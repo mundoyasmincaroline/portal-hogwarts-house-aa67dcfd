@@ -15,6 +15,11 @@ const buttonVariants = cva(
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        magical: "bg-gradient-to-r from-primary/90 to-primary text-primary-foreground hover:shadow-[0_0_20px_hsl(43_65%_54%/0.4)] transition-shadow duration-300",
+        gryffindor: "bg-gryffindor text-foreground hover:bg-gryffindor/80",
+        slytherin: "bg-slytherin text-foreground hover:bg-slytherin/80",
+        ravenclaw: "bg-ravenclaw text-foreground hover:bg-ravenclaw/80",
+        hufflepuff: "bg-hufflepuff text-primary-foreground hover:bg-hufflepuff/80",
       },
       size: {
         default: "h-10 px-4 py-2",
