@@ -1,0 +1,60 @@
+import { type UserProfile, HOUSES } from "@/lib/store";
+import HouseCrest from "./HouseCrest";
+import XPBar from "./XPBar";
+
+export default function UserCard({ user, compact = false }: { user: UserProfile; compact?: boolean }) {
+  const house = HOUSES[user.house];
+
+  if (compact) {
+    return (
+      <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer">
+        <div className="relative">
+          <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-sm font-heading text-primary">
+            {user.fullName[0]}
+          </div>
+          {user.online && <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-green-500 border-2 border-card" />}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium truncate">{user.fullName}</p>
+          <p className="text-xs text-muted-foreground">@{user.username}</p>
+        </div>
+        <HouseCrest house={user.house} size="sm" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="glass rounded-xl p-4 animate-fade-in-up">
+      <div className="flex items-start gap-4">
+        <div className="relative">
+          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary/30 to-secondary flex items-center justify-center text-2xl font-heading text-primary">
+            {user.fullName[0]}
+          </div>
+          {user.online && <div className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-green-500 border-2 border-card" />}
+        </div>
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <h3 className="font-heading text-foreground">{user.fullName}</h3>
+            {user.role === "admin" && <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full font-heading">Admin</span>}
+            {user.role === "moderator" && <span className="text-xs bg-ravenclaw/20 text-ravenclaw px-2 py-0.5 rounded-full font-heading">Mod</span>}
+          </div>
+          <p className="text-sm text-muted-foreground">@{user.username} • {house.name}</p>
+          <p className="text-xs text-muted-foreground mt-1">{user.bio}</p>
+        </div>
+        <HouseCrest house={user.house} />
+      </div>
+      <div className="mt-3">
+        <XPBar xp={user.xp} />
+      </div>
+      {user.badges.length > 0 && (
+        <div className="flex gap-1 mt-3 flex-wrap">
+          {user.badges.map((b) => (
+            <span key={b} className="text-xs bg-secondary px-2 py-0.5 rounded-full text-muted-foreground">
+              ✨ {b}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
