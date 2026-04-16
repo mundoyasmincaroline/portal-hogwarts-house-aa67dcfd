@@ -12,24 +12,21 @@ const MOCK_POSTS = [
 ];
 
 export default function Feed() {
-  const { user } = useAuth();
+  const { profile } = useAuth();
   const [newPost, setNewPost] = useState("");
   const sortedHouses = Object.values(HOUSES).sort((a, b) => b.points - a.points);
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Welcome */}
       <div className="glass rounded-2xl p-6">
         <h1 className="font-heading text-2xl text-gold-gradient mb-1">
-          Bem-vindo, {user?.fullName?.split(" ")[0]}! ⚡
+          Bem-vindo, {profile?.full_name?.split(" ")[0] || "Bruxo"}! ⚡
         </h1>
         <p className="text-muted-foreground text-sm">O que você vai fazer hoje no mundo mágico?</p>
       </div>
 
       <div className="grid md:grid-cols-3 gap-4">
-        {/* Feed column */}
         <div className="md:col-span-2 space-y-4">
-          {/* New post */}
           <div className="glass rounded-xl p-4">
             <textarea
               value={newPost}
@@ -49,7 +46,6 @@ export default function Feed() {
             </div>
           </div>
 
-          {/* Posts */}
           {MOCK_POSTS.map((post) => (
             <div key={post.id} className="glass rounded-xl p-4 animate-fade-in-up">
               <div className="flex items-center gap-3 mb-3">
@@ -77,9 +73,7 @@ export default function Feed() {
           ))}
         </div>
 
-        {/* Sidebar */}
         <div className="space-y-4">
-          {/* House standings */}
           <div className="glass rounded-xl p-4">
             <h3 className="font-heading text-sm text-primary mb-3">🏆 Ranking das Casas</h3>
             <div className="space-y-2">
@@ -94,7 +88,6 @@ export default function Feed() {
             </div>
           </div>
 
-          {/* Active challenges */}
           <div className="glass rounded-xl p-4">
             <h3 className="font-heading text-sm text-primary mb-3">⚔️ Desafios Ativos</h3>
             <div className="space-y-2">

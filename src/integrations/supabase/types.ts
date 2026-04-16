@@ -14,16 +14,304 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      badges: {
+        Row: {
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+          xp_required: number | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          xp_required?: number | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          xp_required?: number | null
+        }
+        Relationships: []
+      }
+      challenges: {
+        Row: {
+          active: boolean
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          title: string
+          type: string
+          xp_reward: number
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          title: string
+          type?: string
+          xp_reward?: number
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          title?: string
+          type?: string
+          xp_reward?: number
+        }
+        Relationships: []
+      }
+      house_points: {
+        Row: {
+          awarded_by: string | null
+          created_at: string
+          house: Database["public"]["Enums"]["house_type"]
+          id: string
+          points: number
+          reason: string | null
+        }
+        Insert: {
+          awarded_by?: string | null
+          created_at?: string
+          house: Database["public"]["Enums"]["house_type"]
+          id?: string
+          points?: number
+          reason?: string | null
+        }
+        Update: {
+          awarded_by?: string | null
+          created_at?: string
+          house?: Database["public"]["Enums"]["house_type"]
+          id?: string
+          points?: number
+          reason?: string | null
+        }
+        Relationships: []
+      }
+      post_comments: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          reactions: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          reactions?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          reactions?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          age: number
+          approved: boolean
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          full_name: string
+          house: Database["public"]["Enums"]["house_type"]
+          id: string
+          level: number
+          online: boolean
+          updated_at: string
+          user_id: string
+          username: string
+          xp: number
+          xp_to_next: number
+        }
+        Insert: {
+          age?: number
+          approved?: boolean
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          full_name?: string
+          house?: Database["public"]["Enums"]["house_type"]
+          id?: string
+          level?: number
+          online?: boolean
+          updated_at?: string
+          user_id: string
+          username: string
+          xp?: number
+          xp_to_next?: number
+        }
+        Update: {
+          age?: number
+          approved?: boolean
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          full_name?: string
+          house?: Database["public"]["Enums"]["house_type"]
+          id?: string
+          level?: number
+          online?: boolean
+          updated_at?: string
+          user_id?: string
+          username?: string
+          xp?: number
+          xp_to_next?: number
+        }
+        Relationships: []
+      }
+      user_badges: {
+        Row: {
+          badge_id: string
+          earned_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_id: string
+          earned_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_id?: string
+          earned_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_badges_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "badges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_challenges: {
+        Row: {
+          challenge_id: string
+          completed: boolean
+          completed_at: string | null
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          challenge_id: string
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          challenge_id?: string
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_challenges_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
+      house_type: "gryffindor" | "slytherin" | "ravenclaw" | "hufflepuff"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +438,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+      house_type: ["gryffindor", "slytherin", "ravenclaw", "hufflepuff"],
+    },
   },
 } as const
