@@ -8,18 +8,21 @@ import MagicalParticles from "@/components/MagicalParticles";
 export default function Login() {
   const navigate = useNavigate();
   const login = useAuth((s) => s.login);
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    const success = login(username, password);
-    if (success) {
+    setLoading(true);
+    const result = await login(email, password);
+    setLoading(false);
+    if (result.success) {
       navigate("/dashboard");
     } else {
-      setError("Credenciais inválidas. Tente novamente.");
+      setError(result.error || "Credenciais inválidas. Tente novamente.");
     }
   };
 
@@ -34,11 +37,12 @@ export default function Login() {
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="text-sm font-heading text-muted-foreground block mb-1">Username</label>
+            <label className="text-sm font-heading text-muted-foreground block mb-1">Email</label>
             <Input
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="@seu_username"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="seu@email.com"
               className="bg-secondary/50 border-border"
             />
           </div>
@@ -53,8 +57,8 @@ export default function Login() {
             />
           </div>
           {error && <p className="text-destructive text-sm">{error}</p>}
-          <Button type="submit" variant="magical" className="w-full font-heading">
-            Entrar no Portal
+          <Button type="submit" variant="magical" className="w-full font-heading" disabled={loading}>
+            {loading ? "Entrando..." : "Entrar no Portal"}
           </Button>
         </form>
 
