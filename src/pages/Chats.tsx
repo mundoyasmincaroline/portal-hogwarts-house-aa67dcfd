@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { House } from "@/lib/store";
+import MagicAdBanner from "@/components/MagicAdBanner";
 
 interface RoomDefinition {
   name: string;
@@ -123,6 +124,8 @@ export default function Chats() {
           </p>
         </div>
       </div>
+
+      <MagicAdBanner />
 
       <div className="space-y-10">
         {categories.map((category) => (

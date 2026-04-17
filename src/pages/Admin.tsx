@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "@/lib/auth";
+import { useAuth, isUserOnline } from "@/lib/auth";
 import { HOUSES, type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -54,14 +54,17 @@ export default function Admin() {
   const [pendingTasks, setPendingTasks] = useState<any[]>([]);
   const [bannedWords, setBannedWords] = useState<any[]>([]);
   const [channels, setChannels] = useState<any[]>([]);
+  const [ads, setAds] = useState<any[]>([]);
+  const [stories, setStories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [newCh, setNewCh] = useState({ title: "", description: "", xp_reward: 50, type: "daily", question: "", correct_answer: "" });
   const [newWord, setNewWord] = useState("");
+  const [adForm, setAdForm] = useState({ title: "", link: "", image_url: "" });
 
   const fetchAll = async () => {
     const [
       { data: m }, { data: pm }, { data: c }, { data: l }, { data: f },
-      { data: pt }, { data: bw }, { data: ch }
+      { data: pt }, { data: bw }, { data: ch }, { data: adsData }
     ] = await Promise.all([
       supabase.from("profiles").select("*").eq("approved", true).order("created_at", { ascending: false }),
       supabase.from("profiles").select("*").eq("approved", false).order("created_at", { ascending: false }),
@@ -71,6 +74,8 @@ export default function Admin() {
       supabase.from("user_challenges").select("*, profiles(full_name, username), challenges(title, xp_reward)").eq("status", "pending").order("completed_at", { ascending: false }),
       supabase.from("banned_words").select("*").order("created_at", { ascending: false }),
       supabase.from("channels").select("*").order("name"),
+      supabase.from("ads").select("*").order("created_at", { ascending: false }),
+      supabase.from("stories").select("*, profiles(full_name)").order("created_at", { ascending: false })
     ]);
     if (m) setMembers(m as unknown as MemberProfile[]);
     if (pm) setPendingMembers(pm as unknown as MemberProfile[]);
@@ -80,6 +85,8 @@ export default function Admin() {
     if (pt) setPendingTasks(pt);
     if (bw) setBannedWords(bw);
     if (ch) setChannels(ch);
+    if (adsData) setAds(adsData);
+    if (storiesData) setStories(storiesData);
     setLoading(false);
   };
 
@@ -111,6 +118,28 @@ export default function Admin() {
     fetchAll();
   };
 
+  const createAd = async () => {
+    if (!adForm.title || !adForm.link) return;
+    const { error } = await supabase.from("ads").insert([adForm]);
+    if (!error) {
+      toast.success("Anúncio criado com sucesso!");
+      setAdForm({ title: "", link: "", image_url: "" });
+      fetchAll();
+    } else {
+      toast.error(error.message);
+    }
+  };
+
+  const toggleAd = async (id: string, active: boolean) => {
+    await supabase.from("ads").update({ active: !active }).eq("id", id);
+    fetchAll();
+  };
+
+  const deleteAd = async (id: string) => {
+    await supabase.from("ads").delete().eq("id", id);
+    fetchAll();
+  };
+
   if (!isAdmin) {
     return (
       <div className="text-center py-20">
@@ -130,6 +159,8 @@ export default function Admin() {
     { id: "tasks", label: "Tarefas", icon: "✅" },
     { id: "banned", label: "Filtro Chat", icon: "🚫" },
     { id: "channels", label: "Salas/Meet", icon: "📹" },
+    { id: "monetization", label: "Monetização", icon: "💰" },
+    { id: "moderation", label: "Moderação", icon: "👁️" },
   ];
 
   return (
@@ -145,8 +176,8 @@ export default function Admin() {
           <p className="text-xs text-muted-foreground">Membros</p>
         </div>
         <div className="glass rounded-xl p-4 text-center">
-          <p className="text-2xl font-heading text-foreground">{members.filter((m) => m.online).length}</p>
-          <p className="text-xs text-muted-foreground">Online</p>
+          <h3 className="text-muted-foreground text-sm font-heading mb-2">Usuários Online</h3>
+          <p className="text-2xl font-heading text-foreground">{members.filter((m) => isUserOnline(m)).length}</p>
         </div>
         <div className="glass rounded-xl p-4 text-center">
           <p className="text-2xl font-heading text-foreground">{challenges.filter((c) => c.active).length}</p>
@@ -183,13 +214,13 @@ export default function Admin() {
                 <div key={m.id} className="glass rounded-xl p-4 flex items-center gap-4">
                   <div className="relative">
                     <HouseCrest house={m.house} size="sm" />
-                    <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-card ${m.online ? "bg-green-500" : "bg-muted-foreground"}`} />
+                    <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-card ${isUserOnline(m) ? "bg-green-500" : "bg-muted-foreground"}`} />
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-heading text-foreground">{m.full_name}</p>
                     <p className="text-xs text-muted-foreground">@{m.username} • {m.age} anos • {m.xp} XP</p>
                   </div>
-                  {m.online && <span className="text-xs text-green-500">🟢 Online</span>}
+                  {isUserOnline(m) && <span className="text-xs text-green-500">🟢 Online</span>}
                 </div>
               ))}
             </div>
@@ -472,6 +503,90 @@ export default function Admin() {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+
+          {activeTab === "monetization" && (
+            <div className="space-y-6">
+              <div className="glass rounded-2xl p-6">
+                <h2 className="font-heading text-xl text-primary mb-4">Adicionar Oferta (TikTok Shop)</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Input
+                    placeholder="Título (Ex: Pelúcia Harry Potter)"
+                    value={adForm.title}
+                    onChange={(e) => setAdForm({ ...adForm, title: e.target.value })}
+                  />
+                  <Input
+                    placeholder="Link de Afiliado do TikTok"
+                    value={adForm.link}
+                    onChange={(e) => setAdForm({ ...adForm, link: e.target.value })}
+                  />
+                  <Input
+                    placeholder="URL da Imagem (Link da foto)"
+                    value={adForm.image_url}
+                    onChange={(e) => setAdForm({ ...adForm, image_url: e.target.value })}
+                  />
+                </div>
+                <Button onClick={createAd} variant="magical" className="mt-4 w-full">
+                  Publicar Anúncio Mágico
+                </Button>
+              </div>
+
+              <div className="glass rounded-2xl p-6">
+                <h2 className="font-heading text-xl text-foreground mb-4">Anúncios Ativos</h2>
+                <div className="space-y-4">
+                  {ads.map((ad) => (
+                    <div key={ad.id} className="bg-card/50 rounded-xl p-4 flex items-center justify-between gap-4 border border-border">
+                      {ad.image_url && <img src={ad.image_url} alt="Ad" className="w-12 h-12 object-cover rounded-md" />}
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-foreground">{ad.title}</p>
+                        <a href={ad.link} target="_blank" rel="noreferrer" className="text-xs text-primary hover:underline truncate block">{ad.link}</a>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button variant={ad.active ? "default" : "secondary"} size="sm" onClick={() => toggleAd(ad.id, ad.active)}>
+                          {ad.active ? "Desativar" : "Ativar"}
+                        </Button>
+                        <Button variant="destructive" size="sm" onClick={() => deleteAd(ad.id)}>
+                          Excluir
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                  {ads.length === 0 && <p className="text-muted-foreground text-sm text-center">Nenhum anúncio cadastrado ainda.</p>}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "moderation" && (
+            <div className="glass rounded-2xl p-6">
+              <h2 className="font-heading text-xl text-destructive mb-4">Moderação de Stories</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {stories.map(story => (
+                  <div key={story.id} className="bg-card/50 rounded-xl p-4 border border-border">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="font-bold text-sm text-foreground">{story.profiles?.full_name}</span>
+                      <span className="text-[10px] text-muted-foreground">{new Date(story.created_at).toLocaleString()}</span>
+                    </div>
+                    {story.media_url && (
+                      <img src={story.media_url} alt="Story" className="w-full h-32 object-cover rounded-md mb-2" />
+                    )}
+                    {story.content && <p className="text-sm text-foreground mb-4">{story.content}</p>}
+                    <Button 
+                      variant="destructive" 
+                      size="sm" 
+                      className="w-full"
+                      onClick={async () => {
+                        await supabase.from("stories").delete().eq("id", story.id);
+                        fetchAll();
+                      }}
+                    >
+                      Excluir Story
+                    </Button>
+                  </div>
+                ))}
+                {stories.length === 0 && <p className="text-muted-foreground text-sm col-span-3">Nenhum story ativo no momento.</p>}
+              </div>
             </div>
           )}
         </>

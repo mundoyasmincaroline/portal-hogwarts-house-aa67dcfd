@@ -18,10 +18,20 @@ export interface Profile {
   bio: string;
   avatar_url: string | null;
   approved: boolean;
+  accepted_rules: boolean;
   online: boolean;
   last_seen: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export function isUserOnline(profile: Partial<Profile> | null): boolean {
+  if (!profile) return false;
+  if (!profile.last_seen) return !!profile.online;
+  // Consider online if last_seen is within the last 2 minutes (120000 ms)
+  const lastSeenDate = new Date(profile.last_seen).getTime();
+  const now = new Date().getTime();
+  return (now - lastSeenDate) < 120000;
 }
 
 interface AuthState {

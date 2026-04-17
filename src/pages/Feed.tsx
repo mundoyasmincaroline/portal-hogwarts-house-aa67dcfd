@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import DailyHighlight from "@/components/DailyHighlight";
 import MoodSession from "@/components/MoodSession";
 import BirthdayBanner from "@/components/BirthdayBanner";
+import MagicAdBanner from "@/components/MagicAdBanner";
+import StoriesBar from "@/components/StoriesBar";
 
 const REACTIONS = ["⚡", "❤️", "🔥", "🦁", "🦅", "🐍", "🦡"];
 
@@ -166,6 +168,7 @@ export default function Feed() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
+      <StoriesBar />
       <div className="glass rounded-2xl p-6">
         <h1 className="font-heading text-2xl text-gold-gradient mb-1">
           Bem-vindo, {profile?.full_name?.split(" ")[0] || "Bruxo"}! ⚡
@@ -202,81 +205,84 @@ export default function Feed() {
             </div>
           )}
 
-          {posts.map((post) => (
-            <div key={post.id} className="glass rounded-xl p-4 animate-fade-in-up">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center font-heading text-primary">
-                  {post.author?.full_name?.[0] || "?"}
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-foreground">{post.author?.full_name || "Bruxo desconhecido"}</p>
-                  <p className="text-xs text-muted-foreground">@{post.author?.username} • {new Date(post.created_at).toLocaleString("pt-BR")}</p>
-                </div>
-                {post.author?.house && <HouseCrest house={post.author.house} size="sm" />}
-              </div>
-              <p className="text-sm text-foreground mb-3 whitespace-pre-wrap">{post.content}</p>
-
-              <div className="flex flex-wrap gap-2">
-                {post.reactions.map((r) => (
-                  <button
-                    key={r.emoji}
-                    onClick={() => toggleReaction(post.id, r.emoji, r.mine)}
-                    className={`px-3 py-1 rounded-full text-xs transition-colors ${r.mine ? "bg-primary/30 text-primary" : "glass hover:bg-secondary/80"}`}
-                  >
-                    {r.emoji} {r.count}
-                  </button>
-                ))}
-                <div className="flex gap-1 glass rounded-full px-2 py-1">
-                  {REACTIONS.map((emoji) => {
-                    const existing = post.reactions.find((r) => r.emoji === emoji);
-                    if (existing) return null;
-                    return (
-                      <button
-                        key={emoji}
-                        onClick={() => toggleReaction(post.id, emoji, false)}
-                        className="text-xs hover:scale-125 transition-transform"
-                      >
-                        {emoji}
-                      </button>
-                    );
-                  })}
-                </div>
-                <button
-                  onClick={() => toggleComments(post.id)}
-                  className="glass px-3 py-1 rounded-full text-xs text-muted-foreground hover:bg-secondary/80 transition-colors"
-                >
-                  💬 {post.comments.length} {post.comments.length === 1 ? "comentário" : "comentários"}
-                </button>
-              </div>
-
-              {post.showComments && (
-                <div className="mt-3 pt-3 border-t border-border space-y-2">
-                  {post.comments.map((c) => (
-                    <div key={c.id} className="flex gap-2 items-start">
-                      <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center text-xs font-heading text-primary shrink-0">
-                        {c.author?.full_name?.[0] || "?"}
-                      </div>
-                      <div className="flex-1 bg-secondary/40 rounded-lg px-3 py-2">
-                        <p className="text-xs font-medium text-foreground">{c.author?.full_name}</p>
-                        <p className="text-xs text-foreground">{c.content}</p>
-                      </div>
-                    </div>
-                  ))}
-                  <div className="flex gap-2">
-                    <input
-                      value={commentDrafts[post.id] || ""}
-                      onChange={(e) => setCommentDrafts((d) => ({ ...d, [post.id]: e.target.value }))}
-                      onKeyDown={(e) => e.key === "Enter" && submitComment(post.id)}
-                      placeholder="Comente..."
-                      maxLength={500}
-                      className="flex-1 bg-secondary/50 rounded-lg px-3 py-2 text-xs focus:outline-none text-foreground"
-                    />
-                    <Button size="sm" variant="magical" className="text-xs" onClick={() => submitComment(post.id)}>
-                      Enviar
-                    </Button>
+          {posts.map((post, index) => (
+            <div key={post.id}>
+              {index > 0 && index % 3 === 0 && <MagicAdBanner />}
+              <div className="glass rounded-xl p-4 animate-fade-in-up">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center font-heading text-primary">
+                    {post.author?.full_name?.[0] || "?"}
                   </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-foreground">{post.author?.full_name || "Bruxo desconhecido"}</p>
+                    <p className="text-xs text-muted-foreground">@{post.author?.username} • {new Date(post.created_at).toLocaleString("pt-BR")}</p>
+                  </div>
+                  {post.author?.house && <HouseCrest house={post.author.house} size="sm" />}
                 </div>
-              )}
+                <p className="text-sm text-foreground mb-3 whitespace-pre-wrap">{post.content}</p>
+
+                <div className="flex flex-wrap gap-2">
+                  {post.reactions.map((r) => (
+                    <button
+                      key={r.emoji}
+                      onClick={() => toggleReaction(post.id, r.emoji, r.mine)}
+                      className={`px-3 py-1 rounded-full text-xs transition-colors ${r.mine ? "bg-primary/30 text-primary" : "glass hover:bg-secondary/80"}`}
+                    >
+                      {r.emoji} {r.count}
+                    </button>
+                  ))}
+                  <div className="flex gap-1 glass rounded-full px-2 py-1">
+                    {REACTIONS.map((emoji) => {
+                      const existing = post.reactions.find((r) => r.emoji === emoji);
+                      if (existing) return null;
+                      return (
+                        <button
+                          key={emoji}
+                          onClick={() => toggleReaction(post.id, emoji, false)}
+                          className="text-xs hover:scale-125 transition-transform"
+                        >
+                          {emoji}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <button
+                    onClick={() => toggleComments(post.id)}
+                    className="glass px-3 py-1 rounded-full text-xs text-muted-foreground hover:bg-secondary/80 transition-colors"
+                  >
+                    💬 {post.comments.length} {post.comments.length === 1 ? "comentário" : "comentários"}
+                  </button>
+                </div>
+
+                {post.showComments && (
+                  <div className="mt-3 pt-3 border-t border-border space-y-2">
+                    {post.comments.map((c) => (
+                      <div key={c.id} className="flex gap-2 items-start">
+                        <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center text-xs font-heading text-primary shrink-0">
+                          {c.author?.full_name?.[0] || "?"}
+                        </div>
+                        <div className="flex-1 bg-secondary/40 rounded-lg px-3 py-2">
+                          <p className="text-xs font-medium text-foreground">{c.author?.full_name}</p>
+                          <p className="text-xs text-foreground">{c.content}</p>
+                        </div>
+                      </div>
+                    ))}
+                    <div className="flex gap-2">
+                      <input
+                        value={commentDrafts[post.id] || ""}
+                        onChange={(e) => setCommentDrafts((d) => ({ ...d, [post.id]: e.target.value }))}
+                        onKeyDown={(e) => e.key === "Enter" && submitComment(post.id)}
+                        placeholder="Comente..."
+                        maxLength={500}
+                        className="flex-1 bg-secondary/50 rounded-lg px-3 py-2 text-xs focus:outline-none text-foreground"
+                      />
+                      <Button size="sm" variant="magical" className="text-xs" onClick={() => submitComment(post.id)}>
+                        Enviar
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           ))}
         </div>

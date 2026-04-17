@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "@/lib/auth";
+import { useAuth, isUserOnline } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";
 import { HOUSES } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,6 +8,8 @@ import { supabase } from "@/integrations/supabase/client";
 import Notifications from "@/components/Notifications";
 import CastleEntrance from "@/pages/CastleEntrance";
 import EngagementBot from "@/components/EngagementBot";
+import RulesAgreement from "@/pages/RulesAgreement";
+import PendingApproval from "@/pages/PendingApproval";
 
 const NAV_ITEMS = [
   { icon: "🏠", label: "Feed", path: "/dashboard" },
@@ -62,6 +64,9 @@ export default function DashboardLayout() {
   }
 
   if (!user || !profile) return null;
+  
+  if (!profile.accepted_rules) return <RulesAgreement />;
+  if (!profile.approved) return <PendingApproval />;
   if (!profile.has_seen_intro) return <CastleEntrance />;
   
   const house = HOUSES[profile.house as House] || HOUSES.gryffindor;
@@ -104,7 +109,7 @@ export default function DashboardLayout() {
           <div className="flex items-center gap-3">
             <div className="relative">
               <HouseCrest house={profile.house} size="sm" />
-              <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-green-500 border border-card" title="Online" />
+              <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-card ${isUserOnline(profile) ? "bg-green-500" : "bg-muted-foreground"}`} title={isUserOnline(profile) ? "Online" : "Offline"} />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-heading truncate text-foreground">{profile.full_name}</p>

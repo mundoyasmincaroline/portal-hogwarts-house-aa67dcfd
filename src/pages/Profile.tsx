@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useAuth } from "@/lib/auth";
+import { useState, useEffect } from "react";
+import { useAuth, isUserOnline } from "@/lib/auth";
 import { HOUSES, getLevelFromXP } from "@/lib/store";
 import HouseCrest from "@/components/HouseCrest";
 import XPBar from "@/components/XPBar";
@@ -287,52 +287,54 @@ export default function Profile() {
       {activeTab === "about" ? (
         <>
           <div className="grid grid-cols-3 gap-3">
-        <div className="glass rounded-xl p-4 text-center">
-          <p className="text-2xl font-heading text-primary">{profile.xp}</p>
-          <p className="text-xs text-muted-foreground">XP Total</p>
-        </div>
-        <div className="glass rounded-xl p-4 text-center">
-          <p className="text-2xl font-heading text-foreground">{levelInfo.level}</p>
-          <p className="text-xs text-muted-foreground">Nível</p>
-        </div>
-        <div className="glass rounded-xl p-4 text-center">
-          <p className="text-2xl font-heading text-foreground">{getMedalForXP(profile.xp) ? 1 : 0}</p>
-          <p className="text-xs text-muted-foreground">Badges</p>
-        </div>
-      </div>
-
-      <div className="glass rounded-xl p-4">
-        <h3 className="font-heading text-sm text-primary mb-3">Progresso</h3>
-        <XPBar xp={profile.xp} />
-        <p className="text-xs text-muted-foreground mt-2 text-center">
-          {levelInfo.name} → Faltam {levelInfo.next - profile.xp} XP para o próximo nível
-        </p>
-      </div>
-
-      <div className="glass rounded-xl p-4">
-        <div className="flex items-center gap-3">
-          <HouseCrest house={profile.house} size="md" />
-          <div>
-            <h3 className="font-heading text-foreground">{house.name}</h3>
-            <p className="text-xs text-muted-foreground italic font-serif">"{house.motto}"</p>
+            <div className="glass rounded-xl p-4 text-center">
+              <p className="text-2xl font-heading text-primary">{profile.xp}</p>
+              <p className="text-xs text-muted-foreground">XP Total</p>
+            </div>
+            <div className="glass rounded-xl p-4 text-center">
+              <p className="text-2xl font-heading text-foreground">{levelInfo.level}</p>
+              <p className="text-xs text-muted-foreground">Nível</p>
+            </div>
+            <div className="glass rounded-xl p-4 text-center">
+              <p className="text-2xl font-heading text-foreground">{getMedalForXP(profile.xp) ? 1 : 0}</p>
+              <p className="text-xs text-muted-foreground">Badges</p>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <div className="glass rounded-xl p-4">
-        <h3 className="font-heading text-sm text-primary mb-3">Informações</h3>
-        <div className="space-y-2 text-sm">
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Idade</span>
-            <span className="text-foreground">{profile.age} anos</span>
+          <div className="glass rounded-xl p-4">
+            <h3 className="font-heading text-sm text-primary mb-3">Progresso</h3>
+            <XPBar xp={profile.xp} />
+            <p className="text-xs text-muted-foreground mt-2 text-center">
+              {levelInfo.name} → Faltam {levelInfo.next - profile.xp} XP para o próximo nível
+            </p>
           </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Membro desde</span>
-            <span className="text-foreground">{new Date(profile.created_at).toLocaleDateString("pt-BR")}</span>
+
+          <div className="glass rounded-xl p-4">
+            <div className="flex items-center gap-3">
+              <HouseCrest house={profile.house} size="md" />
+              <div>
+                <h3 className="font-heading text-foreground">{house.name}</h3>
+                <p className="text-xs text-muted-foreground italic font-serif">"{house.motto}"</p>
+              </div>
+            </div>
           </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Status</span>
-            <span className="text-foreground">{profile.online ? "🟢 Online" : "⚫ Offline"}</span>
+
+          <div className="glass rounded-xl p-4">
+            <h3 className="font-heading text-sm text-primary mb-3">Informações</h3>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Idade</span>
+                <span className="text-foreground">{profile.age} anos</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Membro desde</span>
+                <span className="text-foreground">{new Date(profile.created_at).toLocaleDateString("pt-BR")}</span>
+              </div>
+              <div className="flex justify-between items-center text-sm py-2 border-b border-border">
+                <span className="text-muted-foreground">Status</span>
+                <span className="text-foreground">{isUserOnline(profile) ? "🟢 Online" : "⚫ Offline"}</span>
+              </div>
+            </div>
           </div>
         </>
       ) : activeTab === "friends" ? (
