@@ -60,6 +60,10 @@ export default function Challenges() {
       setActiveEnigma(c);
       return;
     } else {
+      toast.info("Desafio em andamento. Aguardando aprovação.");
+    }
+  };
+
   const handleEnigmaAnswer = async (answerInput: string) => {
     const c = activeEnigma;
     if (!c || !user || !profile) return;
