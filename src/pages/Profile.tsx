@@ -16,6 +16,7 @@ export default function Profile() {
     full_name: profile?.full_name || "",
     username: profile?.username || "",
     bio: profile?.bio || "",
+    age: profile?.age || 11,
   });
   const [uploading, setUploading] = useState(false);
 
@@ -24,7 +25,7 @@ export default function Profile() {
   const levelInfo = getLevelFromXP(profile.xp);
 
   const startEdit = () => {
-    setForm({ full_name: profile.full_name, username: profile.username, bio: profile.bio || "" });
+    setForm({ full_name: profile.full_name, username: profile.username, bio: profile.bio || "", age: profile.age || 11 });
     setEditing(true);
   };
 
@@ -93,6 +94,10 @@ export default function Profile() {
             <div>
               <label className="text-xs font-heading text-muted-foreground block mb-1">@Username</label>
               <Input value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value.toLowerCase().replace(/\s/g, "") })} />
+            </div>
+            <div>
+              <label className="text-xs font-heading text-muted-foreground block mb-1">Idade</label>
+              <Input type="number" value={form.age} onChange={(e) => setForm({ ...form, age: parseInt(e.target.value) || 11 })} />
             </div>
             <div>
               <label className="text-xs font-heading text-muted-foreground block mb-1">Bio</label>

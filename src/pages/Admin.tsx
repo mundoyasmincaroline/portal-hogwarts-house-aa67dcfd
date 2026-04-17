@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import HouseCrest from "@/components/HouseCrest";
 import { toast } from "sonner";
 
-type Tab = "members" | "challenges" | "houses" | "filch";
+type Tab = "members" | "challenges" | "houses" | "filch" | "fichas";
 
 interface MemberProfile {
   id: string;
@@ -29,6 +29,8 @@ interface ChallengeRow {
   xp_reward: number;
   type: string;
   active: boolean;
+  question?: string;
+  correct_answer?: string;
 }
 
 interface ModLog {
@@ -47,18 +49,21 @@ export default function Admin() {
   const [members, setMembers] = useState<MemberProfile[]>([]);
   const [challenges, setChallenges] = useState<ChallengeRow[]>([]);
   const [logs, setLogs] = useState<ModLog[]>([]);
+  const [fichas, setFichas] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [newCh, setNewCh] = useState({ title: "", description: "", xp_reward: 50, type: "daily" });
+  const [newCh, setNewCh] = useState({ title: "", description: "", xp_reward: 50, type: "daily", question: "", correct_answer: "" });
 
   const fetchAll = async () => {
-    const [{ data: m }, { data: c }, { data: l }] = await Promise.all([
+    const [{ data: m }, { data: c }, { data: l }, { data: f }] = await Promise.all([
       supabase.from("profiles").select("*").order("created_at", { ascending: false }),
       supabase.from("challenges").select("*").order("created_at", { ascending: false }),
       supabase.from("moderation_log").select("*").order("created_at", { ascending: false }).limit(50),
+      supabase.from("fichas").select("*, profiles(full_name, username)").eq("status", "pending").order("created_at", { ascending: false }),
     ]);
     if (m) setMembers(m as unknown as MemberProfile[]);
     if (c) setChallenges(c as ChallengeRow[]);
     if (l) setLogs(l as ModLog[]);
+    if (f) setFichas(f);
     setLoading(false);
   };
 
@@ -74,12 +79,14 @@ export default function Admin() {
       description: newCh.description,
       xp_reward: newCh.xp_reward,
       type: newCh.type,
+      question: newCh.question,
+      correct_answer: newCh.correct_answer,
       created_by: user.id,
       active: true,
     } as never);
     if (error) { toast.error(error.message); return; }
     toast.success("Desafio criado!");
-    setNewCh({ title: "", description: "", xp_reward: 50, type: "daily" });
+    setNewCh({ title: "", description: "", xp_reward: 50, type: "daily", question: "", correct_answer: "" });
     fetchAll();
   };
 
@@ -103,6 +110,7 @@ export default function Admin() {
     { id: "challenges", label: "Desafios", icon: "⚔️" },
     { id: "houses", label: "Casas", icon: "🏰" },
     { id: "filch", label: "Filch (Log)", icon: "🧹" },
+    { id: "fichas", label: "Aprovar Fichas", icon: "📜" },
   ];
 
   return (
@@ -174,6 +182,8 @@ export default function Admin() {
                 <h3 className="font-heading text-sm text-primary">➕ Criar novo desafio</h3>
                 <Input placeholder="Título" value={newCh.title} onChange={(e) => setNewCh({ ...newCh, title: e.target.value })} />
                 <Input placeholder="Descrição" value={newCh.description} onChange={(e) => setNewCh({ ...newCh, description: e.target.value })} />
+                <Input placeholder="Pergunta do Quiz (Opcional)" value={newCh.question} onChange={(e) => setNewCh({ ...newCh, question: e.target.value })} />
+                <Input placeholder="Resposta Correta (Opcional)" value={newCh.correct_answer} onChange={(e) => setNewCh({ ...newCh, correct_answer: e.target.value })} />
                 <div className="flex gap-2">
                   <Input type="number" placeholder="XP" value={newCh.xp_reward} onChange={(e) => setNewCh({ ...newCh, xp_reward: parseInt(e.target.value) || 0 })} />
                   <select value={newCh.type} onChange={(e) => setNewCh({ ...newCh, type: e.target.value })} className="bg-secondary/50 rounded-md px-3 text-sm text-foreground border border-border">
@@ -238,6 +248,58 @@ export default function Admin() {
                     <p className="text-xs text-muted-foreground mb-1">{l.reason}</p>
                     <p className="text-xs text-foreground italic">"{l.original_content}"</p>
                     <p className="text-xs text-muted-foreground mt-1">Tipo: {l.content_type}</p>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+
+          {tab === "fichas" && (
+            <div className="space-y-4">
+              <div className="glass rounded-xl p-4">
+                <h3 className="font-heading text-sm text-primary mb-1">📜 Fichas Pendentes</h3>
+                <p className="text-xs text-muted-foreground">Analise as fichas de RPG submetidas pelos membros.</p>
+              </div>
+              {fichas.length === 0 ? (
+                <div className="glass rounded-xl p-6 text-center">
+                  <div className="text-3xl mb-3">✨</div>
+                  <p className="text-muted-foreground text-sm">Nenhuma ficha pendente de aprovação.</p>
+                </div>
+              ) : (
+                fichas.map((f) => (
+                  <div key={f.id} className="glass rounded-xl p-5 space-y-3">
+                    <div className="flex justify-between items-start border-b border-border pb-3">
+                      <div>
+                        <h4 className="font-heading text-lg text-foreground">{f.character_name}</h4>
+                        <p className="text-xs text-muted-foreground">Submetido por @{f.profiles?.username} ({f.profiles?.full_name})</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm" className="text-destructive border-destructive hover:bg-destructive/10" onClick={async () => {
+                          await supabase.from("fichas").update({ status: "rejected" }).eq("id", f.id);
+                          toast.success("Ficha rejeitada.");
+                          fetchAll();
+                        }}>Rejeitar</Button>
+                        <Button variant="magical" size="sm" onClick={async () => {
+                          await supabase.from("fichas").update({ status: "approved" }).eq("id", f.id);
+                          toast.success("Ficha aprovada!");
+                          fetchAll();
+                        }}>Aprovar ✅</Button>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <p><span className="text-muted-foreground">Idade:</span> {f.age}</p>
+                      <p><span className="text-muted-foreground">Ano:</span> {f.school_year}º</p>
+                      <p><span className="text-muted-foreground">Casa:</span> {HOUSES[f.primary_house as House]?.name}</p>
+                      <p><span className="text-muted-foreground">Status Sanguíneo:</span> {f.blood_status}</p>
+                      <p><span className="text-muted-foreground">Varinha:</span> {f.wand}</p>
+                      <p><span className="text-muted-foreground">Patrono:</span> {f.patronus}</p>
+                    </div>
+                    
+                    <div>
+                      <span className="text-xs font-heading text-muted-foreground">História:</span>
+                      <p className="text-sm bg-secondary/30 p-3 rounded-md mt-1 italic text-foreground/80">{f.history}</p>
+                    </div>
                   </div>
                 ))
               )}

@@ -5,12 +5,17 @@ import HouseCrest from "@/components/HouseCrest";
 import { HOUSES } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
 
+import Notifications from "@/components/Notifications";
+
 const NAV_ITEMS = [
   { icon: "🏠", label: "Feed", path: "/dashboard" },
+  { icon: "💬", label: "Chats", path: "/dashboard/chats" },
+  { icon: "📷", label: "InstaHogwarts", path: "/dashboard/instahogwarts" },
   { icon: "🏰", label: "Casas", path: "/dashboard/houses" },
   { icon: "🏆", label: "Ranking", path: "/dashboard/ranking" },
   { icon: "⚔️", label: "Desafios", path: "/dashboard/challenges" },
   { icon: "👤", label: "Perfil", path: "/dashboard/profile" },
+  { icon: "📜", label: "Ficha", path: "/dashboard/ficha" },
 ];
 
 const ADMIN_ITEMS = [
@@ -102,7 +107,8 @@ export default function DashboardLayout() {
               <p className="text-sm font-heading truncate text-foreground">{profile.full_name}</p>
               <p className="text-xs text-muted-foreground">{house.name}</p>
             </div>
-            <button onClick={async () => { await logout(); navigate("/"); }} className="text-muted-foreground hover:text-destructive text-xs">
+            <Notifications />
+            <button onClick={async () => { await logout(); navigate("/"); }} className="text-muted-foreground hover:text-destructive text-xs ml-1">
               Sair
             </button>
           </div>

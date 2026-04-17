@@ -11,6 +11,8 @@ interface Challenge {
   xp_reward: number;
   type: string;
   active: boolean;
+  question?: string;
+  correct_answer?: string;
 }
 
 export default function Challenges() {
@@ -18,6 +20,8 @@ export default function Challenges() {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
+  const [answeringId, setAnsweringId] = useState<string | null>(null);
+  const [answerInput, setAnswerInput] = useState("");
 
   const load = useCallback(async () => {
     const { data: ch } = await supabase.from("challenges").select("*").eq("active", true).order("created_at", { ascending: false });
@@ -39,6 +43,18 @@ export default function Challenges() {
     if (!user || !profile) return;
     if (completedIds.has(c.id)) { toast.info("Você já completou este desafio!"); return; }
 
+    if (c.question) {
+      if (answeringId !== c.id) {
+        setAnsweringId(c.id);
+        setAnswerInput("");
+        return;
+      }
+      if (answerInput.trim().toLowerCase() !== c.correct_answer?.trim().toLowerCase()) {
+        toast.error("Resposta incorreta! Tente novamente.");
+        return;
+      }
+    }
+
     const { error: ucErr } = await supabase
       .from("user_challenges")
       .insert({ user_id: user.id, challenge_id: c.id, completed: true, completed_at: new Date().toISOString() } as never);
@@ -50,6 +66,7 @@ export default function Challenges() {
 
     toast.success(`+${c.xp_reward} XP! ⚡ Pontos para ${profile.house}!`);
     setCompletedIds((s) => new Set([...s, c.id]));
+    setAnsweringId(null);
   };
 
   const daily = challenges.filter((c) => c.type === "daily");
@@ -65,15 +82,35 @@ export default function Challenges() {
           <span className="text-xs font-heading bg-primary/20 text-primary px-2 py-1 rounded-full">{c.xp_reward} XP</span>
         </div>
         <p className="text-sm text-muted-foreground mb-4">{c.description}</p>
-        <Button
-          variant="magical"
-          size="sm"
-          className="font-heading text-xs w-full"
-          disabled={done}
-          onClick={() => completeChallenge(c)}
-        >
-          {done ? "✅ Concluído" : isWeekly ? "Participar do Desafio ⚔️" : "Aceitar Desafio ⚡"}
-        </Button>
+        
+        {answeringId === c.id && !done && (
+          <div className="mb-4 space-y-2">
+            <p className="text-sm font-heading text-primary">{c.question}</p>
+            <input 
+              type="text" 
+              className="w-full bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground focus:outline-none border border-border"
+              placeholder="Sua resposta..."
+              value={answerInput}
+              onChange={(e) => setAnswerInput(e.target.value)}
+            />
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" className="w-1/2 text-xs" onClick={() => setAnsweringId(null)}>Cancelar</Button>
+              <Button variant="magical" size="sm" className="w-1/2 text-xs" onClick={() => completeChallenge(c)}>Enviar</Button>
+            </div>
+          </div>
+        )}
+
+        {answeringId !== c.id && (
+          <Button
+            variant="magical"
+            size="sm"
+            className="font-heading text-xs w-full"
+            disabled={done}
+            onClick={() => completeChallenge(c)}
+          >
+            {done ? "✅ Concluído" : isWeekly ? "Participar do Desafio ⚔️" : "Aceitar Desafio ⚡"}
+          </Button>
+        )}
       </div>
     );
   };

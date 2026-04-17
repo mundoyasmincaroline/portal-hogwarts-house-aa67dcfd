@@ -17,6 +17,10 @@ import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
+import Ficha from "./pages/Ficha";
+import Chats from "./pages/Chats";
+import InstaHogwarts from "./pages/InstaHogwarts";
+
 const queryClient = new QueryClient();
 
 function AuthInit({ children }: { children: React.ReactNode }) {
@@ -38,11 +42,14 @@ const App = () => (
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<DashboardLayout />}>
               <Route index element={<Feed />} />
+              <Route path="chats" element={<Chats />} />
+              <Route path="instahogwarts" element={<InstaHogwarts />} />
               <Route path="houses" element={<Houses />} />
               <Route path="ranking" element={<Ranking />} />
               <Route path="challenges" element={<Challenges />} />
               <Route path="profile" element={<Profile />} />
               <Route path="admin" element={<Admin />} />
+              <Route path="ficha" element={<Ficha />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
