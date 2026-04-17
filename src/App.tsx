@@ -16,11 +16,10 @@ import Challenges from "./pages/Challenges";
 import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
-
-import Ficha from "./pages/Ficha";
 import Chats from "./pages/Chats";
 import ChatRoom from "./pages/ChatRoom";
 import InstaHogwarts from "./pages/InstaHogwarts";
+import EmojiShop from "./components/EmojiShop";
 
 const queryClient = new QueryClient();
 
@@ -51,7 +50,7 @@ const App = () => (
               <Route path="challenges" element={<Challenges />} />
               <Route path="profile" element={<Profile />} />
               <Route path="admin" element={<Admin />} />
-              <Route path="ficha" element={<Ficha />} />
+              <Route path="shop" element={<EmojiShop />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import HouseCrest from "@/components/HouseCrest";
 import { House } from "@/lib/store";
+import { addXP } from "@/lib/xpSystem";
 
 interface Message {
   id: string;
@@ -120,6 +121,13 @@ export default function ChatRoom() {
     if (error) {
       toast.error("Erro ao enviar mensagem.");
       setInput(content);
+    } else {
+      const xpRes = await addXP(user.id, 5, 'message');
+      if (xpRes.success) {
+        toast.success("+5 XP! ⚡");
+      } else if (xpRes.message) {
+        toast.info(xpRes.message);
+      }
     }
   };
 

@@ -6,6 +6,8 @@ import { HOUSES } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
 
 import Notifications from "@/components/Notifications";
+import CastleEntrance from "@/pages/CastleEntrance";
+import EngagementBot from "@/components/EngagementBot";
 
 const NAV_ITEMS = [
   { icon: "🏠", label: "Feed", path: "/dashboard" },
@@ -14,8 +16,7 @@ const NAV_ITEMS = [
   { icon: "🏰", label: "Casas", path: "/dashboard/houses" },
   { icon: "🏆", label: "Ranking", path: "/dashboard/ranking" },
   { icon: "⚔️", label: "Desafios", path: "/dashboard/challenges" },
-  { icon: "👤", label: "Perfil", path: "/dashboard/profile" },
-  { icon: "📜", label: "Ficha", path: "/dashboard/ficha" },
+  { icon: "🛍️", label: "Loja", path: "/dashboard/shop" },
 ];
 
 const ADMIN_ITEMS = [
@@ -61,7 +62,9 @@ export default function DashboardLayout() {
   }
 
   if (!user || !profile) return null;
-  const house = HOUSES[profile.house];
+  if (!profile.has_seen_intro) return <CastleEntrance />;
+  
+  const house = HOUSES[profile.house as House] || HOUSES.gryffindor;
   const items = isAdmin ? [...NAV_ITEMS, ...ADMIN_ITEMS] : NAV_ITEMS;
 
   return (
@@ -112,6 +115,10 @@ export default function DashboardLayout() {
               Sair
             </button>
           </div>
+          <div className="mt-4 text-center">
+            <p className="text-[10px] text-muted-foreground/40">Grupo Portal Matrix 2026</p>
+            <p className="text-[10px] text-muted-foreground/40">Mundo Yasmin Caroline</p>
+          </div>
         </div>
       </aside>
 
@@ -123,6 +130,7 @@ export default function DashboardLayout() {
 
         <div className="flex-1 overflow-y-auto p-4 md:p-6">
           <Outlet />
+          <EngagementBot />
         </div>
       </main>
     </div>

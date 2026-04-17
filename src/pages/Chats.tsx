@@ -23,6 +23,9 @@ const ROOMS: RoomDefinition[] = [
   { name: "Castelo RPG", description: "Exploração e interação pelo castelo de Hogwarts.", category: "RPG", allowed_houses: null, is_admin_only: false, icon: "🏰" },
   { name: "RPF Fora de Hogwarts", description: "Roleplay em Hogsmeade, Beco Diagonal, etc.", category: "RPG", allowed_houses: null, is_admin_only: false, icon: "🚂" },
 
+  { name: "𝐅𝐢𝐜𝐡𝐚𝐬 𝐏𝐞𝐬𝐬𝐨𝐚𝐢𝐬 ₊ ෆ ˚", description: "Envie sua ficha pessoal aqui para o portal conhecer você!", category: "Fichas", allowed_houses: null, is_admin_only: false, icon: "✨" },
+  { name: "𝐅𝐢𝐜𝐡𝐚𝐬 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐧𝐬 ₊ ෆ ˚", description: "Envie a ficha do seu personagem do RPG aqui.", category: "Fichas", allowed_houses: null, is_admin_only: false, icon: "⚡" },
+
   { name: "Comunal da Grifinória", description: "Acesso exclusivo aos corajosos da Grifinória.", category: "Comunais", allowed_houses: ["gryffindor"], is_admin_only: false, icon: "🦁" },
   { name: "Comunal da Sonserina", description: "Acesso exclusivo aos astutos da Sonserina.", category: "Comunais", allowed_houses: ["slytherin"], is_admin_only: false, icon: "🐍" },
   { name: "Comunal da Corvinal", description: "Acesso exclusivo aos sábios da Corvinal.", category: "Comunais", allowed_houses: ["ravenclaw"], is_admin_only: false, icon: "🦅" },

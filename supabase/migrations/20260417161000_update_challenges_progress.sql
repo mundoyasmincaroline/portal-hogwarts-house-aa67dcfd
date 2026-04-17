@@ -1,0 +1,1 @@
+ALTER TABLE public.user_challenges ADD COLUMN IF NOT EXISTS progress INTEGER DEFAULT 0;

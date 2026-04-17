@@ -5,6 +5,9 @@ import { supabase } from "@/integrations/supabase/client";
 import HouseCrest from "@/components/HouseCrest";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import DailyHighlight from "@/components/DailyHighlight";
+import MoodSession from "@/components/MoodSession";
+import BirthdayBanner from "@/components/BirthdayBanner";
 
 const REACTIONS = ["⚡", "❤️", "🔥", "🦁", "🦅", "🐍", "🦡"];
 
@@ -169,6 +172,10 @@ export default function Feed() {
         </h1>
         <p className="text-muted-foreground text-sm">O que você vai fazer hoje no mundo mágico?</p>
       </div>
+
+      <BirthdayBanner />
+      <DailyHighlight />
+      <MoodSession />
 
       <div className="grid md:grid-cols-3 gap-4">
         <div className="md:col-span-2 space-y-4">

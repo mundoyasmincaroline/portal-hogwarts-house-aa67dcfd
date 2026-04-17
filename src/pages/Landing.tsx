@@ -74,6 +74,9 @@ export default function Landing() {
           <p className="text-xs text-muted-foreground mt-6">
             Portal exclusivo para bruxos de 13 a 17 anos ✨
           </p>
+          <p className="text-[10px] text-muted-foreground/60 mt-4">
+            Grupo Portal Matrix 2026 - Mundo Yasmin Caroline
+          </p>
         </div>
       </div>
     </div>
