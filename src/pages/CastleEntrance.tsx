@@ -21,8 +21,6 @@ export default function CastleEntrance() {
       useAuth.setState((state) => ({
         profile: state.profile ? { ...state.profile, has_seen_intro: true } : null
       }));
-      
-      await fetchProfile(user.id);
     } catch (e) {
       console.error(e);
     } finally {
