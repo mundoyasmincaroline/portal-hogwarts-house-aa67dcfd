@@ -13,7 +13,7 @@ export default function CastleEntrance() {
     if (!user) return;
     await supabase.from("profiles").update({ has_seen_intro: true }).eq("user_id", user.id);
     await fetchProfile(user.id);
-    navigate("/");
+    navigate("/dashboard");
   };
 
   const steps = [
