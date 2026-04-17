@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import HouseCrest from "@/components/HouseCrest";
 import { toast } from "sonner";
 
-type Tab = "members" | "challenges" | "houses" | "filch" | "fichas";
+type Tab = "members" | "challenges" | "houses" | "filch" | "fichas" | "tasks" | "banned" | "channels";
 
 interface MemberProfile {
   id: string;
@@ -50,20 +50,33 @@ export default function Admin() {
   const [challenges, setChallenges] = useState<ChallengeRow[]>([]);
   const [logs, setLogs] = useState<ModLog[]>([]);
   const [fichas, setFichas] = useState<any[]>([]);
+  const [pendingTasks, setPendingTasks] = useState<any[]>([]);
+  const [bannedWords, setBannedWords] = useState<any[]>([]);
+  const [channels, setChannels] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [newCh, setNewCh] = useState({ title: "", description: "", xp_reward: 50, type: "daily", question: "", correct_answer: "" });
+  const [newWord, setNewWord] = useState("");
 
   const fetchAll = async () => {
-    const [{ data: m }, { data: c }, { data: l }, { data: f }] = await Promise.all([
+    const [
+      { data: m }, { data: c }, { data: l }, { data: f },
+      { data: pt }, { data: bw }, { data: ch }
+    ] = await Promise.all([
       supabase.from("profiles").select("*").order("created_at", { ascending: false }),
       supabase.from("challenges").select("*").order("created_at", { ascending: false }),
       supabase.from("moderation_log").select("*").order("created_at", { ascending: false }).limit(50),
       supabase.from("fichas").select("*, profiles(full_name, username)").eq("status", "pending").order("created_at", { ascending: false }),
+      supabase.from("user_challenges").select("*, profiles(full_name, username), challenges(title, xp_reward)").eq("status", "pending").order("completed_at", { ascending: false }),
+      supabase.from("banned_words").select("*").order("created_at", { ascending: false }),
+      supabase.from("channels").select("*").order("name"),
     ]);
     if (m) setMembers(m as unknown as MemberProfile[]);
     if (c) setChallenges(c as ChallengeRow[]);
     if (l) setLogs(l as ModLog[]);
     if (f) setFichas(f);
+    if (pt) setPendingTasks(pt);
+    if (bw) setBannedWords(bw);
+    if (ch) setChannels(ch);
     setLoading(false);
   };
 
@@ -109,8 +122,10 @@ export default function Admin() {
     { id: "members", label: "Membros", icon: "👥" },
     { id: "challenges", label: "Desafios", icon: "⚔️" },
     { id: "houses", label: "Casas", icon: "🏰" },
-    { id: "filch", label: "Filch (Log)", icon: "🧹" },
-    { id: "fichas", label: "Aprovar Fichas", icon: "📜" },
+    { id: "fichas", label: "Fichas", icon: "📜" },
+    { id: "tasks", label: "Tarefas", icon: "✅" },
+    { id: "banned", label: "Filtro Chat", icon: "🚫" },
+    { id: "channels", label: "Salas/Meet", icon: "📹" },
   ];
 
   return (
@@ -303,6 +318,118 @@ export default function Admin() {
                   </div>
                 ))
               )}
+            </div>
+          )}
+
+          {tab === "tasks" && (
+            <div className="space-y-4">
+              <div className="glass rounded-xl p-4">
+                <h3 className="font-heading text-sm text-primary mb-1">✅ Aprovação de Tarefas</h3>
+                <p className="text-xs text-muted-foreground">Avalie as comprovações enviadas pelos membros e libere o XP.</p>
+              </div>
+              {pendingTasks.length === 0 ? (
+                <div className="glass rounded-xl p-6 text-center">
+                  <p className="text-muted-foreground text-sm">Nenhuma tarefa pendente de aprovação.</p>
+                </div>
+              ) : (
+                pendingTasks.map((t) => (
+                  <div key={`${t.user_id}-${t.challenge_id}`} className="glass rounded-xl p-5 space-y-3">
+                    <div className="flex justify-between items-start border-b border-border pb-3">
+                      <div>
+                        <h4 className="font-heading text-lg text-foreground">{t.challenges?.title}</h4>
+                        <p className="text-xs text-muted-foreground">Enviado por @{t.profiles?.username} • <span className="text-primary">{t.challenges?.xp_reward} XP</span></p>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm" className="text-destructive border-destructive" onClick={async () => {
+                          await supabase.from("user_challenges").update({ status: "rejected" }).eq("user_id", t.user_id).eq("challenge_id", t.challenge_id);
+                          toast.success("Tarefa rejeitada.");
+                          fetchAll();
+                        }}>Rejeitar</Button>
+                        <Button variant="magical" size="sm" onClick={async () => {
+                          await supabase.from("user_challenges").update({ status: "approved", completed: true }).eq("user_id", t.user_id).eq("challenge_id", t.challenge_id);
+                          // Give XP
+                          const { data: prof } = await supabase.from("profiles").select("xp, house").eq("user_id", t.user_id).single();
+                          if (prof) {
+                            await supabase.from("profiles").update({ xp: prof.xp + t.challenges.xp_reward }).eq("user_id", t.user_id);
+                            await supabase.from("house_points").insert({ house: prof.house, points: t.challenges.xp_reward, reason: `Tarefa aprovada: ${t.challenges.title}`, awarded_by: user?.id } as never);
+                          }
+                          toast.success("Tarefa aprovada!");
+                          fetchAll();
+                        }}>Aprovar ✅</Button>
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-xs font-heading text-muted-foreground">Comprovação:</span>
+                      <div className="text-sm bg-secondary/30 p-3 rounded-md mt-1 italic text-foreground/80 break-words whitespace-pre-wrap">
+                        {t.proof?.includes("http") ? <a href={t.proof} target="_blank" className="text-primary hover:underline">{t.proof}</a> : t.proof}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+
+          {tab === "banned" && (
+            <div className="space-y-4">
+              <div className="glass rounded-xl p-4 flex gap-2">
+                <Input placeholder="Nova palavra proibida" value={newWord} onChange={(e) => setNewWord(e.target.value)} />
+                <Button variant="magical" onClick={async () => {
+                  if (!newWord.trim()) return;
+                  await supabase.from("banned_words").insert({ word: newWord.toLowerCase().trim() });
+                  setNewWord("");
+                  fetchAll();
+                  toast.success("Palavra adicionada!");
+                }}>Adicionar</Button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {bannedWords.map(bw => (
+                  <div key={bw.id} className="bg-secondary px-3 py-1.5 rounded-full flex items-center gap-2 text-sm border border-border">
+                    <span className="text-destructive font-mono">{bw.word}</span>
+                    <button onClick={async () => {
+                      await supabase.from("banned_words").delete().eq("id", bw.id);
+                      fetchAll();
+                    }} className="text-muted-foreground hover:text-foreground">✕</button>
+                  </div>
+                ))}
+                {bannedWords.length === 0 && <p className="text-sm text-muted-foreground">Nenhuma palavra cadastrada.</p>}
+              </div>
+            </div>
+          )}
+
+          {tab === "channels" && (
+            <div className="space-y-4">
+              {channels.map((c) => (
+                <div key={c.id} className="glass rounded-xl p-4 space-y-3">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h4 className="font-heading text-lg text-foreground flex items-center gap-2">
+                        {c.name} {c.is_premium && <span className="text-xl">✨</span>}
+                      </h4>
+                      <p className="text-xs text-muted-foreground">{c.description}</p>
+                    </div>
+                    <label className="flex items-center gap-2 cursor-pointer text-sm font-heading">
+                      <input type="checkbox" checked={c.is_premium} onChange={async (e) => {
+                        await supabase.from("channels").update({ is_premium: e.target.checked }).eq("id", c.id);
+                        fetchAll();
+                        toast.success("Status premium atualizado!");
+                      }} className="accent-primary" />
+                      Premium / Brilho
+                    </label>
+                  </div>
+                  <div>
+                    <span className="text-xs text-muted-foreground mb-1 block">Link do Meet / Jitsi (Transmissão)</span>
+                    <div className="flex gap-2">
+                      <Input defaultValue={c.meet_link || ""} placeholder="https://meet.jit.si/HogwartsRoom" onBlur={async (e) => {
+                        if (e.target.value === c.meet_link) return;
+                        await supabase.from("channels").update({ meet_link: e.target.value || null }).eq("id", c.id);
+                        toast.success("Link do Meet salvo!");
+                        fetchAll();
+                      }} />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </>

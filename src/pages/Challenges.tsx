@@ -19,9 +19,12 @@ export default function Challenges() {
   const { user, profile, fetchProfile } = useAuth();
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
+  const [pendingIds, setPendingIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [answeringId, setAnsweringId] = useState<string | null>(null);
   const [answerInput, setAnswerInput] = useState("");
+  const [submittingProof, setSubmittingProof] = useState<string | null>(null);
+  const [proofInput, setProofInput] = useState("");
 
   const load = useCallback(async () => {
     const { data: ch } = await supabase.from("challenges").select("*").eq("active", true).order("created_at", { ascending: false });
@@ -29,10 +32,17 @@ export default function Challenges() {
     if (user) {
       const { data: uc } = await supabase
         .from("user_challenges")
-        .select("challenge_id, completed")
-        .eq("user_id", user.id)
-        .eq("completed", true);
-      setCompletedIds(new Set((uc || []).map((r) => r.challenge_id)));
+        .select("challenge_id, status")
+        .eq("user_id", user.id);
+      
+      const comp = new Set<string>();
+      const pend = new Set<string>();
+      (uc || []).forEach(r => {
+        if (r.status === 'approved' || r.status === 'completed') comp.add(r.challenge_id);
+        if (r.status === 'pending') pend.add(r.challenge_id);
+      });
+      setCompletedIds(comp);
+      setPendingIds(pend);
     }
     setLoading(false);
   }, [user]);
@@ -53,20 +63,41 @@ export default function Challenges() {
         toast.error("Resposta incorreta! Tente novamente.");
         return;
       }
+
+      // Quiz is auto-approved
+      const { error: ucErr } = await supabase
+        .from("user_challenges")
+        .insert({ user_id: user.id, challenge_id: c.id, completed: true, status: 'approved', completed_at: new Date().toISOString() } as never);
+      if (ucErr) { toast.error("Erro: " + ucErr.message); return; }
+
+      await supabase.from("profiles").update({ xp: profile.xp + c.xp_reward } as never).eq("user_id", user.id);
+      await supabase.from("house_points").insert({ house: profile.house, points: c.xp_reward, reason: `Desafio: ${c.title}`, awarded_by: user.id } as never);
+      await fetchProfile(user.id);
+
+      toast.success(`+${c.xp_reward} XP! ⚡ Pontos para ${profile.house}!`);
+      setCompletedIds((s) => new Set([...s, c.id]));
+      setAnsweringId(null);
+    } else {
+      // Normal task needs proof
+      if (submittingProof !== c.id) {
+        setSubmittingProof(c.id);
+        setProofInput("");
+        return;
+      }
+      if (!proofInput.trim()) {
+        toast.error("Por favor, forneça uma comprovação (texto ou link).");
+        return;
+      }
+
+      const { error: ucErr } = await supabase
+        .from("user_challenges")
+        .insert({ user_id: user.id, challenge_id: c.id, completed: false, status: 'pending', proof: proofInput, completed_at: new Date().toISOString() } as never);
+      if (ucErr) { toast.error("Erro: " + ucErr.message); return; }
+
+      toast.success("Comprovação enviada! XP será creditado após aprovação da moderação. 🦉");
+      setPendingIds((s) => new Set([...s, c.id]));
+      setSubmittingProof(null);
     }
-
-    const { error: ucErr } = await supabase
-      .from("user_challenges")
-      .insert({ user_id: user.id, challenge_id: c.id, completed: true, completed_at: new Date().toISOString() } as never);
-    if (ucErr) { toast.error("Erro: " + ucErr.message); return; }
-
-    await supabase.from("profiles").update({ xp: profile.xp + c.xp_reward } as never).eq("user_id", user.id);
-    await supabase.from("house_points").insert({ house: profile.house, points: c.xp_reward, reason: `Desafio: ${c.title}`, awarded_by: user.id } as never);
-    await fetchProfile(user.id);
-
-    toast.success(`+${c.xp_reward} XP! ⚡ Pontos para ${profile.house}!`);
-    setCompletedIds((s) => new Set([...s, c.id]));
-    setAnsweringId(null);
   };
 
   const daily = challenges.filter((c) => c.type === "daily");
@@ -100,15 +131,31 @@ export default function Challenges() {
           </div>
         )}
 
-        {answeringId !== c.id && (
+        {submittingProof === c.id && !done && (
+          <div className="mb-4 space-y-2">
+            <p className="text-sm font-heading text-primary">Comprovação da Tarefa</p>
+            <textarea 
+              className="w-full bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground focus:outline-none border border-border min-h-[60px]"
+              placeholder="Cole o link ou digite como você completou..."
+              value={proofInput}
+              onChange={(e) => setProofInput(e.target.value)}
+            />
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" className="w-1/2 text-xs" onClick={() => setSubmittingProof(null)}>Cancelar</Button>
+              <Button variant="magical" size="sm" className="w-1/2 text-xs" onClick={() => completeChallenge(c)}>Enviar para Análise</Button>
+            </div>
+          </div>
+        )}
+
+        {answeringId !== c.id && submittingProof !== c.id && (
           <Button
             variant="magical"
             size="sm"
             className="font-heading text-xs w-full"
-            disabled={done}
+            disabled={done || pendingIds.has(c.id)}
             onClick={() => completeChallenge(c)}
           >
-            {done ? "✅ Concluído" : isWeekly ? "Participar do Desafio ⚔️" : "Aceitar Desafio ⚡"}
+            {done ? "✅ Concluído" : pendingIds.has(c.id) ? "⏳ Em Análise" : (c.question ? "Responder Charada 🦉" : "Enviar Comprovação ⚡")}
           </Button>
         )}
       </div>

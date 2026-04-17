@@ -3,6 +3,7 @@ import { useAuth } from "@/lib/auth";
 import { HOUSES, getLevelFromXP } from "@/lib/store";
 import HouseCrest from "@/components/HouseCrest";
 import XPBar from "@/components/XPBar";
+import MedalBadge, { getMedalForXP } from "@/components/MedalBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
@@ -78,7 +79,10 @@ export default function Profile() {
 
         {!editing ? (
           <>
-            <h1 className="font-heading text-2xl text-foreground">{profile.full_name}</h1>
+            <h1 className="font-heading text-2xl text-foreground flex items-center justify-center gap-2">
+              {profile.full_name}
+              <MedalBadge xp={profile.xp} />
+            </h1>
             <p className="text-muted-foreground text-sm">@{profile.username}</p>
             <p className="text-sm text-muted-foreground mt-3 font-serif italic">{profile.bio || "Sem bio ainda..."}</p>
             <Button variant="magical" size="sm" className="mt-4 font-heading text-xs" onClick={startEdit}>
@@ -126,7 +130,7 @@ export default function Profile() {
           <p className="text-xs text-muted-foreground">Nível</p>
         </div>
         <div className="glass rounded-xl p-4 text-center">
-          <p className="text-2xl font-heading text-foreground">0</p>
+          <p className="text-2xl font-heading text-foreground">{getMedalForXP(profile.xp) ? 1 : 0}</p>
           <p className="text-xs text-muted-foreground">Badges</p>
         </div>
       </div>

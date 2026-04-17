@@ -19,6 +19,7 @@ import NotFound from "./pages/NotFound";
 
 import Ficha from "./pages/Ficha";
 import Chats from "./pages/Chats";
+import ChatRoom from "./pages/ChatRoom";
 import InstaHogwarts from "./pages/InstaHogwarts";
 
 const queryClient = new QueryClient();
@@ -43,6 +44,7 @@ const App = () => (
             <Route path="/dashboard" element={<DashboardLayout />}>
               <Route index element={<Feed />} />
               <Route path="chats" element={<Chats />} />
+              <Route path="chat/:roomId" element={<ChatRoom />} />
               <Route path="instahogwarts" element={<InstaHogwarts />} />
               <Route path="houses" element={<Houses />} />
               <Route path="ranking" element={<Ranking />} />

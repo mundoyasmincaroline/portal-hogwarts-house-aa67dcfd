@@ -1,6 +1,7 @@
 import { MOCK_MEMBERS, HOUSES, getLevelFromXP } from "@/lib/store";
 import HouseCrest from "@/components/HouseCrest";
 import XPBar from "@/components/XPBar";
+import MedalBadge from "@/components/MedalBadge";
 
 export default function Ranking() {
   const sorted = [...MOCK_MEMBERS].sort((a, b) => b.xp - a.xp);
@@ -20,7 +21,10 @@ export default function Ranking() {
             <div className="w-12 h-12 mx-auto rounded-full bg-secondary flex items-center justify-center text-xl font-heading text-primary mb-2">
               {u.fullName[0]}
             </div>
-            <p className="font-heading text-sm text-foreground">{u.fullName}</p>
+            <p className="font-heading text-sm text-foreground flex items-center justify-center gap-1">
+              {u.fullName}
+              <MedalBadge xp={u.xp} />
+            </p>
             <p className="text-xs text-muted-foreground">@{u.username}</p>
             <HouseCrest house={u.house} size="sm" />
             <p className="font-heading text-primary text-sm mt-1">{u.xp} XP</p>
@@ -40,6 +44,7 @@ export default function Ranking() {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <p className="text-sm font-medium text-foreground truncate">{u.fullName}</p>
+                <MedalBadge xp={u.xp} />
                 <HouseCrest house={u.house} size="sm" />
               </div>
               <XPBar xp={u.xp} showLabel={false} />

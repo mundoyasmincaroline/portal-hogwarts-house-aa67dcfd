@@ -1,232 +1,121 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import HouseCrest from "@/components/HouseCrest";
 import { House } from "@/lib/store";
 
-interface Channel {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  allowed_houses: string[] | null;
-  is_admin_only: boolean;
-}
-
-interface Message {
-  id: string;
-  channel_id: string;
-  user_id: string;
-  content: string;
-  created_at: string;
-  profiles: {
-    full_name: string;
-    username: string;
-    house: House;
-    avatar_url: string | null;
-  };
-}
-
 export default function Chats() {
-  const { user, profile } = useAuth();
-  const [channels, setChannels] = useState<Channel[]>([]);
-  const [activeChannel, setActiveChannel] = useState<Channel | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState("");
-  const [loadingChannels, setLoadingChannels] = useState(true);
-  const [loadingMessages, setLoadingMessages] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { profile, isAdmin } = useAuth();
+  const navigate = useNavigate();
+  const [loadingRoom, setLoadingRoom] = useState<string | null>(null);
+  const [channels, setChannels] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchChannels();
-  }, [user]);
-
-  useEffect(() => {
-    if (activeChannel) {
-      fetchMessages(activeChannel.id);
-      
-      const subscription = supabase
-        .channel(`messages:${activeChannel.id}`)
-        .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `channel_id=eq.${activeChannel.id}` }, async (payload) => {
-          // Fetch user info for the new message
-          const { data: userData } = await supabase.from("profiles").select("full_name, username, house, avatar_url").eq("user_id", payload.new.user_id).single();
-          if (userData) {
-            setMessages(prev => [...prev, { ...payload.new, profiles: userData } as Message]);
-          }
-        })
-        .subscribe();
-
-      return () => {
-        supabase.removeChannel(subscription);
-      };
-    }
-  }, [activeChannel]);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, []);
 
   const fetchChannels = async () => {
-    const { data, error } = await supabase.from("channels").select("*").order("category").order("name");
-    if (data) {
-      setChannels(data);
-      if (data.length > 0 && !activeChannel) {
-        setActiveChannel(data[0]);
+    const { data } = await supabase.from("channels").select("*").order("name");
+    if (data) setChannels(data);
+    setLoading(false);
+  };
+
+  const handleEnterRoom = async (roomDef: any) => {
+    // Validação local de acesso
+    if (roomDef.is_admin_only && !isAdmin) {
+      toast.error("Acesso negado. Apenas membros da Ordem da Fênix podem entrar aqui.");
+      return;
+    }
+    if (roomDef.allowed_houses && profile) {
+      if (!roomDef.allowed_houses.includes(profile.house as House) && !isAdmin) {
+        toast.error("Acesso negado. Esta não é a sua Sala Comunal.");
+        return;
       }
     }
-    setLoadingChannels(false);
-  };
 
-  const fetchMessages = async (channelId: string) => {
-    setLoadingMessages(true);
-    const { data, error } = await supabase
-      .from("messages")
-      .select("*, profiles(full_name, username, house, avatar_url)")
-      .eq("channel_id", channelId)
-      .order("created_at", { ascending: true })
-      .limit(100);
-    
-    if (data) setMessages(data as unknown as Message[]);
-    setLoadingMessages(false);
-  };
+    setLoadingRoom(roomDef.name);
 
-  const sendMessage = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || !activeChannel || !user) return;
-    
-    const content = input;
-    setInput(""); // Optimistic clear
-
-    const { error } = await supabase.from("messages").insert({
-      channel_id: activeChannel.id,
-      user_id: user.id,
-      content
-    });
-
-    if (error) {
-      toast.error("Erro ao enviar mensagem: " + error.message);
-      setInput(content); // Restore if error
+    try {
+      if (roomDef.id) {
+        navigate(`/dashboard/chat/${roomDef.id}`);
+        return;
+      }
+    } catch (err: any) {
+      toast.error("Ocorreu um erro mágico ao tentar abrir as portas do salão: " + err.message);
+    } finally {
+      setLoadingRoom(null);
     }
   };
 
-  const categories = Array.from(new Set(channels.map(c => c.category)));
+  const categories = Array.from(new Set(channels.map((r) => r.category)));
 
-  if (loadingChannels) return <div className="p-10 text-center text-muted-foreground">Conectando à Rede de Flu...</div>;
+  if (loading) return <div className="text-center py-20">Carregando salões...</div>;
 
   return (
-    <div className="flex h-[calc(100vh-100px)] glass rounded-2xl overflow-hidden border border-border">
-      {/* Sidebar */}
-      <div className="w-64 bg-card/50 border-r border-border flex flex-col hidden md:flex">
-        <div className="p-4 border-b border-border">
-          <h2 className="font-heading text-lg text-gold-gradient">Canais de Flu</h2>
-        </div>
-        <div className="flex-1 overflow-y-auto p-2 space-y-4">
-          {categories.map(cat => (
-            <div key={cat}>
-              <h3 className="text-xs font-heading text-muted-foreground uppercase tracking-wider px-2 mb-1">{cat}</h3>
-              <div className="space-y-0.5">
-                {channels.filter(c => c.category === cat).map(c => (
-                  <button
-                    key={c.id}
-                    onClick={() => setActiveChannel(c)}
-                    className={`w-full text-left px-3 py-1.5 rounded-md text-sm transition-colors ${
-                      activeChannel?.id === c.id ? "bg-primary/20 text-primary font-medium" : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-                    }`}
-                  >
-                    # {c.name.toLowerCase().replace(/\s+/g, '-')}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ))}
+    <div className="max-w-5xl mx-auto space-y-8 pb-10">
+      <div className="glass rounded-3xl p-8 text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2070')] bg-cover bg-center opacity-10 mix-blend-overlay"></div>
+        <div className="relative z-10">
+          <h1 className="font-heading text-4xl md:text-5xl text-gold-gradient mb-3 drop-shadow-lg">Salões do Castelo</h1>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Explore os corredores, salas comunais e espaços do castelo. Cada porta leva a uma nova aventura.
+          </p>
         </div>
       </div>
 
-      {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col min-w-0 bg-background/50">
-        {activeChannel ? (
-          <>
-            {/* Header */}
-            <div className="p-4 border-b border-border flex items-center justify-between bg-card/30">
-              <div>
-                <h3 className="font-heading text-lg text-foreground"># {activeChannel.name.toLowerCase().replace(/\s+/g, '-')}</h3>
-                <p className="text-xs text-muted-foreground">{activeChannel.description}</p>
-              </div>
-            </div>
-
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {loadingMessages ? (
-                <div className="text-center text-xs text-muted-foreground py-10">Lendo as folhas de chá...</div>
-              ) : messages.length === 0 ? (
-                <div className="h-full flex items-center justify-center text-center">
-                  <div>
-                    <div className="text-4xl mb-3 opacity-50">👻</div>
-                    <p className="text-muted-foreground text-sm">Este canal está mais vazio que o Ministério no domingo.</p>
-                    <p className="text-xs text-muted-foreground">Seja o primeiro a enviar uma mensagem!</p>
-                  </div>
-                </div>
-              ) : (
-                messages.map((m, i) => {
-                  const showHeader = i === 0 || messages[i-1].user_id !== m.user_id || new Date(m.created_at).getTime() - new Date(messages[i-1].created_at).getTime() > 300000;
-                  return (
-                    <div key={m.id} className={`group flex gap-3 ${showHeader ? 'mt-4' : 'mt-1'}`}>
-                      {showHeader ? (
-                        <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-border">
-                          {m.profiles.avatar_url ? (
-                            <img src={m.profiles.avatar_url} alt={m.profiles.full_name} className="w-full h-full object-cover" />
-                          ) : (
-                            <div className="w-full h-full bg-secondary flex items-center justify-center text-sm font-heading text-primary">
-                              {m.profiles.full_name[0]}
-                            </div>
-                          )}
-                        </div>
-                      ) : (
-                        <div className="w-10 flex-shrink-0 opacity-0 group-hover:opacity-100 flex items-center justify-center">
-                          <span className="text-[10px] text-muted-foreground">{new Date(m.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                        </div>
-                      )}
-                      
-                      <div className="flex-1 min-w-0">
-                        {showHeader && (
-                          <div className="flex items-center gap-2 mb-0.5">
-                            <span className="font-medium text-sm text-foreground">{m.profiles.full_name}</span>
-                            <HouseCrest house={m.profiles.house} size="sm" />
-                            <span className="text-xs text-muted-foreground ml-1">{new Date(m.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                          </div>
-                        )}
-                        <p className="text-sm text-foreground/90 whitespace-pre-wrap leading-relaxed">{m.content}</p>
+      <div className="space-y-10">
+        {categories.map((category) => (
+          <div key={category}>
+            <h2 className="font-heading text-xl text-primary mb-4 flex items-center gap-2">
+              <span className="w-8 h-[1px] bg-primary/30"></span>
+              {category}
+              <span className="flex-1 h-[1px] bg-primary/10"></span>
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {channels.filter((r) => r.category === category).map((room) => {
+                const isLocked = (room.is_admin_only && !isAdmin) || 
+                                 (room.allowed_houses && profile && !room.allowed_houses.includes(profile.house as House) && !isAdmin);
+                
+                return (
+                  <div 
+                    key={room.name}
+                    onClick={() => !isLocked && handleEnterRoom(room)}
+                    className={`relative glass rounded-2xl p-5 border transition-all duration-300
+                      ${isLocked ? "opacity-60 cursor-not-allowed grayscale-[30%] border-border/50" : 
+                        room.is_premium ? "border-primary/80 shadow-[0_0_15px_rgba(212,175,55,0.4)] hover:shadow-[0_0_25px_rgba(212,175,55,0.6)] cursor-pointer group bg-primary/5" : 
+                        "border-border/50 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(212,175,55,0.15)] hover:-translate-y-1 cursor-pointer group"}
+                    `}
+                  >
+                    {room.is_premium && (
+                      <div className="absolute -top-2 -right-2 text-2xl animate-bounce">✨</div>
+                    )}
+                    <div className="flex justify-between items-start mb-3">
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl group-hover:scale-110 transition-transform ${room.is_premium ? 'bg-primary/20 ring-2 ring-primary/50 text-primary' : 'bg-secondary/50'}`}>
+                        {room.name[0]}
                       </div>
+                      {isLocked && <div className="text-xl text-muted-foreground" title="Acesso Negado">🔒</div>}
                     </div>
-                  );
-                })
-              )}
-              <div ref={messagesEndRef} />
-            </div>
+                    
+                    <h3 className={`font-heading text-lg mb-1 transition-colors ${room.is_premium ? 'text-primary drop-shadow-md' : 'text-foreground group-hover:text-primary'}`}>
+                      {room.name}
+                    </h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
+                      {room.description}
+                    </p>
 
-            {/* Input */}
-            <div className="p-4 bg-card/30 border-t border-border">
-              <form onSubmit={sendMessage} className="flex gap-2">
-                <Input 
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder={`Mande uma mensagem em #${activeChannel.name.toLowerCase().replace(/\s+/g, '-')}...`}
-                  className="flex-1 bg-secondary/50 border-border"
-                />
-                <Button type="submit" variant="magical" size="icon" disabled={!input.trim()}>
-                  ✨
-                </Button>
-              </form>
+                    {loadingRoom === room.name && (
+                      <div className="absolute inset-0 bg-background/80 rounded-2xl flex items-center justify-center backdrop-blur-sm z-10">
+                        <span className="text-2xl animate-pulse">✨</span>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
-          </>
-        ) : (
-          <div className="h-full flex items-center justify-center text-muted-foreground">
-            Selecione um canal
           </div>
-        )}
+        ))}
       </div>
     </div>
   );
