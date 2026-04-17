@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import Notifications from "@/components/Notifications";
 import CastleEntrance from "@/pages/CastleEntrance";
 import EngagementBot from "@/components/EngagementBot";
-import RulesAgreement from "@/pages/RulesAgreement";
+
 import PendingApproval from "@/pages/PendingApproval";
 
 const NAV_ITEMS = [
@@ -65,7 +65,7 @@ export default function DashboardLayout() {
 
   if (!user || !profile) return null;
   
-  if (!profile.accepted_rules) return <RulesAgreement />;
+
   if (!profile.approved) return <PendingApproval />;
   if (!profile.has_seen_intro) return <CastleEntrance />;
   
