@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/lib/auth";
 import { type House, HOUSES } from "@/lib/store";
+import { toast } from "sonner";
 import HouseCrest from "@/components/HouseCrest";
 import MagicalParticles from "@/components/MagicalParticles";
 
@@ -53,6 +54,7 @@ export default function Register() {
     if (result.success) {
       setStep(3);
     } else {
+      toast.error(result.error || "Erro ao criar conta");
       setErrors({ general: result.error || "Erro ao criar conta" });
     }
   };
@@ -124,6 +126,7 @@ export default function Register() {
               ))}
             </div>
             {errors.house && <p className="text-destructive text-xs text-center">{errors.house}</p>}
+            {errors.general && <p className="text-destructive text-sm text-center font-bold bg-destructive/10 p-2 rounded-lg border border-destructive/20">{errors.general}</p>}
             <div className="flex gap-3">
               <Button variant="outline" className="flex-1 font-heading" onClick={() => setStep(1)}>← Voltar</Button>
               <Button variant="magical" className="flex-1 font-heading" onClick={handleSubmit} disabled={loading}>

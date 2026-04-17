@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export default function RulesAgreement() {
   const { updateProfile } = useAuth();
@@ -8,8 +9,14 @@ export default function RulesAgreement() {
 
   const handleAccept = async () => {
     setLoading(true);
-    await updateProfile({ accepted_rules: true });
+    const result = await updateProfile({ accepted_rules: true });
     setLoading(false);
+    if (!result.success) {
+      toast.error("Erro ao aceitar as regras: " + result.error);
+    } else {
+      toast.success("Regras aceitas! Seja bem-vindo.");
+      window.location.reload(); // Forçar recarregamento caso o estado não atualize a view sozinho
+    }
   };
 
   return (
