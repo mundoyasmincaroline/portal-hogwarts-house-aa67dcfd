@@ -12,7 +12,7 @@ export default function UserCard({ user, compact = false }: { user: UserProfile;
           <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-sm font-heading text-primary">
             {user.fullName[0]}
           </div>
-          {user.online && <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-green-500 border-2 border-card" />}
+          <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-card ${user.online ? "bg-green-500" : "bg-muted-foreground"}`} title={user.online ? "Online" : "Offline"} />
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium truncate">{user.fullName}</p>
@@ -30,7 +30,7 @@ export default function UserCard({ user, compact = false }: { user: UserProfile;
           <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary/30 to-secondary flex items-center justify-center text-2xl font-heading text-primary">
             {user.fullName[0]}
           </div>
-          {user.online && <div className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-green-500 border-2 border-card" />}
+          <div className={`absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-card ${user.online ? "bg-green-500" : "bg-muted-foreground"}`} title={user.online ? "Online" : "Offline"} />
         </div>
         <div className="flex-1">
           <div className="flex items-center gap-2">
