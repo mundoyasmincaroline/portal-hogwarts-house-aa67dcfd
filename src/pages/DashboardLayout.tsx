@@ -19,6 +19,7 @@ const NAV_ITEMS = [
   { icon: "🏆", label: "Ranking", path: "/dashboard/ranking" },
   { icon: "⚔️", label: "Desafios", path: "/dashboard/challenges" },
   { icon: "🛍️", label: "Loja", path: "/dashboard/shop" },
+  { icon: "📜", label: "Regras", path: "/dashboard/rules" },
 ];
 
 const ADMIN_ITEMS = [

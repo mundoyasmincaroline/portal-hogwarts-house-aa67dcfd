@@ -20,6 +20,7 @@ import Chats from "./pages/Chats";
 import ChatRoom from "./pages/ChatRoom";
 import InstaHogwarts from "./pages/InstaHogwarts";
 import EmojiShop from "./components/EmojiShop";
+import Rules from "./pages/Rules";
 
 const queryClient = new QueryClient();
 
@@ -52,6 +53,7 @@ const App = () => (
               <Route path="profile/:userId" element={<Profile />} />
               <Route path="admin" element={<Admin />} />
               <Route path="shop" element={<EmojiShop />} />
+              <Route path="rules" element={<Rules />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
