@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export default function BirthdayBanner() {
-  const [birthdayToday, setBirthdayToday] = useState<any>(null);
+  const [birthdayChars, setBirthdayChars] = useState<any[]>([]);
+  const [birthdayMembers, setBirthdayMembers] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchBirthdays = async () => {
@@ -10,49 +11,66 @@ export default function BirthdayBanner() {
       const month = today.getMonth() + 1;
       const day = today.getDate();
 
-      // PostgreSQL EXTRACT requires a bit of logic, but for simplicity, let's fetch all and filter in JS 
-      // since the list of characters is small.
-      const { data } = await supabase.from('characters_birthdays').select('*');
+      const { data: chars } = await supabase.from('characters_birthdays').select('*');
+      const { data: members } = await supabase.from('profiles').select('full_name, house, birth_date').not('birth_date', 'is', null);
       
-      if (data) {
-        const birthday = data.find(char => {
-          const charDate = new Date(char.birth_date);
-          // Handling timezone issues by using string parts or UTC
+      if (chars) {
+        const todaysChars = chars.filter(char => {
           const charStr = char.birth_date.split('-');
-          const cMonth = parseInt(charStr[1]);
-          const cDay = parseInt(charStr[2]);
-          return cMonth === month && cDay === day;
+          return parseInt(charStr[1]) === month && parseInt(charStr[2]) === day;
         });
+        setBirthdayChars(todaysChars.map(c => {
+          c.age = today.getFullYear() - new Date(c.birth_date).getFullYear();
+          return c;
+        }));
+      }
 
-        if (birthday) {
-          // Calculate age
-          const birthYear = new Date(birthday.birth_date).getFullYear();
-          const currentYear = today.getFullYear();
-          birthday.age = currentYear - birthYear;
-          setBirthdayToday(birthday);
-        }
+      if (members) {
+        const todaysMembers = members.filter(m => {
+          const mStr = m.birth_date.split('-');
+          return parseInt(mStr[1]) === month && parseInt(mStr[2]) === day;
+        });
+        setBirthdayMembers(todaysMembers);
       }
     };
 
     fetchBirthdays();
   }, []);
 
-  if (!birthdayToday) return null;
+  if (birthdayChars.length === 0 && birthdayMembers.length === 0) return null;
 
   return (
-    <div className="bg-gradient-to-r from-primary/30 via-secondary to-primary/30 border border-primary/50 text-foreground px-4 py-3 rounded-xl shadow-lg mb-6 flex flex-col md:flex-row items-center justify-between gap-4 animate-in slide-in-from-top-4 duration-500">
-      <div className="flex items-center gap-4">
-        <div className="text-4xl animate-bounce">🎂</div>
-        <div>
-          <h3 className="font-heading text-lg text-primary drop-shadow-sm">Aniversário Mágico!</h3>
-          <p className="text-sm">
-            Hoje é o aniversário de <strong className="text-primary">{birthdayToday.name}</strong> ({birthdayToday.age} anos)! 
-          </p>
+    <div className="space-y-3 mb-6">
+      {birthdayMembers.map((m, i) => (
+        <div key={`m-${i}`} className="bg-gradient-to-r from-primary/30 via-secondary to-primary/30 border border-primary/50 text-foreground px-4 py-3 rounded-xl shadow-lg flex flex-col md:flex-row items-center justify-between gap-4 animate-in slide-in-from-top-4 duration-500">
+          <div className="flex items-center gap-4">
+            <div className="text-4xl animate-bounce">🎈</div>
+            <div>
+              <h3 className="font-heading text-lg text-primary drop-shadow-sm">Parabéns, {m.full_name}!</h3>
+              <p className="text-sm">
+                Hoje é o aniversário do nosso membro mágico! Mande felicitações para a casa de <strong className="capitalize text-primary">{m.house}</strong>!
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="text-xs px-3 py-1 bg-background/50 rounded-full border border-primary/30">
-        Casa: <span className="capitalize text-primary font-bold">{birthdayToday.house}</span>
-      </div>
+      ))}
+
+      {birthdayChars.map((c, i) => (
+        <div key={`c-${i}`} className="bg-gradient-to-r from-primary/30 via-secondary to-primary/30 border border-primary/50 text-foreground px-4 py-3 rounded-xl shadow-lg flex flex-col md:flex-row items-center justify-between gap-4 animate-in slide-in-from-top-4 duration-500">
+          <div className="flex items-center gap-4">
+            <div className="text-4xl animate-bounce">🎂</div>
+            <div>
+              <h3 className="font-heading text-lg text-primary drop-shadow-sm">Aniversário no Mundo Bruxo!</h3>
+              <p className="text-sm">
+                Hoje comemoramos o aniversário de <strong className="text-primary">{c.name}</strong> ({c.age} anos)! 
+              </p>
+            </div>
+          </div>
+          <div className="text-xs px-3 py-1 bg-background/50 rounded-full border border-primary/30">
+            Casa: <span className="capitalize text-primary font-bold">{c.house}</span>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

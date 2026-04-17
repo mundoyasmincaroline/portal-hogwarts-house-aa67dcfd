@@ -49,6 +49,7 @@ const App = () => (
               <Route path="ranking" element={<Ranking />} />
               <Route path="challenges" element={<Challenges />} />
               <Route path="profile" element={<Profile />} />
+              <Route path="profile/:userId" element={<Profile />} />
               <Route path="admin" element={<Admin />} />
               <Route path="shop" element={<EmojiShop />} />
             </Route>

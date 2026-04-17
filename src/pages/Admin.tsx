@@ -50,6 +50,7 @@ export default function Admin() {
   const [challenges, setChallenges] = useState<ChallengeRow[]>([]);
   const [logs, setLogs] = useState<ModLog[]>([]);
   const [fichas, setFichas] = useState<any[]>([]);
+  const [pendingMembers, setPendingMembers] = useState<MemberProfile[]>([]);
   const [pendingTasks, setPendingTasks] = useState<any[]>([]);
   const [bannedWords, setBannedWords] = useState<any[]>([]);
   const [channels, setChannels] = useState<any[]>([]);
@@ -59,10 +60,11 @@ export default function Admin() {
 
   const fetchAll = async () => {
     const [
-      { data: m }, { data: c }, { data: l }, { data: f },
+      { data: m }, { data: pm }, { data: c }, { data: l }, { data: f },
       { data: pt }, { data: bw }, { data: ch }
     ] = await Promise.all([
-      supabase.from("profiles").select("*").order("created_at", { ascending: false }),
+      supabase.from("profiles").select("*").eq("approved", true).order("created_at", { ascending: false }),
+      supabase.from("profiles").select("*").eq("approved", false).order("created_at", { ascending: false }),
       supabase.from("challenges").select("*").order("created_at", { ascending: false }),
       supabase.from("moderation_log").select("*").order("created_at", { ascending: false }).limit(50),
       supabase.from("fichas").select("*, profiles(full_name, username)").eq("status", "pending").order("created_at", { ascending: false }),
@@ -71,6 +73,7 @@ export default function Admin() {
       supabase.from("channels").select("*").order("name"),
     ]);
     if (m) setMembers(m as unknown as MemberProfile[]);
+    if (pm) setPendingMembers(pm as unknown as MemberProfile[]);
     if (c) setChallenges(c as ChallengeRow[]);
     if (l) setLogs(l as ModLog[]);
     if (f) setFichas(f);
@@ -120,6 +123,7 @@ export default function Admin() {
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
     { id: "members", label: "Membros", icon: "👥" },
+    { id: "pending_members", label: "Novos Membros", icon: "⏳" },
     { id: "challenges", label: "Desafios", icon: "⚔️" },
     { id: "houses", label: "Casas", icon: "🏰" },
     { id: "fichas", label: "Fichas", icon: "📜" },
@@ -188,6 +192,44 @@ export default function Admin() {
                   {m.online && <span className="text-xs text-green-500">🟢 Online</span>}
                 </div>
               ))}
+            </div>
+          )}
+
+          {tab === "pending_members" && (
+            <div className="space-y-4">
+              <div className="glass rounded-xl p-4">
+                <h3 className="font-heading text-sm text-primary mb-1">⏳ Novos Membros Pendentes</h3>
+                <p className="text-xs text-muted-foreground">Aprove a entrada dos novos bruxos no portal.</p>
+              </div>
+              {pendingMembers.length === 0 ? (
+                <div className="glass rounded-xl p-6 text-center">
+                  <p className="text-muted-foreground text-sm">Nenhum membro aguardando aprovação.</p>
+                </div>
+              ) : (
+                pendingMembers.map((m) => (
+                  <div key={m.id} className="glass rounded-xl p-4 flex items-center gap-4">
+                    <div className="relative">
+                      <HouseCrest house={m.house} size="sm" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-heading text-foreground">{m.full_name}</p>
+                      <p className="text-xs text-muted-foreground">@{m.username} • {m.age} anos</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm" className="text-destructive border-destructive" onClick={async () => {
+                        await supabase.from("profiles").delete().eq("user_id", m.user_id);
+                        toast.success("Membro rejeitado.");
+                        fetchAll();
+                      }}>Rejeitar</Button>
+                      <Button variant="magical" size="sm" onClick={async () => {
+                        await supabase.from("profiles").update({ approved: true }).eq("user_id", m.user_id);
+                        toast.success("Membro aprovado!");
+                        fetchAll();
+                      }}>Aprovar ✅</Button>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           )}
 

@@ -10,6 +10,7 @@ export interface Profile {
   full_name: string;
   username: string;
   age: number;
+  birth_date: string | null;
   house: House;
   level: number;
   xp: number;
@@ -43,6 +44,7 @@ interface AuthState {
   fetchProfile: (userId: string) => Promise<void>;
   checkAdmin: (userId: string) => Promise<boolean>;
   updateProfile: (updates: Partial<Profile>) => Promise<{ success: boolean; error?: string }>;
+  updatePassword: (password: string) => Promise<{ success: boolean; error?: string }>;
   pingPresence: () => Promise<void>;
 }
 
@@ -140,6 +142,12 @@ export const useAuth = create<AuthState>((set, get) => ({
       .eq("user_id", userId);
     if (error) return { success: false, error: error.message };
     await get().fetchProfile(userId);
+    return { success: true };
+  },
+
+  updatePassword: async (password) => {
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) return { success: false, error: error.message };
     return { success: true };
   },
 
