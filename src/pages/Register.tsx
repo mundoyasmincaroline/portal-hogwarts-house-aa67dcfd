@@ -17,6 +17,10 @@ export default function Register() {
     fullName: "", username: "", age: "", house: "" as House | "", email: "", password: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  
+  // Captcha State
+  const [captchaParams, setCaptchaParams] = useState({ num1: Math.floor(Math.random() * 10) + 1, num2: Math.floor(Math.random() * 10) + 1 });
+  const [captchaAnswer, setCaptchaAnswer] = useState("");
 
   const validateStep1 = () => {
     const errs: Record<string, string> = {};
@@ -28,6 +32,9 @@ export default function Register() {
     const age = parseInt(form.age);
     if (!form.age || isNaN(age)) errs.age = "Idade é obrigatória";
     else if (age < 13 || age > 17) errs.age = "Apenas bruxos de 13 a 17 anos";
+    const expectedAnswer = captchaParams.num1 + captchaParams.num2;
+    if (parseInt(captchaAnswer) !== expectedAnswer) errs.captcha = "Resposta incorreta";
+    
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -101,6 +108,14 @@ export default function Register() {
               <label className="text-sm font-heading text-muted-foreground block mb-1">Idade</label>
               <Input type="number" min={13} max={17} value={form.age} onChange={(e) => setForm({ ...form, age: e.target.value })} placeholder="13-17" className="bg-secondary/50" />
               {errors.age && <p className="text-destructive text-xs mt-1">{errors.age}</p>}
+            </div>
+            <div className="bg-primary/10 p-4 rounded-xl border border-primary/20">
+              <label className="text-sm font-heading text-primary block mb-1 flex items-center gap-2">
+                <span>🛡️</span> Prove que não é um trasgo (Bot)
+              </label>
+              <p className="text-xs text-muted-foreground mb-2">Resolva a soma: {captchaParams.num1} + {captchaParams.num2} = ?</p>
+              <Input type="number" value={captchaAnswer} onChange={(e) => setCaptchaAnswer(e.target.value)} placeholder="Sua resposta..." className="bg-secondary/50 border-primary/50" />
+              {errors.captcha && <p className="text-destructive text-xs mt-1 font-bold">{errors.captcha}</p>}
             </div>
             {errors.general && <p className="text-destructive text-sm">{errors.general}</p>}
             <Button variant="magical" className="w-full font-heading" onClick={handleNext}>
