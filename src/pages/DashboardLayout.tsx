@@ -3,6 +3,7 @@ import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";
 import { HOUSES } from "@/lib/store";
+import { supabase } from "@/integrations/supabase/client";
 
 const NAV_ITEMS = [
   { icon: "🏠", label: "Feed", path: "/dashboard" },
@@ -17,16 +18,31 @@ const ADMIN_ITEMS = [
 ];
 
 export default function DashboardLayout() {
-  const { user, profile, isAdmin, isLoading, logout } = useAuth();
+  const { user, profile, isAdmin, isLoading, logout, pingPresence } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
-    if (!isLoading && !user) {
-      navigate("/login");
-    }
+    if (!isLoading && !user) navigate("/login");
   }, [isLoading, user, navigate]);
+
+  // Heartbeat de presença + offline ao sair
+  useEffect(() => {
+    if (!user) return;
+    pingPresence();
+    const interval = setInterval(pingPresence, 30000);
+    const handleBeforeUnload = () => {
+      navigator.sendBeacon &&
+        supabase.from("profiles").update({ online: false } as never).eq("user_id", user.id);
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      supabase.from("profiles").update({ online: false } as never).eq("user_id", user.id);
+    };
+  }, [user, pingPresence]);
 
   if (isLoading) {
     return (
@@ -40,7 +56,6 @@ export default function DashboardLayout() {
   }
 
   if (!user || !profile) return null;
-
   const house = HOUSES[profile.house];
   const items = isAdmin ? [...NAV_ITEMS, ...ADMIN_ITEMS] : NAV_ITEMS;
 
@@ -79,12 +94,15 @@ export default function DashboardLayout() {
 
         <div className="p-3 border-t border-border">
           <div className="flex items-center gap-3">
-            <HouseCrest house={profile.house} size="sm" />
+            <div className="relative">
+              <HouseCrest house={profile.house} size="sm" />
+              <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-green-500 border border-card" title="Online" />
+            </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-heading truncate text-foreground">{profile.full_name}</p>
               <p className="text-xs text-muted-foreground">{house.name}</p>
             </div>
-            <button onClick={() => { logout(); navigate("/"); }} className="text-muted-foreground hover:text-destructive text-xs">
+            <button onClick={async () => { await logout(); navigate("/"); }} className="text-muted-foreground hover:text-destructive text-xs">
               Sair
             </button>
           </div>
