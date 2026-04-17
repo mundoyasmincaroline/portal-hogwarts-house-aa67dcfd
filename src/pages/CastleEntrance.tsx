@@ -9,11 +9,26 @@ export default function CastleEntrance() {
   const { user, profile, fetchProfile } = useAuth();
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(false);
+
   const handleFinish = async () => {
     if (!user) return;
-    await supabase.from("profiles").update({ has_seen_intro: true }).eq("user_id", user.id);
-    await fetchProfile(user.id);
-    navigate("/dashboard");
+    setLoading(true);
+    try {
+      await supabase.from("profiles").update({ has_seen_intro: true }).eq("user_id", user.id);
+      
+      // Força a atualização do estado local para evitar problemas de cache/schema
+      useAuth.setState((state) => ({
+        profile: state.profile ? { ...state.profile, has_seen_intro: true } : null
+      }));
+      
+      await fetchProfile(user.id);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+      navigate("/dashboard");
+    }
   };
 
   const steps = [
@@ -58,8 +73,9 @@ export default function CastleEntrance() {
                 size="lg" 
                 className="w-full text-md font-heading animate-in fade-in duration-500 delay-500"
                 onClick={() => opt.next === -1 ? handleFinish() : setStep(opt.next)}
+                disabled={opt.next === -1 ? loading : false}
               >
-                {opt.text}
+                {opt.next === -1 && loading ? "Iniciando..." : opt.text}
               </Button>
             ))}
           </div>
