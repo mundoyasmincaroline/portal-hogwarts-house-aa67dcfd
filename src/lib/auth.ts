@@ -18,6 +18,7 @@ export interface Profile {
   avatar_url: string | null;
   approved: boolean;
   online: boolean;
+  last_seen: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -41,6 +42,8 @@ interface AuthState {
   }) => Promise<{ success: boolean; error?: string }>;
   fetchProfile: (userId: string) => Promise<void>;
   checkAdmin: (userId: string) => Promise<boolean>;
+  updateProfile: (updates: Partial<Profile>) => Promise<{ success: boolean; error?: string }>;
+  pingPresence: () => Promise<void>;
 }
 
 export const useAuth = create<AuthState>((set, get) => ({
@@ -51,21 +54,19 @@ export const useAuth = create<AuthState>((set, get) => ({
   isAdmin: false,
 
   init: async () => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        if (session?.user) {
-          set({ user: session.user, isAuthenticated: true });
-          // Use setTimeout to avoid Supabase auth deadlock
-          setTimeout(async () => {
-            await get().fetchProfile(session.user.id);
-            const admin = await get().checkAdmin(session.user.id);
-            set({ isAdmin: admin, isLoading: false });
-          }, 0);
-        } else {
-          set({ user: null, profile: null, isAuthenticated: false, isAdmin: false, isLoading: false });
-        }
+    supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        set({ user: session.user, isAuthenticated: true });
+        setTimeout(async () => {
+          await get().fetchProfile(session.user.id);
+          const admin = await get().checkAdmin(session.user.id);
+          set({ isAdmin: admin, isLoading: false });
+          get().pingPresence();
+        }, 0);
+      } else {
+        set({ user: null, profile: null, isAuthenticated: false, isAdmin: false, isLoading: false });
       }
-    );
+    });
 
     const { data: { session } } = await supabase.auth.getSession();
     if (session?.user) {
@@ -73,6 +74,7 @@ export const useAuth = create<AuthState>((set, get) => ({
       await get().fetchProfile(session.user.id);
       const admin = await get().checkAdmin(session.user.id);
       set({ isAdmin: admin, isLoading: false });
+      get().pingPresence();
     } else {
       set({ isLoading: false });
     }
@@ -83,10 +85,8 @@ export const useAuth = create<AuthState>((set, get) => ({
       .from("profiles")
       .select("*")
       .eq("user_id", userId)
-      .single();
-    if (data) {
-      set({ profile: data as unknown as Profile });
-    }
+      .maybeSingle();
+    if (data) set({ profile: data as unknown as Profile });
   },
 
   checkAdmin: async (userId: string) => {
@@ -106,24 +106,49 @@ export const useAuth = create<AuthState>((set, get) => ({
   },
 
   logout: async () => {
+    const userId = get().user?.id;
+    if (userId) {
+      await supabase.from("profiles").update({ online: false } as never).eq("user_id", userId);
+    }
     await supabase.auth.signOut();
     set({ user: null, profile: null, isAuthenticated: false, isAdmin: false });
   },
 
   register: async ({ email, password, fullName, username, age, house }) => {
+    if (age < 13 || age > 17) {
+      return { success: false, error: "Apenas bruxos de 13 a 17 anos podem se matricular." };
+    }
+    const redirectUrl = `${window.location.origin}/dashboard`;
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: {
-          full_name: fullName,
-          username,
-          age,
-          house,
-        },
+        emailRedirectTo: redirectUrl,
+        data: { full_name: fullName, username, age, house },
       },
     });
     if (error) return { success: false, error: error.message };
     return { success: true };
+  },
+
+  updateProfile: async (updates) => {
+    const userId = get().user?.id;
+    if (!userId) return { success: false, error: "Não autenticado" };
+    const { error } = await supabase
+      .from("profiles")
+      .update(updates as never)
+      .eq("user_id", userId);
+    if (error) return { success: false, error: error.message };
+    await get().fetchProfile(userId);
+    return { success: true };
+  },
+
+  pingPresence: async () => {
+    const userId = get().user?.id;
+    if (!userId) return;
+    await supabase
+      .from("profiles")
+      .update({ online: true, last_seen: new Date().toISOString() } as never)
+      .eq("user_id", userId);
   },
 }));
