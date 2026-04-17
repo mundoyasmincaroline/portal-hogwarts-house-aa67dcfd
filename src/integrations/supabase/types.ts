@@ -101,6 +101,39 @@ export type Database = {
         }
         Relationships: []
       }
+      moderation_log: {
+        Row: {
+          action: string
+          content_id: string | null
+          content_type: string
+          created_at: string
+          id: string
+          original_content: string | null
+          reason: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          content_id?: string | null
+          content_type: string
+          created_at?: string
+          id?: string
+          original_content?: string | null
+          reason?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          content_id?: string | null
+          content_type?: string
+          created_at?: string
+          id?: string
+          original_content?: string | null
+          reason?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       post_comments: {
         Row: {
           content: string
@@ -126,6 +159,38 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "post_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      post_reactions: {
+        Row: {
+          created_at: string
+          emoji: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          emoji: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          emoji?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_reactions_post_id_fkey"
             columns: ["post_id"]
             isOneToOne: false
             referencedRelation: "posts"
@@ -170,6 +235,7 @@ export type Database = {
           full_name: string
           house: Database["public"]["Enums"]["house_type"]
           id: string
+          last_seen: string | null
           level: number
           online: boolean
           updated_at: string
@@ -187,6 +253,7 @@ export type Database = {
           full_name?: string
           house?: Database["public"]["Enums"]["house_type"]
           id?: string
+          last_seen?: string | null
           level?: number
           online?: boolean
           updated_at?: string
@@ -204,6 +271,7 @@ export type Database = {
           full_name?: string
           house?: Database["public"]["Enums"]["house_type"]
           id?: string
+          last_seen?: string | null
           level?: number
           online?: boolean
           updated_at?: string
