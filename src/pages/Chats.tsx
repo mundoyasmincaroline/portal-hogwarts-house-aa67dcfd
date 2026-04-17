@@ -5,6 +5,32 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { House } from "@/lib/store";
 
+interface RoomDefinition {
+  name: string;
+  description: string;
+  category: string;
+  allowed_houses: string[] | null;
+  is_admin_only: boolean;
+  icon: string;
+}
+
+const ROOMS: RoomDefinition[] = [
+  { name: "Chat Off", description: "Bate-papo fora do personagem.", category: "Geral", allowed_houses: null, is_admin_only: false, icon: "☕" },
+  { name: "Eventos", description: "Avisos e cobertura de eventos do portal.", category: "Geral", allowed_houses: null, is_admin_only: false, icon: "🎉" },
+  { name: "Profeta Diário", description: "Notícias do mundo bruxo.", category: "Geral", allowed_houses: null, is_admin_only: false, icon: "📰" },
+  
+  { name: "Chat ON", description: "Conversas gerais dentro do RPG.", category: "RPG", allowed_houses: null, is_admin_only: false, icon: "🎭" },
+  { name: "Castelo RPG", description: "Exploração e interação pelo castelo de Hogwarts.", category: "RPG", allowed_houses: null, is_admin_only: false, icon: "🏰" },
+  { name: "RPF Fora de Hogwarts", description: "Roleplay em Hogsmeade, Beco Diagonal, etc.", category: "RPG", allowed_houses: null, is_admin_only: false, icon: "🚂" },
+
+  { name: "Comunal da Grifinória", description: "Acesso exclusivo aos corajosos da Grifinória.", category: "Comunais", allowed_houses: ["gryffindor"], is_admin_only: false, icon: "🦁" },
+  { name: "Comunal da Sonserina", description: "Acesso exclusivo aos astutos da Sonserina.", category: "Comunais", allowed_houses: ["slytherin"], is_admin_only: false, icon: "🐍" },
+  { name: "Comunal da Corvinal", description: "Acesso exclusivo aos sábios da Corvinal.", category: "Comunais", allowed_houses: ["ravenclaw"], is_admin_only: false, icon: "🦅" },
+  { name: "Comunal da Lufa-Lufa", description: "Acesso exclusivo aos leais da Lufa-Lufa.", category: "Comunais", allowed_houses: ["hufflepuff"], is_admin_only: false, icon: "🦡" },
+
+  { name: "Ordem da Fênix", description: "Reuniões da moderação e administração.", category: "Admin", allowed_houses: null, is_admin_only: true, icon: "🔥" },
+];
+
 export default function Chats() {
   const { profile, isAdmin } = useAuth();
   const navigate = useNavigate();
@@ -38,9 +64,28 @@ export default function Chats() {
     setLoadingRoom(roomDef.name);
 
     try {
-      if (roomDef.id) {
-        navigate(`/dashboard/chat/${roomDef.id}`);
-        return;
+      let roomId = roomDef.id;
+
+      if (!roomId) {
+        // Find or create in DB
+        const { data: existingChannel } = await supabase.from("channels").select("id").eq("name", roomDef.name).maybeSingle();
+        if (existingChannel) {
+          roomId = existingChannel.id;
+        } else {
+          const { data: newChannel, error: insertError } = await supabase.from("channels").insert({
+            name: roomDef.name,
+            description: roomDef.description,
+            category: roomDef.category,
+            allowed_houses: roomDef.allowed_houses,
+            is_admin_only: roomDef.is_admin_only,
+          }).select("id").single();
+          if (insertError) throw insertError;
+          roomId = newChannel?.id;
+        }
+      }
+
+      if (roomId) {
+        navigate(`/dashboard/chat/${roomId}`);
       }
     } catch (err: any) {
       toast.error("Ocorreu um erro mágico ao tentar abrir as portas do salão: " + err.message);
@@ -49,7 +94,18 @@ export default function Chats() {
     }
   };
 
-  const categories = Array.from(new Set(channels.map((r) => r.category)));
+  // Mescla a lista estática (garantida) com as configurações do banco (premium)
+  const mergedRooms = ROOMS.map(room => {
+    const dbRoom = channels.find(c => c.name === room.name);
+    return {
+      ...room,
+      id: dbRoom?.id,
+      is_premium: dbRoom?.is_premium || false,
+      meet_link: dbRoom?.meet_link || null
+    };
+  });
+
+  const categories = Array.from(new Set(mergedRooms.map((r) => r.category)));
 
   if (loading) return <div className="text-center py-20">Carregando salões...</div>;
 
@@ -74,7 +130,7 @@ export default function Chats() {
               <span className="flex-1 h-[1px] bg-primary/10"></span>
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {channels.filter((r) => r.category === category).map((room) => {
+              {mergedRooms.filter((r) => r.category === category).map((room) => {
                 const isLocked = (room.is_admin_only && !isAdmin) || 
                                  (room.allowed_houses && profile && !room.allowed_houses.includes(profile.house as House) && !isAdmin);
                 
@@ -93,7 +149,7 @@ export default function Chats() {
                     )}
                     <div className="flex justify-between items-start mb-3">
                       <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl group-hover:scale-110 transition-transform ${room.is_premium ? 'bg-primary/20 ring-2 ring-primary/50 text-primary' : 'bg-secondary/50'}`}>
-                        {room.name[0]}
+                        {room.icon}
                       </div>
                       {isLocked && <div className="text-xl text-muted-foreground" title="Acesso Negado">🔒</div>}
                     </div>
