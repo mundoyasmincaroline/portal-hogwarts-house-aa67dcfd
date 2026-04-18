@@ -28,12 +28,10 @@ export default function Login() {
       if (event === "PASSWORD_RECOVERY") {
         setIsRecoveryMode(true);
       } else if (session?.user && !isRecoveryMode) {
-        // Se já estiver logado e não for recuperação, manda pro painel
         navigate("/dashboard");
       }
     });
 
-    // Fallback: Check se já tem sessão ativa ao montar a página
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user && !window.location.hash.includes("recovery")) {
         navigate("/dashboard");
@@ -150,55 +148,56 @@ export default function Login() {
               />
             </div>
           
-          {!isResetting && (
-            <div>
-              <div className="flex justify-between items-center mb-1">
-                <label className="text-sm font-heading text-muted-foreground block">Senha</label>
-                <button 
-                  type="button" 
-                  onClick={() => setIsResetting(true)}
-                  className="text-xs text-primary hover:underline font-heading"
-                >
-                  Esqueceu a senha?
-                </button>
+            {!isResetting && (
+              <div>
+                <div className="flex justify-between items-center mb-1">
+                  <label className="text-sm font-heading text-muted-foreground block">Senha</label>
+                  <button 
+                    type="button" 
+                    onClick={() => setIsResetting(true)}
+                    className="text-xs text-primary hover:underline font-heading"
+                  >
+                    Esqueceu a senha?
+                  </button>
+                </div>
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="bg-secondary/50 border-border pr-10"
+                    required={!isResetting}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
               </div>
-              <div className="relative">
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="bg-secondary/50 border-border pr-10"
-                  required={!isResetting}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-            </div>
-          )}
+            )}
 
-          {error && <p className="text-destructive text-sm font-medium">{error}</p>}
-          {resetMessage && <p className="text-green-500 text-sm font-medium">{resetMessage}</p>}
+            {error && <p className="text-destructive text-sm font-medium">{error}</p>}
+            {resetMessage && <p className="text-green-500 text-sm font-medium">{resetMessage}</p>}
 
-          <Button type="submit" variant="magical" className="w-full font-heading" disabled={loading}>
-            {loading ? "Aguarde..." : isResetting ? "Recuperar Senha" : "Entrar no Portal"}
-          </Button>
+            <Button type="submit" variant="magical" className="w-full font-heading" disabled={loading}>
+              {loading ? "Aguarde..." : isResetting ? "Recuperar Senha" : "Entrar no Portal"}
+            </Button>
 
-          {isResetting && (
-            <button 
-              type="button"
-              onClick={() => { setIsResetting(false); setError(""); setResetMessage(""); }}
-              className="w-full text-sm text-muted-foreground hover:text-foreground mt-2"
-            >
-              Voltar para o Login
-            </button>
-          )}
-        </form>
+            {isResetting && (
+              <button 
+                type="button"
+                onClick={() => { setIsResetting(false); setError(""); setResetMessage(""); }}
+                className="w-full text-sm text-muted-foreground hover:text-foreground mt-2"
+              >
+                Voltar para o Login
+              </button>
+            )}
+          </form>
+        )}
 
         <div className="text-center mt-6 pt-4 border-t border-border">
           <p className="text-sm text-muted-foreground mb-2">
