@@ -91,11 +91,13 @@ export type Database = {
       }
       challenges: {
         Row: {
+          action_type: string | null
           active: boolean
           correct_answer: string | null
           created_at: string
           created_by: string | null
           description: string | null
+          goal: number | null
           id: string
           question: string | null
           title: string
@@ -103,11 +105,13 @@ export type Database = {
           xp_reward: number
         }
         Insert: {
+          action_type?: string | null
           active?: boolean
           correct_answer?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
+          goal?: number | null
           id?: string
           question?: string | null
           title: string
@@ -115,11 +119,13 @@ export type Database = {
           xp_reward?: number
         }
         Update: {
+          action_type?: string | null
           active?: boolean
           correct_answer?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
+          goal?: number | null
           id?: string
           question?: string | null
           title?: string
@@ -935,6 +941,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      award_xp_action: {
+        Args: { _action: string; _user_id: string; _xp: number }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
