@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth, isUserOnline } from "@/lib/auth";
-import { HOUSES, getLevelFromXP } from "@/lib/store";
+import { HOUSES, getLevelFromXP, type House } from "@/lib/store";
 import HouseCrest from "@/components/HouseCrest";
 import XPBar from "@/components/XPBar";
 import MedalBadge, { getMedalForXP } from "@/components/MedalBadge";

@@ -32,7 +32,7 @@ export default function Challenges() {
     if (user) {
       const { data: uc } = await supabase
         .from("user_challenges")
-        .select("challenge_id, status")
+        .select("challenge_id, status, progress")
         .eq("user_id", user.id);
       
         const comp = new Set<string>();
