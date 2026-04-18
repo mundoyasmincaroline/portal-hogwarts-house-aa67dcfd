@@ -55,6 +55,7 @@ interface AuthState {
   checkAdmin: (userId: string) => Promise<boolean>;
   updateProfile: (updates: Partial<Profile>) => Promise<{ success: boolean; error?: string }>;
   updatePassword: (password: string) => Promise<{ success: boolean; error?: string }>;
+  resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
   pingPresence: () => Promise<void>;
 }
 
@@ -164,6 +165,14 @@ export const useAuth = create<AuthState>((set, get) => ({
 
   updatePassword: async (password) => {
     const { error } = await supabase.auth.updateUser({ password });
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  },
+
+  resetPassword: async (email) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/dashboard/profile`,
+    });
     if (error) return { success: false, error: error.message };
     return { success: true };
   },
