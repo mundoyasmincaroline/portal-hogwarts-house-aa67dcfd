@@ -72,10 +72,10 @@ export default function StickerAlbum() {
     const won = possible[Math.floor(Math.random() * possible.length)];
 
     if (userStickers[won.id]) {
-      toast.success(\Você abriu o pacote e encontrou \ (\), mas já tinha essa!\);
+      toast.success(`Você abriu o pacote e encontrou ${won.character_name} (${won.rarity}), mas já tinha essa!`);
     } else {
       await supabase.from("user_stickers").insert({ user_id: user.id, sticker_id: won.id } as never);
-      toast.success(\✨ INCRÍVEL! Você ganhou a figurinha de \ (\)!\);
+      toast.success(`✨ INCRÍVEL! Você ganhou a figurinha de ${won.character_name} (${won.rarity})!`);
       setUserStickers(prev => ({ ...prev, [won.id]: true }));
     }
     setOpening(false);
@@ -115,7 +115,7 @@ export default function StickerAlbum() {
           return (
             <div 
               key={s.id} 
-              className={\elative aspect-[3/4] rounded-xl overflow-hidden border-2 transition-all duration-500 \\}
+              className={`relative aspect-[3/4] rounded-xl overflow-hidden border-2 transition-all duration-500 ${unlocked ? rarityStyle : 'border-border/50 bg-secondary/20 grayscale blur-[1px]'}`}
             >
               {unlocked && (
                 <div className="absolute inset-0 z-0">
@@ -126,7 +126,7 @@ export default function StickerAlbum() {
               
               <div className="relative z-10 h-full flex flex-col justify-end p-3">
                 <div className="mb-auto flex justify-between items-start">
-                  <span className={\	ext-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full \\}>
+                  <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full ${unlocked ? 'bg-background/80 text-foreground' : 'hidden'}`}>
                     {s.rarity}
                   </span>
                   {!unlocked && (
@@ -136,7 +136,7 @@ export default function StickerAlbum() {
                   )}
                 </div>
                 {unlocked ? (
-                  <h3 className={\ont-heading text-sm leading-tight \\}>
+                  <h3 className={`font-heading text-sm leading-tight ${isGold ? 'text-yellow-400' : 'text-foreground'}`}>
                     {s.character_name}
                   </h3>
                 ) : (
