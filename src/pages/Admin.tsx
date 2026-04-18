@@ -519,7 +519,7 @@ export default function Admin() {
             </div>
           )}
 
-          {activeTab === "monetization" && (
+          {tab === "monetization" && (
             <div className="space-y-6">
               <div className="glass rounded-2xl p-6">
                 <h2 className="font-heading text-xl text-primary mb-4">Adicionar Oferta (TikTok Shop)</h2>
@@ -571,7 +571,7 @@ export default function Admin() {
             </div>
           )}
 
-          {activeTab === "moderation" && (
+          {tab === "moderation" && (
             <div className="glass rounded-2xl p-6">
               <h2 className="font-heading text-xl text-destructive mb-4">Moderação de Stories</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -607,3 +607,4 @@ export default function Admin() {
     </div>
   );
 }
+
