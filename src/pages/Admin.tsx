@@ -152,11 +152,11 @@ export default function Admin() {
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
     { id: "members", label: "Membros", icon: "👥" },
-    { id: "challenges", label: "Missões Diárias", icon: "⭐" },
-    { id: "tasks", label: "Aprovar Tarefas", icon: "📝" },
-    { id: "channels", label: "Canais", icon: "💬" },
-    { id: "banned", label: "Filtro de Palavras", icon: "🤬" },
-    { id: "filch", label: "Moderação", icon: "👁️" },
+    { id: "pending_members", label: "Novos Membros", icon: "⏳" },
+    { id: "challenges", label: "Desafios", icon: "⚔️" },
+    { id: "houses", label: "Casas", icon: "🏰" },
+    { id: "tasks", label: "Tarefas", icon: "✅" },
+    { id: "banned", label: "Filtro Chat", icon: "🚫" },
     { id: "channels", label: "Salas/Meet", icon: "📹" },
     { id: "monetization", label: "Monetização", icon: "💰" },
     { id: "moderation", label: "Moderação", icon: "👁️" },
