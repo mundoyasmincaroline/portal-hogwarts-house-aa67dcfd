@@ -7,9 +7,28 @@ import { WEEKLY_INTROS } from "@/lib/store";
 
 export default function Landing() {
   const navigate = useNavigate();
-  const [introIndex] = useState(() => Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000)) % WEEKLY_INTROS.length);
   const [showContent, setShowContent] = useState(false);
-  const intro = WEEKLY_INTROS[introIndex];
+
+  const hour = new Date().getHours();
+  let timeOfDay = "night";
+  if (hour >= 5 && hour < 12) timeOfDay = "morning";
+  else if (hour >= 12 && hour < 18) timeOfDay = "afternoon";
+
+  let bgUrl = "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=2000"; // Night
+  if (timeOfDay === "morning") bgUrl = "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=2000";
+  else if (timeOfDay === "afternoon") bgUrl = "https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2000";
+
+  let titleText = "O Portal de Hogwarts";
+  let subtitleText = "Magia Noturna";
+  let descriptionText = "O castelo repousa sob um céu estrelado. Os feitiços brilham mais forte à noite. Entre e descubra os segredos que aguardam na escuridão.";
+
+  if (timeOfDay === "morning") {
+    subtitleText = "Amanhecer Mágico";
+    descriptionText = "Os primeiros raios de sol da manhã iluminam as pesadas portas de carvalho do castelo. O Grande Salão desperta com o cheiro de café da manhã mágico e o voo das corujas.";
+  } else if (timeOfDay === "afternoon") {
+    subtitleText = "Tarde em Hogwarts";
+    descriptionText = "O sol da tarde aquece as pedras milenares de Hogwarts. Pelas janelas, você pode ver os alunos rindo e praticando feitiços nos jardins iluminados.";
+  }
 
   useEffect(() => {
     const t = setTimeout(() => setShowContent(true), 800);
@@ -20,7 +39,7 @@ export default function Landing() {
     <div className="relative min-h-screen overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0">
-        <img src={castleImg} alt="Hogwarts Castle" className="w-full h-full object-cover" width={1920} height={1080} />
+        <img src={bgUrl} alt="Hogwarts Castle" className="w-full h-full object-cover" width={1920} height={1080} />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/30" />
       </div>
 
@@ -35,16 +54,16 @@ export default function Landing() {
           </h1>
           <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mb-6" />
 
-          {/* Weekly intro */}
+          {/* Dynamic intro */}
           <div className="glass rounded-2xl p-6 md:p-8 max-w-lg mx-auto mb-8">
             <p className="text-primary font-heading text-sm tracking-widest uppercase mb-2">
-              {intro.subtitle}
+              {subtitleText}
             </p>
             <h2 className="font-heading text-2xl md:text-3xl text-foreground mb-3">
-              {intro.title}
+              {titleText}
             </h2>
             <p className="text-muted-foreground font-serif text-sm md:text-base leading-relaxed">
-              {intro.description}
+              {descriptionText}
             </p>
           </div>
 

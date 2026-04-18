@@ -20,9 +20,13 @@ export default function CastleEntrance() {
     if (!user) return;
     setLoading(true);
     try {
+      // Salva no localStorage para não repetir hoje
+      const today = new Date().toISOString().split('T')[0];
+      localStorage.setItem(`intro_last_seen_${user.id}`, today);
+
+      // Atualiza o perfil caso ainda esteja sendo usado
       await supabase.from("profiles").update({ has_seen_intro: true }).eq("user_id", user.id);
       
-      // Força a atualização do estado local para evitar problemas de cache/schema
       useAuth.setState((state) => ({
         profile: state.profile ? { ...state.profile, has_seen_intro: true } : null
       }));
@@ -30,7 +34,7 @@ export default function CastleEntrance() {
       console.error(e);
     } finally {
       setLoading(false);
-      navigate("/dashboard");
+      window.location.reload(); // Força o recarregamento limpo para o dashboard
     }
   };
 
