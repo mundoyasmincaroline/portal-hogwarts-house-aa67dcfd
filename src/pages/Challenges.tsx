@@ -52,27 +52,14 @@ export default function Challenges() {
 
   useEffect(() => { load(); }, [load]);
 
-  const completeChallenge = async (c: Challenge) => {
+  const openChallenge = (c: Challenge) => {
     if (!user || !profile) return;
     if (completedIds.has(c.id)) { toast.info("Você já completou este desafio!"); return; }
 
     if (c.question) {
       setActiveEnigma(c);
-      return;
     } else {
-      // Tarefas comuns: auto-aprovar para o usuário conseguir o XP na hora
-      const { error: ucErr } = await supabase
-        .from("user_challenges")
-        .insert({ user_id: user.id, challenge_id: c.id, completed: true, status: 'approved', completed_at: new Date().toISOString() } as never);
-      
-      if (ucErr) { toast.error("Erro ao registrar: " + ucErr.message); return; }
-
-      await supabase.from("profiles").update({ xp: profile.xp + c.xp_reward } as never).eq("user_id", user.id);
-      await supabase.from("house_points").insert({ house: profile.house, points: c.xp_reward, reason: `Missão: ${c.title}`, awarded_by: user.id } as never);
-      await fetchProfile(user.id);
-
-      toast.success(`Missão Cumprida! +${c.xp_reward} XP! ⚡`);
-      setCompletedIds((s) => new Set([...s, c.id]));
+      toast.info("✨ Esta missão é concluída automaticamente! Realize a ação descrita e o sistema irá detectar e recompensar você.");
     }
   };
 
@@ -136,9 +123,9 @@ export default function Challenges() {
           size="sm"
           className="font-heading text-xs w-full"
           disabled={done}
-          onClick={() => completeChallenge(c)}
+          onClick={() => openChallenge(c)}
         >
-          {done ? "✅ Concluído" : c.question ? "Responder Charada 🦉" : "Concluir Missão ⚡"}
+          {done ? "✅ Concluído" : c.question ? "Responder Charada 🦉" : "Automática ⚙️"}
         </Button>
       </div>
     );
