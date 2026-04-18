@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      ads: {
+        Row: {
+          active: boolean
+          ad_type: string
+          created_at: string
+          id: string
+          image_url: string | null
+          link: string
+          title: string
+        }
+        Insert: {
+          active?: boolean
+          ad_type?: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          link?: string
+          title: string
+        }
+        Update: {
+          active?: boolean
+          ad_type?: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          link?: string
+          title?: string
+        }
+        Relationships: []
+      }
       badges: {
         Row: {
           created_at: string
@@ -74,6 +104,92 @@ export type Database = {
         }
         Relationships: []
       }
+      channels: {
+        Row: {
+          created_at: string
+          description: string | null
+          house_only: string | null
+          icon: string | null
+          id: string
+          name: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          house_only?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          type?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          house_only?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          type?: string
+        }
+        Relationships: []
+      }
+      characters_birthdays: {
+        Row: {
+          birth_date: string
+          created_at: string
+          house: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          birth_date: string
+          created_at?: string
+          house?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          birth_date?: string
+          created_at?: string
+          house?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      chat_messages: {
+        Row: {
+          channel_id: string
+          content: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          channel_id: string
+          content: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          channel_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
+            referencedRelation: "channels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       house_points: {
         Row: {
           awarded_by: string | null
@@ -131,6 +247,36 @@ export type Database = {
           original_content?: string | null
           reason?: string | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          link: string | null
+          message: string
+          read: boolean
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          link?: string | null
+          message?: string
+          read?: boolean
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          link?: string | null
+          message?: string
+          read?: boolean
+          title?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -231,6 +377,7 @@ export type Database = {
           approved: boolean
           avatar_url: string | null
           bio: string | null
+          birth_date: string | null
           created_at: string
           full_name: string
           house: Database["public"]["Enums"]["house_type"]
@@ -249,6 +396,7 @@ export type Database = {
           approved?: boolean
           avatar_url?: string | null
           bio?: string | null
+          birth_date?: string | null
           created_at?: string
           full_name?: string
           house?: Database["public"]["Enums"]["house_type"]
@@ -267,6 +415,7 @@ export type Database = {
           approved?: boolean
           avatar_url?: string | null
           bio?: string | null
+          birth_date?: string | null
           created_at?: string
           full_name?: string
           house?: Database["public"]["Enums"]["house_type"]
@@ -279,6 +428,84 @@ export type Database = {
           username?: string
           xp?: number
           xp_to_next?: number
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          id: string
+          setting_key: string
+          setting_value: Json
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          setting_key: string
+          setting_value?: Json
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          setting_key?: string
+          setting_value?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      stickers: {
+        Row: {
+          character_name: string
+          created_at: string
+          house: string | null
+          id: string
+          image_url: string
+          level_required: number
+          rarity: string
+        }
+        Insert: {
+          character_name: string
+          created_at?: string
+          house?: string | null
+          id?: string
+          image_url?: string
+          level_required?: number
+          rarity?: string
+        }
+        Update: {
+          character_name?: string
+          created_at?: string
+          house?: string | null
+          id?: string
+          image_url?: string
+          level_required?: number
+          rarity?: string
+        }
+        Relationships: []
+      }
+      stories: {
+        Row: {
+          caption: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          image_url: string
+          user_id: string
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          image_url: string
+          user_id: string
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          image_url?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -346,6 +573,33 @@ export type Database = {
           },
         ]
       }
+      user_cooldowns: {
+        Row: {
+          id: string
+          last_message_at: string | null
+          last_post_at: string | null
+          last_reaction_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          last_message_at?: string | null
+          last_post_at?: string | null
+          last_reaction_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          last_message_at?: string | null
+          last_post_at?: string | null
+          last_reaction_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -363,6 +617,35 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_stickers: {
+        Row: {
+          id: string
+          obtained_at: string
+          sticker_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          obtained_at?: string
+          sticker_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          obtained_at?: string
+          sticker_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_stickers_sticker_id_fkey"
+            columns: ["sticker_id"]
+            isOneToOne: false
+            referencedRelation: "stickers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
