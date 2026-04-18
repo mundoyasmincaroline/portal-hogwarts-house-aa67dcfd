@@ -176,20 +176,20 @@ export default function Profile() {
       {/* Abas */}
       <div className="flex gap-4 border-b border-border mb-6">
         <button 
-          onClick={() => setActiveTab("about")} 
+          onClick={() => { setActiveTab("about"); setEditing(false); }} 
           className={`pb-2 font-heading text-sm transition-colors ${activeTab === "about" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
         >
           Sobre
         </button>
         <button 
-          onClick={() => setActiveTab("friends")} 
+          onClick={() => { setActiveTab("friends"); setEditing(false); }} 
           className={`pb-2 font-heading text-sm transition-colors ${activeTab === "friends" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
         >
           Amigos ({friends.length})
         </button>
         {isMe && (
           <button 
-            onClick={() => setActiveTab("security")} 
+            onClick={() => { setActiveTab("security"); setEditing(false); }} 
             className={`pb-2 font-heading text-sm transition-colors ${activeTab === "security" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
           >
             Segurança
