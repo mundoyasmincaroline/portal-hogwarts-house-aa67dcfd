@@ -71,7 +71,7 @@ export default function DashboardLayout() {
   
 
   if (!profile.approved) return <PendingApproval />;
-    const today = new Date().toISOString().split(''T'')[0];
+    const today = new Date().toISOString().split('T')[0];
   const lastSeenIntro = localStorage.getItem(`intro_last_seen_${user.id}`);
   const shouldShowIntro = lastSeenIntro !== today;
 
