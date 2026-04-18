@@ -6,6 +6,12 @@ import MagicalParticles from "@/components/MagicalParticles";
 export default function Landing() {
   const navigate = useNavigate();
   const [showContent, setShowContent] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const hour = new Date().getHours();
   let timeOfDay = "night";
@@ -92,6 +98,11 @@ export default function Landing() {
           <p className="text-xs text-muted-foreground mt-6">
             Portal exclusivo para bruxos de 13 a 17 anos ✨
           </p>
+          <div className="mt-4 inline-block px-4 py-1.5 rounded-full glass border border-primary/20">
+            <p className="text-xs font-heading text-gold-gradient font-medium tracking-wider">
+              {currentTime.toLocaleDateString("pt-BR")} - {currentTime.toLocaleTimeString("pt-BR")}
+            </p>
+          </div>
           <p className="text-[10px] text-muted-foreground/60 mt-4">
             Grupo Portal Matrix 2026 - Mundo Yasmin Caroline
           </p>
