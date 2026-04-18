@@ -71,33 +71,57 @@ export type Database = {
         }
         Relationships: []
       }
+      banned_words: {
+        Row: {
+          created_at: string
+          id: string
+          word: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          word: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          word?: string
+        }
+        Relationships: []
+      }
       challenges: {
         Row: {
           active: boolean
+          correct_answer: string | null
           created_at: string
           created_by: string | null
           description: string | null
           id: string
+          question: string | null
           title: string
           type: string
           xp_reward: number
         }
         Insert: {
           active?: boolean
+          correct_answer?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
           id?: string
+          question?: string | null
           title: string
           type?: string
           xp_reward?: number
         }
         Update: {
           active?: boolean
+          correct_answer?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
           id?: string
+          question?: string | null
           title?: string
           type?: string
           xp_reward?: number
@@ -106,29 +130,44 @@ export type Database = {
       }
       channels: {
         Row: {
+          allowed_houses: string[] | null
+          category: string | null
           created_at: string
           description: string | null
           house_only: string | null
           icon: string | null
           id: string
+          is_admin_only: boolean | null
+          is_premium: boolean | null
+          meet_link: string | null
           name: string
           type: string
         }
         Insert: {
+          allowed_houses?: string[] | null
+          category?: string | null
           created_at?: string
           description?: string | null
           house_only?: string | null
           icon?: string | null
           id?: string
+          is_admin_only?: boolean | null
+          is_premium?: boolean | null
+          meet_link?: string | null
           name: string
           type?: string
         }
         Update: {
+          allowed_houses?: string[] | null
+          category?: string | null
           created_at?: string
           description?: string | null
           house_only?: string | null
           icon?: string | null
           id?: string
+          is_admin_only?: boolean | null
+          is_premium?: boolean | null
+          meet_link?: string | null
           name?: string
           type?: string
         }
@@ -136,6 +175,7 @@ export type Database = {
       }
       characters_birthdays: {
         Row: {
+          age: number | null
           birth_date: string
           created_at: string
           house: string | null
@@ -143,6 +183,7 @@ export type Database = {
           name: string
         }
         Insert: {
+          age?: number | null
           birth_date: string
           created_at?: string
           house?: string | null
@@ -150,6 +191,7 @@ export type Database = {
           name: string
         }
         Update: {
+          age?: number | null
           birth_date?: string
           created_at?: string
           house?: string | null
@@ -190,6 +232,119 @@ export type Database = {
           },
         ]
       }
+      class_attendance: {
+        Row: {
+          attended_at: string
+          class_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          attended_at?: string
+          class_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          attended_at?: string
+          class_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_attendance_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      classes: {
+        Row: {
+          created_at: string
+          day_of_week: string
+          id: string
+          is_optional: boolean
+          professor: string | null
+          target_years: string
+          time_slot: string
+          title: string
+          week_rotation: number
+          xp_reward: number
+        }
+        Insert: {
+          created_at?: string
+          day_of_week: string
+          id?: string
+          is_optional?: boolean
+          professor?: string | null
+          target_years?: string
+          time_slot: string
+          title: string
+          week_rotation?: number
+          xp_reward?: number
+        }
+        Update: {
+          created_at?: string
+          day_of_week?: string
+          id?: string
+          is_optional?: boolean
+          professor?: string | null
+          target_years?: string
+          time_slot?: string
+          title?: string
+          week_rotation?: number
+          xp_reward?: number
+        }
+        Relationships: []
+      }
+      fichas: {
+        Row: {
+          age: number | null
+          blood_status: string | null
+          character_name: string
+          created_at: string
+          history: string | null
+          id: string
+          patronus: string | null
+          primary_house: string | null
+          school_year: number | null
+          status: string
+          user_id: string
+          wand: string | null
+        }
+        Insert: {
+          age?: number | null
+          blood_status?: string | null
+          character_name: string
+          created_at?: string
+          history?: string | null
+          id?: string
+          patronus?: string | null
+          primary_house?: string | null
+          school_year?: number | null
+          status?: string
+          user_id: string
+          wand?: string | null
+        }
+        Update: {
+          age?: number | null
+          blood_status?: string | null
+          character_name?: string
+          created_at?: string
+          history?: string | null
+          id?: string
+          patronus?: string | null
+          primary_house?: string | null
+          school_year?: number | null
+          status?: string
+          user_id?: string
+          wand?: string | null
+        }
+        Relationships: []
+      }
       house_points: {
         Row: {
           awarded_by: string | null
@@ -216,6 +371,38 @@ export type Database = {
           reason?: string | null
         }
         Relationships: []
+      }
+      messages: {
+        Row: {
+          channel_id: string
+          content: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          channel_id: string
+          content: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          channel_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
+            referencedRelation: "channels"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       moderation_log: {
         Row: {
@@ -380,11 +567,13 @@ export type Database = {
           birth_date: string | null
           created_at: string
           full_name: string
+          has_seen_intro: boolean | null
           house: Database["public"]["Enums"]["house_type"]
           id: string
           last_seen: string | null
           level: number
           online: boolean
+          role: string | null
           updated_at: string
           user_id: string
           username: string
@@ -399,11 +588,13 @@ export type Database = {
           birth_date?: string | null
           created_at?: string
           full_name?: string
+          has_seen_intro?: boolean | null
           house?: Database["public"]["Enums"]["house_type"]
           id?: string
           last_seen?: string | null
           level?: number
           online?: boolean
+          role?: string | null
           updated_at?: string
           user_id: string
           username: string
@@ -418,11 +609,13 @@ export type Database = {
           birth_date?: string | null
           created_at?: string
           full_name?: string
+          has_seen_intro?: boolean | null
           house?: Database["public"]["Enums"]["house_type"]
           id?: string
           last_seen?: string | null
           level?: number
           online?: boolean
+          role?: string | null
           updated_at?: string
           user_id?: string
           username?: string
@@ -485,26 +678,32 @@ export type Database = {
       stories: {
         Row: {
           caption: string | null
+          content: string | null
           created_at: string
           expires_at: string
           id: string
-          image_url: string
+          image_url: string | null
+          media_url: string | null
           user_id: string
         }
         Insert: {
           caption?: string | null
+          content?: string | null
           created_at?: string
           expires_at?: string
           id?: string
-          image_url: string
+          image_url?: string | null
+          media_url?: string | null
           user_id: string
         }
         Update: {
           caption?: string | null
+          content?: string | null
           created_at?: string
           expires_at?: string
           id?: string
-          image_url?: string
+          image_url?: string | null
+          media_url?: string | null
           user_id?: string
         }
         Relationships: []
@@ -545,6 +744,9 @@ export type Database = {
           completed_at: string | null
           created_at: string
           id: string
+          progress: number | null
+          proof: string | null
+          status: string | null
           user_id: string
         }
         Insert: {
@@ -553,6 +755,9 @@ export type Database = {
           completed_at?: string | null
           created_at?: string
           id?: string
+          progress?: number | null
+          proof?: string | null
+          status?: string | null
           user_id: string
         }
         Update: {
@@ -561,6 +766,9 @@ export type Database = {
           completed_at?: string | null
           created_at?: string
           id?: string
+          progress?: number | null
+          proof?: string | null
+          status?: string | null
           user_id?: string
         }
         Relationships: [
@@ -576,27 +784,36 @@ export type Database = {
       user_cooldowns: {
         Row: {
           id: string
+          last_enigma_at: string | null
           last_message_at: string | null
           last_post_at: string | null
           last_reaction_at: string | null
+          minute_started_at: string | null
           updated_at: string
           user_id: string
+          xp_gained_this_minute: number | null
         }
         Insert: {
           id?: string
+          last_enigma_at?: string | null
           last_message_at?: string | null
           last_post_at?: string | null
           last_reaction_at?: string | null
+          minute_started_at?: string | null
           updated_at?: string
           user_id: string
+          xp_gained_this_minute?: number | null
         }
         Update: {
           id?: string
+          last_enigma_at?: string | null
           last_message_at?: string | null
           last_post_at?: string | null
           last_reaction_at?: string | null
+          minute_started_at?: string | null
           updated_at?: string
           user_id?: string
+          xp_gained_this_minute?: number | null
         }
         Relationships: []
       }
