@@ -122,8 +122,7 @@ export default function DashboardLayout() {
             </button>
           </div>
           <div className="mt-4 text-center">
-            <p className="text-[10px] text-muted-foreground/40">Grupo Portal Matrix 2026</p>
-            <p className="text-[10px] text-muted-foreground/40">Mundo Yasmin Caroline</p>
+            <p className="text-[10px] text-muted-foreground/40 text-center px-4">Grupo Portal Matrix 2026 - Mundo Yasmin Caroline</p>
           </div>
         </div>
       </aside>

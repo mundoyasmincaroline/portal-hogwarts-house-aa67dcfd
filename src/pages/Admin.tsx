@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import HouseCrest from "@/components/HouseCrest";
 import { toast } from "sonner";
 
-type Tab = "members" | "challenges" | "houses" | "filch" | "fichas" | "tasks" | "banned" | "channels";
+type Tab = "members" | "pending_members" | "challenges" | "houses" | "fichas" | "tasks" | "banned" | "channels" | "monetization" | "moderation" | "filch";
 
 interface MemberProfile {
   id: string;
@@ -20,6 +20,7 @@ interface MemberProfile {
   xp: number;
   approved: boolean;
   online: boolean;
+  last_seen?: string;
 }
 
 interface ChallengeRow {
@@ -219,7 +220,22 @@ export default function Admin() {
                     <p className="text-sm font-heading text-foreground">{m.full_name}</p>
                     <p className="text-xs text-muted-foreground">@{m.username} • {m.age} anos • {m.xp} XP</p>
                   </div>
-                  {isUserOnline(m) && <span className="text-xs text-green-500">🟢 Online</span>}
+                  <div className="flex flex-col items-end gap-1">
+                    {isUserOnline(m) ? (
+                      <span className="text-xs text-green-500 font-medium">🟢 Online</span>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">⚪ Offline</span>
+                    )}
+                    {m.last_seen ? (
+                      <span className="text-[10px] text-muted-foreground/70">
+                        Último login: {new Date(m.last_seen).toLocaleString('pt-BR')}
+                      </span>
+                    ) : (
+                      <span className="text-[10px] text-muted-foreground/40">
+                        Nunca acessou
+                      </span>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
