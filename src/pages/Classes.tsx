@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -93,17 +93,29 @@ export default function Classes() {
   };
 
   const isClassActive = (timeSlot: string) => {
-    const [start, end] = timeSlot.split(' - ').map(s => s.trim());
-    const [sh, sm] = start.split(':').map(Number);
-    const [eh, em] = end.split(':').map(Number);
-    
-    const startTime = new Date();
-    startTime.setHours(sh, sm, 0);
-    
-    const endTime = new Date();
-    endTime.setHours(eh, em, 0);
-    
-    return now >= startTime && now <= endTime;
+    try {
+      // Normaliza o texto removendo espaços em branco para evitar erros se o admin digitar "14:00-15:00"
+      const normalized = timeSlot.replace(/\s/g, '');
+      const [start, end] = normalized.split('-');
+      
+      if (!start || !end) return false;
+
+      const [sh, sm] = start.split(':').map(Number);
+      const [eh, em] = end.split(':').map(Number);
+      
+      if (isNaN(sh) || isNaN(sm) || isNaN(eh) || isNaN(em)) return false;
+      
+      const startTime = new Date();
+      startTime.setHours(sh, sm, 0, 0);
+      
+      const endTime = new Date();
+      endTime.setHours(eh, em, 0, 0);
+      
+      return now >= startTime && now <= endTime;
+    } catch (error) {
+      // Falha silenciosa caso o admin tenha digitado o horário num formato incorreto
+      return false;
+    }
   };
 
   const attendClass = async (cls: SchoolClass) => {

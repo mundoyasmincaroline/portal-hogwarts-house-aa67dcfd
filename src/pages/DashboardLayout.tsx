@@ -13,6 +13,7 @@ import EngagementBot from "@/components/EngagementBot";
 import PendingApproval from "@/pages/PendingApproval";
 
 const NAV_ITEMS = [
+  { icon: "👤", label: "Meu Perfil", path: "/dashboard/profile" },
   { icon: "✨", label: "Feed", path: "/dashboard" },
   { icon: "💬", label: "Chats", path: "/dashboard/chats" },
   { icon: "📸", label: "InstaHogwarts", path: "/dashboard/instahogwarts" },
