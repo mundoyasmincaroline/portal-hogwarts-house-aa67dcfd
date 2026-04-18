@@ -10,7 +10,7 @@ export async function addXP(userId: string, amount: number, actionType: 'message
       .from('user_cooldowns')
       .select('*')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle();
 
     const now = new Date();
     

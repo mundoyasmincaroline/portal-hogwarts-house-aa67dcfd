@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -17,12 +17,18 @@ interface UserSticker {
   obtained_at: string;
 }
 
+const RARITY_COST = {
+  bronze: 20,
+  silver: 50,
+  gold: 100,
+};
+
 export default function StickerAlbum() {
-  const { profile, user } = useAuth();
+  const { profile, user, fetchProfile } = useAuth();
   const [stickers, setStickers] = useState<Sticker[]>([]);
   const [userStickers, setUserStickers] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
-  const [opening, setOpening] = useState(false);
+  const [buyingId, setBuyingId] = useState<string | null>(null);
 
   useEffect(() => {
     loadAlbum();
@@ -43,109 +49,121 @@ export default function StickerAlbum() {
     setLoading(false);
   };
 
-  const buyPack = async () => {
+  const buySticker = async (sticker: Sticker) => {
     if (!user || !profile) return;
-    const packCost = 50;
-    if (profile.xp < packCost) {
-      toast.error("Você precisa de pelo menos 50 XP para comprar um pacotinho mágico!");
-      return;
-    }
-
-    setOpening(true);
-    await supabase.from("profiles").update({ xp: profile.xp - packCost } as never).eq("user_id", user.id);
     
-    const available = stickers.filter(s => s.level_required <= profile.level);
-    if (available.length === 0) {
-      toast.error("Nenhuma figurinha disponível para o seu nível ainda!");
-      setOpening(false);
+    const cost = RARITY_COST[sticker.rarity];
+    if (profile.xp < cost) {
+      toast.error(`Você precisa de ${cost} XP para comprar esta figurinha!`);
       return;
     }
 
-    const roll = Math.random() * 100;
-    let targetRarity = "bronze";
-    if (roll > 95) targetRarity = "gold";
-    else if (roll > 70) targetRarity = "silver";
+    setBuyingId(sticker.id);
+    try {
+      // Deduzir o XP
+      const { error: updateError } = await supabase.from("profiles").update({ xp: profile.xp - cost } as never).eq("user_id", user.id);
+      if (updateError) throw updateError;
+      
+      // Adicionar figurinha
+      const { error: insertError } = await supabase.from("user_stickers").insert({ user_id: user.id, sticker_id: sticker.id } as never);
+      if (insertError) throw insertError;
 
-    let possible = available.filter(s => s.rarity === targetRarity);
-    if (possible.length === 0) possible = available;
-
-    const won = possible[Math.floor(Math.random() * possible.length)];
-
-    if (userStickers[won.id]) {
-      toast.success(`Você abriu o pacote e encontrou ${won.character_name} (${won.rarity}), mas já tinha essa!`);
-    } else {
-      await supabase.from("user_stickers").insert({ user_id: user.id, sticker_id: won.id } as never);
-      toast.success(`✨ INCRÍVEL! Você ganhou a figurinha de ${won.character_name} (${won.rarity})!`);
-      setUserStickers(prev => ({ ...prev, [won.id]: true }));
+      toast.success(`✨ Sucesso! Você comprou a figurinha de ${sticker.character_name}!`);
+      setUserStickers(prev => ({ ...prev, [sticker.id]: true }));
+      await fetchProfile(user.id);
+    } catch (err: any) {
+      toast.error("Erro mágico: " + err.message);
+    } finally {
+      setBuyingId(null);
     }
-    setOpening(false);
   };
 
-  if (loading) return <div className="text-center py-10">Abrindo o álbum...</div>;
+  if (loading) return <div className="text-center py-10 text-muted-foreground animate-pulse">Abrindo a vitrine mágica...</div>;
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
-      <div className="glass rounded-2xl p-6 text-center">
-        <h1 className="font-heading text-3xl text-gold-gradient mb-2">Álbum de Bruxos Célebres</h1>
-        <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-          Colecione figurinhas dos maiores bruxos e bruxas da história. Compre pacotinhos usando seu XP. 
-          Figurinhas Ouro e Prata só podem ser encontradas por bruxos de nível alto!
-        </p>
-        <div className="mt-6 flex justify-center gap-4 items-center">
-          <div className="glass px-4 py-2 rounded-lg">
-            <span className="text-sm text-muted-foreground">Seu XP: </span>
-            <span className="font-heading text-primary">{profile?.xp || 0}</span>
+    <div className="max-w-6xl mx-auto space-y-8 pb-10">
+      <div className="glass rounded-3xl p-8 text-center relative overflow-hidden border border-primary/20">
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2070')] bg-cover bg-center opacity-10 mix-blend-overlay"></div>
+        <div className="relative z-10">
+          <h1 className="font-heading text-4xl md:text-5xl text-gold-gradient mb-3 drop-shadow-lg">Vitrine de Figurinhas Premium</h1>
+          <p className="text-muted-foreground text-sm max-w-2xl mx-auto leading-relaxed">
+            Navegue pela coleção oficial de Bruxos Célebres. Compre figurinhas exclusivas usando o XP conquistado no RPG.
+            Figurinhas Ouro e Prata brilham de forma mágica e mostram o seu prestígio!
+          </p>
+          <div className="mt-8 inline-flex items-center gap-3 bg-secondary/50 backdrop-blur-md px-6 py-3 rounded-xl border border-border/50">
+            <span className="text-sm text-muted-foreground uppercase tracking-widest">Saldo Atual:</span>
+            <span className="font-heading text-2xl text-primary animate-pulse">{profile?.xp || 0} XP</span>
           </div>
-          <Button variant="magical" onClick={buyPack} disabled={opening}>
-            {opening ? "Abrindo Pacote..." : "Comprar Pacote (50 XP)"}
-          </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         {stickers.map(s => {
           const unlocked = userStickers[s.id];
           const isGold = s.rarity === 'gold';
           const isSilver = s.rarity === 'silver';
+          const cost = RARITY_COST[s.rarity];
+          const levelOk = profile ? profile.level >= s.level_required : false;
+          const xpOk = profile ? profile.xp >= cost : false;
           
-          let rarityStyle = "border-amber-700/50 from-amber-900/40 to-background";
-          if (isSilver) rarityStyle = "border-slate-300/80 from-slate-700/40 to-background shadow-white/10";
-          if (isGold) rarityStyle = "border-yellow-400 from-yellow-600/40 to-background shadow-yellow-500/20";
+          let rarityStyle = "border-amber-700/50 from-amber-900/40 to-background shadow-lg shadow-amber-900/20";
+          if (isSilver) rarityStyle = "border-slate-300/80 from-slate-700/40 to-background shadow-xl shadow-white/10";
+          if (isGold) rarityStyle = "border-yellow-400 from-yellow-600/40 to-background shadow-2xl shadow-yellow-500/30 ring-1 ring-yellow-400/50";
 
           return (
             <div 
               key={s.id} 
-              className={`relative aspect-[3/4] rounded-xl overflow-hidden border-2 transition-all duration-500 ${unlocked ? rarityStyle : 'border-border/50 bg-secondary/20 grayscale blur-[1px]'}`}
+              className={`relative aspect-[3/4] rounded-2xl flex flex-col overflow-hidden border-2 transition-all duration-500 group ${unlocked ? rarityStyle : 'border-border/50 bg-secondary/10 hover:border-primary/50'}`}
             >
-              {unlocked && (
-                <div className="absolute inset-0 z-0">
-                  <img src={s.image_url} alt={s.character_name} className="w-full h-full object-cover mix-blend-overlay opacity-60" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-                </div>
-              )}
+              {/* Imagem */}
+              <div className="absolute inset-0 z-0">
+                <img 
+                  src={s.image_url} 
+                  alt={s.character_name} 
+                  className={`w-full h-full object-cover transition-all duration-700 ${unlocked ? 'mix-blend-overlay opacity-80 group-hover:scale-105 group-hover:opacity-100' : 'opacity-30 grayscale blur-[2px] group-hover:grayscale-0 group-hover:blur-0'}`} 
+                />
+                <div className={`absolute inset-0 bg-gradient-to-t ${unlocked ? 'from-background via-background/60 to-transparent' : 'from-background via-background/90 to-background/40'}`} />
+              </div>
               
-              <div className="relative z-10 h-full flex flex-col justify-end p-3">
-                <div className="mb-auto flex justify-between items-start">
-                  <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full ${unlocked ? 'bg-background/80 text-foreground' : 'hidden'}`}>
+              <div className="relative z-10 h-full flex flex-col justify-between p-4">
+                <div className="flex justify-between items-start">
+                  <span className={`text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full shadow-sm ${
+                    isGold ? 'bg-yellow-400/20 text-yellow-400 border border-yellow-400/50' : 
+                    isSilver ? 'bg-slate-300/20 text-slate-300 border border-slate-300/50' : 
+                    'bg-amber-700/20 text-amber-600 border border-amber-700/50'
+                  }`}>
                     {s.rarity}
                   </span>
-                  {!unlocked && (
-                    <span className="text-xs text-muted-foreground/60 bg-background/80 px-2 py-1 rounded-md">
+                  
+                  {unlocked ? (
+                    <span className="text-xl drop-shadow-md">✨</span>
+                  ) : (
+                    <span className={`text-[10px] uppercase font-bold tracking-widest px-2 py-1 rounded-md ${levelOk ? 'bg-background/80 text-primary' : 'bg-destructive/20 text-destructive'}`}>
                       Nv. {s.level_required}
                     </span>
                   )}
                 </div>
-                {unlocked ? (
-                  <h3 className={`font-heading text-sm leading-tight ${isGold ? 'text-yellow-400' : 'text-foreground'}`}>
+                
+                <div className="mt-auto space-y-3">
+                  <h3 className={`font-heading text-lg leading-tight text-center drop-shadow-md ${unlocked && isGold ? 'text-yellow-400' : unlocked ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground transition-colors'}`}>
                     {s.character_name}
                   </h3>
-                ) : (
-                  <h3 className="font-heading text-sm text-muted-foreground/40">Desconhecido</h3>
-                )}
+
+                  {!unlocked && (
+                    <Button 
+                      variant="magical" 
+                      className="w-full h-9 text-xs font-heading shadow-[0_0_15px_rgba(212,175,55,0.2)]"
+                      disabled={!levelOk || !xpOk || buyingId === s.id}
+                      onClick={() => buySticker(s)}
+                    >
+                      {buyingId === s.id ? "Comprando..." : !levelOk ? "Nível Insuficiente" : !xpOk ? "XP Insuficiente" : `Comprar por ${cost} XP`}
+                    </Button>
+                  )}
+                </div>
               </div>
               
               {unlocked && isGold && (
-                <div className="absolute inset-0 z-20 pointer-events-none opacity-50 bg-[radial-gradient(circle_at_50%_50%,rgba(255,215,0,0.2),transparent_70%)] animate-pulse" />
+                <div className="absolute inset-0 z-20 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(255,215,0,0.15),transparent_60%)] animate-pulse" />
               )}
             </div>
           );
