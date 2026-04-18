@@ -12,6 +12,11 @@ interface Sticker {
   level_required: number;
 }
 
+interface UserSticker {
+  sticker_id: string;
+  obtained_at: string;
+}
+
 export default function StickerAlbum() {
   const { profile, user } = useAuth();
   const [stickers, setStickers] = useState<Sticker[]>([]);
@@ -21,19 +26,18 @@ export default function StickerAlbum() {
 
   useEffect(() => {
     loadAlbum();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadAlbum = async () => {
     if (!user) return;
-    const { data: allStickers } = await supabase.from("stickers" as never).select("*").order("level_required", { ascending: true });
-    const { data: myStickers } = await supabase.from("user_stickers" as never).select("sticker_id").eq("user_id", user.id);
-
-    setStickers((allStickers as unknown as Sticker[]) || []);
-
+    const { data: allStickers } = await supabase.from("stickers").select("*").order("level_required", { ascending: true });
+    const { data: myStickers } = await supabase.from("user_stickers").select("sticker_id").eq("user_id", user.id);
+    
+    setStickers((allStickers as Sticker[]) || []);
+    
     const myMap: Record<string, boolean> = {};
     if (myStickers) {
-      (myStickers as unknown as { sticker_id: string }[]).forEach(s => myMap[s.sticker_id] = true);
+      myStickers.forEach(s => myMap[s.sticker_id] = true);
     }
     setUserStickers(myMap);
     setLoading(false);
@@ -49,7 +53,7 @@ export default function StickerAlbum() {
 
     setOpening(true);
     await supabase.from("profiles").update({ xp: profile.xp - packCost } as never).eq("user_id", user.id);
-
+    
     const available = stickers.filter(s => s.level_required <= profile.level);
     if (available.length === 0) {
       toast.error("Nenhuma figurinha disponível para o seu nível ainda!");
@@ -68,17 +72,10 @@ export default function StickerAlbum() {
     const won = possible[Math.floor(Math.random() * possible.length)];
 
     if (userStickers[won.id]) {
-<<<<<<< HEAD
       toast.success(\Você abriu o pacote e encontrou \ (\), mas já tinha essa!\);
     } else {
       await supabase.from("user_stickers").insert({ user_id: user.id, sticker_id: won.id } as never);
-      toast.success(\? INCRÍVEL! Você ganhou a figurinha de \ (\)!\);
-=======
-      toast.success(`Você abriu o pacote e encontrou ${won.character_name} (${won.rarity}), mas já tinha essa!`);
-    } else {
-      await supabase.from("user_stickers" as never).insert({ user_id: user.id, sticker_id: won.id } as never);
-      toast.success(`✨ INCRÍVEL! Você ganhou a figurinha de ${won.character_name} (${won.rarity})!`);
->>>>>>> 92203115bf0e05ea1193ba30698e72d1932e7b0f
+      toast.success(\✨ INCRÍVEL! Você ganhou a figurinha de \ (\)!\);
       setUserStickers(prev => ({ ...prev, [won.id]: true }));
     }
     setOpening(false);
@@ -91,11 +88,7 @@ export default function StickerAlbum() {
       <div className="glass rounded-2xl p-6 text-center">
         <h1 className="font-heading text-3xl text-gold-gradient mb-2">Álbum de Bruxos Célebres</h1>
         <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-<<<<<<< HEAD
           Colecione figurinhas dos maiores bruxos e bruxas da história. Compre pacotinhos usando seu XP. 
-=======
-          Colecione figurinhas dos maiores bruxos e bruxas da história. Compre pacotinhos usando seu XP.
->>>>>>> 92203115bf0e05ea1193ba30698e72d1932e7b0f
           Figurinhas Ouro e Prata só podem ser encontradas por bruxos de nível alto!
         </p>
         <div className="mt-6 flex justify-center gap-4 items-center">
@@ -114,15 +107,15 @@ export default function StickerAlbum() {
           const unlocked = userStickers[s.id];
           const isGold = s.rarity === 'gold';
           const isSilver = s.rarity === 'silver';
-
+          
           let rarityStyle = "border-amber-700/50 from-amber-900/40 to-background";
           if (isSilver) rarityStyle = "border-slate-300/80 from-slate-700/40 to-background shadow-white/10";
           if (isGold) rarityStyle = "border-yellow-400 from-yellow-600/40 to-background shadow-yellow-500/20";
 
           return (
-            <div
-              key={s.id}
-              className={`relative aspect-[3/4] rounded-xl overflow-hidden border-2 transition-all duration-500 bg-gradient-to-b ${rarityStyle} ${unlocked ? '' : 'grayscale opacity-60'}`}
+            <div 
+              key={s.id} 
+              className={\elative aspect-[3/4] rounded-xl overflow-hidden border-2 transition-all duration-500 \\}
             >
               {unlocked && (
                 <div className="absolute inset-0 z-0">
@@ -130,10 +123,10 @@ export default function StickerAlbum() {
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
                 </div>
               )}
-
+              
               <div className="relative z-10 h-full flex flex-col justify-end p-3">
                 <div className="mb-auto flex justify-between items-start">
-                  <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full ${isGold ? 'bg-yellow-500/30 text-yellow-200' : isSilver ? 'bg-slate-300/30 text-slate-100' : 'bg-amber-700/30 text-amber-200'}`}>
+                  <span className={\	ext-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full \\}>
                     {s.rarity}
                   </span>
                   {!unlocked && (
@@ -143,14 +136,14 @@ export default function StickerAlbum() {
                   )}
                 </div>
                 {unlocked ? (
-                  <h3 className={`font-heading text-sm leading-tight ${isGold ? 'text-yellow-300' : isSilver ? 'text-slate-100' : 'text-amber-200'}`}>
+                  <h3 className={\ont-heading text-sm leading-tight \\}>
                     {s.character_name}
                   </h3>
                 ) : (
                   <h3 className="font-heading text-sm text-muted-foreground/40">Desconhecido</h3>
                 )}
               </div>
-
+              
               {unlocked && isGold && (
                 <div className="absolute inset-0 z-20 pointer-events-none opacity-50 bg-[radial-gradient(circle_at_50%_50%,rgba(255,215,0,0.2),transparent_70%)] animate-pulse" />
               )}
