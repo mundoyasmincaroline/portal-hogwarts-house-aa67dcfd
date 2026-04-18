@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";
@@ -26,7 +26,7 @@ const NAV_ITEMS = [
 ];
 
 const ADMIN_ITEMS = [
-  { icon: "âš™ï¸", label: "Admin", path: "/dashboard/admin" },
+  { icon: "⚙️", label: "Admin", path: "/dashboard/admin" },
 ];
 
 export default function DashboardLayout() {
@@ -39,7 +39,7 @@ export default function DashboardLayout() {
     if (!isLoading && !user) navigate("/login");
   }, [isLoading, user, navigate]);
 
-  // Heartbeat de presenÃ§a + offline ao sair
+  // Heartbeat de presença + offline ao sair
   useEffect(() => {
     if (!user) return;
     pingPresence();
@@ -60,7 +60,7 @@ export default function DashboardLayout() {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <div className="text-4xl animate-float mb-4">âš¡</div>
+          <div className="text-4xl animate-float mb-4">⚡</div>
           <p className="font-heading text-muted-foreground">Carregando portal...</p>
         </div>
       </div>
@@ -86,7 +86,7 @@ export default function DashboardLayout() {
       <aside className={`fixed md:static inset-y-0 left-0 z-40 w-64 bg-card border-r border-border flex flex-col transition-transform md:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="p-4 border-b border-border">
           <Link to="/dashboard" className="flex items-center gap-2">
-            <span className="text-2xl">âš¡</span>
+            <span className="text-2xl">⚡</span>
             <span className="font-heading text-lg text-gold-gradient">Hogwarts House</span>
           </Link>
         </div>
@@ -133,7 +133,7 @@ export default function DashboardLayout() {
 
       <main className="flex-1 flex flex-col min-w-0">
         <div className="md:hidden flex items-center gap-3 p-3 border-b border-border bg-card">
-          <button onClick={() => setSidebarOpen(true)} className="text-xl">â˜°</button>
+          <button onClick={() => setSidebarOpen(true)} className="text-xl">☰</button>
           <span className="font-heading text-sm text-gold-gradient">Hogwarts House</span>
         </div>
 
