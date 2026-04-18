@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+ï»¿import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -110,12 +110,12 @@ export default function Classes() {
     if (!user || !profile) return;
     
     if (!isClassActive(cls.time_slot)) {
-      toast.error("Você não pode entrar nesta aula agora. As portas estão trancadas!");
+      toast.error("VocÃª nÃ£o pode entrar nesta aula agora. As portas estÃ£o trancadas!");
       return;
     }
 
     if (attendedMap[cls.id]) {
-      toast.error("Você já participou desta aula hoje!");
+      toast.error("VocÃª jÃ¡ participou desta aula hoje!");
       return;
     }
 
@@ -125,7 +125,7 @@ export default function Classes() {
     });
 
     if (error) {
-      toast.error("Erro ao registrar presença: " + error.message);
+      toast.error("Erro ao registrar presenÃ§a: " + error.message);
       return;
     }
 
@@ -133,7 +133,7 @@ export default function Classes() {
     await supabase.from("profiles").update({ xp: profile.xp + cls.xp_reward }).eq("user_id", user.id);
     
     setAttendedMap(prev => ({ ...prev, [cls.id]: true }));
-    toast.success(\? Mais \ XP! Você assistiu à aula de \ com sucesso!\);
+    toast.success(`âœ¨ Mais ${cls.xp_reward} XP! VocÃª assistiu Ã  aula de ${cls.title} com sucesso!`);
   };
 
   if (loading) return <div className="text-center py-10">Consultando pergaminhos...</div>;
@@ -141,10 +141,10 @@ export default function Classes() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="glass rounded-2xl p-6 text-center">
-        <h1 className="font-heading text-3xl text-gold-gradient mb-2">Horário de Aulas</h1>
+        <h1 className="font-heading text-3xl text-gold-gradient mb-2">HorÃ¡rio de Aulas</h1>
         <p className="text-muted-foreground text-sm max-w-xl mx-auto mb-4">
-          Você é um aluno do <strong>{studentYear}º Ano</strong>. Estamos na <strong>Semana {currentRotation}</strong> do rodízio.
-          Participe das aulas no horário exato para ganhar XP.
+          VocÃª Ã© um aluno do <strong>{studentYear}Âº Ano</strong>. Estamos na <strong>Semana {currentRotation}</strong> do rodÃ­zio.
+          Participe das aulas no horÃ¡rio exato para ganhar XP.
         </p>
         <div className="flex items-center justify-center gap-2 text-primary">
           <Clock className="w-4 h-4" />
@@ -156,7 +156,7 @@ export default function Classes() {
         {classes.length === 0 ? (
           <div className="col-span-full glass rounded-xl p-8 text-center border-border">
             <BookOpen className="w-12 h-12 mx-auto text-muted-foreground/30 mb-3" />
-            <p className="text-muted-foreground">Você não tem aulas programadas para hoje.</p>
+            <p className="text-muted-foreground">VocÃª nÃ£o tem aulas programadas para hoje.</p>
           </div>
         ) : (
           classes.map(cls => {
@@ -164,7 +164,7 @@ export default function Classes() {
             const attended = attendedMap[cls.id];
             
             return (
-              <div key={cls.id} className={\glass rounded-xl p-5 border-l-4 transition-all \\}>
+              <div key={cls.id} className={`glass rounded-xl p-5 border-l-4 transition-all ${active ? 'border-primary shadow-[0_0_15px_rgba(255,215,0,0.1)]' : 'border-border/50 opacity-80'}`}>
                 <div className="flex justify-between items-start mb-3">
                   <div>
                     <h3 className="font-heading text-lg text-foreground flex items-center gap-2">
@@ -186,7 +186,7 @@ export default function Classes() {
 
                   {attended ? (
                     <Button variant="secondary" size="sm" disabled className="text-green-500">
-                      Presença Confirmada
+                      PresenÃ§a Confirmada
                     </Button>
                   ) : (
                     <Button 
@@ -194,7 +194,7 @@ export default function Classes() {
                       size="sm"
                       onClick={() => attendClass(cls)}
                     >
-                      {active ? "Participar da Aula" : "Fora do Horário"}
+                      {active ? "Participar da Aula" : "Fora do HorÃ¡rio"}
                     </Button>
                   )}
                 </div>
@@ -207,7 +207,7 @@ export default function Classes() {
       <div className="glass rounded-xl p-4 bg-primary/5 border-primary/20 flex gap-3">
         <AlertCircle className="w-5 h-5 text-primary shrink-0" />
         <p className="text-sm text-muted-foreground">
-          <strong>Aviso:</strong> A porta da sala só se abre durante o horário marcado. Se você tentar entrar antes ou depois, o zelador Filch não vai deixar!
+          <strong>Aviso:</strong> A porta da sala sÃ³ se abre durante o horÃ¡rio marcado. Se vocÃª tentar entrar antes ou depois, o zelador Filch nÃ£o vai deixar!
         </p>
       </div>
     </div>
