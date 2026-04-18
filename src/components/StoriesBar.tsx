@@ -23,21 +23,40 @@ export default function StoriesBar() {
   }, []);
 
   const fetchStories = async () => {
-    const { data } = await supabase
+    const { data: storiesData } = await supabase
       .from("stories")
-      .select("*, profiles!inner(full_name, avatar_url, house, id)")
+      .select("*")
       .gt("expires_at", new Date().toISOString())
       .order("created_at", { ascending: true });
 
-    if (data) {
-      setStories(data);
-      const grouped = data.reduce((acc: any, story: any) => {
+    if (storiesData && storiesData.length > 0) {
+      const userIds = [...new Set(storiesData.map(s => s.user_id))];
+      const { data: profilesData } = await supabase
+        .from("profiles")
+        .select("user_id, full_name, avatar_url, house, id")
+        .in("user_id", userIds);
+      
+      const profilesMap = (profilesData || []).reduce((acc: any, p: any) => {
+        acc[p.user_id] = p;
+        return acc;
+      }, {});
+
+      const mergedData = storiesData.map(s => ({
+        ...s,
+        profiles: profilesMap[s.user_id]
+      }));
+
+      setStories(mergedData);
+      const grouped = mergedData.reduce((acc: any, story: any) => {
         const uid = story.user_id;
         if (!acc[uid]) acc[uid] = [];
         acc[uid].push(story);
         return acc;
       }, {});
       setGroupedStories(grouped);
+    } else {
+      setStories([]);
+      setGroupedStories({});
     }
   };
 
