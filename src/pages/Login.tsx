@@ -4,17 +4,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/lib/auth";
 import MagicalParticles from "@/components/MagicalParticles";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function Login() {
   const navigate = useNavigate();
-  const login = useAuth((s) => s.login);
+  const { login, resetPassword } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
+  const [resetMessage, setResetMessage] = useState("");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isResetting) {
+      handleResetPassword();
+      return;
+    }
     setError("");
     setLoading(true);
     const result = await login(email, password);
@@ -23,6 +31,23 @@ export default function Login() {
       navigate("/dashboard");
     } else {
       setError(result.error || "Credenciais inválidas. Tente novamente.");
+    }
+  };
+
+  const handleResetPassword = async () => {
+    if (!email) {
+      setError("Digite seu e-mail para recuperar a senha.");
+      return;
+    }
+    setError("");
+    setLoading(true);
+    const result = await resetPassword(email);
+    setLoading(false);
+    if (result.success) {
+      setResetMessage("Um e-mail mágico foi enviado com o link de recuperação!");
+      setIsResetting(false);
+    } else {
+      setError(result.error || "Erro ao solicitar recuperação.");
     }
   };
 
@@ -44,32 +69,72 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="seu@email.com"
               className="bg-secondary/50 border-border"
+              required
             />
           </div>
-          <div>
-            <label className="text-sm font-heading text-muted-foreground block mb-1">Senha</label>
-            <Input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="bg-secondary/50 border-border"
-            />
-          </div>
-          {error && <p className="text-destructive text-sm">{error}</p>}
+          
+          {!isResetting && (
+            <div>
+              <div className="flex justify-between items-center mb-1">
+                <label className="text-sm font-heading text-muted-foreground block">Senha</label>
+                <button 
+                  type="button" 
+                  onClick={() => setIsResetting(true)}
+                  className="text-xs text-primary hover:underline font-heading"
+                >
+                  Esqueceu a senha?
+                </button>
+              </div>
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="bg-secondary/50 border-border pr-10"
+                  required={!isResetting}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {error && <p className="text-destructive text-sm font-medium">{error}</p>}
+          {resetMessage && <p className="text-green-500 text-sm font-medium">{resetMessage}</p>}
+
           <Button type="submit" variant="magical" className="w-full font-heading" disabled={loading}>
-            {loading ? "Entrando..." : "Entrar no Portal"}
+            {loading ? "Aguarde..." : isResetting ? "Recuperar Senha" : "Entrar no Portal"}
           </Button>
+
+          {isResetting && (
+            <button 
+              type="button"
+              onClick={() => { setIsResetting(false); setError(""); setResetMessage(""); }}
+              className="w-full text-sm text-muted-foreground hover:text-foreground mt-2"
+            >
+              Voltar para o Login
+            </button>
+          )}
         </form>
 
-        <div className="text-center mt-6">
-          <p className="text-sm text-muted-foreground">
+        <div className="text-center mt-6 pt-4 border-t border-border">
+          <p className="text-sm text-muted-foreground mb-2">
             Ainda não tem vaga?{" "}
             <Link to="/register" className="text-primary hover:underline font-heading">
               Solicitar acesso
             </Link>
           </p>
-          <Link to="/" className="text-xs text-muted-foreground hover:text-primary mt-2 inline-block">
+          <p className="text-xs text-muted-foreground mt-4 italic">
+            Problemas com o acesso? Contate o suporte:<br/>
+            <a href="mailto:mundoyasmincaroline@gmail.com" className="text-primary hover:underline">mundoyasmincaroline@gmail.com</a>
+          </p>
+          <Link to="/" className="text-xs text-muted-foreground hover:text-primary mt-4 inline-block">
             ← Voltar ao início
           </Link>
         </div>
