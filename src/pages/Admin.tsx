@@ -61,6 +61,8 @@ export default function Admin() {
   const [newCh, setNewCh] = useState({ title: "", description: "", xp_reward: 50, type: "daily", question: "", correct_answer: "" });
   const [newWord, setNewWord] = useState("");
   const [adForm, setAdForm] = useState({ title: "", link: "", image_url: "" });
+  const [adFormType, setAdFormType] = useState("feed");
+  const [interstitialConfig, setInterstitialConfig] = useState({ enabled: false, interval_minutes: 5 });
 
   const fetchAll = async () => {
     const [
@@ -86,6 +88,8 @@ export default function Admin() {
     if (bw) setBannedWords(bw);
     if (ch) setChannels(ch);
     if (adsData) setAds(adsData);
+    const { data: s } = await supabase.from("site_settings").select("setting_value").eq("setting_key", "interstitial_config").single();
+    if (s) setInterstitialConfig(s.setting_value as any);
     setLoading(false);
   };
 
@@ -117,12 +121,20 @@ export default function Admin() {
     fetchAll();
   };
 
+  const updateInterstitialConfig = async (updates: any) => {
+    const newConfig = { ...interstitialConfig, ...updates };
+    setInterstitialConfig(newConfig);
+    await supabase.from("site_settings").upsert({ setting_key: "interstitial_config", setting_value: newConfig } as never);
+    toast.success("ConfiguraÁıes atualizadas!");
+  };
+
   const createAd = async () => {
     if (!adForm.title || !adForm.link) return;
     const { error } = await supabase.from("ads").insert([adForm]);
     if (!error) {
       toast.success("An√∫ncio criado com sucesso!");
       setAdForm({ title: "", link: "", image_url: "" });
+    setAdFormType("feed");
       fetchAll();
     } else {
       toast.error(error.message);
@@ -553,6 +565,7 @@ export default function Admin() {
                       {ad.image_url && <img src={ad.image_url} alt="Ad" className="w-12 h-12 object-cover rounded-md" />}
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-foreground">{ad.title}</p>
+<span className="text-[10px] uppercase bg-secondary px-2 py-0.5 rounded text-muted-foreground">{ad.ad_type}</span>
                         <a href={ad.link} target="_blank" rel="noreferrer" className="text-xs text-primary hover:underline truncate block">{ad.link}</a>
                       </div>
                       <div className="flex gap-2">
@@ -607,4 +620,5 @@ export default function Admin() {
     </div>
   );
 }
+
 

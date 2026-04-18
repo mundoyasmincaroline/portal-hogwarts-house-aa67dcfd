@@ -6,6 +6,7 @@ import { HOUSES } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
 
 import Notifications from "@/components/Notifications";
+import InterstitialAd from "@/components/InterstitialAd";
 import CastleEntrance from "@/pages/CastleEntrance";
 import EngagementBot from "@/components/EngagementBot";
 
@@ -75,6 +76,7 @@ export default function DashboardLayout() {
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
+      <InterstitialAd />
       {sidebarOpen && (
         <div className="fixed inset-0 bg-background/80 z-30 md:hidden" onClick={() => setSidebarOpen(false)} />
       )}
@@ -141,5 +143,6 @@ export default function DashboardLayout() {
     </div>
   );
 }
+
 
 
