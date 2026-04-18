@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";
-import { HOUSES } from "@/lib/store";
+import { HOUSES, type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
 
 import Notifications from "@/components/Notifications";
