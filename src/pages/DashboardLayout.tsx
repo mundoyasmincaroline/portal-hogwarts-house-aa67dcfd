@@ -71,7 +71,11 @@ export default function DashboardLayout() {
   
 
   if (!profile.approved) return <PendingApproval />;
-  if (!profile.has_seen_intro) return <CastleEntrance />;
+    const today = new Date().toISOString().split(''T'')[0];
+  const lastSeenIntro = localStorage.getItem(`intro_last_seen_${user.id}`);
+  const shouldShowIntro = lastSeenIntro !== today;
+
+  if (shouldShowIntro) return <CastleEntrance />;
   
   const house = HOUSES[profile.house as House] || HOUSES.gryffindor;
   const items = isAdmin ? [...NAV_ITEMS, ...ADMIN_ITEMS] : NAV_ITEMS;
@@ -145,6 +149,7 @@ export default function DashboardLayout() {
     </div>
   );
 }
+
 
 
 
