@@ -345,6 +345,45 @@ export type Database = {
         }
         Relationships: []
       }
+      friendships: {
+        Row: {
+          created_at: string
+          friend_id: string
+          id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          friend_id: string
+          id?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          friend_id?: string
+          id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "friendships_friend_id_fkey"
+            columns: ["friend_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "friendships_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       house_points: {
         Row: {
           awarded_by: string | null
@@ -369,6 +408,33 @@ export type Database = {
           id?: string
           points?: number
           reason?: string | null
+        }
+        Relationships: []
+      }
+      insta_posts: {
+        Row: {
+          caption: string | null
+          created_at: string
+          id: string
+          image_url: string
+          likes: string[]
+          user_id: string
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          image_url: string
+          likes?: string[]
+          user_id: string
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string
+          likes?: string[]
+          user_id?: string
         }
         Relationships: []
       }
