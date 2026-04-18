@@ -10,21 +10,21 @@ export default function DynamicGreeting() {
     if (hour >= 5 && hour < 12) {
       setGreeting({
         title: "Bom dia!",
-        desc: "O Salão Principal cheira a panquecas e café quente.",
+        desc: "O SalÃ£o Principal cheira a panquecas e cafÃ© quente.",
         img: "https://images.unsplash.com/photo-1544463403-f11dd252cbe9?q=80&w=800&auto=format&fit=crop",
         bg: "from-amber-500/20 to-orange-500/10"
       });
     } else if (hour >= 12 && hour < 18) {
       setGreeting({
         title: "Boa tarde!",
-        desc: "As aulas de poções estão a todo vapor.",
+        desc: "As aulas de poÃ§Ãµes estÃ£o a todo vapor.",
         img: "https://images.unsplash.com/photo-1579781403261-fcfcb16e14fb?q=80&w=800&auto=format&fit=crop",
         bg: "from-amber-700/20 to-yellow-600/10"
       });
     } else {
       setGreeting({
         title: "Boa noite!",
-        desc: "Cuidado com os corredores escuros, os monitores estão rondando.",
+        desc: "Cuidado com os corredores escuros, os monitores estÃ£o rondando.",
         img: "https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?q=80&w=800&auto=format&fit=crop",
         bg: "from-blue-900/40 to-indigo-900/20"
       });
@@ -34,7 +34,7 @@ export default function DynamicGreeting() {
   if (!profile) return null;
 
   return (
-    <div className={elative overflow-hidden rounded-2xl p-6 mb-6 glass bg-gradient-to-br \}>
+    <div className={`relative overflow-hidden rounded-2xl p-6 mb-6 glass bg-gradient-to-br ${greeting.bg}`}>
       <div className="absolute inset-0 z-0">
         <img src={greeting.img} alt="Hogwarts" className="w-full h-full object-cover opacity-20 mix-blend-overlay" />
         <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent" />

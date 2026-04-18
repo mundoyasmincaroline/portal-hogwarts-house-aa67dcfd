@@ -287,26 +287,26 @@ export default function Feed() {
         </div>
 
         <div className="space-y-4">
-                    <div className="glass rounded-xl p-4">
-            <h3 className="font-heading text-sm text-primary mb-3">?? Bruxos no Castelo</h3>
+          <div className="glass rounded-xl p-4">
+            <h3 className="font-heading text-sm text-primary mb-3">🏰 Bruxos no Castelo</h3>
             <div className="space-y-2 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
               {onlineUsers.length === 0 && (
-                <p className="text-xs text-muted-foreground">Ningu�m � vista.</p>
+                <p className="text-xs text-muted-foreground">Ninguém à vista.</p>
               )}
-              {onlineUsers.map(u => (
+              {onlineUsers.map((u) => (
                 <div key={u.id} className="flex items-center gap-2">
                   <HouseCrest house={u.house} size="sm" />
                   <div className="flex-1 min-w-0">
                     <p className="text-xs text-foreground truncate">{u.full_name.split(' ')[0]}</p>
                   </div>
-                  <span className={w-2 h-2 rounded-full } title={u.online ? 'Online' : 'Offline'} />
+                  <span className={`w-2 h-2 rounded-full ${u.online ? 'bg-green-500' : 'bg-muted'}`} title={u.online ? 'Online' : 'Offline'} />
                 </div>
               ))}
             </div>
           </div>
 
           <div className="glass rounded-xl p-4">
-            <h3 className="font-heading text-sm text-primary mb-3">?? Desafios Ativos</h3>
+            <h3 className="font-heading text-sm text-primary mb-3">⚔️ Desafios Ativos</h3>
             <div className="space-y-2">
               {activeChallenges.length === 0 && (
                 <p className="text-xs text-muted-foreground">Nenhum desafio ativo agora.</p>
@@ -324,4 +324,3 @@ export default function Feed() {
     </div>
   );
 }
-
