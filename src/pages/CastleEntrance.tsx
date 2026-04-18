@@ -9,6 +9,11 @@ export default function CastleEntrance() {
   const { user, profile, fetchProfile } = useAuth();
   const navigate = useNavigate();
 
+  const hour = new Date().getHours();
+  let timeOfDay = "night";
+  if (hour >= 5 && hour < 12) timeOfDay = "morning";
+  else if (hour >= 12 && hour < 18) timeOfDay = "afternoon";
+
   const [loading, setLoading] = useState(false);
 
   const handleFinish = async () => {
@@ -29,9 +34,16 @@ export default function CastleEntrance() {
     }
   };
 
+  let welcomeText = "As pesadas portas de carvalho do castelo se abrem lentamente, revelando o imponente Grande Salão iluminado por milhares de velas flutuantes.";
+  if (timeOfDay === "morning") {
+    welcomeText = "Os primeiros raios de sol da manhã iluminam as pesadas portas de carvalho do castelo. O Grande Salão desperta com o cheiro de café da manhã mágico e o voo das corujas.";
+  } else if (timeOfDay === "afternoon") {
+    welcomeText = "O sol da tarde aquece as pedras milenares de Hogwarts. Pelas janelas do Grande Salão, você pode ver os alunos rindo e praticando feitiços nos jardins iluminados.";
+  }
+
   const steps = [
     {
-      text: "As pesadas portas de carvalho do castelo se abrem lentamente, revelando o imponente Grande Salão iluminado por milhares de velas flutuantes.",
+      text: welcomeText,
       options: [{ text: "Entrar com cautela", next: 1 }, { text: "Correr para dentro", next: 1 }],
     },
     {
@@ -51,10 +63,14 @@ export default function CastleEntrance() {
 
   const current = steps[step];
 
+  let bgUrl = "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=2000"; // Night sky/magic
+  if (timeOfDay === "morning") bgUrl = "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=2000"; // Morning light
+  else if (timeOfDay === "afternoon") bgUrl = "https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2000"; // Afternoon castle
+
   return (
     <div className="fixed inset-0 bg-background/95 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay" style={{ backgroundImage: `url('${bgUrl}')` }}></div>
       <div className="max-w-2xl w-full bg-secondary/80 border border-primary/20 rounded-2xl p-8 shadow-2xl relative overflow-hidden animate-in fade-in zoom-in duration-700">
-        <div className="absolute inset-0 bg-[url('/hogwarts-stars.png')] opacity-20 pointer-events-none mix-blend-screen"></div>
         
         <div className="relative z-10 space-y-8 text-center">
           <h1 className="font-heading text-3xl text-gold-gradient mb-6">O Retorno a Hogwarts</h1>

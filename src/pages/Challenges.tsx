@@ -60,7 +60,19 @@ export default function Challenges() {
       setActiveEnigma(c);
       return;
     } else {
-      toast.info("Desafio em andamento. Aguardando aprovação.");
+      // Tarefas comuns: auto-aprovar para o usuário conseguir o XP na hora
+      const { error: ucErr } = await supabase
+        .from("user_challenges")
+        .insert({ user_id: user.id, challenge_id: c.id, completed: true, status: 'approved', completed_at: new Date().toISOString() } as never);
+      
+      if (ucErr) { toast.error("Erro ao registrar: " + ucErr.message); return; }
+
+      await supabase.from("profiles").update({ xp: profile.xp + c.xp_reward } as never).eq("user_id", user.id);
+      await supabase.from("house_points").insert({ house: profile.house, points: c.xp_reward, reason: `Missão: ${c.title}`, awarded_by: user.id } as never);
+      await fetchProfile(user.id);
+
+      toast.success(`Missão Cumprida! +${c.xp_reward} XP! ⚡`);
+      setCompletedIds((s) => new Set([...s, c.id]));
     }
   };
 
@@ -119,17 +131,15 @@ export default function Challenges() {
           </div>
         )}
 
-        {c.question && (
-          <Button
-            variant="magical"
-            size="sm"
-            className="font-heading text-xs w-full"
-            disabled={done}
-            onClick={() => completeChallenge(c)}
-          >
-            {done ? "✅ Concluído" : "Responder Charada 🦉"}
-          </Button>
-        )}
+        <Button
+          variant="magical"
+          size="sm"
+          className="font-heading text-xs w-full"
+          disabled={done}
+          onClick={() => completeChallenge(c)}
+        >
+          {done ? "✅ Concluído" : c.question ? "Responder Charada 🦉" : "Concluir Missão ⚡"}
+        </Button>
       </div>
     );
   };
