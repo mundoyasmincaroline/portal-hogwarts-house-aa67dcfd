@@ -123,9 +123,9 @@ export default function Challenges() {
           size="sm"
           className="font-heading text-xs w-full"
           disabled={done}
-          onClick={() => completeChallenge(c)}
+          onClick={() => openChallenge(c)}
         >
-          {done ? "✅ Concluído" : c.question ? "Responder Charada 🦉" : "Concluir Missão ⚡"}
+          {done ? "✅ Concluído" : c.question ? "Responder Charada 🦉" : "Automática ⚙️"}
         </Button>
       </div>
     );
