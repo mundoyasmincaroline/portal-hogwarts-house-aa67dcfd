@@ -65,7 +65,7 @@ export default function Admin() {
   const fetchAll = async () => {
     const [
       { data: m }, { data: pm }, { data: c }, { data: l }, { data: f },
-      { data: pt }, { data: bw }, { data: ch }, { data: adsData }, { data: storiesData }
+      { data: pt }, { data: bw }, { data: ch }, { data: adsData }
     ] = await Promise.all([
       supabase.from("profiles").select("*").eq("approved", true).order("created_at", { ascending: false }),
       supabase.from("profiles").select("*").eq("approved", false).order("created_at", { ascending: false }),
@@ -75,8 +75,7 @@ export default function Admin() {
       supabase.from("user_challenges").select("*, profiles(full_name, username), challenges(title, xp_reward)").eq("status", "pending").order("completed_at", { ascending: false }),
       supabase.from("banned_words").select("*").order("created_at", { ascending: false }),
       supabase.from("channels").select("*").order("name"),
-      supabase.from("ads").select("*").order("created_at", { ascending: false }),
-      supabase.from("stories").select("*, profiles(full_name)").order("created_at", { ascending: false })
+      supabase.from("ads").select("*").order("created_at", { ascending: false })
     ]);
     if (m) setMembers(m as unknown as MemberProfile[]);
     if (pm) setPendingMembers(pm as unknown as MemberProfile[]);
@@ -87,7 +86,6 @@ export default function Admin() {
     if (bw) setBannedWords(bw);
     if (ch) setChannels(ch);
     if (adsData) setAds(adsData);
-    if (storiesData) setStories(storiesData);
     setLoading(false);
   };
 

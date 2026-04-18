@@ -8,7 +8,7 @@ const crests: Record<House, { emoji: string; bg: string }> = {
 };
 
 export default function HouseCrest({ house, size = "md" }: { house: House; size?: "sm" | "md" | "lg" }) {
-  const c = crests[house];
+  const c = crests[house] || crests.gryffindor;
   const sizeClasses = {
     sm: "w-8 h-8 text-sm",
     md: "w-12 h-12 text-xl",
