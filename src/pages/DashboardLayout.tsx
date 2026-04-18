@@ -114,16 +114,18 @@ export default function DashboardLayout() {
           })}
         </nav>
 
-        <div className="p-3 border-t border-border">
+                <div className="p-3 border-t border-border">
           <div className="flex items-center gap-3">
-            <div className="relative">
-              <HouseCrest house={profile.house} size="sm" />
-              <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-card ${isUserOnline(profile) ? "bg-green-500" : "bg-muted-foreground"}`} title={isUserOnline(profile) ? "Online" : "Offline"} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-heading truncate text-foreground">{profile.full_name}</p>
-              <p className="text-xs text-muted-foreground">{house.name}</p>
-            </div>
+            <Link to="/dashboard/profile" className="flex items-center gap-3 flex-1 min-w-0 hover:bg-secondary/50 p-1.5 rounded-lg transition-colors cursor-pointer group">
+              <div className="relative">
+                <HouseCrest house={profile.house} size="sm" />
+                <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-card ${isUserOnline(profile) ? "bg-green-500" : "bg-muted-foreground"}`} title={isUserOnline(profile) ? "Online" : "Offline"} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-heading truncate text-foreground group-hover:text-primary transition-colors">{profile.full_name}</p>
+                <p className="text-xs text-muted-foreground">{house.name}</p>
+              </div>
+            </Link>
             <Notifications />
             <button onClick={async () => { await logout(); navigate("/"); }} className="text-muted-foreground hover:text-destructive text-xs ml-1">
               Sair
@@ -149,6 +151,7 @@ export default function DashboardLayout() {
     </div>
   );
 }
+
 
 
 
