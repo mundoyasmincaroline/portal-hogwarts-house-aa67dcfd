@@ -10,6 +10,7 @@ import MoodSession from "@/components/MoodSession";
 import BirthdayBanner from "@/components/BirthdayBanner";
 import MagicAdBanner from "@/components/MagicAdBanner";
 import StoriesBar from "@/components/StoriesBar";
+import DynamicGreeting from "@/components/DynamicGreeting";
 
 const REACTIONS = ["⚡", "❤️", "🔥", "🦁", "🦅", "🐍", "🦡"];
 
@@ -41,6 +42,7 @@ export default function Feed() {
     gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0,
   });
   const [activeChallenges, setActiveChallenges] = useState<{ id: string; title: string; xp_reward: number; type: string }[]>([]);
+  const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
 
   const loadFeed = useCallback(async () => {
     const { data: postsData } = await supabase
@@ -111,6 +113,8 @@ export default function Feed() {
 
     const { data: ch } = await supabase.from("challenges").select("id, title, xp_reward, type").eq("active", true).limit(5);
     setActiveChallenges(ch || []);
+    const { data: users } = await supabase.from("profiles").select("id, user_id, full_name, username, house, online").eq("approved", true).order("online", { ascending: false }).limit(10);
+    setOnlineUsers(users || []);
   }, []);
 
   useEffect(() => {
@@ -169,12 +173,7 @@ export default function Feed() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <StoriesBar />
-      <div className="glass rounded-2xl p-6">
-        <h1 className="font-heading text-2xl text-gold-gradient mb-1">
-          Bem-vindo, {profile?.full_name?.split(" ")[0] || "Bruxo"}! ⚡
-        </h1>
-        <p className="text-muted-foreground text-sm">O que você vai fazer hoje no mundo mágico?</p>
-      </div>
+      <DynamicGreeting />
 
       <BirthdayBanner />
       <DailyHighlight />
@@ -288,22 +287,26 @@ export default function Feed() {
         </div>
 
         <div className="space-y-4">
-          <div className="glass rounded-xl p-4">
-            <h3 className="font-heading text-sm text-primary mb-3">🏆 Ranking das Casas</h3>
-            <div className="space-y-2">
-              {sortedHouses.map((h, i) => (
-                <div key={h.id} className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground w-4">{i + 1}.</span>
-                  <HouseCrest house={h.id} size="sm" />
-                  <span className="text-sm flex-1 text-foreground">{h.name}</span>
-                  <span className="text-xs font-heading text-primary">{h.points}</span>
+                    <div className="glass rounded-xl p-4">
+            <h3 className="font-heading text-sm text-primary mb-3">?? Bruxos no Castelo</h3>
+            <div className="space-y-2 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
+              {onlineUsers.length === 0 && (
+                <p className="text-xs text-muted-foreground">Ningu�m � vista.</p>
+              )}
+              {onlineUsers.map(u => (
+                <div key={u.id} className="flex items-center gap-2">
+                  <HouseCrest house={u.house} size="sm" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-foreground truncate">{u.full_name.split(' ')[0]}</p>
+                  </div>
+                  <span className={w-2 h-2 rounded-full } title={u.online ? 'Online' : 'Offline'} />
                 </div>
               ))}
             </div>
           </div>
 
           <div className="glass rounded-xl p-4">
-            <h3 className="font-heading text-sm text-primary mb-3">⚔️ Desafios Ativos</h3>
+            <h3 className="font-heading text-sm text-primary mb-3">?? Desafios Ativos</h3>
             <div className="space-y-2">
               {activeChallenges.length === 0 && (
                 <p className="text-xs text-muted-foreground">Nenhum desafio ativo agora.</p>
@@ -321,3 +324,4 @@ export default function Feed() {
     </div>
   );
 }
+
