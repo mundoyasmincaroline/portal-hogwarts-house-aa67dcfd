@@ -64,7 +64,7 @@ export default function Admin() {
   const fetchAll = async () => {
     const [
       { data: m }, { data: pm }, { data: c }, { data: l }, { data: f },
-      { data: pt }, { data: bw }, { data: ch }, { data: adsData }
+      { data: pt }, { data: bw }, { data: ch }, { data: adsData }, { data: storiesData }
     ] = await Promise.all([
       supabase.from("profiles").select("*").eq("approved", true).order("created_at", { ascending: false }),
       supabase.from("profiles").select("*").eq("approved", false).order("created_at", { ascending: false }),
