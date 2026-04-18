@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import MagicalParticles from "@/components/MagicalParticles";
-import castleImg from "@/assets/hogwarts-castle.jpg";
-import { WEEKLY_INTROS } from "@/lib/store";
 
 export default function Landing() {
   const navigate = useNavigate();
