@@ -20,6 +20,7 @@ import Chats from "./pages/Chats";
 import ChatRoom from "./pages/ChatRoom";
 import InstaHogwarts from "./pages/InstaHogwarts";
 import StickerAlbum from "./pages/StickerAlbum";
+import Classes from "./pages/Classes";
 import EmojiShop from "./components/EmojiShop";
 import Rules from "./pages/Rules";
 
@@ -48,6 +49,7 @@ const App = () => (
               <Route path="chat/:roomId" element={<ChatRoom />} />
               <Route path="instahogwarts" element={<InstaHogwarts />} />
                 <Route path="album" element={<StickerAlbum />} />
+                <Route path="classes" element={<Classes />} />
               <Route path="houses" element={<Houses />} />
               <Route path="ranking" element={<Ranking />} />
               <Route path="challenges" element={<Challenges />} />
@@ -66,4 +68,5 @@ const App = () => (
 );
 
 export default App;
+
 

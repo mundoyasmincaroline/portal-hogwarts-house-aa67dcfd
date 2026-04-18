@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+Ôªøimport { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -47,7 +47,7 @@ export default function StickerAlbum() {
     if (!user || !profile) return;
     const packCost = 50;
     if (profile.xp < packCost) {
-      toast.error("VocÍ precisa de pelo menos 50 XP para comprar um pacotinho m·gico!");
+      toast.error("Voc√™ precisa de pelo menos 50 XP para comprar um pacotinho m√°gico!");
       return;
     }
 
@@ -58,7 +58,7 @@ export default function StickerAlbum() {
     // Pick a random sticker available for their level
     const available = stickers.filter(s => s.level_required <= profile.level);
     if (available.length === 0) {
-      toast.error("Nenhuma figurinha disponÌvel para o seu nÌvel ainda!");
+      toast.error("Nenhuma figurinha dispon√≠vel para o seu n√≠vel ainda!");
       setOpening(false);
       return;
     }
@@ -76,24 +76,24 @@ export default function StickerAlbum() {
 
     // Check if already has
     if (userStickers[won.id]) {
-      toast.success(\VocÍ abriu o pacote e encontrou \ (\), mas j· tinha essa!\);
+      toast.success(\Voc√™ abriu o pacote e encontrou \ (\), mas j√° tinha essa!\);
     } else {
       await supabase.from("user_stickers").insert({ user_id: user.id, sticker_id: won.id } as never);
-      toast.success(\? INCRÕVEL! VocÍ ganhou a figurinha de \ (\)!\);
+      toast.success(\? INCR√çVEL! Voc√™ ganhou a figurinha de \ (\)!\);
       setUserStickers(prev => ({ ...prev, [won.id]: true }));
     }
     setOpening(false);
   };
 
-  if (loading) return <div className="text-center py-10">Abrindo o ·lbum...</div>;
+  if (loading) return <div className="text-center py-10">Abrindo o √°lbum...</div>;
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       <div className="glass rounded-2xl p-6 text-center">
-        <h1 className="font-heading text-3xl text-gold-gradient mb-2">¡lbum de Bruxos CÈlebres</h1>
+        <h1 className="font-heading text-3xl text-gold-gradient mb-2">√Ålbum de Bruxos C√©lebres</h1>
         <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-          Colecione figurinhas dos maiores bruxos e bruxas da histÛria. Compre pacotinhos usando seu XP. 
-          Figurinhas Ouro e Prata sÛ podem ser encontradas por bruxos de nÌvel alto!
+          Colecione figurinhas dos maiores bruxos e bruxas da hist√≥ria. Compre pacotinhos usando seu XP. 
+          Figurinhas Ouro e Prata s√≥ podem ser encontradas por bruxos de n√≠vel alto!
         </p>
         <div className="mt-6 flex justify-center gap-4 items-center">
           <div className="glass px-4 py-2 rounded-lg">
