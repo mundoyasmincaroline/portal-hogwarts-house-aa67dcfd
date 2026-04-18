@@ -12,9 +12,10 @@ export default function Landing() {
   if (hour >= 5 && hour < 12) timeOfDay = "morning";
   else if (hour >= 12 && hour < 18) timeOfDay = "afternoon";
 
-  let bgUrl = "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=2000"; // Night
-  if (timeOfDay === "morning") bgUrl = "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=2000";
-  else if (timeOfDay === "afternoon") bgUrl = "https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2000";
+  // Usando assets locais gerados pelo Bot
+  let bgUrl = new URL('../assets/hogwarts_night.png', import.meta.url).href;
+  if (timeOfDay === "morning") bgUrl = new URL('../assets/hogwarts_morning.png', import.meta.url).href;
+  else if (timeOfDay === "afternoon") bgUrl = new URL('../assets/hogwarts_afternoon.png', import.meta.url).href;
 
   let titleText = "O Portal de Hogwarts";
   let subtitleText = "Magia Noturna";
