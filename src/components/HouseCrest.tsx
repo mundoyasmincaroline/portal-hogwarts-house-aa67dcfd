@@ -18,12 +18,12 @@ export default function HouseCrest({ house, size = "md" }: { house: House; size?
 
   return (
     <div
-      className={`${sizeClasses[size]} rounded-full bg-gradient-to-br ${c.bg} flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)] overflow-hidden border-2 border-white/30 relative font-heading font-bold text-white transition-transform hover:scale-105`}
+      className={`${sizeClasses[size]} rounded-full bg-gradient-to-br ${c.bg} flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)] overflow-hidden border-2 border-white/30 relative font-heading font-bold transition-transform hover:scale-105`}
       title={safeHouse.charAt(0).toUpperCase() + safeHouse.slice(1)}
     >
       <div className="absolute inset-0 bg-black/20 mix-blend-overlay z-0" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-0" />
-      <span className="z-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] tracking-widest">{c.letter}</span>
+      <span className="z-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] tracking-widest text-gold-gradient">{c.letter}</span>
     </div>
   );
 }
