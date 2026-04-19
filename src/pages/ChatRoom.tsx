@@ -286,53 +286,69 @@ export default function ChatRoom() {
             </div>
           </div>
         ) : (
-          messages.map((m, i) => {
-            const showHeader = i === 0 || messages[i-1].user_id !== m.user_id || new Date(m.created_at).getTime() - new Date(messages[i-1].created_at).getTime() > 300000;
-            const isMe = m.user_id === user?.id;
+            messages.map((m, i) => {
+              const showHeader = i === 0 || messages[i-1].user_id !== m.user_id || new Date(m.created_at).getTime() - new Date(messages[i-1].created_at).getTime() > 300000;
+              const isMe = m.user_id === user?.id;
 
-            return (
-              <div key={m.id} className={`flex gap-3 ${isMe ? 'flex-row-reverse' : 'flex-row'} ${showHeader ? 'mt-6' : 'mt-1'}`}>
-                {showHeader ? (
-                  <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border border-border">
-                    {(m.characters || m.profiles).avatar_url ? (
-                      <img src={(m.characters || m.profiles).avatar_url!} alt={(m.characters || m.profiles).full_name} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full bg-secondary flex items-center justify-center text-sm font-heading text-primary">
-                        {(m.characters || m.profiles).full_name[0]}
+              const profileName = (m.characters || m.profiles)?.full_name || "";
+              const profileUser = (m.characters || m.profiles)?.username || "";
+              const isMorpheus = profileName.toLowerCase().includes('morpheus') || profileUser.toLowerCase().includes('morpheus');
+
+              return (
+                <div key={m.id} className={`flex gap-3 ${isMe ? 'flex-row-reverse' : 'flex-row'} ${showHeader ? 'mt-6' : 'mt-1'}`}>
+                  {showHeader ? (
+                    <div className={`w-10 h-10 shrink-0 border ${isMorpheus ? 'rounded-none border-green-500 bg-black flex items-center justify-center font-mono text-green-500 font-bold text-lg' : 'rounded-full overflow-hidden border-border'}`}>
+                      {isMorpheus ? (
+                        <span className="animate-pulse">M</span>
+                      ) : (m.characters || m.profiles).avatar_url ? (
+                        <img src={(m.characters || m.profiles).avatar_url!} alt={(m.characters || m.profiles).full_name} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full bg-secondary flex items-center justify-center text-sm font-heading text-primary">
+                          {(m.characters || m.profiles).full_name[0]}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="w-10 shrink-0" />
+                  )}
+                  
+                  <div className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[80%]`}>
+                    {showHeader && (
+                      <div className={`flex items-center gap-2 mb-1 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
+                        {isMorpheus ? (
+                          <span className="font-mono text-xs font-bold text-green-500 tracking-widest">&gt; MORPHEUS [O ARQUITETO]</span>
+                        ) : (
+                          <span className="font-heading text-xs text-foreground/80">{(m.characters || m.profiles).full_name}</span>
+                        )}
+                        
+                        {!isMorpheus && m.user_role === 'admin' && (
+                          <span className="text-[10px] font-bold bg-primary/20 text-primary px-1.5 py-0.5 rounded flex items-center gap-1" title="Administrador Master">
+                            👑 Admin
+                          </span>
+                        )}
+                        {!isMorpheus && m.user_role === 'moderator' && (
+                          <span className="text-[10px] font-bold bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded flex items-center gap-1" title="Moderador Ativo">
+                            🛡️ Mod
+                          </span>
+                        )}
+
+                        {!isMorpheus && <HouseCrest house={(m.characters || m.profiles).house} size="sm" />}
+                        <span className="text-[10px] text-muted-foreground">{formatDate(m.created_at)}</span>
                       </div>
                     )}
-                  </div>
-                ) : (
-                  <div className="w-10 shrink-0" />
-                )}
-                
-                <div className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[80%]`}>
-                  {showHeader && (
-                    <div className={`flex items-center gap-2 mb-1 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
-                      <span className="font-heading text-xs text-foreground/80">{(m.characters || m.profiles).full_name}</span>
-                      
-                      {m.user_role === 'admin' && (
-                        <span className="text-[10px] font-bold bg-primary/20 text-primary px-1.5 py-0.5 rounded flex items-center gap-1" title="Administrador Master">
-                          👑 Admin
-                        </span>
-                      )}
-                      {m.user_role === 'moderator' && (
-                        <span className="text-[10px] font-bold bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded flex items-center gap-1" title="Moderador Ativo">
-                          🛡️ Mod
-                        </span>
-                      )}
-
-                      <HouseCrest house={(m.characters || m.profiles).house} size="sm" />
-                      <span className="text-[10px] text-muted-foreground">{formatDate(m.created_at)}</span>
+                    <div className={`px-4 py-2 text-sm ${
+                      isMorpheus 
+                        ? 'bg-black text-green-500 font-mono border border-green-500/50 shadow-[0_0_15px_rgba(34,197,94,0.2)] rounded-none' 
+                        : isMe 
+                          ? 'bg-primary/20 text-foreground rounded-2xl rounded-tr-sm' 
+                          : 'bg-secondary text-foreground rounded-2xl rounded-tl-sm'
+                    }`}>
+                      <p className={`whitespace-pre-wrap leading-relaxed ${isMorpheus ? 'drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]' : ''}`}>{renderRPGText(m.content)}</p>
                     </div>
-                  )}
-                  <div className={`px-4 py-2 rounded-2xl text-sm ${isMe ? 'bg-primary/20 text-foreground rounded-tr-sm' : 'bg-secondary text-foreground rounded-tl-sm'}`}>
-                    <p className="whitespace-pre-wrap leading-relaxed">{renderRPGText(m.content)}</p>
                   </div>
                 </div>
-              </div>
-            );
-          })
+              );
+            })
         )}
         <div ref={messagesEndRef} />
       </div>
