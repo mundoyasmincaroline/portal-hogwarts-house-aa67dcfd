@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import { HOUSES, type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
@@ -125,7 +125,7 @@ export default function Admin() {
     const newConfig = { ...interstitialConfig, ...updates };
     setInterstitialConfig(newConfig);
     await supabase.from("site_settings").upsert({ setting_key: "interstitial_config", setting_value: newConfig } as never);
-    toast.success("ConfiguraÃ§Ãµes atualizadas!");
+    toast.success("Configurações atualizadas!");
   };
 
   const createAd = async () => {
@@ -156,21 +156,21 @@ export default function Admin() {
       <div className="text-center py-20">
         <div className="text-4xl mb-4">ðŸ”’</div>
         <h2 className="font-heading text-xl text-foreground">Acesso Restrito</h2>
-        <p className="text-muted-foreground text-sm">Apenas administradores podem acessar esta Ã¡rea.</p>
+        <p className="text-muted-foreground text-sm">Apenas administradores podem acessar esta área.</p>
       </div>
     );
   }
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
-    { id: "members", label: "Membros", icon: "ðŸ‘¥" },
-    { id: "pending_members", label: "Novos Membros", icon: "â³" },
-    { id: "challenges", label: "Desafios", icon: "âš”ï¸" },
-    { id: "houses", label: "Casas", icon: "ðŸ°" },
-    { id: "tasks", label: "Tarefas", icon: "âœ…" },
-    { id: "banned", label: "Filtro Chat", icon: "ðŸš«" },
-    { id: "channels", label: "Salas/Meet", icon: "ðŸ“¹" },
-    { id: "monetization", label: "MonetizaÃ§Ã£o", icon: "ðŸ’°" },
-    { id: "moderation", label: "ModeraÃ§Ã£o", icon: "ðŸ‘ï¸" },
+    { id: "members", label: "Membros", icon: "👥" },
+    { id: "pending_members", label: "Novos Membros", icon: "⏳" },
+    { id: "challenges", label: "Desafios", icon: "⚔️" },
+    { id: "houses", label: "Casas", icon: "🏰" },
+    { id: "tasks", label: "Tarefas", icon: "✅" },
+    { id: "banned", label: "Filtro Chat", icon: "🚫" },
+    { id: "channels", label: "Salas/Meet", icon: "📹" },
+    { id: "monetization", label: "Monetização", icon: "💰" },
+    { id: "moderation", label: "Moderação", icon: "👁️" },
   ];
 
   return (
@@ -259,7 +259,7 @@ export default function Admin() {
               </div>
               {pendingMembers.length === 0 ? (
                 <div className="glass rounded-xl p-6 text-center">
-                  <p className="text-muted-foreground text-sm">Nenhum membro aguardando aprovaÃ§Ã£o.</p>
+                  <p className="text-muted-foreground text-sm">Nenhum membro aguardando aprovação.</p>
                 </div>
               ) : (
                 pendingMembers.map((m) => (
@@ -294,7 +294,7 @@ export default function Admin() {
               <div className="glass rounded-xl p-4 space-y-3">
                 <h3 className="font-heading text-sm text-primary">âž• Criar novo desafio</h3>
                 <Input placeholder="TÃ­tulo" value={newCh.title} onChange={(e) => setNewCh({ ...newCh, title: e.target.value })} />
-                <Input placeholder="DescriÃ§Ã£o" value={newCh.description} onChange={(e) => setNewCh({ ...newCh, description: e.target.value })} />
+                <Input placeholder="Descrição" value={newCh.description} onChange={(e) => setNewCh({ ...newCh, description: e.target.value })} />
                 <Input placeholder="Pergunta do Quiz (Opcional)" value={newCh.question} onChange={(e) => setNewCh({ ...newCh, question: e.target.value })} />
                 <Input placeholder="Resposta Correta (Opcional)" value={newCh.correct_answer} onChange={(e) => setNewCh({ ...newCh, correct_answer: e.target.value })} />
                 <div className="flex gap-2">
@@ -344,7 +344,7 @@ export default function Admin() {
             <div className="space-y-3">
               <div className="glass rounded-xl p-4">
                 <h3 className="font-heading text-sm text-primary mb-1">ðŸ§¹ Filch, o Zelador</h3>
-                <p className="text-xs text-muted-foreground">Bot de moderaÃ§Ã£o que bloqueia automaticamente palavras imprÃ³prias em posts e comentÃ¡rios.</p>
+                <p className="text-xs text-muted-foreground">Bot de moderação que bloqueia automaticamente palavras imprÃ³prias em posts e comentÃ¡rios.</p>
               </div>
               {logs.length === 0 ? (
                 <div className="glass rounded-xl p-6 text-center">
@@ -376,7 +376,7 @@ export default function Admin() {
               {fichas.length === 0 ? (
                 <div className="glass rounded-xl p-6 text-center">
                   <div className="text-3xl mb-3">âœ¨</div>
-                  <p className="text-muted-foreground text-sm">Nenhuma ficha pendente de aprovaÃ§Ã£o.</p>
+                  <p className="text-muted-foreground text-sm">Nenhuma ficha pendente de aprovação.</p>
                 </div>
               ) : (
                 fichas.map((f) => (
@@ -422,12 +422,12 @@ export default function Admin() {
           {tab === "tasks" && (
             <div className="space-y-4">
               <div className="glass rounded-xl p-4">
-                <h3 className="font-heading text-sm text-primary mb-1">âœ… AprovaÃ§Ã£o de Tarefas</h3>
-                <p className="text-xs text-muted-foreground">Avalie as comprovaÃ§Ãµes enviadas pelos membros e libere o XP.</p>
+                <h3 className="font-heading text-sm text-primary mb-1">âœ… Aprovação de Tarefas</h3>
+                <p className="text-xs text-muted-foreground">Avalie as comprovações enviadas pelos membros e libere o XP.</p>
               </div>
               {pendingTasks.length === 0 ? (
                 <div className="glass rounded-xl p-6 text-center">
-                  <p className="text-muted-foreground text-sm">Nenhuma tarefa pendente de aprovaÃ§Ã£o.</p>
+                  <p className="text-muted-foreground text-sm">Nenhuma tarefa pendente de aprovação.</p>
                 </div>
               ) : (
                 pendingTasks.map((t) => (
@@ -457,7 +457,7 @@ export default function Admin() {
                       </div>
                     </div>
                     <div>
-                      <span className="text-xs font-heading text-muted-foreground">ComprovaÃ§Ã£o:</span>
+                      <span className="text-xs font-heading text-muted-foreground">Comprovação:</span>
                       <div className="text-sm bg-secondary/30 p-3 rounded-md mt-1 italic text-foreground/80 break-words whitespace-pre-wrap">
                         {t.proof?.includes("http") ? <a href={t.proof} target="_blank" className="text-primary hover:underline">{t.proof}</a> : t.proof}
                       </div>
@@ -586,7 +586,7 @@ export default function Admin() {
 
           {tab === "moderation" && (
             <div className="glass rounded-2xl p-6">
-              <h2 className="font-heading text-xl text-destructive mb-4">ModeraÃ§Ã£o de Stories</h2>
+              <h2 className="font-heading text-xl text-destructive mb-4">Moderação de Stories</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {stories.map(story => (
                   <div key={story.id} className="bg-card/50 rounded-xl p-4 border border-border">
@@ -620,6 +620,7 @@ export default function Admin() {
     </div>
   );
 }
+
 
 
 
