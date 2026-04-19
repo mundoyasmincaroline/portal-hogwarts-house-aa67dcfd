@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import HouseCrest from "@/components/HouseCrest";
 import { House } from "@/lib/store";
 import { addXP } from "@/lib/xpSystem";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 interface Message {
   id: string;
@@ -281,15 +282,16 @@ export default function ChatRoom() {
 
       {/* Área de Mensagens */}
       <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-background/50">
-        {messages.length === 0 ? (
-          <div className="h-full flex items-center justify-center text-center">
-            <div>
-              <div className="text-5xl mb-4 opacity-50">🕯️</div>
-              <p className="text-muted-foreground text-sm">O silêncio ecoa por este salão.</p>
-              <p className="text-xs text-muted-foreground">Seja o primeiro a falar!</p>
+        <ErrorBoundary fallback={<div className="text-center py-10 text-red-500">Erro ao carregar as mensagens.</div>}>
+          {messages.length === 0 ? (
+            <div className="h-full flex items-center justify-center text-center">
+              <div>
+                <div className="text-5xl mb-4 opacity-50">🕯️</div>
+                <p className="text-muted-foreground text-sm">O silêncio ecoa por este salão.</p>
+                <p className="text-xs text-muted-foreground">Seja o primeiro a falar!</p>
+              </div>
             </div>
-          </div>
-        ) : (
+          ) : (
             messages.map((m, i) => {
               const profileData = m.characters || m.profiles || { full_name: "Bruxo Desconhecido", username: "desconhecido", house: "gryffindor", avatar_url: null };
               const profileName = profileData.full_name || "Desconhecido";
@@ -300,65 +302,68 @@ export default function ChatRoom() {
               const isCarolina = profileName.toLowerCase().includes('carolina') || profileUser.toLowerCase().includes('carolinaas.assis');
 
               return (
-                <div key={m.id} className="glass rounded-xl p-4 animate-fade-in-up mb-4">
-                  <div className="flex items-center gap-3 mb-3">
-                    <Link to={`/dashboard/profile/${m.user_id}`} className={`w-10 h-10 shrink-0 border block transition-transform hover:scale-105 ${
-                      isMorpheus ? 'rounded-none border-green-500 bg-black flex items-center justify-center font-mono text-green-500 font-bold text-lg' 
-                      : isYasmin ? 'rounded-full overflow-hidden border-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.5)]'
-                      : isCarolina ? 'rounded-full overflow-hidden border-blue-400 shadow-[0_0_10px_rgba(96,165,250,0.5)]'
-                      : 'rounded-full overflow-hidden border-border'
-                    }`}>
-                      {isMorpheus ? (
-                        <span className="animate-pulse">M</span>
-                      ) : profileData.avatar_url ? (
-                        <img src={profileData.avatar_url} alt={profileName} className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full bg-secondary flex items-center justify-center text-sm font-heading text-primary">
-                          {profileName.charAt(0).toUpperCase() || "?"}
-                        </div>
-                      )}
-                    </Link>
+                <ErrorBoundary key={m.id}>
+                  <div className="glass rounded-xl p-4 animate-fade-in-up mb-4">
+                    <div className="flex items-center gap-3 mb-3">
+                      <Link to={`/dashboard/profile/${m.user_id}`} className={`w-10 h-10 shrink-0 border block transition-transform hover:scale-105 ${
+                        isMorpheus ? 'rounded-none border-green-500 bg-black flex items-center justify-center font-mono text-green-500 font-bold text-lg' 
+                        : isYasmin ? 'rounded-full overflow-hidden border-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.5)]'
+                        : isCarolina ? 'rounded-full overflow-hidden border-blue-400 shadow-[0_0_10px_rgba(96,165,250,0.5)]'
+                        : 'rounded-full overflow-hidden border-border'
+                      }`}>
+                        {isMorpheus ? (
+                          <span className="animate-pulse">M</span>
+                        ) : profileData.avatar_url ? (
+                          <img src={profileData.avatar_url} alt={profileName} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full bg-secondary flex items-center justify-center text-sm font-heading text-primary">
+                            {profileName.charAt(0).toUpperCase() || "?"}
+                          </div>
+                        )}
+                      </Link>
 
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <Link to={`/dashboard/profile/${m.user_id}`} className="hover:opacity-80 transition-opacity">
-                          {isMorpheus ? (
-                            <span className="font-mono text-sm font-bold text-green-500 tracking-widest">&gt; MORPHEUS [O ARQUITETO]</span>
-                          ) : isYasmin ? (
-                            <span className="font-heading text-sm font-bold text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]">✨ YASMIN [A FUNDADORA]</span>
-                          ) : isCarolina ? (
-                            <span className="font-heading text-sm font-bold text-blue-400 drop-shadow-[0_0_5px_rgba(96,165,250,0.8)]">🛡️ CAROLINA [A GUARDIÃ]</span>
-                          ) : (
-                            <span className="font-heading text-sm font-medium text-foreground">{profileName}</span>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <Link to={`/dashboard/profile/${m.user_id}`} className="hover:opacity-80 transition-opacity">
+                            {isMorpheus ? (
+                              <span className="font-mono text-sm font-bold text-green-500 tracking-widest">&gt; MORPHEUS [O ARQUITETO]</span>
+                            ) : isYasmin ? (
+                              <span className="font-heading text-sm font-bold text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]">✨ YASMIN [A FUNDADORA]</span>
+                            ) : isCarolina ? (
+                              <span className="font-heading text-sm font-bold text-blue-400 drop-shadow-[0_0_5px_rgba(96,165,250,0.8)]">🛡️ CAROLINA [A GUARDIÃ]</span>
+                            ) : (
+                              <span className="font-heading text-sm font-medium text-foreground">{profileName}</span>
+                            )}
+                          </Link>
+
+                          {!isMorpheus && !isYasmin && !isCarolina && m.user_role === 'admin' && (
+                            <span className="text-[10px] font-bold bg-primary/20 text-primary px-1.5 py-0.5 rounded flex items-center gap-1" title="Administrador Master">👑 Admin</span>
                           )}
-                        </Link>
-
-                        {!isMorpheus && !isYasmin && !isCarolina && m.user_role === 'admin' && (
-                          <span className="text-[10px] font-bold bg-primary/20 text-primary px-1.5 py-0.5 rounded flex items-center gap-1" title="Administrador Master">👑 Admin</span>
-                        )}
-                        {!isMorpheus && !isYasmin && !isCarolina && m.user_role === 'moderator' && (
-                          <span className="text-[10px] font-bold bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded flex items-center gap-1" title="Moderador Ativo">🛡️ Mod</span>
-                        )}
+                          {!isMorpheus && !isYasmin && !isCarolina && m.user_role === 'moderator' && (
+                            <span className="text-[10px] font-bold bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded flex items-center gap-1" title="Moderador Ativo">🛡️ Mod</span>
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground">@{profileUser} • {m.created_at ? formatDate(m.created_at) : ''}</p>
                       </div>
-                      <p className="text-xs text-muted-foreground">@{profileUser} • {m.created_at ? formatDate(m.created_at) : ''}</p>
+                      
+                      {!isMorpheus && !isYasmin && !isCarolina && <HouseCrest house={profileData.house} size="sm" />}
                     </div>
-                    
-                    {!isMorpheus && !isYasmin && !isCarolina && <HouseCrest house={profileData.house} size="sm" />}
-                  </div>
 
-                  <div className={`text-sm ${
-                    isMorpheus ? 'text-green-500 font-mono drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]' 
-                    : isYasmin ? 'text-yellow-100'
-                    : isCarolina ? 'text-blue-100'
-                    : 'text-foreground'
-                  }`}>
-                    <p className="whitespace-pre-wrap leading-relaxed">{renderRPGText(m.content)}</p>
+                    <div className={`text-sm ${
+                      isMorpheus ? 'text-green-500 font-mono drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]' 
+                      : isYasmin ? 'text-yellow-100'
+                      : isCarolina ? 'text-blue-100'
+                      : 'text-foreground'
+                    }`}>
+                      <p className="whitespace-pre-wrap leading-relaxed">{renderRPGText(m.content)}</p>
+                    </div>
                   </div>
-                </div>
+                </ErrorBoundary>
               );
             })
-        )}
-        <div ref={messagesEndRef} />
+          )}
+          <div ref={messagesEndRef} />
+        </ErrorBoundary>
       </div>
 
       {/* Input */}
