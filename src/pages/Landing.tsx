@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import MagicalParticles from "@/components/MagicalParticles";
+import HouseCrest from "@/components/HouseCrest";
+import { type House } from "@/lib/store";
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -74,13 +76,13 @@ export default function Landing() {
 
           {/* House crests */}
           <div className="flex justify-center gap-4 mb-8">
-            {["🦁", "🐍", "🦅", "🦡"].map((emoji, i) => (
+            {(["gryffindor", "slytherin", "ravenclaw", "hufflepuff"] as House[]).map((house, i) => (
               <div
                 key={i}
-                className="w-12 h-12 rounded-full glass flex items-center justify-center text-xl animate-float"
+                className="animate-float"
                 style={{ animationDelay: `${i * 0.3}s` }}
               >
-                {emoji}
+                <HouseCrest house={house} size="lg" />
               </div>
             ))}
           </div>
