@@ -396,15 +396,15 @@ export default function Admin() {
                           await supabase.from("fichas").update({ status: "approved" }).eq("id", f.id);
                           toast.success("Ficha aprovada!");
                           fetchAll();
-                        }}>Aprovar âœ…</Button>
+                        }}>Aprovar ✅</Button>
                       </div>
                     </div>
                     
                     <div className="grid grid-cols-2 gap-2 text-sm">
                       <p><span className="text-muted-foreground">Idade:</span> {f.age}</p>
-                      <p><span className="text-muted-foreground">Ano:</span> {f.school_year}Âº</p>
+                      <p><span className="text-muted-foreground">Ano:</span> {f.school_year}º</p>
                       <p><span className="text-muted-foreground">Casa:</span> {HOUSES[f.primary_house as House]?.name}</p>
-                      <p><span className="text-muted-foreground">Status SanguÃ­neo:</span> {f.blood_status}</p>
+                      <p><span className="text-muted-foreground">Status Sanguíneo:</span> {f.blood_status}</p>
                       <p><span className="text-muted-foreground">Varinha:</span> {f.wand}</p>
                       <p><span className="text-muted-foreground">Patrono:</span> {f.patronus}</p>
                     </div>

@@ -1,22 +1,23 @@
--- SCRIPT FINAL DE CORREÇÃO DAS FIGURINHAS
--- Utiliza um proxy oficial de imagens (wsrv.nl) para burlar completamente o bloqueio do Pinterest.
-
+-- SCRIPT DEFINITIVO - Imagens do Harry Potter Fandom Wiki (sem bloqueio de hotlink)
 TRUNCATE TABLE public.stickers CASCADE;
 
 INSERT INTO public.stickers (character_name, rarity, image_url, level_required) VALUES
-('Harry Potter', 'gold', 'https://wsrv.nl/?url=i.pinimg.com/736x/8d/62/72/8d62725f09cb8d9e61c390558197c36a.jpg', 4),
-('Alvo Dumbledore', 'gold', 'https://wsrv.nl/?url=i.pinimg.com/736x/71/34/00/713400a4db6e56846f4144365da98495.jpg', 5),
-('Lord Voldemort', 'gold', 'https://wsrv.nl/?url=i.pinimg.com/736x/51/e0/75/51e075d9e5a873132fcb9f56e9c6128d.jpg', 5),
-('Minerva McGonagall', 'gold', 'https://wsrv.nl/?url=i.pinimg.com/736x/07/dc/fc/07dcfc7865239e26da7e9eecdb3672d4.jpg', 5),
+-- BRONZE (Nível 1)
+('Rúbeo Hagrid',       'bronze', 'https://static.wikia.nocookie.net/harrypotter/images/3/31/Rubeus_Hagrid.jpg',           1),
+('Dobby',              'bronze', 'https://static.wikia.nocookie.net/harrypotter/images/7/73/Dobby.jpg',                    1),
+('Neville Longbottom', 'bronze', 'https://static.wikia.nocookie.net/harrypotter/images/9/9e/Neville_Longbottom.jpg',       1),
+('Luna Lovegood',      'bronze', 'https://static.wikia.nocookie.net/harrypotter/images/4/4f/LunaLovegood.jpg',             1),
+('Gina Weasley',       'bronze', 'https://static.wikia.nocookie.net/harrypotter/images/2/27/GinnyFull.jpg',                1),
 
-('Hermione Granger', 'silver', 'https://wsrv.nl/?url=i.pinimg.com/736x/21/df/b8/21dfb8c2d1b88e6308ba0f0c0da53b52.jpg', 3),
-('Ronald Weasley', 'silver', 'https://wsrv.nl/?url=i.pinimg.com/736x/f6/cb/35/f6cb35d252f5ee66dbcebd67ea2c2197.jpg', 3),
-('Severo Snape', 'silver', 'https://wsrv.nl/?url=i.pinimg.com/736x/c5/d1/9b/c5d19b33a5da1f1fb6b22ebce27abda3.jpg', 3),
-('Draco Malfoy', 'silver', 'https://wsrv.nl/?url=i.pinimg.com/736x/d6/0e/db/d60edba4895ee54452140cda3d4d38dc.jpg', 2),
-('Sirius Black', 'silver', 'https://wsrv.nl/?url=i.pinimg.com/736x/0c/b5/d9/0cb5d985a9ed7a71a3980df96556fdb4.jpg', 3),
+-- SILVER (Nível 2-3)
+('Draco Malfoy',       'silver', 'https://static.wikia.nocookie.net/harrypotter/images/1/15/Dracomalfoy.jpg',              2),
+('Hermione Granger',   'silver', 'https://static.wikia.nocookie.net/harrypotter/images/6/6e/Hermione_Granger_poster.jpg',  3),
+('Ronald Weasley',     'silver', 'https://static.wikia.nocookie.net/harrypotter/images/5/5e/Ron_Weasley.jpg',              3),
+('Severo Snape',       'silver', 'https://static.wikia.nocookie.net/harrypotter/images/2/2e/Snape_fl.jpg',                 3),
+('Sirius Black',       'silver', 'https://static.wikia.nocookie.net/harrypotter/images/2/24/Sirius_Black_OOTP.jpg',        3),
 
-('Rúbeo Hagrid', 'bronze', 'https://wsrv.nl/?url=i.pinimg.com/736x/74/4e/1b/744e1bad59b92ed50099689408034dbf.jpg', 1),
-('Dobby', 'bronze', 'https://wsrv.nl/?url=i.pinimg.com/736x/b2/2f/78/b22f788b13c721c60f224f2b968c9288.jpg', 1),
-('Neville Longbottom', 'bronze', 'https://wsrv.nl/?url=i.pinimg.com/736x/7d/54/22/7d5422894582f34ee69002242131b790.jpg', 1),
-('Luna Lovegood', 'bronze', 'https://wsrv.nl/?url=i.pinimg.com/736x/bd/ec/04/bdec048e421ef8e60a35db4057881c1c.jpg', 1),
-('Gina Weasley', 'bronze', 'https://wsrv.nl/?url=i.pinimg.com/736x/eb/6f/a6/eb6fa6b0e98031d683e351f0412808ad.jpg', 1);
+-- GOLD (Nível 4-5)
+('Harry Potter',       'gold',   'https://static.wikia.nocookie.net/harrypotter/images/7/7e/Harry_Potter_Movie_poster.jpg', 4),
+('Alvo Dumbledore',    'gold',   'https://static.wikia.nocookie.net/harrypotter/images/9/93/Dumbledore_and_Elder_Wand.jpg', 5),
+('Lord Voldemort',     'gold',   'https://static.wikia.nocookie.net/harrypotter/images/b/b7/Voldemort_poster.jpg',          5),
+('Minerva McGonagall', 'gold',   'https://static.wikia.nocookie.net/harrypotter/images/6/61/McGonagall-PM.jpg',             5);

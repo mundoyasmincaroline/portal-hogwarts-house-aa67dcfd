@@ -328,7 +328,13 @@ export default function Profile() {
               />
             </div>
             <div>
-              <label className="text-xs font-heading text-muted-foreground block mb-1">Foto de perfil — Cole uma URL</label>
+              <label className="text-xs font-heading text-muted-foreground block mb-1">📷 Foto de Perfil</label>
+              {/* Upload de arquivo — botão grande e visível */}
+              <label className="flex items-center justify-center gap-2 w-full py-3 rounded-xl border-2 border-dashed border-primary/50 bg-primary/5 hover:bg-primary/10 cursor-pointer transition-colors text-sm font-heading text-primary mb-2">
+                {uploading ? "⏳ Fazendo upload..." : "📁 Clique aqui para fazer upload da sua foto"}
+                <input type="file" accept="image/*" className="hidden" onChange={uploadAvatar} disabled={uploading} />
+              </label>
+              <p className="text-[10px] text-muted-foreground text-center mb-2">ou cole o link direto abaixo ↓</p>
               <div className="flex gap-2 items-center">
                 <Input
                   value={form.avatar_url}
@@ -340,7 +346,6 @@ export default function Profile() {
                   <img src={form.avatar_url} alt="preview" className="w-10 h-10 rounded-full object-cover border border-border" onError={(e) => (e.currentTarget.style.display = 'none')} />
                 )}
               </div>
-              <p className="text-[10px] text-muted-foreground mt-1">Ou use o botão 📷 acima para fazer upload direto</p>
             </div>
             <div className="flex gap-2 justify-center pt-2">
               <Button variant="outline" size="sm" onClick={() => setEditing(false)}>Cancelar</Button>
