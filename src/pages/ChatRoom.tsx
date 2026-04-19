@@ -40,7 +40,37 @@ export default function ChatRoom() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(true);
   const [bannedWords, setBannedWords] = useState<string[]>([]);
+  const [cooldown, setCooldown] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (cooldown > 0) {
+      const t = setTimeout(() => setCooldown(cooldown - 1), 1000);
+      return () => clearTimeout(t);
+    }
+  }, [cooldown]);
+
+  const renderRPGText = (text: string) => {
+    // Se a mensagem inteira comecar com /acao
+    let processedText = text;
+    if (processedText.startsWith('/acao ')) {
+      return <span className="italic text-primary/80">{processedText.replace('/acao ', '')}</span>;
+    }
+
+    const parts = processedText.split(/(\*[^*]+\*|\([^)]+\)|"[^"]+")/g);
+    return parts.map((part, i) => {
+      if (part.startsWith('*') && part.endsWith('*')) {
+        return <span key={i} className="italic text-primary/80">{part.slice(1, -1)}</span>;
+      }
+      if (part.startsWith('(') && part.endsWith(')')) {
+        return <span key={i} className="italic text-muted-foreground">{part}</span>;
+      }
+      if (part.startsWith('"') && part.endsWith('"')) {
+        return <span key={i} className="font-semibold text-foreground/90">{part}</span>;
+      }
+      return <span key={i}>{part}</span>;
+    });
+  };
 
   useEffect(() => {
     // Buscar palavras proibidas
@@ -116,7 +146,7 @@ export default function ChatRoom() {
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || !channel || !user) return;
+    if (!input.trim() || !channel || !user || cooldown > 0) return;
     
     const content = input;
     
@@ -129,6 +159,7 @@ export default function ChatRoom() {
     }
 
     setInput("");
+    setCooldown(30); // 30 segundos de Anti-Spam
 
     const { error } = await supabase.from("messages").insert({
       channel_id: channel.id,
@@ -241,7 +272,7 @@ export default function ChatRoom() {
                     </div>
                   )}
                   <div className={`px-4 py-2 rounded-2xl text-sm ${isMe ? 'bg-primary/20 text-foreground rounded-tr-sm' : 'bg-secondary text-foreground rounded-tl-sm'}`}>
-                    <p className="whitespace-pre-wrap leading-relaxed">{m.content}</p>
+                    <p className="whitespace-pre-wrap leading-relaxed">{renderRPGText(m.content)}</p>
                   </div>
                 </div>
               </div>
@@ -280,11 +311,12 @@ export default function ChatRoom() {
           <Input 
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={`Enviar mensagem em ${channel.name}...`}
+            placeholder={cooldown > 0 ? `Aguarde ${cooldown}s para conjurar novamente...` : `Enviar mensagem em ${channel.name}...`}
             className="flex-1 bg-secondary/50 border-border"
+            disabled={cooldown > 0}
           />
-          <Button type="submit" variant="magical" size="icon" disabled={!input.trim()}>
-            ✨
+          <Button type="submit" variant="magical" size="icon" disabled={!input.trim() || cooldown > 0}>
+            {cooldown > 0 ? cooldown : '✨'}
           </Button>
         </form>
       </div>

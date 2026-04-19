@@ -13,6 +13,7 @@ import EngagementBot from "@/components/EngagementBot";
 import PendingApproval from "@/pages/PendingApproval";
 import RulesAgreement from "@/pages/RulesAgreement";
 import CharacterSelection from "@/pages/CharacterSelection";
+import DailyEncounter from "@/components/DailyEncounter";
 
 const NAV_ITEMS = [
   { icon: "👤", label: "Meu Perfil", path: "/dashboard/profile" },
@@ -37,6 +38,7 @@ export default function DashboardLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [encounterDone, setEncounterDone] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !user) navigate("/login");
@@ -76,11 +78,21 @@ export default function DashboardLayout() {
   if (!profile.approved) return <PendingApproval />;
   if (!profile.has_accepted_rules) return <RulesAgreement />;
   if (!profile.active_character_id) return <CharacterSelection />;
-    const today = new Date().toISOString().split('T')[0];
+  const today = new Date().toISOString().split('T')[0];
   const lastSeenIntro = localStorage.getItem(`intro_last_seen_${user.id}`);
   const shouldShowIntro = lastSeenIntro !== today;
 
   if (shouldShowIntro) return <CastleEntrance />;
+  
+  const lastSeenEncounter = localStorage.getItem(`encounter_last_seen_${user.id}`);
+  const shouldShowEncounter = lastSeenEncounter !== today && !encounterDone;
+
+  if (shouldShowEncounter) {
+    return <DailyEncounter onComplete={() => {
+      localStorage.setItem(`encounter_last_seen_${user.id}`, today);
+      setEncounterDone(true);
+    }} />;
+  }
   
   const house = HOUSES[profile.house as House] || HOUSES.gryffindor;
   const items = isAdmin ? [...NAV_ITEMS, ...ADMIN_ITEMS] : NAV_ITEMS;
