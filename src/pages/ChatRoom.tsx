@@ -105,34 +105,42 @@ export default function ChatRoom() {
     setLoading(true);
     let query = supabase
       .from("messages")
-      .select("*, profiles(full_name, username, house, avatar_url), characters(full_name, house, avatar_url)")
+      .select("*, characters(full_name, house, avatar_url)")
       .eq("channel_id", id)
       .order("created_at", { ascending: false })
       .limit(100);
 
-    // Se uma data específica for selecionada (diferente de hoje), aplicar filtro
-    const todayStr = new Date().toLocaleDateString('en-CA'); // Formato YYYY-MM-DD no fuso local
+    const todayStr = new Date().toLocaleDateString('en-CA');
     if (dateStr && dateStr !== todayStr) {
       const startOfDay = new Date(dateStr + 'T00:00:00');
       const endOfDay = new Date(dateStr + 'T23:59:59');
       query = query.gte("created_at", startOfDay.toISOString()).lte("created_at", endOfDay.toISOString());
     }
 
-    const { data } = await query;
+    const { data, error } = await query;
+    if (error) console.error("fetchMessages error:", error);
     
-    if (data) {
+    if (data && data.length > 0) {
       const userIds = [...new Set(data.map(m => m.user_id))];
-      const { data: rolesData } = await supabase.from("user_roles").select("user_id, role").in("user_id", userIds);
-      const roleMap = rolesData?.reduce((acc: any, curr) => ({ ...acc, [curr.user_id]: curr.role }), {}) || {};
+      
+      // Fetch profiles and roles separately to avoid RLS join issues
+      const [{ data: profilesData }, { data: rolesData }] = await Promise.all([
+        supabase.from("profiles").select("user_id, full_name, username, house, avatar_url").in("user_id", userIds),
+        supabase.from("user_roles").select("user_id, role").in("user_id", userIds)
+      ]);
+
+      const profileMap = (profilesData || []).reduce((acc: any, p) => ({ ...acc, [p.user_id]: p }), {});
+      const roleMap = (rolesData || []).reduce((acc: any, r) => ({ ...acc, [r.user_id]: r.role }), {});
       
       const msgs = data.map(m => ({
         ...m,
+        profiles: profileMap[m.user_id] || { full_name: "Bruxo", username: "bruxo", house: "gryffindor", avatar_url: null },
         user_role: roleMap[m.user_id]
       }));
       setMessages(msgs.reverse() as unknown as Message[]);
-      setTimeout(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
-      }, 100);
+      setTimeout(() => { messagesEndRef.current?.scrollIntoView({ behavior: "auto" }); }, 100);
+    } else {
+      setMessages([]);
     }
     setLoading(false);
   };
