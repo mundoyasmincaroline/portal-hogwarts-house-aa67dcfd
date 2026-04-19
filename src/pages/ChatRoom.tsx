@@ -34,7 +34,7 @@ interface Message {
 export default function ChatRoom() {
   const { roomId } = useParams<{ roomId: string }>();
   const navigate = useNavigate();
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, profile } = useAuth();
   
   const [channel, setChannel] = useState<any>(null);
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toLocaleDateString('en-CA'));
@@ -211,7 +211,7 @@ export default function ChatRoom() {
     const { error } = await supabase.from("messages").insert({
       channel_id: channel.id,
       user_id: user.id,
-      character_id: useAuth.getState().profile?.active_character_id,
+      character_id: profile?.active_character_id ?? null,
       content
     });
 
