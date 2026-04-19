@@ -103,7 +103,7 @@ export default function ChatRoom() {
       .from("messages")
       .select("*, profiles(full_name, username, house, avatar_url), characters(full_name, house, avatar_url)")
       .eq("channel_id", id)
-      .order("created_at", { ascending: true })
+      .order("created_at", { ascending: false })
       .limit(100);
     
     if (data) {
@@ -115,9 +115,21 @@ export default function ChatRoom() {
         ...m,
         user_role: roleMap[m.user_id]
       }));
-      setMessages(msgs as unknown as Message[]);
+      setMessages(msgs.reverse() as unknown as Message[]);
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+      }, 100);
     }
     setLoading(false);
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const today = new Date();
+    if (date.toDateString() === today.toDateString()) {
+      return date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }
+    return date.toLocaleDateString('pt-BR', {day: '2-digit', month: 'short'}) + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
   };
 
   useEffect(() => {
@@ -268,7 +280,7 @@ export default function ChatRoom() {
                       )}
 
                       <HouseCrest house={(m.characters || m.profiles).house} size="sm" />
-                      <span className="text-[10px] text-muted-foreground">{new Date(m.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                      <span className="text-[10px] text-muted-foreground">{formatDate(m.created_at)}</span>
                     </div>
                   )}
                   <div className={`px-4 py-2 rounded-2xl text-sm ${isMe ? 'bg-primary/20 text-foreground rounded-tr-sm' : 'bg-secondary text-foreground rounded-tl-sm'}`}>

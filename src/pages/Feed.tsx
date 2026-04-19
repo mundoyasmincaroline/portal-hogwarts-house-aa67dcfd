@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useAuth } from "@/lib/auth";
+import { useAuth, isUserOnline } from "@/lib/auth";
 import { HOUSES, type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
 import HouseCrest from "@/components/HouseCrest";
@@ -116,7 +116,7 @@ export default function Feed() {
 
     const { data: ch } = await supabase.from("challenges").select("id, title, xp_reward, type").eq("active", true).limit(5);
     setActiveChallenges(ch || []);
-    const { data: users } = await supabase.from("profiles").select("id, user_id, full_name, username, house, online").eq("approved", true).order("online", { ascending: false }).limit(10);
+    const { data: users } = await supabase.from("profiles").select("id, user_id, full_name, username, house, online, last_seen").eq("approved", true).order("online", { ascending: false }).limit(10);
     setOnlineUsers(users || []);
   }, []);
 
@@ -333,7 +333,7 @@ export default function Feed() {
                   <div className="flex-1 min-w-0">
                     <p className="text-xs text-foreground truncate">{u.full_name.split(' ')[0]}</p>
                   </div>
-                  <span className={`w-2 h-2 rounded-full ${u.online ? 'bg-green-500' : 'bg-muted'}`} title={u.online ? 'Online' : 'Offline'} />
+                  <span className={`w-2 h-2 rounded-full ${isUserOnline(u) ? 'bg-green-500' : 'bg-muted'}`} title={isUserOnline(u) ? 'Online' : 'Offline'} />
                 </div>
               ))}
             </div>
