@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import { HOUSES, type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
@@ -154,7 +154,7 @@ export default function Admin() {
   if (!isAdmin) {
     return (
       <div className="text-center py-20">
-        <div className="text-4xl mb-4">ðŸ”’</div>
+        <div className="text-4xl mb-4">🔒</div>
         <h2 className="font-heading text-xl text-foreground">Acesso Restrito</h2>
         <p className="text-muted-foreground text-sm">Apenas administradores podem acessar esta Ã¡rea.</p>
       </div>
@@ -186,7 +186,7 @@ export default function Admin() {
           <p className="text-xs text-muted-foreground">Membros</p>
         </div>
         <div className="glass rounded-xl p-4 text-center">
-          <h3 className="text-muted-foreground text-sm font-heading mb-2">UsuÃ¡rios Online</h3>
+          <h3 className="text-muted-foreground text-sm font-heading mb-2">Usuários Online</h3>
           <p className="text-2xl font-heading text-foreground">{members.filter((m) => isUserOnline(m)).length}</p>
         </div>
         <div className="glass rounded-xl p-4 text-center">
@@ -232,13 +232,13 @@ export default function Admin() {
                   </div>
                   <div className="flex flex-col items-end gap-1">
                     {isUserOnline(m) ? (
-                      <span className="text-xs text-green-500 font-medium">ðŸŸ¢ Online</span>
+                      <span className="text-xs text-green-500 font-medium">🟢 Online</span>
                     ) : (
-                      <span className="text-xs text-muted-foreground">âšª Offline</span>
+                      <span className="text-xs text-muted-foreground">⚪ Offline</span>
                     )}
                     {m.last_seen ? (
                       <span className="text-[10px] text-muted-foreground/70">
-                        Ãšltimo login: {new Date(m.last_seen).toLocaleString('pt-BR')}
+                        Último login: {new Date(m.last_seen).toLocaleString('pt-BR')}
                       </span>
                     ) : (
                       <span className="text-[10px] text-muted-foreground/40">
@@ -259,7 +259,7 @@ export default function Admin() {
               </div>
               {pendingMembers.length === 0 ? (
                 <div className="glass rounded-xl p-6 text-center">
-                  <p className="text-muted-foreground text-sm">Nenhum membro aguardando aprovaÃ§Ã£o.</p>
+                  <p className="text-muted-foreground text-sm">Nenhum membro aguardando aprovação.</p>
                 </div>
               ) : (
                 pendingMembers.map((m) => (
@@ -281,7 +281,7 @@ export default function Admin() {
                         await supabase.from("profiles").update({ approved: true }).eq("user_id", m.user_id);
                         toast.success("Membro aprovado!");
                         fetchAll();
-                      }}>Aprovar Ã¢Å“â€¦</Button>
+                      }}>Aprovar ✅</Button>
                     </div>
                   </div>
                 ))
@@ -292,9 +292,9 @@ export default function Admin() {
           {tab === "challenges" && (
             <div className="space-y-4">
               <div className="glass rounded-xl p-4 space-y-3">
-                <h3 className="font-heading text-sm text-primary">âž• Criar novo desafio</h3>
-                <Input placeholder="TÃ­tulo" value={newCh.title} onChange={(e) => setNewCh({ ...newCh, title: e.target.value })} />
-                <Input placeholder="DescriÃ§Ã£o" value={newCh.description} onChange={(e) => setNewCh({ ...newCh, description: e.target.value })} />
+                <h3 className="font-heading text-sm text-primary">➕ Criar novo desafio</h3>
+                <Input placeholder="Título" value={newCh.title} onChange={(e) => setNewCh({ ...newCh, title: e.target.value })} />
+                <Input placeholder="Descrição" value={newCh.description} onChange={(e) => setNewCh({ ...newCh, description: e.target.value })} />
                 <Input placeholder="Pergunta do Quiz (Opcional)" value={newCh.question} onChange={(e) => setNewCh({ ...newCh, question: e.target.value })} />
                 <Input placeholder="Resposta Correta (Opcional)" value={newCh.correct_answer} onChange={(e) => setNewCh({ ...newCh, correct_answer: e.target.value })} />
                 <div className="flex gap-2">
