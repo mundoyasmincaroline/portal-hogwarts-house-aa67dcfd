@@ -123,7 +123,6 @@ export default function StickerAlbum() {
                     src={s.image_url} 
                     alt={s.character_name}
                     referrerPolicy="no-referrer"
-                    crossOrigin="anonymous"
                     onError={() => setFailedImages(prev => ({ ...prev, [s.id]: true }))}
                     className={`w-full h-full object-cover object-top transition-all duration-700 ${unlocked ? 'opacity-90 group-hover:scale-105' : 'opacity-40 grayscale group-hover:grayscale-0 group-hover:opacity-60'}`} 
                   />

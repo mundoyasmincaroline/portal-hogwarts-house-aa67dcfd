@@ -162,15 +162,15 @@ export default function Admin() {
   }
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
-    { id: "members", label: "Membros", icon: "ðŸ‘¥" },
-    { id: "pending_members", label: "Novos Membros", icon: "â³" },
-    { id: "challenges", label: "Desafios", icon: "âš”ï¸" },
-    { id: "houses", label: "Casas", icon: "ðŸ°" },
-    { id: "tasks", label: "Tarefas", icon: "âœ…" },
-    { id: "banned", label: "Filtro Chat", icon: "ðŸš«" },
-    { id: "channels", label: "Salas/Meet", icon: "ðŸ“¹" },
-    { id: "monetization", label: "MonetizaÃ§Ã£o", icon: "ðŸ’°" },
-    { id: "moderation", label: "ModeraÃ§Ã£o", icon: "ðŸ‘ï¸" },
+    { id: "members", label: "Membros", icon: "👥" },
+    { id: "pending_members", label: "Novos Membros", icon: "⏳" },
+    { id: "challenges", label: "Desafios", icon: "⚔️" },
+    { id: "houses", label: "Casas", icon: "🏰" },
+    { id: "tasks", label: "Tarefas", icon: "✅" },
+    { id: "banned", label: "Filtro Chat", icon: "🚫" },
+    { id: "channels", label: "Salas/Meet", icon: "📹" },
+    { id: "monetization", label: "Monetização", icon: "💰" },
+    { id: "moderation", label: "Moderação", icon: "👁️" },
   ];
 
   return (
@@ -254,7 +254,7 @@ export default function Admin() {
           {tab === "pending_members" && (
             <div className="space-y-4">
               <div className="glass rounded-xl p-4">
-                <h3 className="font-heading text-sm text-primary mb-1">â³ Novos Membros Pendentes</h3>
+                <h3 className="font-heading text-sm text-primary mb-1">⏳ Novos Membros Pendentes</h3>
                 <p className="text-xs text-muted-foreground">Aprove a entrada dos novos bruxos no portal.</p>
               </div>
               {pendingMembers.length === 0 ? (
@@ -422,12 +422,12 @@ export default function Admin() {
           {tab === "tasks" && (
             <div className="space-y-4">
               <div className="glass rounded-xl p-4">
-                <h3 className="font-heading text-sm text-primary mb-1">âœ… AprovaÃ§Ã£o de Tarefas</h3>
-                <p className="text-xs text-muted-foreground">Avalie as comprovaÃ§Ãµes enviadas pelos membros e libere o XP.</p>
+                <h3 className="font-heading text-sm text-primary mb-1">✅ Aprovação de Tarefas</h3>
+                <p className="text-xs text-muted-foreground">Avalie as comprovações enviadas pelos membros e libere o XP.</p>
               </div>
               {pendingTasks.length === 0 ? (
-                <div className="glass rounded-xl p-6 text-center">
-                  <p className="text-muted-foreground text-sm">Nenhuma tarefa pendente de aprovaÃ§Ã£o.</p>
+                <div className="glass rounded-xl p-4 text-center">
+                  <p className="text-muted-foreground text-sm">Nenhuma tarefa pendente de aprovação.</p>
                 </div>
               ) : (
                 pendingTasks.map((t) => (
@@ -453,11 +453,11 @@ export default function Admin() {
                           }
                           toast.success("Tarefa aprovada!");
                           fetchAll();
-                        }}>Aprovar âœ…</Button>
+                        }}>Aprovar ✅</Button>
                       </div>
                     </div>
                     <div>
-                      <span className="text-xs font-heading text-muted-foreground">ComprovaÃ§Ã£o:</span>
+                      <span className="text-xs font-heading text-muted-foreground">Comprovação:</span>
                       <div className="text-sm bg-secondary/30 p-3 rounded-md mt-1 italic text-foreground/80 break-words whitespace-pre-wrap">
                         {t.proof?.includes("http") ? <a href={t.proof} target="_blank" className="text-primary hover:underline">{t.proof}</a> : t.proof}
                       </div>
@@ -487,7 +487,7 @@ export default function Admin() {
                     <button onClick={async () => {
                       await supabase.from("banned_words").delete().eq("id", bw.id);
                       fetchAll();
-                    }} className="text-muted-foreground hover:text-foreground">âœ•</button>
+                    }} className="text-muted-foreground hover:text-foreground">✖</button>
                   </div>
                 ))}
                 {bannedWords.length === 0 && <p className="text-sm text-muted-foreground">Nenhuma palavra cadastrada.</p>}
@@ -502,7 +502,7 @@ export default function Admin() {
                   <div className="flex justify-between items-start">
                     <div>
                       <h4 className="font-heading text-lg text-foreground flex items-center gap-2">
-                        {c.name} {c.is_premium && <span className="text-xl">âœ¨</span>}
+                        {c.name} {c.is_premium && <span className="text-xl">✨</span>}
                       </h4>
                       <p className="text-xs text-muted-foreground">{c.description}</p>
                     </div>
@@ -516,7 +516,7 @@ export default function Admin() {
                     </label>
                   </div>
                   <div>
-                    <span className="text-xs text-muted-foreground mb-1 block">Link do Meet / Jitsi (TransmissÃ£o)</span>
+                    <span className="text-xs text-muted-foreground mb-1 block">Link do Meet / Jitsi (Transmissão)</span>
                     <div className="flex gap-2">
                       <Input defaultValue={c.meet_link || ""} placeholder="https://meet.jit.si/HogwartsRoom" onBlur={async (e) => {
                         if (e.target.value === c.meet_link) return;
@@ -537,7 +537,7 @@ export default function Admin() {
                 <h2 className="font-heading text-xl text-primary mb-4">Adicionar Oferta (TikTok Shop)</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Input
-                    placeholder="TÃ­tulo (Ex: PelÃºcia Harry Potter)"
+                    placeholder="Título (Ex: Pelúcia Harry Potter)"
                     value={adForm.title}
                     onChange={(e) => setAdForm({ ...adForm, title: e.target.value })}
                   />
@@ -553,12 +553,12 @@ export default function Admin() {
                   />
                 </div>
                 <Button onClick={createAd} variant="magical" className="mt-4 w-full">
-                  Publicar AnÃºncio MÃ¡gico
+                  Publicar Anúncio Mágico
                 </Button>
               </div>
 
               <div className="glass rounded-2xl p-6">
-                <h2 className="font-heading text-xl text-foreground mb-4">AnÃºncios Ativos</h2>
+                <h2 className="font-heading text-xl text-foreground mb-4">Anúncios Ativos</h2>
                 <div className="space-y-4">
                   {ads.map((ad) => (
                     <div key={ad.id} className="bg-card/50 rounded-xl p-4 flex items-center justify-between gap-4 border border-border">
@@ -578,7 +578,7 @@ export default function Admin() {
                       </div>
                     </div>
                   ))}
-                  {ads.length === 0 && <p className="text-muted-foreground text-sm text-center">Nenhum anÃºncio cadastrado ainda.</p>}
+                  {ads.length === 0 && <p className="text-muted-foreground text-sm text-center">Nenhum anúncio cadastrado ainda.</p>}
                 </div>
               </div>
             </div>
@@ -586,7 +586,7 @@ export default function Admin() {
 
           {tab === "moderation" && (
             <div className="glass rounded-2xl p-6">
-              <h2 className="font-heading text-xl text-destructive mb-4">ModeraÃ§Ã£o de Stories</h2>
+              <h2 className="font-heading text-xl text-destructive mb-4">Moderação de Stories</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {stories.map(story => (
                   <div key={story.id} className="bg-card/50 rounded-xl p-4 border border-border">
