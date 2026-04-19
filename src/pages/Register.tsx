@@ -14,7 +14,7 @@ export default function Register() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
-    fullName: "", username: "", age: "", house: "" as House | "", email: "", password: "",
+    fullName: "", username: "", age: "", house: "" as House | "", email: "", password: "", referralCode: ""
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   
@@ -59,6 +59,9 @@ export default function Register() {
     });
     setLoading(false);
     if (result.success) {
+      if (form.referralCode.trim()) {
+        localStorage.setItem("pending_referral", form.referralCode.trim().toLowerCase().replace("@", ""));
+      }
       setStep(3);
     } else {
       toast.error(result.error || "Erro ao criar conta");
@@ -108,6 +111,10 @@ export default function Register() {
               <label className="text-sm font-heading text-muted-foreground block mb-1">Idade</label>
               <Input type="number" min={13} max={17} value={form.age} onChange={(e) => setForm({ ...form, age: e.target.value })} placeholder="13-17" className="bg-secondary/50" />
               {errors.age && <p className="text-destructive text-xs mt-1">{errors.age}</p>}
+            </div>
+            <div>
+              <label className="text-sm font-heading text-muted-foreground block mb-1">Código de Convite (Opcional)</label>
+              <Input value={form.referralCode} onChange={(e) => setForm({ ...form, referralCode: e.target.value })} placeholder="Quem te chamou? (Ex: harry)" className="bg-secondary/50" />
             </div>
             <div className="bg-primary/10 p-4 rounded-xl border border-primary/20">
               <label className="text-sm font-heading text-primary block mb-1 flex items-center gap-2">

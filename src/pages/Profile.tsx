@@ -20,7 +20,8 @@ export default function Profile() {
   const [friendship, setFriendship] = useState<any>(null);
   const [friends, setFriends] = useState<any[]>([]);
   const [loadingTarget, setLoadingTarget] = useState(false);
-  const [activeTab, setActiveTab] = useState<"about" | "friends" | "security" | "album">("about");
+  const [activeTab, setActiveTab] = useState<"about" | "friends" | "security" | "album" | "referral">("about");
+  const [referrals, setReferrals] = useState<any[]>([]);
 
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -48,9 +49,11 @@ export default function Profile() {
         birth_date: currentUserProfile.birth_date || "",
       });
       loadFriends(user!.id);
+      loadReferrals(user!.id);
     } else if (userId) {
       loadTargetProfile();
       loadFriends(userId);
+      loadReferrals(userId);
     }
   }, [userId, isMe, currentUserProfile]);
 
@@ -79,6 +82,21 @@ export default function Profile() {
     if (data) {
       const mapped = data.map(d => d.user_id === targetId ? d.friend_profiles : d.user_profiles);
       setFriends(mapped);
+    }
+  };
+
+  const loadReferrals = async (targetId: string) => {
+    const { data: refs } = await supabase.from("referrals").select("*").eq("inviter_id", targetId);
+    if (refs && refs.length > 0) {
+      const invitedIds = refs.map(r => r.invited_id);
+      const { data: profs } = await supabase.from("profiles").select("*").in("user_id", invitedIds);
+      const enriched = refs.map(r => ({
+        ...r,
+        profile: profs?.find(p => p.user_id === r.invited_id)
+      }));
+      setReferrals(enriched);
+    } else {
+      setReferrals([]);
     }
   };
 
@@ -194,6 +212,14 @@ export default function Profile() {
         >
           Álbum
         </button>
+        {isMe && (
+          <button 
+            onClick={() => { setActiveTab("referral"); setEditing(false); }} 
+            className={`pb-2 font-heading text-sm transition-colors ${activeTab === "referral" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            Recrutamento
+          </button>
+        )}
         {isMe && (
           <button 
             onClick={() => { setActiveTab("security"); setEditing(false); }} 
@@ -374,6 +400,50 @@ export default function Profile() {
         </div>
       ) : activeTab === "album" ? (
         <ProfileAlbum userId={profile.user_id} />
+      ) : activeTab === "referral" && isMe ? (
+        <div className="space-y-4">
+          <div className="glass rounded-2xl p-6 text-center border border-primary/20 bg-primary/5">
+            <h2 className="font-heading text-xl text-primary mb-2">Seu Link de Convite Mágico</h2>
+            <p className="text-sm text-muted-foreground mb-4">
+              Convide novos bruxos e ganhe <strong>500 XP</strong> assim que eles chegarem ao Nível 2!
+            </p>
+            <div className="flex items-center gap-2 max-w-sm mx-auto">
+              <Input readOnly value={profile.username} className="text-center font-bold text-lg bg-background" />
+              <Button variant="magical" onClick={() => {
+                navigator.clipboard.writeText(`Entre na Hogwarts House e use meu código de convite: ${profile.username}`);
+                toast.success("Código copiado!");
+              }}>Copiar</Button>
+            </div>
+          </div>
+
+          <h3 className="font-heading text-lg text-foreground mt-8">Bruxos que você recrutou ({referrals.length})</h3>
+          
+          {referrals.length === 0 ? (
+            <div className="glass rounded-xl p-6 text-center text-muted-foreground text-sm">
+              Você ainda não recrutou ninguém. Compartilhe seu código!
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {referrals.map(r => (
+                <div key={r.id} className="glass rounded-xl p-3 flex items-center gap-3">
+                  {r.profile?.avatar_url ? (
+                    <img src={r.profile.avatar_url} alt={r.profile.full_name} className="w-10 h-10 rounded-full object-cover" />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center font-heading text-primary">
+                      {r.profile?.full_name?.[0] || "?"}
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-heading text-foreground truncate">{r.profile?.full_name}</p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {r.status === 'completed' ? <span className="text-green-500">✅ 500 XP Ganhos</span> : <span className="text-amber-500">⏳ Pendente (Aguardando Nv. 2)</span>}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       ) : activeTab === "security" && isMe ? (
         <div className="glass rounded-2xl p-6">
           <h2 className="font-heading text-xl text-foreground mb-1">🔐 Segurança e Acesso</h2>

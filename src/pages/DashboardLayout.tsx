@@ -62,6 +62,35 @@ export default function DashboardLayout() {
     };
   }, [user, pingPresence]);
 
+  // Sistema de Recrutamento (Referral)
+  useEffect(() => {
+    const processReferral = async () => {
+      if (!user || !profile) return;
+      
+      // 1. Registra o convite se o usuário acabou de se cadastrar com um código
+      const pendingRef = localStorage.getItem("pending_referral");
+      if (pendingRef) {
+        const { data: inviter } = await supabase.from("profiles").select("user_id").eq("username", pendingRef).single();
+        if (inviter) {
+          await supabase.from("referrals").insert({
+            inviter_id: inviter.user_id,
+            invited_id: user.id
+          } as never);
+        }
+        localStorage.removeItem("pending_referral");
+      }
+
+      // 2. Anti-Burla: Se chegou no Nível 2, conclui o convite
+      if (profile.level >= 2) {
+        const { data: ref } = await supabase.from("referrals").select("status").eq("invited_id", user.id).maybeSingle();
+        if (ref && ref.status === 'pending') {
+          await supabase.rpc("complete_referral_action", { _invited_id: user.id });
+        }
+      }
+    };
+    processReferral();
+  }, [user, profile]);
+
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
@@ -76,9 +105,12 @@ export default function DashboardLayout() {
   if (!user || !profile) return null;
   
 
-  if (!profile.approved) return <PendingApproval />;
-  if (!profile.has_accepted_rules) return <RulesAgreement />;
-  if (!profile.active_character_id) return <CharacterSelection />;
+  if (!profile.approved && !isAdmin) return <PendingApproval />;
+  
+  if (!isAdmin) {
+    if (!profile.has_accepted_rules) return <RulesAgreement />;
+    if (!profile.active_character_id) return <CharacterSelection />;
+  }
   const today = new Date().toISOString().split('T')[0];
   const lastSeenIntro = localStorage.getItem(`intro_last_seen_${user.id}`);
   const shouldShowIntro = lastSeenIntro !== today;
