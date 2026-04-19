@@ -14,6 +14,7 @@ import PendingApproval from "@/pages/PendingApproval";
 import RulesAgreement from "@/pages/RulesAgreement";
 import CharacterSelection from "@/pages/CharacterSelection";
 import DailyEncounter from "@/components/DailyEncounter";
+import NotificationBanner from "@/components/NotificationBanner";
 
 const NAV_ITEMS = [
   { icon: "👤", label: "Meu Perfil", path: "/dashboard/profile" },
@@ -165,6 +166,7 @@ export default function DashboardLayout() {
       </aside>
 
       <main className="flex-1 flex flex-col min-w-0">
+        <NotificationBanner />
         <div className="md:hidden flex items-center gap-3 p-3 border-b border-border bg-card">
           <button onClick={() => setSidebarOpen(true)} className="text-xl">☰</button>
           <span className="font-heading text-sm text-gold-gradient">Hogwarts House</span>
