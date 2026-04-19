@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import { HOUSES, type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
@@ -154,23 +154,23 @@ export default function Admin() {
   if (!isAdmin) {
     return (
       <div className="text-center py-20">
-        <div className="text-4xl mb-4">ðŸ”’</div>
+        <div className="text-4xl mb-4">🔒</div>
         <h2 className="font-heading text-xl text-foreground">Acesso Restrito</h2>
-        <p className="text-muted-foreground text-sm">Apenas administradores podem acessar esta Ã¡rea.</p>
+        <p className="text-muted-foreground text-sm">Apenas administradores podem acessar esta área.</p>
       </div>
     );
   }
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
-    { id: "members", label: "Membros", icon: "ðŸ‘¥" },
-    { id: "pending_members", label: "Novos Membros", icon: "â³" },
-    { id: "challenges", label: "Desafios", icon: "âš”ï¸" },
-    { id: "houses", label: "Casas", icon: "ðŸ°" },
-    { id: "tasks", label: "Tarefas", icon: "âœ…" },
-    { id: "banned", label: "Filtro Chat", icon: "ðŸš«" },
-    { id: "channels", label: "Salas/Meet", icon: "ðŸ“¹" },
-    { id: "monetization", label: "MonetizaÃ§Ã£o", icon: "ðŸ’°" },
-    { id: "moderation", label: "ModeraÃ§Ã£o", icon: "ðŸ‘ï¸" },
+    { id: "members", label: "Membros", icon: "👥" },
+    { id: "pending_members", label: "Novos Membros", icon: "⏳" },
+    { id: "challenges", label: "Desafios", icon: "⚔️" },
+    { id: "houses", label: "Casas", icon: "🏰" },
+    { id: "tasks", label: "Tarefas", icon: "✅" },
+    { id: "banned", label: "Filtro Chat", icon: "🚫" },
+    { id: "channels", label: "Salas/Meet", icon: "📹" },
+    { id: "monetization", label: "Monetização", icon: "💰" },
+    { id: "moderation", label: "Moderação", icon: "👁️" },
   ];
 
   return (
@@ -186,7 +186,7 @@ export default function Admin() {
           <p className="text-xs text-muted-foreground">Membros</p>
         </div>
         <div className="glass rounded-xl p-4 text-center">
-          <h3 className="text-muted-foreground text-sm font-heading mb-2">UsuÃ¡rios Online</h3>
+          <h3 className="text-muted-foreground text-sm font-heading mb-2">Usuários Online</h3>
           <p className="text-2xl font-heading text-foreground">{members.filter((m) => isUserOnline(m)).length}</p>
         </div>
         <div className="glass rounded-xl p-4 text-center">
@@ -232,13 +232,13 @@ export default function Admin() {
                   </div>
                   <div className="flex flex-col items-end gap-1">
                     {isUserOnline(m) ? (
-                      <span className="text-xs text-green-500 font-medium">ðŸŸ¢ Online</span>
+                      <span className="text-xs text-green-500 font-medium">🟢 Online</span>
                     ) : (
-                      <span className="text-xs text-muted-foreground">âšª Offline</span>
+                      <span className="text-xs text-muted-foreground">⚪ Offline</span>
                     )}
                     {m.last_seen ? (
                       <span className="text-[10px] text-muted-foreground/70">
-                        Ãšltimo login: {new Date(m.last_seen).toLocaleString('pt-BR')}
+                        Último login: {new Date(m.last_seen).toLocaleString('pt-BR')}
                       </span>
                     ) : (
                       <span className="text-[10px] text-muted-foreground/40">
