@@ -345,6 +345,32 @@ export default function Feed() {
               <div className="w-2 h-2 rounded-none bg-green-500 animate-[ping_3s_linear_infinite]"></div>
             </div>
 
+            {/* Yasmin Caroline - A Fundadora */}
+            <div className="flex items-center gap-2 mb-2 p-2 bg-yellow-500/10 border border-yellow-400/50 rounded-lg group shadow-[0_0_15px_rgba(250,204,21,0.3)] hover:scale-105 transition-transform cursor-default">
+              <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border-2 border-yellow-400 relative">
+                <div className="absolute inset-0 bg-yellow-400/30 mix-blend-overlay z-10 animate-pulse"></div>
+                <img src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Yasmin Caroline" className="w-full h-full object-cover" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-yellow-400 font-bold truncate">✨ Yasmin Caroline</p>
+                <p className="text-[9px] text-yellow-500/80 truncate font-bold">A FUNDADORA GENIAL</p>
+              </div>
+              <div className="w-2 h-2 rounded-full bg-yellow-400 animate-bounce"></div>
+            </div>
+
+            {/* Carolina Assis - A Guardiã */}
+            <div className="flex items-center gap-2 mb-2 p-2 bg-blue-500/10 border border-blue-400/50 rounded-lg group shadow-[0_0_10px_rgba(96,165,250,0.2)]">
+              <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-blue-400 relative">
+                <div className="absolute inset-0 bg-blue-400/20 mix-blend-overlay z-10 animate-pulse"></div>
+                <img src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Carolina Assis" className="w-full h-full object-cover" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-blue-400 font-bold truncate">🛡️ Carolina Assis</p>
+                <p className="text-[9px] text-blue-400/80 truncate font-bold">MÃE ZELOSA • VIGIANDO</p>
+              </div>
+              <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></div>
+            </div>
+
             {/* Argus Filch - Sempre Online */}
             <div className="flex items-center gap-2 mb-4 p-2 bg-red-950/30 border border-red-900/50 rounded-lg group">
               <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-red-500/50">
