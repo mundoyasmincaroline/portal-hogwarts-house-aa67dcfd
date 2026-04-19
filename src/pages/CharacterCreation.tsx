@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,9 @@ interface Props {
 export default function CharacterCreation({ onComplete, onCancel, canCancel }: Props) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Form State
   const [type, setType] = useState<"oc" | "canon">("oc");
@@ -82,6 +85,17 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
     setLoading(true);
 
     try {
+      // 0. Upload avatar if file was chosen
+      let finalAvatarUrl = formData.avatar_url;
+      if (avatarFile && user) {
+        const ext = avatarFile.name.split(".").pop();
+        const path = `characters/${user.id}/${Date.now()}.${ext}`;
+        const { error: upErr } = await supabase.storage.from("avatars").upload(path, avatarFile, { upsert: true });
+        if (!upErr) {
+          const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
+          finalAvatarUrl = publicUrl;
+        }
+      }
       // 1. Check if Canon is already claimed
       if (type === "canon") {
         const { data: existingCanon } = await supabase
@@ -107,6 +121,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
           gender: gender,
           house: house || null,
           ...formData,
+          avatar_url: finalAvatarUrl,
           age: formData.age ? parseInt(formData.age) : null
         })
         .select("id")
@@ -212,7 +227,49 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Input name="full_name" placeholder="Nome Completo *" value={formData.full_name} onChange={handleChange} required className="bg-secondary/50" />
               <Input name="age" type="number" placeholder="Idade (Anos)" value={formData.age} onChange={handleChange} className="bg-secondary/50" />
-              <Input name="avatar_url" placeholder="URL da Foto do Personagem (Link)" value={formData.avatar_url} onChange={handleChange} className="bg-secondary/50" />
+              {/* Avatar upload + URL */}
+              <div className="col-span-1 md:col-span-2 space-y-2">
+                <label className="text-sm text-muted-foreground block">📷 Foto do Personagem *</label>
+                {/* Big upload button */}
+                <label className="flex flex-col items-center justify-center gap-2 w-full py-5 rounded-xl border-2 border-dashed border-primary/50 bg-primary/5 hover:bg-primary/10 cursor-pointer transition-colors">
+                  {avatarPreview ? (
+                    <img src={avatarPreview} alt="preview" className="w-20 h-20 rounded-full object-cover border-2 border-primary/50" />
+                  ) : (
+                    <span className="text-4xl">📁</span>
+                  )}
+                  <span className="text-sm font-heading text-primary">
+                    {loading ? "Aguarde..." : avatarPreview ? "✅ Foto selecionada! (clique para trocar)" : "Clique aqui para fazer upload da foto"}
+                  </span>
+                  <span className="text-[10px] text-muted-foreground">PNG, JPG ou WEBP — máx. 5MB</span>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      if (file.size > 5 * 1024 * 1024) { toast.error("Imagem muito grande (máx 5MB)"); return; }
+                      setAvatarFile(file);
+                      setAvatarPreview(URL.createObjectURL(file));
+                      setFormData(f => ({ ...f, avatar_url: "" }));
+                    }}
+                  />
+                </label>
+                {/* Fallback: paste URL */}
+                <p className="text-[11px] text-muted-foreground text-center">— ou cole um link direto abaixo —</p>
+                <Input
+                  name="avatar_url"
+                  placeholder="https://link-da-imagem.com/foto.jpg"
+                  value={formData.avatar_url}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setAvatarPreview(e.target.value);
+                    setAvatarFile(null);
+                  }}
+                  className="bg-secondary/50"
+                />
+              </div>
               <Input name="blood_status" placeholder="Status Sanguíneo (Ex: Puro, Trouxa)" value={formData.blood_status} onChange={handleChange} className="bg-secondary/50" />
               <Input name="actor_faceclaim" placeholder="Faceclaim (Ator/Atriz que representa)" value={formData.actor_faceclaim} onChange={handleChange} className="bg-secondary/50" />
               {ageCategory === "adult" && (
