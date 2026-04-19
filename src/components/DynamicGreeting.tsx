@@ -11,21 +11,21 @@ export default function DynamicGreeting() {
       setGreeting({
         title: "Bom dia!",
         desc: "O Salão Principal cheira a panquecas e café quente.",
-        img: "https://images.unsplash.com/photo-1544463403-f11dd252cbe9?q=80&w=800&auto=format&fit=crop",
+        img: new URL('../assets/hogwarts_morning.png', import.meta.url).href,
         bg: "from-amber-500/20 to-orange-500/10"
       });
     } else if (hour >= 12 && hour < 18) {
       setGreeting({
         title: "Boa tarde!",
         desc: "As aulas de poções estão a todo vapor.",
-        img: "https://images.unsplash.com/photo-1579781403261-fcfcb16e14fb?q=80&w=800&auto=format&fit=crop",
+        img: new URL('../assets/hogwarts_afternoon.png', import.meta.url).href,
         bg: "from-amber-700/20 to-yellow-600/10"
       });
     } else {
       setGreeting({
         title: "Boa noite!",
         desc: "Cuidado com os corredores escuros, os monitores estão rondando.",
-        img: "https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?q=80&w=800&auto=format&fit=crop",
+        img: new URL('../assets/hogwarts_night.png', import.meta.url).href,
         bg: "from-blue-900/40 to-indigo-900/20"
       });
     }

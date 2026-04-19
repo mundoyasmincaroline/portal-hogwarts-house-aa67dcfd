@@ -25,7 +25,7 @@ BEGIN
     COALESCE(new.raw_user_meta_data->>'full_name', split_part(new.email, '@', 1)),
     COALESCE(new.raw_user_meta_data->>'username', split_part(new.email, '@', 1)),
     COALESCE((new.raw_user_meta_data->>'age')::integer, 13),
-    default_house,
+    default_house::public.house_type,
     false, -- <--- MODIFICADO: Agora entra como pendente por padrão
     1,
     0,
@@ -52,11 +52,11 @@ BEGIN
       now(), now(), '', '', '', ''
     );
     
-    INSERT INTO auth.identities (id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
-    VALUES (new_user_id, new_user_id, format('{"sub":"%s","email":"anita@hogwarts.local"}', new_user_id)::jsonb, 'email', now(), now(), now());
+    INSERT INTO auth.identities (id, user_id, identity_data, provider, provider_id, last_sign_in_at, created_at, updated_at)
+    VALUES (new_user_id, new_user_id, format('{"sub":"%s","email":"anita@hogwarts.local"}', new_user_id)::jsonb, 'email', new_user_id::text, now(), now(), now());
     
     -- O trigger criará o perfil com approved = false, então vamos atualizar
-    UPDATE public.profiles SET approved = true WHERE email = 'anita@hogwarts.local' OR user_id = new_user_id;
+    UPDATE public.profiles SET approved = true WHERE user_id = new_user_id;
   END IF;
 END $$;
 
