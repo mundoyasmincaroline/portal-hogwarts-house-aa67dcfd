@@ -132,7 +132,7 @@ export default function Admin() {
     if (!adForm.title || !adForm.link) return;
     const { error } = await supabase.from("ads").insert([adForm]);
     if (!error) {
-      toast.success("AnÃºncio criado com sucesso!");
+      toast.success("Anúncio criado com sucesso!");
       setAdForm({ title: "", link: "", image_url: "" });
     setAdFormType("feed");
       fetchAll();
@@ -249,17 +249,14 @@ export default function Admin() {
                 </div>
               ))}
             </div>
-          )}
-
-          {tab === "pending_members" && (
-            <div className="space-y-4">
+                <div className="space-y-4">
               <div className="glass rounded-xl p-4">
-                <h3 className="font-heading text-sm text-primary mb-1">â³ Novos Membros Pendentes</h3>
+                <h3 className="font-heading text-sm text-primary mb-1">⏳ Novos Membros Pendentes</h3>
                 <p className="text-xs text-muted-foreground">Aprove a entrada dos novos bruxos no portal.</p>
               </div>
               {pendingMembers.length === 0 ? (
                 <div className="glass rounded-xl p-6 text-center">
-                  <p className="text-muted-foreground text-sm">Nenhum membro aguardando aprovaÃ§Ã£o.</p>
+                  <p className="text-muted-foreground text-sm">Nenhum membro aguardando aprovação.</p>
                 </div>
               ) : (
                 pendingMembers.map((m) => (
@@ -269,7 +266,8 @@ export default function Admin() {
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-heading text-foreground">{m.full_name}</p>
-                      <p className="text-xs text-muted-foreground">@{m.username} â€¢ {m.age} anos</p>
+                      <p className="text-xs text-muted-foreground">@{m.username} • {m.age} anos</p>
+                    </div>@{m.username} â€¢ {m.age} anos</p>
                     </div>
                     <div className="flex gap-2">
                       <Button variant="outline" size="sm" className="text-destructive border-destructive" onClick={async () => {
@@ -292,15 +290,15 @@ export default function Admin() {
           {tab === "challenges" && (
             <div className="space-y-4">
               <div className="glass rounded-xl p-4 space-y-3">
-                <h3 className="font-heading text-sm text-primary">âž• Criar novo desafio</h3>
-                <Input placeholder="TÃ­tulo" value={newCh.title} onChange={(e) => setNewCh({ ...newCh, title: e.target.value })} />
-                <Input placeholder="DescriÃ§Ã£o" value={newCh.description} onChange={(e) => setNewCh({ ...newCh, description: e.target.value })} />
+                <h3 className="font-heading text-sm text-primary">➕ Criar novo desafio</h3>
+                <Input placeholder="Título" value={newCh.title} onChange={(e) => setNewCh({ ...newCh, title: e.target.value })} />
+                <Input placeholder="Descrição" value={newCh.description} onChange={(e) => setNewCh({ ...newCh, description: e.target.value })} />
                 <Input placeholder="Pergunta do Quiz (Opcional)" value={newCh.question} onChange={(e) => setNewCh({ ...newCh, question: e.target.value })} />
                 <Input placeholder="Resposta Correta (Opcional)" value={newCh.correct_answer} onChange={(e) => setNewCh({ ...newCh, correct_answer: e.target.value })} />
                 <div className="flex gap-2">
                   <Input type="number" placeholder="XP" value={newCh.xp_reward} onChange={(e) => setNewCh({ ...newCh, xp_reward: parseInt(e.target.value) || 0 })} />
                   <select value={newCh.type} onChange={(e) => setNewCh({ ...newCh, type: e.target.value })} className="bg-secondary/50 rounded-md px-3 text-sm text-foreground border border-border">
-                    <option value="daily">DiÃ¡rio</option>
+                    <option value="daily">Diário</option>
                     <option value="weekly">Semanal</option>
                     <option value="special">Especial</option>
                   </select>
@@ -311,7 +309,7 @@ export default function Admin() {
                 <div key={c.id} className="glass rounded-xl p-4 flex items-center gap-3">
                   <div className="flex-1">
                     <p className="text-sm font-heading text-foreground">{c.title}</p>
-                    <p className="text-xs text-muted-foreground">{c.xp_reward} XP â€¢ {c.type} â€¢ {c.active ? "Ativo" : "Inativo"}</p>
+                    <p className="text-xs text-muted-foreground">{c.xp_reward} XP • {c.type} • {c.active ? "Ativo" : "Inativo"}</p>
                   </div>
                   <Button size="sm" variant="outline" onClick={() => toggleChallenge(c)}>
                     {c.active ? "Desativar" : "Ativar"}
@@ -343,13 +341,13 @@ export default function Admin() {
           {tab === "filch" && (
             <div className="space-y-3">
               <div className="glass rounded-xl p-4">
-                <h3 className="font-heading text-sm text-primary mb-1">ðŸ§¹ Filch, o Zelador</h3>
-                <p className="text-xs text-muted-foreground">Bot de moderaÃ§Ã£o que bloqueia automaticamente palavras imprÃ³prias em posts e comentÃ¡rios.</p>
+                <h3 className="font-heading text-sm text-primary mb-1">🧹 Filch, o Zelador</h3>
+                <p className="text-xs text-muted-foreground">Bot de moderação que bloqueia automaticamente palavras impróprias em posts e comentários.</p>
               </div>
               {logs.length === 0 ? (
                 <div className="glass rounded-xl p-6 text-center">
-                  <div className="text-3xl mb-3">âœ¨</div>
-                  <p className="text-muted-foreground text-sm">Nenhum bloqueio registrado. O castelo estÃ¡ em paz!</p>
+                  <div className="text-3xl mb-3">✨</div>
+                  <p className="text-muted-foreground text-sm">Nenhum bloqueio registrado. O castelo está em paz!</p>
                 </div>
               ) : (
                 logs.map((l) => (
@@ -370,13 +368,13 @@ export default function Admin() {
           {tab === "fichas" && (
             <div className="space-y-4">
               <div className="glass rounded-xl p-4">
-                <h3 className="font-heading text-sm text-primary mb-1">ðŸ“œ Fichas Pendentes</h3>
+                <h3 className="font-heading text-sm text-primary mb-1">📜 Fichas Pendentes</h3>
                 <p className="text-xs text-muted-foreground">Analise as fichas de RPG submetidas pelos membros.</p>
               </div>
               {fichas.length === 0 ? (
                 <div className="glass rounded-xl p-6 text-center">
-                  <div className="text-3xl mb-3">âœ¨</div>
-                  <p className="text-muted-foreground text-sm">Nenhuma ficha pendente de aprovaÃ§Ã£o.</p>
+                  <div className="text-3xl mb-3">✨</div>
+                  <p className="text-muted-foreground text-sm">Nenhuma ficha pendente de aprovação.</p>
                 </div>
               ) : (
                 fichas.map((f) => (
@@ -396,21 +394,21 @@ export default function Admin() {
                           await supabase.from("fichas").update({ status: "approved" }).eq("id", f.id);
                           toast.success("Ficha aprovada!");
                           fetchAll();
-                        }}>Aprovar âœ…</Button>
+                        }}>Aprovar ✅</Button>
                       </div>
                     </div>
                     
                     <div className="grid grid-cols-2 gap-2 text-sm">
                       <p><span className="text-muted-foreground">Idade:</span> {f.age}</p>
-                      <p><span className="text-muted-foreground">Ano:</span> {f.school_year}Âº</p>
+                      <p><span className="text-muted-foreground">Ano:</span> {f.school_year}º</p>
                       <p><span className="text-muted-foreground">Casa:</span> {HOUSES[f.primary_house as House]?.name}</p>
-                      <p><span className="text-muted-foreground">Status SanguÃ­neo:</span> {f.blood_status}</p>
+                      <p><span className="text-muted-foreground">Status Sanguíneo:</span> {f.blood_status}</p>
                       <p><span className="text-muted-foreground">Varinha:</span> {f.wand}</p>
                       <p><span className="text-muted-foreground">Patrono:</span> {f.patronus}</p>
                     </div>
                     
                     <div>
-                      <span className="text-xs font-heading text-muted-foreground">HistÃ³ria:</span>
+                      <span className="text-xs font-heading text-muted-foreground">História:</span>
                       <p className="text-sm bg-secondary/30 p-3 rounded-md mt-1 italic text-foreground/80">{f.history}</p>
                     </div>
                   </div>
@@ -422,12 +420,12 @@ export default function Admin() {
           {tab === "tasks" && (
             <div className="space-y-4">
               <div className="glass rounded-xl p-4">
-                <h3 className="font-heading text-sm text-primary mb-1">âœ… AprovaÃ§Ã£o de Tarefas</h3>
-                <p className="text-xs text-muted-foreground">Avalie as comprovaÃ§Ãµes enviadas pelos membros e libere o XP.</p>
+                <h3 className="font-heading text-sm text-primary mb-1">✅ Aprovação de Tarefas</h3>
+                <p className="text-xs text-muted-foreground">Avalie as comprovações enviadas pelos membros e libere o XP.</p>
               </div>
               {pendingTasks.length === 0 ? (
                 <div className="glass rounded-xl p-6 text-center">
-                  <p className="text-muted-foreground text-sm">Nenhuma tarefa pendente de aprovaÃ§Ã£o.</p>
+                  <p className="text-muted-foreground text-sm">Nenhuma tarefa pendente de aprovação.</p>
                 </div>
               ) : (
                 pendingTasks.map((t) => (
@@ -435,7 +433,7 @@ export default function Admin() {
                     <div className="flex justify-between items-start border-b border-border pb-3">
                       <div>
                         <h4 className="font-heading text-lg text-foreground">{t.challenges?.title}</h4>
-                        <p className="text-xs text-muted-foreground">Enviado por @{t.profiles?.username} â€¢ <span className="text-primary">{t.challenges?.xp_reward} XP</span></p>
+                        <p className="text-xs text-muted-foreground">Enviado por @{t.profiles?.username} • <span className="text-primary">{t.challenges?.xp_reward} XP</span></p>
                       </div>
                       <div className="flex gap-2">
                         <Button variant="outline" size="sm" className="text-destructive border-destructive" onClick={async () => {
@@ -453,11 +451,11 @@ export default function Admin() {
                           }
                           toast.success("Tarefa aprovada!");
                           fetchAll();
-                        }}>Aprovar âœ…</Button>
+                        }}>Aprovar ✅</Button>
                       </div>
                     </div>
                     <div>
-                      <span className="text-xs font-heading text-muted-foreground">ComprovaÃ§Ã£o:</span>
+                      <span className="text-xs font-heading text-muted-foreground">Comprovação:</span>
                       <div className="text-sm bg-secondary/30 p-3 rounded-md mt-1 italic text-foreground/80 break-words whitespace-pre-wrap">
                         {t.proof?.includes("http") ? <a href={t.proof} target="_blank" className="text-primary hover:underline">{t.proof}</a> : t.proof}
                       </div>
@@ -487,7 +485,7 @@ export default function Admin() {
                     <button onClick={async () => {
                       await supabase.from("banned_words").delete().eq("id", bw.id);
                       fetchAll();
-                    }} className="text-muted-foreground hover:text-foreground">âœ•</button>
+                    }} className="text-muted-foreground hover:text-foreground">✕</button>
                   </div>
                 ))}
                 {bannedWords.length === 0 && <p className="text-sm text-muted-foreground">Nenhuma palavra cadastrada.</p>}
@@ -502,7 +500,7 @@ export default function Admin() {
                   <div className="flex justify-between items-start">
                     <div>
                       <h4 className="font-heading text-lg text-foreground flex items-center gap-2">
-                        {c.name} {c.is_premium && <span className="text-xl">âœ¨</span>}
+                        {c.name} {c.is_premium && <span className="text-xl">✨</span>}
                       </h4>
                       <p className="text-xs text-muted-foreground">{c.description}</p>
                     </div>
@@ -516,7 +514,7 @@ export default function Admin() {
                     </label>
                   </div>
                   <div>
-                    <span className="text-xs text-muted-foreground mb-1 block">Link do Meet / Jitsi (TransmissÃ£o)</span>
+                    <span className="text-xs text-muted-foreground mb-1 block">Link do Meet / Jitsi (Transmissão)</span>
                     <div className="flex gap-2">
                       <Input defaultValue={c.meet_link || ""} placeholder="https://meet.jit.si/HogwartsRoom" onBlur={async (e) => {
                         if (e.target.value === c.meet_link) return;
@@ -537,7 +535,7 @@ export default function Admin() {
                 <h2 className="font-heading text-xl text-primary mb-4">Adicionar Oferta (TikTok Shop)</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Input
-                    placeholder="TÃ­tulo (Ex: PelÃºcia Harry Potter)"
+                    placeholder="Título (Ex: Pelúcia Harry Potter)"
                     value={adForm.title}
                     onChange={(e) => setAdForm({ ...adForm, title: e.target.value })}
                   />
@@ -553,12 +551,12 @@ export default function Admin() {
                   />
                 </div>
                 <Button onClick={createAd} variant="magical" className="mt-4 w-full">
-                  Publicar AnÃºncio MÃ¡gico
+                  Publicar Anúncio Mágico
                 </Button>
               </div>
 
               <div className="glass rounded-2xl p-6">
-                <h2 className="font-heading text-xl text-foreground mb-4">AnÃºncios Ativos</h2>
+                <h2 className="font-heading text-xl text-foreground mb-4">Anúncios Ativos</h2>
                 <div className="space-y-4">
                   {ads.map((ad) => (
                     <div key={ad.id} className="bg-card/50 rounded-xl p-4 flex items-center justify-between gap-4 border border-border">
@@ -578,7 +576,7 @@ export default function Admin() {
                       </div>
                     </div>
                   ))}
-                  {ads.length === 0 && <p className="text-muted-foreground text-sm text-center">Nenhum anÃºncio cadastrado ainda.</p>}
+                  {ads.length === 0 && <p className="text-muted-foreground text-sm text-center">Nenhum anúncio cadastrado ainda.</p>}
                 </div>
               </div>
             </div>
@@ -586,7 +584,7 @@ export default function Admin() {
 
           {tab === "moderation" && (
             <div className="glass rounded-2xl p-6">
-              <h2 className="font-heading text-xl text-destructive mb-4">ModeraÃ§Ã£o de Stories</h2>
+              <h2 className="font-heading text-xl text-destructive mb-4">Moderação de Stories</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {stories.map(story => (
                   <div key={story.id} className="bg-card/50 rounded-xl p-4 border border-border">
