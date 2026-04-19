@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useParams, useNavigate } from "react-router-dom";
+import ProfileAlbum from "@/components/ProfileAlbum";
 
 export default function Profile() {
   const { userId } = useParams<{ userId: string }>();
@@ -19,7 +20,7 @@ export default function Profile() {
   const [friendship, setFriendship] = useState<any>(null);
   const [friends, setFriends] = useState<any[]>([]);
   const [loadingTarget, setLoadingTarget] = useState(false);
-  const [activeTab, setActiveTab] = useState<"about" | "friends" | "security">("about");
+  const [activeTab, setActiveTab] = useState<"about" | "friends" | "security" | "album">("about");
 
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -186,6 +187,12 @@ export default function Profile() {
           className={`pb-2 font-heading text-sm transition-colors ${activeTab === "friends" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
         >
           Amigos ({friends.length})
+        </button>
+        <button 
+          onClick={() => { setActiveTab("album"); setEditing(false); }} 
+          className={`pb-2 font-heading text-sm transition-colors ${activeTab === "album" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          Álbum
         </button>
         {isMe && (
           <button 
@@ -365,6 +372,8 @@ export default function Profile() {
             </div>
           )}
         </div>
+      ) : activeTab === "album" ? (
+        <ProfileAlbum userId={profile.user_id} />
       ) : activeTab === "security" && isMe ? (
         <div className="glass rounded-2xl p-6">
           <h2 className="font-heading text-xl text-foreground mb-1">🔐 Segurança e Acesso</h2>

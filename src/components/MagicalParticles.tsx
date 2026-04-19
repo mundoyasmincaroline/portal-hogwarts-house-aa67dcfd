@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { getSeasonalEvent } from "@/lib/seasonal";
 
 export default function MagicalParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -9,8 +10,11 @@ export default function MagicalParticles() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const season = getSeasonalEvent();
+    const theme = season?.particleTheme || "magic";
+
     let animationId: number;
-    const particles: { x: number; y: number; size: number; speedY: number; opacity: number; flicker: number }[] = [];
+    const particles: any[] = [];
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -19,36 +23,84 @@ export default function MagicalParticles() {
     resize();
     window.addEventListener("resize", resize);
 
-    for (let i = 0; i < 50; i++) {
+    // Initial setup based on theme
+    const count = theme === "snow" ? 100 : theme === "leaves" ? 30 : 50;
+    
+    for (let i = 0; i < count; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        size: Math.random() * 2 + 0.5,
-        speedY: -(Math.random() * 0.3 + 0.1),
+        size: theme === "snow" ? Math.random() * 2 + 1 : Math.random() * 2 + 0.5,
+        speedY: theme === "snow" ? (Math.random() * 1 + 0.5) : theme === "leaves" ? (Math.random() * 0.8 + 0.4) : -(Math.random() * 0.3 + 0.1),
+        speedX: theme === "leaves" ? (Math.random() * 1 - 0.5) : 0,
         opacity: Math.random() * 0.5 + 0.2,
         flicker: Math.random() * Math.PI * 2,
+        angle: Math.random() * Math.PI * 2,
       });
     }
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
       particles.forEach((p) => {
         p.y += p.speedY;
-        p.flicker += 0.02;
-        const opacity = p.opacity * (0.5 + Math.sin(p.flicker) * 0.5);
-        if (p.y < -10) {
+        p.x += p.speedX;
+        
+        if (theme === "leaves") {
+          p.x += Math.sin(p.angle) * 0.5;
+          p.angle += 0.02;
+        }
+
+        let opacity = p.opacity;
+        if (theme === "magic" || theme === "sparks") {
+          p.flicker += 0.02;
+          opacity = p.opacity * (0.5 + Math.sin(p.flicker) * 0.5);
+        }
+
+        // Reset positions
+        if ((theme === "snow" || theme === "leaves") && p.y > canvas.height + 10) {
+          p.y = -10;
+          p.x = Math.random() * canvas.width;
+        } else if ((theme === "magic" || theme === "hearts" || theme === "sparks") && p.y < -10) {
           p.y = canvas.height + 10;
           p.x = Math.random() * canvas.width;
         }
+
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(43, 65%, 54%, ${opacity})`;
-        ctx.fill();
-        // glow
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(43, 65%, 54%, ${opacity * 0.15})`;
-        ctx.fill();
+        
+        if (theme === "hearts") {
+          // Simple heart shape
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.scale(p.size * 0.5, p.size * 0.5);
+          ctx.moveTo(0, 0);
+          ctx.bezierCurveTo(0, -3, -5, -3, -5, 0);
+          ctx.bezierCurveTo(-5, 3, 0, 5, 0, 8);
+          ctx.bezierCurveTo(0, 5, 5, 3, 5, 0);
+          ctx.bezierCurveTo(5, -3, 0, -3, 0, 0);
+          ctx.fillStyle = `hsla(340, 80%, 60%, ${opacity})`;
+          ctx.fill();
+          ctx.restore();
+        } else {
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          
+          if (theme === "snow") {
+            ctx.fillStyle = `hsla(0, 0%, 100%, ${opacity})`;
+          } else if (theme === "leaves") {
+            ctx.fillStyle = `hsla(30, 80%, 40%, ${opacity})`;
+          } else {
+            ctx.fillStyle = `hsla(43, 65%, 54%, ${opacity})`;
+          }
+          ctx.fill();
+        }
+
+        // Glow for magic/sparks
+        if (theme === "magic" || theme === "sparks") {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+          ctx.fillStyle = `hsla(43, 65%, 54%, ${opacity * 0.15})`;
+          ctx.fill();
+        }
       });
       animationId = requestAnimationFrame(animate);
     };

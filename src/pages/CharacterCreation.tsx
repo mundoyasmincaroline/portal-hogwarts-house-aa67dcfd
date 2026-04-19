@@ -57,11 +57,26 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
+    if (!user || loading) return;
     
-    if (!formData.full_name) {
-      toast.error("O nome do personagem é obrigatório!");
+    // Validar limite de personagens direto no banco para evitar cliques duplos
+    const { count } = await supabase.from("characters").select("*", { count: 'exact', head: true }).eq("user_id", user.id);
+    if (count && count >= 2) {
+      toast.error("Você já atingiu o limite máximo de 2 personagens por conta (Ex: 1 OC e 1 Canon)!");
       return;
+    }
+
+    const requiredFields = [
+      'full_name', 'avatar_url', 'age', 'blood_status', 
+      'actor_faceclaim', 'wand', 'patronus', 'personality', 
+      'strength', 'weakness', 'fears', 'dreams'
+    ];
+    
+    for (const field of requiredFields) {
+      if (!formData[field as keyof typeof formData]) {
+        toast.error(`A ficha está incompleta! Preencha todos os campos mágicos.`);
+        return;
+      }
     }
 
     setLoading(true);

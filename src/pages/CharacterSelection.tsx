@@ -92,16 +92,18 @@ export default function CharacterSelection() {
           ))}
 
           {/* Botão de Criar Novo */}
-          <div 
-            onClick={() => setShowCreation(true)}
-            className="glass p-6 rounded-2xl border border-dashed border-border/50 text-center flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all min-h-[300px]"
-          >
-            <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center text-2xl mb-4">
-              ✨
+          {characters.length < 2 && (
+            <div 
+              onClick={() => setShowCreation(true)}
+              className="glass p-6 rounded-2xl border border-dashed border-border/50 text-center flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all min-h-[300px]"
+            >
+              <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center text-2xl mb-4">
+                ✨
+              </div>
+              <h3 className="font-heading text-lg text-foreground">Nova Ficha</h3>
+              <p className="text-xs text-muted-foreground">Criar um novo personagem para a sua conta.</p>
             </div>
-            <h3 className="font-heading text-lg text-foreground">Nova Ficha</h3>
-            <p className="text-xs text-muted-foreground">Criar um novo personagem para a sua conta.</p>
-          </div>
+          )}
         </div>
       </div>
     </div>

@@ -24,6 +24,7 @@ interface FeedPost {
   id: string;
   user_id: string;
   content: string;
+  music_url?: string;
   created_at: string;
   author?: PostAuthor;
   reactions: { emoji: string; count: number; mine: boolean }[];
@@ -34,6 +35,7 @@ interface FeedPost {
 export default function Feed() {
   const { profile, user } = useAuth();
   const [newPost, setNewPost] = useState("");
+  const [newMusicUrl, setNewMusicUrl] = useState("");
   const [posts, setPosts] = useState<FeedPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [posting, setPosting] = useState(false);
@@ -92,6 +94,7 @@ export default function Feed() {
         id: p.id,
         user_id: p.user_id,
         content: p.content,
+        music_url: p.music_url,
         created_at: p.created_at,
         author: authorMap.get(p.user_id),
         reactions: Object.entries(grouped).map(([emoji, v]) => ({ emoji, count: v.count, mine: v.mine })),
@@ -132,13 +135,18 @@ export default function Feed() {
   const submitPost = async () => {
     if (!newPost.trim() || !user) return;
     setPosting(true);
-    const { error } = await supabase.from("posts").insert({ user_id: user.id, content: newPost.trim() } as never);
+    const { error } = await supabase.from("posts").insert({ 
+      user_id: user.id, 
+      content: newPost.trim(),
+      music_url: newMusicUrl.trim() || null 
+    } as never);
     setPosting(false);
     if (error) {
       toast.error(error.message.includes("Filch") ? error.message : "Erro ao publicar: " + error.message);
       return;
     }
     setNewPost("");
+    setNewMusicUrl("");
     toast.success("Publicado! ✨");
   };
 
@@ -189,7 +197,16 @@ export default function Feed() {
               maxLength={1000}
               className="w-full bg-transparent resize-none text-sm text-foreground placeholder:text-muted-foreground focus:outline-none min-h-[80px]"
             />
-            <div className="flex justify-between items-center mt-2">
+            <div className="flex gap-2 mt-2 pt-2 border-t border-border">
+              <input 
+                type="text" 
+                value={newMusicUrl} 
+                onChange={(e) => setNewMusicUrl(e.target.value)} 
+                placeholder="🎵 Link de Música (Spotify ou MP3)..." 
+                className="flex-1 bg-secondary/50 rounded-lg px-3 py-1.5 text-xs text-foreground focus:outline-none" 
+              />
+            </div>
+            <div className="flex justify-between items-center mt-3">
               <span className="text-xs text-muted-foreground">{newPost.length}/1000</span>
               <Button variant="magical" size="sm" className="font-heading text-xs" disabled={!newPost.trim() || posting} onClick={submitPost}>
                 {posting ? "Publicando..." : "Publicar"}
@@ -219,6 +236,23 @@ export default function Feed() {
                   {post.author?.house && <HouseCrest house={post.author.house} size="sm" />}
                 </div>
                 <p className="text-sm text-foreground mb-3 whitespace-pre-wrap">{post.content}</p>
+                
+                {post.music_url && (
+                  <div className="mb-4">
+                    {post.music_url.includes("spotify.com/track/") ? (
+                      <iframe 
+                        src={post.music_url.replace("open.spotify.com/track/", "open.spotify.com/embed/track/")} 
+                        width="100%" 
+                        height="80" 
+                        frameBorder="0" 
+                        allow="encrypted-media" 
+                        className="rounded-lg opacity-80 hover:opacity-100 transition-opacity"
+                      ></iframe>
+                    ) : (
+                      <audio controls src={post.music_url} className="w-full h-8" />
+                    )}
+                  </div>
+                )}
 
                 <div className="flex flex-wrap gap-2">
                   {post.reactions.map((r) => (
