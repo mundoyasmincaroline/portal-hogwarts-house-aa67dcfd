@@ -24,6 +24,8 @@ export default function Challenges() {
   const [loading, setLoading] = useState(true);
   const [answeringId, setAnsweringId] = useState<string | null>(null);
   const [activeEnigma, setActiveEnigma] = useState<Challenge | null>(null);
+  const [activeSocial, setActiveSocial] = useState<Challenge | null>(null);
+  const [socialLink, setSocialLink] = useState("");
   const [userProgress, setUserProgress] = useState<Record<string, number>>({});
 
   const load = useCallback(async () => {
@@ -54,13 +56,41 @@ export default function Challenges() {
 
   const openChallenge = (c: Challenge) => {
     if (!user || !profile) return;
-    if (completedIds.has(c.id)) { toast.info("Você já completou este desafio!"); return; }
+    if (completedIds.has(c.id) || pendingIds.has(c.id)) { toast.info("Você já completou ou enviou este desafio!"); return; }
 
     if (c.question) {
       setActiveEnigma(c);
+    } else if (c.type === 'social') {
+      setActiveSocial(c);
+      setSocialLink("");
     } else {
       toast.info("✨ Esta missão é concluída automaticamente! Realize a ação descrita e o sistema irá detectar e recompensar você.");
     }
+  };
+
+  const handleSocialSubmit = async () => {
+    const c = activeSocial;
+    if (!c || !user || !socialLink.trim()) return;
+
+    if (!socialLink.includes("http")) {
+      toast.error("Insira um link válido (com http/https).");
+      return;
+    }
+
+    const { error } = await supabase
+      .from("user_challenges")
+      .insert({ 
+        user_id: user.id, 
+        challenge_id: c.id, 
+        status: 'pending',
+        proof_url: socialLink 
+      } as never);
+
+    if (error) { toast.error("Erro ao enviar: " + error.message); return; }
+
+    toast.success("Link enviado! Aguarde a avaliação da administração mágica.");
+    setPendingIds((s) => new Set([...s, c.id]));
+    setActiveSocial(null);
   };
 
   const handleEnigmaAnswer = async (answerInput: string) => {
@@ -91,11 +121,15 @@ export default function Challenges() {
   const daily = challenges.filter((c) => c.type === "daily");
   const weekly = challenges.filter((c) => c.type === "weekly");
   const special = challenges.filter((c) => c.type === "special");
+  const social = challenges.filter((c) => c.type === "social");
 
-  const renderCard = (c: Challenge, isWeekly = false) => {
+  const renderCard = (c: Challenge, isSpecial = false) => {
     const done = completedIds.has(c.id);
+    const pending = pendingIds.has(c.id);
+    const disabled = done || pending;
+    
     return (
-      <div key={c.id} className={`glass rounded-xl p-5 transition-transform hover:scale-[1.01] ${isWeekly ? "ring-1 ring-primary/20" : ""} ${done ? "opacity-60" : ""}`}>
+      <div key={c.id} className={`glass rounded-xl p-5 transition-transform hover:scale-[1.01] ${isSpecial ? "ring-1 ring-primary/20" : ""} ${disabled ? "opacity-60" : ""}`}>
         <div className="flex items-start justify-between mb-3">
           <h3 className="font-heading text-foreground">{c.title}</h3>
           <span className="text-xs font-heading bg-primary/20 text-primary px-2 py-1 rounded-full">{c.xp_reward} XP</span>
@@ -122,10 +156,10 @@ export default function Challenges() {
           variant="magical"
           size="sm"
           className="font-heading text-xs w-full"
-          disabled={done}
+          disabled={disabled}
           onClick={() => openChallenge(c)}
         >
-          {done ? "✅ Concluído" : c.question ? "Responder Charada 🦉" : "Automática ⚙️"}
+          {done ? "✅ Concluído" : pending ? "⏳ Em Avaliação" : c.type === 'social' ? "Enviar Link 🔗" : c.question ? "Responder Charada 🦉" : "Automática ⚙️"}
         </Button>
       </div>
     );
@@ -165,6 +199,38 @@ export default function Challenges() {
         <div>
           <h2 className="font-heading text-lg text-foreground mb-3">✨ Eventos Especiais</h2>
           <div className="grid md:grid-cols-2 gap-4">{special.map((c) => renderCard(c, true))}</div>
+        </div>
+      )}
+
+      {social.length > 0 && (
+        <div>
+          <h2 className="font-heading text-lg text-foreground mb-3">📱 Embaixador de Hogwarts (Redes Sociais)</h2>
+          <div className="grid md:grid-cols-2 gap-4">{social.map((c) => renderCard(c, true))}</div>
+        </div>
+      )}
+
+      {activeSocial && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-fade-in">
+          <div className="glass max-w-md w-full rounded-2xl p-6 relative border border-primary/20 animate-scale-in">
+            <button onClick={() => setActiveSocial(null)} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground">✕</button>
+            <div className="text-center mb-6">
+              <span className="text-4xl">🔗</span>
+              <h2 className="font-heading text-2xl text-foreground mt-2">Comprovar Missão</h2>
+              <p className="text-sm text-muted-foreground mt-1">Cole abaixo o link público da sua postagem.</p>
+            </div>
+            <div className="space-y-4">
+              <input
+                type="url"
+                value={socialLink}
+                onChange={(e) => setSocialLink(e.target.value)}
+                className="w-full bg-secondary/50 rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 placeholder:text-muted-foreground text-sm"
+                placeholder="https://tiktok.com/@seu_perfil/video/123"
+              />
+              <Button onClick={handleSocialSubmit} variant="magical" className="w-full font-heading" disabled={!socialLink.trim()}>
+                Enviar para o Ministério Mágico
+              </Button>
+            </div>
+          </div>
         </div>
       )}
 

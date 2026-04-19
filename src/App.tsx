@@ -5,6 +5,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/lib/auth";
+
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -18,11 +19,13 @@ import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Chats from "./pages/Chats";
 import ChatRoom from "./pages/ChatRoom";
+import CineHogwarts from "./pages/CineHogwarts";
 import InstaHogwarts from "./pages/InstaHogwarts";
 import StickerAlbum from "./pages/StickerAlbum";
 import Classes from "./pages/Classes";
 import EmojiShop from "./components/EmojiShop";
 import Rules from "./pages/Rules";
+import MaraudersGuide from "./pages/MaraudersGuide";
 
 const queryClient = new QueryClient();
 
@@ -47,9 +50,10 @@ const App = () => (
               <Route index element={<Feed />} />
               <Route path="chats" element={<Chats />} />
               <Route path="chat/:roomId" element={<ChatRoom />} />
+              <Route path="cinema" element={<CineHogwarts />} />
               <Route path="instahogwarts" element={<InstaHogwarts />} />
-                <Route path="album" element={<StickerAlbum />} />
-                <Route path="classes" element={<Classes />} />
+              <Route path="album" element={<StickerAlbum />} />
+              <Route path="classes" element={<Classes />} />
               <Route path="houses" element={<Houses />} />
               <Route path="ranking" element={<Ranking />} />
               <Route path="challenges" element={<Challenges />} />
@@ -58,6 +62,7 @@ const App = () => (
               <Route path="admin" element={<Admin />} />
               <Route path="shop" element={<EmojiShop />} />
               <Route path="rules" element={<Rules />} />
+              <Route path="guide" element={<MaraudersGuide />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
@@ -68,5 +73,3 @@ const App = () => (
 );
 
 export default App;
-
-

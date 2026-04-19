@@ -36,6 +36,7 @@ export default function ChatRoom() {
   const { user, isAdmin } = useAuth();
   
   const [channel, setChannel] = useState<any>(null);
+  const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(true);
@@ -85,7 +86,7 @@ export default function ChatRoom() {
       return;
     }
     fetchChannel();
-  }, [roomId]);
+  }, [roomId, selectedDate]);
 
   const fetchChannel = async () => {
     const { data, error } = await supabase.from("channels").select("*").eq("id", roomId).single();
@@ -95,14 +96,22 @@ export default function ChatRoom() {
       return;
     }
     setChannel(data);
-    fetchMessages(data.id);
+    fetchMessages(data.id, selectedDate);
   };
 
-  const fetchMessages = async (id: string) => {
+  const fetchMessages = async (id: string, dateStr: string) => {
+    setLoading(true);
+    const startOfDay = new Date(dateStr);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(dateStr);
+    endOfDay.setHours(23, 59, 59, 999);
+
     const { data } = await supabase
       .from("messages")
       .select("*, profiles(full_name, username, house, avatar_url), characters(full_name, house, avatar_url)")
       .eq("channel_id", id)
+      .gte("created_at", startOfDay.toISOString())
+      .lte("created_at", endOfDay.toISOString())
       .order("created_at", { ascending: false })
       .limit(100);
     
@@ -138,6 +147,10 @@ export default function ChatRoom() {
     const subscription = supabase
       .channel(`messages:${channel.id}`)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `channel_id=eq.${channel.id}` }, async (payload) => {
+        // Só adiciona ao vivo se a data selecionada for hoje
+        const todayStr = new Date().toISOString().split('T')[0];
+        if (selectedDate !== todayStr) return;
+
         const { data: userData } = await supabase.from("profiles").select("full_name, username, house, avatar_url").eq("user_id", payload.new.user_id).single();
         const { data: charData } = payload.new.character_id ? await supabase.from("characters").select("full_name, house, avatar_url").eq("id", payload.new.character_id).single() : { data: null };
         const { data: roleData } = await supabase.from("user_roles").select("role").eq("user_id", payload.new.user_id).maybeSingle();
@@ -198,13 +211,26 @@ export default function ChatRoom() {
   return (
     <div className="max-w-4xl mx-auto h-[calc(100vh-100px)] flex flex-col glass rounded-2xl overflow-hidden border border-border">
       {/* Header da Sala */}
-      <div className="p-4 border-b border-border bg-card/50 flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard/chats")} className="shrink-0">
-          ⬅️
-        </Button>
-        <div>
-          <h2 className="font-heading text-xl text-gold-gradient">{channel.name}</h2>
-          <p className="text-xs text-muted-foreground">{channel.description}</p>
+      <div className="p-4 border-b border-border bg-card/50 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard/chats")} className="shrink-0">
+            ⬅️
+          </Button>
+          <div>
+            <h2 className="font-heading text-lg text-foreground flex items-center gap-2">
+              {channel.name} {channel.is_premium && <span className="text-xl">⭐</span>}
+            </h2>
+            <p className="text-xs text-muted-foreground hidden sm:block">{channel.description}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <input 
+            type="date" 
+            value={selectedDate} 
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className="bg-secondary/50 text-xs text-foreground px-2 py-1.5 rounded border border-border focus:outline-none"
+            title="Penseira: Ver mensagens de outro dia"
+          />
         </div>
       </div>
 

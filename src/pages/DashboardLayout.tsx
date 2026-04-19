@@ -18,8 +18,9 @@ import NotificationBanner from "@/components/NotificationBanner";
 
 const NAV_ITEMS = [
   { icon: "👤", label: "Meu Perfil", path: "/dashboard/profile" },
-  { icon: "✨", label: "Feed", path: "/dashboard" },
-  { icon: "💬", label: "Chats", path: "/dashboard/chats" },
+  { icon: "🏰", label: "O Castelo", path: "/dashboard" },
+  { icon: "💬", label: "Chats RPG", path: "/dashboard/chats" },
+  { icon: "🍿", label: "Cine Hogwarts", path: "/dashboard/cinema" },
   { icon: "📸", label: "InstaHogwarts", path: "/dashboard/instahogwarts" },
   { icon: "🏰", label: "Casas", path: "/dashboard/houses" },
   { icon: "🏆", label: "Ranking", path: "/dashboard/ranking" },
@@ -28,6 +29,7 @@ const NAV_ITEMS = [
   { icon: "📖", label: "Álbum", path: "/dashboard/album" },
   { icon: "🛍️", label: "Loja", path: "/dashboard/shop" },
   { icon: "📜", label: "Regras", path: "/dashboard/rules" },
+  { icon: "📖", label: "Guia do Maroto", path: "/dashboard/guide" },
 ];
 
 const ADMIN_ITEMS = [
@@ -147,20 +149,23 @@ export default function DashboardLayout() {
 
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
           {items.map((item) => {
-            const active = location.pathname === item.path;
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setSidebarOpen(false)}
-                className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
-                  active ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-                }`}
-              >
-                <span>{item.icon}</span>
-                <span className="font-heading text-xs tracking-wide">{item.label}</span>
-              </Link>
-            );
+            const isActive = location.pathname === item.path;
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setSidebarOpen(false)}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all ${
+                    isActive ? "bg-primary/20 text-primary font-bold" : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  }`}
+                >
+                  <span className="text-xl">{item.icon}</span>
+                  <span className="font-heading text-sm">{item.label}</span>
+                  {item.label === "Guia do Maroto" && (
+                    <span className="ml-auto w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                  )}
+                </Link>
+              );
           })}
         </nav>
 
