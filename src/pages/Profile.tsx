@@ -34,6 +34,7 @@ export default function Profile() {
     bio: "",
     age: 11,
     birth_date: "",
+    avatar_url: "",
   });
   const [uploading, setUploading] = useState(false);
 
@@ -48,6 +49,7 @@ export default function Profile() {
         bio: currentUserProfile.bio || "",
         age: currentUserProfile.age || 11,
         birth_date: currentUserProfile.birth_date || "",
+        avatar_url: currentUserProfile.avatar_url || "",
       });
       loadFriends(user!.id);
       loadReferrals(user!.id);
@@ -155,13 +157,16 @@ export default function Profile() {
   const levelInfo = getLevelFromXP(profile.xp);
 
   const startEdit = () => {
-    setForm({ full_name: profile.full_name, username: profile.username, bio: profile.bio || "", age: profile.age || 11, birth_date: profile.birth_date || "" });
+    setForm({ full_name: profile.full_name, username: profile.username, bio: profile.bio || "", age: profile.age || 11, birth_date: profile.birth_date || "", avatar_url: profile.avatar_url || "" });
     setEditing(true);
   };
 
   const save = async () => {
     setSaving(true);
-    const result = await updateProfile(form);
+    const updates: any = { ...form };
+    // Only update avatar_url from the URL field if it was changed
+    if (!updates.avatar_url) delete updates.avatar_url;
+    const result = await updateProfile(updates);
     setSaving(false);
     if (result.success) {
       toast.success("Perfil atualizado! ✨");
@@ -321,6 +326,21 @@ export default function Profile() {
                 onChange={(e) => setForm({ ...form, bio: e.target.value })}
                 className="w-full bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground focus:outline-none min-h-[80px]"
               />
+            </div>
+            <div>
+              <label className="text-xs font-heading text-muted-foreground block mb-1">Foto de perfil — Cole uma URL</label>
+              <div className="flex gap-2 items-center">
+                <Input
+                  value={form.avatar_url}
+                  onChange={(e) => setForm({ ...form, avatar_url: e.target.value })}
+                  placeholder="https://exemplo.com/sua-foto.jpg"
+                  className="flex-1"
+                />
+                {form.avatar_url && (
+                  <img src={form.avatar_url} alt="preview" className="w-10 h-10 rounded-full object-cover border border-border" onError={(e) => (e.currentTarget.style.display = 'none')} />
+                )}
+              </div>
+              <p className="text-[10px] text-muted-foreground mt-1">Ou use o botão 📷 acima para fazer upload direto</p>
             </div>
             <div className="flex gap-2 justify-center pt-2">
               <Button variant="outline" size="sm" onClick={() => setEditing(false)}>Cancelar</Button>

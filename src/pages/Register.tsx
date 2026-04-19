@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,14 +7,18 @@ import { type House, HOUSES } from "@/lib/store";
 import { toast } from "sonner";
 import HouseCrest from "@/components/HouseCrest";
 import MagicalParticles from "@/components/MagicalParticles";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function Register() {
   const navigate = useNavigate();
   const register = useAuth((s) => s.register);
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState("");
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState({
-    fullName: "", username: "", age: "", house: "" as House | "", email: "", password: "", referralCode: ""
+    fullName: "", username: "", age: "", house: "" as House | "", email: "", password: "", referralCode: "", avatarUrl: ""
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   
@@ -49,6 +53,16 @@ export default function Register() {
       return;
     }
     setLoading(true);
+
+    // If user selected a file, upload it to Supabase Storage first
+    let finalAvatarUrl = form.avatarUrl || "";
+
+    if (avatarFile) {
+      // We need to sign up first to get the user ID, then upload
+      // So we'll store the file temporarily and upload after account creation
+      // For now, create object URL as placeholder — we'll upload post-signup
+    }
+
     const result = await register({
       email: form.email,
       password: form.password,
@@ -56,7 +70,28 @@ export default function Register() {
       username: form.username,
       age: parseInt(form.age),
       house: form.house as House,
+      avatarUrl: finalAvatarUrl || undefined,
     });
+
+    // If signup succeeded and we have a file, sign in and upload
+    if (result.success && avatarFile) {
+      try {
+        const { data: signInData } = await supabase.auth.signInWithPassword({ email: form.email, password: form.password });
+        if (signInData?.user) {
+          const ext = avatarFile.name.split(".").pop();
+          const path = `${signInData.user.id}/avatar.${ext}`;
+          const { error: upErr } = await supabase.storage.from("avatars").upload(path, avatarFile, { upsert: true });
+          if (!upErr) {
+            const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
+            await supabase.from("profiles").update({ avatar_url: publicUrl } as never).eq("user_id", signInData.user.id);
+          }
+          await supabase.auth.signOut();
+        }
+      } catch (e) {
+        // Avatar upload failed silently — user can update later
+      }
+    }
+
     setLoading(false);
     if (result.success) {
       if (form.referralCode.trim()) {
@@ -115,6 +150,56 @@ export default function Register() {
             <div>
               <label className="text-sm font-heading text-muted-foreground block mb-1">Código de Convite (Opcional)</label>
               <Input value={form.referralCode} onChange={(e) => setForm({ ...form, referralCode: e.target.value })} placeholder="Quem te chamou? (Ex: harry)" className="bg-secondary/50" />
+            </div>
+
+            {/* FOTO DE PERFIL */}
+            <div className="bg-secondary/30 p-4 rounded-xl border border-border">
+              <label className="text-sm font-heading text-muted-foreground block mb-3">📷 Foto de Perfil (Opcional)</label>
+              <div className="flex items-center gap-4">
+                {/* Preview */}
+                <div className="w-16 h-16 rounded-full bg-secondary/50 border-2 border-dashed border-border flex items-center justify-center overflow-hidden flex-shrink-0">
+                  {avatarPreview ? (
+                    <img src={avatarPreview} alt="preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-2xl">🧙</span>
+                  )}
+                </div>
+                <div className="flex-1 space-y-2">
+                  {/* Upload button */}
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="w-full text-xs py-2 px-3 rounded-lg border border-border bg-secondary/50 hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
+                  >
+                    📁 Fazer upload de foto
+                  </button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      if (file.size > 5 * 1024 * 1024) { toast.error("Imagem muito grande (máx 5MB)"); return; }
+                      setAvatarFile(file);
+                      setAvatarPreview(URL.createObjectURL(file));
+                      setForm(f => ({ ...f, avatarUrl: "" }));
+                    }}
+                  />
+                  {/* OR URL */}
+                  <Input
+                    value={form.avatarUrl}
+                    onChange={(e) => {
+                      setForm({ ...form, avatarUrl: e.target.value });
+                      setAvatarPreview(e.target.value);
+                      setAvatarFile(null);
+                    }}
+                    placeholder="Ou cole o link da sua foto..."
+                    className="bg-secondary/50 text-xs h-8"
+                  />
+                </div>
+              </div>
             </div>
             <div className="bg-primary/10 p-4 rounded-xl border border-primary/20">
               <label className="text-sm font-heading text-primary block mb-1 flex items-center gap-2">

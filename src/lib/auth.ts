@@ -51,6 +51,7 @@ interface AuthState {
     username: string;
     age: number;
     house: House;
+    avatarUrl?: string;
   }) => Promise<{ success: boolean; error?: string }>;
   fetchProfile: (userId: string) => Promise<void>;
   checkAdmin: (userId: string) => Promise<boolean>;
@@ -129,7 +130,7 @@ export const useAuth = create<AuthState>((set, get) => ({
     set({ user: null, profile: null, isAuthenticated: false, isAdmin: false });
   },
 
-  register: async ({ email, password, fullName, username, age, house }) => {
+  register: async ({ email, password, fullName, username, age, house, avatarUrl }) => {
     if (age < 13 || age > 17) {
       return { success: false, error: "Apenas bruxos de 13 a 17 anos podem se matricular." };
     }
@@ -139,7 +140,7 @@ export const useAuth = create<AuthState>((set, get) => ({
       password,
       options: {
         emailRedirectTo: redirectUrl,
-        data: { full_name: fullName, username, age, house },
+        data: { full_name: fullName, username, age, house, avatar_url: avatarUrl || null },
       },
     });
     if (error) return { success: false, error: error.message };

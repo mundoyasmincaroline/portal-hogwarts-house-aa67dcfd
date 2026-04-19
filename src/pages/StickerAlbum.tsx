@@ -121,22 +121,25 @@ export default function StickerAlbum() {
                 {s.image_url && !failedImages[s.id] ? (
                   <img 
                     src={s.image_url} 
-                    alt={s.character_name} 
+                    alt={s.character_name}
+                    referrerPolicy="no-referrer"
+                    crossOrigin="anonymous"
                     onError={() => setFailedImages(prev => ({ ...prev, [s.id]: true }))}
-                    className={`w-full h-full object-cover transition-all duration-700 ${unlocked ? 'mix-blend-overlay opacity-80 group-hover:scale-105 group-hover:opacity-100' : 'opacity-30 grayscale blur-[2px] group-hover:grayscale-0 group-hover:blur-0'}`} 
+                    className={`w-full h-full object-cover object-top transition-all duration-700 ${unlocked ? 'opacity-90 group-hover:scale-105' : 'opacity-40 grayscale group-hover:grayscale-0 group-hover:opacity-60'}`} 
                   />
                 ) : (
-                  <div className={`absolute inset-0 flex items-center justify-center bg-gradient-to-br ${
+                  <div className={`absolute inset-0 flex flex-col items-center justify-center gap-2 bg-gradient-to-br ${
                     isGold ? 'from-yellow-900/60 to-background' : isSilver ? 'from-slate-700/60 to-background' : 'from-amber-900/60 to-background'
                   }`}>
-                    <span className={`font-heading text-7xl font-bold select-none ${
-                      isGold ? 'text-yellow-400/30' : isSilver ? 'text-slate-300/30' : 'text-amber-600/30'
+                    <span className="text-4xl">🧙</span>
+                    <span className={`font-heading text-5xl font-bold select-none ${
+                      isGold ? 'text-yellow-400/40' : isSilver ? 'text-slate-300/40' : 'text-amber-600/40'
                     }`}>
                       {s.character_name.charAt(0)}
                     </span>
                   </div>
                 )}
-                <div className={`absolute inset-0 bg-gradient-to-t ${unlocked ? 'from-background via-background/60 to-transparent' : 'from-background via-background/90 to-background/40'}`} />
+                <div className={`absolute inset-0 bg-gradient-to-t ${unlocked ? 'from-background via-background/50 to-transparent' : 'from-background via-background/80 to-background/30'}`} />
               </div>
               
               <div className="relative z-10 h-full flex flex-col justify-between p-4">
