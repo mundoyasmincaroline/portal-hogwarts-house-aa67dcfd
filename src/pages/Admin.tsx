@@ -228,7 +228,7 @@ export default function Admin() {
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-heading text-foreground">{m.full_name}</p>
-                    <p className="text-xs text-muted-foreground">@{m.username} â€¢ {m.age} anos â€¢ {m.xp} XP</p>
+                    <p className="text-xs text-muted-foreground">@{m.username} • {m.age} anos • {m.xp} XP</p>
                   </div>
                   <div className="flex flex-col items-end gap-1">
                     {isUserOnline(m) ? (
