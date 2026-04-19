@@ -117,12 +117,19 @@ export default function StickerAlbum() {
             >
               {/* Imagem */}
               <div className="absolute inset-0 z-0">
-                <img 
-                  src={s.image_url} 
-                  alt={s.character_name} 
-                  onError={(e) => { e.currentTarget.src = "https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg"; }}
-                  className={`w-full h-full object-cover transition-all duration-700 ${unlocked ? 'mix-blend-overlay opacity-80 group-hover:scale-105 group-hover:opacity-100' : 'opacity-30 grayscale blur-[2px] group-hover:grayscale-0 group-hover:blur-0'}`} 
-                />
+                {s.image_url ? (
+                  <img 
+                    src={s.image_url} 
+                    alt={s.character_name} 
+                    onError={(e) => { 
+                      e.currentTarget.style.display = 'none'; 
+                    }}
+                    className={`w-full h-full object-cover transition-all duration-700 ${unlocked ? 'mix-blend-overlay opacity-80 group-hover:scale-105 group-hover:opacity-100' : 'opacity-30 grayscale blur-[2px] group-hover:grayscale-0 group-hover:blur-0'}`} 
+                  />
+                ) : null}
+                <div className={`absolute inset-0 flex items-center justify-center text-6xl font-heading text-white/10 select-none pointer-events-none ${s.image_url ? 'opacity-0' : 'opacity-100'}`}>
+                  {s.character_name.charAt(0)}
+                </div>
                 <div className={`absolute inset-0 bg-gradient-to-t ${unlocked ? 'from-background via-background/60 to-transparent' : 'from-background via-background/90 to-background/40'}`} />
               </div>
               
