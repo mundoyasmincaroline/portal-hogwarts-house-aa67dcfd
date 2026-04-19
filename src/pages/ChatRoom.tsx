@@ -15,12 +15,12 @@ interface Message {
   user_id: string;
   content: string;
   created_at: string;
+  user_role?: string;
   profiles: {
     full_name: string;
     username: string;
     house: House;
     avatar_url: string | null;
-    role: string;
   };
 }
 
@@ -65,12 +65,22 @@ export default function ChatRoom() {
   const fetchMessages = async (id: string) => {
     const { data } = await supabase
       .from("messages")
-      .select("*, profiles(full_name, username, house, avatar_url, role)")
+      .select("*, profiles(full_name, username, house, avatar_url)")
       .eq("channel_id", id)
       .order("created_at", { ascending: true })
       .limit(100);
     
-    if (data) setMessages(data as unknown as Message[]);
+    if (data) {
+      const userIds = [...new Set(data.map(m => m.user_id))];
+      const { data: rolesData } = await supabase.from("user_roles").select("user_id, role").in("user_id", userIds);
+      const roleMap = rolesData?.reduce((acc: any, curr) => ({ ...acc, [curr.user_id]: curr.role }), {}) || {};
+      
+      const msgs = data.map(m => ({
+        ...m,
+        user_role: roleMap[m.user_id]
+      }));
+      setMessages(msgs as unknown as Message[]);
+    }
     setLoading(false);
   };
 
@@ -80,9 +90,10 @@ export default function ChatRoom() {
     const subscription = supabase
       .channel(`messages:${channel.id}`)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `channel_id=eq.${channel.id}` }, async (payload) => {
-        const { data: userData } = await supabase.from("profiles").select("full_name, username, house, avatar_url, role").eq("user_id", payload.new.user_id).single();
+        const { data: userData } = await supabase.from("profiles").select("full_name, username, house, avatar_url").eq("user_id", payload.new.user_id).single();
+        const { data: roleData } = await supabase.from("user_roles").select("role").eq("user_id", payload.new.user_id).maybeSingle();
         if (userData) {
-          setMessages(prev => [...prev, { ...payload.new, profiles: userData } as Message]);
+          setMessages(prev => [...prev, { ...payload.new, profiles: userData, user_role: roleData?.role } as unknown as Message]);
         }
       })
       .subscribe();
@@ -206,12 +217,12 @@ export default function ChatRoom() {
                     <div className={`flex items-center gap-2 mb-1 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
                       <span className="font-heading text-xs text-foreground/80">{m.profiles.full_name}</span>
                       
-                      {m.profiles.role === 'admin' && (
+                      {m.user_role === 'admin' && (
                         <span className="text-[10px] font-bold bg-primary/20 text-primary px-1.5 py-0.5 rounded flex items-center gap-1" title="Administrador Master">
                           👑 Admin
                         </span>
                       )}
-                      {m.profiles.role === 'moderator' && (
+                      {m.user_role === 'moderator' && (
                         <span className="text-[10px] font-bold bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded flex items-center gap-1" title="Moderador Ativo">
                           🛡️ Mod
                         </span>

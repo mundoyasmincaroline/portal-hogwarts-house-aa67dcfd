@@ -61,7 +61,7 @@ export default function StickerAlbum() {
     setBuyingId(sticker.id);
     try {
       // Deduzir o XP
-      const { error: updateError } = await supabase.from("profiles").update({ xp: profile.xp - cost } as never).eq("user_id", user.id);
+      const { error: updateError } = await supabase.rpc("award_xp_action", { _action: "buy_sticker", _user_id: user.id, _xp: -cost });
       if (updateError) throw updateError;
       
       // Adicionar figurinha

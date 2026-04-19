@@ -141,8 +141,8 @@ export default function Classes() {
       return;
     }
 
-    // Award XP
-    await supabase.from("profiles").update({ xp: profile.xp + cls.xp_reward }).eq("user_id", user.id);
+    // Award XP via RPC
+    await supabase.rpc("award_xp_action", { _action: "class", _user_id: user.id, _xp: cls.xp_reward });
     
     setAttendedMap(prev => ({ ...prev, [cls.id]: true }));
     toast.success(`✨ Mais ${cls.xp_reward} XP! Você assistiu à aula de ${cls.title} com sucesso!`);

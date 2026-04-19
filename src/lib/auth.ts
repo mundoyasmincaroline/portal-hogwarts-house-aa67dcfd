@@ -153,10 +153,10 @@ export const useAuth = create<AuthState>((set, get) => ({
       .eq("user_id", userId);
     if (error) return { success: false, error: error.message };
 
-    // RPG Vivo: Dar 5 XP automático por atualizar o perfil (se ainda tiver a property 'xp' acessível, mas para evitar exploit vamos só dar 2 XP)
+    // RPG Vivo: Dar XP automático por atualizar o perfil usando RPC para evitar soma no frontend
     const currentProfile = get().profile;
     if (currentProfile) {
-      await supabase.from("profiles").update({ xp: currentProfile.xp + 2 } as never).eq("user_id", userId);
+      await supabase.rpc('award_xp_action', { _action: 'profile_update', _user_id: userId, _xp: 2 });
     }
 
     await get().fetchProfile(userId);
@@ -171,7 +171,7 @@ export const useAuth = create<AuthState>((set, get) => ({
 
   resetPassword: async (email) => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/dashboard/profile`,
+      redirectTo: `${window.location.origin}/login`,
     });
     if (error) return { success: false, error: error.message };
     return { success: true };

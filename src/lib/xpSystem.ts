@@ -34,26 +34,17 @@ export async function addXP(userId: string, amount: number, actionType: 'message
       }
     }
 
-    // Update profile XP
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('xp, xp_to_next, level')
-      .eq('user_id', userId)
-      .single();
+    // Update profile XP via backend RPC
+    const { error: rpcError } = await supabase.rpc('award_xp_action', {
+      _action: actionType,
+      _user_id: userId,
+      _xp: amount
+    });
 
-    if (!profile) return { success: false, message: "Perfil não encontrado" };
-
-    let newXp = profile.xp + amount;
-    let newLevel = profile.level;
-    let newXpToNext = profile.xp_to_next;
-
-    // Level up logic (simplified, ideally sync with LEVEL_THRESHOLDS from store)
-    while (newXp >= newXpToNext) {
-      newLevel++;
-      newXpToNext = newXpToNext + 1000; // Mock threshold calculation
+    if (rpcError) {
+      console.error("RPC Error:", rpcError);
+      return { success: false, message: "Erro ao sincronizar XP." };
     }
-
-    await supabase.from('profiles').update({ xp: newXp, level: newLevel, xp_to_next: newXpToNext }).eq('user_id', userId);
 
     // Update cooldowns
     let newCooldownData: any = {
