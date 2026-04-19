@@ -249,7 +249,10 @@ export default function Admin() {
                 </div>
               ))}
             </div>
-                <div className="space-y-4">
+          )}
+
+          {tab === "pending_members" && (
+            <div className="space-y-4">
               <div className="glass rounded-xl p-4">
                 <h3 className="font-heading text-sm text-primary mb-1">⏳ Novos Membros Pendentes</h3>
                 <p className="text-xs text-muted-foreground">Aprove a entrada dos novos bruxos no portal.</p>
