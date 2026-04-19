@@ -293,11 +293,18 @@ export default function ChatRoom() {
               const profileName = (m.characters || m.profiles)?.full_name || "";
               const profileUser = (m.characters || m.profiles)?.username || "";
               const isMorpheus = profileName.toLowerCase().includes('morpheus') || profileUser.toLowerCase().includes('morpheus');
+              const isYasmin = profileName.toLowerCase().includes('yasmin') || profileUser.toLowerCase().includes('mundoyasmincaroline');
+              const isCarolina = profileName.toLowerCase().includes('carolina') || profileUser.toLowerCase().includes('carolinaas.assis');
 
               return (
                 <div key={m.id} className={`flex gap-3 ${isMe ? 'flex-row-reverse' : 'flex-row'} ${showHeader ? 'mt-6' : 'mt-1'}`}>
                   {showHeader ? (
-                    <div className={`w-10 h-10 shrink-0 border ${isMorpheus ? 'rounded-none border-green-500 bg-black flex items-center justify-center font-mono text-green-500 font-bold text-lg' : 'rounded-full overflow-hidden border-border'}`}>
+                    <div className={`w-10 h-10 shrink-0 border ${
+                      isMorpheus ? 'rounded-none border-green-500 bg-black flex items-center justify-center font-mono text-green-500 font-bold text-lg' 
+                      : isYasmin ? 'rounded-full overflow-hidden border-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.5)]'
+                      : isCarolina ? 'rounded-full overflow-hidden border-blue-400 shadow-[0_0_10px_rgba(96,165,250,0.5)]'
+                      : 'rounded-full overflow-hidden border-border'
+                    }`}>
                       {isMorpheus ? (
                         <span className="animate-pulse">M</span>
                       ) : (m.characters || m.profiles).avatar_url ? (
@@ -317,28 +324,36 @@ export default function ChatRoom() {
                       <div className={`flex items-center gap-2 mb-1 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
                         {isMorpheus ? (
                           <span className="font-mono text-xs font-bold text-green-500 tracking-widest">&gt; MORPHEUS [O ARQUITETO]</span>
+                        ) : isYasmin ? (
+                          <span className="font-heading text-xs font-bold text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]">✨ YASMIN [A FUNDADORA]</span>
+                        ) : isCarolina ? (
+                          <span className="font-heading text-xs font-bold text-blue-400 drop-shadow-[0_0_5px_rgba(96,165,250,0.8)]">🛡️ CAROLINA [A GUARDIÃ]</span>
                         ) : (
                           <span className="font-heading text-xs text-foreground/80">{(m.characters || m.profiles).full_name}</span>
                         )}
                         
-                        {!isMorpheus && m.user_role === 'admin' && (
+                        {!isMorpheus && !isYasmin && !isCarolina && m.user_role === 'admin' && (
                           <span className="text-[10px] font-bold bg-primary/20 text-primary px-1.5 py-0.5 rounded flex items-center gap-1" title="Administrador Master">
                             👑 Admin
                           </span>
                         )}
-                        {!isMorpheus && m.user_role === 'moderator' && (
+                        {!isMorpheus && !isYasmin && !isCarolina && m.user_role === 'moderator' && (
                           <span className="text-[10px] font-bold bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded flex items-center gap-1" title="Moderador Ativo">
                             🛡️ Mod
                           </span>
                         )}
 
-                        {!isMorpheus && <HouseCrest house={(m.characters || m.profiles).house} size="sm" />}
+                        {!isMorpheus && !isYasmin && !isCarolina && <HouseCrest house={(m.characters || m.profiles).house} size="sm" />}
                         <span className="text-[10px] text-muted-foreground">{formatDate(m.created_at)}</span>
                       </div>
                     )}
                     <div className={`px-4 py-2 text-sm ${
                       isMorpheus 
                         ? 'bg-black text-green-500 font-mono border border-green-500/50 shadow-[0_0_15px_rgba(34,197,94,0.2)] rounded-none' 
+                        : isYasmin
+                        ? 'bg-yellow-500/10 text-yellow-100 border border-yellow-400/50 rounded-2xl shadow-[0_0_15px_rgba(250,204,21,0.2)]'
+                        : isCarolina
+                        ? 'bg-blue-500/10 text-blue-100 border border-blue-400/50 rounded-2xl shadow-[0_0_10px_rgba(96,165,250,0.2)]'
                         : isMe 
                           ? 'bg-primary/20 text-foreground rounded-2xl rounded-tr-sm' 
                           : 'bg-secondary text-foreground rounded-2xl rounded-tl-sm'
