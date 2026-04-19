@@ -291,19 +291,17 @@ export default function ChatRoom() {
           </div>
         ) : (
             messages.map((m, i) => {
-              const showHeader = i === 0 || messages[i-1].user_id !== m.user_id || new Date(m.created_at).getTime() - new Date(messages[i-1].created_at).getTime() > 300000;
-              const isMe = m.user_id === user?.id;
-
               const profileData = m.characters || m.profiles || { full_name: "Bruxo Desconhecido", username: "desconhecido", house: "gryffindor", avatar_url: null };
-              const profileName = profileData.full_name || "";
-              const profileUser = profileData.username || "";
+              const profileName = profileData.full_name || "Desconhecido";
+              const profileUser = profileData.username || "desconhecido";
+              
               const isMorpheus = profileName.toLowerCase().includes('morpheus') || profileUser.toLowerCase().includes('morpheus');
               const isYasmin = profileName.toLowerCase().includes('yasmin') || profileUser.toLowerCase().includes('mundoyasmincaroline');
               const isCarolina = profileName.toLowerCase().includes('carolina') || profileUser.toLowerCase().includes('carolinaas.assis');
 
               return (
-                <div key={m.id} className={`flex gap-3 ${isMe ? 'flex-row-reverse' : 'flex-row'} ${showHeader ? 'mt-6' : 'mt-1'}`}>
-                  {showHeader ? (
+                <div key={m.id} className="glass rounded-xl p-4 animate-fade-in-up mb-4">
+                  <div className="flex items-center gap-3 mb-3">
                     <Link to={`/dashboard/profile/${m.user_id}`} className={`w-10 h-10 shrink-0 border block transition-transform hover:scale-105 ${
                       isMorpheus ? 'rounded-none border-green-500 bg-black flex items-center justify-center font-mono text-green-500 font-bold text-lg' 
                       : isYasmin ? 'rounded-full overflow-hidden border-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.5)]'
@@ -313,58 +311,48 @@ export default function ChatRoom() {
                       {isMorpheus ? (
                         <span className="animate-pulse">M</span>
                       ) : profileData.avatar_url ? (
-                        <img src={profileData.avatar_url!} alt={profileData.full_name} className="w-full h-full object-cover" />
+                        <img src={profileData.avatar_url} alt={profileName} className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full bg-secondary flex items-center justify-center text-sm font-heading text-primary">
-                          {profileData.full_name[0] || "?"}
+                          {profileName.charAt(0).toUpperCase() || "?"}
                         </div>
                       )}
                     </Link>
-                  ) : (
-                    <div className="w-10 shrink-0" />
-                  )}
-                  
-                  <div className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[80%]`}>
-                    {showHeader && (
-                      <Link to={`/dashboard/profile/${m.user_id}`} className={`flex items-center gap-2 mb-1 hover:opacity-80 transition-opacity ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
-                        {isMorpheus ? (
-                          <span className="font-mono text-xs font-bold text-green-500 tracking-widest">&gt; MORPHEUS [O ARQUITETO]</span>
-                        ) : isYasmin ? (
-                          <span className="font-heading text-xs font-bold text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]">✨ YASMIN [A FUNDADORA]</span>
-                        ) : isCarolina ? (
-                          <span className="font-heading text-xs font-bold text-blue-400 drop-shadow-[0_0_5px_rgba(96,165,250,0.8)]">🛡️ CAROLINA [A GUARDIÃ]</span>
-                        ) : (
-                          <span className="font-heading text-xs text-foreground/80">{profileData.full_name}</span>
-                        )}
-                        
+
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <Link to={`/dashboard/profile/${m.user_id}`} className="hover:opacity-80 transition-opacity">
+                          {isMorpheus ? (
+                            <span className="font-mono text-sm font-bold text-green-500 tracking-widest">&gt; MORPHEUS [O ARQUITETO]</span>
+                          ) : isYasmin ? (
+                            <span className="font-heading text-sm font-bold text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]">✨ YASMIN [A FUNDADORA]</span>
+                          ) : isCarolina ? (
+                            <span className="font-heading text-sm font-bold text-blue-400 drop-shadow-[0_0_5px_rgba(96,165,250,0.8)]">🛡️ CAROLINA [A GUARDIÃ]</span>
+                          ) : (
+                            <span className="font-heading text-sm font-medium text-foreground">{profileName}</span>
+                          )}
+                        </Link>
+
                         {!isMorpheus && !isYasmin && !isCarolina && m.user_role === 'admin' && (
-                          <span className="text-[10px] font-bold bg-primary/20 text-primary px-1.5 py-0.5 rounded flex items-center gap-1" title="Administrador Master">
-                            👑 Admin
-                          </span>
+                          <span className="text-[10px] font-bold bg-primary/20 text-primary px-1.5 py-0.5 rounded flex items-center gap-1" title="Administrador Master">👑 Admin</span>
                         )}
                         {!isMorpheus && !isYasmin && !isCarolina && m.user_role === 'moderator' && (
-                          <span className="text-[10px] font-bold bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded flex items-center gap-1" title="Moderador Ativo">
-                            🛡️ Mod
-                          </span>
+                          <span className="text-[10px] font-bold bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded flex items-center gap-1" title="Moderador Ativo">🛡️ Mod</span>
                         )}
-
-                        {!isMorpheus && !isYasmin && !isCarolina && <HouseCrest house={profileData.house} size="sm" />}
-                        <span className="text-[10px] text-muted-foreground">{m.created_at ? formatDate(m.created_at) : ''}</span>
-                      </Link>
-                    )}
-                    <div className={`px-4 py-2 text-sm ${
-                      isMorpheus 
-                        ? 'bg-black text-green-500 font-mono border border-green-500/50 shadow-[0_0_15px_rgba(34,197,94,0.2)] rounded-none' 
-                        : isYasmin
-                        ? 'bg-yellow-500/10 text-yellow-100 border border-yellow-400/50 rounded-2xl shadow-[0_0_15px_rgba(250,204,21,0.2)]'
-                        : isCarolina
-                        ? 'bg-blue-500/10 text-blue-100 border border-blue-400/50 rounded-2xl shadow-[0_0_10px_rgba(96,165,250,0.2)]'
-                        : isMe 
-                          ? 'bg-primary/20 text-foreground rounded-2xl rounded-tr-sm' 
-                          : 'bg-secondary text-foreground rounded-2xl rounded-tl-sm'
-                    }`}>
-                      <p className={`whitespace-pre-wrap leading-relaxed ${isMorpheus ? 'drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]' : ''}`}>{renderRPGText(m.content)}</p>
+                      </div>
+                      <p className="text-xs text-muted-foreground">@{profileUser} • {m.created_at ? formatDate(m.created_at) : ''}</p>
                     </div>
+                    
+                    {!isMorpheus && !isYasmin && !isCarolina && <HouseCrest house={profileData.house} size="sm" />}
+                  </div>
+
+                  <div className={`text-sm ${
+                    isMorpheus ? 'text-green-500 font-mono drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]' 
+                    : isYasmin ? 'text-yellow-100'
+                    : isCarolina ? 'text-blue-100'
+                    : 'text-foreground'
+                  }`}>
+                    <p className="whitespace-pre-wrap leading-relaxed">{renderRPGText(m.content)}</p>
                   </div>
                 </div>
               );
