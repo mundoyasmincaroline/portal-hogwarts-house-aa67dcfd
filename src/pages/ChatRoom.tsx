@@ -36,7 +36,7 @@ export default function ChatRoom() {
   const { user, isAdmin } = useAuth();
   
   const [channel, setChannel] = useState<any>(null);
-  const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
+  const [selectedDate, setSelectedDate] = useState<string>(new Date().toLocaleDateString('en-CA'));
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(true);
@@ -101,19 +101,22 @@ export default function ChatRoom() {
 
   const fetchMessages = async (id: string, dateStr: string) => {
     setLoading(true);
-    const startOfDay = new Date(dateStr);
-    startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date(dateStr);
-    endOfDay.setHours(23, 59, 59, 999);
-
-    const { data } = await supabase
+    let query = supabase
       .from("messages")
       .select("*, profiles(full_name, username, house, avatar_url), characters(full_name, house, avatar_url)")
       .eq("channel_id", id)
-      .gte("created_at", startOfDay.toISOString())
-      .lte("created_at", endOfDay.toISOString())
       .order("created_at", { ascending: false })
       .limit(100);
+
+    // Se uma data específica for selecionada (diferente de hoje), aplicar filtro
+    const todayStr = new Date().toLocaleDateString('en-CA'); // Formato YYYY-MM-DD no fuso local
+    if (dateStr && dateStr !== todayStr) {
+      const startOfDay = new Date(dateStr + 'T00:00:00');
+      const endOfDay = new Date(dateStr + 'T23:59:59');
+      query = query.gte("created_at", startOfDay.toISOString()).lte("created_at", endOfDay.toISOString());
+    }
+
+    const { data } = await query;
     
     if (data) {
       const userIds = [...new Set(data.map(m => m.user_id))];
@@ -148,7 +151,7 @@ export default function ChatRoom() {
       .channel(`messages:${channel.id}`)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `channel_id=eq.${channel.id}` }, async (payload) => {
         // Só adiciona ao vivo se a data selecionada for hoje
-        const todayStr = new Date().toISOString().split('T')[0];
+        const todayStr = new Date().toLocaleDateString('en-CA');
         if (selectedDate !== todayStr) return;
 
         const { data: userData } = await supabase.from("profiles").select("full_name, username, house, avatar_url").eq("user_id", payload.new.user_id).single();
@@ -299,7 +302,7 @@ export default function ChatRoom() {
               return (
                 <div key={m.id} className={`flex gap-3 ${isMe ? 'flex-row-reverse' : 'flex-row'} ${showHeader ? 'mt-6' : 'mt-1'}`}>
                   {showHeader ? (
-                    <div className={`w-10 h-10 shrink-0 border ${
+                    <Link to={`/dashboard/profile/${m.user_id}`} className={`w-10 h-10 shrink-0 border block transition-transform hover:scale-105 ${
                       isMorpheus ? 'rounded-none border-green-500 bg-black flex items-center justify-center font-mono text-green-500 font-bold text-lg' 
                       : isYasmin ? 'rounded-full overflow-hidden border-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.5)]'
                       : isCarolina ? 'rounded-full overflow-hidden border-blue-400 shadow-[0_0_10px_rgba(96,165,250,0.5)]'
@@ -314,14 +317,14 @@ export default function ChatRoom() {
                           {(m.characters || m.profiles).full_name[0]}
                         </div>
                       )}
-                    </div>
+                    </Link>
                   ) : (
                     <div className="w-10 shrink-0" />
                   )}
                   
                   <div className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[80%]`}>
                     {showHeader && (
-                      <div className={`flex items-center gap-2 mb-1 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
+                      <Link to={`/dashboard/profile/${m.user_id}`} className={`flex items-center gap-2 mb-1 hover:opacity-80 transition-opacity ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
                         {isMorpheus ? (
                           <span className="font-mono text-xs font-bold text-green-500 tracking-widest">&gt; MORPHEUS [O ARQUITETO]</span>
                         ) : isYasmin ? (
@@ -345,7 +348,7 @@ export default function ChatRoom() {
 
                         {!isMorpheus && !isYasmin && !isCarolina && <HouseCrest house={(m.characters || m.profiles).house} size="sm" />}
                         <span className="text-[10px] text-muted-foreground">{formatDate(m.created_at)}</span>
-                      </div>
+                      </Link>
                     )}
                     <div className={`px-4 py-2 text-sm ${
                       isMorpheus 

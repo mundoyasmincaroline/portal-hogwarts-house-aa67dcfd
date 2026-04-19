@@ -12,6 +12,7 @@ interface InstaPost {
   user_id: string;
   image_url: string;
   caption: string;
+  spotify_uri?: string;
   likes: string[];
   created_at: string;
   profiles: {
@@ -28,6 +29,7 @@ export default function InstaHogwarts() {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [caption, setCaption] = useState("");
+  const [spotifyUri, setSpotifyUri] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   useEffect(() => {
@@ -68,7 +70,8 @@ export default function InstaHogwarts() {
     const { error: insertErr } = await supabase.from("insta_posts").insert({
       user_id: user.id,
       image_url: publicUrl,
-      caption: caption
+      caption: caption,
+      spotify_uri: spotifyUri || null
     });
 
     if (insertErr) {
@@ -77,6 +80,7 @@ export default function InstaHogwarts() {
       toast.success("Postagem publicada no Insta Hogwarts!");
       setSelectedFile(null);
       setCaption("");
+      setSpotifyUri("");
       fetchPosts();
     }
     setUploading(false);
@@ -133,6 +137,12 @@ export default function InstaHogwarts() {
                 </button>
               </div>
             )}
+            <Input
+              className="w-full bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground focus:outline-none border border-border"
+              placeholder="Link do Spotify (opcional)..."
+              value={spotifyUri}
+              onChange={(e) => setSpotifyUri(e.target.value)}
+            />
             <div className="flex justify-between items-center">
               <label className="cursor-pointer text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2">
                 <span>📷 Adicionar Foto</span>
@@ -188,6 +198,19 @@ export default function InstaHogwarts() {
               <div className="relative aspect-square md:aspect-auto md:max-h-[500px] w-full bg-black flex items-center justify-center">
                 <img src={post.image_url} className="max-w-full max-h-[500px] object-contain" alt="Post" />
               </div>
+
+              {post.spotify_uri && (
+                <div className="px-4 pt-4">
+                  <iframe 
+                    src={post.spotify_uri.replace("open.spotify.com", "open.spotify.com/embed")} 
+                    width="100%" 
+                    height="80" 
+                    frameBorder="0" 
+                    allow="encrypted-media"
+                    className="rounded-lg shadow-sm border border-border/50"
+                  ></iframe>
+                </div>
+              )}
 
               <div className="p-4">
                 <div className="flex items-center gap-4 mb-3">

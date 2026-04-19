@@ -22,6 +22,7 @@ export default function Profile() {
   const [loadingTarget, setLoadingTarget] = useState(false);
   const [activeTab, setActiveTab] = useState<"about" | "friends" | "security" | "album" | "referral">("about");
   const [referrals, setReferrals] = useState<any[]>([]);
+  const [userBadges, setUserBadges] = useState<any[]>([]);
 
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -50,10 +51,12 @@ export default function Profile() {
       });
       loadFriends(user!.id);
       loadReferrals(user!.id);
+      loadBadges(user!.id);
     } else if (userId) {
       loadTargetProfile();
       loadFriends(userId);
       loadReferrals(userId);
+      loadBadges(userId);
     }
   }, [userId, isMe, currentUserProfile]);
 
@@ -97,6 +100,16 @@ export default function Profile() {
       setReferrals(enriched);
     } else {
       setReferrals([]);
+    }
+  };
+
+  const loadBadges = async (targetId: string) => {
+    const { data } = await supabase
+      .from("user_badges")
+      .select("*, badges(*)")
+      .eq("user_id", targetId);
+    if (data) {
+      setUserBadges(data.map(d => d.badges).filter(Boolean));
     }
   };
 
@@ -368,6 +381,21 @@ export default function Profile() {
                 <span className="text-foreground">{isUserOnline(profile) ? "🟢 Online" : "⚫ Offline"}</span>
               </div>
             </div>
+          </div>
+
+          <div className="glass rounded-xl p-4">
+            <h3 className="font-heading text-sm text-primary mb-3">Coleção Borgin & Burkes</h3>
+            {userBadges.length === 0 ? (
+              <p className="text-xs text-muted-foreground text-center italic py-2">Nenhuma insígnia adquirida ainda.</p>
+            ) : (
+              <div className="flex flex-wrap gap-3">
+                {userBadges.map(badge => (
+                  <div key={badge.id} className="bg-secondary/50 rounded-lg p-2 flex items-center justify-center gap-2 border border-border" title={badge.name}>
+                    <span className="text-2xl drop-shadow-md">{badge.icon}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </>
       ) : activeTab === "friends" ? (

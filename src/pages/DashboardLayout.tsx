@@ -4,7 +4,7 @@ import { useAuth, isUserOnline } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";
 import { HOUSES, type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
-import { playMagicSound } from "@/lib/sounds";
+import { playMagicSound, isSoundEnabled, toggleSound } from "@/lib/sounds";
 import { toast } from "sonner";
 
 import Notifications from "@/components/Notifications";
@@ -45,6 +45,11 @@ export default function DashboardLayout() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [encounterDone, setEncounterDone] = useState(false);
+  const [soundOn, setSoundOn] = useState(isSoundEnabled());
+
+  const handleToggleSound = () => {
+    setSoundOn(toggleSound());
+  };
 
   useEffect(() => {
     playMagicSound();
@@ -216,6 +221,13 @@ export default function DashboardLayout() {
               title="Trocar Personagem"
             >
               🔄
+            </button>
+            <button
+              onClick={handleToggleSound}
+              className="text-muted-foreground hover:text-primary text-base ml-1 transition-colors"
+              title={soundOn ? "Desativar Som" : "Ativar Som"}
+            >
+              {soundOn ? "🔊" : "🔇"}
             </button>
             <Notifications />
             <button onClick={async () => { await logout(); navigate("/"); }} className="text-muted-foreground hover:text-destructive text-xs ml-1">

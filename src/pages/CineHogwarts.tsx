@@ -54,15 +54,17 @@ export default function CineHogwarts() {
             <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center border border-primary/50 mb-4 animate-pulse-glow">
               <span className="text-4xl">📽️</span>
             </div>
-            <h1 className="font-heading text-4xl text-gold-gradient mb-3 drop-shadow-lg">Hogwarts Flix</h1>
-            <p className="text-lg text-foreground font-medium max-w-md mx-auto mb-2">
-              As cortinas de veludo ainda estão fechadas...
+            <h1 className="font-heading text-4xl text-gold-gradient mb-3 drop-shadow-lg">Hogwarts Cine</h1>
+            <p className="text-lg text-foreground font-medium max-w-md mx-auto mb-4">
+              As portas do grande salão de cinema estão trancadas... 🔒
             </p>
-            <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-              Os quadros do castelo estão se arrumando e as corujas ainda não trouxeram o rolo de filme. Fique de olho no Salão Principal para anúncios da próxima sessão!
-            </p>
-            <div className="mt-6 px-4 py-2 bg-secondary/80 border border-primary/30 rounded-full text-xs font-bold uppercase tracking-widest text-primary">
-              Em Breve
+            <div className="bg-background/40 backdrop-blur-sm p-4 rounded-xl border border-primary/20">
+              <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+                No momento não temos nenhuma sessão agendada. Volte mais tarde ou acompanhe os avisos no Chat Geral para saber quando a mágica irá começar!
+              </p>
+            </div>
+            <div className="mt-8 px-6 py-2 bg-secondary/80 border border-primary/30 rounded-full text-xs font-bold uppercase tracking-widest text-primary animate-pulse">
+              Fique de olho nas novidades
             </div>
           </div>
         </div>
