@@ -9,6 +9,7 @@ import { toast } from "sonner";
 
 import Notifications from "@/components/Notifications";
 import InterstitialAd from "@/components/InterstitialAd";
+import GrandOpeningFireworks from "@/components/GrandOpeningFireworks";
 import CastleEntrance from "@/pages/CastleEntrance";
 import EngagementBot from "@/components/EngagementBot";
 
@@ -154,7 +155,8 @@ export default function DashboardLayout() {
   const items = isAdmin ? [...NAV_ITEMS, ...ADMIN_ITEMS] : NAV_ITEMS;
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
+    <div className="flex h-screen bg-background overflow-hidden relative">
+      <GrandOpeningFireworks />
       <InterstitialAd />
       {sidebarOpen && (
         <div className="fixed inset-0 bg-background/80 z-30 md:hidden" onClick={() => setSidebarOpen(false)} />
