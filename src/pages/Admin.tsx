@@ -410,7 +410,7 @@ export default function Admin() {
                     </div>
                     
                     <div>
-                      <span className="text-xs font-heading text-muted-foreground">HistÃ³ria:</span>
+                      <span className="text-xs font-heading text-muted-foreground">História:</span>
                       <p className="text-sm bg-secondary/30 p-3 rounded-md mt-1 italic text-foreground/80">{f.history}</p>
                     </div>
                   </div>
