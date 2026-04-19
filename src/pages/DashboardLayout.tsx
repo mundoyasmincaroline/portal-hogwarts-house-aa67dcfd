@@ -4,6 +4,8 @@ import { useAuth, isUserOnline } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";
 import { HOUSES, type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
+import { playMagicSound } from "@/lib/sounds";
+import { toast } from "sonner";
 
 import Notifications from "@/components/Notifications";
 import InterstitialAd from "@/components/InterstitialAd";
@@ -17,19 +19,19 @@ import DailyEncounter from "@/components/DailyEncounter";
 import NotificationBanner from "@/components/NotificationBanner";
 
 const NAV_ITEMS = [
-  { icon: "👤", label: "Meu Perfil", path: "/dashboard/profile" },
   { icon: "🏰", label: "O Castelo", path: "/dashboard" },
+  { icon: "📖", label: "Guia do Maroto", path: "/dashboard/guide" },
+  { icon: "👤", label: "Meu Perfil", path: "/dashboard/profile" },
   { icon: "💬", label: "Chats RPG", path: "/dashboard/chats" },
-  { icon: "🍿", label: "Cine Hogwarts", path: "/dashboard/cinema" },
   { icon: "📸", label: "InstaHogwarts", path: "/dashboard/instahogwarts" },
-  { icon: "🏰", label: "Casas", path: "/dashboard/houses" },
+  { icon: "🍿", label: "Hogwarts Flix", path: "/dashboard/cinema" },
   { icon: "🏆", label: "Ranking", path: "/dashboard/ranking" },
+  { icon: "🏰", label: "Casas", path: "/dashboard/houses" },
   { icon: "⚔️", label: "Desafios", path: "/dashboard/challenges" },
   { icon: "📚", label: "Aulas", path: "/dashboard/classes" },
   { icon: "📖", label: "Álbum", path: "/dashboard/album" },
   { icon: "🛍️", label: "Loja", path: "/dashboard/shop" },
   { icon: "📜", label: "Regras", path: "/dashboard/rules" },
-  { icon: "📖", label: "Guia do Maroto", path: "/dashboard/guide" },
 ];
 
 const ADMIN_ITEMS = [
@@ -42,6 +44,25 @@ export default function DashboardLayout() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [encounterDone, setEncounterDone] = useState(false);
+
+  useEffect(() => {
+    playMagicSound();
+    
+    // Morpheus Security Protocol Alert
+    setTimeout(() => {
+      toast(
+        <div className="font-mono text-green-500 bg-black p-1 w-full">
+          <p className="font-bold border-b border-green-500/50 mb-1 flex justify-between">
+            <span>&gt; MORPHEUS_PROTOCOL</span>
+            <span className="text-red-500">ACTIVE</span>
+          </p>
+          <p className="text-xs">&gt; System Secured & Encrypted.</p>
+          <p className="text-xs">&gt; Tracking all unauthorized access...</p>
+        </div>,
+        { duration: 5000, className: "bg-black border border-green-500 rounded-none p-0" }
+      );
+    }, 1500);
+  }, []);
 
   useEffect(() => {
     if (!isLoading && !user) navigate("/login");
@@ -154,7 +175,10 @@ export default function DashboardLayout() {
                 <Link
                   key={item.path}
                   to={item.path}
-                  onClick={() => setSidebarOpen(false)}
+                  onClick={() => {
+                    playMagicSound();
+                    setSidebarOpen(false);
+                  }}
                   className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all ${
                     isActive ? "bg-primary/20 text-primary font-bold" : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                   }`}

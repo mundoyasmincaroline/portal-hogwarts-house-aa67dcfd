@@ -48,11 +48,23 @@ export default function CineHogwarts() {
             <Button variant="magical" onClick={saveCinema}>Salvar Sessão</Button>
           </div>
         )}
-        <div className="glass rounded-2xl p-8 text-center border border-border">
-          <span className="text-5xl drop-shadow-md">🍿</span>
-          <h1 className="font-heading text-3xl text-foreground mt-4 mb-2">Cine Hogwarts</h1>
-          <p className="text-muted-foreground text-sm">As portas do cinema estão fechadas no momento.</p>
-          <p className="text-xs text-primary mt-2">Aguarde a próxima sessão mágica agendada pela direção!</p>
+        <div className="glass rounded-2xl p-12 text-center border border-primary/20 bg-[url('https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center relative overflow-hidden">
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-[2px]"></div>
+          <div className="relative z-10 flex flex-col items-center justify-center">
+            <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center border border-primary/50 mb-4 animate-pulse-glow">
+              <span className="text-4xl">📽️</span>
+            </div>
+            <h1 className="font-heading text-4xl text-gold-gradient mb-3 drop-shadow-lg">Hogwarts Flix</h1>
+            <p className="text-lg text-foreground font-medium max-w-md mx-auto mb-2">
+              As cortinas de veludo ainda estão fechadas...
+            </p>
+            <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+              Os quadros do castelo estão se arrumando e as corujas ainda não trouxeram o rolo de filme. Fique de olho no Salão Principal para anúncios da próxima sessão!
+            </p>
+            <div className="mt-6 px-4 py-2 bg-secondary/80 border border-primary/30 rounded-full text-xs font-bold uppercase tracking-widest text-primary">
+              Em Breve
+            </div>
+          </div>
         </div>
       </div>
     );

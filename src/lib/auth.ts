@@ -125,6 +125,7 @@ export const useAuth = create<AuthState>((set, get) => ({
       await supabase.from("profiles").update({ online: false } as never).eq("user_id", userId);
     }
     await supabase.auth.signOut();
+    localStorage.removeItem("hogwarts_session_id");
     set({ user: null, profile: null, isAuthenticated: false, isAdmin: false });
   },
 
@@ -181,6 +182,25 @@ export const useAuth = create<AuthState>((set, get) => ({
   pingPresence: async () => {
     const userId = get().user?.id;
     if (!userId) return;
+
+    let sessionId = localStorage.getItem("hogwarts_session_id");
+    if (!sessionId) {
+      sessionId = Math.random().toString(36).substring(2, 15);
+      localStorage.setItem("hogwarts_session_id", sessionId);
+      await supabase.from("profiles").update({ current_session_id: sessionId } as never).eq("user_id", userId);
+    }
+
+    const { data: prof } = await supabase.from("profiles").select("current_session_id").eq("user_id", userId).single();
+    
+    if (prof?.current_session_id && prof.current_session_id !== sessionId) {
+      // Foi logado em outro dispositivo
+      await supabase.auth.signOut();
+      localStorage.removeItem("hogwarts_session_id");
+      set({ user: null, profile: null, isAuthenticated: false, isAdmin: false });
+      window.location.href = "/login?kicked=true";
+      return;
+    }
+
     await supabase
       .from("profiles")
       .update({ online: true, last_seen: new Date().toISOString() } as never)

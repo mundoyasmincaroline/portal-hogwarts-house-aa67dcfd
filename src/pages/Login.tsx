@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import MagicalParticles from "@/components/MagicalParticles";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
+import { playDoorSound } from "@/lib/sounds";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -52,6 +53,7 @@ export default function Login() {
     const result = await login(email, password);
     setLoading(false);
     if (result.success) {
+      playDoorSound();
       navigate("/dashboard");
     } else {
       setError(result.error || "Credenciais inválidas. Tente novamente.");
@@ -88,6 +90,7 @@ export default function Login() {
     if (updateErr) {
       setError(updateErr.message);
     } else {
+      playDoorSound();
       toast.success("Senha atualizada com sucesso! Bem-vindo de volta.");
       setIsRecoveryMode(false);
       navigate("/dashboard");

@@ -226,8 +226,12 @@ export default function Feed() {
               {index > 0 && index % 3 === 0 && <MagicAdBanner />}
               <div className="glass rounded-xl p-4 animate-fade-in-up">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center font-heading text-primary">
-                    {post.author?.full_name?.[0] || "?"}
+                  <div className={`w-10 h-10 rounded-full bg-secondary flex items-center justify-center font-heading text-primary overflow-hidden border-2 shrink-0 ${post.author?.house === 'gryffindor' ? 'border-red-500' : post.author?.house === 'slytherin' ? 'border-green-500' : post.author?.house === 'ravenclaw' ? 'border-blue-500' : 'border-yellow-500'}`}>
+                    {post.author?.avatar_url ? (
+                      <img src={post.author.avatar_url} alt={post.author?.full_name} className="w-full h-full object-cover" />
+                    ) : (
+                      post.author?.full_name?.[0] || "?"
+                    )}
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-medium text-foreground">{post.author?.full_name || "Bruxo desconhecido"}</p>
@@ -291,8 +295,12 @@ export default function Feed() {
                   <div className="mt-3 pt-3 border-t border-border space-y-2">
                     {post.comments.map((c) => (
                       <div key={c.id} className="flex gap-2 items-start">
-                        <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center text-xs font-heading text-primary shrink-0">
-                          {c.author?.full_name?.[0] || "?"}
+                        <div className={`w-6 h-6 rounded-full bg-secondary flex items-center justify-center font-heading text-xs text-primary overflow-hidden shrink-0 border border-primary/30`}>
+                          {c.author?.avatar_url ? (
+                            <img src={c.author.avatar_url} alt={c.author?.full_name} className="w-full h-full object-cover" />
+                          ) : (
+                            c.author?.full_name?.[0] || "?"
+                          )}
                         </div>
                         <div className="flex-1 bg-secondary/40 rounded-lg px-3 py-2">
                           <p className="text-xs font-medium text-foreground">{c.author?.full_name}</p>
@@ -323,6 +331,32 @@ export default function Feed() {
         <div className="space-y-4">
           <div className="glass rounded-xl p-4">
             <h3 className="font-heading text-sm text-primary mb-3">🏰 Bruxos no Castelo</h3>
+            
+            {/* Morpheus - Arquiteto */}
+            <div className="flex items-center gap-2 mb-2 p-2 bg-black border border-green-500/50 rounded-lg group shadow-[0_0_10px_rgba(34,197,94,0.2)]">
+              <div className="w-8 h-8 rounded-none shrink-0 border border-green-500 relative bg-black flex items-center justify-center">
+                <div className="absolute inset-0 bg-green-500/10 z-10"></div>
+                <span className="text-green-500 font-mono text-xs font-bold animate-pulse">M</span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-green-500 font-bold font-mono truncate tracking-widest">&gt; MORPHEUS</p>
+                <p className="text-[9px] font-mono text-green-500/70 truncate">SYSTEM_ARCHITECT</p>
+              </div>
+              <div className="w-2 h-2 rounded-none bg-green-500 animate-[ping_3s_linear_infinite]"></div>
+            </div>
+
+            {/* Argus Filch - Sempre Online */}
+            <div className="flex items-center gap-2 mb-4 p-2 bg-red-950/30 border border-red-900/50 rounded-lg group">
+              <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-red-500/50">
+                <img src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Argus Filch" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-red-500 font-bold truncate">Argus Filch</p>
+                <p className="text-[10px] text-muted-foreground truncate">Vigiando os corredores...</p>
+              </div>
+              <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+            </div>
+
             <div className="space-y-2 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
               {onlineUsers.length === 0 && (
                 <p className="text-xs text-muted-foreground">Ninguém à vista.</p>

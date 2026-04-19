@@ -179,7 +179,24 @@ export default function ChatRoom() {
     const lowerContent = content.toLowerCase();
     const hasBannedWord = bannedWords.some(word => lowerContent.includes(word));
     if (hasBannedWord) {
-      toast.error("Sua mensagem contém palavras inapropriadas pelas leis de magia e foi bloqueada!");
+      toast.error(
+        <div className="flex gap-3 items-center">
+          <img src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Filch" className="w-10 h-10 rounded-full border border-red-500 object-cover" />
+          <div>
+            <p className="font-bold text-red-500">Argus Filch</p>
+            <p className="text-sm">O que temos aqui? Arrumando confusão pelos corredores! Sua mensagem foi apreendida.</p>
+          </div>
+        </div>,
+        { duration: 6000 }
+      );
+      // Log to Filch
+      await supabase.from("moderation_log").insert({
+        user_id: user.id,
+        content_type: "chat",
+        original_content: content,
+        reason: "Palavra proibida",
+        action: "block"
+      });
       return;
     }
 
