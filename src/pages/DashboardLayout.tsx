@@ -11,6 +11,8 @@ import CastleEntrance from "@/pages/CastleEntrance";
 import EngagementBot from "@/components/EngagementBot";
 
 import PendingApproval from "@/pages/PendingApproval";
+import RulesAgreement from "@/pages/RulesAgreement";
+import CharacterSelection from "@/pages/CharacterSelection";
 
 const NAV_ITEMS = [
   { icon: "👤", label: "Meu Perfil", path: "/dashboard/profile" },
@@ -72,6 +74,8 @@ export default function DashboardLayout() {
   
 
   if (!profile.approved) return <PendingApproval />;
+  if (!profile.has_accepted_rules) return <RulesAgreement />;
+  if (!profile.active_character_id) return <CharacterSelection />;
     const today = new Date().toISOString().split('T')[0];
   const lastSeenIntro = localStorage.getItem(`intro_last_seen_${user.id}`);
   const shouldShowIntro = lastSeenIntro !== today;
@@ -127,6 +131,16 @@ export default function DashboardLayout() {
                 <p className="text-xs text-muted-foreground">{house.name}</p>
               </div>
             </Link>
+            <button 
+              onClick={async () => {
+                await supabase.from("profiles").update({ active_character_id: null } as never).eq("user_id", user.id);
+                useAuth.setState((state) => ({ profile: state.profile ? { ...state.profile, active_character_id: null } : null }));
+              }} 
+              className="text-muted-foreground hover:text-primary text-base ml-1 transition-colors" 
+              title="Trocar Personagem"
+            >
+              🔄
+            </button>
             <Notifications />
             <button onClick={async () => { await logout(); navigate("/"); }} className="text-muted-foreground hover:text-destructive text-xs ml-1">
               Sair

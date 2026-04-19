@@ -18,7 +18,8 @@ export interface Profile {
   bio: string;
   avatar_url: string | null;
   approved: boolean;
-  accepted_rules: boolean;
+  active_character_id: string | null;
+  has_accepted_rules: boolean;
   online: boolean;
   last_seen: string | null;
   created_at: string;

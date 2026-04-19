@@ -13,12 +13,18 @@ interface Message {
   id: string;
   channel_id: string;
   user_id: string;
+  character_id: string | null;
   content: string;
   created_at: string;
   user_role?: string;
   profiles: {
     full_name: string;
     username: string;
+    house: House;
+    avatar_url: string | null;
+  };
+  characters?: {
+    full_name: string;
     house: House;
     avatar_url: string | null;
   };
@@ -65,7 +71,7 @@ export default function ChatRoom() {
   const fetchMessages = async (id: string) => {
     const { data } = await supabase
       .from("messages")
-      .select("*, profiles(full_name, username, house, avatar_url)")
+      .select("*, profiles(full_name, username, house, avatar_url), characters(full_name, house, avatar_url)")
       .eq("channel_id", id)
       .order("created_at", { ascending: true })
       .limit(100);
@@ -91,9 +97,10 @@ export default function ChatRoom() {
       .channel(`messages:${channel.id}`)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `channel_id=eq.${channel.id}` }, async (payload) => {
         const { data: userData } = await supabase.from("profiles").select("full_name, username, house, avatar_url").eq("user_id", payload.new.user_id).single();
+        const { data: charData } = payload.new.character_id ? await supabase.from("characters").select("full_name, house, avatar_url").eq("id", payload.new.character_id).single() : { data: null };
         const { data: roleData } = await supabase.from("user_roles").select("role").eq("user_id", payload.new.user_id).maybeSingle();
         if (userData) {
-          setMessages(prev => [...prev, { ...payload.new, profiles: userData, user_role: roleData?.role } as unknown as Message]);
+          setMessages(prev => [...prev, { ...payload.new, profiles: userData, characters: charData, user_role: roleData?.role } as unknown as Message]);
         }
       })
       .subscribe();
@@ -126,6 +133,7 @@ export default function ChatRoom() {
     const { error } = await supabase.from("messages").insert({
       channel_id: channel.id,
       user_id: user.id,
+      character_id: useAuth.getState().profile?.active_character_id,
       content
     });
 
@@ -200,11 +208,11 @@ export default function ChatRoom() {
               <div key={m.id} className={`flex gap-3 ${isMe ? 'flex-row-reverse' : 'flex-row'} ${showHeader ? 'mt-6' : 'mt-1'}`}>
                 {showHeader ? (
                   <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border border-border">
-                    {m.profiles.avatar_url ? (
-                      <img src={m.profiles.avatar_url} alt={m.profiles.full_name} className="w-full h-full object-cover" />
+                    {(m.characters || m.profiles).avatar_url ? (
+                      <img src={(m.characters || m.profiles).avatar_url!} alt={(m.characters || m.profiles).full_name} className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full bg-secondary flex items-center justify-center text-sm font-heading text-primary">
-                        {m.profiles.full_name[0]}
+                        {(m.characters || m.profiles).full_name[0]}
                       </div>
                     )}
                   </div>
@@ -215,7 +223,7 @@ export default function ChatRoom() {
                 <div className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[80%]`}>
                   {showHeader && (
                     <div className={`flex items-center gap-2 mb-1 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
-                      <span className="font-heading text-xs text-foreground/80">{m.profiles.full_name}</span>
+                      <span className="font-heading text-xs text-foreground/80">{(m.characters || m.profiles).full_name}</span>
                       
                       {m.user_role === 'admin' && (
                         <span className="text-[10px] font-bold bg-primary/20 text-primary px-1.5 py-0.5 rounded flex items-center gap-1" title="Administrador Master">
@@ -228,7 +236,7 @@ export default function ChatRoom() {
                         </span>
                       )}
 
-                      <HouseCrest house={m.profiles.house} size="sm" />
+                      <HouseCrest house={(m.characters || m.profiles).house} size="sm" />
                       <span className="text-[10px] text-muted-foreground">{new Date(m.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                     </div>
                   )}
