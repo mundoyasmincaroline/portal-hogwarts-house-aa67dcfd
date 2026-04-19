@@ -29,6 +29,7 @@ export default function StickerAlbum() {
   const [userStickers, setUserStickers] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
   const [buyingId, setBuyingId] = useState<string | null>(null);
+  const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     loadAlbum();
@@ -117,19 +118,24 @@ export default function StickerAlbum() {
             >
               {/* Imagem */}
               <div className="absolute inset-0 z-0">
-                {s.image_url ? (
+                {s.image_url && !failedImages[s.id] ? (
                   <img 
                     src={s.image_url} 
                     alt={s.character_name} 
-                    onError={(e) => { 
-                      e.currentTarget.style.display = 'none'; 
-                    }}
+                    onError={() => setFailedImages(prev => ({ ...prev, [s.id]: true }))}
                     className={`w-full h-full object-cover transition-all duration-700 ${unlocked ? 'mix-blend-overlay opacity-80 group-hover:scale-105 group-hover:opacity-100' : 'opacity-30 grayscale blur-[2px] group-hover:grayscale-0 group-hover:blur-0'}`} 
                   />
-                ) : null}
-                <div className={`absolute inset-0 flex items-center justify-center text-6xl font-heading text-white/10 select-none pointer-events-none ${s.image_url ? 'opacity-0' : 'opacity-100'}`}>
-                  {s.character_name.charAt(0)}
-                </div>
+                ) : (
+                  <div className={`absolute inset-0 flex items-center justify-center bg-gradient-to-br ${
+                    isGold ? 'from-yellow-900/60 to-background' : isSilver ? 'from-slate-700/60 to-background' : 'from-amber-900/60 to-background'
+                  }`}>
+                    <span className={`font-heading text-7xl font-bold select-none ${
+                      isGold ? 'text-yellow-400/30' : isSilver ? 'text-slate-300/30' : 'text-amber-600/30'
+                    }`}>
+                      {s.character_name.charAt(0)}
+                    </span>
+                  </div>
+                )}
                 <div className={`absolute inset-0 bg-gradient-to-t ${unlocked ? 'from-background via-background/60 to-transparent' : 'from-background via-background/90 to-background/40'}`} />
               </div>
               
