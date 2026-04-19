@@ -52,6 +52,7 @@ export default function ChatRoom() {
   }, [cooldown]);
 
   const renderRPGText = (text: string) => {
+    if (!text) return null;
     // Se a mensagem inteira comecar com /acao
     let processedText = text;
     if (processedText.startsWith('/acao ')) {
@@ -293,8 +294,9 @@ export default function ChatRoom() {
               const showHeader = i === 0 || messages[i-1].user_id !== m.user_id || new Date(m.created_at).getTime() - new Date(messages[i-1].created_at).getTime() > 300000;
               const isMe = m.user_id === user?.id;
 
-              const profileName = (m.characters || m.profiles)?.full_name || "";
-              const profileUser = (m.characters || m.profiles)?.username || "";
+              const profileData = m.characters || m.profiles || { full_name: "Bruxo Desconhecido", username: "desconhecido", house: "gryffindor", avatar_url: null };
+              const profileName = profileData.full_name || "";
+              const profileUser = profileData.username || "";
               const isMorpheus = profileName.toLowerCase().includes('morpheus') || profileUser.toLowerCase().includes('morpheus');
               const isYasmin = profileName.toLowerCase().includes('yasmin') || profileUser.toLowerCase().includes('mundoyasmincaroline');
               const isCarolina = profileName.toLowerCase().includes('carolina') || profileUser.toLowerCase().includes('carolinaas.assis');
@@ -310,11 +312,11 @@ export default function ChatRoom() {
                     }`}>
                       {isMorpheus ? (
                         <span className="animate-pulse">M</span>
-                      ) : (m.characters || m.profiles).avatar_url ? (
-                        <img src={(m.characters || m.profiles).avatar_url!} alt={(m.characters || m.profiles).full_name} className="w-full h-full object-cover" />
+                      ) : profileData.avatar_url ? (
+                        <img src={profileData.avatar_url!} alt={profileData.full_name} className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full bg-secondary flex items-center justify-center text-sm font-heading text-primary">
-                          {(m.characters || m.profiles).full_name[0]}
+                          {profileData.full_name[0] || "?"}
                         </div>
                       )}
                     </Link>
@@ -332,7 +334,7 @@ export default function ChatRoom() {
                         ) : isCarolina ? (
                           <span className="font-heading text-xs font-bold text-blue-400 drop-shadow-[0_0_5px_rgba(96,165,250,0.8)]">🛡️ CAROLINA [A GUARDIÃ]</span>
                         ) : (
-                          <span className="font-heading text-xs text-foreground/80">{(m.characters || m.profiles).full_name}</span>
+                          <span className="font-heading text-xs text-foreground/80">{profileData.full_name}</span>
                         )}
                         
                         {!isMorpheus && !isYasmin && !isCarolina && m.user_role === 'admin' && (
@@ -346,8 +348,8 @@ export default function ChatRoom() {
                           </span>
                         )}
 
-                        {!isMorpheus && !isYasmin && !isCarolina && <HouseCrest house={(m.characters || m.profiles).house} size="sm" />}
-                        <span className="text-[10px] text-muted-foreground">{formatDate(m.created_at)}</span>
+                        {!isMorpheus && !isYasmin && !isCarolina && <HouseCrest house={profileData.house} size="sm" />}
+                        <span className="text-[10px] text-muted-foreground">{m.created_at ? formatDate(m.created_at) : ''}</span>
                       </Link>
                     )}
                     <div className={`px-4 py-2 text-sm ${
