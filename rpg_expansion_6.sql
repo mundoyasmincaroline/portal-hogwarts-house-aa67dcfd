@@ -1,26 +1,6 @@
--- EXPANSÃO 6: Amizades e Cine Hogwarts
+-- EXPANSÃO 6: Cine Hogwarts
 
--- 1. Tabela de Amigos (Rede Social)
-CREATE TABLE IF NOT EXISTS public.friends (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
-    friend_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    UNIQUE(user_id, friend_id)
-);
-
-ALTER TABLE public.friends ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Users can view their own friends" ON public.friends
-    FOR SELECT USING (auth.uid() = user_id OR auth.uid() = friend_id);
-
-CREATE POLICY "Users can add friends" ON public.friends
-    FOR INSERT WITH CHECK (auth.uid() = user_id);
-
-CREATE POLICY "Users can remove friends" ON public.friends
-    FOR DELETE USING (auth.uid() = user_id);
-
--- 2. Tabela de Configurações do Sistema (Cine Hogwarts e outros)
+-- 1. Tabela de Configurações do Sistema (Cine Hogwarts e outros)
 CREATE TABLE IF NOT EXISTS public.system_settings (
     key TEXT PRIMARY KEY,
     value JSONB NOT NULL,

@@ -3,19 +3,32 @@ import { supabase } from "@/integrations/supabase/client";
 
 export default function DailyHighlight() {
   const [highlightedUser, setHighlightedUser] = useState<any>(null);
+  const [highlightTitle, setHighlightTitle] = useState("✨ Aluno Destaque do Dia ✨");
 
   useEffect(() => {
     // In a real app, this would be computed by a cron job or complex query.
     // We mock the top user for the day.
     const fetchTopUser = async () => {
+      const categories = [
+        { title: "🏆 O Mais Rico de Hogwarts 🏆", orderBy: "xp", asc: false },
+        { title: "🌱 Novato Promissor 🌱", orderBy: "created_at", asc: false },
+        { title: "⚡ Veterano do Castelo ⚡", orderBy: "xp", asc: false },
+        { title: "🔮 Monitor Ativo 🔮", orderBy: "last_seen", asc: false },
+      ];
+      
+      const selectedCat = categories[Math.floor(Math.random() * categories.length)];
+      setHighlightTitle(selectedCat.title);
+      
       const { data } = await supabase
         .from('profiles')
         .select('*')
-        .order('xp', { ascending: false })
-        .limit(1)
-        .single();
+        .eq('approved', true)
+        .order(selectedCat.orderBy, { ascending: selectedCat.asc })
+        .limit(10);
       
-      setHighlightedUser(data);
+      if (data && data.length > 0) {
+        setHighlightedUser(data[Math.floor(Math.random() * data.length)]);
+      }
     };
 
     fetchTopUser();
@@ -42,7 +55,7 @@ export default function DailyHighlight() {
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
       
       <div className="relative z-10">
-        <h2 className="font-heading text-2xl text-gold-gradient mb-2 drop-shadow-md">✨ Aluno Destaque do Dia ✨</h2>
+        <h2 className="font-heading text-xl text-gold-gradient mb-4 drop-shadow-md">{highlightTitle}</h2>
         <div className="flex flex-col items-center gap-3">
           <div className="w-20 h-20 rounded-full border-2 border-primary overflow-hidden shadow-[0_0_15px_rgba(var(--primary),0.5)]">
             <img 

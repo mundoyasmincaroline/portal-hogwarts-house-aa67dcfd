@@ -116,7 +116,7 @@ export default function Feed() {
 
     const { data: ch } = await supabase.from("challenges").select("id, title, xp_reward, type").eq("active", true).limit(5);
     setActiveChallenges(ch || []);
-    const { data: users } = await supabase.from("profiles").select("id, user_id, full_name, username, house, online, last_seen").eq("approved", true).order("online", { ascending: false }).limit(10);
+    const { data: users } = await supabase.from("profiles").select("id, user_id, full_name, username, house, avatar_url, online, last_seen").eq("approved", true).order("online", { ascending: false }).limit(10);
     setOnlineUsers(users || []);
   }, []);
 
@@ -329,7 +329,9 @@ export default function Feed() {
               )}
               {onlineUsers.map((u) => (
                 <div key={u.id} className="flex items-center gap-2">
-                  <HouseCrest house={u.house} size="sm" />
+                  <div className={`w-6 h-6 rounded-full overflow-hidden border-2 shrink-0 ${u.house === 'gryffindor' ? 'border-red-500' : u.house === 'slytherin' ? 'border-green-500' : u.house === 'ravenclaw' ? 'border-blue-500' : 'border-yellow-500'}`}>
+                    <img src={u.avatar_url || `https://api.dicebear.com/7.x/adventurer/svg?seed=${u.username}`} alt={u.username} className="w-full h-full object-cover bg-secondary" />
+                  </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-xs text-foreground truncate">{u.full_name.split(' ')[0]}</p>
                   </div>
