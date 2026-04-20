@@ -6,32 +6,13 @@ import { Timer, Sparkles, Trophy, X, ChevronRight, Coins, Zap } from "lucide-rea
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 
-// ─── Configurações dos Eventos ───────────────────────────────────────────
-const EVENT_SCHEDULE = [
-  { id: "morning", name: "O Despertar da Fênix", start: "09:00", end: "09:30", type: "history", xp: 100, galeons: 10 },
-  { id: "afternoon", name: "O Mistério de Gringotts", start: "15:00", end: "15:30", type: "spells", xp: 150, galeons: 25 },
-  { id: "night", name: "O Enigma da Seção Reservada", start: "21:00", end: "21:30", type: "dark_arts", xp: 200, galeons: 50 },
-];
-
-const RIDDLES = {
-  history: [
-    { q: "Qual casa preza pela coragem?", a: "grifinoria" },
-    { q: "Quem fundou a Sonserina?", a: "salazar" },
-  ],
-  spells: [
-    { q: "Feitiço para desarmar?", a: "expelliarmus" },
-    { q: "Feitiço para flutuar?", a: "wingardium leviosa" },
-  ],
-  dark_arts: [
-    { q: "Quem matou Dumbledore?", a: "snape" },
-    { q: "O que é uma Horcrux?", a: "alma" },
-  ]
-};
+import { getEventsForToday, type MagicalEvent } from "@/lib/MagicalEventEngine";
 
 // ─── Componente Principal ──────────────────────────────────────────────────
 export default function MagicalEventSystem() {
   const { user, profile, fetchProfile } = useAuth();
-  const [activeEvent, setActiveEvent] = useState<any>(null);
+  const [dailyEvents, setDailyEvents] = useState<MagicalEvent[]>([]);
+  const [activeEvent, setActiveEvent] = useState<MagicalEvent | null>(null);
   const [nextEventIn, setNextEventIn] = useState<string>("");
   const [showInvite, setShowInvite] = useState(false);
   const [participating, setParticipating] = useState(false);
@@ -40,6 +21,52 @@ export default function MagicalEventSystem() {
   const [loading, setLoading] = useState(false);
   const [hasCompleted, setHasCompleted] = useState(false);
 
+  // Inicializar eventos do dia
+  useEffect(() => {
+    const loadEvents = async () => {
+        const today = new Date();
+        const day = today.getDate();
+        const month = today.getMonth() + 1;
+        
+        // Buscar aniversários de OCs no banco
+        const { data: ocBirthdays } = await supabase
+            .from("characters")
+            .select("full_name")
+            .filter("birth_date", "not.is", null);
+
+        // Filtrar localmente por dia/mês (ou via SQL se preferir)
+        const activeCelebrations = (ocBirthdays || []).filter(c => {
+            const d = new Date((c as any).birth_date);
+            return d.getDate() === day && (d.getMonth() + 1) === month;
+        }).map(c => ({ name: c.full_name, type: "oc_birthday" }));
+
+        const events = getEventsForToday(activeCelebrations);
+        
+        // Plot Twist: Checar aniversário do usuário logado
+        if (profile?.birth_date) {
+            const bday = new Date(profile.birth_date);
+            if (today.getDate() === bday.getDate() && today.getMonth() === bday.getMonth()) {
+                events.push({
+                    id: "birthday",
+                    name: "🎈 Sua Festa de Aniversário!",
+                    start: "00:00",
+                    end: "23:59",
+                    type: "spells",
+                    xp: 1000,
+                    galeons: 200,
+                    audience: "all",
+                    description: `Parabéns pelo seu dia, ${profile.full_name}! Hogwarts preparou um presente especial para você.`,
+                    riddles: [{ q: "Você está pronto para o seu presente? (Diga: sim!)", a: "sim" }],
+                    isSpecial: true
+                });
+            }
+        }
+        setDailyEvents(events);
+    };
+
+    loadEvents();
+  }, [profile?.id]);
+
   // Monitorar o relógio
   useEffect(() => {
     const timer = setInterval(() => {
@@ -47,7 +74,7 @@ export default function MagicalEventSystem() {
       const timeStr = now.toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit', hour12: false });
       
       // Checar se há um evento agora
-      const current = EVENT_SCHEDULE.find(e => timeStr >= e.start && timeStr <= e.end);
+      const current = dailyEvents.find(e => timeStr >= e.start && timeStr <= e.end);
       
       if (current && !activeEvent) {
         checkIfAlreadyDone(current);
@@ -62,7 +89,7 @@ export default function MagicalEventSystem() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [activeEvent, user]);
+  }, [activeEvent, user, dailyEvents]);
 
   const checkIfAlreadyDone = async (event: any) => {
     if (!user) return;
@@ -84,7 +111,7 @@ export default function MagicalEventSystem() {
     const now = new Date();
     let next: any = null;
     
-    for (const event of EVENT_SCHEDULE) {
+    for (const event of dailyEvents) {
       const [h, m] = event.start.split(":").map(Number);
       const eventDate = new Date();
       eventDate.setHours(h, m, 0, 0);
@@ -95,8 +122,8 @@ export default function MagicalEventSystem() {
       }
     }
 
-    if (!next) { // Se todos passaram, o próximo é o primeiro de amanhã
-      const [h, m] = EVENT_SCHEDULE[0].start.split(":").map(Number);
+    if (!next && dailyEvents.length > 0) { // Se todos passaram, o próximo é o primeiro de amanhã
+      const [h, m] = dailyEvents[0].start.split(":").map(Number);
       next = new Date();
       next.setDate(next.getDate() + 1);
       next.setHours(h, m, 0, 0);
@@ -109,7 +136,34 @@ export default function MagicalEventSystem() {
     setNextEventIn(`${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`);
   };
 
-  const handleStart = () => {
+  const handleStart = async () => {
+    if (!profile.active_character_id) {
+      toast.error("Você precisa selecionar um personagem para participar!");
+      return;
+    }
+
+    setLoading(true);
+    // Verificar se o personagem é do tipo correto
+    const { data: char } = await supabase
+      .from("characters")
+      .select("is_canon")
+      .eq("id", profile.active_character_id)
+      .single();
+
+    setLoading(false);
+
+    const isCanon = char?.is_canon || false;
+    const aud = activeEvent.audience;
+
+    if (aud === "canons" && !isCanon) {
+      toast.error("Este evento é exclusivo para Personagens Canons!");
+      return;
+    }
+    if (aud === "ocs" && isCanon) {
+      toast.error("Este evento é exclusivo para Personagens Originais (OCs)!");
+      return;
+    }
+
     setShowInvite(false);
     setParticipating(true);
     setStep(0);
@@ -118,7 +172,8 @@ export default function MagicalEventSystem() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const riddles = RIDDLES[activeEvent.type as keyof typeof RIDDLES];
+    if (!activeEvent) return;
+    const riddles = activeEvent.riddles;
     const correct = riddles[step].a.toLowerCase();
     
     if (answer.toLowerCase().includes(correct)) {
@@ -181,10 +236,25 @@ export default function MagicalEventSystem() {
     <>
       {/* ── Mini Countdown ── */}
       {!activeEvent && (
-        <div className="fixed top-4 right-20 z-[40] hidden lg:flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-primary/20 text-[10px] font-heading text-primary/80">
+        <button 
+          onClick={() => {
+            const next = dailyEvents.find(e => {
+              const [h, m] = e.start.split(":").map(Number);
+              const now = new Date();
+              const ev = new Date(); ev.setHours(h, m, 0, 0);
+              return ev > now;
+            }) || dailyEvents[0];
+            if (!next) return;
+            toast.info(`🔮 Próximo: ${next.name}`, {
+              description: `${next.description} (${next.audience === 'all' ? 'Todos' : next.audience === 'canons' ? 'Canons' : 'OCs'}) às ${next.start}`,
+              duration: 5000
+            });
+          }}
+          className="fixed top-4 right-20 z-[40] hidden lg:flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-primary/20 text-[10px] font-heading text-primary/80 hover:bg-primary/10 transition-colors"
+        >
           <Timer size={12} className="animate-pulse" />
           <span>PRÓXIMO EVENTO EM: {nextEventIn}</span>
-        </div>
+        </button>
       )}
 
       {/* ── Convite do Evento ── */}
@@ -201,8 +271,12 @@ export default function MagicalEventSystem() {
                 </button>
               </div>
               
-              <h3 className="text-xl font-heading text-white mb-2">{activeEvent.name}</h3>
-              <p className="text-sm text-muted-foreground mb-6">Um evento global começou! Aceite o desafio agora para ganhar recompensas exclusivas.</p>
+              <h3 className="text-xl font-heading text-white mb-1">{activeEvent.name}</h3>
+              <p className="text-[10px] font-heading text-primary uppercase tracking-widest mb-3">
+                {activeEvent.audience === "all" ? "👥 Todos os Bruxos" : activeEvent.audience === "canons" ? "📜 Apenas Canons" : "🎭 Apenas Personagens OCs"}
+              </p>
+              
+              <p className="text-sm text-muted-foreground mb-6">{activeEvent.description}</p>
               
               <div className="flex gap-3 mb-6">
                 <div className="flex-1 bg-secondary/50 p-2 rounded-xl text-center border border-primary/10">
@@ -216,7 +290,7 @@ export default function MagicalEventSystem() {
               </div>
 
               <Button variant="magical" className="w-full py-6 rounded-2xl group" onClick={handleStart}>
-                Participar Agora <ChevronRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+                Registrar e Participar <ChevronRight className="ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
               
               {profile.vip_plan === null && (
@@ -247,7 +321,7 @@ export default function MagicalEventSystem() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="bg-secondary/30 p-6 rounded-2xl border border-border/50 text-center min-h-[120px] flex items-center justify-center">
                   <p className="text-xl font-serif italic text-primary-foreground">
-                    "{RIDDLES[activeEvent.type as keyof typeof RIDDLES][step].q}"
+                    "{activeEvent.riddles[step].q}"
                   </p>
                 </div>
 

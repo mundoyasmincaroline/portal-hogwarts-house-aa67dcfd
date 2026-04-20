@@ -10,7 +10,7 @@ import AdminMemberModal from "@/components/AdminMemberModal";
 import PedidosTab from "@/components/PedidosTab";
 import SafeImage from "@/components/SafeImage";
 
-type Tab = "members" | "pending_members" | "challenges" | "houses" | "fichas" | "tasks" | "banned" | "channels" | "monetization" | "moderation" | "filch" | "pedidos";
+type Tab = "members" | "pending_members" | "challenges" | "houses" | "fichas" | "tasks" | "banned" | "channels" | "monetization" | "moderation" | "filch" | "pedidos" | "festas";
 
 interface MemberProfile {
   id: string;
@@ -67,7 +67,8 @@ function MonetizationTab({ members, fetchAll, adForm, setAdForm, ads, createAd, 
   const [crediting, setCrediting] = useState(false);
   const [newItem, setNewItem] = useState({
     name: "", description: "", category: "clothing", price_galeons: 100,
-    rarity: "common", image_url: "", is_featured: false
+    rarity: "common", image_url: "", is_featured: false,
+    stats: { atk: 0, def: 0, mana: 0, hp: 0 }
   });
   const [addingItem, setAddingItem] = useState(false);
 
@@ -100,7 +101,15 @@ function MonetizationTab({ members, fetchAll, adForm, setAdForm, ads, createAd, 
     setAddingItem(true);
     const { error } = await supabase.from("store_items").insert({ ...newItem, is_active: true } as never);
     if (error) toast.error(error.message);
-    else { toast.success("✅ Item adicionado à loja!"); setNewItem({ name: "", description: "", category: "clothing", price_galeons: 100, rarity: "common", image_url: "", is_featured: false }); loadStoreItems(); }
+    else { 
+        toast.success("✅ Item adicionado à loja!"); 
+        setNewItem({ 
+            name: "", description: "", category: "clothing", price_galeons: 100, 
+            rarity: "common", image_url: "", is_featured: false,
+            stats: { atk: 0, def: 0, mana: 0, hp: 0 }
+        }); 
+        loadStoreItems(); 
+    }
     setAddingItem(false);
   };
 
@@ -145,7 +154,8 @@ function MonetizationTab({ members, fetchAll, adForm, setAdForm, ads, createAd, 
 
   const CATEGORY_LABELS: Record<string, string> = {
     clothing: "👗 Roupas", wand: "🪄 Varinhas", accessory: "💎 Acessórios",
-    skin: "🎨 Skins", decoration: "🏠 Decorações", pack: "📦 Pacotes"
+    skin: "🎨 Skins", decoration: "🏠 Decorações", pack: "📦 Pacotes",
+    spell: "📜 Feitiços", potion: "🧪 Poções", upgrade: "⚡ Upgrades"
   };
   const RARITY_LABELS: Record<string, string> = { common: "Comum", rare: "Raro", legendary: "Lendário" };
 
@@ -285,6 +295,25 @@ function MonetizationTab({ members, fetchAll, adForm, setAdForm, ads, createAd, 
               <option value="rare">🔵 Raro</option>
               <option value="legendary">⭐ Lendário</option>
             </select>
+            {/* Campos de Atributos para Duelos/RPG */}
+            <div className="col-span-1 md:col-span-2 grid grid-cols-4 gap-2 pt-2 border-t border-border/50 mt-2">
+                <div>
+                    <label className="text-[10px] text-muted-foreground uppercase mb-1 block">Ataque</label>
+                    <Input type="number" placeholder="Atk" value={newItem.stats.atk} onChange={e => setNewItem({...newItem, stats: {...newItem.stats, atk: parseInt(e.target.value) || 0}})} />
+                </div>
+                <div>
+                    <label className="text-[10px] text-muted-foreground uppercase mb-1 block">Defesa</label>
+                    <Input type="number" placeholder="Def" value={newItem.stats.def} onChange={e => setNewItem({...newItem, stats: {...newItem.stats, def: parseInt(e.target.value) || 0}})} />
+                </div>
+                <div>
+                    <label className="text-[10px] text-muted-foreground uppercase mb-1 block">Mana</label>
+                    <Input type="number" placeholder="Mana" value={newItem.stats.mana} onChange={e => setNewItem({...newItem, stats: {...newItem.stats, mana: parseInt(e.target.value) || 0}})} />
+                </div>
+                <div>
+                    <label className="text-[10px] text-muted-foreground uppercase mb-1 block">Vida (HP)</label>
+                    <Input type="number" placeholder="HP" value={newItem.stats.hp} onChange={e => setNewItem({...newItem, stats: {...newItem.stats, hp: parseInt(e.target.value) || 0}})} />
+                </div>
+            </div>
           </div>
           <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
             <input type="checkbox" checked={newItem.is_featured} onChange={e => setNewItem({ ...newItem, is_featured: e.target.checked })} className="accent-primary" />
@@ -350,6 +379,122 @@ function MonetizationTab({ members, fetchAll, adForm, setAdForm, ads, createAd, 
     </div>
   );
 }
+// ─────────────────────────────────────────────────────────────
+// Sub-componente: Gerenciamento de Festas
+// ─────────────────────────────────────────────────────────────
+function PartiesTab() {
+  const [parties, setParties] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [form, setForm] = useState({
+    title: "", description: "", theme: "classic", music_url: "", image_url: "", foods: ""
+  });
+
+  useEffect(() => { loadParties(); }, []);
+
+  const loadParties = async () => {
+    const { data } = await supabase.from("site_events").select("*").order("created_at", { ascending: false });
+    setParties(data || []);
+    setLoading(false);
+  };
+
+  const createParty = async () => {
+    if (!form.title) return toast.error("Dê um nome para a festa!");
+    const { error } = await supabase.from("site_events").insert({
+      ...form,
+      active: false,
+      foods: form.foods.split(",").map(f => f.trim())
+    } as never);
+
+    if (error) toast.error("Erro ao criar festa: " + error.message);
+    else {
+      toast.success("✨ Festa preparada com sucesso!");
+      setForm({ title: "", description: "", theme: "classic", music_url: "", image_url: "", foods: "" });
+      loadParties();
+    }
+  };
+
+  const toggleParty = async (id: string, current: boolean) => {
+    if (!current) {
+      await supabase.from("site_events").update({ active: false } as never).neq("id", id);
+    }
+    const { error } = await supabase.from("site_events").update({ active: !current } as never).eq("id", id);
+    if (error) toast.error("Erro ao atualizar status.");
+    else loadParties();
+  };
+
+  const deleteParty = async (id: string) => {
+    if (!confirm("Deseja cancelar esta festa permanentemente?")) return;
+    const { error } = await supabase.from("site_events").delete().eq("id", id);
+    if (error) toast.error("Erro ao deletar.");
+    else loadParties();
+  };
+
+  return (
+    <div className="space-y-8">
+      <div className="glass rounded-3xl p-8 border border-primary/20 bg-primary/5">
+        <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-heading text-primary flex items-center gap-2">
+            🪄 Organizar Grande Festa
+            </h2>
+            <Badge variant="outline" className="border-primary/20 text-primary">Modo Staff</Badge>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <Input placeholder="Título da Festa (Ex: Baile de Inverno)" value={form.title} onChange={e => setForm({...form, title: e.target.value})} />
+            <textarea 
+              placeholder="Descrição narrativa da festa..."
+              className="w-full bg-secondary/50 rounded-xl px-4 py-3 text-sm border border-border min-h-[100px]"
+              value={form.description}
+              onChange={e => setForm({...form, description: e.target.value})}
+            />
+            <select 
+              className="w-full bg-secondary/50 rounded-xl px-4 py-3 text-sm border border-border"
+              value={form.theme}
+              onChange={e => setForm({...form, theme: e.target.value})}
+            >
+              <option value="classic">🏛️ Clássico (Salão Principal)</option>
+              <option value="winter">❄️ Baile de Inverno</option>
+              <option value="halloween">🎃 Halloween / Das Bruxas</option>
+              <option value="yule">🎄 Natal / Yule Ball</option>
+              <option value="summer">☀️ Festa de Verão no Lago</option>
+            </select>
+          </div>
+          <div className="space-y-4">
+            <Input placeholder="Link da Música (YouTube/Spotify)" value={form.music_url} onChange={e => setForm({...form, music_url: e.target.value})} />
+            <Input placeholder="URL da Foto de Capa" value={form.image_url} onChange={e => setForm({...form, image_url: e.target.value})} />
+            <Input placeholder="Comidas (separadas por vírgula)" value={form.foods} onChange={e => setForm({...form, foods: e.target.value})} />
+            <Button onClick={createParty} variant="magical" className="w-full py-7 rounded-2xl">
+              Publicar Convite de Festa ✨
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {parties.map(party => (
+          <div key={party.id} className={`glass rounded-[2rem] overflow-hidden border-2 transition-all ${party.active ? "border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]" : "border-border/30 opacity-70"}`}>
+            {party.image_url && <SafeImage src={party.image_url} alt={party.title} className="w-full h-40 object-cover" />}
+            <div className="p-6 space-y-4">
+              <div className="flex justify-between items-start">
+                <h3 className="font-heading text-lg text-white">{party.title}</h3>
+                <Badge variant={party.active ? "default" : "secondary"}>{party.active ? "ATIVA" : "OFFLINE"}</Badge>
+              </div>
+              <p className="text-xs text-muted-foreground line-clamp-2">{party.description}</p>
+              <div className="flex gap-2">
+                <Button className="flex-1" variant={party.active ? "secondary" : "magical"} onClick={() => toggleParty(party.id, party.active)}>
+                  {party.active ? "Encerrar Festa" : "Ligar Festa 🚀"}
+                </Button>
+                <Button variant="destructive" size="icon" onClick={() => deleteParty(party.id)}>🗑️</Button>
+              </div>
+            </div>
+          </div>
+        ))}
+        {parties.length === 0 && <p className="text-center text-muted-foreground col-span-3 py-10">Nenhuma festa organizada ainda.</p>}
+      </div>
+    </div>
+  );
+}
+
 // ─────────────────────────────────────────────────────────────
 
 export default function Admin() {
@@ -959,6 +1104,8 @@ export default function Admin() {
           {tab === "pedidos" && (
             <PedidosTab />
           )}
+
+          {tab === "festas" && <PartiesTab />}
 
         </>
       )}

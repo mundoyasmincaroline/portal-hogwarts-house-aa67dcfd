@@ -63,10 +63,11 @@ const TABS = [
   { id: "featured", label: "🔥 Exclusivos", icon: Flame },
   { id: "galeons",  label: "🪙 Galeões",    icon: Coins },
   { id: "vip",      label: "👑 VIP",        icon: Crown },
-  { id: "clothing", label: "👗 Roupas",     icon: Shirt },
   { id: "wand",     label: "🪄 Varinhas",   icon: Wand2 },
-  { id: "accessory",label: "💎 Acessórios", icon: Gem },
-  { id: "skin",     label: "🎨 Skins",      icon: Sparkles },
+  { id: "spell",    label: "📜 Feitiços",   icon: Sparkles },
+  { id: "potion",   label: "🧪 Poções",     icon: Gem },
+  { id: "clothing", label: "👗 Roupas",     icon: Shirt },
+  { id: "upgrade",  label: "⚡ Upgrades",   icon: Zap },
 ];
 
 export default function GringottsStore() {
@@ -316,6 +317,53 @@ export default function GringottsStore() {
             <p className="text-muted-foreground">Itens raríssimos de colecionador. Uma vez que o estoque mágico acabe, eles podem nunca mais voltar.</p>
           </div>
 
+          {/* LOOT BOX: O COFRE MISTERIOSO (GAMBLE) */}
+          <div className="relative group rounded-[3rem] overflow-hidden border-2 border-purple-500/30 bg-gradient-to-br from-purple-900/40 via-background to-black p-1 shadow-[0_0_50px_rgba(168,85,247,0.2)] mb-12">
+            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=2000')] opacity-5 mix-blend-overlay" />
+            <div className="relative glass rounded-[2.5rem] p-10 flex flex-col md:flex-row items-center gap-10">
+                <div className="relative shrink-0">
+                    <div className="absolute inset-0 bg-purple-500/20 blur-3xl rounded-full animate-pulse" />
+                    <div className="w-40 h-40 bg-gradient-to-b from-purple-500/20 to-transparent rounded-full flex items-center justify-center border border-purple-500/30 group-hover:scale-110 transition-transform duration-700">
+                        <Gift size={80} className="text-purple-400 drop-shadow-[0_0_20px_rgba(168,85,247,0.8)]" />
+                    </div>
+                    <div className="absolute -bottom-2 inset-x-0 w-fit mx-auto bg-purple-500 text-white text-[10px] font-bold border-none px-4 py-1 animate-bounce rounded-full shadow-lg">SORTE GRANDE</div>
+                </div>
+                
+                <div className="flex-1 space-y-6 text-center md:text-left">
+                    <div>
+                        <h2 className="text-4xl font-heading text-purple-300 mb-2">Cofre de Gringotts</h2>
+                        <p className="text-muted-foreground text-sm max-w-xl font-serif">Uma chance de obter itens lendários, feitiços raros ou grandes fortunas em Galeões por um preço único. O destino está em suas mãos.</p>
+                    </div>
+
+                    <div className="flex items-center gap-6">
+                        <div className="text-left shrink-0">
+                            <p className="text-[10px] text-muted-foreground uppercase mb-1">Custo por Tentativa</p>
+                            <p className="text-3xl font-heading text-yellow-400">🪙 30</p>
+                        </div>
+                        <Button 
+                            variant="magical" 
+                            className="flex-1 py-8 text-xl rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border-none shadow-[0_10px_20px_rgba(124,58,237,0.3)] transition-all active:scale-95"
+                            onClick={() => {
+                                if (galeons < 30) return toast.error("Galeões insuficientes!");
+                                toast.promise(new Promise(r => setTimeout(r, 2000)), {
+                                    loading: '🪄 Conjurando abertura do cofre...',
+                                    success: () => {
+                                        const rng = Math.random();
+                                        if (rng < 0.05) return "💎 INCRÍVEL! Você ganhou a Varinha das Varinhas (Lendária)!";
+                                        if (rng < 0.25) return "📜 Raro! Você obteve o Feitiço de Invisibilidade!";
+                                        return "🪙 Ganhou 10 Galeões de volta!";
+                                    },
+                                    error: 'Erro na magia.',
+                                });
+                            }}
+                        >
+                            Tentar a Sorte ✨
+                        </Button>
+                    </div>
+                </div>
+            </div>
+          </div>
+
           {/* Hardcoded Mystery Box Offer */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
             <div className="relative group rounded-3xl overflow-hidden border border-purple-500/40 bg-gradient-to-br from-purple-900/30 to-indigo-950/40 p-1">
@@ -532,8 +580,8 @@ export default function GringottsStore() {
         </div>
       )}
 
-      {/* ── ABAS DE ITENS (Roupas, Varinhas, etc) ── */}
-      {["clothing","wand","accessory","skin"].includes(tab) && (
+      {/* ── ABAS DE ITENS (Roupas, Varinhas, Feitiços, Poções, etc) ── */}
+      {["clothing","wand","spell","potion","upgrade"].includes(tab) && (
         <div className="animate-in fade-in duration-500">
           {loading ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
@@ -553,6 +601,8 @@ export default function GringottsStore() {
                 const rar = RARITY[item.rarity as keyof typeof RARITY] || RARITY.common;
                 const isOwned = owned.includes(item.id);
                 const canAfford = galeons >= item.price_galeons;
+                const stats = (item as any).stats;
+
                 return (
                   <div key={item.id}
                     className={`group glass rounded-2xl border overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-2 hover:bg-secondary/40 ${rar.border} ${rar.glow} ${
@@ -571,8 +621,18 @@ export default function GringottsStore() {
                     </div>
                     <div className="p-4 flex flex-col flex-1 relative">
                       <h4 className="font-heading text-base text-foreground leading-tight mb-2 group-hover:text-primary transition-colors">{item.name}</h4>
-                      <p className="text-[11px] text-muted-foreground flex-1 mb-4 leading-relaxed line-clamp-2">{item.description}</p>
+                      <p className="text-[11px] text-muted-foreground flex-1 mb-3 leading-relaxed line-clamp-2">{item.description}</p>
                       
+                      {/* Atributos de RPG */}
+                      {stats && (stats.atk > 0 || stats.def > 0 || stats.mana > 0 || stats.hp > 0) && (
+                          <div className="grid grid-cols-2 gap-1 mb-4">
+                              {stats.atk > 0 && <div className="text-[9px] font-bold text-red-400 bg-red-400/10 px-2 py-0.5 rounded border border-red-400/20 flex items-center gap-1"><Swords size={8} /> ATK +{stats.atk}</div>}
+                              {stats.def > 0 && <div className="text-[9px] font-bold text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded border border-blue-400/20 flex items-center gap-1"><Shield size={8} /> DEF +{stats.def}</div>}
+                              {stats.mana > 0 && <div className="text-[9px] font-bold text-indigo-400 bg-indigo-400/10 px-2 py-0.5 rounded border border-indigo-400/20 flex items-center gap-1"><Zap size={8} /> MANA +{stats.mana}</div>}
+                              {stats.hp > 0 && <div className="text-[9px] font-bold text-green-400 bg-green-400/10 px-2 py-0.5 rounded border border-green-400/20 flex items-center gap-1"><Flame size={8} /> HP +{stats.hp}</div>}
+                          </div>
+                      )}
+
                       <div className="flex items-center justify-between mt-auto">
                         <div className="flex items-center gap-1.5 bg-background/50 px-2 py-1 rounded-md border border-border/50">
                            <span className="text-xs">🪙</span>
@@ -586,7 +646,6 @@ export default function GringottsStore() {
                         </Button>
                       </div>
                       
-                      {/* Hover Overlay for insufficient funds */}
                       {!isOwned && !canAfford && (
                         <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-background via-background/90 to-transparent translate-y-full group-hover:translate-y-0 transition-transform flex flex-col items-center justify-end z-20">
                           <p className="text-[11px] text-red-400 font-bold text-center bg-red-500/10 px-2 py-1 rounded w-full border border-red-500/20">

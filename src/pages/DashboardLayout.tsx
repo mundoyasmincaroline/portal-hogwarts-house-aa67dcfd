@@ -4,7 +4,7 @@ import {
   Castle, BookOpen, User, MessageCircle, Camera, Film, Trophy,
   Shield, Swords, BookMarked, Library, ShoppingBag, ScrollText,
   Settings, LogOut, Volume2, VolumeX, RefreshCw, Menu, Users,
-  Coins, Lock, Wallet
+  Coins, Lock, Wallet, Map as MapIcon
 } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";
@@ -27,10 +27,18 @@ import NotificationBanner from "@/components/NotificationBanner";
 import { useAchievements } from "@/lib/useAchievements";
 import FilchWatcher from "@/components/FilchWatcher";
 import MagicalEventSystem from "@/components/MagicalEventSystem";
+import MagicalPartyOverlay from "@/components/MagicalPartyOverlay";
+import GlobalChallengeWatcher from "@/components/GlobalChallengeWatcher";
+import DailyRewardSystem from "@/components/DailyRewardSystem";
+import MaraudersMap from "@/components/MaraudersMap";
+import MagicalActivityFeed from "@/components/MagicalActivityFeed";
+import TimedMysteryChest from "@/components/TimedMysteryChest";
 
 
 const NAV_ITEMS = [
   { icon: <Castle size={20} />, label: "O Castelo", path: "/dashboard" },
+  { icon: <MapIcon size={20} />, label: "Mapa do Maroto", isMap: true },
+  { icon: <Trophy size={20} />, label: "Sagas Mágicas", path: "/dashboard/sagas" },
   { icon: <BookOpen size={20} />, label: "Guia do Maroto", path: "/dashboard/guide" },
   { icon: <User size={20} />, label: "Meu Perfil", path: "/dashboard/profile" },
   { icon: <MessageCircle size={20} />, label: "Mensagens", path: "/dashboard/dm" },
@@ -42,6 +50,7 @@ const NAV_ITEMS = [
   { icon: <Trophy size={20} />, label: "Ranking", path: "/dashboard/ranking" },
   { icon: <Shield size={20} />, label: "Casas", path: "/dashboard/houses" },
   { icon: <Swords size={20} />, label: "Desafios", path: "/dashboard/challenges" },
+  { icon: <Sparkles size={20} />, label: "Eventos Mágicos", path: "/dashboard/events" },
   { icon: <BookMarked size={20} />, label: "Aulas", path: "/dashboard/classes" },
   { icon: <Library size={20} />, label: "Álbum", path: "/dashboard/album" },
   { icon: <ShoppingBag size={20} />, label: "Loja", path: "/dashboard/shop" },
@@ -61,6 +70,7 @@ export default function DashboardLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [mapOpen, setMapOpen] = useState(false);
   const [encounterDone, setEncounterDone] = useState(false);
   const [soundOn, setSoundOn] = useState(isSoundEnabled());
   const [dmUnread, setDmUnread] = useState(0);
@@ -298,10 +308,23 @@ export default function DashboardLayout() {
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
           {items.map((item) => {
             const isActive = location.pathname === item.path;
-              return (
+              return item.isMap ? (
+                <button
+                  key={item.label}
+                  onClick={() => {
+                    playMagicSound();
+                    setMapOpen(true);
+                    setSidebarOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
+                >
+                  <span className="text-muted-foreground group-hover:text-primary transition-colors">{item.icon}</span>
+                  <span className="font-heading text-sm">{item.label}</span>
+                </button>
+              ) : (
                 <Link
                   key={item.path}
-                  to={item.path}
+                  to={item.path!}
                   onClick={() => {
                     playMagicSound();
                     setSidebarOpen(false);
@@ -403,10 +426,18 @@ export default function DashboardLayout() {
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 md:p-6">
-          <Outlet />
+          <MagicalActivityFeed />
+          <div className="mt-4">
+             <Outlet />
+          </div>
           <EngagementBot />
           <FilchWatcher />
           <MagicalEventSystem />
+          <MagicalPartyOverlay />
+          <GlobalChallengeWatcher />
+          <DailyRewardSystem />
+          <TimedMysteryChest />
+          <MaraudersMap isOpen={mapOpen} onClose={() => setMapOpen(false)} />
         </div>
       </main>
     </div>

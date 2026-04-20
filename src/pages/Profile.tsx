@@ -300,6 +300,16 @@ export default function Profile() {
     toast.success("Usuário bloqueado. 🚫");
   };
 
+  const toggleEquip = async (itemId: string, currentStatus: boolean) => {
+    if (!isMe) return;
+    const { error } = await supabase.from("user_items").update({ is_equipped: !currentStatus } as never).eq("id", itemId);
+    if (error) toast.error("Erro ao equipar item.");
+    else {
+      toast.success(!currentStatus ? "Item equipado! ⚔️" : "Item removido.");
+      loadExtras(user!.id);
+    }
+  };
+
   const handleUnblock = async () => {
     if (!friendship) return;
     const { error } = await supabase.from("friendships").delete().eq("id", friendship.id);
@@ -737,63 +747,91 @@ export default function Profile() {
           )}
         </div>
       ) : activeTab === "achievements" ? (
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="font-heading text-xl text-foreground">🏆 Conquistas Mágicas</h2>
-            <span className="text-xs text-muted-foreground">{userChallenges.length} Desafios Concluídos</span>
+        <div className="space-y-10">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="text-center md:text-left">
+                <h2 className="font-heading text-2xl text-foreground">🏆 Sala de Troféus</h2>
+                <p className="text-sm text-muted-foreground">Suas glórias e conquistas eternizadas no castelo.</p>
+            </div>
+            <div className="flex gap-2">
+                <div className="px-4 py-2 bg-primary/10 rounded-xl border border-primary/20 text-center">
+                    <p className="text-[10px] text-muted-foreground uppercase font-heading">Conquistas</p>
+                    <p className="text-xl font-heading text-primary">{userChallenges.length}</p>
+                </div>
+            </div>
           </div>
-          
+
           {loadingExtras ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[1,2,3,4].map(i => <div key={i} className="glass h-32 rounded-2xl animate-pulse" />)}
             </div>
           ) : userChallenges.length === 0 ? (
-            <div className="glass rounded-2xl p-10 text-center border-dashed border-2 border-border/50">
-              <Trophy size={48} className="mx-auto text-muted-foreground opacity-20 mb-4" />
-              <p className="text-muted-foreground text-sm italic">Nenhuma conquista registrada ainda. Explore o mapa para encontrar missões!</p>
+            <div className="glass rounded-[3rem] p-16 text-center border-dashed border-2 border-primary/20 bg-primary/5">
+              <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Trophy size={48} className="text-primary/30" />
+              </div>
+              <h3 className="font-heading text-xl text-foreground mb-2">O Mural está em branco</h3>
+              <p className="text-muted-foreground text-sm max-w-sm mx-auto italic">Explore o mapa, participe de aulas e vença desafios para preencher sua sala de troféus!</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {userChallenges.map(uc => (
-                <div key={uc.id} className="glass rounded-2xl p-5 border border-primary/10 bg-gradient-to-br from-primary/5 to-transparent relative group">
-                  <div className="absolute top-4 right-4">
-                    <CheckCircle2 size={18} className="text-green-500" />
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 bg-primary/10 rounded-xl text-primary shrink-0">
-                      <Star size={20} />
+                <div key={uc.id} className="relative group perspective">
+                    <div className="glass rounded-[2rem] p-6 border border-primary/20 bg-gradient-to-br from-indigo-950/20 to-transparent hover:border-primary/50 transition-all duration-500 hover:-rotate-1 hover:scale-[1.02] overflow-hidden">
+                        {/* Status Check */}
+                        <div className="absolute top-4 right-4 p-1.5 bg-green-500/20 rounded-full text-green-500">
+                            <CheckCircle2 size={14} />
+                        </div>
+                        
+                        {/* Glow effect */}
+                        <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all" />
+
+                        <div className="space-y-4 relative z-10">
+                            <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary border border-primary/10">
+                                <Star size={24} />
+                            </div>
+                            <div>
+                                <h4 className="font-heading text-lg text-foreground mb-1 line-clamp-1">{uc.challenges?.title || "Desafio Místico"}</h4>
+                                <p className="text-xs text-muted-foreground line-clamp-2 h-8 leading-relaxed italic">
+                                    "{uc.challenges?.description}"
+                                </p>
+                            </div>
+                            <div className="flex items-center justify-between pt-2 border-t border-white/5">
+                                <Badge variant="magical" className="text-[9px] px-2 py-0.5">+{uc.challenges?.xp_reward} XP</Badge>
+                                <span className="text-[10px] text-muted-foreground font-mono">
+                                    {new Date(uc.completed_at || uc.created_at).toLocaleDateString("pt-BR")}
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-heading text-foreground mb-1">{uc.challenges?.title || "Desafio Místico"}</h4>
-                      <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{uc.challenges?.description}</p>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-heading bg-primary/10 text-primary px-2 py-0.5 rounded-full">
-                          +{uc.challenges?.xp_reward} XP
-                        </span>
-                        <span className="text-[10px] text-muted-foreground">
-                          {new Date(uc.completed_at || uc.created_at).toLocaleDateString("pt-BR")}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               ))}
             </div>
           )}
 
-          {/* Badges de Nível (as que já estavam no 'About', mas aqui com destaque) */}
-          <div className="mt-10">
-            <h3 className="font-heading text-sm text-primary mb-4 flex items-center gap-2">
-               <Sparkles size={16} /> Medalhas de Prestígio
+          {/* Seção de Medalhas de Nível */}
+          <div className="pt-10">
+            <h3 className="font-heading text-sm text-primary mb-6 flex items-center gap-2 uppercase tracking-widest">
+               <Crown size={16} /> Graus de Prestígio
             </h3>
-            <div className="flex flex-wrap gap-4">
-              <div className="glass rounded-2xl p-4 flex items-center gap-4 border border-yellow-500/20 bg-yellow-500/5">
-                <span className="text-3xl">🏅</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="glass rounded-2xl p-5 flex items-center gap-4 border border-yellow-500/20 bg-gradient-to-r from-yellow-500/10 to-transparent">
+                <div className="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center text-2xl">🏅</div>
                 <div>
                   <p className="font-heading text-sm text-yellow-400">Veterano de Hogwarts</p>
-                  <p className="text-[10px] text-muted-foreground">Alcançado pelo XP acumulado</p>
+                  <p className="text-[10px] text-muted-foreground">Conquistado pelo seu XP total</p>
                 </div>
               </div>
+              
+              {profile.vip_plan && (
+                <div className="glass rounded-2xl p-5 flex items-center gap-4 border border-purple-500/20 bg-gradient-to-r from-purple-500/10 to-transparent">
+                    <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center text-2xl">✨</div>
+                    <div>
+                        <p className="font-heading text-sm text-purple-400">Membro Honorário</p>
+                        <p className="text-[10px] text-muted-foreground">Assinante do Plano {profile.vip_plan.toUpperCase()}</p>
+                    </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -818,8 +856,11 @@ export default function Profile() {
               {userItems.map(ui => {
                 const item = ui.store_items;
                 if (!item) return null;
+                const isEquipped = (ui as any).is_equipped;
+                const stats = (item as any).stats;
+
                 return (
-                  <div key={ui.id} className="group glass rounded-2xl overflow-hidden border border-border/50 hover:border-primary/40 transition-all hover:-translate-y-1">
+                  <div key={ui.id} className={`group glass rounded-2xl overflow-hidden border transition-all hover:-translate-y-1 ${isEquipped ? 'border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]' : 'border-border/50 hover:border-primary/40'}`}>
                     <div className="relative aspect-square">
                       <SafeImage 
                         src={item.image_url} 
@@ -827,8 +868,28 @@ export default function Profile() {
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         fallbackEmoji="📦"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
-                         <p className="text-[10px] text-white line-clamp-2">{item.description}</p>
+                      {isEquipped && (
+                          <div className="absolute top-2 right-2 bg-primary text-primary-foreground text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest z-10 animate-pulse">
+                              Equipado
+                          </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-end p-3 gap-2">
+                         {stats && (stats.atk > 0 || stats.def > 0 || stats.mana > 0 || stats.hp > 0) && (
+                             <div className="grid grid-cols-2 gap-1 w-full">
+                                 {stats.atk > 0 && <div className="text-[8px] font-bold text-red-400 bg-red-400/20 px-1.5 py-0.5 rounded border border-red-400/30">⚔️ +{stats.atk}</div>}
+                                 {stats.def > 0 && <div className="text-[8px] font-bold text-blue-400 bg-blue-400/20 px-1.5 py-0.5 rounded border border-blue-400/30">🛡️ +{stats.def}</div>}
+                                 {stats.mana > 0 && <div className="text-[8px] font-bold text-indigo-400 bg-indigo-400/20 px-1.5 py-0.5 rounded border border-indigo-400/30">✨ +{stats.mana}</div>}
+                                 {stats.hp > 0 && <div className="text-[8px] font-bold text-green-400 bg-green-400/20 px-1.5 py-0.5 rounded border border-green-400/30">❤️ +{stats.hp}</div>}
+                             </div>
+                         )}
+                         <Button 
+                            size="sm" 
+                            variant={isEquipped ? "outline" : "magical"} 
+                            className="w-full h-7 text-[10px] rounded-lg"
+                            onClick={() => toggleEquip(ui.id, isEquipped)}
+                        >
+                            {isEquipped ? "Desequipar" : "Equipar"}
+                        </Button>
                       </div>
                     </div>
                     <div className="p-3 text-center">

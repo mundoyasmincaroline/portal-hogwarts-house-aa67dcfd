@@ -14,6 +14,7 @@ import Feed from "./pages/Feed";
 import Houses from "./pages/Houses";
 import Ranking from "./pages/Ranking";
 import Challenges from "./pages/Challenges";
+import Events from "./pages/Events";
 import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
@@ -34,6 +35,7 @@ import Azkaban from "./pages/Azkaban";
 import Members from "./pages/Members";
 import GringottsStore from "./pages/GringottsStore";
 import Wallet from "./pages/Wallet";
+import MagicalTournaments from "./components/MagicalTournaments";
 
 
 const queryClient = new QueryClient();
@@ -66,6 +68,7 @@ const App = () => (
               <Route path="houses" element={<Houses />} />
               <Route path="ranking" element={<Ranking />} />
               <Route path="challenges" element={<Challenges />} />
+              <Route path="events" element={<Events />} />
               <Route path="profile" element={<Profile />} />
               <Route path="profile/:userId" element={<Profile />} />
               <Route path="admin" element={<Admin />} />
@@ -80,6 +83,7 @@ const App = () => (
               <Route path="members" element={<Members />} />
               <Route path="store" element={<GringottsStore />} />
               <Route path="wallet" element={<Wallet />} />
+              <Route path="sagas" element={<MagicalTournaments />} />
 
             </Route>
             <Route path="*" element={<NotFound />} />
