@@ -18,6 +18,7 @@ interface PostAuthor {
   full_name: string;
   username: string;
   house: House;
+  avatar_url?: string | null;
 }
 
 interface FeedPost {
@@ -57,7 +58,7 @@ export default function Feed() {
     const userIds = [...new Set(postsData.map((p) => p.user_id))];
     const { data: authors } = await supabase
       .from("profiles")
-      .select("user_id, full_name, username, house")
+      .select("user_id, full_name, username, house, avatar_url")
       .in("user_id", userIds.length ? userIds : ["00000000-0000-0000-0000-000000000000"]);
 
     const postIds = postsData.map((p) => p.id);
@@ -70,7 +71,7 @@ export default function Feed() {
     const commentUserIds = [...new Set((comments || []).map((c) => c.user_id))];
     const { data: commentAuthors } = await supabase
       .from("profiles")
-      .select("user_id, full_name, username, house")
+      .select("user_id, full_name, username, house, avatar_url")
       .in("user_id", commentUserIds.length ? commentUserIds : ["00000000-0000-0000-0000-000000000000"]);
 
     const authorMap = new Map((authors || []).map((a) => [a.user_id, a as PostAuthor & { user_id: string }]));

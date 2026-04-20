@@ -17,9 +17,10 @@ export default function CineHogwarts() {
     const fetchCinema = async () => {
       const { data } = await supabase.from("system_settings").select("value").eq("key", "cinema_config").single();
       if (data) {
-        setCinemaConfig(data.value);
-        setEditUrl(data.value.url || "");
-        setEditTitle(data.value.title || "");
+        const val = data.value as { url?: string; title?: string; active?: boolean };
+        setCinemaConfig(val);
+        setEditUrl(val.url || "");
+        setEditTitle(val.title || "");
       }
       setLoading(false);
     };

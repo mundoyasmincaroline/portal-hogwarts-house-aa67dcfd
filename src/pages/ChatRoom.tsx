@@ -301,7 +301,7 @@ export default function ChatRoom() {
             </div>
           ) : (
             messages.map((m, i) => {
-              const profileData = m.characters || m.profiles || { full_name: "Bruxo Desconhecido", username: "desconhecido", house: "gryffindor", avatar_url: null };
+              const profileData: any = m.characters || m.profiles || { full_name: "Bruxo Desconhecido", username: "desconhecido", house: "gryffindor", avatar_url: null };
               const profileName = profileData.full_name || "Desconhecido";
               const profileUser = profileData.username || "desconhecido";
               
