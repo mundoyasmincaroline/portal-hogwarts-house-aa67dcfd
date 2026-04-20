@@ -125,7 +125,7 @@ export default function StoreItemVisual({ imageUrl, name, category, isOwned }: P
   const theme = getTheme(name, category);
 
   // Se tiver imagem real e válida, usa ela
-  if (imageUrl && !imageUrl.includes("placeholder") && !imageUrl.includes("unsplash")) {
+  if (imageUrl && !imageUrl.includes("placeholder")) {
     return (
       <div className="relative w-full h-full">
         <img src={imageUrl} alt={name}

@@ -20,30 +20,30 @@ interface StoreItem {
 
 // ─── Pacotes de Galeões ────────────────────────────────────
 const GALEON_PACKAGES = [
-  { id: "bolsinha",  name: "Bolsinha de Galeões",     galeons: 100,  price_brl: 4.90,  icon: "💰", color: "from-amber-800/40 to-amber-900/40", border: "border-amber-600/40", glow: "group-hover:shadow-[0_0_20px_rgba(217,119,6,0.3)]" },
-  { id: "saco",      name: "Saco de Galeões",          galeons: 300,  price_brl: 12.90, icon: "🪙", color: "from-amber-700/50 to-yellow-800/40", border: "border-yellow-500/50", glow: "group-hover:shadow-[0_0_25px_rgba(234,179,8,0.4)]", badge: "Mais Popular" },
-  { id: "bau",       name: "Baú de Galeões",           galeons: 700,  price_brl: 24.90, icon: "💎", color: "from-yellow-600/50 to-amber-700/50", border: "border-amber-400/60", glow: "group-hover:shadow-[0_0_30px_rgba(251,191,36,0.5)]" },
-  { id: "tesouro",   name: "Tesouro de Gringotts",     galeons: 1500, price_brl: 44.90, icon: "👑", color: "from-yellow-500/60 to-amber-600/50", border: "border-yellow-400/70", glow: "group-hover:shadow-[0_0_35px_rgba(250,204,21,0.6)]", badge: "Melhor Valor" },
-  { id: "cofre",     name: "Cofre Lendário",           galeons: 4000, price_brl: 99.90, icon: "🏆", color: "from-yellow-400/70 to-amber-500/60", border: "border-yellow-300/80", glow: "group-hover:shadow-[0_0_45px_rgba(253,224,71,0.7)]", badge: "Lendário" },
+  { id: "bolsinha",  name: "Bolsinha de Galeões",     galeons: 100,  price_brl: 4.90,  icon: "💰", image_url: "https://images.unsplash.com/photo-1621508654686-809f23efdabc?q=80&w=400", color: "from-amber-800/40 to-amber-900/40", border: "border-amber-600/40", glow: "group-hover:shadow-[0_0_20px_rgba(217,119,6,0.3)]" },
+  { id: "saco",      name: "Saco de Galeões",          galeons: 300,  price_brl: 12.90, icon: "🪙", image_url: "https://images.unsplash.com/photo-1610484826917-0f101a7bf7f4?q=80&w=400", color: "from-amber-700/50 to-yellow-800/40", border: "border-yellow-500/50", glow: "group-hover:shadow-[0_0_25px_rgba(234,179,8,0.4)]", badge: "Mais Popular" },
+  { id: "bau",       name: "Baú de Galeões",           galeons: 700,  price_brl: 24.90, icon: "💎", image_url: "https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?q=80&w=400", color: "from-yellow-600/50 to-amber-700/50", border: "border-amber-400/60", glow: "group-hover:shadow-[0_0_30px_rgba(251,191,36,0.5)]" },
+  { id: "tesouro",   name: "Tesouro de Gringotts",     galeons: 1500, price_brl: 44.90, icon: "👑", image_url: "https://images.unsplash.com/photo-1599839619722-39751411ea63?q=80&w=400", color: "from-yellow-500/60 to-amber-600/50", border: "border-yellow-400/70", glow: "group-hover:shadow-[0_0_35px_rgba(250,204,21,0.6)]", badge: "Melhor Valor" },
+  { id: "cofre",     name: "Cofre Lendário",           galeons: 4000, price_brl: 99.90, icon: "🏆", image_url: "https://images.unsplash.com/photo-1587910903822-b13c7bbbc18a?q=80&w=400", color: "from-yellow-400/70 to-amber-500/60", border: "border-yellow-300/80", glow: "group-hover:shadow-[0_0_45px_rgba(253,224,71,0.7)]", badge: "Lendário" },
 ];
 
 // ─── Planos VIP ────────────────────────────────────────────
 const VIP_PLANS = [
   {
-    id: "premium", name: "Estudante Premium", icon: "✨", price_brl: 9.90,
+    id: "premium", name: "Estudante Premium", icon: "✨", price_brl: 9.90, image_url: "https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=600",
     color: "from-blue-900/60 to-indigo-900/40", border: "border-blue-400/50", textColor: "text-blue-300", glow: "hover:shadow-[0_0_30px_rgba(96,165,250,0.3)]",
     benefits: ["+50% XP em todas as atividades", "Badge exclusivo ✨ no perfil", "Acesso a salas Premium", "Nome com brilho especial"],
     galeons_monthly: 0,
   },
   {
-    id: "vip", name: "Auror VIP", icon: "🥇", price_brl: 19.90,
+    id: "vip", name: "Auror VIP", icon: "🥇", price_brl: 19.90, image_url: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=600",
     color: "from-purple-900/60 to-fuchsia-900/40", border: "border-purple-400/60", textColor: "text-purple-300", glow: "hover:shadow-[0_0_40px_rgba(192,132,252,0.4)]",
     benefits: ["Tudo do Premium", "+200 Galeões todo mês", "Nome dourado em todo portal", "Skin exclusiva de Auror", "Acesso antecipado a eventos"],
     galeons_monthly: 200,
     badge: "MAIS ESCOLHIDO"
   },
   {
-    id: "founder", name: "Fundador Hogwarts", icon: "👑", price_brl: 39.90,
+    id: "founder", name: "Fundador Hogwarts", icon: "👑", price_brl: 39.90, image_url: "https://images.unsplash.com/photo-1574280367876-0f862cd5d082?q=80&w=600",
     color: "from-yellow-700/60 to-amber-900/50", border: "border-yellow-400/70", textColor: "text-yellow-300", glow: "hover:shadow-[0_0_50px_rgba(251,191,36,0.5)]",
     benefits: ["Tudo do VIP", "+500 Galeões todo mês", "Acesso ao Conselho Secreto", "Título permanente 👑 Fundador", "Participação em decisões do portal"],
     galeons_monthly: 500,
@@ -335,8 +335,12 @@ export default function GringottsStore() {
                     <p className="text-xs text-purple-300/50 uppercase">Preço Especial</p>
                     <p className="text-xl font-heading text-yellow-400">🪙 2.500</p>
                   </div>
-                  <Button className="flex-1 bg-purple-600 hover:bg-purple-500 text-white font-bold h-full shadow-[0_0_20px_rgba(147,51,234,0.4)]">
-                    Adquirir Caixa
+                  <Button 
+                    className="flex-1 bg-purple-600 hover:bg-purple-500 text-white font-bold h-full shadow-[0_0_20px_rgba(147,51,234,0.4)] transition-transform hover:scale-105"
+                    onClick={() => buyItem({ id: "3d_mystery_box", name: "Caixa Surpresa VIP", description: "Contém 1 item Lendário garantido, 3 itens Raros e uma chance de desbloquear um Título Exclusivo permanente.", category: "featured", price_galeons: 2500, image_url: "https://images.unsplash.com/photo-1618944913456-11f422b404d0?q=80&w=600", rarity: "legendary", is_featured: true })}
+                    disabled={buying === "3d_mystery_box" || galeons < 2500}
+                  >
+                    {buying === "3d_mystery_box" ? "Comprando..." : galeons < 2500 ? "Sem Saldo" : "Adquirir Caixa"}
                   </Button>
                 </div>
               </div>
@@ -359,8 +363,12 @@ export default function GringottsStore() {
                     <p className="text-xs text-yellow-300/50 uppercase">Valor Lendário</p>
                     <p className="text-xl font-heading text-yellow-400">🪙 10.000</p>
                   </div>
-                  <Button className="flex-1 bg-yellow-600 hover:bg-yellow-500 text-black font-bold h-full shadow-[0_0_20px_rgba(202,138,4,0.4)]">
-                    Comprar Artefato
+                  <Button 
+                    className="flex-1 bg-yellow-600 hover:bg-yellow-500 text-black font-bold h-full shadow-[0_0_20px_rgba(202,138,4,0.4)] transition-transform hover:scale-105"
+                    onClick={() => buyItem({ id: "3d_merlin_crown", name: "Coroa de Merlin", description: "O artefato mais raro do portal. Concede uma aura dourada permanente ao seu perfil e destaque máximo no ranking.", category: "featured", price_galeons: 10000, image_url: "https://images.unsplash.com/photo-1574280367876-0f862cd5d082?q=80&w=600", rarity: "legendary", is_featured: true })}
+                    disabled={buying === "3d_merlin_crown" || galeons < 10000}
+                  >
+                    {buying === "3d_merlin_crown" ? "Comprando..." : galeons < 10000 ? "Sem Saldo" : "Comprar Artefato"}
                   </Button>
                 </div>
               </div>
@@ -420,9 +428,12 @@ export default function GringottsStore() {
                       {pkg.badge}
                     </div>
                   )}
-                  <div className={`text-6xl mb-4 mt-4 drop-shadow-[0_0_15px_rgba(251,191,36,0.6)] group-hover:scale-110 transition-transform duration-500`}>{pkg.icon}</div>
-                  <h3 className="font-heading text-lg text-foreground mb-2 group-hover:text-yellow-400 transition-colors">{pkg.name}</h3>
-                  <p className="text-3xl font-heading text-yellow-400 font-bold mb-1 drop-shadow-md">🪙 {pkg.galeons}</p>
+                  <div className="w-24 h-24 mb-4 mt-2 relative rounded-2xl overflow-hidden border-2 border-yellow-500/30 group-hover:scale-110 transition-transform duration-500 shadow-[0_0_15px_rgba(251,191,36,0.3)]">
+                    <img src={pkg.image_url} alt={pkg.name} className="w-full h-full object-cover mix-blend-overlay opacity-80" />
+                    <div className="absolute inset-0 flex items-center justify-center text-4xl drop-shadow-[0_0_15px_rgba(251,191,36,0.8)]">{pkg.icon}</div>
+                  </div>
+                  <h3 className="font-heading text-lg text-foreground mb-1 group-hover:text-yellow-400 transition-colors">{pkg.name}</h3>
+                  <p className="text-2xl font-heading text-yellow-400 font-bold mb-1 drop-shadow-md">🪙 {pkg.galeons}</p>
                   <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-6 flex-1">
                     ~{(pkg.galeons / pkg.price_brl).toFixed(0)} Galeões / R$
                   </p>
@@ -474,7 +485,11 @@ export default function GringottsStore() {
                     </div>
                   )}
 
-                  <div className={`text-6xl mb-6 mt-4 drop-shadow-lg filter`}>{plan.icon}</div>
+                  <div className="w-full h-32 mb-6 mt-2 relative rounded-2xl overflow-hidden border border-current shadow-lg group-hover:scale-105 transition-transform duration-500" style={{ borderColor: plan.textColor.split('-')[1] }}>
+                    <img src={plan.image_url} alt={plan.name} className="w-full h-full object-cover opacity-60 mix-blend-overlay" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent" />
+                    <div className="absolute inset-0 flex items-center justify-center text-5xl drop-shadow-[0_0_20px_currentColor]">{plan.icon}</div>
+                  </div>
                   <h3 className={`font-heading text-2xl mb-2 ${plan.textColor}`}>{plan.name}</h3>
                   <div className="flex items-end gap-1 mb-8">
                     <span className={`font-heading text-4xl font-bold ${plan.textColor}`}>R$ {plan.price_brl.toFixed(2).replace(".", ",")}</span>
