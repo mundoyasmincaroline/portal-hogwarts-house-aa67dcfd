@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import HouseCrest from "@/components/HouseCrest";
 import { toast } from "sonner";
+import AdminMemberModal from "@/components/AdminMemberModal";
 
 type Tab = "members" | "pending_members" | "challenges" | "houses" | "fichas" | "tasks" | "banned" | "channels" | "monetization" | "moderation" | "filch";
 
@@ -58,6 +59,8 @@ export default function Admin() {
   const [ads, setAds] = useState<any[]>([]);
   const [stories, setStories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [pendingChars, setPendingChars] = useState<Record<string, any[]>>({});
+  const [selectedMember, setSelectedMember] = useState<{ id: string; name: string } | null>(null);
   const [newCh, setNewCh] = useState({ title: "", description: "", xp_reward: 50, type: "daily", question: "", correct_answer: "" });
   const [newWord, setNewWord] = useState("");
   const [adForm, setAdForm] = useState({ title: "", link: "", image_url: "" });
@@ -80,7 +83,22 @@ export default function Admin() {
       supabase.from("ads").select("*").order("created_at", { ascending: false })
     ]);
     if (m) setMembers(m as unknown as MemberProfile[]);
-    if (pm) setPendingMembers(pm as unknown as MemberProfile[]);
+    if (pm) {
+      setPendingMembers(pm as unknown as MemberProfile[]);
+      // load characters for each pending member
+      if (pm.length > 0) {
+        const ids = pm.map((p: any) => p.user_id);
+        const { data: chars } = await supabase.from("characters").select("*").in("user_id", ids);
+        if (chars) {
+          const map: Record<string, any[]> = {};
+          chars.forEach((ch: any) => {
+            if (!map[ch.user_id]) map[ch.user_id] = [];
+            map[ch.user_id].push(ch);
+          });
+          setPendingChars(map);
+        }
+      }
+    }
     if (c) setChallenges(c as ChallengeRow[]);
     if (l) setLogs(l as ModLog[]);
     if (f) setFichas(f);
@@ -221,14 +239,18 @@ export default function Admin() {
           {tab === "members" && (
             <div className="space-y-3">
               {members.map((m) => (
-                <div key={m.id} className="glass rounded-xl p-4 flex items-center gap-4">
+                <div
+                  key={m.id}
+                  className="glass rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:border-primary/40 border border-transparent transition-colors"
+                  onClick={() => setSelectedMember({ id: m.user_id, name: m.full_name })}
+                >
                   <div className="relative">
                     <HouseCrest house={m.house} size="sm" />
                     <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-card ${isUserOnline(m) ? "bg-green-500" : "bg-muted-foreground"}`} />
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-heading text-foreground">{m.full_name}</p>
-                    <p className="text-xs text-muted-foreground">@{m.username} • {m.age} anos • {m.xp} XP</p>
+                    <p className="text-xs text-muted-foreground">@{m.username} • {m.age} anos • Nível {m.level} • {m.xp} XP</p>
                   </div>
                   <div className="flex flex-col items-end gap-1">
                     {isUserOnline(m) ? (
@@ -241,10 +263,9 @@ export default function Admin() {
                         Último login: {new Date(m.last_seen).toLocaleString('pt-BR')}
                       </span>
                     ) : (
-                      <span className="text-[10px] text-muted-foreground/40">
-                        Nunca acessou
-                      </span>
+                      <span className="text-[10px] text-muted-foreground/40">Nunca acessou</span>
                     )}
+                    <span className="text-[10px] text-primary/60 font-heading">✏️ clique para editar</span>
                   </div>
                 </div>
               ))}
@@ -255,36 +276,76 @@ export default function Admin() {
             <div className="space-y-4">
               <div className="glass rounded-xl p-4">
                 <h3 className="font-heading text-sm text-primary mb-1">⏳ Novos Membros Pendentes</h3>
-                <p className="text-xs text-muted-foreground">Aprove a entrada dos novos bruxos no portal.</p>
+                <p className="text-xs text-muted-foreground">Aprove os novos bruxos e revise as fichas de personagem antes de liberar acesso.</p>
               </div>
               {pendingMembers.length === 0 ? (
                 <div className="glass rounded-xl p-6 text-center">
                   <p className="text-muted-foreground text-sm">Nenhum membro aguardando aprovação.</p>
                 </div>
               ) : (
-                pendingMembers.map((m) => (
-                  <div key={m.id} className="glass rounded-xl p-4 flex items-center gap-4">
-                    <div className="relative">
-                      <HouseCrest house={m.house} size="sm" />
+                pendingMembers.map((m) => {
+                  const chars = pendingChars[m.user_id] || [];
+                  return (
+                    <div key={m.id} className="glass rounded-xl overflow-hidden border border-border/50">
+                      {/* member row */}
+                      <div className="p-4 flex items-center gap-4">
+                        <div className="relative">
+                          <HouseCrest house={m.house} size="sm" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-heading text-foreground">{m.full_name}</p>
+                          <p className="text-xs text-muted-foreground">@{m.username} • {m.age} anos</p>
+                        </div>
+                        <div className="flex gap-2 flex-wrap justify-end">
+                          <Button variant="outline" size="sm" className="text-destructive border-destructive" onClick={async () => {
+                            await supabase.from("profiles").delete().eq("user_id", m.user_id);
+                            toast.success("Membro rejeitado.");
+                            fetchAll();
+                          }}>Rejeitar</Button>
+                          <Button variant="magical" size="sm" onClick={async () => {
+                            await supabase.from("profiles").update({ approved: true }).eq("user_id", m.user_id);
+                            toast.success("Membro aprovado!");
+                            fetchAll();
+                          }}>Aprovar ✅</Button>
+                          <Button variant="outline" size="sm" onClick={() => setSelectedMember({ id: m.user_id, name: m.full_name })}>
+                            ✏️ Editar
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* fichas de personagem inline */}
+                      {chars.length > 0 && (
+                        <div className="border-t border-border/50 bg-secondary/20 px-4 py-3 space-y-3">
+                          <p className="text-xs font-heading text-primary">📜 Fichas de Personagem ({chars.length})</p>
+                          {chars.map((char: any) => (
+                            <div key={char.id} className="bg-card/60 rounded-xl p-3 flex gap-3">
+                              {char.avatar_url && (
+                                <img src={char.avatar_url} alt={char.full_name} className="w-12 h-12 rounded-full object-cover border border-border shrink-0" />
+                              )}
+                              <div className="min-w-0 flex-1">
+                                <p className="font-heading text-sm text-foreground">{char.full_name}</p>
+                                <p className="text-xs text-muted-foreground">
+                                  {char.character_type === "oc" ? "OC" : "Canon"} • {char.house || "Sem casa"} • {char.blood_status || "—"}
+                                </p>
+                                {char.wand && <p className="text-xs text-muted-foreground">🪄 {char.wand}</p>}
+                                {char.patronus && <p className="text-xs text-muted-foreground">✨ Patrono: {char.patronus}</p>}
+                                {char.personality && (
+                                  <p className="text-xs text-foreground/70 italic mt-1 line-clamp-2">{char.personality}</p>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {chars.length === 0 && (
+                        <div className="border-t border-border/50 bg-secondary/10 px-4 py-2">
+                          <p className="text-xs text-muted-foreground italic">📝 Ainda não criou fichas de personagem.</p>
+                        </div>
+                      )}
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-heading text-foreground">{m.full_name}</p>
-                      <p className="text-xs text-muted-foreground">@{m.username} • {m.age} anos</p>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm" className="text-destructive border-destructive" onClick={async () => {
-                        await supabase.from("profiles").delete().eq("user_id", m.user_id);
-                        toast.success("Membro rejeitado.");
-                        fetchAll();
-                      }}>Rejeitar</Button>
-                      <Button variant="magical" size="sm" onClick={async () => {
-                        await supabase.from("profiles").update({ approved: true }).eq("user_id", m.user_id);
-                        toast.success("Membro aprovado!");
-                        fetchAll();
-                      }}>Aprovar ✅</Button>
-                    </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           )}
@@ -616,6 +677,16 @@ export default function Admin() {
             </div>
           )}
         </>
+      )}
+
+      {/* Member edit modal */}
+      {selectedMember && (
+        <AdminMemberModal
+          memberId={selectedMember.id}
+          memberName={selectedMember.name}
+          onClose={() => setSelectedMember(null)}
+          onSaved={() => { fetchAll(); }}
+        />
       )}
     </div>
   );

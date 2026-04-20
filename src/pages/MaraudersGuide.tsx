@@ -16,40 +16,114 @@ export default function MaraudersGuide() {
             <li><strong>Comando Rápido:</strong> Comece a mensagem com <code>/acao pega o livro</code> para transformar a mensagem inteira numa ação.</li>
             <li><strong>Pensamentos:</strong> Escreva <code>(Será que eu vou passar de ano?)</code> e o texto ficará acinzentado e itálico.</li>
             <li><strong>Falas Normais:</strong> Coloque <code>"Estupefaça!"</code> entre aspas para negritar e destacar sua voz.</li>
+            <li><strong>Marcar Membros:</strong> Digite <code>@nome</code> no chat para marcar outro bruxo — ele receberá uma notificação! ✨</li>
           </ul>
           <p className="text-xs text-primary italic mt-2">Dica: O Chat também possui a "Penseira". No canto superior direito da sala, você pode escolher uma data antiga para ler as fofocas de ontem!</p>
         </div>
       )
     },
     {
-      title: "🎵 O Novo InstaHogwarts",
+      title: "🎵 InstaHogwarts & Mensagens Diretas",
       content: (
         <div className="space-y-4">
-          <p>Compartilhar momentos agora tem trilha sonora!</p>
-          <div className="bg-secondary/50 p-4 rounded-xl border border-primary/20 text-sm text-muted-foreground">
-            <p>Ao criar uma nova postagem no Feed, você verá um novo campo: <strong>"Link de Música (Spotify ou MP3)"</strong>.</p>
-            <p className="mt-2">Basta colar um link do Spotify (Ex: de uma música do Harry Potter ou sua banda favorita) e um Player Mágico aparecerá na sua foto para todos escutarem enquanto dão like!</p>
+          <p>Compartilhar momentos mágicos agora tem trilha sonora — e conversas privadas!</p>
+          <div className="space-y-3">
+            <div className="bg-secondary/50 p-4 rounded-xl border border-primary/20 text-sm text-muted-foreground">
+              <strong className="text-foreground block mb-1">📸 InstaHogwarts</strong>
+              <p>Ao criar uma postagem, cole um link do Spotify para adicionar trilha sonora. Um Player Mágico aparecerá na sua foto!</p>
+            </div>
+            <div className="bg-secondary/50 p-4 rounded-xl border border-primary/20 text-sm text-muted-foreground">
+              <strong className="text-foreground block mb-1">💬 Mensagens Diretas (DM)</strong>
+              <p>Clique em <strong>"Mensagens"</strong> no menu lateral ou visite o perfil de um membro e clique em <strong>"💬 Mensagem"</strong>. As conversas acontecem em tempo real — como WhatsApp, mas dentro do castelo! Você verá um badge com quantas mensagens não lidas tem.</p>
+            </div>
           </div>
         </div>
       )
     },
     {
-      title: "🎁 Missões, Redes Sociais e Loja",
+      title: "⚔️ Desafios & Missões — Guia Completo",
+      content: (
+        <div className="space-y-4">
+          <p>Vá na aba <strong>Desafios</strong> para ver todas as missões disponíveis. Cada tipo funciona de um jeito:</p>
+          <div className="space-y-3">
+            <div className="bg-secondary/50 p-3 rounded-xl border border-primary/20">
+              <strong className="text-foreground">⚙️ Missões Automáticas (Diárias / Semanais)</strong>
+              <p className="text-sm text-muted-foreground mt-1">Participar de chats, postar no InstaHogwarts, etc. O sistema detecta e concede XP automaticamente. A barra de progresso atualiza sozinha!</p>
+            </div>
+            <div className="bg-secondary/50 p-3 rounded-xl border border-primary/20">
+              <strong className="text-foreground">📱 Missões de Redes Sociais</strong>
+              <p className="text-sm text-muted-foreground mt-1">Fez um TikTok ou Reels sobre o portal? Clique no desafio → cole o link público → envie. A administração avalia em até 24h e libera o XP!</p>
+            </div>
+            <div className="bg-secondary/50 p-3 rounded-xl border border-primary/20">
+              <strong className="text-foreground">🦉 Enigmas (Quiz Mágico)</strong>
+              <p className="text-sm text-muted-foreground mt-1">Clique no desafio com charada → responda corretamente → XP imediato! Errou? Aguarde o cooldown e tente de novo.</p>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      title: "🧭 Missão Coletiva — Liderar & Participar",
+      content: (
+        <div className="space-y-4">
+          <p>Missões coletivas são eventos onde um membro <strong>lidera</strong> e outros <strong>participam</strong> — <em>todos ganham XP!</em></p>
+          <div className="space-y-3">
+            <div className="bg-primary/10 p-4 rounded-xl border border-primary/30">
+              <strong className="text-primary">👑 Para o Líder da Missão:</strong>
+              <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground mt-2">
+                <li>Vá em <strong>Desafios</strong> e clique no desafio "Liderar Missão".</li>
+                <li>Crie um post no <strong>InstaHogwarts</strong> descrevendo a missão e o que os participantes devem fazer.</li>
+                <li>Marque os participantes com <code>@nome</code> no post ou no chat da sala.</li>
+                <li>Após a missão acontecer, cole o link do post como comprovação e envie.</li>
+                <li>Admin aprova → Líder e <strong>todos os participantes marcados</strong> recebem XP automaticamente! ⚡</li>
+              </ol>
+            </div>
+            <div className="bg-secondary/50 p-3 rounded-xl border border-primary/20">
+              <strong className="text-foreground">🤝 Para Participar:</strong>
+              <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground mt-2">
+                <li>Aguarde ser marcado pelo líder com @.</li>
+                <li>Participe da atividade combinada.</li>
+                <li>Quando o líder enviar a comprovação e for aprovada, o XP cai automaticamente na sua conta!</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      title: "🦉 Enigmas de Hogwarts",
+      content: (
+        <div className="space-y-4">
+          <p>Os Enigmas são charadas do universo de Harry Potter. Responda corretamente e ganhe XP na hora!</p>
+          <div className="bg-secondary/50 p-4 rounded-xl border border-primary/20 space-y-2 text-sm text-muted-foreground">
+            <p>🔮 <strong>Como funciona:</strong> Clique num desafio do tipo Enigma → leia a charada → escreva sua resposta → envie.</p>
+            <p>✅ <strong>Acertou?</strong> XP concedido imediatamente e pontos para sua Casa!</p>
+            <p>❌ <strong>Errou?</strong> Não entre em pânico — aguarde o cooldown mágico e tente novamente.</p>
+            <p>📚 <strong>Dica:</strong> A Biblioteca de Hogwarts (e seus livros favoritos de HP) contém todas as respostas. Boa sorte!</p>
+          </div>
+          <div className="bg-primary/5 p-3 rounded-xl border border-primary/20 text-center">
+            <p className="text-xs text-primary font-heading">Enigmas novos são adicionados pela administração regularmente. Fique atento! 🦉✨</p>
+          </div>
+        </div>
+      )
+    },
+    {
+      title: "🎁 Loja, Recrutamento & Álbum",
       content: (
         <div className="space-y-4">
           <p>Seja recompensado por explorar e divulgar o Castelo:</p>
           <div className="space-y-3">
             <div className="bg-secondary/50 p-3 rounded-xl border border-primary/20">
-              <strong className="text-foreground">Embaixador Mágico (Ganhe XP Fácil)</strong>
-              <p className="text-sm text-muted-foreground">Vá na aba "Desafios". Você encontrará as missões de Redes Sociais. Fez um TikTok do portal? Cole o link lá, a direção vai aprovar e você ganha <strong>500 XP</strong>!</p>
+              <strong className="text-foreground">Loja Borgin &amp; Burkes</strong>
+              <p className="text-sm text-muted-foreground">Acumulou XP? Troque por insígnias e Emojis Raros que aparecem no seu perfil e no chat!</p>
             </div>
             <div className="bg-secondary/50 p-3 rounded-xl border border-primary/20">
-              <strong className="text-foreground">Loja Borgin & Burkes</strong>
-              <p className="text-sm text-muted-foreground">Vá na aba "Loja". Acumulou muito XP? Troque-o por insígnias e Emojis Raros (Vira-Tempo, Marca Negra) que aparecerão no seu perfil e no chat.</p>
+              <strong className="text-foreground">Recrutamento Mágico</strong>
+              <p className="text-sm text-muted-foreground">Convide novos bruxos com seu código (Perfil → Recrutamento). Quando o convidado atingir Nível 2, você ganha <strong>500 XP</strong>!</p>
             </div>
             <div className="bg-secondary/50 p-3 rounded-xl border border-primary/20">
-              <strong className="text-foreground">Eventos Sazonais e Encontros</strong>
-              <p className="text-sm text-muted-foreground">Uma vez por dia, ao entrar, você esbarrará numa cena aleatória de RPG para ganhar XP. E preste atenção ao clima: o castelo muda de acordo com a época do ano!</p>
+              <strong className="text-foreground">📗 Álbum de Figurinhas</strong>
+              <p className="text-sm text-muted-foreground">Complete desafios e eventos para desbloquear figurinhas mágicas no seu Álbum. Colecione todas!</p>
             </div>
           </div>
         </div>

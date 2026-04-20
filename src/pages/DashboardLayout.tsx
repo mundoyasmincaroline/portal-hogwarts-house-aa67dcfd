@@ -27,6 +27,7 @@ const NAV_ITEMS = [
   { icon: <Castle size={20} />, label: "O Castelo", path: "/dashboard" },
   { icon: <BookOpen size={20} />, label: "Guia do Maroto", path: "/dashboard/guide" },
   { icon: <User size={20} />, label: "Meu Perfil", path: "/dashboard/profile" },
+  { icon: <MessageCircle size={20} />, label: "Mensagens", path: "/dashboard/dm" },
   { icon: <MessageCircle size={20} />, label: "Chats RPG", path: "/dashboard/chats" },
   { icon: <Camera size={20} />, label: "InstaHogwarts", path: "/dashboard/instahogwarts" },
   { icon: <Film size={20} />, label: "Hogwarts Cine", path: "/dashboard/cinema" },
@@ -50,6 +51,25 @@ export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [encounterDone, setEncounterDone] = useState(false);
   const [soundOn, setSoundOn] = useState(isSoundEnabled());
+  const [dmUnread, setDmUnread] = useState(0);
+
+  // DM unread badge
+  useEffect(() => {
+    if (!user) return;
+    const countUnread = async () => {
+      const { count } = await supabase
+        .from("dm_messages")
+        .select("*", { count: "exact", head: true })
+        .eq("receiver_id", user.id)
+        .eq("read", false);
+      setDmUnread(count || 0);
+    };
+    countUnread();
+    const ch = supabase.channel("dm_unread_badge")
+      .on("postgres_changes", { event: "*", schema: "public", table: "dm_messages" }, countUnread)
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [user]);
 
   const handleToggleSound = () => {
     setSoundOn(toggleSound());
@@ -203,6 +223,11 @@ export default function DashboardLayout() {
                   <span className="font-heading text-sm">{item.label}</span>
                   {item.label === "Guia do Maroto" && (
                     <span className="ml-auto w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                  )}
+                  {item.label === "Mensagens" && dmUnread > 0 && (
+                    <span className="ml-auto min-w-[18px] h-[18px] px-1 bg-primary text-primary-foreground rounded-full text-[10px] flex items-center justify-center font-bold">
+                      {dmUnread > 9 ? "9+" : dmUnread}
+                    </span>
                   )}
                 </Link>
               );

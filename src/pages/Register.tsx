@@ -83,7 +83,8 @@ export default function Register() {
           const { error: upErr } = await supabase.storage.from("avatars").upload(path, avatarFile, { upsert: true });
           if (!upErr) {
             const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
-            await supabase.from("profiles").update({ avatar_url: publicUrl } as never).eq("user_id", signInData.user.id);
+            const bustedUrl = `${publicUrl}?t=${Date.now()}`;
+            await supabase.from("profiles").update({ avatar_url: bustedUrl } as never).eq("user_id", signInData.user.id);
           }
           await supabase.auth.signOut();
         }

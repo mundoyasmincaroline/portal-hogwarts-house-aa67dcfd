@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useParams, useNavigate } from "react-router-dom";
 import ProfileAlbum from "@/components/ProfileAlbum";
+import CharacterSheetView from "@/components/CharacterSheetView";
 
 export default function Profile() {
   const { userId } = useParams<{ userId: string }>();
@@ -20,7 +21,7 @@ export default function Profile() {
   const [friendship, setFriendship] = useState<any>(null);
   const [friends, setFriends] = useState<any[]>([]);
   const [loadingTarget, setLoadingTarget] = useState(false);
-  const [activeTab, setActiveTab] = useState<"about" | "friends" | "security" | "album" | "referral">("about");
+  const [activeTab, setActiveTab] = useState<"about" | "fichas" | "friends" | "security" | "album" | "referral">("about");
   const [referrals, setReferrals] = useState<any[]>([]);
   const [userBadges, setUserBadges] = useState<any[]>([]);
 
@@ -203,7 +204,8 @@ export default function Profile() {
     const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
     if (upErr) { toast.error(upErr.message); setUploading(false); return; }
     const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
-    await updateProfile({ avatar_url: publicUrl });
+    const bustedUrl = `${publicUrl}?t=${Date.now()}`;
+    await updateProfile({ avatar_url: bustedUrl });
     setUploading(false);
     toast.success("Foto atualizada!");
   };
@@ -223,6 +225,12 @@ export default function Profile() {
           className={`pb-2 font-heading text-sm transition-colors ${activeTab === "friends" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
         >
           Amigos ({friends.length})
+        </button>
+        <button 
+          onClick={() => { setActiveTab("fichas"); setEditing(false); }} 
+          className={`pb-2 font-heading text-sm transition-colors ${activeTab === "fichas" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          Fichas 📜
         </button>
         <button 
           onClick={() => { setActiveTab("album"); setEditing(false); }} 
@@ -251,7 +259,7 @@ export default function Profile() {
       <div className="glass rounded-2xl p-8 text-center">
         <div className="relative inline-block mb-4">
           {profile.avatar_url ? (
-            <img src={profile.avatar_url} alt={profile.full_name} className="w-24 h-24 rounded-full object-cover animate-pulse-glow" />
+          <img src={profile.avatar_url} alt={profile.full_name} className="w-24 h-24 rounded-full object-cover animate-pulse-glow" onError={(e) => { e.currentTarget.style.display='none'; }} />
           ) : (
             <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary/30 to-secondary flex items-center justify-center text-4xl font-heading text-primary animate-pulse-glow">
               {profile.full_name[0]}
@@ -294,7 +302,13 @@ export default function Profile() {
                     <Button variant="outline" size="sm" disabled>Pedido Enviado ⏳</Button>
                   )}
                   {friendship?.status === "accepted" && (
-                    <Button variant="outline" size="sm" className="text-destructive" onClick={handleRemoveFriend}>Desfazer Amizade ❌</Button>
+                    <>
+                      <Button variant="outline" size="sm" className="text-destructive" onClick={handleRemoveFriend}>Desfazer Amizade ❌</Button>
+                      <Button variant="magical" size="sm" onClick={() => navigate(`/dashboard/dm/${profile.user_id}`)}>💬 Mensagem</Button>
+                    </>
+                  )}
+                  {!friendship && (
+                    <Button variant="outline" size="sm" onClick={() => navigate(`/dashboard/dm/${profile.user_id}`)}>💬 Mensagem</Button>
                   )}
                 </>
               )}
@@ -451,6 +465,8 @@ export default function Profile() {
             </div>
           )}
         </div>
+      ) : activeTab === "fichas" ? (
+        <CharacterSheetView userId={profile.user_id} isOwner={isMe} />
       ) : activeTab === "album" ? (
         <ProfileAlbum userId={profile.user_id} />
       ) : activeTab === "referral" && isMe ? (

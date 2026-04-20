@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -26,33 +26,28 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
   const [gender, setGender] = useState<"female" | "male">("female");
   const [house, setHouse] = useState<string>("");
   
-  const [formData, setFormData] = useState({
-    full_name: "",
-    avatar_url: "",
-    age: "",
-    blood_status: "",
-    wand: "",
-    patronus: "",
-    pet: "",
-    pet_name: "",
-    pet_avatar: "",
-    favorite_class: "",
-    favorite_spell: "",
-    personality: "",
-    weakness: "",
-    strength: "",
-    secrets: "",
-    fears: "",
-    dreams: "",
-    quotes: "",
-    instagram: "",
-    actor_faceclaim: "",
-    family_mother: "",
-    family_father: "",
-    family_siblings: "",
-    family_relatives: "",
-    adult_job: ""
+  const DRAFT_KEY = `char_draft_${user?.id}`;
+
+  const [formData, setFormData] = useState(() => {
+    try {
+      const saved = localStorage.getItem(`char_draft_${user?.id}`);
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return {
+      full_name: "", avatar_url: "", age: "", blood_status: "",
+      wand: "", patronus: "", pet: "", pet_name: "", pet_avatar: "",
+      favorite_class: "", favorite_spell: "", personality: "",
+      weakness: "", strength: "", secrets: "", fears: "", dreams: "",
+      quotes: "", instagram: "", actor_faceclaim: "",
+      family_mother: "", family_father: "", family_siblings: "",
+      family_relatives: "", adult_job: ""
+    };
   });
+
+  // Auto-save draft on every formData change
+  useEffect(() => {
+    try { localStorage.setItem(DRAFT_KEY, JSON.stringify(formData)); } catch {}
+  }, [formData, DRAFT_KEY]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -93,7 +88,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
         const { error: upErr } = await supabase.storage.from("avatars").upload(path, avatarFile, { upsert: true });
         if (!upErr) {
           const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
-          finalAvatarUrl = publicUrl;
+          finalAvatarUrl = `${publicUrl}?t=${Date.now()}`;
         }
       }
       // 1. Check if Canon is already claimed
@@ -138,6 +133,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
       }
 
       toast.success("Personagem criado com sucesso!");
+      try { localStorage.removeItem(DRAFT_KEY); } catch {}
       onComplete();
     } catch (err: any) {
       console.error(err);
