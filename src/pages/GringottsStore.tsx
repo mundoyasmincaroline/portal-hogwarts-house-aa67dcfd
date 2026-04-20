@@ -5,11 +5,16 @@ import { toast } from "sonner";
 import { ShoppingBag, Coins, Crown, Wand2, Shirt, Gem, Sparkles, Star, ExternalLink, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-// ─── InfinitePay (API pública — CORS liberado) ───────────────────
+// ─── Config ────────────────────────────────────────────────────────────
 const INFINITEPAY_HANDLE = "portal-matrix";
+const SUPABASE_URL = "https://gubokmpoihpoiecvngnm.supabase.co";
+// Edge Functions (server-side — sem CORS)
+const EF_CREATE_LINK = `${SUPABASE_URL}/functions/v1/create-payment-link`;
+const EF_WEBHOOK     = `${SUPABASE_URL}/functions/v1/infinitepay-webhook`;
+// Fallback direto (apenas se Edge Function não estiver deployada)
 const IP_LINKS_API = "https://api.infinitepay.io/invoices/public/checkout/links";
 const IP_CHECK_API = "https://api.infinitepay.io/invoices/public/checkout/payment_check";
-// ─────────────────────────────────────────────────────────────────
+// ────────────────────────────────────────────────────────────
 
 
 // ─── Tipos ────────────────────────────────────────────────
@@ -172,14 +177,50 @@ export default function GringottsStore() {
     }
   };
 
-  // ── Criar Link de Pagamento (API pública InfinitePay) ────────
+  // ── Criar Link via Edge Function (com fallback direto) ──────────
   const createInfinitePayLink = async (
     orderId: string,
     amountBrl: number,
     description: string,
     userEmail: string,
     userName: string,
+    galeonsQty?: number,
+    vipPlan?: string,
   ): Promise<string | null> => {
+    const { data: { session } } = await supabase.auth.getSession();
+
+    // ─ Tentativa 1: Edge Function (sem CORS) ────────────────────
+    try {
+      const res = await fetch(EF_CREATE_LINK, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session?.access_token ?? ""}`,
+        },
+        body: JSON.stringify({
+          order_id: orderId,
+          amount_brl: amountBrl,
+          galeons: galeonsQty ?? 0,
+          package_name: description,
+          user_id: user?.id,
+          user_email: userEmail,
+          user_name: userName,
+          vip_plan: vipPlan,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.payment_url) return data.payment_url;
+        console.warn("Edge Function retornou sem URL:", data);
+      } else {
+        const err = await res.json().catch(() => ({}));
+        console.warn("Edge Function erro:", res.status, err);
+      }
+    } catch (e) {
+      console.warn("Edge Function indisponível (não deployada):", e);
+    }
+
+    // ─ Tentativa 2: Direto InfinitePay (pode ter CORS) ──────────
     try {
       const res = await fetch(IP_LINKS_API, {
         method: "POST",
@@ -193,9 +234,10 @@ export default function GringottsStore() {
         }),
       });
       const data = await res.json();
+      console.log("Resposta InfinitePay direta:", data);
       return data.url ?? null;
-    } catch (e) {
-      console.error("Erro ao criar link InfinitePay:", e);
+    } catch (e: any) {
+      console.error("Erro CORS ao chamar InfinitePay diretamente:", e.message);
       return null;
     }
   };
@@ -215,9 +257,11 @@ export default function GringottsStore() {
       } as never).select("id").single();
       if (error) throw error;
 
-      // 2. Gerar link InfinitePay
       const description = `${pkg.name} — ${pkg.galeons}🪙 Galeões — Portal Hogwarts`;
-      const payUrl = await createInfinitePayLink(order.id, pkg.price_brl, description, user.email ?? "", profile.full_name);
+      const payUrl = await createInfinitePayLink(
+        order.id, pkg.price_brl, description, user.email ?? "", profile.full_name,
+        pkg.galeons
+      );
 
       if (!payUrl) throw new Error("Não foi possível gerar o link de pagamento.");
 
@@ -275,7 +319,10 @@ export default function GringottsStore() {
       if (error) throw error;
 
       const description = `VIP ${plan.name} — Portal Hogwarts (1 mês)`;
-      const payUrl = await createInfinitePayLink(order.id, plan.price_brl, description, user.email ?? "", profile.full_name);
+      const payUrl = await createInfinitePayLink(
+        order.id, plan.price_brl, description, user.email ?? "", profile.full_name,
+        plan.galeons_monthly, plan.id
+      );
 
       if (!payUrl) throw new Error("Não foi possível gerar o link de pagamento VIP.");
 

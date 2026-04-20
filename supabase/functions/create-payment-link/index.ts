@@ -54,7 +54,7 @@ serve(async (req) => {
     // Montar payload InfinitePay
     const payload: Record<string, unknown> = {
       handle: INFINITEPAY_HANDLE,
-      redirect_url: `${supabaseUrl.replace(".supabase.co", "")}.lovable.app/dashboard/store`,
+      redirect_url: "https://portal-hogwarts-house.lovable.app/dashboard/store",
       webhook_url: webhookUrl,
       order_nsu: order_id,           // ID do pedido no nosso banco
       customer: {
