@@ -6,7 +6,11 @@ import MagicalParticles from "@/components/MagicalParticles";
 import { toast } from "sonner";
 import CharacterCreation from "./CharacterCreation";
 
-export default function CharacterSelection() {
+interface Props {
+  adminMode?: boolean;
+}
+
+export default function CharacterSelection({ adminMode }: Props) {
   const { user, profile } = useAuth();
   const [characters, setCharacters] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -26,7 +30,7 @@ export default function CharacterSelection() {
     if (data) setCharacters(data);
     setLoading(false);
 
-    // Se não tiver nenhum personagem, força a criação
+    // Se não tiver nenhum personagem, força a criação (mas admin pode cancelar)
     if (data && data.length === 0) {
       setShowCreation(true);
     }
@@ -50,8 +54,21 @@ export default function CharacterSelection() {
 
   if (loading) return <div className="h-screen flex items-center justify-center">Lendo registros mágicos...</div>;
 
+  // Admin can skip character creation entirely via a bypass flag
+  const handleAdminSkip = async () => {
+    // Pick first character if exists, otherwise set a sentinel in localStorage
+    if (characters.length > 0) {
+      await selectCharacter(characters[0].id);
+    } else {
+      // Mark that admin deliberately chose to skip for now
+      localStorage.setItem(`admin_skip_character_${user?.id}`, "true");
+      // Force reload to bypass the CharacterSelection gate
+      window.location.reload();
+    }
+  };
+
   if (showCreation) {
-    return <CharacterCreation onComplete={fetchCharacters} onCancel={() => characters.length > 0 ? setShowCreation(false) : null} canCancel={characters.length > 0} />;
+    return <CharacterCreation onComplete={fetchCharacters} onCancel={() => adminMode ? setShowCreation(false) : characters.length > 0 ? setShowCreation(false) : null} canCancel={adminMode || characters.length > 0} />;
   }
 
   return (
@@ -105,6 +122,18 @@ export default function CharacterSelection() {
             </div>
           )}
         </div>
+
+        {/* Admin skip button */}
+        {adminMode && (
+          <div className="text-center mt-4">
+            <button
+              onClick={handleAdminSkip}
+              className="text-xs text-muted-foreground hover:text-primary underline underline-offset-2 transition-colors"
+            >
+              ⚙️ Admin: pular seleção de personagem por agora
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

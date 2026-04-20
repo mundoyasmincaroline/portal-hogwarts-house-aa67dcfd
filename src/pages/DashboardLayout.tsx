@@ -142,8 +142,11 @@ export default function DashboardLayout() {
   
   if (!isAdmin) {
     if (!profile.has_accepted_rules) return <RulesAgreement />;
-    if (!profile.active_character_id) return <CharacterSelection />;
   }
+
+  // Admin also goes through character selection, but can skip (canCancel)
+  const adminSkipped = isAdmin && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
+  if (!profile.active_character_id && !adminSkipped) return <CharacterSelection adminMode={isAdmin} />;
   const today = new Date().toISOString().split('T')[0];
   const lastSeenIntro = localStorage.getItem(`intro_last_seen_${user.id}`);
   const shouldShowIntro = lastSeenIntro !== today;
