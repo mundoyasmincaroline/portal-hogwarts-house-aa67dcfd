@@ -345,14 +345,14 @@ export default function Admin() {
     const newConfig = { ...interstitialConfig, ...updates };
     setInterstitialConfig(newConfig);
     await supabase.from("site_settings").upsert({ setting_key: "interstitial_config", setting_value: newConfig } as never);
-    toast.success("ConfiguraÃ§Ãµes atualizadas!");
+    toast.success("Configurações atualizadas!");
   };
 
   const createAd = async () => {
     if (!adForm.title || !adForm.link) return;
     const { error } = await supabase.from("ads").insert([adForm]);
     if (!error) {
-      toast.success("AnÃºncio criado com sucesso!");
+      toast.success("Anúncio criado com sucesso!");
       setAdForm({ title: "", link: "", image_url: "" });
     setAdFormType("feed");
       fetchAll();
@@ -376,7 +376,7 @@ export default function Admin() {
       <div className="text-center py-20">
         <div className="text-4xl mb-4">🔒</div>
         <h2 className="font-heading text-xl text-foreground">Acesso Restrito</h2>
-        <p className="text-muted-foreground text-sm">Apenas administradores podem acessar esta Ã¡rea.</p>
+        <p className="text-muted-foreground text-sm">Apenas administradores podem acessar esta área.</p>
       </div>
     );
   }
@@ -563,7 +563,7 @@ export default function Admin() {
                 <div className="flex gap-2">
                   <Input type="number" placeholder="XP" value={newCh.xp_reward} onChange={(e) => setNewCh({ ...newCh, xp_reward: parseInt(e.target.value) || 0 })} />
                   <select value={newCh.type} onChange={(e) => setNewCh({ ...newCh, type: e.target.value })} className="bg-secondary/50 rounded-md px-3 text-sm text-foreground border border-border">
-                    <option value="daily">DiÃ¡rio</option>
+                    <option value="daily">Diário</option>
                     <option value="weekly">Semanal</option>
                     <option value="special">Especial</option>
                   </select>
@@ -606,13 +606,13 @@ export default function Admin() {
           {tab === "filch" && (
             <div className="space-y-3">
               <div className="glass rounded-xl p-4">
-                <h3 className="font-heading text-sm text-primary mb-1">ðŸ§¹ Filch, o Zelador</h3>
-                <p className="text-xs text-muted-foreground">Bot de moderaÃ§Ã£o que bloqueia automaticamente palavras imprÃ³prias em posts e comentÃ¡rios.</p>
+                <h3 className="font-heading text-sm text-primary mb-1">🧹 Filch, o Zelador</h3>
+                <p className="text-xs text-muted-foreground">Bot de moderação que bloqueia automaticamente palavras impróprias em posts e comentários.</p>
               </div>
               {logs.length === 0 ? (
                 <div className="glass rounded-xl p-6 text-center">
-                  <div className="text-3xl mb-3">âœ¨</div>
-                  <p className="text-muted-foreground text-sm">Nenhum bloqueio registrado. O castelo estÃ¡ em paz!</p>
+                  <div className="text-3xl mb-3">✨</div>
+                  <p className="text-muted-foreground text-sm">Nenhum bloqueio registrado. O castelo está em paz!</p>
                 </div>
               ) : (
                 logs.map((l) => (
@@ -633,13 +633,13 @@ export default function Admin() {
           {tab === "fichas" && (
             <div className="space-y-4">
               <div className="glass rounded-xl p-4">
-                <h3 className="font-heading text-sm text-primary mb-1">ðŸ“œ Fichas Pendentes</h3>
+                <h3 className="font-heading text-sm text-primary mb-1">📜 Fichas Pendentes</h3>
                 <p className="text-xs text-muted-foreground">Analise as fichas de RPG submetidas pelos membros.</p>
               </div>
               {fichas.length === 0 ? (
                 <div className="glass rounded-xl p-6 text-center">
                   <div className="text-3xl mb-3">âœ¨</div>
-                  <p className="text-muted-foreground text-sm">Nenhuma ficha pendente de aprovaÃ§Ã£o.</p>
+                  <p className="text-muted-foreground text-sm">Nenhuma ficha pendente de aprovação.</p>
                 </div>
               ) : (
                 fichas.map((f) => (

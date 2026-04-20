@@ -24,6 +24,10 @@ export interface Profile {
   last_seen: string | null;
   created_at: string;
   updated_at: string;
+  // Monetização (sprint_migration_3.sql)
+  galeons: number;
+  vip_plan: "premium" | "vip" | "founder" | null;
+  vip_expires_at: string | null;
 }
 
 export function isUserOnline(profile: Partial<Profile> | null): boolean {
