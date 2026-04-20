@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import { Timer, Sparkles, Trophy, X, ChevronRight, Coins, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { motion, AnimatePresence } from "framer-motion";
 
 // ─── Configurações dos Eventos ───────────────────────────────────────────
 const EVENT_SCHEDULE = [
@@ -189,14 +188,8 @@ export default function MagicalEventSystem() {
       )}
 
       {/* ── Convite do Evento ── */}
-      <AnimatePresence>
-        {showInvite && activeEvent && (
-          <motion.div 
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className="fixed bottom-20 left-4 right-4 md:left-auto md:right-8 md:w-96 z-[100] glass p-6 border-2 border-primary/40 shadow-[0_0_50px_rgba(var(--primary-rgb),0.3)] rounded-[2rem] overflow-hidden"
-          >
+      {showInvite && activeEvent && (
+        <div className="fixed bottom-20 left-4 right-4 md:left-auto md:right-8 md:w-96 z-[100] glass p-6 border-2 border-primary/40 shadow-[0_0_50px_rgba(var(--primary-rgb),0.3)] rounded-[2rem] overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-500">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
             <div className="relative z-10">
               <div className="flex justify-between items-start mb-4">
@@ -232,23 +225,13 @@ export default function MagicalEventSystem() {
                 </p>
               )}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        </div>
+      )}
 
       {/* ── Modal do Desafio ── */}
-      <AnimatePresence>
-        {participating && activeEvent && !hasCompleted && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-          >
-            <motion.div 
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              className="glass w-full max-w-lg rounded-[2.5rem] p-8 border border-primary/30 relative"
-            >
+      {participating && activeEvent && !hasCompleted && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="glass w-full max-w-lg rounded-[2.5rem] p-8 border border-primary/30 relative animate-in zoom-in-95 duration-300">
               <div className="text-center mb-8">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-heading text-primary uppercase tracking-widest mb-4">
                   <Zap size={10} /> Desafio Global Ativo
@@ -287,24 +270,14 @@ export default function MagicalEventSystem() {
               >
                 Desistir do desafio (você poderá tentar novamente depois)
               </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </div>
+        </div>
+      )}
 
       {/* ── Sucesso ── */}
-      <AnimatePresence>
-        {hasCompleted && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md"
-          >
-            <motion.div 
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              className="text-center space-y-6"
-            >
+      {hasCompleted && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-500">
+          <div className="text-center space-y-6 animate-in zoom-in-90 duration-500">
               <div className="w-32 h-32 mx-auto bg-primary/20 rounded-full flex items-center justify-center text-primary border-2 border-primary/30 shadow-[0_0_50px_rgba(var(--primary-rgb),0.5)]">
                 <Trophy size={64} className="animate-bounce" />
               </div>
@@ -325,10 +298,9 @@ export default function MagicalEventSystem() {
               <Button variant="magical" size="lg" className="px-12 py-8 rounded-2xl" onClick={() => { setHasCompleted(false); setParticipating(false); setActiveEvent(null); }}>
                 Continuar Jornada
               </Button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </div>
+        </div>
+      )}
     </>
   );
 }

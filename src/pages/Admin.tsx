@@ -151,31 +151,103 @@ function MonetizationTab({ members, fetchAll, adForm, setAdForm, ads, createAd, 
 
   return (
     <div className="space-y-6">
-      {/* ─── 1. Crédito Manual de Galeões ─── */}
-      <div className="glass rounded-2xl p-6 border border-yellow-500/30">
-        <h2 className="font-heading text-xl text-yellow-400 mb-1">🪙 Creditar Galeões Manualmente</h2>
-        <p className="text-xs text-muted-foreground mb-4">Use para premiar membros, corrigir erros ou conceder bônus especiais.</p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <select
-            value={galeonTarget}
-            onChange={e => setGaleonTarget(e.target.value)}
-            className="bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground border border-border col-span-1 md:col-span-1"
+      {/* ─── 1. Gerenciar Créditos ─── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="glass rounded-2xl p-6">
+          <h2 className="font-heading text-xl text-primary mb-4">💰 Gerenciar Créditos</h2>
+          <div className="space-y-4">
+            <select
+              value={galeonTarget}
+              onChange={e => setGaleonTarget(e.target.value)}
+              className="w-full bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground border border-border"
+            >
+              <option value="">Selecione o Bruxo...</option>
+              {members.map(m => (
+                <option key={m.user_id} value={m.user_id}>
+                  {m.full_name} ({m.username}) — 🪙 {m.galeons || 0}
+                </option>
+              ))}
+            </select>
+            <Input
+              type="number"
+              placeholder="Quantidade de Galeões"
+              value={galeonAmount}
+              onChange={e => setGaleonAmount(parseInt(e.target.value) || 0)}
+            />
+            <Button onClick={creditGaleons} variant="magical" className="w-full" disabled={crediting}>
+              {crediting ? "Creditando..." : "Creditário Manual ✨"}
+            </Button>
+          </div>
+        </div>
+
+        <div className="glass rounded-2xl p-6 border-yellow-500/30 bg-yellow-500/5">
+          <h2 className="font-heading text-xl text-yellow-500 mb-4">💳 Teste InfinitePay</h2>
+          <p className="text-xs text-muted-foreground mb-4">
+            Gere um pedido real para aparecer no seu Dashboard da InfinitePay. 
+            Isso criará um link de checkout válido.
+          </p>
+          <Button 
+            variant="outline" 
+            className="w-full border-yellow-500/50 text-yellow-500 hover:bg-yellow-500/10"
+            onClick={async () => {
+              try {
+                const user = (await supabase.auth.getUser()).data.user;
+                if (!user) return toast.error("Não autenticado");
+                
+                toast.info("⏳ Gerando pedido de teste...");
+                
+                // 1. Criar pedido na tabela
+                const { data: order, error: orderErr } = await supabase.from("galeon_orders").insert({
+                  user_id: user.id,
+                  package_id: "test_admin_order",
+                  amount_brl: 1.00, // 1 real para teste
+                  galeons: 10,
+                  status: "pending",
+                } as never).select("id").single();
+                
+                if (orderErr) throw orderErr;
+
+                // 2. Solicitar link (etapa 1 RPC)
+                const { data: started, error: startErr } = await supabase.rpc("start_payment_request", {
+                  p_order_id: order.id,
+                  p_amount_brl: 1.00,
+                  p_description: "PEDIDO TESTE - Portal Hogwarts",
+                  p_user_id: user.id,
+                  p_user_email: user.email || "admin@teste.com",
+                  p_user_name: "Admin Tester",
+                });
+
+                if (startErr || !started?.success) throw new Error("Erro ao iniciar request");
+                const requestId = started.request_id;
+
+                // 3. Polling para o link
+                toast.info("✨ Consultando InfinitePay...");
+                let paymentUrl = null;
+                for (let i = 0; i < 5; i++) {
+                  await new Promise(r => setTimeout(r, 2000));
+                  const { data: result } = await supabase.rpc("get_payment_link", { p_request_id: requestId, p_order_id: order.id });
+                  if (result?.ready && result?.payment_url) {
+                    paymentUrl = result.payment_url;
+                    break;
+                  }
+                }
+
+                if (paymentUrl) {
+                  toast.success("✅ Pedido criado no InfinitePay!");
+                  window.open(paymentUrl, "_blank");
+                } else {
+                  toast.error("Tempo esgotado ao gerar link. Verifique os logs do Supabase.");
+                }
+              } catch (err: any) {
+                toast.error("Erro no teste: " + err.message);
+              }
+            }}
           >
-            <option value="">— Selecionar membro —</option>
-            {members.map(m => (
-              <option key={m.user_id} value={m.user_id}>
-                {m.full_name} (@{m.username}) — 🪙 {(m as any).galeons || 0}
-              </option>
-            ))}
-          </select>
-          <Input
-            type="number" min={1} placeholder="Quantidade de Galeões"
-            value={galeonAmount || ""}
-            onChange={e => setGaleonAmount(parseInt(e.target.value) || 0)}
-          />
-          <Button variant="magical" onClick={creditGaleons} disabled={crediting}>
-            {crediting ? "Creditando..." : "🪙 Creditar"}
+            Gerar Pedido Mínimo (R$ 1,00)
           </Button>
+          <p className="text-[10px] text-center mt-4 text-muted-foreground">
+            Nota: O pedido aparecerá como "Pendente" no seu InfinitePay.
+          </p>
         </div>
       </div>
 
