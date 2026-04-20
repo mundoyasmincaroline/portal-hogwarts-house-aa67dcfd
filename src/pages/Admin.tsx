@@ -7,8 +7,9 @@ import { Input } from "@/components/ui/input";
 import HouseCrest from "@/components/HouseCrest";
 import { toast } from "sonner";
 import AdminMemberModal from "@/components/AdminMemberModal";
+import PedidosTab from "@/components/PedidosTab";
 
-type Tab = "members" | "pending_members" | "challenges" | "houses" | "fichas" | "tasks" | "banned" | "channels" | "monetization" | "moderation" | "filch";
+type Tab = "members" | "pending_members" | "challenges" | "houses" | "fichas" | "tasks" | "banned" | "channels" | "monetization" | "moderation" | "filch" | "pedidos";
 
 interface MemberProfile {
   id: string;
@@ -390,6 +391,7 @@ export default function Admin() {
     { id: "banned", label: "Filtro Chat", icon: "🚫" },
     { id: "channels", label: "Salas/Meet", icon: "📹" },
     { id: "monetization", label: "Monetização", icon: "💰" },
+    { id: "pedidos", label: "Pedidos 🪙", icon: "🧾" },
     { id: "moderation", label: "Moderação", icon: "👁️" },
   ];
 
@@ -846,6 +848,12 @@ export default function Admin() {
               </div>
             </div>
           )}
+
+          {/* ─── ABA: PEDIDOS DE GALEÕES ─── */}
+          {tab === "pedidos" && (
+            <PedidosTab />
+          )}
+
         </>
       )}
 
