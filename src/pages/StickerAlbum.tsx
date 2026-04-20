@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Trophy } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface Sticker {
   id: string;
@@ -25,6 +26,10 @@ export default function StickerAlbum() {
   const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
   const [activeRarity, setActiveRarity] = useState<"all" | "bronze" | "silver" | "gold">("all");
   const [completedBanner, setCompletedBanner] = useState(false);
+  const [openingPack, setOpeningPack] = useState(false);
+  const [packReveal, setPackReveal] = useState<Sticker | null>(null);
+  const [packPhase, setPackPhase] = useState<"idle" | "shaking" | "reveal">("idle");
+  const navigate = useNavigate();
 
   useEffect(() => { loadAlbum(); }, [user]);
 
@@ -85,6 +90,31 @@ export default function StickerAlbum() {
     }
   };
 
+  const openSurprisePack = async () => {
+    if (!user || !profile) return;
+    const PACK_COST = 80;
+    if (profile.xp < PACK_COST) { toast.error(`Você precisa de ${PACK_COST} XP para abrir um pacote!`); return; }
+    const locked = stickers.filter(s => !userStickers[s.id]);
+    if (locked.length === 0) { toast.info("🏆 Você já tem todas as figurinhas!"); return; }
+    // Peso por raridade: ouro 10%, prata 30%, bronze 60%
+    const pool: Sticker[] = [];
+    locked.forEach(s => {
+      const weight = s.rarity === "gold" ? 1 : s.rarity === "silver" ? 3 : 6;
+      for (let i = 0; i < weight; i++) pool.push(s);
+    });
+    const picked = pool[Math.floor(Math.random() * pool.length)];
+    setOpeningPack(true);
+    setPackPhase("shaking");
+    setPackReveal(null);
+    const { error: xpErr } = await supabase.rpc("award_xp_action", { _action: "buy_sticker", _user_id: user.id, _xp: -PACK_COST });
+    if (xpErr) { toast.error("Erro ao abrir o pacote."); setOpeningPack(false); return; }
+    await supabase.from("user_stickers").upsert({ user_id: user.id, sticker_id: picked.id } as never);
+    await fetchProfile(user.id);
+    setUserStickers(prev => ({ ...prev, [picked.id]: true }));
+    setTimeout(() => { setPackPhase("reveal"); setPackReveal(picked); }, 1500);
+  };
+
+  const closePack = () => { setOpeningPack(false); setPackPhase("idle"); setPackReveal(null); };
   const owned = Object.keys(userStickers).length;
   const total = stickers.length;
   const pct = total > 0 ? Math.round((owned / total) * 100) : 0;
@@ -123,6 +153,73 @@ export default function StickerAlbum() {
         </div>
       </div>
 
+      {/* Animação de abertura de pack */}
+      {openingPack && (
+        <div className="fixed inset-0 z-50 bg-background/90 backdrop-blur-md flex flex-col items-center justify-center gap-6" onClick={packPhase === "reveal" ? closePack : undefined}>
+          {packPhase === "shaking" && (
+            <>
+              <div className="text-8xl animate-bounce">🎁</div>
+              <p className="font-heading text-2xl text-primary animate-pulse">Abrindo o pacote...</p>
+              <p className="text-xs text-muted-foreground">A magia está agindo!</p>
+            </>
+          )}
+          {packPhase === "reveal" && packReveal && (
+            <>
+              <div className="text-6xl mb-2 animate-bounce">
+                {packReveal.rarity === "gold" ? "🥇" : packReveal.rarity === "silver" ? "🥈" : "🥉"}
+              </div>
+              <div className={`relative w-48 h-64 rounded-2xl overflow-hidden border-4 shadow-2xl animate-fade-in-up ${
+                packReveal.rarity === "gold" ? "border-yellow-400 shadow-yellow-400/50"
+                : packReveal.rarity === "silver" ? "border-slate-300 shadow-white/20"
+                : "border-amber-600 shadow-amber-900/50"
+              }`}>
+                {packReveal.image_url ? (
+                  <img src={packReveal.image_url} alt={packReveal.character_name} className="w-full h-full object-cover object-top" referrerPolicy="no-referrer" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-secondary text-6xl">{packReveal.character_name.charAt(0)}</div>
+                )}
+                {packReveal.rarity === "gold" && <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,215,0,0.3),transparent_60%)] animate-pulse" />}
+              </div>
+              <p className="font-heading text-2xl text-foreground">{packReveal.character_name}</p>
+              <p className={`text-sm font-bold uppercase tracking-widest ${
+                packReveal.rarity === "gold" ? "text-yellow-400" : packReveal.rarity === "silver" ? "text-slate-300" : "text-amber-600"
+              }`}>
+                {packReveal.rarity === "gold" ? "🌟 FIGURINHA RARA!" : packReveal.rarity === "silver" ? "⭐ Figurinha Incomum" : "✨ Figurinha Obtida"}
+              </p>
+              <button onClick={closePack} className="mt-2 text-sm text-muted-foreground hover:text-foreground underline">Fechar</button>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Pacote Surpresa + Mercado de Trocas */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="glass rounded-2xl p-6 flex flex-col items-center gap-4 text-center border border-primary/20 hover:border-primary/50 transition-all">
+          <div className="text-4xl">🎁</div>
+          <div>
+            <h3 className="font-heading text-lg text-foreground">Pacote Surpresa</h3>
+            <p className="text-xs text-muted-foreground mt-1">Uma figurinha aleatória! Chances: 10% Ouro · 30% Prata · 60% Bronze</p>
+          </div>
+          <Button
+            variant="magical"
+            className="w-full font-heading"
+            onClick={openSurprisePack}
+            disabled={openingPack || (profile?.xp ?? 0) < 80}
+          >
+            {openingPack ? "Abrindo..." : "Abrir Pacote — 80 XP"}
+          </Button>
+        </div>
+        <div className="glass rounded-2xl p-6 flex flex-col items-center gap-4 text-center border border-border hover:border-primary/30 transition-all">
+          <div className="text-4xl">🔄</div>
+          <div>
+            <h3 className="font-heading text-lg text-foreground">Mercado de Trocas</h3>
+            <p className="text-xs text-muted-foreground mt-1">Troque figurinhas duplicadas com outros membros de Hogwarts</p>
+          </div>
+          <Button variant="outline" className="w-full font-heading" onClick={() => navigate("/dashboard/trades")}>
+            Acessar Mercado 🏪
+          </Button>
+        </div>
+      </div>
       {/* Barra de progresso geral */}
       <div className="glass rounded-2xl p-6 space-y-4">
         <div className="flex items-center justify-between mb-1">

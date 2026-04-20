@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,6 +9,13 @@ import HouseCrest from "@/components/HouseCrest";
 import { House } from "@/lib/store";
 import { addXP } from "@/lib/xpSystem";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+
+interface MemberSuggestion {
+  user_id: string;
+  username: string;
+  full_name: string;
+  avatar_url: string | null;
+}
 
 interface Message {
   id: string;
@@ -44,6 +51,13 @@ export default function ChatRoom() {
   const [bannedWords, setBannedWords] = useState<string[]>([]);
   const [cooldown, setCooldown] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // @mention state
+  const [mentionQuery, setMentionQuery] = useState("");
+  const [mentionSuggestions, setMentionSuggestions] = useState<MemberSuggestion[]>([]);
+  const [showMentionMenu, setShowMentionMenu] = useState(false);
+  const [mentionStart, setMentionStart] = useState(-1);
 
   useEffect(() => {
     if (cooldown > 0) {
@@ -60,8 +74,16 @@ export default function ChatRoom() {
       return <span className="italic text-primary/80">{processedText.replace('/acao ', '')}</span>;
     }
 
-    const parts = processedText.split(/(\*[^*]+\*|\([^)]+\)|"[^"]+")/g);
+    // Split por formatação RPG + @mentions
+    const parts = processedText.split(/(\*[^*]+\*|\([^)]+\)|"[^"]+"|@[\w.]+)/g);
     return parts.map((part, i) => {
+      if (part.startsWith('@') && part.length > 1) {
+        return (
+          <span key={i} className="font-bold text-yellow-400 bg-yellow-400/10 rounded px-0.5 cursor-pointer hover:underline">
+            {part}
+          </span>
+        );
+      }
       if (part.startsWith('*') && part.endsWith('*')) {
         return <span key={i} className="italic text-primary/80">{part.slice(1, -1)}</span>;
       }
@@ -74,6 +96,48 @@ export default function ChatRoom() {
       return <span key={i}>{part}</span>;
     });
   };
+
+  // Handler para mudanças no input — detecta @mention
+  const handleInputChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setInput(val);
+
+    const cursor = e.target.selectionStart ?? val.length;
+    // Encontra o @ mais próximo antes do cursor
+    const beforeCursor = val.slice(0, cursor);
+    const atIdx = beforeCursor.lastIndexOf('@');
+
+    if (atIdx !== -1) {
+      const afterAt = beforeCursor.slice(atIdx + 1);
+      // Só mostra se não tem espaço depois do @
+      if (!afterAt.includes(' ') && afterAt.length >= 0) {
+        setMentionStart(atIdx);
+        setMentionQuery(afterAt);
+        setShowMentionMenu(true);
+        // Busca membros
+        const { data } = await supabase
+          .from('profiles')
+          .select('user_id, username, full_name, avatar_url')
+          .ilike('username', `${afterAt}%`)
+          .limit(6);
+        setMentionSuggestions(data || []);
+        return;
+      }
+    }
+    setShowMentionMenu(false);
+    setMentionSuggestions([]);
+  }, []);
+
+  const selectMention = useCallback(async (member: MemberSuggestion) => {
+    // Substitui o @query pelo @username
+    const before = input.slice(0, mentionStart);
+    const after = input.slice(mentionStart + 1 + mentionQuery.length);
+    const newVal = `${before}@${member.username} ${after}`;
+    setInput(newVal);
+    setShowMentionMenu(false);
+    setMentionSuggestions([]);
+    inputRef.current?.focus();
+  }, [input, mentionStart, mentionQuery]);
 
   useEffect(() => {
     // Buscar palavras proibidas
@@ -214,6 +278,7 @@ export default function ChatRoom() {
     }
 
     setInput("");
+    setShowMentionMenu(false);
     setCooldown(30); // 30 segundos de Anti-Spam
 
     const { error } = await supabase.from("messages").insert({
@@ -232,6 +297,30 @@ export default function ChatRoom() {
         toast.success("+5 XP! ⚡");
       } else if (xpRes.message) {
         toast.info(xpRes.message);
+      }
+
+      // Notificar membros mencionados
+      const mentionMatches = content.match(/@([\w.]+)/g);
+      if (mentionMatches) {
+        const usernames = mentionMatches.map(m => m.slice(1));
+        const { data: mentionedProfiles } = await supabase
+          .from('profiles')
+          .select('user_id, username')
+          .in('username', usernames);
+        if (mentionedProfiles && mentionedProfiles.length > 0) {
+          const senderName = profile?.username || 'alguém';
+          const notifs = mentionedProfiles
+            .filter(p => p.user_id !== user.id)
+            .map(p => ({
+              user_id: p.user_id,
+              type: 'mention',
+              content: `@${senderName} mencionou você no chat "${channel.name}"`,
+              read: false
+            }));
+          if (notifs.length > 0) {
+            await supabase.from('notifications').insert(notifs);
+          }
+        }
       }
     }
   };
@@ -399,18 +488,51 @@ export default function ChatRoom() {
             </Button>
           </div>
         )}
-        <form onSubmit={sendMessage} className="flex gap-2">
-          <Input 
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder={cooldown > 0 ? `Aguarde ${cooldown}s para conjurar novamente...` : `Enviar mensagem em ${channel.name}...`}
-            className="flex-1 bg-secondary/50 border-border"
-            disabled={cooldown > 0}
-          />
-          <Button type="submit" variant="magical" size="icon" disabled={!input.trim() || cooldown > 0}>
-            {cooldown > 0 ? cooldown : '✨'}
-          </Button>
-        </form>
+        <div className="relative">
+          {/* Dropdown de @mention */}
+          {showMentionMenu && mentionSuggestions.length > 0 && (
+            <div className="absolute bottom-full left-0 right-0 mb-1 bg-card border border-border rounded-xl shadow-xl z-50 overflow-hidden">
+              <div className="p-1.5 text-[10px] text-muted-foreground font-semibold px-3 pt-2 pb-1">🔮 Mencionar membro</div>
+              {mentionSuggestions.map(member => (
+                <button
+                  key={member.user_id}
+                  type="button"
+                  onMouseDown={(e) => { e.preventDefault(); selectMention(member); }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 hover:bg-secondary/60 transition-colors text-left"
+                >
+                  {member.avatar_url ? (
+                    <img src={member.avatar_url} alt={member.full_name} className="w-7 h-7 rounded-full object-cover border border-border" />
+                  ) : (
+                    <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center text-xs font-heading text-primary">
+                      {member.full_name?.charAt(0) || '?'}
+                    </div>
+                  )}
+                  <div>
+                    <p className="text-sm font-medium text-foreground leading-none">{member.full_name}</p>
+                    <p className="text-[10px] text-muted-foreground">@{member.username}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+          <form onSubmit={sendMessage} className="flex gap-2">
+            <Input
+              ref={inputRef}
+              value={input}
+              onChange={handleInputChange}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') setShowMentionMenu(false);
+              }}
+              placeholder={cooldown > 0 ? `Aguarde ${cooldown}s para conjurar novamente...` : `Enviar mensagem em ${channel.name}... (use @ para mencionar)`}
+              className="flex-1 bg-secondary/50 border-border"
+              disabled={cooldown > 0}
+              autoComplete="off"
+            />
+            <Button type="submit" variant="magical" size="icon" disabled={!input.trim() || cooldown > 0}>
+              {cooldown > 0 ? cooldown : '✨'}
+            </Button>
+          </form>
+        </div>
       </div>
     </div>
   );

@@ -29,6 +29,8 @@ import MaraudersGuide from "./pages/MaraudersGuide";
 import DMInbox from "./pages/DMInbox";
 import DMChat from "./pages/DMChat";
 import Friends from "./pages/Friends";
+import StickerTrades from "./pages/StickerTrades";
+
 
 
 const queryClient = new QueryClient();
@@ -70,6 +72,8 @@ const App = () => (
               <Route path="dm" element={<DMInbox />} />
               <Route path="dm/:userId" element={<DMChat />} />
               <Route path="friends" element={<Friends />} />
+              <Route path="trades" element={<StickerTrades />} />
+
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
