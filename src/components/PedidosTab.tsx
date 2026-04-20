@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { TrendingUp, Crown, Coins, Clock } from "lucide-react";
 
 export default function PedidosTab() {
   const [orders, setOrders] = useState<any[]>([]);
+  const [allOrders, setAllOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"pending" | "paid" | "all">("pending");
   const [processing, setProcessing] = useState<string | null>(null);
@@ -13,14 +15,16 @@ export default function PedidosTab() {
 
   const loadOrders = async () => {
     setLoading(true);
-    let q = supabase
+    // Carrega todos para métricas
+    const { data: all } = await supabase
       .from("galeon_orders")
-      .select("*, profiles(full_name, username, galeons)")
+      .select("*, profiles(full_name, username, galeons, vip_plan)")
       .order("created_at", { ascending: false })
-      .limit(100);
-    if (filter !== "all") q = q.eq("status", filter);
-    const { data } = await q;
-    setOrders(data || []);
+      .limit(500);
+    setAllOrders(all || []);
+    // Filtra para exibição
+    const filtered = filter === "all" ? (all || []) : (all || []).filter(o => o.status === filter);
+    setOrders(filtered);
     setLoading(false);
   };
 
@@ -88,8 +92,31 @@ export default function PedidosTab() {
 
   const pendingCount = orders.filter(o => o.status === "pending").length;
 
+  // Métricas de receita
+  const paidAll = allOrders.filter(o => o.status === "paid");
+  const totalRevenue = paidAll.reduce((s, o) => s + parseFloat(o.amount_brl || 0), 0);
+  const thisMonth = new Date(); thisMonth.setDate(1); thisMonth.setHours(0,0,0,0);
+  const mrr = paidAll.filter(o => new Date(o.paid_at || o.created_at) >= thisMonth).reduce((s,o) => s + parseFloat(o.amount_brl||0), 0);
+  const vipActive = allOrders.filter(o => o.status === "paid" && o.package_id?.startsWith("vip_")).length;
+  const pendingRevenue = allOrders.filter(o => o.status === "pending").reduce((s,o) => s + parseFloat(o.amount_brl||0), 0);
+
   return (
     <div className="space-y-4">
+
+      {/* ── Revenue Dashboard ── */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {[
+          { icon: <TrendingUp size={16} className="text-green-400" />, label: "Receita Total",  value: `R$ ${totalRevenue.toFixed(2).replace(".",",")}`, color: "border-green-500/30 bg-green-900/10" },
+          { icon: <Coins size={16} className="text-yellow-400" />,    label: "Este Mês (MRR)", value: `R$ ${mrr.toFixed(2).replace(".",",")}`,          color: "border-yellow-500/30 bg-yellow-900/10" },
+          { icon: <Crown size={16} className="text-purple-400" />,    label: "VIPs Ativados",  value: `${vipActive} planos`,                            color: "border-purple-500/30 bg-purple-900/10" },
+          { icon: <Clock size={16} className="text-orange-400" />,    label: "Aguardando",    value: `R$ ${pendingRevenue.toFixed(2).replace(".",",")}`, color: "border-orange-500/30 bg-orange-900/10" },
+        ].map((m, i) => (
+          <div key={i} className={`glass rounded-xl p-4 border ${m.color}`}>
+            <div className="flex items-center gap-2 mb-1">{m.icon}<span className="text-[10px] text-muted-foreground font-heading uppercase tracking-wider">{m.label}</span></div>
+            <p className="font-heading text-lg text-foreground">{m.value}</p>
+          </div>
+        ))}
+      </div>
       {/* Header */}
       <div className="glass rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
