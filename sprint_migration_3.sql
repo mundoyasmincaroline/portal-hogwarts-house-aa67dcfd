@@ -24,10 +24,12 @@ CREATE TABLE IF NOT EXISTS galeon_orders (
 );
 
 ALTER TABLE galeon_orders ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "Users view own orders" ON galeon_orders;
+DROP POLICY IF EXISTS "Users view own orders"   ON galeon_orders;
 DROP POLICY IF EXISTS "Users insert own orders" ON galeon_orders;
-CREATE POLICY "Users view own orders" ON galeon_orders FOR SELECT USING (user_id = auth.uid());
+DROP POLICY IF EXISTS "Users update own orders" ON galeon_orders;
+CREATE POLICY "Users view own orders"   ON galeon_orders FOR SELECT USING (user_id = auth.uid());
 CREATE POLICY "Users insert own orders" ON galeon_orders FOR INSERT WITH CHECK (user_id = auth.uid());
+CREATE POLICY "Users update own orders" ON galeon_orders FOR UPDATE USING (user_id = auth.uid());
 
 -- 3. Catálogo de itens da loja
 CREATE TABLE IF NOT EXISTS store_items (

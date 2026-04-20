@@ -232,68 +232,6 @@ export default function GringottsStore() {
   };
 
 
-    try {
-      // Criar ordem pendente no banco
-      const { data: order, error } = await supabase.from("galeon_orders").insert({
-        user_id: user.id,
-        package_id: pkg.id,
-        amount_brl: pkg.price_brl,
-        galeons: pkg.galeons,
-        status: "pending",
-      } as never).select("id").single();
-
-      if (error) throw error;
-
-      // Chamar Edge Function para gerar link InfinitePay
-      const { data: linkData, error: linkErr } = await supabase.functions.invoke("create-payment-link", {
-        body: {
-          order_id: order.id,
-          amount_brl: pkg.price_brl,
-          galeons: pkg.galeons,
-          package_name: pkg.name,
-          user_id: user.id,
-          user_email: user.email,
-          user_name: profile.full_name,
-        },
-      });
-
-      if (linkErr || !linkData?.payment_url) {
-        // Fallback: modo desenvolvimento — credita direto (remover em produção)
-        if (import.meta.env.DEV) {
-          await supabase.from("profiles").update({ galeons: (profile.galeons || 0) + pkg.galeons } as never).eq("user_id", user.id);
-          await supabase.from("galeon_orders").update({ status: "paid", paid_at: new Date().toISOString() } as never).eq("id", order.id);
-          toast.success(`✅ [DEV] ${pkg.galeons} Galeões creditados!`);
-          loadStore();
-          return;
-        }
-        throw new Error("Não foi possível gerar o link de pagamento.");
-      }
-
-      // Abre o link InfinitePay em nova aba
-      window.open(linkData.payment_url, "_blank");
-      toast.info("💳 Finalize o pagamento na janela que abriu. Seus Galeões serão creditados automaticamente!");
-
-      // Polling: verifica a cada 5s se o pagamento foi confirmado (até 5 min)
-      let attempts = 0;
-      const poll = setInterval(async () => {
-        attempts++;
-        const { data: ord } = await supabase.from("galeon_orders").select("status").eq("id", order.id).single();
-        if (ord?.status === "paid") {
-          clearInterval(poll);
-          toast.success(`🎉 ${pkg.galeons} Galeões adicionados à sua conta!`);
-          loadStore();
-          window.location.reload();
-        }
-        if (attempts >= 60) clearInterval(poll); // para após 5 min
-      }, 5000);
-
-    } catch (e: any) {
-      toast.error(e.message || "Erro ao processar pagamento.");
-    } finally {
-      setBuying(null);
-    }
-  };
-
   // ── Comprar Item da Loja ──────────────────────────────────
   const buyItem = async (item: StoreItem) => {
     if (!user || !profile) return toast.error("Você precisa estar logado.");
@@ -326,39 +264,23 @@ export default function GringottsStore() {
     if (!user || !profile) return toast.error("Você precisa estar logado.");
     setBuying(plan.id);
     try {
-      const { data: order } = await supabase.from("galeon_orders").insert({
+      const { data: order, error } = await supabase.from("galeon_orders").insert({
         user_id: user.id,
         package_id: `vip_${plan.id}`,
         amount_brl: plan.price_brl,
         galeons: 0,
         status: "pending",
       } as never).select("id").single();
+      if (error) throw error;
 
-      const { data: linkData, error: linkErr } = await supabase.functions.invoke("create-payment-link", {
-        body: {
-          order_id: order.id,
-          amount_brl: plan.price_brl,
-          galeons: 0,
-          package_name: `VIP ${plan.name}`,
-          user_id: user.id,
-          user_email: user.email,
-          user_name: profile.full_name,
-          vip_plan: plan.id,
-        },
-      });
+      const description = `VIP ${plan.name} — Portal Hogwarts (1 mês)`;
+      const payUrl = await createInfinitePayLink(order.id, plan.price_brl, description, user.email ?? "", profile.full_name);
 
-      if (linkErr || !linkData?.payment_url) {
-        if (import.meta.env.DEV) {
-          const expires = new Date(); expires.setMonth(expires.getMonth() + 1);
-          await supabase.from("profiles").update({ vip_plan: plan.id, vip_expires_at: expires.toISOString() } as never).eq("user_id", user.id);
-          toast.success(`[DEV] ✅ Plano ${plan.name} ativado por 30 dias!`);
-          return;
-        }
-        throw new Error("Não foi possível gerar o link de pagamento VIP.");
-      }
+      if (!payUrl) throw new Error("Não foi possível gerar o link de pagamento VIP.");
 
-      window.open(linkData.payment_url, "_blank");
-      toast.info("💳 Finalize a assinatura na janela que abriu.");
+      await supabase.from("galeon_orders").update({ payment_link: payUrl } as never).eq("id", order.id);
+      toast.info("💳 Redirecionando para assinatura VIP...");
+      setTimeout(() => { window.location.href = payUrl; }, 800);
     } catch (e: any) {
       toast.error(e.message || "Erro ao ativar VIP.");
     } finally {
