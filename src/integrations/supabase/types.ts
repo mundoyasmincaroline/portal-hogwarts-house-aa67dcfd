@@ -89,6 +89,27 @@ export type Database = {
         }
         Relationships: []
       }
+      canon_claims: {
+        Row: {
+          canon_name: string
+          claimed_by: string
+          created_at: string | null
+          id: string
+        }
+        Insert: {
+          canon_name: string
+          claimed_by: string
+          created_at?: string | null
+          id?: string
+        }
+        Update: {
+          canon_name?: string
+          claimed_by?: string
+          created_at?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
       challenges: {
         Row: {
           action_type: string | null
@@ -176,6 +197,120 @@ export type Database = {
           meet_link?: string | null
           name?: string
           type?: string
+        }
+        Relationships: []
+      }
+      characters: {
+        Row: {
+          actor_faceclaim: string | null
+          adult_job: string | null
+          age: number | null
+          age_category: string
+          avatar_url: string | null
+          blood_status: string | null
+          character_type: string
+          created_at: string | null
+          dreams: string | null
+          family_father: string | null
+          family_mother: string | null
+          family_relatives: string | null
+          family_siblings: string | null
+          favorite_class: string | null
+          favorite_spell: string | null
+          fears: string | null
+          full_name: string
+          gender: string
+          house: Database["public"]["Enums"]["house_type"] | null
+          id: string
+          instagram: string | null
+          level: number | null
+          patronus: string | null
+          personality: string | null
+          pet: string | null
+          pet_avatar: string | null
+          pet_name: string | null
+          quotes: string | null
+          secrets: string | null
+          strength: string | null
+          user_id: string
+          wand: string | null
+          weakness: string | null
+          xp: number | null
+          xp_to_next: number | null
+        }
+        Insert: {
+          actor_faceclaim?: string | null
+          adult_job?: string | null
+          age?: number | null
+          age_category: string
+          avatar_url?: string | null
+          blood_status?: string | null
+          character_type: string
+          created_at?: string | null
+          dreams?: string | null
+          family_father?: string | null
+          family_mother?: string | null
+          family_relatives?: string | null
+          family_siblings?: string | null
+          favorite_class?: string | null
+          favorite_spell?: string | null
+          fears?: string | null
+          full_name: string
+          gender: string
+          house?: Database["public"]["Enums"]["house_type"] | null
+          id?: string
+          instagram?: string | null
+          level?: number | null
+          patronus?: string | null
+          personality?: string | null
+          pet?: string | null
+          pet_avatar?: string | null
+          pet_name?: string | null
+          quotes?: string | null
+          secrets?: string | null
+          strength?: string | null
+          user_id: string
+          wand?: string | null
+          weakness?: string | null
+          xp?: number | null
+          xp_to_next?: number | null
+        }
+        Update: {
+          actor_faceclaim?: string | null
+          adult_job?: string | null
+          age?: number | null
+          age_category?: string
+          avatar_url?: string | null
+          blood_status?: string | null
+          character_type?: string
+          created_at?: string | null
+          dreams?: string | null
+          family_father?: string | null
+          family_mother?: string | null
+          family_relatives?: string | null
+          family_siblings?: string | null
+          favorite_class?: string | null
+          favorite_spell?: string | null
+          fears?: string | null
+          full_name?: string
+          gender?: string
+          house?: Database["public"]["Enums"]["house_type"] | null
+          id?: string
+          instagram?: string | null
+          level?: number | null
+          patronus?: string | null
+          personality?: string | null
+          pet?: string | null
+          pet_avatar?: string | null
+          pet_name?: string | null
+          quotes?: string | null
+          secrets?: string | null
+          strength?: string | null
+          user_id?: string
+          wand?: string | null
+          weakness?: string | null
+          xp?: number | null
+          xp_to_next?: number | null
         }
         Relationships: []
       }
@@ -306,6 +441,42 @@ export type Database = {
         }
         Relationships: []
       }
+      couples: {
+        Row: {
+          character1_id: string
+          character2_id: string
+          created_at: string | null
+          id: string
+        }
+        Insert: {
+          character1_id: string
+          character2_id: string
+          created_at?: string | null
+          id?: string
+        }
+        Update: {
+          character1_id?: string
+          character2_id?: string
+          created_at?: string | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "couples_character1_id_fkey"
+            columns: ["character1_id"]
+            isOneToOne: true
+            referencedRelation: "characters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "couples_character2_id_fkey"
+            columns: ["character2_id"]
+            isOneToOne: true
+            referencedRelation: "characters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       fichas: {
         Row: {
           age: number | null
@@ -424,6 +595,7 @@ export type Database = {
           id: string
           image_url: string
           likes: string[]
+          spotify_uri: string | null
           user_id: string
         }
         Insert: {
@@ -432,6 +604,7 @@ export type Database = {
           id?: string
           image_url: string
           likes?: string[]
+          spotify_uri?: string | null
           user_id: string
         }
         Update: {
@@ -440,6 +613,7 @@ export type Database = {
           id?: string
           image_url?: string
           likes?: string[]
+          spotify_uri?: string | null
           user_id?: string
         }
         Relationships: []
@@ -447,6 +621,7 @@ export type Database = {
       messages: {
         Row: {
           channel_id: string
+          character_id: string | null
           content: string
           created_at: string
           id: string
@@ -454,6 +629,7 @@ export type Database = {
         }
         Insert: {
           channel_id: string
+          character_id?: string | null
           content: string
           created_at?: string
           id?: string
@@ -461,6 +637,7 @@ export type Database = {
         }
         Update: {
           channel_id?: string
+          character_id?: string | null
           content?: string
           created_at?: string
           id?: string
@@ -472,6 +649,13 @@ export type Database = {
             columns: ["channel_id"]
             isOneToOne: false
             referencedRelation: "channels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_character_id_fkey"
+            columns: ["character_id"]
+            isOneToOne: false
+            referencedRelation: "characters"
             referencedColumns: ["id"]
           },
         ]
@@ -541,6 +725,7 @@ export type Database = {
       }
       post_comments: {
         Row: {
+          character_id: string | null
           content: string
           created_at: string
           id: string
@@ -548,6 +733,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          character_id?: string | null
           content: string
           created_at?: string
           id?: string
@@ -555,6 +741,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          character_id?: string | null
           content?: string
           created_at?: string
           id?: string
@@ -562,6 +749,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "post_comments_character_id_fkey"
+            columns: ["character_id"]
+            isOneToOne: false
+            referencedRelation: "characters"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "post_comments_post_id_fkey"
             columns: ["post_id"]
@@ -605,40 +799,57 @@ export type Database = {
       }
       posts: {
         Row: {
+          character_id: string | null
           content: string
           created_at: string
           id: string
+          music_url: string | null
           reactions: Json | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          character_id?: string | null
           content: string
           created_at?: string
           id?: string
+          music_url?: string | null
           reactions?: Json | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          character_id?: string | null
           content?: string
           created_at?: string
           id?: string
+          music_url?: string | null
           reactions?: Json | null
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "posts_character_id_fkey"
+            columns: ["character_id"]
+            isOneToOne: false
+            referencedRelation: "characters"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
+          active_character_id: string | null
           age: number
           approved: boolean
           avatar_url: string | null
           bio: string | null
           birth_date: string | null
           created_at: string
+          current_session_id: string | null
           full_name: string
+          has_accepted_rules: boolean | null
           has_seen_intro: boolean | null
           house: Database["public"]["Enums"]["house_type"]
           id: string
@@ -653,13 +864,16 @@ export type Database = {
           xp_to_next: number
         }
         Insert: {
+          active_character_id?: string | null
           age?: number
           approved?: boolean
           avatar_url?: string | null
           bio?: string | null
           birth_date?: string | null
           created_at?: string
+          current_session_id?: string | null
           full_name?: string
+          has_accepted_rules?: boolean | null
           has_seen_intro?: boolean | null
           house?: Database["public"]["Enums"]["house_type"]
           id?: string
@@ -674,13 +888,16 @@ export type Database = {
           xp_to_next?: number
         }
         Update: {
+          active_character_id?: string | null
           age?: number
           approved?: boolean
           avatar_url?: string | null
           bio?: string | null
           birth_date?: string | null
           created_at?: string
+          current_session_id?: string | null
           full_name?: string
+          has_accepted_rules?: boolean | null
           has_seen_intro?: boolean | null
           house?: Database["public"]["Enums"]["house_type"]
           id?: string
@@ -694,7 +911,54 @@ export type Database = {
           xp?: number
           xp_to_next?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_active_character"
+            columns: ["active_character_id"]
+            isOneToOne: false
+            referencedRelation: "characters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referrals: {
+        Row: {
+          created_at: string | null
+          id: string
+          invited_id: string | null
+          inviter_id: string | null
+          status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          invited_id?: string | null
+          inviter_id?: string | null
+          status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          invited_id?: string | null
+          inviter_id?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referrals_invited_id_fkey"
+            columns: ["invited_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "referrals_inviter_id_fkey"
+            columns: ["inviter_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
       }
       site_settings: {
         Row: {
@@ -780,6 +1044,24 @@ export type Database = {
         }
         Relationships: []
       }
+      system_settings: {
+        Row: {
+          key: string
+          updated_at: string | null
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string | null
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string | null
+          value?: Json
+        }
+        Relationships: []
+      }
       user_badges: {
         Row: {
           badge_id: string
@@ -818,6 +1100,7 @@ export type Database = {
           id: string
           progress: number | null
           proof: string | null
+          proof_url: string | null
           status: string | null
           user_id: string
         }
@@ -829,6 +1112,7 @@ export type Database = {
           id?: string
           progress?: number | null
           proof?: string | null
+          proof_url?: string | null
           status?: string | null
           user_id: string
         }
@@ -840,6 +1124,7 @@ export type Database = {
           id?: string
           progress?: number | null
           proof?: string | null
+          proof_url?: string | null
           status?: string | null
           user_id?: string
         }
@@ -941,8 +1226,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      award_xp_action: {
-        Args: { _action: string; _user_id: string; _xp: number }
+      award_xp_action:
+        | {
+            Args: { _action: string; _user_id: string; _xp: number }
+            Returns: undefined
+          }
+        | {
+            Args: { _action: string; _user_id: string; _xp: number }
+            Returns: undefined
+          }
+      complete_referral_action: {
+        Args: { _invited_id: string }
         Returns: undefined
       }
       has_role: {
