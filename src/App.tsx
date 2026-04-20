@@ -26,6 +26,7 @@ import Classes from "./pages/Classes";
 import EmojiShop from "./components/EmojiShop";
 import Rules from "./pages/Rules";
 import MaraudersGuide from "./pages/MaraudersGuide";
+import Friends from "./pages/Friends";
 
 const queryClient = new QueryClient();
 
@@ -63,6 +64,7 @@ const App = () => (
               <Route path="shop" element={<EmojiShop />} />
               <Route path="rules" element={<Rules />} />
               <Route path="guide" element={<MaraudersGuide />} />
+              <Route path="friends" element={<Friends />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
