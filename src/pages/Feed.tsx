@@ -48,6 +48,7 @@ export default function Feed() {
   });
   const [activeChallenges, setActiveChallenges] = useState<{ id: string; title: string; xp_reward: number; type: string }[]>([]);
   const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
+  const [bannedWords, setBannedWords] = useState<string[]>([]);
 
   const loadFeed = useCallback(async () => {
     const { data: postsData } = await supabase
@@ -126,6 +127,12 @@ export default function Feed() {
   useEffect(() => {
     loadFeed();
     loadSidebar();
+    
+    // Buscar palavras proibidas
+    supabase.from("banned_words").select("word").then(({ data }) => {
+      if (data) setBannedWords(data.map(d => d.word.toLowerCase()));
+    });
+
     const channel = supabase
       .channel("feed-changes")
       .on("postgres_changes", { event: "*", schema: "public", table: "posts" }, () => loadFeed())
@@ -137,10 +144,34 @@ export default function Feed() {
 
   const submitPost = async () => {
     if (!newPost.trim() || !user) return;
+    
+    const content = newPost.trim();
+    const lowerContent = content.toLowerCase();
+    const hasBannedWord = bannedWords.some(word => lowerContent.includes(word));
+    const isAllCaps = content.length > 20 && content === content.toUpperCase();
+    const hasSpamChars = /(.)\1{5,}/.test(content);
+    
+    if (hasBannedWord || isAllCaps || hasSpamChars) {
+      let reason = hasBannedWord ? "Palavra proibida" : isAllCaps ? "Gritaria (CAPS LOCK)" : "Spam (letras repetidas)";
+      toast.error(
+        <div className="flex gap-3 items-center">
+          <img src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Filch" className="w-10 h-10 rounded-full border border-red-500 object-cover" />
+          <div>
+            <p className="font-bold text-red-500">Argus Filch</p>
+            <p className="text-sm">Publicação bloqueada: {reason}</p>
+          </div>
+        </div>,
+        { duration: 8000 }
+      );
+      await supabase.from("moderation_log").insert({ user_id: user.id, content_type: "post", original_content: content, reason: reason, action: "block" });
+      await supabase.rpc("award_xp_action", { _action: "spam_penalty", _user_id: user.id, _xp: -10 });
+      return;
+    }
+
     setPosting(true);
     const { error } = await supabase.from("posts").insert({ 
       user_id: user.id, 
-      content: newPost.trim(),
+      content: content,
       music_url: newMusicUrl.trim() || null 
     } as never);
     setPosting(false);
@@ -167,6 +198,19 @@ export default function Feed() {
   const submitComment = async (postId: string) => {
     const text = commentDrafts[postId]?.trim();
     if (!text || !user) return;
+    
+    const lowerContent = text.toLowerCase();
+    const hasBannedWord = bannedWords.some(word => lowerContent.includes(word));
+    const isAllCaps = text.length > 15 && text === text.toUpperCase();
+    const hasSpamChars = /(.)\1{5,}/.test(text);
+
+    if (hasBannedWord || isAllCaps || hasSpamChars) {
+      toast.error("Comentário bloqueado pelo Filch! Mantenha a ordem no castelo.");
+      await supabase.from("moderation_log").insert({ user_id: user.id, content_type: "comment", original_content: text, reason: "Spam/Palavra proibida", action: "block" });
+      await supabase.rpc("award_xp_action", { _action: "spam_penalty", _user_id: user.id, _xp: -5 });
+      return;
+    }
+
     const { error } = await supabase.from("post_comments").insert({ post_id: postId, user_id: user.id, content: text } as never);
     if (error) {
       toast.error(error.message.includes("Filch") ? error.message : "Erro: " + error.message);

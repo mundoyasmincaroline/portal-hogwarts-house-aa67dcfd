@@ -66,17 +66,34 @@ export default function AdminMemberModal({ memberId, memberName, onClose, onSave
   /* ---------- save character ---------- */
   const saveChar = async (char: any) => {
     setSaving(true);
-    const { id, user_id, created_at, updated_at, ...rest } = char;
-    const { error } = await supabase.from("characters").update({
-      ...rest,
-      age: rest.age ? Number(rest.age) : null,
-      xp:  rest.xp  ? Number(rest.xp)  : 0,
-      level: rest.level ? Number(rest.level) : 1,
-    } as never).eq("id", id);
-    setSaving(false);
-    if (error) { toast.error("Erro ao salvar ficha: " + error.message); return; }
-    toast.success("Ficha salva! 📜");
+    const { id, user_id, created_at, updated_at, isNew, ...rest } = char;
+    
+    if (isNew) {
+      const { error } = await supabase.from("characters").insert({
+        user_id,
+        ...rest,
+        age: rest.age ? Number(rest.age) : null,
+        xp:  rest.xp  ? Number(rest.xp)  : 0,
+        level: rest.level ? Number(rest.level) : 1,
+      } as never);
+      setSaving(false);
+      if (error) { toast.error("Erro ao criar ficha: " + error.message); return; }
+      toast.success("Ficha criada com sucesso! 📜");
+    } else {
+      const { error } = await supabase.from("characters").update({
+        ...rest,
+        age: rest.age ? Number(rest.age) : null,
+        xp:  rest.xp  ? Number(rest.xp)  : 0,
+        level: rest.level ? Number(rest.level) : 1,
+      } as never).eq("id", id);
+      setSaving(false);
+      if (error) { toast.error("Erro ao salvar ficha: " + error.message); return; }
+      toast.success("Ficha salva! 📜");
+    }
     onSaved();
+    // Refresh characters
+    const { data: c } = await supabase.from("characters").select("*").eq("user_id", memberId).order("created_at");
+    if (c) setCharacters(c);
   };
 
   /* ---------- delete character ---------- */
@@ -218,9 +235,44 @@ export default function AdminMemberModal({ memberId, memberName, onClose, onSave
                 <Scroll size={16} /> Fichas de Personagem ({characters.length})
               </h3>
 
-              {characters.length === 0 && (
+              {characters.length === 0 ? (
                 <div className="glass rounded-xl p-6 text-center">
-                  <p className="text-muted-foreground text-sm">Este membro ainda não criou nenhuma ficha.</p>
+                  <p className="text-muted-foreground text-sm mb-4">Este membro ainda não criou nenhuma ficha.</p>
+                  <Button onClick={() => {
+                    const newChar = {
+                      id: `temp_${Date.now()}`,
+                      user_id: memberId,
+                      full_name: "Novo Personagem",
+                      character_type: "oc",
+                      house: "",
+                      level: 1,
+                      xp: 0,
+                      isNew: true
+                    };
+                    setCharacters([...characters, newChar]);
+                    setExpandedChar(newChar.id);
+                  }} variant="magical" size="sm">
+                    ✨ Criar Primeira Ficha
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex justify-end mb-4">
+                  <Button onClick={() => {
+                    const newChar = {
+                      id: `temp_${Date.now()}`,
+                      user_id: memberId,
+                      full_name: "Novo Personagem",
+                      character_type: "oc",
+                      house: "",
+                      level: 1,
+                      xp: 0,
+                      isNew: true
+                    };
+                    setCharacters([newChar, ...characters]);
+                    setExpandedChar(newChar.id);
+                  }} variant="outline" size="sm">
+                    ➕ Nova Ficha
+                  </Button>
                 </div>
               )}
 

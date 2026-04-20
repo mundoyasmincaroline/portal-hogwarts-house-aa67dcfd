@@ -35,7 +35,7 @@ export default function Register() {
     if (!form.password || form.password.length < 6) errs.password = "Mínimo 6 caracteres";
     const age = parseInt(form.age);
     if (!form.age || isNaN(age)) errs.age = "Idade é obrigatória";
-    else if (age < 13 || age > 17) errs.age = "Apenas bruxos de 13 a 17 anos";
+    else if (age <= 0) errs.age = "Idade inválida";
     const expectedAnswer = captchaParams.num1 + captchaParams.num2;
     if (parseInt(captchaAnswer) !== expectedAnswer) errs.captcha = "Resposta incorreta";
     
@@ -145,7 +145,7 @@ export default function Register() {
             </div>
             <div>
               <label className="text-sm font-heading text-muted-foreground block mb-1">Idade</label>
-              <Input type="number" min={13} max={17} value={form.age} onChange={(e) => setForm({ ...form, age: e.target.value })} placeholder="13-17" className="bg-secondary/50" />
+              <Input type="number" min={1} value={form.age} onChange={(e) => setForm({ ...form, age: e.target.value })} placeholder="Sua idade" className="bg-secondary/50" />
               {errors.age && <p className="text-destructive text-xs mt-1">{errors.age}</p>}
             </div>
             <div>

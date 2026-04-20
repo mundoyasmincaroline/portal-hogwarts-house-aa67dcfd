@@ -252,28 +252,34 @@ export default function ChatRoom() {
     
     const content = input;
     
-    // Verificação de moderação
+    // Verificações rigorosas de moderação (Filch)
     const lowerContent = content.toLowerCase();
     const hasBannedWord = bannedWords.some(word => lowerContent.includes(word));
-    if (hasBannedWord) {
+    const isAllCaps = content.length > 15 && content === content.toUpperCase();
+    const hasSpamChars = /(.)\1{5,}/.test(content); // A mesma letra/símbolo 6+ vezes seguidas
+    
+    if (hasBannedWord || isAllCaps || hasSpamChars) {
+      let reason = hasBannedWord ? "Palavra proibida" : isAllCaps ? "Gritaria (CAPS LOCK)" : "Spam (letras repetidas)";
       toast.error(
         <div className="flex gap-3 items-center">
           <img src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Filch" className="w-10 h-10 rounded-full border border-red-500 object-cover" />
           <div>
             <p className="font-bold text-red-500">Argus Filch</p>
-            <p className="text-sm">O que temos aqui? Arrumando confusão pelos corredores! Sua mensagem foi apreendida.</p>
+            <p className="text-sm">O que temos aqui? Arrumando confusão pelos corredores! Sua mensagem foi apreendida por: {reason}</p>
           </div>
         </div>,
-        { duration: 6000 }
+        { duration: 8000 }
       );
       // Log to Filch
       await supabase.from("moderation_log").insert({
         user_id: user.id,
         content_type: "chat",
         original_content: content,
-        reason: "Palavra proibida",
+        reason: reason,
         action: "block"
       });
+      // Punição extra de XP para spam no chat
+      await supabase.rpc("award_xp_action", { _action: "spam_penalty", _user_id: user.id, _xp: -10 });
       return;
     }
 

@@ -22,7 +22,7 @@ export default function FilchWatcher() {
       const lastSeen = profile.last_seen ? new Date(profile.last_seen).getTime() : Date.now();
       const inactiveDays = Math.floor((Date.now() - lastSeen) / DAY_MS);
 
-      if (inactiveDays < 3) return; // Nenhuma ação necessária
+      if (inactiveDays < 1) return; // Nenhuma ação necessária
 
       // Check if already in azkaban
       const { data: azk } = await supabase
@@ -50,56 +50,55 @@ export default function FilchWatcher() {
       if (lastCheck === today) return; // Already warned today
       localStorage.setItem(key, today);
 
-      if (inactiveDays >= 10) {
-        // Send to Azkaban — 1 hour
-        const releaseAt = new Date(Date.now() + 3600_000).toISOString();
+      if (inactiveDays >= 5) {
+        // Send to Azkaban — 24 hours
+        const releaseAt = new Date(Date.now() + 86400_000).toISOString();
         await supabase.from("azkaban_status").insert({
           user_id: user.id,
           active: true,
-          reason: `Inatividade de ${inactiveDays} dias`,
-          xp_penalty: 150,
+          reason: `Inatividade severa de ${inactiveDays} dias`,
+          xp_penalty: 500,
           release_at: releaseAt,
         } as never);
-        // Apply XP penalty
-        await supabase.rpc("award_xp_action", { _action: "azkaban_penalty", _user_id: user.id, _xp: -150 });
+        await supabase.rpc("award_xp_action", { _action: "azkaban_penalty", _user_id: user.id, _xp: -500 });
         toast(
           <div className="text-center">
             <div className="text-4xl mb-2">⛓️</div>
-            <p className="font-heading text-lg text-blue-400">O Filch te enviou para Azkaban!</p>
-            <p className="text-xs text-muted-foreground mt-1">Inatividade de {inactiveDays} dias. -150 XP. Duração: 1 hora.</p>
+            <p className="font-heading text-lg text-blue-400">O Filch te jogou em Azkaban!</p>
+            <p className="text-xs text-muted-foreground mt-1">Inatividade inaceitável. -500 XP. Duração: 24 horas.</p>
           </div>,
           { duration: 10000 }
         );
         setTimeout(() => navigate("/dashboard/azkaban"), 3000);
-      } else if (inactiveDays >= 7) {
-        // Final warning + XP penalty
-        await supabase.rpc("award_xp_action", { _action: "inactivity_penalty", _user_id: user.id, _xp: -75 });
+      } else if (inactiveDays >= 3) {
+        // Heavy penalty
+        await supabase.rpc("award_xp_action", { _action: "inactivity_penalty", _user_id: user.id, _xp: -100 });
         toast(
           <div className="text-center">
             <div className="text-3xl mb-1">🧹</div>
-            <p className="font-heading text-base text-red-400">⚠️ Aviso Final do Filch!</p>
-            <p className="text-xs text-muted-foreground mt-1">Você perdeu 75 XP por inatividade de {inactiveDays} dias. Próximo passo: Azkaban!</p>
+            <p className="font-heading text-base text-red-400">⚠️ Último Aviso do Filch!</p>
+            <p className="text-xs text-muted-foreground mt-1">Você perdeu 100 XP por inatividade. O próximo passo é Azkaban direto!</p>
           </div>,
           { duration: 8000 }
         );
-      } else if (inactiveDays >= 5) {
-        // First XP penalty
-        await supabase.rpc("award_xp_action", { _action: "inactivity_penalty", _user_id: user.id, _xp: -30 });
+      } else if (inactiveDays >= 2) {
+        // Medium penalty
+        await supabase.rpc("award_xp_action", { _action: "inactivity_penalty", _user_id: user.id, _xp: -50 });
         toast(
           <div className="text-center">
             <div className="text-3xl mb-1">🧹</div>
-            <p className="font-heading text-base text-orange-400">Penalidade por Inatividade!</p>
-            <p className="text-xs text-muted-foreground mt-1">Você perdeu 30 XP. {inactiveDays} dias sem atividade. Continue assim e Filch vai te levar para Azkaban!</p>
+            <p className="font-heading text-base text-orange-400">Penalidade de Inatividade!</p>
+            <p className="text-xs text-muted-foreground mt-1">Você perdeu 50 XP por não aparecer no castelo. Filch não gosta de vadiagem!</p>
           </div>,
           { duration: 6000 }
         );
-      } else if (inactiveDays >= 3) {
+      } else if (inactiveDays >= 1) {
         // Just a warning, no penalty
         toast(
           <div className="text-center">
             <div className="text-3xl mb-1">🧹</div>
-            <p className="font-heading text-base text-yellow-400">Filch está de olho em você!</p>
-            <p className="text-xs text-muted-foreground mt-1">{inactiveDays} dias sem atividade. Continue participando para evitar penalidades!</p>
+            <p className="font-heading text-base text-yellow-400">Filch está te observando!</p>
+            <p className="text-xs text-muted-foreground mt-1">1 dia de ausência. Não deixe a inatividade virar um hábito, ou haverá punições!</p>
           </div>,
           { duration: 5000 }
         );
