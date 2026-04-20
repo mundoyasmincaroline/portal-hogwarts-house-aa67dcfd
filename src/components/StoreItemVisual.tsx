@@ -121,81 +121,53 @@ interface Props {
   isOwned?: boolean;
 }
 
+// Mapeamento de imagens épicas para categorias caso o item não tenha imagem
+function getEpicPlaceholder(category: string, name: string): string {
+  const n = name.toLowerCase();
+  if (category === "clothing" || n.includes("robe") || n.includes("manto")) 
+    return "https://images.unsplash.com/photo-1595123550441-d377e017ea6a?q=80&w=600"; // Mistic cloth
+  if (category === "wand" || n.includes("varinha")) 
+    return "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=600"; // Wand
+  if (category === "accessory" || n.includes("anel") || n.includes("colar") || n.includes("amuleto")) 
+    return "https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?q=80&w=600"; // Crystal/Gem
+  if (category === "skin" || n.includes("aura") || n.includes("skin")) 
+    return "https://images.unsplash.com/photo-1515688594390-b649af70d282?q=80&w=600"; // Magical aura
+  if (category === "featured" || n.includes("coroa") || n.includes("vip")) 
+    return "https://images.unsplash.com/photo-1574280367876-0f862cd5d082?q=80&w=600"; // Crown
+  if (n.includes("vassoura") || n.includes("nimbus")) 
+    return "https://images.unsplash.com/photo-1618220179428-22790b46a0eb?q=80&w=600"; // Magical object
+  
+  return "https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=600"; // Magical book
+}
+
 export default function StoreItemVisual({ imageUrl, name, category, isOwned }: Props) {
-  const theme = getTheme(name, category);
+  const finalImage = (imageUrl && !imageUrl.includes("placeholder")) 
+    ? imageUrl 
+    : getEpicPlaceholder(category, name);
 
-  // Se tiver imagem real e válida, usa ela
-  if (imageUrl && !imageUrl.includes("placeholder")) {
-    return (
-      <div className="relative w-full h-full">
-        <img src={imageUrl} alt={name}
-          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-          onError={(e) => { e.currentTarget.style.display = "none"; }} />
-        {isOwned && (
-          <div className="absolute inset-0 bg-green-900/40 flex items-center justify-center">
-            <span className="font-heading text-green-400 text-sm bg-card/80 px-3 py-1 rounded-full">✓ Adquirido</span>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  // Arte digital gerada em código
   return (
-    <div className={`relative w-full h-full bg-gradient-to-br ${theme.bg} overflow-hidden flex items-center justify-center`}>
+    <div className="relative w-full h-full bg-black group overflow-hidden">
+      <img 
+        src={finalImage} 
+        alt={name}
+        className="w-full h-full object-cover mix-blend-lighten opacity-90 group-hover:scale-110 group-hover:opacity-100 transition-all duration-700"
+        onError={(e) => { 
+          // Fallback final se a imagem falhar
+          e.currentTarget.src = "https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=600"; 
+        }} 
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_50%,_rgba(0,0,0,0.6)_100%)] pointer-events-none" />
+      
+      {/* Glow Effect */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-30 mix-blend-overlay transition-opacity duration-700 bg-gradient-to-br from-yellow-500 to-purple-500 pointer-events-none" />
 
-      {/* Partículas de estrela animadas */}
-      {theme.particles.map((p, i) => (
-        <div key={i}
-          className="absolute rounded-full animate-pulse"
-          style={{
-            left: `${p.x}%`, top: `${p.y}%`,
-            width: `${p.size * 2}px`, height: `${p.size * 2}px`,
-            background: theme.accent,
-            opacity: 0.3 + (i % 4) * 0.15,
-            animationDelay: `${p.delay}s`,
-            animationDuration: `${1.5 + p.delay}s`,
-          }}
-        />
-      ))}
-
-      {/* Círculo de brilho atrás do ícone */}
-      <div className="absolute" style={{
-        width: "120px", height: "120px",
-        background: `radial-gradient(circle, ${theme.glow}40 0%, transparent 70%)`,
-        borderRadius: "50%",
-        filter: "blur(12px)",
-      }} />
-
-      {/* Linha decorativa no topo */}
-      <div className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: `linear-gradient(90deg, transparent, ${theme.accent}80, transparent)` }} />
-
-      {/* Ícone SVG principal */}
-      <div className="relative z-10 flex flex-col items-center gap-2"
-        style={{ filter: `drop-shadow(0 0 12px ${theme.glow}80)` }}>
-        <theme.Icon size={72} />
-        <span className="text-2xl" style={{ filter: "drop-shadow(0 0 8px rgba(255,255,255,0.5))" }}>
-          {theme.badge}
-        </span>
-      </div>
-
-      {/* Cantos decorativos */}
-      <div className="absolute top-2 left-2 w-4 h-4 border-t border-l rounded-tl"
-        style={{ borderColor: `${theme.accent}60` }} />
-      <div className="absolute top-2 right-2 w-4 h-4 border-t border-r rounded-tr"
-        style={{ borderColor: `${theme.accent}60` }} />
-      <div className="absolute bottom-2 left-2 w-4 h-4 border-b border-l rounded-bl"
-        style={{ borderColor: `${theme.accent}60` }} />
-      <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r rounded-br"
-        style={{ borderColor: `${theme.accent}60` }} />
-
-      {/* Overlay "Adquirido" */}
       {isOwned && (
-        <div className="absolute inset-0 bg-green-900/50 flex items-center justify-center z-20">
-          <span className="font-heading text-green-400 text-sm bg-card/90 px-3 py-1 rounded-full border border-green-500/40">
-            ✓ Adquirido
-          </span>
+        <div className="absolute inset-0 bg-green-900/60 backdrop-blur-[2px] flex items-center justify-center z-20">
+          <div className="flex flex-col items-center gap-2 transform group-hover:scale-110 transition-transform">
+            <span className="text-3xl drop-shadow-[0_0_10px_rgba(74,222,128,0.8)]">✅</span>
+            <span className="font-heading text-green-300 text-sm font-bold uppercase tracking-widest drop-shadow-md">Adquirido</span>
+          </div>
         </div>
       )}
     </div>

@@ -14,18 +14,18 @@ interface Props {
 }
 
 const VIP_BENEFITS = [
-  { icon: "🏅", text: "Badge VIP exclusivo no perfil" },
-  { icon: "🪙", text: "Galeões mensais automáticos" },
-  { icon: "✨", text: "Skins e itens exclusivos desbloqueados" },
-  { icon: "⚡", text: "XP bônus em todas as atividades" },
-  { icon: "🔮", text: "Acesso antecipado a novidades" },
-  { icon: "👑", text: "Título de Mago(a) Premium no ranking" },
+  { img: "https://images.unsplash.com/photo-1589802790933-f5fb3d2f93cb?q=80&w=200", text: "Badge VIP exclusivo no perfil" },
+  { img: "https://images.unsplash.com/photo-1621508654686-809f23efdabc?q=80&w=200", text: "Galeões mensais automáticos" },
+  { img: "https://images.unsplash.com/photo-1618944847023-38aa001235f0?q=80&w=200", text: "Skins e itens exclusivos desbloqueados" },
+  { img: "https://images.unsplash.com/photo-1517404215738-15263e9f9178?q=80&w=200", text: "XP bônus em todas as atividades" },
+  { img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=200", text: "Acesso antecipado a novidades" },
+  { img: "https://images.unsplash.com/photo-1574280367876-0f862cd5d082?q=80&w=200", text: "Título de Mago(a) Premium no ranking" },
 ];
 
 const PLANS = [
-  { id: "premium", name: "Iniciante", price: "R$ 9,90", color: "from-slate-800 to-slate-700", border: "border-slate-500/40", badge: "⭐", galeons: 0 },
-  { id: "vip", name: "VIP", price: "R$ 19,90", color: "from-purple-900 to-violet-800", border: "border-purple-400/50", badge: "💜", galeons: 200, highlight: true },
-  { id: "founder", name: "Fundador", price: "R$ 39,90", color: "from-yellow-900 to-amber-800", border: "border-yellow-400/50", badge: "👑", galeons: 500 },
+  { id: "premium", name: "Iniciante", price: "R$ 9,90", color: "from-slate-800 to-slate-700", border: "border-slate-500/40", img: "https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=200", galeons: 0 },
+  { id: "vip", name: "VIP", price: "R$ 19,90", color: "from-purple-900 to-violet-800", border: "border-purple-400/50", img: "https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?q=80&w=200", galeons: 200, highlight: true },
+  { id: "founder", name: "Fundador", price: "R$ 39,90", color: "from-yellow-900 to-amber-800", border: "border-yellow-400/50", img: "https://images.unsplash.com/photo-1574280367876-0f862cd5d082?q=80&w=200", galeons: 500 },
 ];
 
 export default function VipUpsellBanner({ currentVip, galeons = 0, username }: Props) {
@@ -79,30 +79,34 @@ export default function VipUpsellBanner({ currentVip, galeons = 0, username }: P
         </div>
 
         {/* Benefits grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
           {VIP_BENEFITS.map((b, i) => (
-            <div key={i} className="flex items-center gap-2 text-xs text-muted-foreground bg-white/3 rounded-lg px-3 py-2 border border-white/5">
-              <span className="text-base shrink-0">{b.icon}</span>
-              <span>{b.text}</span>
+            <div key={i} className="flex items-center gap-3 text-xs text-muted-foreground bg-white/5 rounded-xl px-4 py-3 border border-white/10 hover:bg-white/10 transition-colors shadow-lg shadow-black/20">
+              <div className="w-8 h-8 rounded-full overflow-hidden border border-purple-500/30 shrink-0 shadow-[0_0_10px_rgba(168,85,247,0.3)] group-hover:scale-110 transition-transform">
+                <img src={b.img} alt={b.text} className="w-full h-full object-cover mix-blend-lighten" />
+              </div>
+              <span className="font-medium text-white/90">{b.text}</span>
             </div>
           ))}
         </div>
 
         {/* Plan cards */}
-        <div className="grid grid-cols-3 gap-3 mb-5">
+        <div className="grid grid-cols-3 gap-4 mb-6">
           {PLANS.map(plan => (
             <div key={plan.id}
-              className={`relative rounded-xl border bg-gradient-to-br ${plan.color} ${plan.border} p-3 text-center ${plan.highlight ? "ring-1 ring-purple-400/50" : ""}`}>
+              className={`relative rounded-2xl border bg-gradient-to-br ${plan.color} ${plan.border} p-4 text-center shadow-xl transition-transform hover:-translate-y-1 ${plan.highlight ? "ring-2 ring-purple-400/50 shadow-[0_0_20px_rgba(168,85,247,0.3)]" : ""}`}>
               {plan.highlight && (
-                <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-purple-500 text-white text-[9px] font-heading px-2 py-0.5 rounded-full whitespace-nowrap">
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-500 to-indigo-500 text-white text-[10px] font-heading font-bold px-3 py-1 rounded-full whitespace-nowrap shadow-lg">
                   + POPULAR
                 </span>
               )}
-              <div className="text-xl mb-1">{plan.badge}</div>
-              <p className="font-heading text-[11px] text-foreground mb-1">{plan.name}</p>
-              <p className="font-heading text-sm text-primary">{plan.price}<span className="text-[9px] text-muted-foreground">/mês</span></p>
+              <div className="w-14 h-14 mx-auto mb-3 rounded-full overflow-hidden border-2 border-white/20 shadow-inner bg-black/50">
+                 <img src={plan.img} alt={plan.name} className="w-full h-full object-cover mix-blend-screen opacity-90 hover:scale-110 transition-transform" />
+              </div>
+              <p className="font-heading text-xs text-white/90 mb-1 uppercase tracking-wider">{plan.name}</p>
+              <p className="font-heading text-lg text-yellow-400 drop-shadow-md">{plan.price}<span className="text-[10px] text-yellow-400/50">/mês</span></p>
               {plan.galeons > 0 && (
-                <p className="text-[9px] text-yellow-400 mt-1">+{plan.galeons}🪙/mês</p>
+                <p className="text-[10px] font-bold text-yellow-300 mt-2 bg-yellow-500/20 py-1 rounded-full border border-yellow-500/30">+{plan.galeons} 🪙</p>
               )}
             </div>
           ))}
