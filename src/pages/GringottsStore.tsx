@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ShoppingBag, Coins, Crown, Wand2, Shirt, Gem, Sparkles, Star, ExternalLink, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import StoreItemVisual from "@/components/StoreItemVisual";
 
 // ─── Config ────────────────────────────────────────────────────────────
 // Tudo via supabase.rpc() — sem CORS, server-side via pg_net
@@ -430,18 +431,16 @@ export default function GringottsStore() {
                       item.rarity === "legendary" ? "bg-gradient-to-br from-yellow-900/20 to-amber-800/10" : ""
                     }`}>
                     <div className="relative aspect-square overflow-hidden bg-secondary/50">
-                      <img src={item.image_url} alt={item.name}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                        onError={e => { e.currentTarget.src = "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=400"; }} />
-                      <span className={`absolute top-2 right-2 text-[10px] font-heading px-2 py-0.5 rounded-full border ${rar.cls} bg-card/80 backdrop-blur-sm`}>
+                      <StoreItemVisual
+                        imageUrl={item.image_url}
+                        name={item.name}
+                        category={item.category}
+                        isOwned={isOwned}
+                      />
+                      <span className={`absolute top-2 right-2 text-[10px] font-heading px-2 py-0.5 rounded-full border ${rar.cls} bg-card/80 backdrop-blur-sm z-10`}>
                         {rar.label}
                         {item.rarity === "legendary" && " ⭐"}
                       </span>
-                      {isOwned && (
-                        <div className="absolute inset-0 bg-green-900/40 flex items-center justify-center">
-                          <span className="font-heading text-green-400 text-sm bg-card/80 px-3 py-1 rounded-full">✓ Adquirido</span>
-                        </div>
-                      )}
                     </div>
                     <div className="p-3 flex flex-col flex-1">
                       <h4 className="font-heading text-sm text-foreground leading-tight mb-1">{item.name}</h4>
