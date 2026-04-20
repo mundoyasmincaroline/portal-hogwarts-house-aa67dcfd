@@ -25,8 +25,10 @@ export default function EnigmaModal({ isOpen, onClose, question, onAnswer }: Eni
       <DialogContent className="sm:max-w-md bg-secondary/95 border-primary/20 backdrop-blur-md">
         <DialogHeader>
           <DialogTitle className="font-heading text-2xl text-gold-gradient text-center">O Enigma da Esfinge</DialogTitle>
-          <DialogDescription className="text-center text-foreground mt-4 text-lg font-serif">
-            "{question}"
+          <DialogDescription asChild>
+            <p className="text-center text-foreground mt-4 text-lg font-serif italic leading-relaxed">
+              "{question}"
+            </p>
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 mt-6">

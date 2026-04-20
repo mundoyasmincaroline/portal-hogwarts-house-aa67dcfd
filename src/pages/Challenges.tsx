@@ -118,10 +118,11 @@ export default function Challenges() {
     setActiveEnigma(null);
   };
 
-  const daily = challenges.filter((c) => c.type === "daily");
-  const weekly = challenges.filter((c) => c.type === "weekly");
+  const daily   = challenges.filter((c) => c.type === "daily");
+  const weekly  = challenges.filter((c) => c.type === "weekly");
   const special = challenges.filter((c) => c.type === "special");
-  const social = challenges.filter((c) => c.type === "social");
+  const social  = challenges.filter((c) => c.type === "social");
+  const enigmas = challenges.filter((c) => c.type === "enigma");
 
   const renderCard = (c: Challenge, isSpecial = false) => {
     const done = completedIds.has(c.id);
@@ -199,6 +200,14 @@ export default function Challenges() {
         <div>
           <h2 className="font-heading text-lg text-foreground mb-3">✨ Eventos Especiais</h2>
           <div className="grid md:grid-cols-2 gap-4">{special.map((c) => renderCard(c, true))}</div>
+        </div>
+      )}
+
+      {enigmas.length > 0 && (
+        <div>
+          <h2 className="font-heading text-lg text-foreground mb-3">🦉 Enigmas de Hogwarts</h2>
+          <p className="text-xs text-muted-foreground mb-3 -mt-1">Responda corretamente para ganhar XP instantâneo!</p>
+          <div className="grid md:grid-cols-2 gap-4">{enigmas.map((c) => renderCard(c, true))}</div>
         </div>
       )}
 

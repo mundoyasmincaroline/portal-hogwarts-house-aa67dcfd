@@ -45,7 +45,7 @@ const XP_LIKE = 5;
 const XP_FOLLOW = 30;
 
 export default function InstaHogwarts() {
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const [posts, setPosts] = useState<InstaPost[]>([]);
   const [myChars, setMyChars] = useState<Character[]>([]);
   const [selectedCharId, setSelectedCharId] = useState<string>("");

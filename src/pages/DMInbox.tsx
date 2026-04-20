@@ -1,10 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Send, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import SafeImage from "@/components/SafeImage";
-import { toast } from "sonner";
 
 interface DMThread {
   partner_id: string;

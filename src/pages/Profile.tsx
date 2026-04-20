@@ -343,21 +343,16 @@ export default function Profile() {
                   )}
                   {friendship?.status === "accepted" && (
                     <>
-<<<<<<< HEAD
-                      <Button variant="outline" size="sm" className="text-destructive" onClick={handleRemoveFriend}>Desfazer Amizade ❌</Button>
+                      <Button variant="outline" size="sm" className="text-destructive" onClick={handleRemoveFriend}>Desfazer ❌</Button>
+                      <Button variant="outline" size="sm" className="text-destructive" onClick={handleBlockUser}>Bloquear 🚫</Button>
                       <Button variant="magical" size="sm" onClick={() => navigate(`/dashboard/dm/${profile.user_id}`)}>💬 Mensagem</Button>
                     </>
                   )}
                   {!friendship && (
                     <Button variant="outline" size="sm" onClick={() => navigate(`/dashboard/dm/${profile.user_id}`)}>💬 Mensagem</Button>
-=======
-                      <Button variant="outline" size="sm" className="text-destructive" onClick={handleRemoveFriend}>Desfazer ❌</Button>
-                      <Button variant="outline" size="sm" className="text-destructive" onClick={handleBlockUser}>Bloquear 🚫</Button>
-                    </>
                   )}
                   {friendship?.status === "blocked" && friendship.user_id === user?.id && (
                     <Button variant="outline" size="sm" onClick={handleUnblock}>Desbloquear</Button>
->>>>>>> a7ecf612ff74f3c68d60cb3cc87dd136c2b3266d
                   )}
                 </>
               )}

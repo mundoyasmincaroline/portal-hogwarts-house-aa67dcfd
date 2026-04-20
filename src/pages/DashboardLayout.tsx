@@ -22,16 +22,14 @@ import RulesAgreement from "@/pages/RulesAgreement";
 import CharacterSelection from "@/pages/CharacterSelection";
 import DailyEncounter from "@/components/DailyEncounter";
 import NotificationBanner from "@/components/NotificationBanner";
+import { useAchievements } from "@/lib/useAchievements";
 
 const NAV_ITEMS = [
   { icon: <Castle size={20} />, label: "O Castelo", path: "/dashboard" },
   { icon: <BookOpen size={20} />, label: "Guia do Maroto", path: "/dashboard/guide" },
   { icon: <User size={20} />, label: "Meu Perfil", path: "/dashboard/profile" },
-<<<<<<< HEAD
   { icon: <MessageCircle size={20} />, label: "Mensagens", path: "/dashboard/dm" },
-=======
   { icon: <Users size={20} />, label: "Amigos", path: "/dashboard/friends" },
->>>>>>> a7ecf612ff74f3c68d60cb3cc87dd136c2b3266d
   { icon: <MessageCircle size={20} />, label: "Chats RPG", path: "/dashboard/chats" },
   { icon: <Camera size={20} />, label: "InstaHogwarts", path: "/dashboard/instahogwarts" },
   { icon: <Film size={20} />, label: "Hogwarts Cine", path: "/dashboard/cinema" },
@@ -57,6 +55,9 @@ export default function DashboardLayout() {
   const [soundOn, setSoundOn] = useState(isSoundEnabled());
   const [dmUnread, setDmUnread] = useState(0);
 
+  // Auto-conquistas baseadas em XP e nível
+  useAchievements(user?.id, profile?.xp ?? 0, profile?.level ?? 1);
+
   // DM unread badge
   useEffect(() => {
     if (!user) return;
@@ -74,6 +75,55 @@ export default function DashboardLayout() {
       .subscribe();
     return () => { supabase.removeChannel(ch); };
   }, [user]);
+
+  // Daily login streak — concede XP uma vez por dia
+  useEffect(() => {
+    if (!user || !profile) return;
+    const key = `daily_login_${user.id}`;
+    const today = new Date().toDateString();
+    const lastLogin = localStorage.getItem(key);
+    if (lastLogin === today) return; // já ganhou hoje
+
+    const awardStreak = async () => {
+      const streakKey = `streak_${user.id}`;
+      const lastDate = localStorage.getItem(streakKey);
+      const yesterday = new Date(Date.now() - 86400000).toDateString();
+      
+      // Calcular streak atual
+      const currentStreak = (() => {
+        const saved = localStorage.getItem(`streak_count_${user.id}`);
+        if (lastDate === yesterday) return (parseInt(saved || "0") + 1);
+        return 1;
+      })();
+      
+      localStorage.setItem(streakKey, today);
+      localStorage.setItem(`streak_count_${user.id}`, String(currentStreak));
+      localStorage.setItem(key, today);
+      
+      // XP escalona com o streak (máx 7 dias = 75 XP)
+      const xpBonus = Math.min(25 + (currentStreak - 1) * 5, 75);
+      await supabase.rpc("award_xp_action", { _action: "daily_login", _user_id: user.id, _xp: xpBonus });
+      
+      const streakMsg = currentStreak > 1 ? ` 🔥 ${currentStreak} dias seguidos!` : "";
+      toast.success(`☀️ Bom dia, ${profile.full_name?.split(" ")[0]}! +${xpBonus} XP pela sua presença diária!${streakMsg}`, { duration: 4000 });
+      
+      // Check level-up: refetch profile after xp
+      setTimeout(async () => {
+        const { data: fresh } = await supabase.from("profiles").select("level, xp").eq("user_id", user.id).single();
+        if (fresh && fresh.level > (profile.level || 1)) {
+          toast(
+            <div className="text-center">
+              <div className="text-3xl mb-1">⚡</div>
+              <p className="font-heading text-primary font-bold">NÍVEL {fresh.level}!</p>
+              <p className="text-xs text-muted-foreground">Você subiu de nível, bruxo(a)!</p>
+            </div>,
+            { duration: 6000 }
+          );
+        }
+      }, 2000);
+    };
+    awardStreak();
+  }, [user, profile]);
 
   const handleToggleSound = () => {
     setSoundOn(toggleSound());
