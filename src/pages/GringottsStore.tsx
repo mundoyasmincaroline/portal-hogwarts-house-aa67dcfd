@@ -252,14 +252,14 @@ export default function GringottsStore() {
       
       {/* ── SUPER HERO BANNER ── */}
       <div className="relative overflow-hidden rounded-[2.5rem] border border-yellow-500/40 shadow-[0_0_50px_rgba(234,179,8,0.15)] group">
-        <div className="absolute inset-0 bg-gradient-to-br from-yellow-900/60 via-amber-900/40 to-black z-0" />
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070')] bg-cover bg-center mix-blend-overlay opacity-20 group-hover:scale-105 transition-transform duration-1000" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-0" />
+        <div className="absolute inset-0 bg-gradient-to-br from-yellow-900/60 via-amber-900/40 to-black z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070')] bg-cover bg-center mix-blend-overlay opacity-20 group-hover:scale-105 transition-transform duration-1000 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-0 pointer-events-none" />
         
         {/* Animated Particles */}
-        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-400 rounded-full animate-ping opacity-50" />
-        <div className="absolute top-3/4 right-1/4 w-3 h-3 bg-amber-400 rounded-full animate-pulse opacity-60" />
-        <div className="absolute bottom-1/4 left-1/2 w-1.5 h-1.5 bg-yellow-200 rounded-full animate-bounce opacity-70" />
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-400 rounded-full animate-ping opacity-50 pointer-events-none" />
+        <div className="absolute top-3/4 right-1/4 w-3 h-3 bg-amber-400 rounded-full animate-pulse opacity-60 pointer-events-none" />
+        <div className="absolute bottom-1/4 left-1/2 w-1.5 h-1.5 bg-yellow-200 rounded-full animate-bounce opacity-70 pointer-events-none" />
 
         <div className="relative z-10 p-8 sm:p-12 lg:p-16 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="max-w-2xl">

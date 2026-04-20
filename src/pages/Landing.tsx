@@ -62,14 +62,13 @@ export default function Landing() {
       <div className="relative min-h-screen flex flex-col items-center justify-center px-4 text-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img src={bgUrl} alt="Hogwarts Castle" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/70 to-background" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-background" />
         </div>
 
-        {/* Nav */}
         <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-6 py-4">
-          <span className="font-heading text-lg text-gold-gradient">✦ Hogwarts House</span>
+          <span className="font-heading text-lg text-gold-gradient drop-shadow-md">✦ Hogwarts House</span>
           <button onClick={() => navigate("/login")}
-            className="text-sm font-heading text-muted-foreground hover:text-foreground transition-colors border border-border/50 px-4 py-1.5 rounded-full hover:border-primary/40">
+            className="text-sm font-heading text-white bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 hover:border-primary/50 transition-all px-5 py-2 rounded-full shadow-lg">
             Entrar
           </button>
         </div>
@@ -88,7 +87,7 @@ export default function Landing() {
           </h1>
           <div className="w-32 h-px bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mb-5" />
 
-          <p className="text-base sm:text-lg text-muted-foreground max-w-xl mx-auto mb-8 leading-relaxed font-serif">
+          <p className="text-base sm:text-lg text-white/90 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] max-w-xl mx-auto mb-8 leading-relaxed font-serif font-medium bg-black/20 p-4 rounded-2xl backdrop-blur-sm border border-white/5">
             O portal de fãs de Harry Potter com gamificação, RPG, álbum de figurinhas, 
             loja mágica e uma comunidade que vive e respira magia.
           </p>

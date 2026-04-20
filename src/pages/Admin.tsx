@@ -116,6 +116,32 @@ function MonetizationTab({ members, fetchAll, adForm, setAdForm, ads, createAd, 
     toast.success("Item removido da loja.");
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      toast.info("Iniciando upload...");
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
+      
+      const { data, error } = await supabase.storage.from("store_items").upload(fileName, file);
+      
+      if (error) {
+        if (error.message.includes("Bucket not found") || error.message.includes("does not exist")) {
+           toast.error("O bucket 'store_items' não existe no Supabase. Crie-o primeiro (como Public).");
+           return;
+        }
+        throw error;
+      }
+      
+      const { data: { publicUrl } } = supabase.storage.from("store_items").getPublicUrl(fileName);
+      setNewItem({ ...newItem, image_url: publicUrl });
+      toast.success("Upload concluído com sucesso!");
+    } catch (err: any) {
+      toast.error(`Erro no upload: ${err.message}`);
+    }
+  };
+
   const CATEGORY_LABELS: Record<string, string> = {
     clothing: "👗 Roupas", wand: "🪄 Varinhas", accessory: "💎 Acessórios",
     skin: "🎨 Skins", decoration: "🏠 Decorações", pack: "📦 Pacotes"
@@ -162,7 +188,13 @@ function MonetizationTab({ members, fetchAll, adForm, setAdForm, ads, createAd, 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <Input placeholder="Nome do item *" value={newItem.name} onChange={e => setNewItem({ ...newItem, name: e.target.value })} />
             <Input placeholder="Descrição" value={newItem.description} onChange={e => setNewItem({ ...newItem, description: e.target.value })} />
-            <Input placeholder="URL da imagem" value={newItem.image_url} onChange={e => setNewItem({ ...newItem, image_url: e.target.value })} />
+            <div className="flex items-center gap-2">
+              <Input placeholder="URL da imagem" className="flex-1" value={newItem.image_url} onChange={e => setNewItem({ ...newItem, image_url: e.target.value })} />
+              <div className="relative shrink-0 w-24">
+                <input type="file" accept="image/*" onChange={handleImageUpload} className="absolute inset-0 opacity-0 cursor-pointer w-full h-full" title="Fazer Upload de Imagem" />
+                <Button variant="outline" className="w-full pointer-events-none">Upload</Button>
+              </div>
+            </div>
             <Input type="number" placeholder="Preço em Galeões *" value={newItem.price_galeons || ""} onChange={e => setNewItem({ ...newItem, price_galeons: parseInt(e.target.value) || 0 })} />
             <select
               value={newItem.category}
