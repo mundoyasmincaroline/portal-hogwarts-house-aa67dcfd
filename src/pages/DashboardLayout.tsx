@@ -4,7 +4,7 @@ import {
   Castle, BookOpen, User, MessageCircle, Camera, Film, Trophy,
   Shield, Swords, BookMarked, Library, ShoppingBag, ScrollText,
   Settings, LogOut, Volume2, VolumeX, RefreshCw, Menu, Users,
-  Coins, Lock
+  Coins, Lock, Wallet
 } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";
@@ -45,6 +45,7 @@ const NAV_ITEMS = [
   { icon: <Library size={20} />, label: "Álbum", path: "/dashboard/album" },
   { icon: <ShoppingBag size={20} />, label: "Loja", path: "/dashboard/shop" },
   { icon: <Coins size={20} />, label: "Gringotts", path: "/dashboard/store" },
+  { icon: <Wallet size={20} />, label: "Carteira", path: "/dashboard/wallet" },
   { icon: <ScrollText size={20} />, label: "Regras", path: "/dashboard/rules" },
   { icon: <Lock size={20} />, label: "Azkaban", path: "/dashboard/azkaban" },
 ];

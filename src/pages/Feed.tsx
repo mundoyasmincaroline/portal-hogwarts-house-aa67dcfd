@@ -20,6 +20,7 @@ interface PostAuthor {
   username: string;
   house: House;
   avatar_url?: string | null;
+  vip_plan?: string | null;
 }
 
 interface FeedPost {
@@ -59,7 +60,7 @@ export default function Feed() {
     const userIds = [...new Set(postsData.map((p) => p.user_id))];
     const { data: authors } = await supabase
       .from("profiles")
-      .select("user_id, full_name, username, house, avatar_url")
+      .select("user_id, full_name, username, house, avatar_url, vip_plan")
       .in("user_id", userIds.length ? userIds : ["00000000-0000-0000-0000-000000000000"]);
 
     const postIds = postsData.map((p) => p.id);
@@ -150,6 +151,8 @@ export default function Feed() {
     setNewPost("");
     setNewMusicUrl("");
     toast.success("Publicado! ✨");
+    // +2 Galeões por publicar
+    supabase.rpc("award_galeons", { _user_id: user.id, _amount: 2, _reason: "post" }).then(() => {});
   };
 
   const toggleReaction = async (postId: string, emoji: string, mine: boolean) => {
@@ -241,7 +244,12 @@ export default function Feed() {
                     )}
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-foreground">{post.author?.full_name || "Bruxo desconhecido"}</p>
+                    <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
+                      {post.author?.full_name || "Bruxo desconhecido"}
+                      {post.author?.vip_plan === "founder" && <span className="text-[10px] bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 px-1.5 py-0.5 rounded-full font-heading">👑 Fundador</span>}
+                      {post.author?.vip_plan === "vip" && <span className="text-[10px] bg-purple-500/20 text-purple-300 border border-purple-500/30 px-1.5 py-0.5 rounded-full font-heading">💜 VIP</span>}
+                      {post.author?.vip_plan === "premium" && <span className="text-[10px] bg-slate-500/20 text-slate-300 border border-slate-400/30 px-1.5 py-0.5 rounded-full font-heading">⭐ Premium</span>}
+                    </p>
                     <p className="text-xs text-muted-foreground">@{post.author?.username} • {new Date(post.created_at).toLocaleString("pt-BR")}</p>
                   </div>
                   {post.author?.house && <HouseCrest house={post.author.house} size="sm" />}
