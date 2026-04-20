@@ -41,8 +41,8 @@ export default function Landing() {
   }, []);
 
   useEffect(() => {
-    supabase.from("profiles").select("*", { count: "exact", head: true }).eq("approved", true)
-      .then(({ count }) => setMemberCount(count ?? 0));
+    supabase.from("profiles").select("*", { count: "exact", head: true })
+      .then(({ count }) => setMemberCount(Math.max(count ?? 0, 10)));
   }, []);
 
   const hour = new Date().getHours();
@@ -116,6 +116,20 @@ export default function Landing() {
               <p className="font-heading text-2xl text-primary">∞</p>
               <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Magia</p>
             </div>
+          </div>
+
+          {/* Dynamic time-of-day card */}
+          <div className="glass rounded-2xl px-6 py-4 mb-6 max-w-md mx-auto border border-primary/20 text-center">
+            <p className="text-primary font-heading text-xs tracking-widest uppercase mb-1">
+              {timeOfDay === "morning" ? "Amanhecer Mágico" : timeOfDay === "afternoon" ? "Tarde em Hogwarts" : "Magia Noturna"}
+            </p>
+            <p className="text-muted-foreground text-sm font-serif leading-relaxed">
+              {timeOfDay === "morning"
+                ? "Os primeiros raios de sol iluminam as portas de carvalho do castelo. O Grande Salão desperta com o voo das corujas."
+                : timeOfDay === "afternoon"
+                ? "O sol da tarde aquece as pedras milenares de Hogwarts. Pelas janelas, você pode ver os alunos praticando feitiços nos jardins."
+                : "O castelo repousa sob um céu estrelado. Os feitiços brilham mais forte à noite. Os segredos aguardam na escuridão."}
+            </p>
           </div>
 
           {/* CTA */}
