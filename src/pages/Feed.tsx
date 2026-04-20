@@ -11,6 +11,7 @@ import BirthdayBanner from "@/components/BirthdayBanner";
 import MagicAdBanner from "@/components/MagicAdBanner";
 import StoriesBar from "@/components/StoriesBar";
 import DynamicGreeting from "@/components/DynamicGreeting";
+import VipUpsellBanner from "@/components/VipUpsellBanner";
 
 const REACTIONS = ["⚡", "❤️", "🔥", "🦁", "🦅", "🐍", "🦡"];
 
@@ -185,6 +186,11 @@ export default function Feed() {
       <DynamicGreeting />
 
       <BirthdayBanner />
+      <VipUpsellBanner
+        currentVip={(profile as any)?.vip_plan}
+        galeons={(profile as any)?.galeons ?? 0}
+        username={profile?.full_name}
+      />
       <DailyHighlight />
       <MoodSession />
 

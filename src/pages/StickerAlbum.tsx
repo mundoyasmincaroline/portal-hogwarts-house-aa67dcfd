@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Trophy } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import StickerVisual from "@/components/StickerVisual";
 
 interface Sticker {
   id: string;
@@ -327,7 +328,15 @@ export default function StickerAlbum() {
               }`}
             >
               <div className="absolute inset-0 z-0">
-                {s.image_url && !failedImages[s.id] ? (
+                {/* StickerVisual como base — mostra se imagem falhar ou não existir */}
+                <StickerVisual
+                  name={s.character_name}
+                  rarity={s.rarity}
+                  unlocked={unlocked}
+                  imageUrl={s.image_url}
+                  failedImage={failedImages[s.id]}
+                />
+                {s.image_url && !failedImages[s.id] && (
                   <img
                     src={s.image_url}
                     alt={s.character_name}
@@ -337,15 +346,6 @@ export default function StickerAlbum() {
                       unlocked ? "opacity-90 group-hover:scale-105" : "opacity-40 grayscale group-hover:grayscale-0 group-hover:opacity-60"
                     }`}
                   />
-                ) : (
-                  <div className={`absolute inset-0 flex flex-col items-center justify-center gap-2 bg-gradient-to-br ${
-                    isGold ? "from-yellow-900/60 to-background" : isSilver ? "from-slate-700/60 to-background" : "from-amber-900/60 to-background"
-                  }`}>
-                    <span className="text-4xl">🧙</span>
-                    <span className={`font-heading text-5xl font-bold select-none ${
-                      isGold ? "text-yellow-400/40" : isSilver ? "text-slate-300/40" : "text-amber-600/40"
-                    }`}>{s.character_name.charAt(0)}</span>
-                  </div>
                 )}
                 <div className={`absolute inset-0 bg-gradient-to-t ${
                   unlocked ? "from-background via-background/50 to-transparent" : "from-background via-background/80 to-background/30"

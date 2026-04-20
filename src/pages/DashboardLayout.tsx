@@ -325,6 +325,22 @@ export default function DashboardLayout() {
             <span className="text-[11px] text-yellow-400/80 font-heading group-hover:text-yellow-400">🪙 Galeões</span>
             <span className="font-heading text-sm text-yellow-400">{((profile as any).galeons || 0).toLocaleString("pt-BR")}</span>
           </Link>
+          {/* VIP upgrade CTA — só para não-VIPs */}
+          {!(profile as any).vip_plan && (
+            <Link to="/dashboard/store"
+              className="flex items-center gap-2 px-3 py-2 mb-2 rounded-xl border border-purple-500/40 bg-gradient-to-r from-purple-900/30 to-violet-900/20 hover:border-purple-400/60 hover:from-purple-900/50 transition-all group animate-pulse-glow">
+              <span className="text-base">👑</span>
+              <span className="text-[11px] text-purple-300 font-heading group-hover:text-purple-200 flex-1">Ativar VIP</span>
+              <span className="text-[9px] bg-purple-500/30 text-purple-300 px-1.5 py-0.5 rounded-full font-heading">R$9,90</span>
+            </Link>
+          )}
+          {/* Badge VIP ativo */}
+          {(profile as any).vip_plan && (
+            <div className="flex items-center gap-2 px-3 py-2 mb-2 rounded-xl border border-yellow-500/40 bg-gradient-to-r from-yellow-900/20 to-amber-900/10">
+              <span className="text-base">✨</span>
+              <span className="text-[11px] text-yellow-400 font-heading capitalize">{(profile as any).vip_plan} Ativo</span>
+            </div>
+          )}
           <div className="flex items-center justify-between gap-1 w-full flex-wrap">
             <Link to="/dashboard/profile" className="flex items-center gap-2 max-w-[120px] hover:bg-secondary/50 p-1.5 rounded-lg transition-colors cursor-pointer group">
               <div className="relative shrink-0">
