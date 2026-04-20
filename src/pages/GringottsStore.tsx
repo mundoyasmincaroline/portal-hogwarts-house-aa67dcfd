@@ -6,14 +6,7 @@ import { ShoppingBag, Coins, Crown, Wand2, Shirt, Gem, Sparkles, Star, ExternalL
 import { Button } from "@/components/ui/button";
 
 // ─── Config ────────────────────────────────────────────────────────────
-const INFINITEPAY_HANDLE = "portal-matrix";
-const SUPABASE_URL = "https://gubokmpoihpoiecvngnm.supabase.co";
-// Edge Functions (server-side — sem CORS)
-const EF_CREATE_LINK = `${SUPABASE_URL}/functions/v1/create-payment-link`;
-const EF_WEBHOOK     = `${SUPABASE_URL}/functions/v1/infinitepay-webhook`;
-// Fallback direto (apenas se Edge Function não estiver deployada)
-const IP_LINKS_API = "https://api.infinitepay.io/invoices/public/checkout/links";
-const IP_CHECK_API = "https://api.infinitepay.io/invoices/public/checkout/payment_check";
+// Tudo via supabase.rpc() — sem CORS, server-side via pg_net
 // ────────────────────────────────────────────────────────────
 
 
@@ -110,74 +103,38 @@ export default function GringottsStore() {
     try {
       toast.info("🔍 Verificando seu pagamento...");
 
-      // Chamar API pública InfinitePay (sem autenticação, CORS liberado)
-      const checkRes = await fetch(IP_CHECK_API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          handle: INFINITEPAY_HANDLE,
-          order_nsu: orderNsu,
-          transaction_nsu: transactionNsu,
-          slug,
-        }),
+      // ✅ Verificar server-side via pg_net (sem CORS!)
+      const { data, error } = await supabase.rpc("verify_infinitepay_payment", {
+        p_order_nsu:       orderNsu,
+        p_transaction_nsu: transactionNsu,
+        p_slug:            slug,
       });
 
-      const checkData = await checkRes.json();
+      if (error) throw new Error(error.message);
 
-      if (!checkData.paid) {
-        // Pagamento ainda processando — guardar ID para retry
-        setPendingOrderId(orderNsu);
-        toast.warning("⏳ Pagamento ainda sendo processado. Clique em 'Verificar novamente' em alguns segundos.", { duration: 10000 });
-        return;
-      }
-
-      // Buscar pedido no banco
-      const { data: order } = await supabase
-        .from("galeon_orders")
-        .select("*")
-        .eq("id", orderNsu)
-        .maybeSingle();
-
-      if (!order) { toast.error("Pedido não encontrado."); return; }
-      if (order.status === "paid") { toast.info("✅ Pagamento já confirmado!"); return; }
-
-      // Marcar como pago
-      await supabase.from("galeon_orders")
-        .update({ status: "paid", paid_at: new Date().toISOString(), infinitepay_id: transactionNsu } as never)
-        .eq("id", orderNsu);
-
-      const isVip = order.package_id?.startsWith("vip_");
-      const currentGaleons = profile?.galeons ?? 0;
-
-      if (isVip) {
-        const planId = order.package_id.replace("vip_", "");
-        const VIP_GALEONS: Record<string, number> = { premium: 0, vip: 200, founder: 500 };
-        const expires = new Date(); expires.setMonth(expires.getMonth() + 1);
-        await supabase.from("profiles").update({
-          vip_plan: planId,
-          vip_expires_at: expires.toISOString(),
-          galeons: currentGaleons + (VIP_GALEONS[planId] || 0),
-        } as never).eq("user_id", order.user_id);
-        toast.success(`🎉 Plano ${planId.toUpperCase()} ativado! Bem-vindo ao VIP!`, { duration: 6000 });
+      if (data?.success) {
+        if (data.type === "vip") {
+          toast.success(`🎉 Plano ${data.plan?.toUpperCase()} ativado! Bem-vindo ao VIP!`, { duration: 6000 });
+        } else {
+          toast.success(`🎉 ${data.galeons} Galeões adicionados à sua conta!`, { duration: 6000 });
+        }
+        setPendingOrderId(null);
+        setTimeout(() => window.location.reload(), 1500);
+      } else if (data?.message === "Já processado") {
+        toast.info("✅ Pagamento já confirmado anteriormente!");
+        setPendingOrderId(null);
       } else {
-        await supabase.from("profiles")
-          .update({ galeons: currentGaleons + order.galeons } as never)
-          .eq("user_id", order.user_id);
-        toast.success(`🎉 ${order.galeons} Galeões adicionados à sua conta!`, { duration: 6000 });
+        setPendingOrderId(orderNsu);
+        toast.warning("⏳ Pagamento ainda sendo processado. Clique em 'Verificar novamente' em alguns instantes.", { duration: 10000 });
       }
-
-      setPendingOrderId(null);
-      setTimeout(() => window.location.reload(), 1500);
-
     } catch (err: any) {
-      console.warn("Verificação automática falhou:", err.message);
-      // Guardar ID para retry manual
+      console.warn("Erro na verificação:", err.message);
       setPendingOrderId(orderNsu);
       toast.info("✅ Pagamento recebido! Clique em 'Verificar novamente' para liberar seus Galeões.", { duration: 10000 });
     }
   };
 
-  // ── Criar Link via Edge Function (com fallback direto) ──────────
+  // ── Criar Link via supabase.rpc (pg_net — server-side, sem CORS) ──
   const createInfinitePayLink = async (
     orderId: string,
     amountBrl: number,
@@ -187,57 +144,23 @@ export default function GringottsStore() {
     galeonsQty?: number,
     vipPlan?: string,
   ): Promise<string | null> => {
-    const { data: { session } } = await supabase.auth.getSession();
-
-    // ─ Tentativa 1: Edge Function (sem CORS) ────────────────────
     try {
-      const res = await fetch(EF_CREATE_LINK, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${session?.access_token ?? ""}`,
-        },
-        body: JSON.stringify({
-          order_id: orderId,
-          amount_brl: amountBrl,
-          galeons: galeonsQty ?? 0,
-          package_name: description,
-          user_id: user?.id,
-          user_email: userEmail,
-          user_name: userName,
-          vip_plan: vipPlan,
-        }),
+      const { data, error } = await supabase.rpc("create_infinitepay_link", {
+        p_order_id:    orderId,
+        p_amount_brl:  amountBrl,
+        p_description: description,
+        p_user_id:     user?.id,
+        p_user_email:  userEmail,
+        p_user_name:   userName,
+        p_galeons:     galeonsQty ?? 0,
+        p_vip_plan:    vipPlan ?? null,
       });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.payment_url) return data.payment_url;
-        console.warn("Edge Function retornou sem URL:", data);
-      } else {
-        const err = await res.json().catch(() => ({}));
-        console.warn("Edge Function erro:", res.status, err);
-      }
+      if (error) { console.error("RPC error:", error); return null; }
+      if (data?.payment_url) return data.payment_url;
+      console.warn("Sem URL na resposta:", data);
+      return null;
     } catch (e) {
-      console.warn("Edge Function indisponível (não deployada):", e);
-    }
-
-    // ─ Tentativa 2: Direto InfinitePay (pode ter CORS) ──────────
-    try {
-      const res = await fetch(IP_LINKS_API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          handle: INFINITEPAY_HANDLE,
-          redirect_url: `${window.location.origin}/dashboard/store`,
-          order_nsu: orderId,
-          customer: { name: userName || "Bruxo(a)", email: userEmail || "" },
-          items: [{ quantity: 1, price: Math.round(amountBrl * 100), description }],
-        }),
-      });
-      const data = await res.json();
-      console.log("Resposta InfinitePay direta:", data);
-      return data.url ?? null;
-    } catch (e: any) {
-      console.error("Erro CORS ao chamar InfinitePay diretamente:", e.message);
+      console.error("Erro ao chamar create_infinitepay_link:", e);
       return null;
     }
   };

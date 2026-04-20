@@ -1,0 +1,2 @@
+-- PASSO 1: Ativar pg_net
+CREATE EXTENSION IF NOT EXISTS pg_net;
