@@ -12,6 +12,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import ProfileAlbum from "@/components/ProfileAlbum";
 import CharacterSheetView from "@/components/CharacterSheetView";
 import MemberCard from "@/components/MemberCard";
+import AdminMemberModal from "@/components/AdminMemberModal";
 import { Search } from "lucide-react";
 
 // ---- Componente embutido: lista de membros para solicitar amizade ----
@@ -131,6 +132,7 @@ export default function Profile() {
     avatar_url: "",
   });
   const [uploading, setUploading] = useState(false);
+  const [adminEditModal, setAdminEditModal] = useState(false);
 
   const isMe = !userId || userId === user?.id;
   const profile = isMe ? currentUserProfile : targetProfile;
@@ -435,11 +437,23 @@ export default function Profile() {
             
             <div className="mt-4 flex justify-center gap-2">
               {isMe ? (
-                <Button variant="magical" size="sm" className="font-heading text-xs" onClick={startEdit}>
-                  ✏️ Editar perfil
-                </Button>
+                <>
+                  <Button variant="magical" size="sm" className="font-heading text-xs" onClick={startEdit}>
+                    ✏️ Editar perfil
+                  </Button>
+                  {isAdmin && (
+                    <Button variant="outline" size="sm" className="font-heading text-xs text-primary border-primary hover:bg-primary/10" onClick={() => setAdminEditModal(true)}>
+                      🪄 Edição Suprema (Admin)
+                    </Button>
+                  )}
+                </>
               ) : (
                 <>
+                {isAdmin && (
+                  <Button variant="outline" size="sm" className="font-heading text-xs text-primary border-primary hover:bg-primary/10" onClick={() => setAdminEditModal(true)}>
+                    🪄 Edição Suprema (Admin)
+                  </Button>
+                )}
                 {/* Botão de MENSAGEM sempre visível para qualquer perfil que não seja o meu */}
                 <Button
                   variant="outline"
@@ -694,6 +708,18 @@ export default function Profile() {
           </form>
         </div>
       ) : null}
+
+      {adminEditModal && profile && (
+        <AdminMemberModal
+          memberId={profile.user_id}
+          memberName={profile.full_name}
+          onClose={() => setAdminEditModal(false)}
+          onSaved={() => {
+            if (isMe) window.location.reload();
+            else loadTargetProfile();
+          }}
+        />
+      )}
     </div>
   );
 }
