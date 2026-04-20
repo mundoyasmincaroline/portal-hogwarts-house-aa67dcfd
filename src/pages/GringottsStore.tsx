@@ -5,10 +5,11 @@ import { toast } from "sonner";
 import { ShoppingBag, Coins, Crown, Wand2, Shirt, Gem, Sparkles, Star, ExternalLink, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-// ─── InfinitePay ───────────────────────────────────────────────
+// ─── InfinitePay (API pública — CORS liberado) ───────────────────
 const INFINITEPAY_HANDLE = "portal-matrix";
-const SUPABASE_URL = "https://gubokmpoihpoiecvngnm.supabase.co";
-// ──────────────────────────────────────────────────────────────
+const IP_LINKS_API = "https://api.infinitepay.io/invoices/public/checkout/links";
+const IP_CHECK_API = "https://api.infinitepay.io/invoices/public/checkout/payment_check";
+// ─────────────────────────────────────────────────────────────────
 
 
 // ─── Tipos ────────────────────────────────────────────────
@@ -72,6 +73,7 @@ export default function GringottsStore() {
   const [owned, setOwned] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [buying, setBuying] = useState<string|null>(null);
+  const [pendingOrderId, setPendingOrderId] = useState<string|null>(null);
 
   useEffect(() => { loadStore(); }, [user?.id]);
 
@@ -103,44 +105,44 @@ export default function GringottsStore() {
     try {
       toast.info("🔍 Verificando seu pagamento...");
 
-      // Verificar pagamento na InfinitePay
-      const checkRes = await fetch("https://api.infinitepay.io/invoices/public/checkout/payment_check", {
+      // Chamar API pública InfinitePay (sem autenticação, CORS liberado)
+      const checkRes = await fetch(IP_CHECK_API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           handle: INFINITEPAY_HANDLE,
           order_nsu: orderNsu,
           transaction_nsu: transactionNsu,
-          slug: slug,
+          slug,
         }),
       });
 
-      if (!checkRes.ok) throw new Error("Falha na verificação.");
       const checkData = await checkRes.json();
 
       if (!checkData.paid) {
-        toast.error("⚠️ Pagamento ainda não confirmado. Tente novamente em alguns minutos.");
+        // Pagamento ainda processando — guardar ID para retry
+        setPendingOrderId(orderNsu);
+        toast.warning("⏳ Pagamento ainda sendo processado. Clique em 'Verificar novamente' em alguns segundos.", { duration: 10000 });
         return;
       }
 
-      // Buscar o pedido no banco
+      // Buscar pedido no banco
       const { data: order } = await supabase
         .from("galeon_orders")
         .select("*")
         .eq("id", orderNsu)
-        .single();
+        .maybeSingle();
 
-      if (!order || order.status === "paid") return; // já processado
+      if (!order) { toast.error("Pedido não encontrado."); return; }
+      if (order.status === "paid") { toast.info("✅ Pagamento já confirmado!"); return; }
 
       // Marcar como pago
-      await supabase
-        .from("galeon_orders")
+      await supabase.from("galeon_orders")
         .update({ status: "paid", paid_at: new Date().toISOString(), infinitepay_id: transactionNsu } as never)
         .eq("id", orderNsu);
 
-      // Creditar Galeões ou ativar VIP
       const isVip = order.package_id?.startsWith("vip_");
-      const currentGaleons = (profile as any)?.galeons || 0;
+      const currentGaleons = profile?.galeons ?? 0;
 
       if (isVip) {
         const planId = order.package_id.replace("vip_", "");
@@ -151,25 +153,26 @@ export default function GringottsStore() {
           vip_expires_at: expires.toISOString(),
           galeons: currentGaleons + (VIP_GALEONS[planId] || 0),
         } as never).eq("user_id", order.user_id);
-        toast.success(`🎉 Plano ${planId.toUpperCase()} ativado com sucesso!`);
+        toast.success(`🎉 Plano ${planId.toUpperCase()} ativado! Bem-vindo ao VIP!`, { duration: 6000 });
       } else {
         await supabase.from("profiles")
           .update({ galeons: currentGaleons + order.galeons } as never)
           .eq("user_id", order.user_id);
-        toast.success(`🎉 ${order.galeons} Galeões adicionados à sua conta!`);
+        toast.success(`🎉 ${order.galeons} Galeões adicionados à sua conta!`, { duration: 6000 });
       }
 
-      loadStore();
+      setPendingOrderId(null);
       setTimeout(() => window.location.reload(), 1500);
 
     } catch (err: any) {
-      // Se CORS bloquear: pagamento ficará pendente, admin aprova manualmente
-      console.warn("Verificação automática falhou (provável CORS):", err.message);
-      toast.info("✅ Pagamento recebido! Seus Galeões serão liberados em até 5 minutos.", { duration: 8000 });
+      console.warn("Verificação automática falhou:", err.message);
+      // Guardar ID para retry manual
+      setPendingOrderId(orderNsu);
+      toast.info("✅ Pagamento recebido! Clique em 'Verificar novamente' para liberar seus Galeões.", { duration: 10000 });
     }
   };
 
-  // ── Criar Link de Pagamento InfinitePay ───────────────────
+  // ── Criar Link de Pagamento (API pública InfinitePay) ────────
   const createInfinitePayLink = async (
     orderId: string,
     amountBrl: number,
@@ -177,14 +180,13 @@ export default function GringottsStore() {
     userEmail: string,
     userName: string,
   ): Promise<string | null> => {
-    const redirectUrl = `${window.location.origin}/dashboard/store`;
     try {
-      const res = await fetch("https://api.infinitepay.io/invoices/public/checkout/links", {
+      const res = await fetch(IP_LINKS_API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           handle: INFINITEPAY_HANDLE,
-          redirect_url: redirectUrl,
+          redirect_url: `${window.location.origin}/dashboard/store`,
           order_nsu: orderId,
           customer: { name: userName || "Bruxo(a)", email: userEmail || "" },
           items: [{ quantity: 1, price: Math.round(amountBrl * 100), description }],
@@ -219,7 +221,6 @@ export default function GringottsStore() {
 
       if (!payUrl) throw new Error("Não foi possível gerar o link de pagamento.");
 
-      // 3. Salvar link no banco e redirecionar
       await supabase.from("galeon_orders").update({ payment_link: payUrl } as never).eq("id", order.id);
       toast.info("💳 Redirecionando para o pagamento...");
       setTimeout(() => { window.location.href = payUrl; }, 800);
@@ -235,7 +236,7 @@ export default function GringottsStore() {
   // ── Comprar Item da Loja ──────────────────────────────────
   const buyItem = async (item: StoreItem) => {
     if (!user || !profile) return toast.error("Você precisa estar logado.");
-    const bal = (profile as any).galeons || 0;
+    const bal = profile?.galeons ?? 0;
     if (bal < item.price_galeons) {
       toast.error(`Galeões insuficientes! Você tem ${bal}🪙 e precisa de ${item.price_galeons}🪙`);
       return;
@@ -288,8 +289,8 @@ export default function GringottsStore() {
     }
   };
 
-  const galeons = (profile as any)?.galeons || 0;
-  const currentVip = (profile as any)?.vip_plan;
+  const galeons = profile?.galeons ?? 0;
+  const currentVip = profile?.vip_plan;
   const filteredItems = items.filter(i => i.category === tab);
 
   return (
@@ -315,6 +316,25 @@ export default function GringottsStore() {
           </div>
         </div>
       </div>
+
+      {/* Banner de pagamento pendente — verificar novamente */}
+      {pendingOrderId && (
+        <div className="glass rounded-2xl p-5 border border-yellow-400/40 bg-yellow-900/10 flex flex-col sm:flex-row items-center gap-4">
+          <div className="text-3xl">⏳</div>
+          <div className="flex-1 text-center sm:text-left">
+            <p className="font-heading text-yellow-400 text-sm">Pagamento aguardando confirmação</p>
+            <p className="text-xs text-muted-foreground mt-0.5">Clique para verificar se o pagamento foi aprovado.</p>
+          </div>
+          <Button variant="magical" size="sm"
+            onClick={() => verifyAndCreditPayment(pendingOrderId, "", "")}>
+            🔍 Verificar novamente
+          </Button>
+          <button onClick={() => setPendingOrderId(null)}
+            className="text-muted-foreground hover:text-foreground text-xs underline">
+            Dispensar
+          </button>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="flex gap-2 flex-wrap">
