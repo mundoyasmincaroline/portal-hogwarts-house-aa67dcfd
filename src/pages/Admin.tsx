@@ -3,6 +3,7 @@ import { useAuth, isUserOnline } from "@/lib/auth";
 import { HOUSES, type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import HouseCrest from "@/components/HouseCrest";
 import { toast } from "sonner";

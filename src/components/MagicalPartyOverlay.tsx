@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Sparkles, Music, Pizza, X, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SafeImage from "./SafeImage";
-import { Badge } from "./ui/badge";
+import { Badge } from "@/components/ui/badge";
 
 export default function MagicalPartyOverlay() {
   const [activeParty, setActiveParty] = useState<any>(null);

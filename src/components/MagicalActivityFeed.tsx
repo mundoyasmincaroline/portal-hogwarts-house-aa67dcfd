@@ -23,7 +23,7 @@ export default function MagicalActivityFeed() {
 
   return (
     <div className="w-full bg-black/60 backdrop-blur-md border-y border-white/5 py-2 overflow-hidden relative group">
-      <div className="flex items-center justify-center gap-3 animate-in slide-in-from-right-full duration-1000 key={index}">
+      <div className="flex items-center justify-center gap-3 animate-in slide-in-from-right-full duration-1000" key={index}>
         <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/10">
             {activity.icon}
             <span className="text-[11px] font-heading text-white/80 tracking-wide">

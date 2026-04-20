@@ -5,6 +5,7 @@ import HouseCrest from "@/components/HouseCrest";
 import XPBar from "@/components/XPBar";
 import MedalBadge, { getMedalForXP } from "@/components/MedalBadge";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
