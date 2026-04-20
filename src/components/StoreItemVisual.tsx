@@ -124,20 +124,20 @@ interface Props {
 // Mapeamento de imagens épicas para categorias caso o item não tenha imagem
 function getEpicPlaceholder(category: string, name: string): string {
   const n = name.toLowerCase();
-  if (category === "clothing" || n.includes("robe") || n.includes("manto")) 
-    return "https://images.unsplash.com/photo-1595123550441-d377e017ea6a?q=80&w=600"; // Mistic cloth
+  if (category === "clothing" || n.includes("robe") || n.includes("manto") || n.includes("capa")) 
+    return "https://images.unsplash.com/photo-1603504351111-2eb26fc8e03e?q=80&w=800&auto=format&fit=crop"; // Mistic cloth
   if (category === "wand" || n.includes("varinha")) 
-    return "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=600"; // Wand
+    return "https://images.unsplash.com/photo-1588612501594-541e21b2b800?q=80&w=800&auto=format&fit=crop"; // Wand
   if (category === "accessory" || n.includes("anel") || n.includes("colar") || n.includes("amuleto")) 
-    return "https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?q=80&w=600"; // Crystal/Gem
-  if (category === "skin" || n.includes("aura") || n.includes("skin")) 
-    return "https://images.unsplash.com/photo-1515688594390-b649af70d282?q=80&w=600"; // Magical aura
+    return "https://images.unsplash.com/photo-1605335967008-01d7ed085b30?q=80&w=800&auto=format&fit=crop"; // Crystal/Gem
+  if (category === "skin" || n.includes("aura") || n.includes("visual")) 
+    return "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=800&auto=format&fit=crop"; // Magical aura
   if (category === "featured" || n.includes("coroa") || n.includes("vip")) 
-    return "https://images.unsplash.com/photo-1574280367876-0f862cd5d082?q=80&w=600"; // Crown
+    return "https://images.unsplash.com/photo-1580234797602-22c37b4a6217?q=80&w=800&auto=format&fit=crop"; // Crown
   if (n.includes("vassoura") || n.includes("nimbus")) 
-    return "https://images.unsplash.com/photo-1618220179428-22790b46a0eb?q=80&w=600"; // Magical object
+    return "https://images.unsplash.com/photo-1463130456064-071c775aee3f?q=80&w=800&auto=format&fit=crop"; // Magical broom/wood
   
-  return "https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=600"; // Magical book
+  return "https://images.unsplash.com/photo-1628102491629-778571d893a3?q=80&w=800&auto=format&fit=crop"; // Generic magical item
 }
 
 export default function StoreItemVisual({ imageUrl, name, category, isOwned }: Props) {
