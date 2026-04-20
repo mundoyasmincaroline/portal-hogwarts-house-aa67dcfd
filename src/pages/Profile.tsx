@@ -11,6 +11,99 @@ import { toast } from "sonner";
 import { useParams, useNavigate } from "react-router-dom";
 import ProfileAlbum from "@/components/ProfileAlbum";
 import CharacterSheetView from "@/components/CharacterSheetView";
+import MemberCard from "@/components/MemberCard";
+import { Search } from "lucide-react";
+
+// ---- Componente embutido: lista de membros para solicitar amizade ----
+function MembersTab({ currentUserId }: { currentUserId?: string }) {
+  const [members, setMembers] = useState<any[]>([]);
+  const [friendships, setFriendships] = useState<Record<string, any>>({});
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const load = async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("user_id, full_name, username, avatar_url, house, level, xp, last_seen")
+        .eq("approved", true)
+        .order("level", { ascending: false });
+      setMembers((data || []).map(m => ({ ...m, online: isUserOnline(m) })));
+
+      if (currentUserId) {
+        const { data: fData } = await supabase
+          .from("friendships")
+          .select("user_id, friend_id, status")
+          .or(`user_id.eq.${currentUserId},friend_id.eq.${currentUserId}`);
+        const map: Record<string, string> = {};
+        (fData || []).forEach((f: any) => {
+          const other = f.user_id === currentUserId ? f.friend_id : f.user_id;
+          if (f.status === "accepted") map[other] = "accepted";
+          else if (f.status === "blocked") map[other] = "blocked";
+          else map[other] = f.user_id === currentUserId ? "pending_sent" : "pending_received";
+        });
+        setFriendships(map);
+      }
+      setLoading(false);
+    };
+    load();
+  }, [currentUserId]);
+
+  const filtered = members.filter(m =>
+    !search.trim() ||
+    m.full_name?.toLowerCase().includes(search.toLowerCase()) ||
+    m.username?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div className="space-y-4">
+      <div className="relative">
+        <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          placeholder="Buscar membro..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="pl-9 bg-secondary/50"
+        />
+      </div>
+      {loading ? (
+        <p className="text-center text-muted-foreground py-8 animate-pulse">Convocando os bruxos...</p>
+      ) : filtered.length === 0 ? (
+        <p className="text-center text-muted-foreground py-8">Nenhum membro encontrado.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {filtered.map(m => (
+            <MemberCard
+              key={m.user_id}
+              member={m}
+              friendshipStatus={(friendships[m.user_id] as any) || "none"}
+              onFriendshipChange={() => {
+                // Reload friendships after action
+                if (!currentUserId) return;
+                supabase
+                  .from("friendships")
+                  .select("user_id, friend_id, status")
+                  .or(`user_id.eq.${currentUserId},friend_id.eq.${currentUserId}`)
+                  .then(({ data: fData }) => {
+                    const map: Record<string, string> = {};
+                    (fData || []).forEach((f: any) => {
+                      const other = f.user_id === currentUserId ? f.friend_id : f.user_id;
+                      if (f.status === "accepted") map[other] = "accepted";
+                      else if (f.status === "blocked") map[other] = "blocked";
+                      else map[other] = f.user_id === currentUserId ? "pending_sent" : "pending_received";
+                    });
+                    setFriendships(map);
+                  });
+              }}
+              compact
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+// -----------------------------------------------------------------------
 
 export default function Profile() {
   const { userId } = useParams<{ userId: string }>();
@@ -21,7 +114,7 @@ export default function Profile() {
   const [friendship, setFriendship] = useState<any>(null);
   const [friends, setFriends] = useState<any[]>([]);
   const [loadingTarget, setLoadingTarget] = useState(false);
-  const [activeTab, setActiveTab] = useState<"about" | "fichas" | "friends" | "security" | "album" | "referral">("about");
+  const [activeTab, setActiveTab] = useState<"about" | "fichas" | "friends" | "members" | "security" | "album" | "referral">("about");
   const [referrals, setReferrals] = useState<any[]>([]);
   const [userBadges, setUserBadges] = useState<any[]>([]);
 
@@ -253,11 +346,17 @@ export default function Profile() {
         >
           Sobre
         </button>
-        <button 
-          onClick={() => { setActiveTab("friends"); setEditing(false); }} 
+        <button
+          onClick={() => { setActiveTab("friends"); setEditing(false); }}
           className={`pb-2 font-heading text-sm transition-colors ${activeTab === "friends" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
         >
           Amigos ({friends.length})
+        </button>
+        <button
+          onClick={() => { setActiveTab("members"); setEditing(false); }}
+          className={`pb-2 font-heading text-sm transition-colors ${activeTab === "members" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          👥 Membros
         </button>
         <button 
           onClick={() => { setActiveTab("fichas"); setEditing(false); }} 
@@ -325,36 +424,37 @@ export default function Profile() {
                 </Button>
               ) : (
                 <>
-                  {!friendship && (
-                    <>
-                      <Button variant="magical" size="sm" onClick={handleAddFriend}>Adicionar Amigo +</Button>
-                      <Button variant="outline" size="sm" className="text-destructive" onClick={handleBlockUser}>Bloquear 🚫</Button>
-                    </>
-                  )}
-                  {friendship?.status === "pending" && friendship.friend_id === user?.id && (
-                    <>
-                      <Button variant="magical" size="sm" onClick={handleAcceptFriend}>Aceitar ✅</Button>
-                      <Button variant="outline" size="sm" onClick={handleRejectFriend}>Recusar ❌</Button>
-                      <Button variant="outline" size="sm" className="text-destructive" onClick={handleBlockUser}>Bloquear 🚫</Button>
-                    </>
-                  )}
-                  {friendship?.status === "pending" && friendship.user_id === user?.id && (
-                    <Button variant="outline" size="sm" onClick={handleRemoveFriend}>Cancelar pedido ⏳</Button>
-                  )}
-                  {friendship?.status === "accepted" && (
-                    <>
-                      <Button variant="outline" size="sm" className="text-destructive" onClick={handleRemoveFriend}>Desfazer ❌</Button>
-                      <Button variant="outline" size="sm" className="text-destructive" onClick={handleBlockUser}>Bloquear 🚫</Button>
-                      <Button variant="magical" size="sm" onClick={() => navigate(`/dashboard/dm/${profile.user_id}`)}>💬 Mensagem</Button>
-                    </>
-                  )}
-                  {!friendship && (
-                    <Button variant="outline" size="sm" onClick={() => navigate(`/dashboard/dm/${profile.user_id}`)}>💬 Mensagem</Button>
-                  )}
-                  {friendship?.status === "blocked" && friendship.user_id === user?.id && (
-                    <Button variant="outline" size="sm" onClick={handleUnblock}>Desbloquear</Button>
-                  )}
-                </>
+                {/* Botão de MENSAGEM sempre visível para qualquer perfil que não seja o meu */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate(`/dashboard/dm/${profile.user_id}`)}
+                >
+                  💬 Mensagem
+                </Button>
+
+                {/* Botoes de amizade conforme estado */}
+                {friendship?.status === "blocked" && friendship.user_id === user?.id ? (
+                  <Button variant="outline" size="sm" onClick={handleUnblock}>Desbloquear</Button>
+                ) : friendship?.status === "accepted" ? (
+                  <>
+                    <Button variant="outline" size="sm" className="text-green-500 border-green-500/30">✓ Amigos</Button>
+                    <Button variant="outline" size="sm" className="text-destructive" onClick={handleRemoveFriend}>Desfazer</Button>
+                  </>
+                ) : friendship?.status === "pending" && friendship.friend_id === user?.id ? (
+                  <>
+                    <Button variant="magical" size="sm" onClick={handleAcceptFriend}>Aceitar ✅</Button>
+                    <Button variant="outline" size="sm" onClick={handleRejectFriend}>Recusar ❌</Button>
+                  </>
+                ) : friendship?.status === "pending" && friendship.user_id === user?.id ? (
+                  <Button variant="outline" size="sm" onClick={handleRemoveFriend}>Cancelar ⏳</Button>
+                ) : (
+                  <>
+                    <Button variant="magical" size="sm" onClick={handleAddFriend}>Adicionar Amigo +</Button>
+                    <Button variant="outline" size="sm" className="text-destructive" onClick={handleBlockUser}>Bloquear 🚫</Button>
+                  </>
+                )}
+              </>
               )}
             </div>
           </>
@@ -485,30 +585,30 @@ export default function Profile() {
         <div className="space-y-4">
           <h2 className="font-heading text-xl text-foreground">Amigos de {profile.full_name}</h2>
           {friends.length === 0 ? (
-            <div className="glass rounded-xl p-6 text-center text-muted-foreground text-sm">
-              Nenhum amigo adicionado ainda.
+            <div className="glass rounded-xl p-8 text-center">
+              <p className="text-4xl mb-3">🤝</p>
+              <p className="text-muted-foreground text-sm">Nenhum amigo adicionado ainda.</p>
+              <button
+                onClick={() => setActiveTab("members")}
+                className="mt-3 text-xs text-primary hover:underline"
+              >
+                Ver todos os membros para adicionar →
+              </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {friends.map(f => (
-                <div key={f.user_id} className="glass rounded-xl p-3 flex items-center gap-3 cursor-pointer hover:border-primary/50" onClick={() => navigate(`/dashboard/profile/${f.user_id}`)}>
-                  {f.avatar_url ? (
-                    <img src={f.avatar_url} alt={f.full_name} className="w-10 h-10 rounded-full object-cover" />
-                  ) : (
-                    <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center font-heading text-primary">
-                      {f.full_name[0]}
-                    </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-heading text-foreground truncate">{f.full_name}</p>
-                    <p className="text-xs text-muted-foreground truncate">@{f.username}</p>
-                  </div>
-                  <HouseCrest house={f.house as House} size="sm" />
-                </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {friends.map(f => f && (
+                <MemberCard
+                  key={f.user_id}
+                  member={{ ...f, online: isUserOnline(f) }}
+                  compact
+                />
               ))}
             </div>
           )}
         </div>
+      ) : activeTab === "members" ? (
+        <MembersTab currentUserId={user?.id} />
       ) : activeTab === "fichas" ? (
         <CharacterSheetView userId={profile.user_id} isOwner={isMe} />
       ) : activeTab === "album" ? (

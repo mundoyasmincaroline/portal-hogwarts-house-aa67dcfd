@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { House } from "@/lib/store";
 import MagicAdBanner from "@/components/MagicAdBanner";
+import { Lock, Zap } from "lucide-react";
 
 interface RoomDefinition {
   name: string;
@@ -23,6 +24,7 @@ const ROOMS: RoomDefinition[] = [
   { name: "Chat ON", description: "Conversas gerais dentro do RPG.", category: "RPG", allowed_houses: null, is_admin_only: false, icon: "🎭" },
   { name: "Castelo RPG", description: "Exploração e interação pelo castelo de Hogwarts.", category: "RPG", allowed_houses: null, is_admin_only: false, icon: "🏰" },
   { name: "RPF Fora de Hogwarts", description: "Roleplay em Hogsmeade, Beco Diagonal, etc.", category: "RPG", allowed_houses: null, is_admin_only: false, icon: "🚂" },
+  { name: "Hogwarts Meet", description: "Encontros em vídeo mágicos! Reúna-se com outros bruxos em tempo real.", category: "RPG", allowed_houses: null, is_admin_only: false, icon: "🎥" },
 
   { name: "𝐅𝐢𝐜𝐡𝐚𝐬 𝐏𝐞𝐬𝐬𝐨𝐚𝐢𝐬 ₊ ෆ ˚", description: "Envie sua ficha pessoal aqui para o portal conhecer você!", category: "Fichas", allowed_houses: null, is_admin_only: false, icon: "✨" },
   { name: "𝐅𝐢𝐜𝐡𝐚𝐬 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐧𝐬 ₊ ෆ ˚", description: "Envie a ficha do seu personagem do RPG aqui.", category: "Fichas", allowed_houses: null, is_admin_only: false, icon: "⚡" },
@@ -53,7 +55,6 @@ export default function Chats() {
   };
 
   const handleEnterRoom = async (roomDef: any) => {
-    // Validação local de acesso
     if (roomDef.is_admin_only && !isAdmin) {
       toast.error("Acesso negado. Apenas membros da Ordem da Fênix podem entrar aqui.");
       return;
@@ -64,6 +65,11 @@ export default function Chats() {
         return;
       }
     }
+    // Check if room is disabled by admin
+    if (roomDef.is_disabled && !isAdmin) {
+      toast.error("Esta sala está temporariamente fechada pelos administradores.");
+      return;
+    }
 
     setLoadingRoom(roomDef.name);
 
@@ -71,7 +77,6 @@ export default function Chats() {
       let roomId = roomDef.id;
 
       if (!roomId) {
-        // Find or create in DB
         const { data: existingChannel } = await supabase.from("channels").select("id").eq("name", roomDef.name).maybeSingle();
         if (existingChannel) {
           roomId = existingChannel.id;
@@ -98,14 +103,14 @@ export default function Chats() {
     }
   };
 
-  // Mescla a lista estática (garantida) com as configurações do banco (premium)
   const mergedRooms = ROOMS.map(room => {
     const dbRoom = channels.find(c => c.name === room.name);
     return {
       ...room,
       id: dbRoom?.id,
       is_premium: dbRoom?.is_premium || false,
-      meet_link: dbRoom?.meet_link || null
+      meet_link: dbRoom?.meet_link || null,
+      is_disabled: dbRoom?.is_disabled || false,
     };
   });
 
@@ -139,19 +144,30 @@ export default function Chats() {
               {mergedRooms.filter((r) => r.category === category).map((room) => {
                 const isLocked = (room.is_admin_only && !isAdmin) || 
                                  (room.allowed_houses && profile && !room.allowed_houses.includes(profile.house as House) && !isAdmin);
+                const isDisabled = room.is_disabled && !isAdmin;
                 
                 return (
                   <div 
                     key={room.name}
-                    onClick={() => !isLocked && handleEnterRoom(room)}
+                    onClick={() => !isLocked && !isDisabled && handleEnterRoom(room)}
                     className={`relative glass rounded-2xl p-5 border transition-all duration-300
-                      ${isLocked ? "opacity-60 cursor-not-allowed grayscale-[30%] border-border/50" : 
+                      ${isLocked || isDisabled ? "opacity-60 cursor-not-allowed grayscale-[30%] border-border/50" : 
                         room.is_premium ? "border-primary/80 shadow-[0_0_15px_rgba(212,175,55,0.4)] hover:shadow-[0_0_25px_rgba(212,175,55,0.6)] cursor-pointer group bg-primary/5" : 
                         "border-border/50 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(212,175,55,0.15)] hover:-translate-y-1 cursor-pointer group"}
                     `}
                   >
                     {room.is_premium && (
                       <div className="absolute -top-2 -right-2 text-2xl animate-bounce">✨</div>
+                    )}
+                    {isDisabled && (
+                      <div className="absolute top-2 right-2 bg-destructive/20 text-destructive text-[10px] px-2 py-1 rounded-full font-heading flex items-center gap-1">
+                        <Lock size={10} /> Fechada
+                      </div>
+                    )}
+                    {room.name === "Hogwarts Meet" && !isDisabled && (
+                      <div className="absolute top-2 right-2 bg-primary/20 text-primary text-[10px] px-2 py-1 rounded-full font-heading flex items-center gap-1 animate-pulse">
+                        <Zap size={10} /> Novo!
+                      </div>
                     )}
                     <div className="flex justify-between items-start mb-3">
                       <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl group-hover:scale-110 transition-transform ${room.is_premium ? 'bg-primary/20 ring-2 ring-primary/50 text-primary' : 'bg-secondary/50'}`}>

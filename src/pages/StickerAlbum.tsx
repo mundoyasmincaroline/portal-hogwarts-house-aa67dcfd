@@ -43,7 +43,6 @@ export default function StickerAlbum() {
     setUserStickers(myMap);
     setLoading(false);
 
-    // Check álbum completo
     if (allStickers && myStickers && allStickers.length > 0 && myStickers.length >= allStickers.length) {
       setCompletedBanner(true);
     }
@@ -52,7 +51,7 @@ export default function StickerAlbum() {
   const buySticker = async (sticker: Sticker) => {
     if (!user || !profile) return;
     const cost = RARITY_COST[sticker.rarity];
-    if (profile.xp < cost) { toast.error(`Você precisa de ${cost} XP para esta figurinha!`); return; }
+    if (profile.xp < cost) { toast.error(`Você precisa de ${cost} XP para esta figurinha! Você tem ${profile.xp} XP.`); return; }
 
     setBuyingId(sticker.id);
     try {
@@ -67,10 +66,8 @@ export default function StickerAlbum() {
 
       toast.success(`✨ Figurinha de ${sticker.character_name} desbloqueada! -${cost} XP`);
 
-      // Verificar se completou o álbum inteiro
       if (Object.keys(newMap).length >= stickers.length) {
         setCompletedBanner(true);
-        // Bonus XP por completar
         await supabase.rpc("award_xp_action", { _action: "album_complete", _user_id: user.id, _xp: 500 });
         setTimeout(() => {
           toast(
@@ -84,7 +81,7 @@ export default function StickerAlbum() {
         }, 500);
       }
     } catch (err: any) {
-      toast.error("Erro: " + err.message);
+      toast.error("Erro ao comprar figurinha: " + (err.message || "Tente novamente."));
     } finally {
       setBuyingId(null);
     }
@@ -93,25 +90,45 @@ export default function StickerAlbum() {
   const openSurprisePack = async () => {
     if (!user || !profile) return;
     const PACK_COST = 80;
-    if (profile.xp < PACK_COST) { toast.error(`Você precisa de ${PACK_COST} XP para abrir um pacote!`); return; }
+
+    if (profile.xp < PACK_COST) {
+      toast.error(`Você precisa de ${PACK_COST} XP para abrir um pacote! Você tem apenas ${profile.xp} XP.`);
+      return;
+    }
+
     const locked = stickers.filter(s => !userStickers[s.id]);
     if (locked.length === 0) { toast.info("🏆 Você já tem todas as figurinhas!"); return; }
-    // Peso por raridade: ouro 10%, prata 30%, bronze 60%
+
     const pool: Sticker[] = [];
     locked.forEach(s => {
       const weight = s.rarity === "gold" ? 1 : s.rarity === "silver" ? 3 : 6;
       for (let i = 0; i < weight; i++) pool.push(s);
     });
     const picked = pool[Math.floor(Math.random() * pool.length)];
+
     setOpeningPack(true);
     setPackPhase("shaking");
     setPackReveal(null);
-    const { error: xpErr } = await supabase.rpc("award_xp_action", { _action: "buy_sticker", _user_id: user.id, _xp: -PACK_COST });
-    if (xpErr) { toast.error("Erro ao abrir o pacote."); setOpeningPack(false); return; }
-    await supabase.from("user_stickers").upsert({ user_id: user.id, sticker_id: picked.id } as never);
-    await fetchProfile(user.id);
-    setUserStickers(prev => ({ ...prev, [picked.id]: true }));
-    setTimeout(() => { setPackPhase("reveal"); setPackReveal(picked); }, 1500);
+
+    try {
+      const { error: xpErr } = await supabase.rpc("award_xp_action", { _action: "buy_sticker", _user_id: user.id, _xp: -PACK_COST });
+      if (xpErr) {
+        toast.error("Erro ao descontar XP: " + xpErr.message);
+        setOpeningPack(false);
+        setPackPhase("idle");
+        return;
+      }
+
+      // Check if already owns it (upsert handles duplicate)
+      await supabase.from("user_stickers").upsert({ user_id: user.id, sticker_id: picked.id } as never);
+      await fetchProfile(user.id);
+      setUserStickers(prev => ({ ...prev, [picked.id]: true }));
+      setTimeout(() => { setPackPhase("reveal"); setPackReveal(picked); }, 1500);
+    } catch (err: any) {
+      toast.error("Erro ao abrir o pacote: " + (err.message || "Tente novamente."));
+      setOpeningPack(false);
+      setPackPhase("idle");
+    }
   };
 
   const closePack = () => { setOpeningPack(false); setPackPhase("idle"); setPackReveal(null); };
@@ -145,7 +162,6 @@ export default function StickerAlbum() {
             Colecione figurinhas usando XP. Ouro e Prata brilham com magia!
           </p>
 
-          {/* Saldo XP */}
           <div className="mt-4 inline-flex items-center gap-3 bg-secondary/50 backdrop-blur-md px-6 py-3 rounded-xl border border-border/50">
             <span className="text-sm text-muted-foreground uppercase tracking-widest">Saldo:</span>
             <span className="font-heading text-2xl text-primary">{profile?.xp || 0} XP</span>
@@ -192,7 +208,7 @@ export default function StickerAlbum() {
         </div>
       )}
 
-      {/* Pacote Surpresa + Mercado de Trocas */}
+      {/* Pacote Surpresa + Mercado */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="glass rounded-2xl p-6 flex flex-col items-center gap-4 text-center border border-primary/20 hover:border-primary/50 transition-all">
           <div className="text-4xl">🎁</div>
@@ -206,7 +222,7 @@ export default function StickerAlbum() {
             onClick={openSurprisePack}
             disabled={openingPack || (profile?.xp ?? 0) < 80}
           >
-            {openingPack ? "Abrindo..." : "Abrir Pacote — 80 XP"}
+            {openingPack ? "Abrindo..." : `Abrir Pacote — 80 XP ${(profile?.xp ?? 0) < 80 ? `(faltam ${80 - (profile?.xp ?? 0)} XP)` : ""}`}
           </Button>
         </div>
         <div className="glass rounded-2xl p-6 flex flex-col items-center gap-4 text-center border border-border hover:border-primary/30 transition-all">
@@ -220,6 +236,7 @@ export default function StickerAlbum() {
           </Button>
         </div>
       </div>
+
       {/* Barra de progresso geral */}
       <div className="glass rounded-2xl p-6 space-y-4">
         <div className="flex items-center justify-between mb-1">
@@ -241,7 +258,6 @@ export default function StickerAlbum() {
           />
         </div>
 
-        {/* Stats por raridade */}
         <div className="grid grid-cols-3 gap-3 mt-2">
           {[
             { label: "Bronze", owned: bronzeOwned, total: bronzeTotal, color: "text-amber-600", bg: "bg-amber-900/20 border-amber-700/40" },
@@ -258,7 +274,6 @@ export default function StickerAlbum() {
           ))}
         </div>
 
-        {/* Banner álbum completo */}
         {completedBanner && (
           <div className="mt-4 p-4 rounded-2xl bg-gradient-to-r from-yellow-900/40 via-yellow-700/20 to-yellow-900/40 border border-yellow-400 text-center animate-pulse">
             <p className="font-heading text-yellow-400 text-lg">🏆 LENDA DE HOGWARTS 🏆</p>
@@ -267,7 +282,7 @@ export default function StickerAlbum() {
         )}
       </div>
 
-      {/* Filtros de raridade */}
+      {/* Filtros */}
       <div className="flex gap-3 flex-wrap">
         {(["all", "gold", "silver", "bronze"] as const).map(r => (
           <button
@@ -290,7 +305,7 @@ export default function StickerAlbum() {
         ))}
       </div>
 
-      {/* Grid de figurinhas */}
+      {/* Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         {filtered.map(s => {
           const unlocked = userStickers[s.id];
@@ -311,7 +326,6 @@ export default function StickerAlbum() {
                 unlocked ? rarityStyle : "border-border/50 bg-secondary/10 hover:border-primary/50"
               }`}
             >
-              {/* Imagem */}
               <div className="absolute inset-0 z-0">
                 {s.image_url && !failedImages[s.id] ? (
                   <img
@@ -375,12 +389,10 @@ export default function StickerAlbum() {
                 </div>
               </div>
 
-              {/* Brilho ouro */}
               {unlocked && isGold && (
                 <div className="absolute inset-0 z-20 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(255,215,0,0.15),transparent_60%)] animate-pulse" />
               )}
 
-              {/* Cadeado nas bloqueadas */}
               {!unlocked && !levelOk && (
                 <div className="absolute inset-0 z-20 pointer-events-none flex items-center justify-center bg-background/30">
                   <span className="text-2xl opacity-50">🔒</span>

@@ -558,23 +558,40 @@ export default function Admin() {
 
           {tab === "channels" && (
             <div className="space-y-4">
+              <div className="glass rounded-xl p-4 border border-primary/20">
+                <p className="text-xs text-muted-foreground">
+                  ✅ <strong>Ativar/Desativar sala</strong> — salas desativadas ficam bloqueadas para membros comuns (aparecem com cadeado).<br/>
+                  ✨ <strong>Premium</strong> — adiciona brilho dourado ao card da sala.
+                </p>
+              </div>
               {channels.map((c) => (
-                <div key={c.id} className="glass rounded-xl p-4 space-y-3">
-                  <div className="flex justify-between items-start">
+                <div key={c.id} className={`glass rounded-xl p-4 space-y-3 border ${c.is_disabled ? "border-destructive/30 bg-destructive/5" : "border-border/50"}`}>
+                  <div className="flex justify-between items-start flex-wrap gap-2">
                     <div>
                       <h4 className="font-heading text-lg text-foreground flex items-center gap-2">
                         {c.name} {c.is_premium && <span className="text-xl">✨</span>}
+                        {c.is_disabled && <span className="text-xs bg-destructive/20 text-destructive px-2 py-0.5 rounded-full">🔒 Fechada</span>}
                       </h4>
                       <p className="text-xs text-muted-foreground">{c.description}</p>
                     </div>
-                    <label className="flex items-center gap-2 cursor-pointer text-sm font-heading">
-                      <input type="checkbox" checked={c.is_premium} onChange={async (e) => {
-                        await supabase.from("channels").update({ is_premium: e.target.checked }).eq("id", c.id);
-                        fetchAll();
-                        toast.success("Status premium atualizado!");
-                      }} className="accent-primary" />
-                      Premium / Brilho
-                    </label>
+                    <div className="flex flex-col gap-2">
+                      <label className="flex items-center gap-2 cursor-pointer text-sm font-heading">
+                        <input type="checkbox" checked={c.is_premium} onChange={async (e) => {
+                          await supabase.from("channels").update({ is_premium: e.target.checked }).eq("id", c.id);
+                          fetchAll();
+                          toast.success("Status premium atualizado!");
+                        }} className="accent-primary" />
+                        ✨ Premium
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer text-sm font-heading">
+                        <input type="checkbox" checked={!!c.is_disabled} onChange={async (e) => {
+                          await supabase.from("channels").update({ is_disabled: e.target.checked } as never).eq("id", c.id);
+                          fetchAll();
+                          toast.success(e.target.checked ? "Sala fechada para membros!" : "Sala reaberta!");
+                        }} className="accent-destructive" />
+                        🔒 Desativar Sala
+                      </label>
+                    </div>
                   </div>
                   <div>
                     <span className="text-xs text-muted-foreground mb-1 block">Link do Meet / Jitsi (Transmissão)</span>

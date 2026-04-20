@@ -23,6 +23,8 @@ import CharacterSelection from "@/pages/CharacterSelection";
 import DailyEncounter from "@/components/DailyEncounter";
 import NotificationBanner from "@/components/NotificationBanner";
 import { useAchievements } from "@/lib/useAchievements";
+import FilchWatcher from "@/components/FilchWatcher";
+
 
 const NAV_ITEMS = [
   { icon: <Castle size={20} />, label: "O Castelo", path: "/dashboard" },
@@ -30,6 +32,7 @@ const NAV_ITEMS = [
   { icon: <User size={20} />, label: "Meu Perfil", path: "/dashboard/profile" },
   { icon: <MessageCircle size={20} />, label: "Mensagens", path: "/dashboard/dm" },
   { icon: <Users size={20} />, label: "Amigos", path: "/dashboard/friends" },
+  { icon: <span className="text-lg">👥</span>, label: "Membros", path: "/dashboard/members" },
   { icon: <MessageCircle size={20} />, label: "Chats RPG", path: "/dashboard/chats" },
   { icon: <Camera size={20} />, label: "InstaHogwarts", path: "/dashboard/instahogwarts" },
   { icon: <Film size={20} />, label: "Hogwarts Cine", path: "/dashboard/cinema" },
@@ -38,9 +41,11 @@ const NAV_ITEMS = [
   { icon: <Swords size={20} />, label: "Desafios", path: "/dashboard/challenges" },
   { icon: <BookMarked size={20} />, label: "Aulas", path: "/dashboard/classes" },
   { icon: <Library size={20} />, label: "Álbum", path: "/dashboard/album" },
-  { icon: <ShoppingBag size={20} />, label: "Loja", path: "/dashboard/shop" },
+  { icon: <ShoppingBag size={20} />, label: "Loja 🧿", path: "/dashboard/shop" },
   { icon: <ScrollText size={20} />, label: "Regras", path: "/dashboard/rules" },
+  { icon: <span className="text-lg">⛓️</span>, label: "Azkaban", path: "/dashboard/azkaban" },
 ];
+
 
 const ADMIN_ITEMS = [
   { icon: <Settings size={20} />, label: "Admin", path: "/dashboard/admin" },
@@ -54,9 +59,23 @@ export default function DashboardLayout() {
   const [encounterDone, setEncounterDone] = useState(false);
   const [soundOn, setSoundOn] = useState(isSoundEnabled());
   const [dmUnread, setDmUnread] = useState(0);
+  const [hasCharacters, setHasCharacters] = useState<boolean | null>(null); // null = still loading
 
   // Auto-conquistas baseadas em XP e nível
   useAchievements(user?.id, profile?.xp ?? 0, profile?.level ?? 1);
+
+  // Verificar se usuário tem personagens (pega membros antigos sem ficha)
+  useEffect(() => {
+    if (!user) return;
+    const checkChars = async () => {
+      const { count } = await supabase
+        .from("characters")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id);
+      setHasCharacters((count ?? 0) > 0);
+    };
+    checkChars();
+  }, [user?.id]);
 
   // DM unread badge
   useEffect(() => {
@@ -220,7 +239,16 @@ export default function DashboardLayout() {
 
   // Admin also goes through character selection, but can skip (canCancel)
   const adminSkipped = isAdmin && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
-  if (!profile.active_character_id && !adminSkipped) return <CharacterSelection adminMode={isAdmin} />;
+
+  // Se ainda está verificando personagens, aguarda
+  if (hasCharacters === null) return null;
+
+  // Redireciona para seleção de personagem se:
+  // 1. Não tem active_character_id, OU
+  // 2. Não tem personagens reais na tabela (membros antigos sem ficha)
+  if ((!profile.active_character_id || !hasCharacters) && !adminSkipped) {
+    return <CharacterSelection adminMode={isAdmin} />;
+  }
   const today = new Date().toISOString().split('T')[0];
   const lastSeenIntro = localStorage.getItem(`intro_last_seen_${user.id}`);
   const shouldShowIntro = lastSeenIntro !== today;
@@ -347,6 +375,7 @@ export default function DashboardLayout() {
         <div className="flex-1 overflow-y-auto p-4 md:p-6">
           <Outlet />
           <EngagementBot />
+          <FilchWatcher />
         </div>
       </main>
     </div>

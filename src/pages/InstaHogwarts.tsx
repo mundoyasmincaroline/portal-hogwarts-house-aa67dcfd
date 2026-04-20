@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import HouseCrest from "@/components/HouseCrest";
 import SafeImage from "@/components/SafeImage";
 import { House } from "@/lib/store";
-import { UserPlus, UserCheck, Heart } from "lucide-react";
+import { UserPlus, UserCheck, Heart, Users } from "lucide-react";
 
 interface Character {
   id: string;
@@ -15,6 +15,7 @@ interface Character {
   avatar_url: string | null;
   house: string;
   character_type: string;
+  user_id: string;
 }
 
 interface InstaPost {
@@ -32,6 +33,7 @@ interface InstaPost {
     avatar_url: string | null;
     house: string;
     character_type: string;
+    user_id: string;
   } | null;
   profiles: {
     full_name: string;
@@ -42,7 +44,8 @@ interface InstaPost {
 }
 
 const XP_LIKE = 5;
-const XP_FOLLOW = 30;
+const XP_FOLLOW_USER = 30;
+const XP_FOLLOW_CHAR = 15;
 
 export default function InstaHogwarts() {
   const { user } = useAuth();
@@ -54,8 +57,14 @@ export default function InstaHogwarts() {
   const [caption, setCaption] = useState("");
   const [spotifyUri, setSpotifyUri] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [followedIds, setFollowedIds] = useState<Set<string>>(new Set());
-  const [followCounts, setFollowCounts] = useState<Record<string, number>>({});
+
+  // User follows (by user_id)
+  const [followedUserIds, setFollowedUserIds] = useState<Set<string>>(new Set());
+  // Character follows (by character_id)
+  const [followedCharIds, setFollowedCharIds] = useState<Set<string>>(new Set());
+  // Character follower counts
+  const [charFollowCounts, setCharFollowCounts] = useState<Record<string, number>>({});
+
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -63,11 +72,12 @@ export default function InstaHogwarts() {
     if (user) {
       fetchMyChars();
       fetchFollowed();
+      fetchCharFollows();
     }
   }, [user]);
 
   const fetchMyChars = async () => {
-    const { data } = await supabase.from("characters").select("id, full_name, avatar_url, house, character_type").eq("user_id", user!.id);
+    const { data } = await supabase.from("characters").select("id, full_name, avatar_url, house, character_type, user_id").eq("user_id", user!.id);
     if (data && data.length > 0) {
       setMyChars(data);
       setSelectedCharId(data[0].id);
@@ -77,7 +87,7 @@ export default function InstaHogwarts() {
   const fetchPosts = async () => {
     const { data } = await supabase
       .from("insta_posts")
-      .select("*, characters(id, full_name, avatar_url, house, character_type), profiles(full_name, username, house, avatar_url)")
+      .select("*, characters(id, full_name, avatar_url, house, character_type, user_id), profiles(full_name, username, house, avatar_url)")
       .order("created_at", { ascending: false });
     if (data) setPosts(data as unknown as InstaPost[]);
     setLoading(false);
@@ -85,7 +95,23 @@ export default function InstaHogwarts() {
 
   const fetchFollowed = async () => {
     const { data } = await supabase.from("insta_follows").select("followed_user_id").eq("follower_user_id", user!.id);
-    if (data) setFollowedIds(new Set(data.map(f => f.followed_user_id)));
+    if (data) setFollowedUserIds(new Set(data.map(f => f.followed_user_id)));
+  };
+
+  const fetchCharFollows = async () => {
+    // Fetch character follows
+    const { data } = await supabase.from("insta_character_follows").select("followed_char_id").eq("follower_user_id", user!.id);
+    if (data) setFollowedCharIds(new Set(data.map(f => f.followed_char_id)));
+
+    // Fetch follow counts for all chars in posts
+    const { data: counts } = await supabase.from("insta_character_follows").select("followed_char_id");
+    if (counts) {
+      const countMap: Record<string, number> = {};
+      counts.forEach(c => {
+        countMap[c.followed_char_id] = (countMap[c.followed_char_id] || 0) + 1;
+      });
+      setCharFollowCounts(countMap);
+    }
   };
 
   const handleUpload = async () => {
@@ -118,7 +144,6 @@ export default function InstaHogwarts() {
       setSelectedFile(null);
       setCaption("");
       setSpotifyUri("");
-      // XP for posting
       await supabase.rpc("award_xp_action", { _action: "insta_post", _user_id: user.id, _xp: 10 });
       fetchPosts();
     }
@@ -132,33 +157,50 @@ export default function InstaHogwarts() {
       ? post.likes.filter(id => id !== user.id)
       : [...post.likes, user.id];
 
-    // Optimistic
     setPosts(prev => prev.map(p => p.id === post.id ? { ...p, likes: newLikes } : p));
     await supabase.from("insta_posts").update({ likes: newLikes } as never).eq("id", post.id);
 
-    // XP on like (only when liking, not unliking)
     if (!hasLiked && post.user_id !== user.id) {
       await supabase.rpc("award_xp_action", { _action: "insta_like", _user_id: post.user_id, _xp: XP_LIKE });
     }
   };
 
-  const toggleFollow = async (targetUserId: string) => {
+  // Follow user (not character)
+  const toggleFollowUser = async (targetUserId: string) => {
     if (!user || targetUserId === user.id) return;
-    const isFollowing = followedIds.has(targetUserId);
+    const isFollowing = followedUserIds.has(targetUserId);
 
     if (isFollowing) {
       await supabase.from("insta_follows").delete().eq("follower_user_id", user.id).eq("followed_user_id", targetUserId);
-      setFollowedIds(prev => { const s = new Set(prev); s.delete(targetUserId); return s; });
+      setFollowedUserIds(prev => { const s = new Set(prev); s.delete(targetUserId); return s; });
     } else {
       await supabase.from("insta_follows").insert({ follower_user_id: user.id, followed_user_id: targetUserId } as never);
-      setFollowedIds(prev => new Set([...prev, targetUserId]));
-      // XP for being followed
-      await supabase.rpc("award_xp_action", { _action: "insta_follow", _user_id: targetUserId, _xp: XP_FOLLOW });
-      toast.success("Seguindo! +" + XP_FOLLOW + " XP para este membro ✨");
+      setFollowedUserIds(prev => new Set([...prev, targetUserId]));
+      await supabase.rpc("award_xp_action", { _action: "insta_follow", _user_id: targetUserId, _xp: XP_FOLLOW_USER });
+      toast.success(`Seguindo! +${XP_FOLLOW_USER} XP para este membro ✨`);
     }
   };
 
-  // Display info: prefer character, fall back to profile
+  // Follow character
+  const toggleFollowChar = async (charId: string, charOwnerId: string) => {
+    if (!user || charOwnerId === user.id) return;
+    const isFollowing = followedCharIds.has(charId);
+
+    if (isFollowing) {
+      await supabase.from("insta_character_follows").delete().eq("follower_user_id", user.id).eq("followed_char_id", charId);
+      setFollowedCharIds(prev => { const s = new Set(prev); s.delete(charId); return s; });
+      setCharFollowCounts(prev => ({ ...prev, [charId]: Math.max(0, (prev[charId] || 1) - 1) }));
+    } else {
+      await supabase.from("insta_character_follows").insert({ follower_user_id: user.id, followed_char_id: charId } as never);
+      setFollowedCharIds(prev => new Set([...prev, charId]));
+      setCharFollowCounts(prev => ({ ...prev, [charId]: (prev[charId] || 0) + 1 }));
+      if (charOwnerId !== user.id) {
+        await supabase.rpc("award_xp_action", { _action: "char_follow", _user_id: charOwnerId, _xp: XP_FOLLOW_CHAR });
+        toast.success(`Personagem seguido! +${XP_FOLLOW_CHAR} XP para o criador ⭐`);
+      }
+    }
+  };
+
   const getPostDisplay = (post: InstaPost) => {
     if (post.characters) {
       return {
@@ -167,6 +209,8 @@ export default function InstaHogwarts() {
         house: post.characters.house as House,
         type: post.characters.character_type === "oc" ? "⭐ OC" : "📖 Canon",
         username: post.profiles?.username || "",
+        charId: post.characters.id,
+        charOwnerId: post.characters.user_id,
       };
     }
     return {
@@ -175,6 +219,8 @@ export default function InstaHogwarts() {
       house: post.profiles?.house,
       type: "",
       username: post.profiles?.username || "",
+      charId: null,
+      charOwnerId: post.user_id,
     };
   };
 
@@ -189,7 +235,6 @@ export default function InstaHogwarts() {
 
       {/* Área de postagem */}
       <div className="glass rounded-2xl p-5 space-y-4">
-        {/* Seletor de personagem */}
         {myChars.length === 0 ? (
           <p className="text-center text-muted-foreground text-sm py-2">Crie uma ficha de personagem para poder postar aqui.</p>
         ) : (
@@ -262,8 +307,10 @@ export default function InstaHogwarts() {
           posts.map(post => {
             const disp = getPostDisplay(post);
             const isMyPost = post.user_id === user?.id;
-            const isFollowing = followedIds.has(post.user_id);
+            const isFollowingUser = followedUserIds.has(post.user_id);
+            const isFollowingChar = disp.charId ? followedCharIds.has(disp.charId) : false;
             const hasLiked = post.likes.includes(user?.id || "");
+            const charFollowers = disp.charId ? (charFollowCounts[disp.charId] || 0) : 0;
 
             return (
               <div key={post.id} className="glass rounded-2xl overflow-hidden border border-border/30">
@@ -281,20 +328,50 @@ export default function InstaHogwarts() {
                       {disp.type && <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full shrink-0">{disp.type}</span>}
                       {disp.house && <HouseCrest house={disp.house} size="sm" />}
                     </div>
-                    <p className="text-xs text-muted-foreground">@{disp.username} · {new Date(post.created_at).toLocaleDateString("pt-BR")}</p>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <span>@{disp.username}</span>
+                      <span>·</span>
+                      <span>{new Date(post.created_at).toLocaleDateString("pt-BR")}</span>
+                      {disp.charId && charFollowers > 0 && (
+                        <>
+                          <span>·</span>
+                          <span className="flex items-center gap-1">
+                            <Users size={10} />
+                            {charFollowers}
+                          </span>
+                        </>
+                      )}
+                    </div>
                   </div>
-                  {/* Follow button — only on other's posts */}
+
+                  {/* Action buttons: follow user and/or follow character */}
                   {!isMyPost && (
-                    <button
-                      onClick={() => toggleFollow(post.user_id)}
-                      className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-heading transition-all ${
-                        isFollowing
-                          ? "bg-secondary text-muted-foreground border border-border hover:border-destructive/50"
-                          : "bg-primary/10 text-primary border border-primary/30 hover:bg-primary/20"
-                      }`}
-                    >
-                      {isFollowing ? <><UserCheck size={12} /> Seguindo</> : <><UserPlus size={12} /> Seguir</>}
-                    </button>
+                    <div className="flex flex-col gap-1 shrink-0">
+                      {/* Follow user */}
+                      <button
+                        onClick={() => toggleFollowUser(post.user_id)}
+                        className={`flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-heading transition-all ${
+                          isFollowingUser
+                            ? "bg-secondary text-muted-foreground border border-border hover:border-destructive/50"
+                            : "bg-primary/10 text-primary border border-primary/30 hover:bg-primary/20"
+                        }`}
+                      >
+                        {isFollowingUser ? <><UserCheck size={10} /> Seguindo</> : <><UserPlus size={10} /> Seguir</>}
+                      </button>
+                      {/* Follow character (only if post has a character) */}
+                      {disp.charId && (
+                        <button
+                          onClick={() => toggleFollowChar(disp.charId!, disp.charOwnerId)}
+                          className={`flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-heading transition-all ${
+                            isFollowingChar
+                              ? "bg-secondary text-muted-foreground border border-border"
+                              : "bg-amber-500/10 text-amber-400 border border-amber-400/30 hover:bg-amber-500/20"
+                          }`}
+                        >
+                          {isFollowingChar ? "⭐ Seguindo Personagem" : "⭐ Seguir Personagem"}
+                        </button>
+                      )}
+                    </div>
                   )}
                 </div>
 

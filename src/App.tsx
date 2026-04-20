@@ -30,7 +30,8 @@ import DMInbox from "./pages/DMInbox";
 import DMChat from "./pages/DMChat";
 import Friends from "./pages/Friends";
 import StickerTrades from "./pages/StickerTrades";
-
+import Azkaban from "./pages/Azkaban";
+import Members from "./pages/Members";
 
 
 const queryClient = new QueryClient();
@@ -73,6 +74,8 @@ const App = () => (
               <Route path="dm/:userId" element={<DMChat />} />
               <Route path="friends" element={<Friends />} />
               <Route path="trades" element={<StickerTrades />} />
+              <Route path="azkaban" element={<Azkaban />} />
+              <Route path="members" element={<Members />} />
 
             </Route>
             <Route path="*" element={<NotFound />} />
