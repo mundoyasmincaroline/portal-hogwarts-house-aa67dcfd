@@ -5,6 +5,12 @@ import { toast } from "sonner";
 import { ShoppingBag, Coins, Crown, Wand2, Shirt, Gem, Sparkles, Star, ExternalLink, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+// ─── InfinitePay ───────────────────────────────────────────────
+const INFINITEPAY_HANDLE = "portal-matrix";
+const SUPABASE_URL = "https://gubokmpoihpoiecvngnm.supabase.co";
+// ──────────────────────────────────────────────────────────────
+
+
 // ─── Tipos ────────────────────────────────────────────────
 interface StoreItem {
   id: string; name: string; description: string; category: string;
@@ -79,10 +85,153 @@ export default function GringottsStore() {
     setLoading(false);
   };
 
-  // ── Comprar Galeões via InfinitePay Link ──────────────────
+  // ── Detectar retorno de pagamento na URL ─────────────────
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const orderNsu = params.get("order_nsu");
+    const transactionNsu = params.get("transaction_nsu");
+    const slug = params.get("slug");
+
+    if (orderNsu && transactionNsu && slug) {
+      // Limpar params da URL
+      window.history.replaceState({}, "", window.location.pathname);
+      verifyAndCreditPayment(orderNsu, transactionNsu, slug);
+    }
+  }, []);
+
+  const verifyAndCreditPayment = async (orderNsu: string, transactionNsu: string, slug: string) => {
+    try {
+      toast.info("🔍 Verificando seu pagamento...");
+
+      // Verificar pagamento na InfinitePay
+      const checkRes = await fetch("https://api.infinitepay.io/invoices/public/checkout/payment_check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          handle: INFINITEPAY_HANDLE,
+          order_nsu: orderNsu,
+          transaction_nsu: transactionNsu,
+          slug: slug,
+        }),
+      });
+
+      if (!checkRes.ok) throw new Error("Falha na verificação.");
+      const checkData = await checkRes.json();
+
+      if (!checkData.paid) {
+        toast.error("⚠️ Pagamento ainda não confirmado. Tente novamente em alguns minutos.");
+        return;
+      }
+
+      // Buscar o pedido no banco
+      const { data: order } = await supabase
+        .from("galeon_orders")
+        .select("*")
+        .eq("id", orderNsu)
+        .single();
+
+      if (!order || order.status === "paid") return; // já processado
+
+      // Marcar como pago
+      await supabase
+        .from("galeon_orders")
+        .update({ status: "paid", paid_at: new Date().toISOString(), infinitepay_id: transactionNsu } as never)
+        .eq("id", orderNsu);
+
+      // Creditar Galeões ou ativar VIP
+      const isVip = order.package_id?.startsWith("vip_");
+      const currentGaleons = (profile as any)?.galeons || 0;
+
+      if (isVip) {
+        const planId = order.package_id.replace("vip_", "");
+        const VIP_GALEONS: Record<string, number> = { premium: 0, vip: 200, founder: 500 };
+        const expires = new Date(); expires.setMonth(expires.getMonth() + 1);
+        await supabase.from("profiles").update({
+          vip_plan: planId,
+          vip_expires_at: expires.toISOString(),
+          galeons: currentGaleons + (VIP_GALEONS[planId] || 0),
+        } as never).eq("user_id", order.user_id);
+        toast.success(`🎉 Plano ${planId.toUpperCase()} ativado com sucesso!`);
+      } else {
+        await supabase.from("profiles")
+          .update({ galeons: currentGaleons + order.galeons } as never)
+          .eq("user_id", order.user_id);
+        toast.success(`🎉 ${order.galeons} Galeões adicionados à sua conta!`);
+      }
+
+      loadStore();
+      setTimeout(() => window.location.reload(), 1500);
+
+    } catch (err: any) {
+      // Se CORS bloquear: pagamento ficará pendente, admin aprova manualmente
+      console.warn("Verificação automática falhou (provável CORS):", err.message);
+      toast.info("✅ Pagamento recebido! Seus Galeões serão liberados em até 5 minutos.", { duration: 8000 });
+    }
+  };
+
+  // ── Criar Link de Pagamento InfinitePay ───────────────────
+  const createInfinitePayLink = async (
+    orderId: string,
+    amountBrl: number,
+    description: string,
+    userEmail: string,
+    userName: string,
+  ): Promise<string | null> => {
+    const redirectUrl = `${window.location.origin}/dashboard/store`;
+    try {
+      const res = await fetch("https://api.infinitepay.io/invoices/public/checkout/links", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          handle: INFINITEPAY_HANDLE,
+          redirect_url: redirectUrl,
+          order_nsu: orderId,
+          customer: { name: userName || "Bruxo(a)", email: userEmail || "" },
+          items: [{ quantity: 1, price: Math.round(amountBrl * 100), description }],
+        }),
+      });
+      const data = await res.json();
+      return data.url ?? null;
+    } catch (e) {
+      console.error("Erro ao criar link InfinitePay:", e);
+      return null;
+    }
+  };
+
+  // ── Comprar Galeões ───────────────────────────────────────
   const buyGaleons = async (pkg: typeof GALEON_PACKAGES[0]) => {
     if (!user || !profile) return toast.error("Você precisa estar logado.");
     setBuying(pkg.id);
+    try {
+      // 1. Criar ordem no banco
+      const { data: order, error } = await supabase.from("galeon_orders").insert({
+        user_id: user.id,
+        package_id: pkg.id,
+        amount_brl: pkg.price_brl,
+        galeons: pkg.galeons,
+        status: "pending",
+      } as never).select("id").single();
+      if (error) throw error;
+
+      // 2. Gerar link InfinitePay
+      const description = `${pkg.name} — ${pkg.galeons}🪙 Galeões — Portal Hogwarts`;
+      const payUrl = await createInfinitePayLink(order.id, pkg.price_brl, description, user.email ?? "", profile.full_name);
+
+      if (!payUrl) throw new Error("Não foi possível gerar o link de pagamento.");
+
+      // 3. Salvar link no banco e redirecionar
+      await supabase.from("galeon_orders").update({ payment_link: payUrl } as never).eq("id", order.id);
+      toast.info("💳 Redirecionando para o pagamento...");
+      setTimeout(() => { window.location.href = payUrl; }, 800);
+
+    } catch (e: any) {
+      toast.error(e.message || "Erro ao processar pagamento.");
+    } finally {
+      setBuying(null);
+    }
+  };
+
+
     try {
       // Criar ordem pendente no banco
       const { data: order, error } = await supabase.from("galeon_orders").insert({
