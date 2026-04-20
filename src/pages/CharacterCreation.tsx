@@ -118,7 +118,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
           ...formData,
           avatar_url: finalAvatarUrl,
           age: formData.age ? parseInt(formData.age) : null
-        })
+        } as never)
         .select("id")
         .single();
 

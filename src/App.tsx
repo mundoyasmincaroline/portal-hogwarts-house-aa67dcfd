@@ -26,8 +26,12 @@ import Classes from "./pages/Classes";
 import EmojiShop from "./components/EmojiShop";
 import Rules from "./pages/Rules";
 import MaraudersGuide from "./pages/MaraudersGuide";
+<<<<<<< HEAD
 import DMInbox from "./pages/DMInbox";
 import DMChat from "./pages/DMChat";
+=======
+import Friends from "./pages/Friends";
+>>>>>>> a7ecf612ff74f3c68d60cb3cc87dd136c2b3266d
 
 const queryClient = new QueryClient();
 
@@ -65,8 +69,12 @@ const App = () => (
               <Route path="shop" element={<EmojiShop />} />
               <Route path="rules" element={<Rules />} />
               <Route path="guide" element={<MaraudersGuide />} />
+<<<<<<< HEAD
               <Route path="dm" element={<DMInbox />} />
               <Route path="dm/:userId" element={<DMChat />} />
+=======
+              <Route path="friends" element={<Friends />} />
+>>>>>>> a7ecf612ff74f3c68d60cb3cc87dd136c2b3266d
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

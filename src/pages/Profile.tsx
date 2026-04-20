@@ -152,6 +152,39 @@ export default function Profile() {
     }
   };
 
+  const handleRejectFriend = async () => {
+    if (!friendship) return;
+    const { error } = await supabase.from("friendships").delete().eq("id", friendship.id);
+    if (!error) {
+      setFriendship(null);
+      toast.success("Pedido recusado.");
+    }
+  };
+
+  const handleBlockUser = async () => {
+    if (!user || !targetProfile) return;
+    if (friendship) {
+      await supabase.from("friendships").delete().eq("id", friendship.id);
+    }
+    const { data, error } = await supabase.from("friendships").insert({
+      user_id: user.id,
+      friend_id: targetProfile.user_id,
+      status: "blocked",
+    }).select().single();
+    if (error) return toast.error("Erro ao bloquear.");
+    setFriendship(data);
+    toast.success("Usuário bloqueado. 🚫");
+  };
+
+  const handleUnblock = async () => {
+    if (!friendship) return;
+    const { error } = await supabase.from("friendships").delete().eq("id", friendship.id);
+    if (!error) {
+      setFriendship(null);
+      toast.success("Desbloqueado.");
+    }
+  };
+
   if (loadingTarget) return <div className="text-center py-20 text-muted-foreground">Procurando bruxo...</div>;
   if (!profile) return null;
   const house = HOUSES[profile.house as House] || HOUSES.gryffindor;
@@ -293,22 +326,38 @@ export default function Profile() {
               ) : (
                 <>
                   {!friendship && (
-                    <Button variant="magical" size="sm" onClick={handleAddFriend}>Adicionar Amigo +</Button>
+                    <>
+                      <Button variant="magical" size="sm" onClick={handleAddFriend}>Adicionar Amigo +</Button>
+                      <Button variant="outline" size="sm" className="text-destructive" onClick={handleBlockUser}>Bloquear 🚫</Button>
+                    </>
                   )}
                   {friendship?.status === "pending" && friendship.friend_id === user?.id && (
-                    <Button variant="magical" size="sm" onClick={handleAcceptFriend}>Aceitar Pedido ✅</Button>
+                    <>
+                      <Button variant="magical" size="sm" onClick={handleAcceptFriend}>Aceitar ✅</Button>
+                      <Button variant="outline" size="sm" onClick={handleRejectFriend}>Recusar ❌</Button>
+                      <Button variant="outline" size="sm" className="text-destructive" onClick={handleBlockUser}>Bloquear 🚫</Button>
+                    </>
                   )}
                   {friendship?.status === "pending" && friendship.user_id === user?.id && (
-                    <Button variant="outline" size="sm" disabled>Pedido Enviado ⏳</Button>
+                    <Button variant="outline" size="sm" onClick={handleRemoveFriend}>Cancelar pedido ⏳</Button>
                   )}
                   {friendship?.status === "accepted" && (
                     <>
+<<<<<<< HEAD
                       <Button variant="outline" size="sm" className="text-destructive" onClick={handleRemoveFriend}>Desfazer Amizade ❌</Button>
                       <Button variant="magical" size="sm" onClick={() => navigate(`/dashboard/dm/${profile.user_id}`)}>💬 Mensagem</Button>
                     </>
                   )}
                   {!friendship && (
                     <Button variant="outline" size="sm" onClick={() => navigate(`/dashboard/dm/${profile.user_id}`)}>💬 Mensagem</Button>
+=======
+                      <Button variant="outline" size="sm" className="text-destructive" onClick={handleRemoveFriend}>Desfazer ❌</Button>
+                      <Button variant="outline" size="sm" className="text-destructive" onClick={handleBlockUser}>Bloquear 🚫</Button>
+                    </>
+                  )}
+                  {friendship?.status === "blocked" && friendship.user_id === user?.id && (
+                    <Button variant="outline" size="sm" onClick={handleUnblock}>Desbloquear</Button>
+>>>>>>> a7ecf612ff74f3c68d60cb3cc87dd136c2b3266d
                   )}
                 </>
               )}
