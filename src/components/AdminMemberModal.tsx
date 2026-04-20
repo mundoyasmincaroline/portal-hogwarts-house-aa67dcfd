@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { X, User, Scroll, Save, Trash2, ChevronDown, ChevronUp } from "lucide-react";
+import { X, User, Scroll, Save, Trash2, ChevronDown, ChevronUp, Image as ImageIcon, Upload } from "lucide-react";
+import SafeImage from "@/components/SafeImage";
 
 interface Props {
   memberId: string; // user_id
@@ -27,6 +28,8 @@ export default function AdminMemberModal({ memberId, memberName, onClose, onSave
   const [saving, setSaving]       = useState(false);
   const [expandedChar, setExpandedChar] = useState<string | null>(null);
 
+  const [uploadingChar, setUploadingChar] = useState<string | null>(null);
+
   /* ---------- fetch ---------- */
   useEffect(() => {
     const load = async () => {
@@ -40,6 +43,29 @@ export default function AdminMemberModal({ memberId, memberName, onClose, onSave
     };
     load();
   }, [memberId]);
+
+  /* ---------- upload character avatar ---------- */
+  const handleCharAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>, charId: string) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingChar(charId);
+    try {
+      const ext = file.name.split(".").pop();
+      const path = `characters/${memberId}/${charId}_${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
+      if (upErr) throw upErr;
+
+      const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
+      const finalUrl = `${publicUrl}?t=${Date.now()}`;
+      
+      cf(charId, "avatar_url", finalUrl);
+      toast.success("Foto do personagem carregada! ✨");
+    } catch (err: any) {
+      toast.error("Erro no upload: " + err.message);
+    } finally {
+      setUploadingChar(null);
+    }
+  };
 
   /* ---------- save profile ---------- */
   const saveProfile = async () => {
@@ -285,9 +311,12 @@ export default function AdminMemberModal({ memberId, memberName, onClose, onSave
                       className="flex items-center gap-3 p-4 cursor-pointer hover:bg-secondary/30 transition-colors"
                       onClick={() => setExpandedChar(expandedChar === char.id ? null : char.id)}
                     >
-                      {char.avatar_url && (
-                        <img src={char.avatar_url} alt={char.full_name} className="w-10 h-10 rounded-full object-cover border border-border" />
-                      )}
+                      <SafeImage
+                        src={char.avatar_url}
+                        alt={char.full_name}
+                        className="w-10 h-10 rounded-full object-cover border border-border"
+                        fallbackEmoji="🧙"
+                      />
                       <div className="flex-1 min-w-0">
                         <p className="font-heading text-foreground text-sm">{char.full_name || "Sem nome"}</p>
                         <p className="text-xs text-muted-foreground">
@@ -393,10 +422,38 @@ export default function AdminMemberModal({ memberId, memberName, onClose, onSave
                           </div>
                         </div>
 
-                        {/* Avatar URL */}
-                        <div className="space-y-1">
-                          <label className="text-xs text-muted-foreground">URL do Avatar</label>
-                          <Input value={char.avatar_url || ""} onChange={e => cf(char.id, "avatar_url", e.target.value)} className="bg-secondary/50" placeholder="https://..." />
+                        {/* Avatar / Foto */}
+                        <div className="glass rounded-xl p-4 border border-primary/20 space-y-3">
+                          <label className="text-xs font-heading text-primary flex items-center gap-2">
+                            <ImageIcon size={14} /> Foto do Personagem (Avatar)
+                          </label>
+                          <div className="flex flex-col sm:flex-row gap-4 items-center">
+                            <div className="w-20 h-20 rounded-xl border-2 border-border overflow-hidden bg-secondary flex items-center justify-center shrink-0 shadow-inner">
+                              <SafeImage src={char.avatar_url} alt="Preview" className="w-full h-full object-cover" fallbackEmoji="🧙" />
+                            </div>
+                            <div className="flex-1 w-full space-y-2">
+                              <label className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border-2 border-dashed border-primary/40 bg-primary/5 hover:bg-primary/10 cursor-pointer transition-colors text-sm font-heading text-primary">
+                                <Upload size={16} />
+                                {uploadingChar === char.id ? "Enviando..." : "Fazer Upload da Foto"}
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  className="hidden"
+                                  onChange={e => handleCharAvatarUpload(e, char.id)}
+                                  disabled={uploadingChar === char.id}
+                                />
+                              </label>
+                              <div className="space-y-1">
+                                <p className="text-[10px] text-muted-foreground text-center">ou cole a URL direta abaixo</p>
+                                <Input
+                                  value={char.avatar_url || ""}
+                                  onChange={e => cf(char.id, "avatar_url", e.target.value)}
+                                  className="bg-secondary/50 text-xs"
+                                  placeholder="https://exemplo.com/foto.jpg"
+                                />
+                              </div>
+                            </div>
+                          </div>
                         </div>
 
                         {/* Personality */}

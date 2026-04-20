@@ -1,6 +1,9 @@
-import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import SafeImage from "@/components/SafeImage";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import { Upload, Link as LinkIcon, Edit2, Save, X } from "lucide-react";
 
 interface Props {
   userId: string;
@@ -37,6 +40,9 @@ export default function CharacterSheetView({ userId, isOwner }: Props) {
   const [characters, setCharacters] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeChar, setActiveChar] = useState(0);
+  const [editingPhoto, setEditingPhoto] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [tempUrl, setTempUrl] = useState("");
 
   useEffect(() => {
     supabase
@@ -65,6 +71,48 @@ export default function CharacterSheetView({ userId, isOwner }: Props) {
 
   const char = characters[activeChar];
 
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop();
+      const path = `characters/${userId}/${char.id}_${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
+      if (upErr) throw upErr;
+
+      const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
+      const finalUrl = `${publicUrl}?t=${Date.now()}`;
+      
+      const { error: updateErr } = await supabase.from("characters").update({ avatar_url: finalUrl } as never).eq("id", char.id);
+      if (updateErr) throw updateErr;
+
+      setCharacters(prev => prev.map((c, i) => i === activeChar ? { ...c, avatar_url: finalUrl } : c));
+      toast.success("Foto do personagem atualizada! ✨");
+      setEditingPhoto(false);
+    } catch (err: any) {
+      toast.error("Erro no upload: " + err.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const saveUrl = async () => {
+    if (!tempUrl.trim()) return;
+    setUploading(true);
+    try {
+      const { error } = await supabase.from("characters").update({ avatar_url: tempUrl } as never).eq("id", char.id);
+      if (error) throw error;
+      setCharacters(prev => prev.map((c, i) => i === activeChar ? { ...c, avatar_url: tempUrl } : c));
+      toast.success("URL da foto atualizada! 🪄");
+      setEditingPhoto(false);
+    } catch (err: any) {
+      toast.error("Erro ao salvar URL: " + err.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <div className="space-y-4">
       {/* Tab selector se tiver mais de 1 ficha */}
@@ -91,15 +139,51 @@ export default function CharacterSheetView({ userId, isOwner }: Props) {
         {/* Header com foto */}
         <div className="relative bg-gradient-to-br from-primary/10 via-background to-secondary/30 p-6">
           <div className="flex flex-col sm:flex-row gap-5 items-center sm:items-start">
-            <div className="shrink-0">
+            <div className="shrink-0 group relative">
               <SafeImage
                 src={char.avatar_url}
                 alt={char.full_name}
                 fallbackEmoji="🧙"
                 className="w-28 h-28 rounded-2xl object-cover border-2 border-primary/30 shadow-xl"
               />
+              {isOwner && (
+                <button 
+                  onClick={() => { setEditingPhoto(!editingPhoto); setTempUrl(char.avatar_url || ""); }}
+                  className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground p-1.5 rounded-full shadow-lg hover:scale-110 transition-transform z-10"
+                  title="Editar foto do personagem"
+                >
+                  <Edit2 size={14} />
+                </button>
+              )}
             </div>
-            <div className="text-center sm:text-left">
+            
+            <div className="text-center sm:text-left flex-1">
+              {editingPhoto && isOwner && (
+                <div className="mb-4 p-3 bg-card/80 backdrop-blur-md rounded-xl border border-primary/30 space-y-3 animate-in fade-in slide-in-from-top-2">
+                  <p className="text-[10px] font-heading text-primary uppercase tracking-widest">Atualizar Foto do Personagem</p>
+                  <div className="flex flex-col gap-2">
+                    <label className="flex items-center justify-center gap-2 w-full py-2 rounded-lg border border-dashed border-primary/50 bg-primary/5 hover:bg-primary/10 cursor-pointer transition-colors text-xs font-heading text-primary">
+                      <Upload size={14} />
+                      {uploading ? "Carregando..." : "Upload de Arquivo"}
+                      <input type="file" accept="image/*" className="hidden" onChange={handleUpload} disabled={uploading} />
+                    </label>
+                    <div className="flex gap-2">
+                      <Input 
+                        value={tempUrl} 
+                        onChange={e => setTempUrl(e.target.value)} 
+                        placeholder="Ou cole o link da foto aqui..." 
+                        className="h-8 text-xs bg-secondary/50"
+                      />
+                      <Button size="sm" className="h-8" onClick={saveUrl} disabled={uploading || !tempUrl}>
+                        <Save size={14} />
+                      </Button>
+                      <Button size="sm" variant="ghost" className="h-8" onClick={() => setEditingPhoto(false)}>
+                        <X size={14} />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
               <div className="flex items-center gap-2 justify-center sm:justify-start mb-1">
                 <span className="text-xs uppercase tracking-widest text-primary/70 font-heading">
                   {char.character_type === "oc" ? "⭐ Personagem Original (OC)" : "📖 Personagem Canon (Saga)"}

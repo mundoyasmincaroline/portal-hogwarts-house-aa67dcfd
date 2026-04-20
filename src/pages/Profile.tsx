@@ -13,7 +13,8 @@ import ProfileAlbum from "@/components/ProfileAlbum";
 import CharacterSheetView from "@/components/CharacterSheetView";
 import MemberCard from "@/components/MemberCard";
 import AdminMemberModal from "@/components/AdminMemberModal";
-import { Search } from "lucide-react";
+import { Info, Users, Search, Scroll, Book, Lock, Trophy, ShoppingBag, Flame, Sparkles, Star, CheckCircle2, Crown } from "lucide-react";
+import SafeImage from "@/components/SafeImage";
 
 // ---- Componente embutido: lista de membros para solicitar amizade ----
 function MembersTab({ currentUserId }: { currentUserId?: string }) {
@@ -115,9 +116,11 @@ export default function Profile() {
   const [friendship, setFriendship] = useState<any>(null);
   const [friends, setFriends] = useState<any[]>([]);
   const [loadingTarget, setLoadingTarget] = useState(false);
-  const [activeTab, setActiveTab] = useState<"about" | "fichas" | "friends" | "members" | "security" | "album" | "referral">("about");
-  const [referrals, setReferrals] = useState<any[]>([]);
   const [userBadges, setUserBadges] = useState<any[]>([]);
+  const [userChallenges, setUserChallenges] = useState<any[]>([]);
+  const [userItems, setUserItems] = useState<any[]>([]);
+  const [loadingExtras, setLoadingExtras] = useState(false);
+  const [activeTab, setActiveTab] = useState<"about" | "fichas" | "friends" | "members" | "security" | "album" | "referral" | "achievements" | "inventory">("about");
 
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -150,11 +153,13 @@ export default function Profile() {
       loadFriends(user!.id);
       loadReferrals(user!.id);
       loadBadges(user!.id);
+      loadExtras(user!.id);
     } else if (userId) {
       loadTargetProfile();
       loadFriends(userId);
       loadReferrals(userId);
       loadBadges(userId);
+      loadExtras(userId);
     }
   }, [userId, isMe, currentUserProfile]);
 
@@ -208,6 +213,30 @@ export default function Profile() {
       .eq("user_id", targetId);
     if (data) {
       setUserBadges(data.map(d => d.badges).filter(Boolean));
+    }
+  };
+
+  const loadExtras = async (targetId: string) => {
+    setLoadingExtras(true);
+    try {
+      const [challengesRes, itemsRes] = await Promise.all([
+        supabase
+          .from("user_challenges")
+          .select("*, challenges(*)")
+          .eq("user_id", targetId)
+          .in("status", ["approved", "completed"]),
+        supabase
+          .from("user_items")
+          .select("*, store_items(*)")
+          .eq("user_id", targetId)
+      ]);
+      
+      setUserChallenges(challengesRes.data || []);
+      setUserItems(itemsRes.data || []);
+    } catch (err) {
+      console.error("Erro ao carregar extras:", err);
+    } finally {
+      setLoadingExtras(false);
     }
   };
 
@@ -368,14 +397,26 @@ export default function Profile() {
         </button>
         <button 
           onClick={() => { setActiveTab("album"); setEditing(false); }} 
-          className={`pb-2 font-heading text-sm transition-colors ${activeTab === "album" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
+          className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "album" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
         >
           Álbum
+        </button>
+        <button 
+          onClick={() => { setActiveTab("achievements"); setEditing(false); }} 
+          className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "achievements" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          🏆 Conquistas
+        </button>
+        <button 
+          onClick={() => { setActiveTab("inventory"); setEditing(false); }} 
+          className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "inventory" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          🎒 Inventário
         </button>
         {isMe && (
           <button 
             onClick={() => { setActiveTab("referral"); setEditing(false); }} 
-            className={`pb-2 font-heading text-sm transition-colors ${activeTab === "referral" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
+            className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "referral" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
           >
             Recrutamento
           </button>
@@ -383,7 +424,7 @@ export default function Profile() {
         {isMe && (
           <button 
             onClick={() => { setActiveTab("security"); setEditing(false); }} 
-            className={`pb-2 font-heading text-sm transition-colors ${activeTab === "security" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
+            className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "security" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
           >
             Segurança
           </button>
@@ -684,6 +725,111 @@ export default function Profile() {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+        </div>
+      ) : activeTab === "achievements" ? (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="font-heading text-xl text-foreground">🏆 Conquistas Mágicas</h2>
+            <span className="text-xs text-muted-foreground">{userChallenges.length} Desafios Concluídos</span>
+          </div>
+          
+          {loadingExtras ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[1,2,3,4].map(i => <div key={i} className="glass h-32 rounded-2xl animate-pulse" />)}
+            </div>
+          ) : userChallenges.length === 0 ? (
+            <div className="glass rounded-2xl p-10 text-center border-dashed border-2 border-border/50">
+              <Trophy size={48} className="mx-auto text-muted-foreground opacity-20 mb-4" />
+              <p className="text-muted-foreground text-sm italic">Nenhuma conquista registrada ainda. Explore o mapa para encontrar missões!</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {userChallenges.map(uc => (
+                <div key={uc.id} className="glass rounded-2xl p-5 border border-primary/10 bg-gradient-to-br from-primary/5 to-transparent relative group">
+                  <div className="absolute top-4 right-4">
+                    <CheckCircle2 size={18} className="text-green-500" />
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 bg-primary/10 rounded-xl text-primary shrink-0">
+                      <Star size={20} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-heading text-foreground mb-1">{uc.challenges?.title || "Desafio Místico"}</h4>
+                      <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{uc.challenges?.description}</p>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-heading bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+                          +{uc.challenges?.xp_reward} XP
+                        </span>
+                        <span className="text-[10px] text-muted-foreground">
+                          {new Date(uc.completed_at || uc.created_at).toLocaleDateString("pt-BR")}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Badges de Nível (as que já estavam no 'About', mas aqui com destaque) */}
+          <div className="mt-10">
+            <h3 className="font-heading text-sm text-primary mb-4 flex items-center gap-2">
+               <Sparkles size={16} /> Medalhas de Prestígio
+            </h3>
+            <div className="flex flex-wrap gap-4">
+              <div className="glass rounded-2xl p-4 flex items-center gap-4 border border-yellow-500/20 bg-yellow-500/5">
+                <span className="text-3xl">🏅</span>
+                <div>
+                  <p className="font-heading text-sm text-yellow-400">Veterano de Hogwarts</p>
+                  <p className="text-[10px] text-muted-foreground">Alcançado pelo XP acumulado</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : activeTab === "inventory" ? (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="font-heading text-xl text-foreground">🎒 Itens do Inventário</h2>
+            <span className="text-xs text-muted-foreground">{userItems.length} Itens Adquiridos</span>
+          </div>
+
+          {loadingExtras ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[1,2,3,4].map(i => <div key={i} className="glass aspect-square rounded-2xl animate-pulse" />)}
+            </div>
+          ) : userItems.length === 0 ? (
+            <div className="glass rounded-2xl p-10 text-center border-dashed border-2 border-border/50">
+              <ShoppingBag size={48} className="mx-auto text-muted-foreground opacity-20 mb-4" />
+              <p className="text-muted-foreground text-sm italic">O baú está vazio. Visite Gringotts para adquirir equipamentos!</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              {userItems.map(ui => {
+                const item = ui.store_items;
+                if (!item) return null;
+                return (
+                  <div key={ui.id} className="group glass rounded-2xl overflow-hidden border border-border/50 hover:border-primary/40 transition-all hover:-translate-y-1">
+                    <div className="relative aspect-square">
+                      <SafeImage 
+                        src={item.image_url} 
+                        alt={item.name} 
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        fallbackEmoji="📦"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
+                         <p className="text-[10px] text-white line-clamp-2">{item.description}</p>
+                      </div>
+                    </div>
+                    <div className="p-3 text-center">
+                      <h4 className="font-heading text-xs text-foreground truncate">{item.name}</h4>
+                      <p className="text-[10px] text-primary uppercase tracking-tighter mt-1">{item.category}</p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
