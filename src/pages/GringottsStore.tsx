@@ -82,31 +82,7 @@ export default function GringottsStore() {
   const loadStore = async () => {
     const { data } = await supabase.from("store_items").select("*").eq("is_active", true).order("price_galeons");
     
-    // Injeção de Itens 3D Realistas
-    const custom3DItems: StoreItem[] = [
-      {
-        id: "3d_emerald_robe",
-        name: "Robe das Sombras Esmeralda",
-        description: "Robe de seda verde-esmeralda com detalhes em prata. Elegância e poder em cada fio.",
-        category: "clothing",
-        price_galeons: 1200,
-        image_url: "/items/emerald_robe.png",
-        rarity: "legendary",
-        is_featured: true
-      },
-      {
-        id: "3d_ancient_wand",
-        name: "Varinha Rúnica Ancestral",
-        description: "Madeira escura entalhada com runas brilhantes. Um artefato de poder formidável moldado por magia antiga.",
-        category: "wand",
-        price_galeons: 2500,
-        image_url: "/items/ancient_wand.png",
-        rarity: "legendary",
-        is_featured: true
-      }
-    ];
-
-    setItems([...custom3DItems, ...(data || [])]);
+    setItems(data || []);
     if (user) {
       const { data: myItems } = await supabase.from("user_items").select("item_id").eq("user_id", user.id);
       setOwned((myItems || []).map(i => i.item_id));
@@ -251,48 +227,42 @@ export default function GringottsStore() {
     <div className="max-w-7xl mx-auto space-y-10 pb-20 px-4">
       
       {/* ── SUPER HERO BANNER ── */}
-      <div className="relative overflow-hidden rounded-[2.5rem] border border-yellow-500/40 shadow-[0_0_50px_rgba(234,179,8,0.15)] group">
-        <div className="absolute inset-0 bg-gradient-to-br from-yellow-900/60 via-amber-900/40 to-black z-0 pointer-events-none" />
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070')] bg-cover bg-center mix-blend-overlay opacity-20 group-hover:scale-105 transition-transform duration-1000 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-0 pointer-events-none" />
+      <div className="relative overflow-hidden rounded-[2.5rem] border border-yellow-500/20 shadow-2xl group min-h-[360px] flex items-center mb-6">
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-900/80 via-yellow-900/60 to-black z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-yellow-500/20 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 opacity-30 mix-blend-overlay pointer-events-none" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=2000')" }} />
         
-        {/* Animated Particles */}
-        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-400 rounded-full animate-ping opacity-50 pointer-events-none" />
-        <div className="absolute top-3/4 right-1/4 w-3 h-3 bg-amber-400 rounded-full animate-pulse opacity-60 pointer-events-none" />
-        <div className="absolute bottom-1/4 left-1/2 w-1.5 h-1.5 bg-yellow-200 rounded-full animate-bounce opacity-70 pointer-events-none" />
-
-        <div className="relative z-10 p-8 sm:p-12 lg:p-16 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-500/20 border border-yellow-400/50 text-yellow-300 text-xs font-bold uppercase tracking-wider mb-6 backdrop-blur-md">
-              <Sparkles size={14} className="animate-pulse" />
-              Empório Exclusivo
+        <div className="relative z-10 p-8 sm:p-12 lg:p-16 flex flex-col md:flex-row items-center justify-between w-full gap-8">
+          <div className="flex-1 text-left space-y-6">
+            <div className="inline-flex items-center gap-2 border border-yellow-500/40 rounded-full px-4 py-1.5">
+              <Sparkles size={12} className="text-yellow-500" />
+              <span className="text-[10px] font-heading text-yellow-500 uppercase tracking-widest">Empório Exclusivo</span>
             </div>
-            <h1 className="font-heading text-5xl md:text-7xl text-gold-gradient mb-4 drop-shadow-lg filter">
-              Gringotts Vault
+            
+            <h1 className="text-5xl md:text-7xl font-heading text-gold-gradient drop-shadow-lg leading-tight">
+              GRINGOTTS<br/>VAULT
             </h1>
-            <p className="text-lg md:text-xl text-yellow-100/80 font-light leading-relaxed mb-8 max-w-xl">
+            
+            <p className="text-yellow-100/70 text-base md:text-lg max-w-lg leading-relaxed font-serif">
               Bem-vindo à vitrine mais seleta do mundo bruxo. Descubra artefatos lendários, feitiçarias ancestrais e ostente o prestígio que você merece.
             </p>
-            <div className="flex gap-4">
-              <Button size="lg" className="bg-gradient-to-r from-yellow-600 to-amber-500 hover:from-yellow-500 hover:to-amber-400 text-black font-bold border-none shadow-[0_0_20px_rgba(234,179,8,0.4)]" onClick={() => setTab("featured")}>
-                Ver Exclusivos <Flame className="ml-2" size={18} />
-              </Button>
-            </div>
+            
+            <Button variant="magical" size="lg" className="bg-gradient-to-r from-yellow-500 to-amber-500 text-black border-none font-bold text-base px-8 py-6 rounded-xl hover:scale-105 transition-transform" onClick={() => setTab("featured")}>
+              Ver Exclusivos <Flame className="ml-2" size={18} />
+            </Button>
           </div>
-
-          <div className="relative w-full max-w-xs md:max-w-sm">
-            <div className="absolute inset-0 bg-yellow-500/20 blur-3xl rounded-full" />
-            <div className="glass rounded-3xl p-6 border border-yellow-400/50 backdrop-blur-xl relative flex flex-col items-center justify-center transform hover:-translate-y-2 transition-all duration-500 shadow-2xl">
-              <p className="text-xs text-yellow-200/60 font-heading tracking-widest uppercase mb-2">Acesso ao Cofre</p>
-              <div className="text-6xl mb-2 animate-bounce-slow">🪙</div>
-              <p className="font-heading text-4xl text-yellow-400 font-bold drop-shadow-md">
-                {galeons.toLocaleString("pt-BR")}
-              </p>
-              <p className="text-sm text-yellow-100/70 mt-1">Galeões Disponíveis</p>
-              <Button variant="outline" size="sm" className="mt-4 w-full border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/10" onClick={() => setTab("galeons")}>
-                Adquirir Mais
-              </Button>
+          
+          <div className="w-full md:w-80 glass bg-black/60 border border-yellow-500/20 rounded-[2rem] p-8 text-center backdrop-blur-md shadow-2xl">
+            <p className="text-yellow-500/80 text-[10px] font-heading uppercase tracking-widest mb-6">Acesso ao Cofre</p>
+            <div className="w-12 h-16 mx-auto border border-yellow-500/40 rounded-sm mb-6 flex items-center justify-center relative shadow-[0_0_15px_rgba(234,179,8,0.2)]">
             </div>
+            <p className="text-5xl font-heading text-yellow-400 mb-2 drop-shadow-md">
+              {galeons.toLocaleString("pt-BR")}
+            </p>
+            <p className="text-xs text-yellow-100/60 mb-8 font-serif">Galeões Disponíveis</p>
+            <Button variant="outline" className="w-full border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/10 rounded-xl" onClick={() => setTab("galeons")}>
+              Adquirir Mais
+            </Button>
           </div>
         </div>
       </div>
