@@ -32,6 +32,7 @@ import Friends from "./pages/Friends";
 import StickerTrades from "./pages/StickerTrades";
 import Azkaban from "./pages/Azkaban";
 import Members from "./pages/Members";
+import GringottsStore from "./pages/GringottsStore";
 
 
 const queryClient = new QueryClient();
@@ -76,6 +77,7 @@ const App = () => (
               <Route path="trades" element={<StickerTrades />} />
               <Route path="azkaban" element={<Azkaban />} />
               <Route path="members" element={<Members />} />
+              <Route path="store" element={<GringottsStore />} />
 
             </Route>
             <Route path="*" element={<NotFound />} />

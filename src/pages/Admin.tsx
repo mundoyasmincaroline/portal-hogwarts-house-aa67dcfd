@@ -45,7 +45,209 @@ interface ModLog {
   created_at: string;
 }
 
+// ─────────────────────────────────────────────────────────────
+// Sub-componente: Aba de Monetização completa
+// ─────────────────────────────────────────────────────────────
+function MonetizationTab({ members, fetchAll, adForm, setAdForm, ads, createAd, toggleAd, deleteAd }: {
+  members: any[];
+  fetchAll: () => void;
+  adForm: any;
+  setAdForm: (v: any) => void;
+  ads: any[];
+  createAd: () => void;
+  toggleAd: (id: string, active: boolean) => void;
+  deleteAd: (id: string) => void;
+}) {
+  const [storeItems, setStoreItems] = useState<any[]>([]);
+  const [loadingItems, setLoadingItems] = useState(true);
+  const [galeonTarget, setGaleonTarget] = useState("");
+  const [galeonAmount, setGaleonAmount] = useState(0);
+  const [crediting, setCrediting] = useState(false);
+  const [newItem, setNewItem] = useState({
+    name: "", description: "", category: "clothing", price_galeons: 100,
+    rarity: "common", image_url: "", is_featured: false
+  });
+  const [addingItem, setAddingItem] = useState(false);
+
+  useEffect(() => {
+    loadStoreItems();
+  }, []);
+
+  const loadStoreItems = async () => {
+    setLoadingItems(true);
+    const { data } = await supabase.from("store_items").select("*").order("category").order("price_galeons");
+    setStoreItems(data || []);
+    setLoadingItems(false);
+  };
+
+  const creditGaleons = async () => {
+    if (!galeonTarget || galeonAmount <= 0) return toast.error("Selecione um membro e um valor válido.");
+    setCrediting(true);
+    const member = members.find(m => m.user_id === galeonTarget);
+    if (!member) { toast.error("Membro não encontrado."); setCrediting(false); return; }
+    const current = (member as any).galeons || 0;
+    const { error } = await supabase.from("profiles").update({ galeons: current + galeonAmount } as never).eq("user_id", galeonTarget);
+    if (error) { toast.error("Erro ao creditar Galeões."); }
+    else { toast.success(`🪙 ${galeonAmount} Galeões creditados para ${member.full_name}!`); }
+    setCrediting(false);
+    fetchAll();
+  };
+
+  const addStoreItem = async () => {
+    if (!newItem.name || !newItem.price_galeons) return toast.error("Preencha nome e preço.");
+    setAddingItem(true);
+    const { error } = await supabase.from("store_items").insert({ ...newItem, is_active: true } as never);
+    if (error) toast.error(error.message);
+    else { toast.success("✅ Item adicionado à loja!"); setNewItem({ name: "", description: "", category: "clothing", price_galeons: 100, rarity: "common", image_url: "", is_featured: false }); loadStoreItems(); }
+    setAddingItem(false);
+  };
+
+  const toggleItem = async (item: any) => {
+    await supabase.from("store_items").update({ is_active: !item.is_active } as never).eq("id", item.id);
+    loadStoreItems();
+    toast.success(item.is_active ? "Item desativado." : "Item ativado.");
+  };
+
+  const deleteItem = async (id: string) => {
+    if (!confirm("Tem certeza? Esta ação não pode ser desfeita.")) return;
+    await supabase.from("store_items").delete().eq("id", id);
+    loadStoreItems();
+    toast.success("Item removido da loja.");
+  };
+
+  const CATEGORY_LABELS: Record<string, string> = {
+    clothing: "👗 Roupas", wand: "🪄 Varinhas", accessory: "💎 Acessórios",
+    skin: "🎨 Skins", decoration: "🏠 Decorações", pack: "📦 Pacotes"
+  };
+  const RARITY_LABELS: Record<string, string> = { common: "Comum", rare: "Raro", legendary: "Lendário" };
+
+  return (
+    <div className="space-y-6">
+      {/* ─── 1. Crédito Manual de Galeões ─── */}
+      <div className="glass rounded-2xl p-6 border border-yellow-500/30">
+        <h2 className="font-heading text-xl text-yellow-400 mb-1">🪙 Creditar Galeões Manualmente</h2>
+        <p className="text-xs text-muted-foreground mb-4">Use para premiar membros, corrigir erros ou conceder bônus especiais.</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <select
+            value={galeonTarget}
+            onChange={e => setGaleonTarget(e.target.value)}
+            className="bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground border border-border col-span-1 md:col-span-1"
+          >
+            <option value="">— Selecionar membro —</option>
+            {members.map(m => (
+              <option key={m.user_id} value={m.user_id}>
+                {m.full_name} (@{m.username}) — 🪙 {(m as any).galeons || 0}
+              </option>
+            ))}
+          </select>
+          <Input
+            type="number" min={1} placeholder="Quantidade de Galeões"
+            value={galeonAmount || ""}
+            onChange={e => setGaleonAmount(parseInt(e.target.value) || 0)}
+          />
+          <Button variant="magical" onClick={creditGaleons} disabled={crediting}>
+            {crediting ? "Creditando..." : "🪙 Creditar"}
+          </Button>
+        </div>
+      </div>
+
+      {/* ─── 2. Gerenciar Itens da Loja ─── */}
+      <div className="glass rounded-2xl p-6">
+        <h2 className="font-heading text-xl text-primary mb-4">🏪 Gerenciar Loja Gringotts</h2>
+
+        {/* Adicionar item */}
+        <div className="glass rounded-xl p-4 mb-6 border border-primary/20 space-y-3">
+          <h3 className="font-heading text-sm text-primary">➕ Adicionar Novo Item</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <Input placeholder="Nome do item *" value={newItem.name} onChange={e => setNewItem({ ...newItem, name: e.target.value })} />
+            <Input placeholder="Descrição" value={newItem.description} onChange={e => setNewItem({ ...newItem, description: e.target.value })} />
+            <Input placeholder="URL da imagem" value={newItem.image_url} onChange={e => setNewItem({ ...newItem, image_url: e.target.value })} />
+            <Input type="number" placeholder="Preço em Galeões *" value={newItem.price_galeons || ""} onChange={e => setNewItem({ ...newItem, price_galeons: parseInt(e.target.value) || 0 })} />
+            <select
+              value={newItem.category}
+              onChange={e => setNewItem({ ...newItem, category: e.target.value })}
+              className="bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground border border-border"
+            >
+              {Object.entries(CATEGORY_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+            </select>
+            <select
+              value={newItem.rarity}
+              onChange={e => setNewItem({ ...newItem, rarity: e.target.value })}
+              className="bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground border border-border"
+            >
+              <option value="common">⚪ Comum</option>
+              <option value="rare">🔵 Raro</option>
+              <option value="legendary">⭐ Lendário</option>
+            </select>
+          </div>
+          <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
+            <input type="checkbox" checked={newItem.is_featured} onChange={e => setNewItem({ ...newItem, is_featured: e.target.checked })} className="accent-primary" />
+            ⭐ Destacar na vitrine (Featured)
+          </label>
+          <Button variant="magical" className="w-full" onClick={addStoreItem} disabled={addingItem}>
+            {addingItem ? "Salvando..." : "Adicionar à Loja"}
+          </Button>
+        </div>
+
+        {/* Lista de itens */}
+        {loadingItems ? (
+          <p className="text-center text-muted-foreground animate-pulse">Carregando itens...</p>
+        ) : storeItems.length === 0 ? (
+          <p className="text-center text-muted-foreground text-sm">Nenhum item na loja ainda.</p>
+        ) : (
+          <div className="space-y-2">
+            {storeItems.map(item => (
+              <div key={item.id} className={`flex items-center gap-3 p-3 rounded-xl border ${item.is_active ? "border-border/50 bg-card/30" : "border-border/20 bg-secondary/10 opacity-50"}`}>
+                {item.image_url && <img src={item.image_url} alt={item.name} className="w-10 h-10 rounded-lg object-cover" onError={e => { e.currentTarget.style.display = "none"; }} />}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-heading text-foreground truncate">{item.name} {item.is_featured && "⭐"}</p>
+                  <p className="text-xs text-muted-foreground">{CATEGORY_LABELS[item.category]} • {RARITY_LABELS[item.rarity]} • 🪙 {item.price_galeons}</p>
+                </div>
+                <div className="flex gap-2 shrink-0">
+                  <Button size="sm" variant="outline" onClick={() => toggleItem(item)}>
+                    {item.is_active ? "Desativar" : "Ativar"}
+                  </Button>
+                  <Button size="sm" variant="destructive" onClick={() => deleteItem(item.id)}>🗑️</Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* ─── 3. Anúncios TikTok ─── */}
+      <div className="glass rounded-2xl p-6">
+        <h2 className="font-heading text-xl text-primary mb-4">📦 Adicionar Oferta (TikTok Shop)</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Input placeholder="Título (Ex: Pelúcia Harry Potter)" value={adForm.title} onChange={e => setAdForm({ ...adForm, title: e.target.value })} />
+          <Input placeholder="Link de Afiliado do TikTok" value={adForm.link} onChange={e => setAdForm({ ...adForm, link: e.target.value })} />
+          <Input placeholder="URL da Imagem" value={adForm.image_url} onChange={e => setAdForm({ ...adForm, image_url: e.target.value })} />
+        </div>
+        <Button onClick={createAd} variant="magical" className="mt-4 w-full">Publicar Anúncio Mágico</Button>
+        <div className="mt-4 space-y-3">
+          {ads.map(ad => (
+            <div key={ad.id} className="bg-card/50 rounded-xl p-3 flex items-center gap-3 border border-border">
+              {ad.image_url && <img src={ad.image_url} alt="Ad" className="w-10 h-10 rounded-md object-cover" />}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-heading text-foreground truncate">{ad.title}</p>
+                <a href={ad.link} target="_blank" rel="noreferrer" className="text-xs text-primary hover:underline truncate block">{ad.link}</a>
+              </div>
+              <div className="flex gap-2">
+                <Button size="sm" variant={ad.active ? "default" : "secondary"} onClick={() => toggleAd(ad.id, ad.active)}>{ad.active ? "Desativar" : "Ativar"}</Button>
+                <Button size="sm" variant="destructive" onClick={() => deleteAd(ad.id)}>🗑️</Button>
+              </div>
+            </div>
+          ))}
+          {ads.length === 0 && <p className="text-muted-foreground text-sm text-center">Nenhum anúncio ainda.</p>}
+        </div>
+      </div>
+    </div>
+  );
+}
+// ─────────────────────────────────────────────────────────────
+
 export default function Admin() {
+
   const { isAdmin, user } = useAuth();
   const [tab, setTab] = useState<Tab>("members");
   const [members, setMembers] = useState<MemberProfile[]>([]);
@@ -610,56 +812,7 @@ export default function Admin() {
           )}
 
           {tab === "monetization" && (
-            <div className="space-y-6">
-              <div className="glass rounded-2xl p-6">
-                <h2 className="font-heading text-xl text-primary mb-4">Adicionar Oferta (TikTok Shop)</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Input
-                    placeholder="Título (Ex: Pelúcia Harry Potter)"
-                    value={adForm.title}
-                    onChange={(e) => setAdForm({ ...adForm, title: e.target.value })}
-                  />
-                  <Input
-                    placeholder="Link de Afiliado do TikTok"
-                    value={adForm.link}
-                    onChange={(e) => setAdForm({ ...adForm, link: e.target.value })}
-                  />
-                  <Input
-                    placeholder="URL da Imagem (Link da foto)"
-                    value={adForm.image_url}
-                    onChange={(e) => setAdForm({ ...adForm, image_url: e.target.value })}
-                  />
-                </div>
-                <Button onClick={createAd} variant="magical" className="mt-4 w-full">
-                  Publicar Anúncio Mágico
-                </Button>
-              </div>
-
-              <div className="glass rounded-2xl p-6">
-                <h2 className="font-heading text-xl text-foreground mb-4">Anúncios Ativos</h2>
-                <div className="space-y-4">
-                  {ads.map((ad) => (
-                    <div key={ad.id} className="bg-card/50 rounded-xl p-4 flex items-center justify-between gap-4 border border-border">
-                      {ad.image_url && <img src={ad.image_url} alt="Ad" className="w-12 h-12 object-cover rounded-md" />}
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-foreground">{ad.title}</p>
-<span className="text-[10px] uppercase bg-secondary px-2 py-0.5 rounded text-muted-foreground">{ad.ad_type}</span>
-                        <a href={ad.link} target="_blank" rel="noreferrer" className="text-xs text-primary hover:underline truncate block">{ad.link}</a>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button variant={ad.active ? "default" : "secondary"} size="sm" onClick={() => toggleAd(ad.id, ad.active)}>
-                          {ad.active ? "Desativar" : "Ativar"}
-                        </Button>
-                        <Button variant="destructive" size="sm" onClick={() => deleteAd(ad.id)}>
-                          Excluir
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                  {ads.length === 0 && <p className="text-muted-foreground text-sm text-center">Nenhum anúncio cadastrado ainda.</p>}
-                </div>
-              </div>
-            </div>
+            <MonetizationTab members={members} fetchAll={fetchAll} adForm={adForm} setAdForm={setAdForm} ads={ads} createAd={createAd} toggleAd={toggleAd} deleteAd={deleteAd} />
           )}
 
           {tab === "moderation" && (

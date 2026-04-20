@@ -42,6 +42,7 @@ const NAV_ITEMS = [
   { icon: <BookMarked size={20} />, label: "Aulas", path: "/dashboard/classes" },
   { icon: <Library size={20} />, label: "Álbum", path: "/dashboard/album" },
   { icon: <ShoppingBag size={20} />, label: "Loja 🧿", path: "/dashboard/shop" },
+  { icon: <span className="text-lg">🏰</span>, label: "Gringotts 🪙", path: "/dashboard/store" },
   { icon: <ScrollText size={20} />, label: "Regras", path: "/dashboard/rules" },
   { icon: <span className="text-lg">⛓️</span>, label: "Azkaban", path: "/dashboard/azkaban" },
 ];
@@ -317,6 +318,11 @@ export default function DashboardLayout() {
         </nav>
 
         <div className="p-3 border-t border-border bg-card/80 backdrop-blur-sm relative z-50">
+          {/* Saldo de Galeões */}
+          <Link to="/dashboard/store" className="flex items-center justify-between px-3 py-2 mb-2 rounded-xl border border-yellow-500/30 bg-gradient-to-r from-yellow-900/20 to-amber-900/10 hover:border-yellow-400/50 transition-all group">
+            <span className="text-[11px] text-yellow-400/80 font-heading group-hover:text-yellow-400">🪙 Galeões</span>
+            <span className="font-heading text-sm text-yellow-400">{((profile as any).galeons || 0).toLocaleString("pt-BR")}</span>
+          </Link>
           <div className="flex items-center justify-between gap-1 w-full flex-wrap">
             <Link to="/dashboard/profile" className="flex items-center gap-2 max-w-[120px] hover:bg-secondary/50 p-1.5 rounded-lg transition-colors cursor-pointer group">
               <div className="relative shrink-0">

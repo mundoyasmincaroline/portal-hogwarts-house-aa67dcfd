@@ -410,12 +410,28 @@ export default function Profile() {
 
         {!editing ? (
           <>
-            <h1 className="font-heading text-2xl text-foreground flex items-center justify-center gap-2">
+            <h1 className="font-heading text-2xl text-foreground flex items-center justify-center gap-2 flex-wrap">
               {profile.full_name}
               <MedalBadge xp={profile.xp} />
+              {/* Badge VIP */}
+              {profile.vip_plan === "founder" && (
+                <span className="text-xs font-heading px-2 py-0.5 rounded-full bg-gradient-to-r from-yellow-600 to-amber-400 text-black">👑 Fundador</span>
+              )}
+              {profile.vip_plan === "vip" && (
+                <span className="text-xs font-heading px-2 py-0.5 rounded-full bg-gradient-to-r from-purple-600 to-purple-400 text-white">🥇 VIP</span>
+              )}
+              {profile.vip_plan === "premium" && (
+                <span className="text-xs font-heading px-2 py-0.5 rounded-full bg-gradient-to-r from-blue-600 to-blue-400 text-white">✨ Premium</span>
+              )}
             </h1>
             <p className="text-muted-foreground text-sm">@{profile.username}</p>
             <p className="text-sm text-muted-foreground mt-3 font-serif italic">{profile.bio || "Sem bio ainda..."}</p>
+            {/* Saldo de Galeões — visível apenas no próprio perfil */}
+            {isMe && (
+              <div className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-yellow-500/30 bg-yellow-900/10 text-yellow-400 text-sm font-heading">
+                🪙 {((profile as any).galeons || 0).toLocaleString("pt-BR")} Galeões
+              </div>
+            )}
             
             <div className="mt-4 flex justify-center gap-2">
               {isMe ? (
