@@ -34,7 +34,7 @@ const RARITY_COLOR: Record<string, string> = {
 const RARITY_EMOJI: Record<string, string> = { gold: "🥇", silver: "🥈", bronze: "🥉" };
 
 export default function StickerTrades() {
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [trades, setTrades] = useState<Trade[]>([]);
   const [myStickers, setMyStickers] = useState<Sticker[]>([]);
