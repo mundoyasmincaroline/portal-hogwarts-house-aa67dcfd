@@ -134,33 +134,46 @@ export default function GringottsStore() {
     }
   };
 
-  // ── Criar Link via supabase.rpc (pg_net — server-side, sem CORS) ──
+  // ── Gerar Link (2 etapas: dispara + aguarda resultado) ───────────────────
   const createInfinitePayLink = async (
     orderId: string,
     amountBrl: number,
     description: string,
     userEmail: string,
     userName: string,
-    galeonsQty?: number,
-    vipPlan?: string,
   ): Promise<string | null> => {
     try {
-      const { data, error } = await supabase.rpc("create_infinitepay_link", {
+      // Etapa 1: disparar a chamada HTTP (retorna imediatamente)
+      const { data: started, error: startErr } = await supabase.rpc("start_payment_request", {
         p_order_id:    orderId,
         p_amount_brl:  amountBrl,
         p_description: description,
         p_user_id:     user?.id,
         p_user_email:  userEmail,
         p_user_name:   userName,
-        p_galeons:     galeonsQty ?? 0,
-        p_vip_plan:    vipPlan ?? null,
       });
-      if (error) { console.error("RPC error:", error); return null; }
-      if (data?.payment_url) return data.payment_url;
-      console.warn("Sem URL na resposta:", data);
+      if (startErr || !started?.success) {
+        console.error("start_payment_request erro:", startErr || started);
+        return null;
+      }
+      const requestId: number = started.request_id;
+
+      // Etapa 2: aguardar pg_net processar e ler o resultado (4 tentativas, 2s cada)
+      for (let attempt = 1; attempt <= 4; attempt++) {
+        await new Promise(r => setTimeout(r, 2000));
+        const { data: result, error: getErr } = await supabase.rpc("get_payment_link", {
+          p_request_id: requestId,
+          p_order_id:   orderId,
+        });
+        if (getErr) { console.error("get_payment_link erro:", getErr); continue; }
+        if (result?.ready && result?.payment_url) return result.payment_url;
+        console.log(`Tentativa ${attempt}/4:`, result);
+      }
+
+      console.warn("Todas tentativas esgotadas — nenhuma URL retornada");
       return null;
     } catch (e) {
-      console.error("Erro ao chamar create_infinitepay_link:", e);
+      console.error("Erro no fluxo de pagamento:", e);
       return null;
     }
   };
@@ -181,14 +194,13 @@ export default function GringottsStore() {
       if (error) throw error;
 
       const description = `${pkg.name} — ${pkg.galeons}🪙 Galeões — Portal Hogwarts`;
+      toast.info("⏳ Gerando link de pagamento... (aguarde alguns segundos)");
       const payUrl = await createInfinitePayLink(
-        order.id, pkg.price_brl, description, user.email ?? "", profile.full_name,
-        pkg.galeons
+        order.id, pkg.price_brl, description, user.email ?? "", profile.full_name
       );
 
-      if (!payUrl) throw new Error("Não foi possível gerar o link de pagamento.");
+      if (!payUrl) throw new Error("Não foi possível gerar o link de pagamento. Tente novamente ou contate o suporte.");
 
-      await supabase.from("galeon_orders").update({ payment_link: payUrl } as never).eq("id", order.id);
       toast.info("💳 Redirecionando para o pagamento...");
       setTimeout(() => { window.location.href = payUrl; }, 800);
 
@@ -242,14 +254,13 @@ export default function GringottsStore() {
       if (error) throw error;
 
       const description = `VIP ${plan.name} — Portal Hogwarts (1 mês)`;
+      toast.info("⏳ Gerando link de pagamento... (aguarde alguns segundos)");
       const payUrl = await createInfinitePayLink(
-        order.id, plan.price_brl, description, user.email ?? "", profile.full_name,
-        plan.galeons_monthly, plan.id
+        order.id, plan.price_brl, description, user.email ?? "", profile.full_name
       );
 
       if (!payUrl) throw new Error("Não foi possível gerar o link de pagamento VIP.");
 
-      await supabase.from("galeon_orders").update({ payment_link: payUrl } as never).eq("id", order.id);
       toast.info("💳 Redirecionando para assinatura VIP...");
       setTimeout(() => { window.location.href = payUrl; }, 800);
     } catch (e: any) {
