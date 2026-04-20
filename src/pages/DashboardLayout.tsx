@@ -126,6 +126,10 @@ export default function DashboardLayout() {
       // XP escalona com o streak (máx 7 dias = 75 XP)
       const xpBonus = Math.min(25 + (currentStreak - 1) * 5, 75);
       await supabase.rpc("award_xp_action", { _action: "daily_login", _user_id: user.id, _xp: xpBonus });
+
+      // 🪙 Galeões pelo login (5 base + 2 por dia de streak, máx 15)
+      const galeonsBonus = Math.min(5 + (currentStreak - 1) * 2, 15);
+      supabase.rpc("award_galeons", { _user_id: user.id, _amount: galeonsBonus, _reason: "daily_login" }).then(() => {});
       
       const streakMsg = currentStreak > 1 ? ` 🔥 ${currentStreak} dias seguidos!` : "";
       toast.success(`☀️ Bom dia, ${profile.full_name?.split(" ")[0]}! +${xpBonus} XP pela sua presença diária!${streakMsg}`, { duration: 4000 });
