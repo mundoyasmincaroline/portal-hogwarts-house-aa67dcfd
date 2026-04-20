@@ -8,6 +8,7 @@ import HouseCrest from "@/components/HouseCrest";
 import { toast } from "sonner";
 import AdminMemberModal from "@/components/AdminMemberModal";
 import PedidosTab from "@/components/PedidosTab";
+import SafeImage from "@/components/SafeImage";
 
 type Tab = "members" | "pending_members" | "challenges" | "houses" | "fichas" | "tasks" | "banned" | "channels" | "monetization" | "moderation" | "filch" | "pedidos";
 
@@ -296,6 +297,7 @@ export default function Admin() {
   const [loading, setLoading] = useState(true);
   const [pendingChars, setPendingChars] = useState<Record<string, any[]>>({});
   const [selectedMember, setSelectedMember] = useState<{ id: string; name: string } | null>(null);
+  const [filterOnline, setFilterOnline] = useState(false);
   const [newCh, setNewCh] = useState({ title: "", description: "", xp_reward: 50, type: "daily", question: "", correct_answer: "" });
   const [newWord, setNewWord] = useState("");
   const [adForm, setAdForm] = useState({ title: "", link: "", image_url: "" });
@@ -435,19 +437,19 @@ export default function Admin() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div className="glass rounded-xl p-4 text-center">
+        <div className="glass rounded-xl p-4 text-center cursor-pointer hover:bg-secondary/40 transition-colors" onClick={() => { setTab("members"); setFilterOnline(false); }}>
           <p className="text-2xl font-heading text-primary">{members.length}</p>
           <p className="text-xs text-muted-foreground">Membros</p>
         </div>
-        <div className="glass rounded-xl p-4 text-center">
+        <div className="glass rounded-xl p-4 text-center cursor-pointer hover:bg-secondary/40 transition-colors" onClick={() => { setTab("members"); setFilterOnline(true); }}>
           <h3 className="text-muted-foreground text-sm font-heading mb-2">Usuários Online</h3>
           <p className="text-2xl font-heading text-foreground">{members.filter((m) => isUserOnline(m)).length}</p>
         </div>
-        <div className="glass rounded-xl p-4 text-center">
+        <div className="glass rounded-xl p-4 text-center cursor-pointer hover:bg-secondary/40 transition-colors" onClick={() => setTab("challenges")}>
           <p className="text-2xl font-heading text-foreground">{challenges.filter((c) => c.active).length}</p>
           <p className="text-xs text-muted-foreground">Desafios ativos</p>
         </div>
-        <div className="glass rounded-xl p-4 text-center">
+        <div className="glass rounded-xl p-4 text-center cursor-pointer hover:bg-secondary/40 transition-colors" onClick={() => setTab("banned")}>
           <p className="text-2xl font-heading text-foreground">{logs.length}</p>
           <p className="text-xs text-muted-foreground">Bloqueios Filch</p>
         </div>
@@ -474,7 +476,7 @@ export default function Admin() {
         <>
           {tab === "members" && (
             <div className="space-y-3">
-              {members.map((m) => (
+              {(filterOnline ? members.filter(m => isUserOnline(m)) : members).map((m) => (
                 <div
                   key={m.id}
                   className="glass rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:border-primary/40 border border-transparent transition-colors"
@@ -556,7 +558,7 @@ export default function Admin() {
                           {chars.map((char: any) => (
                             <div key={char.id} className="bg-card/60 rounded-xl p-3 flex gap-3">
                               {char.avatar_url && (
-                                <img src={char.avatar_url} alt={char.full_name} className="w-12 h-12 rounded-full object-cover border border-border shrink-0" />
+                                <SafeImage src={char.avatar_url} alt={char.full_name} className="w-12 h-12 rounded-full object-cover border border-border shrink-0" fallbackEmoji="🧙‍♂️" />
                               )}
                               <div className="min-w-0 flex-1">
                                 <p className="font-heading text-sm text-foreground">{char.full_name}</p>

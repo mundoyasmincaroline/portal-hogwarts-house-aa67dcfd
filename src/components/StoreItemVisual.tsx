@@ -124,20 +124,36 @@ interface Props {
 // Mapeamento de imagens épicas para categorias caso o item não tenha imagem
 function getEpicPlaceholder(category: string, name: string): string {
   const n = name.toLowerCase();
-  if (category === "clothing" || n.includes("robe") || n.includes("manto") || n.includes("capa")) 
-    return "https://images.unsplash.com/photo-1603504351111-2eb26fc8e03e?q=80&w=800&auto=format&fit=crop"; // Mistic cloth
-  if (category === "wand" || n.includes("varinha")) 
-    return "https://images.unsplash.com/photo-1588612501594-541e21b2b800?q=80&w=800&auto=format&fit=crop"; // Wand
-  if (category === "accessory" || n.includes("anel") || n.includes("colar") || n.includes("amuleto")) 
-    return "https://images.unsplash.com/photo-1605335967008-01d7ed085b30?q=80&w=800&auto=format&fit=crop"; // Crystal/Gem
-  if (category === "skin" || n.includes("aura") || n.includes("visual")) 
-    return "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=800&auto=format&fit=crop"; // Magical aura
-  if (category === "featured" || n.includes("coroa") || n.includes("vip")) 
-    return "https://images.unsplash.com/photo-1580234797602-22c37b4a6217?q=80&w=800&auto=format&fit=crop"; // Crown
-  if (n.includes("vassoura") || n.includes("nimbus")) 
-    return "https://images.unsplash.com/photo-1463130456064-071c775aee3f?q=80&w=800&auto=format&fit=crop"; // Magical broom/wood
   
-  return "https://images.unsplash.com/photo-1628102491629-778571d893a3?q=80&w=800&auto=format&fit=crop"; // Generic magical item
+  // Coerência com a descrição/nome
+  if (n.includes("carmesim") || n.includes("vermelho") || (n.includes("robe") && n.includes("coragem")))
+    return "https://images.unsplash.com/photo-1618331835717-801e976710b2?q=80&w=800&auto=format&fit=crop"; // Crimson/Red velvet magic
+  
+  if (n.includes("ouro") || n.includes("cintilante") || n.includes("brilhante"))
+    return "https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=800&auto=format&fit=crop"; // Golden magic particles
+    
+  if (n.includes("moldura") || n.includes("frame"))
+    return "https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?q=80&w=800&auto=format&fit=crop"; // Golden magical frame
+    
+  if (n.includes("cerimonial") || n.includes("formatura") || n.includes("branco"))
+    return "https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=800&auto=format&fit=crop"; // White/Light magical fabric/book
+    
+  if (category === "clothing" || n.includes("robe") || n.includes("manto") || n.includes("capa")) 
+    return "https://images.unsplash.com/photo-1603504351111-2eb26fc8e03e?q=80&w=800&auto=format&fit=crop"; // Mistic dark cloth
+    
+  if (category === "wand" || n.includes("varinha")) 
+    return "https://images.unsplash.com/photo-1588612501594-541e21b2b800?q=80&w=800&auto=format&fit=crop"; // Wizarding Wand
+    
+  if (category === "accessory" || n.includes("anel") || n.includes("colar") || n.includes("amuleto")) 
+    return "https://images.unsplash.com/photo-1605335967008-01d7ed085b30?q=80&w=800&auto=format&fit=crop"; // Magical glowing jewelry
+    
+  if (category === "skin" || n.includes("aura") || n.includes("visual") || n.includes("vip")) 
+    return "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=800&auto=format&fit=crop"; // Magical aura/premium look
+    
+  if (category === "featured" || n.includes("coroa")) 
+    return "https://images.unsplash.com/photo-1580234797602-22c37b4a6217?q=80&w=800&auto=format&fit=crop"; // Legendary Golden Crown
+    
+  return "https://images.unsplash.com/photo-1628102491629-778571d893a3?q=80&w=800&auto=format&fit=crop"; // Ancient Magic Artifact
 }
 
 export default function StoreItemVisual({ imageUrl, name, category, isOwned }: Props) {
@@ -153,7 +169,7 @@ export default function StoreItemVisual({ imageUrl, name, category, isOwned }: P
         className="w-full h-full object-cover mix-blend-lighten opacity-90 group-hover:scale-110 group-hover:opacity-100 transition-all duration-700"
         onError={(e) => { 
           // Fallback final se a imagem falhar
-          e.currentTarget.src = "https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=600"; 
+          e.currentTarget.src = "https://images.unsplash.com/photo-1628102491629-778571d893a3?q=80&w=800&auto=format&fit=crop"; 
         }} 
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />

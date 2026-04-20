@@ -109,7 +109,7 @@ function MembersTab({ currentUserId }: { currentUserId?: string }) {
 export default function Profile() {
   const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
-  const { profile: currentUserProfile, user, updateProfile, updatePassword } = useAuth();
+  const { profile: currentUserProfile, user, updateProfile, updatePassword, isAdmin } = useAuth();
   
   const [targetProfile, setTargetProfile] = useState<any>(null);
   const [friendship, setFriendship] = useState<any>(null);
