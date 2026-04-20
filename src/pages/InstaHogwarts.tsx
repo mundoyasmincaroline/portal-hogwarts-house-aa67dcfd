@@ -377,11 +377,11 @@ export default function InstaHogwarts() {
 
                 {/* Image */}
                 <div className="relative w-full bg-black flex items-center justify-center max-h-[540px] overflow-hidden">
-                  <img
+                  <SafeImage
                     src={post.image_url}
-                    className="max-w-full max-h-[540px] object-contain w-full"
                     alt="Post"
-                    onError={e => { e.currentTarget.src = ""; e.currentTarget.style.display = "none"; }}
+                    className="max-w-full max-h-[540px] object-contain w-full"
+                    fallbackEmoji="📸"
                   />
                 </div>
 

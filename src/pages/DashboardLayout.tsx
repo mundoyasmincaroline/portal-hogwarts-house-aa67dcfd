@@ -26,6 +26,7 @@ import DailyEncounter from "@/components/DailyEncounter";
 import NotificationBanner from "@/components/NotificationBanner";
 import { useAchievements } from "@/lib/useAchievements";
 import FilchWatcher from "@/components/FilchWatcher";
+import MagicalEventSystem from "@/components/MagicalEventSystem";
 
 
 const NAV_ITEMS = [
@@ -405,6 +406,7 @@ export default function DashboardLayout() {
           <Outlet />
           <EngagementBot />
           <FilchWatcher />
+          <MagicalEventSystem />
         </div>
       </main>
     </div>

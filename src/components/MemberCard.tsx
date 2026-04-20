@@ -9,6 +9,7 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import HouseCrest from "@/components/HouseCrest";
+import SafeImage from "@/components/SafeImage";
 import { MessageCircle, UserPlus, UserCheck, Clock } from "lucide-react";
 import { House } from "@/lib/store";
 
@@ -134,13 +135,13 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
         className="flex items-center gap-3 p-3 rounded-xl glass border border-border/50 hover:border-primary/40 cursor-pointer transition-all group"
       >
         <div className="relative shrink-0">
-          {member.avatar_url ? (
-            <img src={member.avatar_url} alt={member.full_name} className="w-10 h-10 rounded-full object-cover border border-border group-hover:border-primary/50 transition-colors" />
-          ) : (
-            <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center font-heading text-sm border border-border">
-              {member.full_name?.[0] || "?"}
-            </div>
-          )}
+          <div className="w-10 h-10 shrink-0">
+            <SafeImage 
+              src={member.avatar_url || ""} 
+              alt={member.full_name} 
+              className="w-full h-full rounded-full object-cover border border-border group-hover:border-primary/50 transition-colors" 
+            />
+          </div>
           {member.online !== undefined && (
             <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-card ${member.online ? "bg-green-500" : "bg-muted-foreground/40"}`} />
           )}
@@ -162,17 +163,13 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
       {/* Avatar */}
       <div className="flex flex-col items-center text-center mb-4">
         <div className="relative mb-3">
-          {member.avatar_url ? (
-            <img
-              src={member.avatar_url}
+          <div className="w-20 h-20 shrink-0">
+            <SafeImage
+              src={member.avatar_url || ""}
               alt={member.full_name}
-              className="w-20 h-20 rounded-full object-cover border-2 border-border group-hover:border-primary/60 transition-colors"
+              className="w-full h-full rounded-full object-cover border-2 border-border group-hover:border-primary/60 transition-colors"
             />
-          ) : (
-            <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center font-heading text-2xl border-2 border-border group-hover:border-primary/60 transition-colors">
-              {member.full_name?.[0] || "?"}
-            </div>
-          )}
+          </div>
           {member.online !== undefined && (
             <span className={`absolute bottom-0.5 right-0.5 w-3.5 h-3.5 rounded-full border-2 border-card ${member.online ? "bg-green-500" : "bg-muted-foreground/40"}`} />
           )}

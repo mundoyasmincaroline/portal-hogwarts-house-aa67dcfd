@@ -1,3 +1,5 @@
+import SafeImage from "@/components/SafeImage";
+
 /**
  * StoreItemVisual — arte digital para itens da loja Gringotts
  * Gerado 100% em código: gradientes, SVG e animações por casa/categoria.
@@ -163,14 +165,11 @@ export default function StoreItemVisual({ imageUrl, name, category, isOwned }: P
 
   return (
     <div className="relative w-full h-full bg-black group overflow-hidden">
-      <img 
+      <SafeImage 
         src={finalImage} 
         alt={name}
         className="w-full h-full object-cover mix-blend-lighten opacity-90 group-hover:scale-110 group-hover:opacity-100 transition-all duration-700"
-        onError={(e) => { 
-          // Fallback final se a imagem falhar
-          e.currentTarget.src = "https://images.unsplash.com/photo-1628102491629-778571d893a3?q=80&w=800&auto=format&fit=crop"; 
-        }} 
+        fallbackEmoji="📦"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_50%,_rgba(0,0,0,0.6)_100%)] pointer-events-none" />

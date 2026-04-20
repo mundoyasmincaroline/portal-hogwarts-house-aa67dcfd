@@ -4,6 +4,7 @@ import { HOUSES, getLevelFromXP, type House } from "@/lib/store";
 import { isUserOnline } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";
 import MedalBadge from "@/components/MedalBadge";
+import SafeImage from "@/components/SafeImage";
 import { useNavigate } from "react-router-dom";
 import { Trophy, Zap, Crown } from "lucide-react";
 
@@ -130,15 +131,11 @@ export default function Ranking() {
                     <div className={`flex flex-col items-center p-4 gap-2 ${heights[idx]}`}>
                       <div className="text-2xl">{medals[PODIUM_ORDER.indexOf(idx)]}</div>
                       <div className="relative">
-                        {m.avatar_url ? (
-                          <img src={m.avatar_url} alt={m.full_name}
-                            className={`w-14 h-14 rounded-full object-cover border-2 ${isGold ? "border-yellow-400" : "border-border"}`}
-                            onError={e => { e.currentTarget.style.display = "none"; }} />
-                        ) : (
-                          <div className={`w-14 h-14 rounded-full bg-gradient-to-br from-primary/30 to-secondary flex items-center justify-center font-heading text-2xl text-primary border-2 ${isGold ? "border-yellow-400" : "border-border"}`}>
-                            {m.full_name[0]}
-                          </div>
-                        )}
+                        <SafeImage 
+                          src={m.avatar_url} 
+                          alt={m.full_name} 
+                          className={`w-14 h-14 rounded-full object-cover border-2 ${isGold ? "border-yellow-400" : "border-border"}`} 
+                        />
                         {isGold && (
                           <Crown size={16} className="absolute -top-2 left-1/2 -translate-x-1/2 text-yellow-400 drop-shadow-[0_0_6px_rgba(251,191,36,0.8)]" />
                         )}
@@ -189,15 +186,11 @@ export default function Ranking() {
 
                   {/* Avatar */}
                   <div className="relative shrink-0">
-                    {m.avatar_url ? (
-                      <img src={m.avatar_url} alt={m.full_name}
-                        className="w-9 h-9 rounded-full object-cover border border-border"
-                        onError={e => { e.currentTarget.style.display = "none"; }} />
-                    ) : (
-                      <div className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center font-heading text-primary text-sm">
-                        {m.full_name[0]}
-                      </div>
-                    )}
+                    <SafeImage 
+                      src={m.avatar_url} 
+                      alt={m.full_name} 
+                      className="w-9 h-9 rounded-full object-cover border border-border" 
+                    />
                     <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-card ${online ? "bg-green-500" : "bg-muted-foreground/50"}`} />
                   </div>
 

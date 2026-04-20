@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { ShoppingBag, Coins, Crown, Wand2, Shirt, Gem, Sparkles, Star, ExternalLink, Check, Flame, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import StoreItemVisual from "@/components/StoreItemVisual";
+import SafeImage from "@/components/SafeImage";
 
 // ─── Config ────────────────────────────────────────────────────────────
 // Tudo via supabase.rpc() — sem CORS, server-side via pg_net
@@ -429,7 +430,7 @@ export default function GringottsStore() {
                     </div>
                   )}
                   <div className="w-24 h-24 mb-4 mt-2 relative rounded-2xl overflow-hidden border-2 border-yellow-500/30 group-hover:scale-110 transition-transform duration-500 shadow-[0_0_15px_rgba(251,191,36,0.3)]">
-                    <img src={pkg.image_url} alt={pkg.name} className="w-full h-full object-cover mix-blend-overlay opacity-80" />
+                    <SafeImage src={pkg.image_url} alt={pkg.name} className="w-full h-full object-cover mix-blend-overlay opacity-80" />
                     <div className="absolute inset-0 flex items-center justify-center text-4xl drop-shadow-[0_0_15px_rgba(251,191,36,0.8)]">{pkg.icon}</div>
                   </div>
                   <h3 className="font-heading text-lg text-foreground mb-1 group-hover:text-yellow-400 transition-colors">{pkg.name}</h3>
@@ -486,7 +487,7 @@ export default function GringottsStore() {
                   )}
 
                   <div className="w-full h-32 mb-6 mt-2 relative rounded-2xl overflow-hidden border border-current shadow-lg group-hover:scale-105 transition-transform duration-500" style={{ borderColor: plan.textColor.split('-')[1] }}>
-                    <img src={plan.image_url} alt={plan.name} className="w-full h-full object-cover opacity-60 mix-blend-overlay" />
+                    <SafeImage src={plan.image_url} alt={plan.name} className="w-full h-full object-cover opacity-60 mix-blend-overlay" />
                     <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent" />
                     <div className="absolute inset-0 flex items-center justify-center text-5xl drop-shadow-[0_0_20px_currentColor]">{plan.icon}</div>
                   </div>

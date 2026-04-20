@@ -370,7 +370,7 @@ export default function Profile() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       {/* Abas */}
-      <div className="flex gap-4 border-b border-border mb-6">
+      <div className="flex gap-4 border-b border-border mb-6 overflow-x-auto pb-1 scrollbar-hide whitespace-nowrap">
         <button 
           onClick={() => { setActiveTab("about"); setEditing(false); }} 
           className={`pb-2 font-heading text-sm transition-colors ${activeTab === "about" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
@@ -433,13 +433,14 @@ export default function Profile() {
 
       <div className="glass rounded-2xl p-8 text-center">
         <div className="relative inline-block mb-4">
-          {profile.avatar_url ? (
-          <img src={profile.avatar_url} alt={profile.full_name} className="w-24 h-24 rounded-full object-cover animate-pulse-glow" onError={(e) => { e.currentTarget.style.display='none'; }} />
-          ) : (
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary/30 to-secondary flex items-center justify-center text-4xl font-heading text-primary animate-pulse-glow">
-              {profile.full_name[0]}
-            </div>
-          )}
+          <div className="w-24 h-24 shrink-0 mx-auto">
+            <SafeImage
+              src={profile.avatar_url}
+              alt={profile.full_name}
+              className="w-full h-full rounded-full object-cover animate-pulse-glow"
+              fallbackText={profile.full_name[0]}
+            />
+          </div>
           <div className="absolute -bottom-1 -right-1">
             <HouseCrest house={profile.house as House} size="sm" />
           </div>
@@ -572,7 +573,13 @@ export default function Profile() {
                   className="flex-1"
                 />
                 {form.avatar_url && (
-                  <img src={form.avatar_url} alt="preview" className="w-10 h-10 rounded-full object-cover border border-border" onError={(e) => (e.currentTarget.style.display = 'none')} />
+                  <div className="w-10 h-10 shrink-0">
+                    <SafeImage 
+                      src={form.avatar_url} 
+                      alt="preview" 
+                      className="w-full h-full rounded-full object-cover border border-border" 
+                    />
+                  </div>
                 )}
               </div>
             </div>
@@ -710,13 +717,14 @@ export default function Profile() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {referrals.map(r => (
                 <div key={r.id} className="glass rounded-xl p-3 flex items-center gap-3">
-                  {r.profile?.avatar_url ? (
-                    <img src={r.profile.avatar_url} alt={r.profile.full_name} className="w-10 h-10 rounded-full object-cover" />
-                  ) : (
-                    <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center font-heading text-primary">
-                      {r.profile?.full_name?.[0] || "?"}
-                    </div>
-                  )}
+                  <div className="w-10 h-10 shrink-0">
+                    <SafeImage 
+                      src={r.profile?.avatar_url} 
+                      alt={r.profile?.full_name || "Membro"} 
+                      className="w-full h-full rounded-full object-cover" 
+                      fallbackText={r.profile?.full_name?.[0]}
+                    />
+                  </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-heading text-foreground truncate">{r.profile?.full_name}</p>
                     <p className="text-xs text-muted-foreground truncate">
