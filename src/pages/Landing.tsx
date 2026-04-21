@@ -63,7 +63,7 @@ export default function Landing() {
     target.setHours(20, 0, 0, 0);
     const timer = setInterval(() => {
       const now = new Date().getTime();
-      const distance = target.getTime() - now;
+      const distance = Math.max(0, target.getTime() - now);
       setTimeLeft({
         days: Math.floor(distance / (1000 * 60 * 60 * 24)),
         hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
@@ -79,7 +79,7 @@ export default function Landing() {
   if (hour >= 5 && hour < 12) timeOfDay = "morning";
   else if (hour >= 12 && hour < 18) timeOfDay = "afternoon";
 
-  const bgUrl = "/hogwarts_monster_hero_1776800242941.png";
+  const bgUrl = "https://images.unsplash.com/photo-1547756536-cde3673fa2e5?q=80&w=2141&auto=format&fit=crop";
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[#050505] selection:bg-primary/30 selection:text-primary">
@@ -135,7 +135,7 @@ export default function Landing() {
             className="w-full h-[120vh] transition-transform duration-300 ease-out will-change-transform"
             style={{ transform: `translateY(${scrollY * 0.4}px) scale(${1 + scrollY * 0.0005})` }}
           >
-            <img src={bgUrl} alt="Hogwarts Castle" className="w-full h-full object-cover opacity-60 mix-blend-screen" />
+            <img src={bgUrl} alt="Hogwarts Castle" className="w-full h-full object-cover opacity-60" />
             <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/40 via-transparent to-[#050505]" />
           </div>
           

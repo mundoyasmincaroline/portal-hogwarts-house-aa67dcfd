@@ -16,6 +16,8 @@ import MemberCard from "@/components/MemberCard";
 import AdminMemberModal from "@/components/AdminMemberModal";
 import { Info, Users, Search, Scroll, Book, Lock, Trophy, ShoppingBag, Flame, Sparkles, Star, CheckCircle2, Crown, ChevronRight, Zap } from "lucide-react";
 import SafeImage from "@/components/SafeImage";
+import MagicalParticles from "@/components/MagicalParticles";
+import { useMagicalSound } from "@/hooks/useMagicalSound";
 
 // ---- Componente embutido: lista de membros para solicitar amizade ----
 function MembersTab({ currentUserId }: { currentUserId?: string }) {
@@ -110,6 +112,7 @@ export default function Profile() {
   const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
   const { profile: currentUserProfile, user, updateProfile, updatePassword, isAdmin } = useAuth();
+  const { play } = useMagicalSound();
   
   const [targetProfile, setTargetProfile] = useState<any>(null);
   const [characters, setCharacters] = useState<any[]>([]);
