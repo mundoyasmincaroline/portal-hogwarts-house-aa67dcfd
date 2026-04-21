@@ -123,7 +123,7 @@ export default function StoriesBar() {
     // Upload file if selected
     if (newStoryFile) {
       const ext = newStoryFile.name.split(".").pop();
-      const path = `stories/${user.id}_${Date.now()}.${ext}`;
+      const path = `${user.id}/stories/${Date.now()}.${ext}`;
       const { error: upErr } = await supabase.storage.from("avatars").upload(path, newStoryFile, { upsert: true });
       if (!upErr) {
         const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);

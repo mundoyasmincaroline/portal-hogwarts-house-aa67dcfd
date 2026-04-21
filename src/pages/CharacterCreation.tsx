@@ -89,7 +89,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
       let avatarUrl = form.avatar_url;
       if (avatarFile) {
         const ext = avatarFile.name.split(".").pop();
-        const path = `characters/${user.id}/${Date.now()}.${ext}`;
+        const path = `${user.id}/characters/${Date.now()}.${ext}`;
         const { error: upErr } = await supabase.storage.from("avatars").upload(path, avatarFile, { upsert: true });
         if (!upErr) {
           const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);

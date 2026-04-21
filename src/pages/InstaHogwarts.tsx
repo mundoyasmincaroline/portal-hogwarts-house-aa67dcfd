@@ -124,10 +124,10 @@ export default function InstaHogwarts() {
 
     const ext = selectedFile.name.split(".").pop();
     const fileName = `${user.id}_${Date.now()}.${ext}`;
-    const { error: upErr } = await supabase.storage.from("avatars").upload(`instaposts/${fileName}`, selectedFile, { upsert: true });
+    const { error: upErr } = await supabase.storage.from("avatars").upload(`${user.id}/instaposts/${fileName}`, selectedFile, { upsert: true });
     if (upErr) { toast.error("Erro no upload."); setUploading(false); return; }
 
-    const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(`instaposts/${fileName}`);
+    const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(`${user.id}/instaposts/${fileName}`);
     const bustedUrl = `${publicUrl}?t=${Date.now()}`;
 
     const { error: insertErr } = await supabase.from("insta_posts").insert({

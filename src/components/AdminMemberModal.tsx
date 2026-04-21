@@ -51,7 +51,7 @@ export default function AdminMemberModal({ memberId, memberName, onClose, onSave
     setUploadingChar(charId);
     try {
       const ext = file.name.split(".").pop();
-      const path = `characters/${memberId}/${charId}_${Date.now()}.${ext}`;
+      const path = `${memberId}/characters/${charId}_${Date.now()}.${ext}`;
       const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
       if (upErr) throw upErr;
 

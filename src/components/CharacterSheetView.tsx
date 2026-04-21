@@ -77,7 +77,7 @@ export default function CharacterSheetView({ userId, isOwner }: Props) {
     setUploading(true);
     try {
       const ext = file.name.split(".").pop();
-      const path = `characters/${userId}/${char.id}_${Date.now()}.${ext}`;
+      const path = `${userId}/characters/${char.id}_${Date.now()}.${ext}`;
       const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
       if (upErr) throw upErr;
 
