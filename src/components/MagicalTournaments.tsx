@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
-import { Swords, Trophy, Users, Timer, Sparkles, Star, Shield, Zap } from "lucide-react";
+import { Swords, Trophy, Users, Timer, Sparkles, Star, Shield, Zap, Flame } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
@@ -33,7 +33,7 @@ export default function MagicalTournaments() {
   }, [user]);
 
   const checkRegistration = async () => {
-    const { data } = await supabase.from("user_challenges").select("*").eq("user_id", user?.id).eq("challenge_id", "winter_saga_2024").single();
+    const { data } = await supabase.from("user_challenges").select("*").eq("user_id", user?.id).eq("challenge_id", "winter_saga_2024").maybeSingle();
     if (data) setIsRegistered(true);
 
     // Calcular Atributos Reais (Base + Itens Equipados)
@@ -80,6 +80,7 @@ export default function MagicalTournaments() {
             <Button variant="outline" onClick={() => setShowDuel(false)}>← Voltar para a Saga</Button>
             <MagicalDuel 
                 opponent={{ name: "Draco Malfoy (Elite)", avatar_url: "https://i.pinimg.com/originals/94/d6/3b/94d63b05423f1011867c293675e4683c.jpg" }} 
+                playerStats={playerStats}
                 onFinish={(won) => {
                     setShowDuel(false);
                     if (won) toast.success("Você avançou para a próxima fase!");

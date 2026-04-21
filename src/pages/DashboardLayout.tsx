@@ -4,7 +4,7 @@ import {
   Castle, BookOpen, User, MessageCircle, Camera, Film, Trophy,
   Shield, Swords, BookMarked, Library, ShoppingBag, ScrollText,
   Settings, LogOut, Volume2, VolumeX, RefreshCw, Menu, Users,
-  Coins, Lock, Wallet, Map as MapIcon
+  Coins, Lock, Wallet, Map as MapIcon, Sparkles
 } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";

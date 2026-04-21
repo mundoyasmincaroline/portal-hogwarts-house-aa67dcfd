@@ -16,9 +16,9 @@ export default function MagicalDuel({ opponent, playerStats, onFinish }: {
     playerStats: { atk: number; def: number; hp: number; mana: number };
     onFinish: (winner: boolean) => void 
 }) {
-  const [playerHP, setPlayerHP] = useState(playerStats.hp);
+  const [playerHP, setPlayerHP] = useState(playerStats?.hp || 100);
   const [opponentHP, setOpponentHP] = useState(100);
-  const [playerMana, setPlayerMana] = useState(playerStats.mana);
+  const [playerMana, setPlayerMana] = useState(playerStats?.mana || 50);
   const [turn, setTurn] = useState<"player" | "opponent">("player");
   const [log, setLog] = useState<string[]>(["O duelo começou! 🪄"]);
   
@@ -35,7 +35,7 @@ export default function MagicalDuel({ opponent, playerStats, onFinish }: {
     if (turn !== "player" || playerMana < spell.cost) return;
 
     setPlayerMana(prev => prev - spell.cost);
-    triggerEffect("rgba(var(--primary-rgb), 0.2)");
+    triggerEffect("rgba(234, 179, 8, 0.2)");
     
     if (spell.type === "attack") {
         const damage = Math.floor(spell.power * (1 + (playerStats.atk / 50)));
@@ -85,7 +85,7 @@ export default function MagicalDuel({ opponent, playerStats, onFinish }: {
             {/* Player */}
             <div className="text-center space-y-3">
                 <div className="w-20 h-20 bg-primary/20 rounded-full mx-auto border-2 border-primary overflow-hidden">
-                    <SafeImage src={null} fallbackEmoji="🧙‍♂️" />
+                    <SafeImage src={null} alt="Você" fallbackEmoji="🧙‍♂️" />
                 </div>
                 <h4 className="font-heading">Você</h4>
                 <div className="w-32 h-3 bg-secondary rounded-full overflow-hidden border border-border">
@@ -103,7 +103,7 @@ export default function MagicalDuel({ opponent, playerStats, onFinish }: {
             {/* Opponent */}
             <div className="text-center space-y-3">
                 <div className="w-20 h-20 bg-destructive/20 rounded-full mx-auto border-2 border-destructive overflow-hidden">
-                    <SafeImage src={opponent.avatar_url} fallbackEmoji="👹" />
+                    <SafeImage src={opponent?.avatar_url} alt={opponent?.name || "Oponente"} fallbackEmoji="👹" />
                 </div>
                 <h4 className="font-heading">{opponent.name}</h4>
                 <div className="w-32 h-3 bg-secondary rounded-full overflow-y-hidden border border-border">
