@@ -414,6 +414,7 @@ export default function DashboardLayout() {
                 onClick={async () => {
                   await supabase.from("profiles").update({ active_character_id: null } as never).eq("user_id", user.id);
                   useAuth.setState((state) => ({ profile: state.profile ? { ...state.profile, active_character_id: null } : null }));
+                  window.location.reload();
                 }} 
                 className="p-1.5 text-muted-foreground hover:bg-secondary/80 hover:text-primary rounded-md transition-colors" 
                 title="Trocar Personagem"

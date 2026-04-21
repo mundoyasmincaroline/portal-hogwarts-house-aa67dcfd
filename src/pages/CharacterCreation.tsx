@@ -73,6 +73,10 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
 
   const handleSubmit = async (type: "oc"|"canon") => {
     if (!user) return;
+    if (!form.full_name || !form.house) {
+      toast.error("Por favor, preencha o nome e selecione uma Casa.");
+      return;
+    }
     if (!form.full_name || !form.avatar_url && !avatarFile || !form.blood_status || !form.wand || !form.patronus || !form.personality || !form.strength || !form.weakness || !form.fears || !form.dreams) {
       toast.error("Preencha todos os campos obrigatórios da ficha!");
       return;
