@@ -23,7 +23,12 @@ export default function EnigmaModal({ isOpen, onClose, question, onAnswer }: Eni
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-md bg-secondary/95 border-primary/20 backdrop-blur-md">
-        <DialogHeader>
+        <DialogHeader className="pt-6">
+          <div className="flex justify-center mb-4">
+            <div className="w-16 h-16 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center animate-pulse shadow-[0_0_20px_rgba(212,175,55,0.3)]">
+               <span className="text-3xl animate-float">🔮</span>
+            </div>
+          </div>
           <DialogTitle className="font-heading text-2xl text-gold-gradient text-center">O Enigma da Esfinge</DialogTitle>
           <DialogDescription asChild>
             <p className="text-center text-foreground mt-4 text-lg font-serif italic leading-relaxed">

@@ -184,9 +184,13 @@ export default function EmojiShop() {
                   </div>
                 )}
 
-                {/* Icon */}
-                <div className={`text-5xl mb-3 mt-2 drop-shadow-lg transition-transform group-hover:scale-110 ${badge.rarity === "legendary" ? "filter drop-shadow-[0_0_8px_rgba(250,204,21,0.6)]" : ""}`}>
-                  {badge.icon}
+                {/* Icon/Image */}
+                <div className={`w-24 h-24 mx-auto mb-3 mt-2 flex items-center justify-center transition-transform group-hover:scale-110 ${badge.rarity === "legendary" ? "filter drop-shadow-[0_0_12px_rgba(250,204,21,0.5)]" : ""}`}>
+                  {badge.image_url ? (
+                    <img src={badge.image_url} alt={badge.name} className="w-full h-full object-contain rounded-xl" />
+                  ) : (
+                    <span className="text-5xl">{badge.icon}</span>
+                  )}
                 </div>
 
                 <h3 className="font-heading text-sm text-foreground mb-1">{badge.name}</h3>

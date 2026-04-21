@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import SafeImage from "@/components/SafeImage";
 import { Button } from "@/components/ui/button";

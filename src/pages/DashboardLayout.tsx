@@ -377,9 +377,12 @@ export default function DashboardLayout() {
 
         <div className="p-3 border-t border-border bg-card/80 backdrop-blur-sm relative z-50">
           {/* Saldo de Galeões */}
-          <Link to="/dashboard/store" className="flex items-center justify-between px-3 py-2 mb-2 rounded-xl border border-yellow-500/30 bg-gradient-to-r from-yellow-900/20 to-amber-900/10 hover:border-yellow-400/50 transition-all group">
-            <span className="text-[11px] text-yellow-400/80 font-heading group-hover:text-yellow-400">🪙 Galeões</span>
-            <span className="font-heading text-sm text-yellow-400">{((profile as any).galeons || 0).toLocaleString("pt-BR")}</span>
+          <Link to="/dashboard/store" className="flex items-center justify-between px-4 py-3 mb-2 rounded-2xl border border-yellow-500/40 bg-gradient-to-br from-amber-600/20 via-yellow-900/40 to-black hover:border-yellow-300 transition-all group shadow-[0_0_15px_rgba(251,191,36,0.1)] hover:shadow-[0_0_25px_rgba(251,191,36,0.2)]">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">🪙</span>
+              <span className="text-[11px] text-yellow-400/90 font-heading group-hover:text-yellow-300 uppercase tracking-wider">Galeões</span>
+            </div>
+            <span className="font-heading text-lg text-yellow-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]">{((profile as any).galeons || 0).toLocaleString("pt-BR")}</span>
           </Link>
           {/* VIP upgrade CTA — só para não-VIPs */}
           {!(profile as any).vip_plan && (
@@ -453,9 +456,9 @@ export default function DashboardLayout() {
           <span className="font-heading text-sm text-gold-gradient">Hogwarts House</span>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4 md:p-6">
+        <div className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
           {/* <MagicalActivityFeed /> */}
-          <div className="mt-4">
+          <div className="mt-2 md:mt-0 pb-10">
              <Outlet />
           </div>
           <EngagementBot />

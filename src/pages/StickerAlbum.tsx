@@ -316,9 +316,9 @@ export default function StickerAlbum() {
           const levelOk = profile ? profile.level >= s.level_required : false;
           const xpOk = profile ? profile.xp >= cost : false;
 
-          let rarityStyle = "border-amber-700/50 from-amber-900/40 to-background shadow-lg shadow-amber-900/20";
-          if (isSilver) rarityStyle = "border-slate-300/80 from-slate-700/40 to-background shadow-xl shadow-white/10";
-          if (isGold) rarityStyle = "border-yellow-400 from-yellow-600/40 to-background shadow-2xl shadow-yellow-500/30 ring-1 ring-yellow-400/50";
+          let rarityStyle = "border-amber-700/50 from-amber-900/40 to-black shadow-[0_0_15px_rgba(180,83,9,0.2)]";
+          if (isSilver) rarityStyle = "border-slate-300/60 from-slate-700/40 to-black shadow-[0_0_20px_rgba(255,255,255,0.1)]";
+          if (isGold) rarityStyle = "border-yellow-400 from-yellow-600/40 to-black shadow-[0_0_30px_rgba(251,191,36,0.3)] ring-2 ring-yellow-400/30 animate-pulse-glow";
 
           return (
             <div

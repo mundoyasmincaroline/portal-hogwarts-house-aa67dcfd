@@ -6,13 +6,13 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 const STREAK_REWARDS = [
-  { day: 1, xp: 50, galeons: 5, icon: "📦" },
-  { day: 2, xp: 75, galeons: 10, icon: "📦" },
-  { day: 3, xp: 100, galeons: 15, icon: "🎁" },
-  { day: 4, xp: 150, galeons: 20, icon: "🎁" },
-  { day: 5, xp: 200, galeons: 30, icon: "💎" },
-  { day: 6, xp: 300, galeons: 50, icon: "💎" },
-  { day: 7, xp: 1000, galeons: 200, icon: "🏆", special: "Baú de Ouro" },
+  { day: 1, xp: 50, galeons: 5, img: "/medalha_ouro.png" },
+  { day: 2, xp: 75, galeons: 10, img: "/medalha_ouro.png" },
+  { day: 3, xp: 100, galeons: 15, img: "/medalha_ouro.png" },
+  { day: 4, xp: 150, galeons: 20, img: "/medalha_ouro.png" },
+  { day: 5, xp: 200, galeons: 30, img: "/legendary_chest_3d.png" },
+  { day: 6, xp: 300, galeons: 50, img: "/legendary_chest_3d.png" },
+  { day: 7, xp: 1000, galeons: 200, img: "/legendary_chest_3d.png", special: "Baú Lendário" },
 ];
 
 export default function DailyRewardSystem() {
@@ -141,7 +141,7 @@ export default function DailyRewardSystem() {
                                 isNext ? "bg-primary/30 border-primary animate-pulse shadow-[0_0_15px_hsl(var(--primary)/0.5)]" :
                                 "bg-secondary/40 border-border/50 opacity-40"
                             }`}>
-                                {isCompleted ? <CheckCircle2 size={20} /> : r.icon}
+                                {isCompleted ? <CheckCircle2 size={20} /> : <img src={r.img} className="w-full h-full object-contain" alt="recompensa" />}
                             </div>
                             <span className={`text-[10px] font-heading uppercase ${isNext ? "text-primary font-bold" : "text-muted-foreground"}`}>
                                 Dia {r.day}

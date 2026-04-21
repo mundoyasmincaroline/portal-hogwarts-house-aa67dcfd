@@ -62,9 +62,11 @@ export default function TimedMysteryChest() {
   return (
     <div className="fixed bottom-24 right-8 z-[100] animate-in slide-in-from-right-10 duration-500">
         <div className="relative group">
-            {/* Glow effect */}
-            <div className="absolute inset-0 bg-yellow-500/20 blur-2xl rounded-full group-hover:bg-yellow-500/40 transition-all animate-pulse" />
-            
+            <div className="relative group cursor-pointer" onClick={openChest}>
+                <img src="/legendary_chest_3d.png" alt="Baú Lendário" className="w-32 h-32 object-contain animate-float drop-shadow-[0_0_20px_rgba(212,175,55,0.4)] group-hover:scale-110 transition-transform" />
+                <div className="absolute -inset-4 bg-primary/20 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity animate-pulse" />
+            </div>
+
             <div className="relative glass rounded-[2.5rem] p-6 border-2 border-yellow-500/50 shadow-[0_0_30px_rgba(234,179,8,0.3)] flex flex-col items-center gap-3 w-48 text-center bg-gradient-to-b from-amber-950/40 to-transparent backdrop-blur-md">
                 <button 
                     onClick={() => setIsVisible(false)}

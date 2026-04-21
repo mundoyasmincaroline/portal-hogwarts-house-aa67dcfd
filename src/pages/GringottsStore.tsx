@@ -32,20 +32,20 @@ const GALEON_PACKAGES = [
 // ─── Planos VIP ────────────────────────────────────────────
 const VIP_PLANS = [
   {
-    id: "premium", name: "Estudante Premium", icon: "✨", price_brl: 9.90, image_url: "https://images.unsplash.com/photo-1602166560037-7f551b228b3a?q=80&w=600&auto=format&fit=crop",
+    id: "premium", name: "Estudante Premium", icon: "✨", price_brl: 9.90, image_url: "/vip_coroa.png",
     color: "from-blue-900/60 to-indigo-900/40", border: "border-blue-400/50", textColor: "text-blue-300", glow: "hover:shadow-[0_0_30px_rgba(96,165,250,0.3)]",
     benefits: ["+50% XP em todas as atividades", "Badge exclusivo ✨ no perfil", "Acesso a salas Premium", "Nome com brilho especial"],
     galeons_monthly: 0,
   },
   {
-    id: "vip", name: "Auror VIP", icon: "🥇", price_brl: 19.90, image_url: "https://images.unsplash.com/photo-1618944913456-11f422b404d0?q=80&w=600&auto=format&fit=crop",
+    id: "vip", name: "Auror VIP", icon: "🥇", price_brl: 19.90, image_url: "/vip_coroa.png",
     color: "from-purple-900/60 to-fuchsia-900/40", border: "border-purple-400/60", textColor: "text-purple-300", glow: "hover:shadow-[0_0_40px_rgba(192,132,252,0.4)]",
     benefits: ["Tudo do Premium", "+200 Galeões todo mês", "Nome dourado em todo portal", "Skin exclusiva de Auror", "Acesso antecipado a eventos"],
     galeons_monthly: 200,
     badge: "MAIS ESCOLHIDO"
   },
   {
-    id: "founder", name: "Fundador Hogwarts", icon: "👑", price_brl: 39.90, image_url: "https://images.unsplash.com/photo-1580234797602-22c37b4a6217?q=80&w=600&auto=format&fit=crop",
+    id: "founder", name: "Fundador Hogwarts", icon: "👑", price_brl: 39.90, image_url: "/vip_coroa.png",
     color: "from-yellow-700/60 to-amber-900/50", border: "border-yellow-400/70", textColor: "text-yellow-300", glow: "hover:shadow-[0_0_50px_rgba(251,191,36,0.5)]",
     benefits: ["Tudo do VIP", "+500 Galeões todo mês", "Acesso ao Conselho Secreto", "Título permanente 👑 Fundador", "Participação em decisões do portal"],
     galeons_monthly: 500,

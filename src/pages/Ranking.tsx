@@ -129,7 +129,15 @@ export default function Ranking() {
                       isGold ? `ring-2 ring-yellow-400/60 border-yellow-400/40 shadow-[0_0_30px_rgba(251,191,36,0.2)]` : `border-border/40`
                     }`}>
                     <div className={`flex flex-col items-center p-4 gap-2 ${heights[idx]}`}>
-                      <div className="text-2xl">{medals[PODIUM_ORDER.indexOf(idx)]}</div>
+                      <div className="relative w-12 h-12 mb-1">
+                        <img 
+                          src="/medalha_ouro.png" 
+                          alt="medalha" 
+                          className={`w-full h-full object-contain ${
+                            idx === 1 ? "" : idx === 0 ? "grayscale brightness-125" : "sepia brightness-75 contrast-125"
+                          }`} 
+                        />
+                      </div>
                       <div className="relative">
                         <SafeImage 
                           src={m.avatar_url} 
