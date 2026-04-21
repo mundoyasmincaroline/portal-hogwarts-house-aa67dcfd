@@ -506,30 +506,19 @@ export default function ChatRoom() {
               const profileName = profileData.full_name || "Desconhecido";
               const profileUser = profileData.username || "desconhecido";
               
-              const isMorpheus = profileName.toLowerCase().includes('morpheus') || profileUser.toLowerCase().includes('morpheus');
-              const isYasmin = profileName.toLowerCase().includes('yasmin') || profileUser.toLowerCase().includes('mundoyasmincaroline');
-              const isCarolina = profileName.toLowerCase().includes('carolina') || profileUser.toLowerCase().includes('carolinaas.assis');
-
               return (
                 <div key={m.id} className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <div className={`flex gap-6 ${isMorpheus || isYasmin ? 'items-center' : 'items-start'}`}>
+                  <div className="flex gap-6 items-start">
                     {/* Avatar Monument */}
                     <div className="relative shrink-0 group/av">
                       <div className={`absolute -inset-1.5 rounded-[1.8rem] blur-lg opacity-20 group-hover/av:opacity-60 transition-opacity duration-500 ${
-                         isMorpheus ? 'bg-green-500' :
-                         isYasmin ? 'bg-yellow-400' :
-                         isCarolina ? 'bg-blue-400' :
                          profileData.house === 'gryffindor' ? 'bg-red-500' :
                          profileData.house === 'slytherin' ? 'bg-green-500' :
                          profileData.house === 'ravenclaw' ? 'bg-blue-500' : 'bg-yellow-500'
                       }`} />
                       
-                      <Link to={`/dashboard/profile/${m.user_id}`} className={`relative z-10 w-14 h-14 rounded-2xl bg-black border border-white/10 overflow-hidden shadow-2xl block group-hover/av:scale-110 transition-transform duration-500 ${
-                         isMorpheus ? 'border-green-500/50 flex items-center justify-center font-mono text-green-500 font-bold text-xl' : ''
-                      }`}>
-                         {isMorpheus ? (
-                            <span className="animate-pulse">M</span>
-                         ) : profileData.avatar_url ? (
+                      <Link to={`/dashboard/profile/${m.user_id}`} className="relative z-10 w-14 h-14 rounded-2xl bg-black border border-white/10 overflow-hidden shadow-2xl block group-hover/av:scale-110 transition-transform duration-500">
+                         {profileData.avatar_url ? (
                             <img src={profileData.avatar_url} className="w-full h-full object-cover" />
                          ) : (
                             <div className="w-full h-full bg-white/5 flex items-center justify-center text-lg font-heading text-primary">
@@ -539,7 +528,7 @@ export default function ChatRoom() {
                       </Link>
 
                       <div className="absolute -bottom-2 -right-2 z-20 scale-125 drop-shadow-[0_5px_10px_rgba(0,0,0,0.5)]">
-                         {!isMorpheus && <HouseCrest house={profileData.house} size="xs" />}
+                         <HouseCrest house={profileData.house} size="xs" />
                       </div>
                     </div>
 
@@ -547,19 +536,11 @@ export default function ChatRoom() {
                     <div className="flex-1 space-y-2">
                        <div className="flex items-center gap-3">
                           <Link to={`/dashboard/profile/${m.user_id}`} className="group/name">
-                             {isMorpheus ? (
-                                <span className="font-mono text-[10px] font-bold text-green-500 tracking-[0.3em] uppercase group-hover/name:drop-shadow-[0_0_10px_rgba(34,197,94,0.8)] transition-all">&gt; MORPHEUS [O ARQUITETO]</span>
-                             ) : isYasmin ? (
-                                <span className="font-heading text-xs font-bold text-yellow-400 tracking-widest uppercase group-hover/name:drop-shadow-[0_0_10px_rgba(250,204,21,0.8)] transition-all">✨ YASMIN [A FUNDADORA]</span>
-                             ) : isCarolina ? (
-                                <span className="font-heading text-xs font-bold text-blue-400 tracking-widest uppercase group-hover/name:drop-shadow-[0_0_10px_rgba(96,165,250,0.8)] transition-all">🛡️ CAROLINA [A GUARDIÃ]</span>
-                             ) : (
-                                <span className="font-heading text-sm text-white/90 group-hover/name:text-primary transition-colors tracking-tight">{profileName}</span>
-                             )}
+                             <span className="font-heading text-sm text-white/90 group-hover/name:text-primary transition-colors tracking-tight">{profileName}</span>
                           </Link>
 
                           <div className="flex items-center gap-2">
-                             {m.user_role === 'admin' && !isYasmin && !isMorpheus && (
+                             {m.user_role === 'admin' && (
                                 <span className="px-2 py-0.5 rounded-md bg-primary/10 border border-primary/20 text-[8px] font-heading text-primary uppercase tracking-widest shadow-lg">ADMIN</span>
                              )}
                              {m.user_role === 'moderator' && (
@@ -596,21 +577,11 @@ export default function ChatRoom() {
                              <span>📌</span> Mensagem Fixada da Diretoria
                           </div>
                        )}
-                       <div className={`relative overflow-hidden rounded-3xl px-6 py-4 border shadow-2xl transition-all duration-500 group/msg ${m.is_pinned ? 'ring-1 ring-amber-500/50 bg-amber-500/10' : ''} ${
-                          isMorpheus ? 'bg-black border-green-500/30 shadow-[0_0_30px_rgba(34,197,94,0.1)]' :
-                          isYasmin ? 'bg-yellow-500/10 border-yellow-500/20 shadow-[0_0_30px_rgba(250,204,21,0.1)]' :
-                          isCarolina ? 'bg-blue-500/10 border-blue-500/20 shadow-[0_0_30px_rgba(96,165,250,0.1)]' :
-                          'bg-white/[0.03] border-white/5 hover:border-white/10 hover:bg-white/[0.05]'
-                       }`}>
+                       <div className={`relative overflow-hidden rounded-3xl px-6 py-4 border shadow-2xl transition-all duration-500 group/msg ${m.is_pinned ? 'ring-1 ring-amber-500/50 bg-amber-500/10' : 'bg-white/[0.03] border-white/5 hover:border-white/10 hover:bg-white/[0.05]'}`}>
                           {/* Inner Shine */}
                           <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
                           
-                          <div className={`relative z-10 text-base md:text-lg leading-relaxed ${
-                             isMorpheus ? 'font-mono text-green-500 drop-shadow-[0_0_5px_rgba(34,197,94,0.5)]' :
-                             isYasmin ? 'font-serif text-yellow-100 italic' :
-                             isCarolina ? 'font-serif text-blue-100 italic' :
-                             'text-white/80'
-                          }`}>
+                          <div className="relative z-10 text-base md:text-lg leading-relaxed text-white/80">
                              <p className="whitespace-pre-wrap">{renderRPGText(m.content)}</p>
                           </div>
                        </div>
