@@ -454,6 +454,9 @@ export default function DashboardLayout() {
           <button onClick={() => setSidebarOpen(true)} className="p-2 -ml-2 text-muted-foreground hover:text-foreground">
             <Menu size={20} />
           </button>
+          <span className="font-heading text-sm text-gold-gradient">Hogwarts House</span>
+        </div>
+        
         {/* House Cup Progress Bar - Gamification Engine */}
         <div className="px-4 md:px-8 mt-4">
           <div className="glass rounded-2xl p-4 border-primary/20 bg-gradient-to-r from-amber-900/20 via-black/40 to-amber-900/10 relative overflow-hidden group">
