@@ -378,237 +378,6 @@ export default function Profile() {
     toast.success("Foto atualizada!");
   };
 
-  return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      {/* MONSTER QUALITY BACKGROUND AURA - FULL PAGE */}
-      <div className={`fixed inset-0 pointer-events-none opacity-[0.07] transition-all duration-[2000ms] ease-in-out z-0 ${
-        profile.house === 'gryffindor' ? 'bg-red-600' :
-        profile.house === 'slytherin' ? 'bg-green-600' :
-        profile.house === 'ravenclaw' ? 'bg-blue-600' : 'bg-yellow-600'
-      }`} />
-      <div className="fixed inset-0 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] z-0" />
-
-      {/* Abas Mágicas - MONSTER QUALITY */}
-      <div className="relative z-20 flex gap-2 md:gap-4 border-b border-white/5 mb-10 overflow-x-auto pb-4 scrollbar-hide whitespace-nowrap px-2">
-        {(["about", "fichas", "friends", "members", "album", "achievements", "inventory", "referral", "security"] as const).map((tab) => {
-           const labels: any = { about: "Sobre", fichas: "Fichas 📜", friends: `Amigos (${friends.length})`, members: "Membros 👥", album: "Álbum", achievements: "Conquistas 🏆", inventory: "Inventário 🎒", referral: "Recrutamento", security: "Segurança" };
-           if (!isMe && (tab === "security" || tab === "referral")) return null;
-           return (
-            <button 
-              key={tab}
-              onClick={() => { setActiveTab(tab); setEditing(false); }} 
-              className={`px-6 py-3 font-heading text-[10px] tracking-[0.3em] uppercase transition-all duration-500 rounded-2xl border ${
-                activeTab === tab 
-                  ? "bg-primary text-white border-primary shadow-[0_10px_20px_rgba(251,191,36,0.2)] scale-105" 
-                  : "text-white/30 border-transparent hover:text-white hover:bg-white/5"
-              }`}
-            >
-              {labels[tab]}
-            </button>
-           )
-        })}
-      </div>
-
-      <div className="relative overflow-hidden rounded-[3rem] bg-gradient-to-b from-white/[0.08] to-black/60 backdrop-blur-3xl p-8 md:p-12 border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] text-center group">
-        {/* House Specific Aura Glow */}
-        <div className={`absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full blur-[120px] opacity-20 group-hover:opacity-30 transition-opacity duration-1000 ${
-          profile.house === 'gryffindor' ? 'bg-red-600' :
-          profile.house === 'slytherin' ? 'bg-green-600' :
-          profile.house === 'ravenclaw' ? 'bg-blue-600' : 'bg-yellow-600'
-        }`} />
-        <div className={`absolute -bottom-40 -right-40 w-[400px] h-[400px] rounded-full blur-[100px] opacity-10 group-hover:opacity-20 transition-opacity duration-1000 ${
-          profile.house === 'gryffindor' ? 'bg-amber-600' :
-          profile.house === 'slytherin' ? 'bg-emerald-600' :
-          profile.house === 'ravenclaw' ? 'bg-cyan-600' : 'bg-orange-600'
-        }`} />
-
-        <div className="relative z-10 flex flex-col items-center">
-          <div className="relative mb-8 group/avatar">
-            {/* 3D Avatar Ring */}
-            <div className={`absolute -inset-4 rounded-full border-2 border-dashed opacity-20 animate-spin-slow ${
-               profile.house === 'gryffindor' ? 'border-red-500' :
-               profile.house === 'slytherin' ? 'border-green-500' :
-               profile.house === 'ravenclaw' ? 'border-blue-500' : 'border-yellow-500'
-            }`} />
-            
-            <div className="w-32 h-32 md:w-40 h-40 shrink-0 relative z-10">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-full p-1.5 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
-                <SafeImage
-                  src={profile.avatar_url}
-                  alt={profile.full_name}
-                  className="w-full h-full rounded-full object-cover border-2 border-white/10 shadow-inner group-hover/avatar:scale-105 transition-transform duration-500"
-                  fallbackText={profile.full_name[0]}
-                />
-              </div>
-            </div>
-
-            {/* Crest Badge */}
-            <div className="absolute -bottom-2 -right-2 z-20 scale-125 md:scale-150 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
-              <HouseCrest house={profile.house as House} size="sm" />
-            </div>
-
-            {isMe && (
-              <label className="absolute -top-2 -right-2 z-20 w-10 h-10 rounded-full bg-primary text-white shadow-2xl flex items-center justify-center cursor-pointer hover:scale-110 active:scale-90 transition-all border border-white/20" title="Trocar foto">
-                <Sparkles size={16} />
-                <input type="file" accept="image/*" className="hidden" onChange={uploadAvatar} disabled={uploading} />
-              </label>
-            )}
-          </div>
-
-          {!editing ? (
-            <div className="space-y-4">
-              <div className="space-y-1">
-                <h1 className="font-heading text-3xl md:text-5xl text-gold-gradient tracking-tight drop-shadow-2xl flex items-center justify-center gap-4 flex-wrap">
-                  {profile.full_name}
-                  <MedalBadge xp={profile.xp} />
-                </h1>
-                <p className="text-primary/60 font-heading text-lg tracking-widest uppercase opacity-80">@{profile.username}</p>
-              </div>
-
-              {/* VIP Badges - Monster Quality */}
-              <div className="flex flex-wrap justify-center gap-3">
-                {profile.vip_plan === "founder" && (
-                  <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-600 text-black font-heading text-xs shadow-lg animate-pulse-slow">
-                    <Crown size={14} /> FUNDADOR
-                  </div>
-                )}
-                {profile.vip_plan === "vip" && (
-                  <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-purple-600 to-purple-400 text-white font-heading text-xs shadow-lg">
-                    <Crown size={14} /> VIP
-                  </div>
-                )}
-                {profile.vip_plan === "premium" && (
-                  <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-600 to-blue-400 text-white font-heading text-xs shadow-lg">
-                    <Star size={14} /> PREMIUM
-                  </div>
-                )}
-                <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/60 font-heading text-[10px] tracking-widest">
-                   {isUserOnline(profile) ? "● ONLINE" : "○ OFFLINE"}
-                </div>
-              </div>
-
-              <div className="max-w-lg mx-auto py-4">
-                <p className="text-lg text-white/70 font-serif italic leading-relaxed">
-                  {profile.bio || "Este bruxo ainda não escreveu sua lenda no castelo..."}
-                </p>
-              </div>
-
-              {/* Galeons - MONSTER QUALITY */}
-              {isMe && (
-                <div className="inline-flex items-center gap-4 px-8 py-4 rounded-[2rem] bg-gradient-to-b from-yellow-500/10 via-amber-900/30 to-black/60 border border-yellow-500/20 shadow-[0_20px_50px_rgba(251,191,36,0.1)] group/galeon animate-in zoom-in duration-1000">
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-yellow-400 blur-lg opacity-20 animate-pulse" />
-                    <div className="w-12 h-12 bg-black border border-yellow-500/40 rounded-2xl flex items-center justify-center text-yellow-400 shadow-inner group-hover/galeon:rotate-12 transition-transform">
-                       <ShoppingBag size={24} />
-                    </div>
-                  </div>
-                  <div className="text-left">
-                     <p className="text-[9px] text-yellow-500/60 font-heading uppercase tracking-[0.4em]">Cofre em Gringotes</p>
-                     <p className="text-3xl font-heading text-yellow-400 tracking-tighter leading-none mt-1">
-                        {((profile as any).galeons || 0).toLocaleString("pt-BR")}
-                        <span className="text-[10px] ml-2 opacity-60 uppercase tracking-widest font-heading">Galeões</span>
-                     </p>
-                  </div>
-                </div>
-              )}
-              
-              <div className="flex flex-wrap justify-center gap-4 pt-6">
-                {isMe ? (
-                  <>
-                    <button onClick={startEdit} className="relative group px-8 py-3 rounded-2xl bg-primary text-white font-heading text-sm tracking-widest overflow-hidden shadow-xl shadow-primary/20 transition-all hover:scale-105 active:scale-95">
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                      EDITAR PERFIL
-                    </button>
-                    {isAdmin && (
-                      <button onClick={() => setAdminEditModal(true)} className="px-8 py-3 rounded-2xl bg-white/5 border border-primary/40 text-primary font-heading text-sm tracking-widest hover:bg-primary/10 transition-all">
-                        EDIÇÃO SUPREMA
-                      </button>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <button onClick={() => navigate(`/dashboard/dm/${profile.user_id}`)} className="px-8 py-3 rounded-2xl bg-white/5 border border-white/20 text-white font-heading text-sm tracking-widest hover:bg-white/10 transition-all">
-                      ENVIAR CORUJA
-                    </button>
-                    
-                    {friendship?.status === "accepted" ? (
-                      <div className="flex gap-2">
-                        <div className="px-6 py-3 rounded-2xl bg-green-500/10 border border-green-500/30 text-green-500 font-heading text-sm tracking-widest">AMIGO ✓</div>
-                        <button onClick={handleRemoveFriend} className="p-3 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-500 hover:bg-red-500/20 transition-all"><Users size={20} /></button>
-                      </div>
-                    ) : friendship?.status === "pending" && friendship.friend_id === user?.id ? (
-                      <div className="flex gap-2">
-                        <button onClick={handleAcceptFriend} className="px-6 py-3 rounded-2xl bg-primary text-white font-heading text-sm tracking-widest hover:scale-105 transition-all shadow-lg shadow-primary/20">ACEITAR ✓</button>
-                        <button onClick={handleRejectFriend} className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 text-white/40 hover:text-white transition-all">RECUSAR</button>
-                      </div>
-                    ) : (
-                      <button onClick={handleAddFriend} className="px-8 py-3 rounded-2xl bg-primary text-white font-heading text-sm tracking-widest shadow-xl shadow-primary/20 hover:scale-105 transition-all">ADICIONAR AMIGO +</button>
-                    )}
-                  </>
-                )}
-              </div>
-            </div>
-          ) : (
-          <div className="space-y-3 text-left">
-            <div>
-              <label className="text-xs font-heading text-muted-foreground block mb-1">Nome completo</label>
-              <Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} />
-            </div>
-            <div>
-              <label className="text-xs font-heading text-muted-foreground block mb-1">@Username</label>
-              <Input value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value.toLowerCase().replace(/\s/g, "") })} />
-            </div>
-            <div>
-              <label className="text-xs font-heading text-muted-foreground block mb-1">Data de Nascimento (Aniversário)</label>
-              <Input type="date" value={form.birth_date} onChange={(e) => setForm({ ...form, birth_date: e.target.value })} className="bg-secondary/50 border-border" />
-            </div>
-            <div>
-              <label className="text-xs font-heading text-muted-foreground block mb-1">Idade</label>
-              <Input type="number" value={form.age} onChange={(e) => setForm({ ...form, age: parseInt(e.target.value) || 11 })} />
-            </div>
-            <div>
-              <label className="text-xs font-heading text-muted-foreground block mb-1">Bio</label>
-              <textarea
-                value={form.bio}
-                maxLength={200}
-                onChange={(e) => setForm({ ...form, bio: e.target.value })}
-                className="w-full bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground focus:outline-none min-h-[80px]"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-heading text-muted-foreground block mb-1">📷 Foto de Perfil</label>
-              {/* Upload de arquivo — botão grande e visível */}
-              <label className="flex items-center justify-center gap-2 w-full py-3 rounded-xl border-2 border-dashed border-primary/50 bg-primary/5 hover:bg-primary/10 cursor-pointer transition-colors text-sm font-heading text-primary mb-2">
-                {uploading ? "⏳ Fazendo upload..." : "📁 Clique aqui para fazer upload da sua foto"}
-                <input type="file" accept="image/*" className="hidden" onChange={uploadAvatar} disabled={uploading} />
-              </label>
-              <p className="text-[10px] text-muted-foreground text-center mb-2">ou cole o link direto abaixo ↓</p>
-              <div className="flex gap-2 items-center">
-                <Input
-                  value={form.avatar_url}
-                  onChange={(e) => setForm({ ...form, avatar_url: e.target.value })}
-                  placeholder="https://exemplo.com/sua-foto.jpg"
-                  className="flex-1"
-                />
-                {form.avatar_url && (
-                  <div className="w-10 h-10 shrink-0">
-                    <SafeImage 
-                      src={form.avatar_url} 
-                      alt="preview" 
-                      className="w-full h-full rounded-full object-cover border border-border" 
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="flex gap-2 justify-center pt-2">
-              <Button variant="outline" size="sm" onClick={() => setEditing(false)}>Cancelar</Button>
-              <Button variant="magical" size="sm" onClick={save} disabled={saving}>{saving ? "Salvando..." : "Salvar"}</Button>
-            </div>
-          </div>
-        )}
-      </div>
-
   let tabContent = null;
 
   if (activeTab === "about") {
@@ -1065,7 +834,6 @@ export default function Profile() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      {/* MONSTER QUALITY BACKGROUND AURA - FULL PAGE */}
       <div className={`fixed inset-0 pointer-events-none opacity-[0.07] transition-all duration-[2000ms] ease-in-out z-0 ${
         profile.house === 'gryffindor' ? 'bg-red-600' :
         profile.house === 'slytherin' ? 'bg-green-600' :
@@ -1073,7 +841,6 @@ export default function Profile() {
       }`} />
       <div className="fixed inset-0 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] z-0" />
 
-      {/* Abas Mágicas - MONSTER QUALITY */}
       <div className="relative z-20 flex gap-2 md:gap-4 border-b border-white/5 mb-10 overflow-x-auto pb-4 scrollbar-hide whitespace-nowrap px-2">
         {(["about", "fichas", "friends", "members", "album", "achievements", "inventory", "referral", "security"] as const).map((tab) => {
            const labels: any = { about: "Sobre", fichas: "Fichas 📜", friends: `Amigos (${friends.length})`, members: "Membros 👥", album: "Álbum", achievements: "Conquistas 🏆", inventory: "Inventário 🎒", referral: "Recrutamento", security: "Segurança" };
@@ -1095,7 +862,6 @@ export default function Profile() {
       </div>
 
       <div className="relative overflow-hidden rounded-[3rem] bg-gradient-to-b from-white/[0.08] to-black/60 backdrop-blur-3xl p-8 md:p-12 border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] text-center group">
-        {/* House Specific Aura Glow */}
         <div className={`absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full blur-[120px] opacity-20 group-hover:opacity-30 transition-opacity duration-1000 ${
           profile.house === 'gryffindor' ? 'bg-red-600' :
           profile.house === 'slytherin' ? 'bg-green-600' :
@@ -1109,7 +875,6 @@ export default function Profile() {
 
         <div className="relative z-10 flex flex-col items-center">
           <div className="relative mb-8 group/avatar">
-            {/* 3D Avatar Ring */}
             <div className={`absolute -inset-4 rounded-full border-2 border-dashed opacity-20 animate-spin-slow ${
                profile.house === 'gryffindor' ? 'border-red-500' :
                profile.house === 'slytherin' ? 'border-green-500' :
@@ -1127,7 +892,6 @@ export default function Profile() {
               </div>
             </div>
 
-            {/* Crest Badge */}
             <div className="absolute -bottom-2 -right-2 z-20 scale-125 md:scale-150 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
               <HouseCrest house={profile.house as House} size="sm" />
             </div>
@@ -1150,7 +914,6 @@ export default function Profile() {
                 <p className="text-primary/60 font-heading text-lg tracking-widest uppercase opacity-80">@{profile.username}</p>
               </div>
 
-              {/* VIP Badges - Monster Quality */}
               <div className="flex flex-wrap justify-center gap-3">
                 {profile.vip_plan === "founder" && (
                   <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-600 text-black font-heading text-xs shadow-lg animate-pulse-slow">
@@ -1178,7 +941,6 @@ export default function Profile() {
                 </p>
               </div>
 
-              {/* Galeons - MONSTER QUALITY */}
               {isMe && (
                 <div className="inline-flex items-center gap-4 px-8 py-4 rounded-[2rem] bg-gradient-to-b from-yellow-500/10 via-amber-900/30 to-black/60 border border-yellow-500/20 shadow-[0_20px_50px_rgba(251,191,36,0.1)] group/galeon animate-in zoom-in duration-1000">
                   <div className="relative">
@@ -1262,7 +1024,6 @@ export default function Profile() {
             </div>
             <div>
               <label className="text-xs font-heading text-muted-foreground block mb-1">📷 Foto de Perfil</label>
-              {/* Upload de arquivo — botão grande e visível */}
               <label className="flex items-center justify-center gap-2 w-full py-3 rounded-xl border-2 border-dashed border-primary/50 bg-primary/5 hover:bg-primary/10 cursor-pointer transition-colors text-sm font-heading text-primary mb-2">
                 {uploading ? "⏳ Fazendo upload..." : "📁 Clique aqui para fazer upload da sua foto"}
                 <input type="file" accept="image/*" className="hidden" onChange={uploadAvatar} disabled={uploading} />
@@ -1294,7 +1055,9 @@ export default function Profile() {
         )}
       </div>
 
-      {tabContent}
+      <div className="animate-in fade-in slide-in-from-bottom-6 duration-1000">
+        {tabContent}
+      </div>
 
       {adminEditModal && profile && (
         <AdminMemberModal
