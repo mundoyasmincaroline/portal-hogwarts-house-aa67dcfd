@@ -634,7 +634,7 @@ export default function GringottsStore() {
                     </div>
                   </div>
                 </div>
-              );
+              )
             })}
           </div>
         </div>

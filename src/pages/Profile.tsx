@@ -1013,7 +1013,7 @@ export default function Profile() {
                       <p className="text-[10px] text-primary uppercase tracking-tighter mt-1">{item.category}</p>
                     </div>
                   </div>
-                );
+                )
               })}
             </div>
           )}

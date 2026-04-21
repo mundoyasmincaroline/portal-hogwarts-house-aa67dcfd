@@ -508,7 +508,7 @@ export default function InstaHogwarts() {
                   )}
                 </div>
               </div>
-            );
+            )
           })
         )}
       </div>

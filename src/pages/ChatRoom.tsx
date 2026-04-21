@@ -538,7 +538,7 @@ export default function ChatRoom() {
                     </div>
                   </div>
                 </div>
-              );
+                )
             })
           )}
           <div ref={messagesEndRef} />
