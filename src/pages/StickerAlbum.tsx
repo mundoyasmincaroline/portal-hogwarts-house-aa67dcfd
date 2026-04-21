@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Trophy, Zap, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import StickerVisual from "@/components/StickerVisual";
+import StickerCard3D from "@/components/StickerCard3D";
 
 interface Sticker {
   id: string;
@@ -354,90 +355,33 @@ export default function StickerAlbum() {
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 md:gap-10">
         {filtered.map(s => {
           const unlocked = userStickers[s.id];
-          const isGold = s.rarity === "gold";
-          const isSilver = s.rarity === "silver";
           const cost = RARITY_COST[s.rarity];
           const levelOk = profile ? profile.level >= s.level_required : false;
           const xpOk = profile ? profile.xp >= cost : false;
 
-          let rarityStyle = "border-amber-700/50 from-amber-900/40 to-black/80 shadow-2xl hover:shadow-amber-900/40";
-          if (isSilver) rarityStyle = "border-slate-300/60 from-slate-700/40 to-black/80 shadow-2xl hover:shadow-slate-300/20";
-          if (isGold) rarityStyle = "border-yellow-400 from-yellow-600/40 to-black/80 shadow-2xl hover:shadow-yellow-400/30 animate-pulse-glow";
-
           return (
-            <div
-              key={s.id}
-              className={`relative aspect-[3/4.5] rounded-[2rem] flex flex-col overflow-hidden border-2 transition-all duration-500 group/stick ${
-                unlocked ? rarityStyle : "border-white/5 bg-white/[0.02] grayscale"
-              }`}
-            >
-              {/* Sticker Content */}
-              <div className="absolute inset-0 z-0 overflow-hidden">
-                <StickerVisual
-                  name={s.character_name}
-                  rarity={s.rarity}
-                  unlocked={unlocked}
-                  imageUrl={s.image_url}
-                  failedImage={failedImages[s.id]}
-                />
-                {s.image_url && !failedImages[s.id] && (
-                  <img
-                    src={s.image_url}
-                    alt={s.character_name}
-                    className={`w-full h-full object-cover object-top transition-all duration-700 ${
-                      unlocked ? "opacity-80 group-hover/stick:scale-110 group-hover/stick:rotate-1" : "opacity-20"
-                    }`}
-                  />
-                )}
-                {/* Vignette */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60" />
-              </div>
-
-              {/* Status & Info */}
-              <div className="relative z-10 h-full flex flex-col justify-between p-5">
-                <div className="flex justify-between items-start">
-                   <div className={`px-3 py-1 rounded-full text-[8px] font-heading tracking-[0.2em] border backdrop-blur-md ${
-                      isGold ? "bg-yellow-400/20 border-yellow-400/40 text-yellow-400" :
-                      isSilver ? "bg-slate-300/20 border-slate-300/40 text-slate-300" :
-                      "bg-amber-700/20 border-amber-700/40 text-amber-600"
-                   }`}>
-                      {s.rarity.toUpperCase()}
-                   </div>
-                   {!unlocked && (
-                      <div className="w-8 h-8 rounded-full bg-black/60 border border-white/10 flex items-center justify-center backdrop-blur-md">
-                         <Lock size={12} className="text-white/40" />
-                      </div>
-                   )}
-                </div>
-
-                <div className="space-y-4 text-center">
-                   <div className="space-y-1">
-                      <p className={`font-heading text-sm tracking-tighter ${
-                         unlocked ? 'text-white' : 'text-white/20'
-                      }`}>
-                         {unlocked ? s.character_name.toUpperCase() : "DESCONHECIDO"}
-                      </p>
-                      {!unlocked && (
-                         <p className="text-[8px] font-heading text-white/40 tracking-[0.2em]">REQUER NÍVEL {s.level_required}</p>
-                      )}
-                   </div>
-
-                   {!unlocked && (
-                     <Button
-                       variant="magical"
-                       className="w-full h-10 rounded-xl font-heading text-[10px] tracking-widest shadow-lg"
-                       disabled={!levelOk || !xpOk || buyingId === s.id}
-                       onClick={() => buySticker(s)}
-                     >
-                        {buyingId === s.id ? "..." : levelOk && xpOk ? `COMPRAR: ${cost} XP` : levelOk ? "XP INSUFICIENTE" : "NÍVEL BAIXO"}
-                     </Button>
-                   )}
-                </div>
-              </div>
-
-              {/* Rarity Auras */}
-              {unlocked && isGold && (
-                <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(255,215,0,0.2),transparent_70%)] animate-pulse" />
+            <div key={s.id} className="space-y-4">
+              <StickerCard3D
+                id={s.id}
+                name={s.character_name}
+                imageUrl={s.image_url}
+                rarity={s.rarity === "gold" ? "legendary" : s.rarity === "silver" ? "rare" : "common"}
+                isOwned={unlocked}
+              />
+              
+              {!unlocked && (
+                <Button
+                  variant="magical"
+                  className="w-full h-10 rounded-xl font-heading text-[10px] tracking-widest shadow-lg"
+                  disabled={!levelOk || !xpOk || buyingId === s.id}
+                  onClick={() => buySticker(s)}
+                >
+                   {buyingId === s.id ? "..." : levelOk && xpOk ? `COMPRAR: ${cost} XP` : levelOk ? "XP INSUFICIENTE" : "NÍVEL BAIXO"}
+                </Button>
+              )}
+              
+              {!unlocked && !levelOk && (
+                <p className="text-[8px] font-heading text-white/40 tracking-[0.2em] text-center">REQUER NÍVEL {s.level_required}</p>
               )}
             </div>
           );

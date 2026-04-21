@@ -227,41 +227,52 @@ export default function GringottsStore() {
   const filteredItems = items.filter(i => i.category === tab);
   const featuredItems = items.filter(i => i.is_featured || i.rarity === 'legendary').slice(0, 4);
 
-  // Injetar itens lendários 3D se as abas correspondentes forem selecionadas
-  const displayItems = tab === "stickers" 
-    ? [...filteredItems, { 
-        id: "3d_sticker_pack", 
-        name: "Pacote de Figurinhas Mágicas", 
-        description: "Contém 3 figurinhas aleatórias. Chance de vir Lendária!", 
-        category: "stickers", 
-        price_galeons: 25, 
-        image_url: "/stickers_pack_3d.png", 
-        rarity: "rare", 
-        is_featured: true 
-      }]
-    : tab === "wand"
-    ? [...filteredItems, {
-        id: "3d_elder_wand",
-        name: "A Varinha das Varinhas",
-        description: "A varinha mais poderosa que já existiu. Feita de sabugueiro.",
-        category: "wand",
-        price_galeons: 5000,
-        image_url: "/elder_wand_3d.png",
-        rarity: "legendary",
-        is_featured: true
-      }]
-    : tab === "clothing"
-    ? [...filteredItems, {
-        id: "3d_invisibility_cloak",
-        name: "Manto da Invisibilidade",
-        description: "Um dos três itens das Relíquias da Morte. Verdadeira invisibilidade.",
-        category: "clothing",
-        price_galeons: 8000,
-        image_url: "/invisibility_cloak_3d.png",
-        rarity: "legendary",
-        is_featured: true
-      }]
-    : filteredItems;
+  const INJECTED_ITEMS: StoreItem[] = [
+    // VARINHAS
+    { id: "3d_elder_wand", name: "Varinha das Varinhas", description: "A varinha mais poderosa que já existiu. Feita de sabugueiro.", category: "wand", price_galeons: 5000, image_url: "/items/elder_wand.png", rarity: "legendary", is_featured: true },
+    { id: "3d_crystal_wand", name: "Varinha de Cristal Ártico", description: "Canaliza magias de gelo com perfeição absoluta.", category: "wand", price_galeons: 1200, image_url: "https://i.pinimg.com/736x/83/81/1b/83811b7d52f9a2e6e3c6691c2b5f548a.jpg", rarity: "legendary", is_featured: false },
+    { id: "3d_phoenix_wand", name: "Varinha de Pena de Fênix", description: "Leal e extremamente poderosa em feitiços defensivos.", category: "wand", price_galeons: 2500, image_url: "https://i.pinimg.com/736x/5c/5e/5e/5c5e5e4e7a2b9a1e8b4e7a2b9a1e8b4e.jpg", rarity: "legendary", is_featured: true },
+    { id: "3d_dark_oak_wand", name: "Varinha de Carvalho Negro", description: "Sintonizada com as artes das trevas e magias de impacto.", category: "wand", price_galeons: 3000, image_url: "https://i.pinimg.com/736x/2c/31/31/2c313181232812328123281232812328.jpg", rarity: "legendary", is_featured: false },
+    { id: "3d_dragon_scale_wand", name: "Varinha de Escama de Dragão", description: "Dura como aço, canaliza o fogo interior do bruxo.", category: "wand", price_galeons: 3500, image_url: "https://i.pinimg.com/736x/8b/6e/8b/8b6e8b4e7a2b9a1e8b4e7a2b9a1e8b4e.jpg", rarity: "legendary", is_featured: false },
+
+    // POÇÕES
+    { id: "3d_liquid_luck", name: "Felix Felicis (Sorte Líquida)", description: "Garante sucesso em todas as suas ações por 24h.", category: "potion", price_galeons: 500, image_url: "/items/liquid_luck.png", rarity: "legendary", is_featured: true },
+    { id: "3d_polyjuice", name: "Poção Polissuco", description: "Permite assumir a forma de outro bruxo temporariamente.", category: "potion", price_galeons: 350, image_url: "https://i.pinimg.com/736x/6c/2c/2c/6c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c.jpg", rarity: "rare", is_featured: false },
+    { id: "3d_amortentia", name: "Poção Amortentia", description: "A poção do amor mais poderosa do mundo.", category: "potion", price_galeons: 400, image_url: "https://i.pinimg.com/736x/9d/9d/9d/9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d.jpg", rarity: "rare", is_featured: false },
+    { id: "3d_elixir_life", name: "Elixir da Vida", description: "Extraído da Pedra Filosofal. Garante imortalidade temporária.", category: "potion", price_galeons: 2000, image_url: "https://i.pinimg.com/736x/7b/7b/7b/7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b.jpg", rarity: "legendary", is_featured: true },
+    { id: "3d_living_death", name: "Poção do Morto-Vivo", description: "Induz um sono tão profundo que parece a morte.", category: "potion", price_galeons: 300, image_url: "https://i.pinimg.com/736x/5a/5a/5a/5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a.jpg", rarity: "rare", is_featured: false },
+
+    // ROUPAS
+    { id: "3d_invisibility_cloak", name: "Manto da Invisibilidade", description: "Uma das Relíquias da Morte. Fica invisível de verdade.", category: "clothing", price_galeons: 8000, image_url: "/items/invisibility_cloak.png", rarity: "legendary", is_featured: true },
+    { id: "3d_sapphire_robe", name: "Robe de Safira", description: "Tecido com fios de consciência pelo próprio Morpheus.", category: "clothing", price_galeons: 1500, image_url: "/robe_safira_premium.png", rarity: "legendary", is_featured: true },
+    { id: "3d_quidditch_uniform", name: "Uniforme de Quadribol Pro", description: "Aumenta sua agilidade e velocidade de voo.", category: "clothing", price_galeons: 850, image_url: "https://i.pinimg.com/736x/3d/3d/3d/3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d.jpg", rarity: "rare", is_featured: false },
+    { id: "3d_sorting_hat", name: "O Chapéu Seletor (Antigo)", description: "Um artefato que conhece seus pensamentos mais profundos.", category: "clothing", price_galeons: 3000, image_url: "https://i.pinimg.com/736x/4f/4f/4f/4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f.jpg", rarity: "legendary", is_featured: true },
+    { id: "3d_dragon_boots", name: "Botas de Couro de Dragão", description: "Resistentes a fogo e maldições de solo.", category: "clothing", price_galeons: 600, image_url: "https://i.pinimg.com/736x/2a/2a/2a/2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a.jpg", rarity: "rare", is_featured: false },
+
+    // FIGURINHAS
+    { id: "3d_snitch_sticker", name: "Figurinha: Pomo de Ouro", description: "Card 3D Holográfico do Pomo de Ouro.", category: "stickers", price_galeons: 150, image_url: "/items/golden_snitch.png", rarity: "legendary", is_featured: true },
+    { id: "3d_dumbledore_sticker", name: "Figurinha: Alvo Dumbledore", description: "Card 3D Holográfico do maior diretor de todos os tempos.", category: "stickers", price_galeons: 100, image_url: "https://i.pinimg.com/736x/1a/1a/1a/1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a.jpg", rarity: "legendary", is_featured: true },
+    { id: "3d_harry_sticker", name: "Figurinha: Harry Potter", description: "Card 3D Holográfico do Menino que Sobreviveu.", category: "stickers", price_galeons: 80, image_url: "https://i.pinimg.com/736x/2b/2b/2b/2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b.jpg", rarity: "legendary", is_featured: false },
+    { id: "3d_voldemort_sticker", name: "Figurinha: Lord Voldemort", description: "Card 3D Holográfico dAquele-Que-Não-Deve-Ser-Nomeado.", category: "stickers", price_galeons: 120, image_url: "https://i.pinimg.com/736x/3c/3c/3c/3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c.jpg", rarity: "legendary", is_featured: false },
+    { id: "3d_griffin_sticker", name: "Figurinha: Grifo de Ouro", description: "Card 3D Holográfico da criatura lendária.", category: "stickers", price_galeons: 50, image_url: "https://i.pinimg.com/736x/4d/4d/4d/4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d.jpg", rarity: "rare", is_featured: false },
+
+    // FEITIÇOS
+    { id: "3d_patronum", name: "Expecto Patronum (Elite)", description: "Invoque um patrono corpóreo 3D no seu perfil.", category: "spell", price_galeons: 1000, image_url: "https://i.pinimg.com/736x/5e/5e/5e/5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e.jpg", rarity: "legendary", is_featured: true },
+    { id: "3d_sectumsempra", name: "Sectumsempra", description: "Um feitiço para inimigos. Efeito visual de corte no alvo.", category: "spell", price_galeons: 600, image_url: "https://i.pinimg.com/736x/6f/6f/6f/6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f.jpg", rarity: "rare", is_featured: false },
+    { id: "3d_protego", name: "Protego Maxima", description: "Cria um escudo esférico impenetrável ao seu redor.", category: "spell", price_galeons: 450, image_url: "https://i.pinimg.com/736x/7a/7a/7a/7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a.jpg", rarity: "rare", is_featured: false },
+    { id: "3d_lumos", name: "Lumos Solem", description: "Ilumine tudo com o brilho do sol. Efeito de luz intensa.", category: "spell", price_galeons: 200, image_url: "https://i.pinimg.com/736x/8b/8b/8b/8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b.jpg", rarity: "common", is_featured: false },
+    { id: "3d_avada", name: "Avada Kedavra (Visual)", description: "Efeito visual da maldição da morte. Apenas cosmético.", category: "spell", price_galeons: 5000, image_url: "https://i.pinimg.com/736x/9c/9c/9c/9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c.jpg", rarity: "legendary", is_featured: true },
+
+    // UPGRADES
+    { id: "3d_xp_booster", name: "Booster de XP 2x", description: "Dobra todo o XP ganho por 7 dias.", category: "upgrade", price_galeons: 400, image_url: "https://i.pinimg.com/736x/1d/1d/1d/1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d.jpg", rarity: "rare", is_featured: true },
+    { id: "3d_galeon_finder", name: "Detector de Galeões", description: "Aumenta a chance de encontrar ouro no feed.", category: "upgrade", price_galeons: 350, image_url: "https://i.pinimg.com/736x/2e/2e/2e/2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e.jpg", rarity: "rare", is_featured: false },
+    { id: "3d_custom_title", name: "Título Personalizado", description: "Mude seu título para qualquer coisa que desejar.", category: "upgrade", price_galeons: 1200, image_url: "https://i.pinimg.com/736x/3f/3f/3f/3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f.jpg", rarity: "legendary", is_featured: true },
+    { id: "3d_lucky_charm", name: "Amuleto da Sorte", description: "Melhora suas chances em todos os jogos do portal.", category: "upgrade", price_galeons: 300, image_url: "https://i.pinimg.com/736x/4a/4a/4a/4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a.jpg", rarity: "common", is_featured: false },
+    { id: "3d_privacy_shield", name: "Escudo de Privacidade", description: "Fique invisível na lista de bruxos online.", category: "upgrade", price_galeons: 250, image_url: "https://i.pinimg.com/736x/5b/5b/5b/5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b.jpg", rarity: "common", is_featured: false },
+  ];
+
+  const displayItems = [...filteredItems, ...INJECTED_ITEMS.filter(i => i.category === tab)];
+
 
   return (
     <div className="max-w-7xl mx-auto space-y-10 pb-20 px-4">
