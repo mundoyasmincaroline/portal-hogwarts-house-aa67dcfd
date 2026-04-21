@@ -485,15 +485,7 @@ export default function DashboardLayout() {
             >
               <Trophy size={16} className="text-yellow-500 group-hover:animate-bounce" />
               <span className="tracking-[0.2em] uppercase">Visualizar Torneio das Casas</span>
-            <div className="px-6 py-10">
-              <button 
-                onClick={toggleHouseCup}
-                className="flex items-center gap-3 px-6 py-3 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-2xl text-[10px] font-heading text-white/60 hover:text-white hover:bg-white/10 hover:scale-105 transition-all shadow-2xl animate-in slide-in-from-left-5 group"
-              >
-                <Trophy size={16} className="text-yellow-500 group-hover:animate-bounce" />
-                <span className="tracking-[0.2em] uppercase">Visualizar Torneio das Casas</span>
-              </button>
-            </div>
+            </button>
           ) : (
             <div className="px-6 py-10 md:px-12 animate-in slide-in-from-top-10 duration-1000">
               <div className="bg-black/60 backdrop-blur-3xl rounded-[4rem] border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.9)] p-10 md:p-14 relative overflow-hidden group/cup">
@@ -626,5 +618,4 @@ export default function DashboardLayout() {
       </main>
     </div>
   );
-
-
+}
