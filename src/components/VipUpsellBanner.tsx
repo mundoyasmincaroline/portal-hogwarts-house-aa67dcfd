@@ -15,18 +15,18 @@ interface Props {
 }
 
 const VIP_BENEFITS = [
-  { img: "/medalha_ouro.png", text: "Badge VIP exclusivo no perfil" },
-  { img: "https://i.pinimg.com/736x/8b/6e/8b/8b6e8b4e7a2b9a1e8b4e7a2b9a1e8b4e.jpg", text: "Galeões mensais automáticos" },
+  { img: "/medalha_ouro_3d.png", text: "Badge VIP exclusivo no perfil" },
+  { img: "/sticker_harry_gold.png", text: "Galeões mensais automáticos" },
   { img: "/robe_safira.png", text: "Skins e itens exclusivos desbloqueados" },
-  { img: "https://i.pinimg.com/736x/5b/6e/8b/5b6e8b4e7a2b9a1e8b4e7a2b9a1e8b4e.jpg", text: "XP bônus em todas as atividades" },
+  { img: "/liquid_luck_3d.png", text: "XP bônus em todas as atividades" },
   { img: "/legendary_chest_3d.png", text: "Acesso antecipado a novidades" },
   { img: "/vip_coroa.png", text: "Título de Mago(a) Premium no ranking" },
 ];
 
 const PLANS = [
-  { id: "premium", name: "Iniciante", price: "R$ 9,90", color: "from-slate-800 to-slate-700", border: "border-slate-500/40", img: "https://hp-api.herokuapp.com/images/harry.jpg", galeons: 0 },
+  { id: "premium", name: "Iniciante", price: "R$ 9,90", color: "from-slate-800 to-slate-700", border: "border-slate-500/40", img: "/invisibility_cloak_3d.png", galeons: 0 },
   { id: "vip", name: "VIP", price: "R$ 19,90", color: "from-purple-900 to-violet-800", border: "border-purple-400/50", img: "/vip_coroa.png", galeons: 200, highlight: true },
-  { id: "founder", name: "Fundador", price: "R$ 39,90", color: "from-yellow-900 to-amber-800", border: "border-yellow-400/50", img: "https://hp-api.herokuapp.com/images/dumbledore.jpg", galeons: 500 },
+  { id: "founder", name: "Fundador", price: "R$ 39,90", color: "from-yellow-900 to-amber-800", border: "border-yellow-400/50", img: "/elder_wand_3d.png", galeons: 500 },
 ];
 
 export default function VipUpsellBanner({ currentVip, galeons = 0, username, onClose }: Props) {

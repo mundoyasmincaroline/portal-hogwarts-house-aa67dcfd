@@ -4,7 +4,7 @@ import {
   Castle, BookOpen, User, MessageCircle, Camera, Film, Trophy,
   Shield, Swords, BookMarked, Library, ShoppingBag, ScrollText,
   Settings, LogOut, Volume2, VolumeX, RefreshCw, Menu, Users,
-  Coins, Lock, Wallet, Map as MapIcon, Sparkles, Crown, Zap
+  Coins, Lock, Wallet, Map as MapIcon, Sparkles, Crown, Zap, X
 } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";
@@ -338,27 +338,27 @@ export default function DashboardLayout() {
           <span className="font-heading text-sm text-gold-gradient">Hogwarts House</span>
         </div>
         
-        <div className="px-4 md:px-12 mt-8 mb-6 relative">
+        <div className="px-4 md:px-12 mt-6 mb-4 relative">
           {showHouseCup && (
-            <div className="bg-black/60 backdrop-blur-3xl rounded-[4rem] border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.9)] p-10 relative overflow-hidden group/cup animate-in slide-in-from-top-10 duration-1000">
-               <div className="flex flex-col lg:flex-row items-center justify-between gap-12 mb-8">
-                  <div className="flex items-center gap-8">
-                     <div className="w-20 h-20 bg-white/5 rounded-[2rem] border border-white/10 flex items-center justify-center shadow-2xl animate-float">
-                        <Trophy size={40} className="text-yellow-400" />
+            <div className="bg-black/60 backdrop-blur-3xl rounded-[3rem] border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.9)] p-6 relative overflow-hidden group/cup animate-in slide-in-from-top-10 duration-1000">
+               <div className="flex flex-col lg:flex-row items-center justify-between gap-6 mb-4">
+                  <div className="flex items-center gap-6">
+                     <div className="w-16 h-16 bg-white/5 rounded-2xl border border-white/10 flex items-center justify-center shadow-2xl animate-float">
+                        <Trophy size={32} className="text-yellow-400" />
                      </div>
-                     <div className="space-y-1">
-                        <h2 className="text-4xl font-heading text-white tracking-tighter italic">Torneio de Hogwarts</h2>
+                     <div className="space-y-0.5">
+                        <h2 className="text-3xl font-heading text-white tracking-tighter italic">Torneio das Casas</h2>
                         <p className="text-[10px] font-heading text-primary uppercase tracking-[0.4em]">A Glória Eterna</p>
                      </div>
                   </div>
-                  <button onClick={toggleHouseCup} className="p-4 bg-white/5 hover:bg-white/10 rounded-2xl transition-colors"><LogOut size={20} className="rotate-90" /></button>
+                  <button onClick={toggleHouseCup} className="p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-colors"><X size={18} className="text-white/40" /></button>
                </div>
-               <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {Object.values(HOUSES).map((h) => (
-                    <div key={h.id} className="bg-white/[0.02] rounded-[2.5rem] p-6 border border-white/5 flex flex-col items-center">
-                       <span className="text-2xl mb-2">{h.id === 'gryffindor' ? '🦁' : h.id === 'slytherin' ? '🐍' : h.id === 'ravenclaw' ? '🦅' : '🦡'}</span>
-                       <p className="text-[10px] font-heading text-white/20 uppercase mb-2">{h.name}</p>
-                       <div className="h-2 w-full bg-black/40 rounded-full overflow-hidden border border-white/5">
+                    <div key={h.id} className="bg-white/[0.02] rounded-[2rem] p-4 border border-white/5 flex flex-col items-center">
+                       <span className="text-xl mb-1">{h.id === 'gryffindor' ? '🦁' : h.id === 'slytherin' ? '🐍' : h.id === 'ravenclaw' ? '🦅' : '🦡'}</span>
+                       <p className="text-[9px] font-heading text-white/20 uppercase mb-1">{h.name}</p>
+                       <div className="h-1.5 w-full bg-black/40 rounded-full overflow-hidden border border-white/5">
                           <div className={`h-full bg-primary`} style={{ width: '50%' }} />
                        </div>
                     </div>
