@@ -191,16 +191,33 @@ export default function Profile() {
   };
 
   const loadReferrals = async (targetId: string) => {
-    const { data: refs } = await supabase.from("referrals").select("*").eq("inviter_id", targetId);
-    if (refs && refs.length > 0) {
-      const invitedIds = refs.map(r => r.invited_id);
-      const { data: profs } = await supabase.from("profiles").select("*").in("user_id", invitedIds);
-      const enriched = refs.map(r => ({
-        ...r,
-        profile: profs?.find(p => p.user_id === r.invited_id)
-      }));
-      setReferrals(enriched);
-    } else {
+    try {
+      const { data: refs, error: refsError } = await supabase
+        .from("referrals")
+        .select("*")
+        .eq("inviter_id", targetId);
+      
+      if (refsError) throw refsError;
+
+      if (refs && refs.length > 0) {
+        const invitedIds = refs.map(r => r.invited_id);
+        const { data: profs, error: profsError } = await supabase
+          .from("profiles")
+          .select("user_id, full_name, username, avatar_url")
+          .in("user_id", invitedIds);
+
+        if (profsError) throw profsError;
+
+        const enriched = refs.map(r => ({
+          ...r,
+          profile: profs?.find(p => p.user_id === r.invited_id) || null
+        }));
+        setReferrals(enriched);
+      } else {
+        setReferrals([]);
+      }
+    } catch (error) {
+      console.error("Erro ao carregar recrutamentos:", error);
       setReferrals([]);
     }
   };
@@ -532,8 +549,16 @@ export default function Profile() {
          <ProfileAlbum userId={profile.user_id} />
       </div>
     );
-  } else if (activeTab === "referral" && isMe) {
-    tabContent = (
+  } else if (activeTab === "referral") {
+    if (!isMe) {
+      tabContent = (
+        <div className="text-center py-20 opacity-40">
+           <Lock size={48} className="mx-auto mb-4" />
+           <p className="font-heading text-sm uppercase tracking-widest">Acesso Restrito</p>
+        </div>
+      );
+    } else {
+      tabContent = (
       <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
         <div className="relative overflow-hidden bg-gradient-to-br from-primary/20 to-amber-900/40 backdrop-blur-3xl rounded-[3rem] p-10 border border-primary/30 shadow-[0_30px_60px_rgba(0,0,0,0.5)] group text-center">
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 mix-blend-overlay pointer-events-none" />
@@ -568,15 +593,15 @@ export default function Profile() {
              <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
                 <Users size={20} className="text-white/60" />
              </div>
-             <h3 className="font-heading text-xl text-white tracking-tight">Bruxos Recrutados por Você <span className="text-primary/40 ml-2">({referrals.length})</span></h3>
+             <h3 className="font-heading text-xl text-white tracking-tight">Bruxos Recrutados por Você <span className="text-primary/40 ml-2">({(referrals || []).length})</span></h3>
           </div>
-          {referrals.length === 0 ? (
+          {(!referrals || referrals.length === 0) ? (
             <div className="bg-black/40 backdrop-blur-3xl rounded-[2.5rem] p-12 text-center border border-white/10 opacity-40">
               <p className="text-[10px] font-heading uppercase tracking-[0.4em]">Nenhum recrutamento registrado</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {referrals.map(r => (
+              {referrals?.map(r => (
                 <div key={r.id} className="glass rounded-xl p-3 flex items-center gap-3">
                   <div className="w-10 h-10 shrink-0">
                     <SafeImage src={r.profile?.avatar_url} alt={r.profile?.full_name || "Membro"} className="w-full h-full rounded-full object-cover" fallbackText={r.profile?.full_name?.[0]} />
@@ -594,6 +619,7 @@ export default function Profile() {
         </div>
       </div>
     );
+    }
   } else if (activeTab === "achievements") {
     tabContent = (
       <div className="space-y-10">
