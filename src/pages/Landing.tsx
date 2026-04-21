@@ -5,6 +5,7 @@ import MagicalParticles from "@/components/MagicalParticles";
 import { type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
 import { ChevronRight, Star, Zap, Crown, BookOpen, Users, ShoppingBag, Trophy, MessageCircle, Sparkles } from "lucide-react";
+import HouseCupWidget from "@/components/HouseCupWidget";
 
 const HOUSES: { id: House; name: string; color: string; animal: string; trait: string }[] = [
   { id: "gryffindor", name: "Grifinória", color: "from-red-900/80 to-yellow-900/60 border-red-500/50", animal: "🦁", trait: "Coragem & Bravura" },
@@ -112,7 +113,7 @@ export default function Landing() {
             </div>
             <div className="w-px h-8 bg-border" />
             <div className="text-center">
-              <p className="font-heading text-2xl text-primary">28+</p>
+              <p className="font-heading text-2xl text-primary">80+</p>
               <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Itens na Loja</p>
             </div>
             <div className="w-px h-8 bg-border" />
@@ -175,6 +176,15 @@ export default function Landing() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* ── HOUSE CUP LANDING ── */}
+      <div className="relative z-10 px-4 py-8">
+        <div className="max-w-5xl mx-auto text-center mb-8">
+             <p className="text-xs font-heading text-primary uppercase tracking-widest mb-2">A Competição de Sangue-Puro</p>
+             <h2 className="font-heading text-3xl md:text-4xl text-foreground">Disputa pela Taça das Casas</h2>
+        </div>
+        <HouseCupWidget isLanding={true} />
       </div>
 
       {/* ── FEATURES ── */}

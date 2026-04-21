@@ -34,6 +34,7 @@ import DailyRewardSystem from "@/components/DailyRewardSystem";
 import MaraudersMap from "@/components/MaraudersMap";
 // import MagicalActivityFeed from "@/components/MagicalActivityFeed";
 // import TimedMysteryChest from "@/components/TimedMysteryChest";
+import HouseCupWidget from "@/components/HouseCupWidget";
 
 
 const NAV_ITEMS = [
@@ -457,42 +458,9 @@ export default function DashboardLayout() {
           <span className="font-heading text-sm text-gold-gradient">Hogwarts House</span>
         </div>
         
-        {/* House Cup Progress Bar - Gamification Engine */}
+        {/* House Cup Progress Bar - Monster Quality Engine */}
         <div className="px-4 md:px-8 mt-4">
-          <div className="glass rounded-2xl p-4 border-primary/20 bg-gradient-to-r from-amber-900/20 via-black/40 to-amber-900/10 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5" />
-            <div className="relative z-10 flex flex-col md:flex-row items-center gap-4">
-              <div className="flex items-center gap-2 shrink-0">
-                <span className="text-2xl animate-float">🏆</span>
-                <span className="font-heading text-sm text-gold-gradient uppercase tracking-tighter">Taça das Casas</span>
-              </div>
-              
-              <div className="flex-1 w-full grid grid-cols-4 gap-2 h-3 items-end">
-                 {/* As barras crescem conforme a pontuação real via backend, aqui simulamos a UI premium */}
-                 <div className="group/house relative h-full bg-red-600/30 rounded-full overflow-hidden border border-red-500/20">
-                    <div className="h-full bg-red-600 shadow-[0_0_10px_rgba(220,38,38,0.5)] animate-pulse" style={{ width: '65%' }} />
-                    <span className="absolute -top-5 left-0 text-[8px] font-heading text-red-400 opacity-0 group-hover/house:opacity-100 transition-opacity">Grifinória</span>
-                 </div>
-                 <div className="group/house relative h-full bg-green-600/30 rounded-full overflow-hidden border border-green-500/20">
-                    <div className="h-full bg-green-600 shadow-[0_0_10px_rgba(22,163,74,0.5)]" style={{ width: '82%' }} />
-                    <span className="absolute -top-5 left-0 text-[8px] font-heading text-green-400 opacity-0 group-hover/house:opacity-100 transition-opacity">Sonserina</span>
-                 </div>
-                 <div className="group/house relative h-full bg-blue-600/30 rounded-full overflow-hidden border border-blue-500/20">
-                    <div className="h-full bg-blue-600 shadow-[0_0_10px_rgba(37,99,235,0.5)]" style={{ width: '45%' }} />
-                    <span className="absolute -top-5 left-0 text-[8px] font-heading text-blue-400 opacity-0 group-hover/house:opacity-100 transition-opacity">Corvinal</span>
-                 </div>
-                 <div className="group/house relative h-full bg-yellow-600/30 rounded-full overflow-hidden border border-yellow-500/20">
-                    <div className="h-full bg-yellow-600 shadow-[0_0_10px_rgba(202,138,4,0.5)]" style={{ width: '30%' }} />
-                    <span className="absolute -top-5 left-0 text-[8px] font-heading text-yellow-400 opacity-0 group-hover/house:opacity-100 transition-opacity">Lufa-Lufa</span>
-                 </div>
-              </div>
-              
-              <div className="hidden md:block text-right shrink-0">
-                <span className="text-[10px] text-muted-foreground uppercase block font-heading">Liderança Atual</span>
-                <span className="text-xs font-heading text-green-400 animate-pulse">🐍 Sonserina +120</span>
-              </div>
-            </div>
-          </div>
+          <HouseCupWidget />
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
