@@ -15,6 +15,7 @@ import { toast } from "sonner";
 
 import Notifications from "@/components/Notifications";
 import InterstitialAd from "@/components/InterstitialAd";
+import MagicalEmoji from "@/components/MagicalEmoji";
 
 import CastleEntrance from "@/pages/CastleEntrance";
 import EngagementBot from "@/components/EngagementBot";
@@ -38,33 +39,32 @@ import HouseCupWidget from "@/components/HouseCupWidget";
 
 
 const NAV_ITEMS = [
-  { icon: <Castle size={20} />, label: "O Castelo", path: "/dashboard" },
-  { icon: <MapIcon size={20} />, label: "Mapa do Maroto", isMap: true },
-  // { icon: <Trophy size={20} />, label: "Sagas Mágicas", path: "/dashboard/sagas" },
-  { icon: <BookOpen size={20} />, label: "Guia do Maroto", path: "/dashboard/guide" },
-  { icon: <User size={20} />, label: "Meu Perfil", path: "/dashboard/profile" },
-  { icon: <MessageCircle size={20} />, label: "Mensagens", path: "/dashboard/dm" },
-  { icon: <Users size={20} />, label: "Amigos", path: "/dashboard/friends" },
-  { icon: <Users size={20} />, label: "Membros", path: "/dashboard/members" },
-  { icon: <MessageCircle size={20} />, label: "Chats RPG", path: "/dashboard/chats" },
-  { icon: <Camera size={20} />, label: "InstaHogwarts", path: "/dashboard/instahogwarts" },
-  { icon: <Film size={20} />, label: "Hogwarts Cine", path: "/dashboard/cinema" },
-  { icon: <Trophy size={20} />, label: "Ranking", path: "/dashboard/ranking" },
-  { icon: <Shield size={20} />, label: "Casas", path: "/dashboard/houses" },
-  { icon: <Swords size={20} />, label: "Desafios", path: "/dashboard/challenges" },
-  { icon: <Sparkles size={20} />, label: "Eventos Mágicos", path: "/dashboard/events" },
-  { icon: <BookMarked size={20} />, label: "Aulas", path: "/dashboard/classes" },
-  { icon: <Library size={20} />, label: "Álbum", path: "/dashboard/album" },
-  { icon: <ShoppingBag size={20} />, label: "Loja", path: "/dashboard/shop" },
-  { icon: <Coins size={20} />, label: "Gringotts", path: "/dashboard/store" },
-  { icon: <Wallet size={20} />, label: "Carteira", path: "/dashboard/wallet" },
-  { icon: <ScrollText size={20} />, label: "Regras", path: "/dashboard/rules" },
-  { icon: <Lock size={20} />, label: "Azkaban", path: "/dashboard/azkaban" },
+  { icon: <MagicalEmoji emoji="🏰" size="xs" />, label: "O Castelo", path: "/dashboard" },
+  { icon: <MagicalEmoji emoji="📜" size="xs" />, label: "Mapa do Maroto", isMap: true },
+  { icon: <MagicalEmoji emoji="📖" size="xs" />, label: "Guia do Maroto", path: "/dashboard/guide" },
+  { icon: <MagicalEmoji emoji="🧙‍♂️" size="xs" />, label: "Meu Perfil", path: "/dashboard/profile" },
+  { icon: <MagicalEmoji emoji="✉️" size="xs" />, label: "Mensagens", path: "/dashboard/dm" },
+  { icon: <MagicalEmoji emoji="🤝" size="xs" />, label: "Amigos", path: "/dashboard/friends" },
+  { icon: <MagicalEmoji emoji="👥" size="xs" />, label: "Membros", path: "/dashboard/members" },
+  { icon: <MagicalEmoji emoji="💬" size="xs" />, label: "Chats RPG", path: "/dashboard/chats" },
+  { icon: <MagicalEmoji emoji="📸" size="xs" />, label: "InstaHogwarts", path: "/dashboard/instahogwarts" },
+  { icon: <MagicalEmoji emoji="🎬" size="xs" />, label: "Hogwarts Cine", path: "/dashboard/cinema" },
+  { icon: <MagicalEmoji emoji="🏆" size="xs" />, label: "Ranking", path: "/dashboard/ranking" },
+  { icon: <MagicalEmoji emoji="🛡️" size="xs" />, label: "Casas", path: "/dashboard/houses" },
+  { icon: <MagicalEmoji emoji="⚔️" size="xs" />, label: "Desafios", path: "/dashboard/challenges" },
+  { icon: <MagicalEmoji emoji="✨" size="xs" />, label: "Eventos Mágicos", path: "/dashboard/events" },
+  { icon: <MagicalEmoji emoji="🎓" size="xs" />, label: "Aulas", path: "/dashboard/classes" },
+  { icon: <MagicalEmoji emoji="🖼️" size="xs" />, label: "Álbum", path: "/dashboard/album" },
+  { icon: <MagicalEmoji emoji="🛍️" size="xs" />, label: "Loja", path: "/dashboard/shop" },
+  { icon: <MagicalEmoji emoji="🪙" size="xs" />, label: "Gringotts", path: "/dashboard/store" },
+  { icon: <MagicalEmoji emoji="💳" size="xs" />, label: "Carteira", path: "/dashboard/wallet" },
+  { icon: <MagicalEmoji emoji="📜" size="xs" />, label: "Regras", path: "/dashboard/rules" },
+  { icon: <MagicalEmoji emoji="⛓️" size="xs" />, label: "Azkaban", path: "/dashboard/azkaban" },
 ];
 
 
 const ADMIN_ITEMS = [
-  { icon: <Settings size={20} />, label: "Admin", path: "/dashboard/admin" },
+  { icon: <MagicalEmoji emoji="⚙️" size="xs" />, label: "Admin", path: "/dashboard/admin" },
 ];
 
 export default function DashboardLayout() {

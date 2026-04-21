@@ -18,12 +18,13 @@ export default function HouseCrest({ house, size = "md" }: { house: House; size?
 
   return (
     <div
-      className={`${sizeClasses[size]} rounded-full bg-gradient-to-br ${c.bg} flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)] overflow-hidden border-2 border-white/30 relative font-heading font-bold transition-transform hover:scale-105`}
+      className={`${sizeClasses[size]} rounded-2xl bg-gradient-to-br ${c.bg} flex items-center justify-center shadow-[0_15px_35px_rgba(0,0,0,0.6)] overflow-hidden border-t-2 border-white/40 border-l-2 border-white/20 relative font-heading font-bold transition-all duration-500 hover:scale-110 hover:shadow-[0_20px_45px_rgba(0,0,0,0.8)] group`}
       title={safeHouse.charAt(0).toUpperCase() + safeHouse.slice(1)}
     >
-      <div className="absolute inset-0 bg-black/20 mix-blend-overlay z-0" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-0" />
-      <span className="z-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] tracking-widest text-gold-gradient">{c.letter}</span>
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-tr from-black/40 via-transparent to-white/30 z-0" />
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+      <span className="z-10 drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)] tracking-[0.1em] text-white brightness-125 group-hover:scale-110 transition-transform">{c.letter}</span>
     </div>
   );
 }

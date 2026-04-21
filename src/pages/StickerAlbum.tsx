@@ -3,9 +3,10 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Trophy } from "lucide-react";
+import { Trophy, Sparkles, Gift, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import StickerVisual from "@/components/StickerVisual";
+import MagicalEmoji from "@/components/MagicalEmoji";
 
 interface Sticker {
   id: string;
@@ -157,9 +158,9 @@ export default function StickerAlbum() {
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2070')] bg-cover bg-center opacity-10 group-hover:scale-105 transition-transform duration-1000" />
         
         <div className="relative z-10 space-y-6">
-          <div className="inline-flex items-center gap-3 bg-black/40 backdrop-blur-md border border-yellow-500/30 rounded-full px-6 py-2">
-            <Sparkles size={16} className="text-yellow-500 animate-pulse" />
-            <span className="text-xs font-heading text-yellow-500 uppercase tracking-widest font-bold">Coleção de Relíquias Card</span>
+          <div className="inline-flex items-center gap-4 bg-black/40 backdrop-blur-md border border-yellow-500/30 rounded-full px-6 py-2 shadow-2xl">
+            <MagicalEmoji emoji="✨" size="xs" glowColor="rgba(234, 179, 8, 0.5)" />
+            <span className="text-[10px] font-heading text-yellow-500 uppercase tracking-[0.3em] font-bold">Relíquias de Hogwarts</span>
           </div>
           
           <h1 className="font-heading text-5xl md:text-7xl text-gold-gradient mb-3 drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
@@ -170,8 +171,8 @@ export default function StickerAlbum() {
           </p>
 
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-6">
-            <div className="inline-flex items-center gap-4 bg-yellow-500/10 backdrop-blur-xl px-8 py-4 rounded-2xl border border-yellow-500/30 shadow-xl">
-              <div className="w-10 h-10 bg-yellow-500/20 rounded-full flex items-center justify-center text-xl shadow-inner">⚡</div>
+            <div className="inline-flex items-center gap-4 bg-yellow-500/10 backdrop-blur-xl px-8 py-4 rounded-2xl border border-yellow-500/30 shadow-xl group/xp">
+              <MagicalEmoji emoji="⚡" size="sm" glowColor="rgba(234, 179, 8, 0.6)" className="group-hover/xp:rotate-12" />
               <div className="text-left">
                 <p className="text-[10px] text-yellow-500/60 uppercase font-bold tracking-widest">Saldo de Magia</p>
                 <p className="font-heading text-3xl text-yellow-400">{profile?.xp || 0} XP</p>
@@ -189,9 +190,9 @@ export default function StickerAlbum() {
       {openingPack && (
         <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-2xl flex flex-col items-center justify-center gap-10 p-4" onClick={packPhase === "reveal" ? closePack : undefined}>
           {packPhase === "shaking" && (
-            <div className="relative group cursor-pointer animate-float">
+            <div className="relative group cursor-pointer animate-float flex flex-col items-center">
               <div className="absolute inset-0 bg-purple-500/30 blur-[100px] rounded-full animate-pulse" />
-              <div className="text-[12rem] md:text-[16rem] animate-bounce filter drop-shadow-[0_0_50px_rgba(168,85,247,0.6)]">🎁</div>
+              <MagicalEmoji emoji="🎁" size="2xl" glowColor="rgba(168, 85, 247, 0.6)" className="animate-bounce" />
               <div className="mt-8 text-center space-y-2">
                 <p className="font-heading text-3xl text-purple-400 animate-pulse uppercase tracking-widest">Invocando Magia...</p>
                 <p className="text-sm text-purple-200/40 font-serif italic">O destino está sendo escrito nas estrelas</p>
@@ -305,7 +306,7 @@ export default function StickerAlbum() {
 
         <div className="glass rounded-[2.5rem] p-10 flex flex-col items-center justify-center text-center gap-8 border border-white/5 bg-gradient-to-t from-black/40 to-white/5 relative group">
             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?q=80&w=2000')] bg-cover opacity-5 group-hover:scale-110 transition-transform duration-1000" />
-            <div className="text-6xl group-hover:rotate-12 transition-transform duration-500">🔄</div>
+            <MagicalEmoji emoji="🔄" size="md" glowColor="rgba(255, 255, 255, 0.2)" className="group-hover:rotate-180 transition-transform duration-1000" />
             <div className="space-y-3 relative z-10">
                 <h3 className="font-heading text-2xl text-foreground">Mercado de Trocas</h3>
                 <p className="text-sm text-muted-foreground font-serif italic">"Um Galeão por uma história, uma carta por um amigo."</p>

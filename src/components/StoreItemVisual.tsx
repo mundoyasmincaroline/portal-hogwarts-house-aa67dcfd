@@ -13,6 +13,7 @@ type VisualTheme = {
   Icon: React.FC<{ size?: number; color?: string; style?: React.CSSProperties }>;
   badge: string;
   particles: { x: number; y: number; size: number; delay: number }[];
+  border: string;
 };
 
 // ─── Ícones SVG inline por categoria ───────────────────────────────────────
@@ -94,25 +95,25 @@ function getTheme(name: string, category: string): VisualTheme {
     }));
 
   if (n.includes("grifin") || n.includes("gryffin"))
-    return { bg: "from-red-950 via-red-900/80 to-yellow-950", accent: "#EF4444", glow: "#DC2626", Icon: (p) => <RobeIcon color="#FCA5A5" {...p} />, badge: "🦁", particles: STARS(8) };
+    return { bg: "from-red-950 via-red-900/80 to-yellow-950", accent: "#EF4444", glow: "#DC2626", border: "border-red-500/50", Icon: (p) => <RobeIcon color="#FCA5A5" {...p} />, badge: "🦁", particles: STARS(8) };
   if (n.includes("sonser") || n.includes("slyther"))
-    return { bg: "from-emerald-950 via-green-900/70 to-slate-950", accent: "#10B981", glow: "#059669", Icon: (p) => <RobeIcon color="#6EE7B7" {...p} />, badge: "🐍", particles: STARS(6) };
+    return { bg: "from-emerald-950 via-green-900/70 to-slate-950", accent: "#10B981", glow: "#059669", border: "border-emerald-500/50", Icon: (p) => <RobeIcon color="#6EE7B7" {...p} />, badge: "🐍", particles: STARS(6) };
   if (n.includes("corvin") || n.includes("raven"))
-    return { bg: "from-blue-950 via-blue-900/70 to-slate-950", accent: "#60A5FA", glow: "#3B82F6", Icon: (p) => <RobeIcon color="#93C5FD" {...p} />, badge: "🦅", particles: STARS(7) };
+    return { bg: "from-blue-950 via-blue-900/70 to-slate-950", accent: "#60A5FA", glow: "#3B82F6", border: "border-blue-500/50", Icon: (p) => <RobeIcon color="#93C5FD" {...p} />, badge: "🦅", particles: STARS(7) };
   if (n.includes("lufa") || n.includes("hufflep"))
-    return { bg: "from-yellow-900 via-amber-800/60 to-stone-950", accent: "#FBBF24", glow: "#D97706", Icon: (p) => <RobeIcon color="#FDE68A" {...p} />, badge: "🦡", particles: STARS(7) };
+    return { bg: "from-yellow-900 via-amber-800/60 to-stone-950", accent: "#FBBF24", glow: "#D97706", border: "border-yellow-500/50", Icon: (p) => <RobeIcon color="#FDE68A" {...p} />, badge: "🦡", particles: STARS(7) };
   if (n.includes("manto") || category === "clothing")
-    return { bg: "from-purple-950 via-violet-900/70 to-slate-950", accent: "#C084FC", glow: "#9333EA", Icon: (p) => <RobeIcon color="#E9D5FF" {...p} />, badge: "✨", particles: STARS(6) };
+    return { bg: "from-purple-950 via-violet-900/70 to-slate-950", accent: "#C084FC", glow: "#9333EA", border: "border-purple-500/50", Icon: (p) => <RobeIcon color="#E9D5FF" {...p} />, badge: "✨", particles: STARS(6) };
   if (n.includes("varinha") || category === "wand")
-    return { bg: "from-violet-950 via-purple-900/80 to-indigo-950", accent: "#A855F7", glow: "#7C3AED", Icon: (p) => <WandIcon color="#DDD6FE" {...p} />, badge: "⚡", particles: STARS(10) };
+    return { bg: "from-violet-950 via-purple-900/80 to-indigo-950", accent: "#A855F7", glow: "#7C3AED", border: "border-purple-400/50", Icon: (p) => <WandIcon color="#DDD6FE" {...p} />, badge: "⚡", particles: STARS(10) };
   if (n.includes("vassoura") || n.includes("nimbus") || n.includes("saeta"))
-    return { bg: "from-amber-950 via-orange-900/70 to-stone-950", accent: "#F59E0B", glow: "#D97706", Icon: (p) => <BroomIcon color="#FDE68A" {...p} />, badge: "🔮", particles: STARS(5) };
+    return { bg: "from-amber-950 via-orange-900/70 to-stone-950", accent: "#F59E0B", glow: "#D97706", border: "border-orange-500/50", Icon: (p) => <BroomIcon color="#FDE68A" {...p} />, badge: "🔮", particles: STARS(5) };
   if (n.includes("amuleto") || n.includes("anel") || n.includes("colar") || n.includes("galeon"))
-    return { bg: "from-amber-950 via-yellow-900/70 to-stone-950", accent: "#FBBF24", glow: "#B45309", Icon: (p) => <GemIcon color="#FEF08A" {...p} />, badge: "💎", particles: STARS(9) };
+    return { bg: "from-amber-950 via-yellow-900/70 to-stone-950", accent: "#FBBF24", glow: "#B45309", border: "border-yellow-500/50", Icon: (p) => <GemIcon color="#FEF08A" {...p} />, badge: "💎", particles: STARS(9) };
   if (n.includes("vip") || n.includes("coroa") || n.includes("titulo"))
-    return { bg: "from-yellow-900 via-amber-800/60 to-orange-950", accent: "#F59E0B", glow: "#B45309", Icon: (p) => <CrownIcon color="#FDE68A" {...p} />, badge: "👑", particles: STARS(8) };
+    return { bg: "from-yellow-900 via-amber-800/60 to-orange-950", accent: "#F59E0B", glow: "#B45309", border: "border-yellow-400/60", Icon: (p) => <CrownIcon color="#FDE68A" {...p} />, badge: "👑", particles: STARS(8) };
   // Default — item mágico genérico
-  return { bg: "from-slate-900 via-purple-950/60 to-slate-900", accent: "#818CF8", glow: "#6366F1", Icon: (p) => <StarIcon color="#C7D2FE" {...p} />, badge: "🌟", particles: STARS(8) };
+  return { bg: "from-slate-900 via-purple-950/60 to-slate-900", accent: "#818CF8", glow: "#6366F1", border: "border-white/10", Icon: (p) => <StarIcon color="#C7D2FE" {...p} />, badge: "🌟", particles: STARS(8) };
 }
 
 // ─── Componente Principal ───────────────────────────────────────────────────
@@ -162,26 +163,43 @@ export default function StoreItemVisual({ imageUrl, name, category, isOwned }: P
   const finalImage = (imageUrl && !imageUrl.includes("placeholder")) 
     ? imageUrl 
     : getEpicPlaceholder(category, name);
+    
+  const theme = getTheme(name, category);
 
   return (
-    <div className="relative w-full h-full bg-black group overflow-hidden">
+    <div className={`relative w-full h-full bg-black group overflow-hidden border-2 ${theme.border} rounded-[2rem] shadow-2xl`}>
       <SafeImage 
         src={finalImage} 
         alt={name}
-        className="w-full h-full object-cover mix-blend-lighten opacity-90 group-hover:scale-110 group-hover:opacity-100 transition-all duration-700"
+        className="w-full h-full object-cover group-hover:scale-125 group-hover:rotate-2 transition-all duration-[2000ms] opacity-90"
         fallbackEmoji="📦"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_50%,_rgba(0,0,0,0.6)_100%)] pointer-events-none" />
       
-      {/* Glow Effect */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-30 mix-blend-overlay transition-opacity duration-700 bg-gradient-to-br from-yellow-500 to-purple-500 pointer-events-none" />
+      {/* Premium Cinematic Overlays */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent pointer-events-none z-10" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_30%,rgba(0,0,0,0.8)_100%)] pointer-events-none z-10" />
+      
+      {/* Holographic Shimmer */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-40 mix-blend-overlay transition-opacity duration-1000 bg-gradient-to-tr from-yellow-500 via-transparent to-blue-500 pointer-events-none z-20" />
+      
+      {/* Dynamic Particles */}
+      <div className="absolute inset-0 z-10 pointer-events-none">
+        {theme.particles.map((p, i) => (
+          <div key={i} className="absolute w-1 h-1 bg-white rounded-full animate-pulse opacity-40" style={{
+            top: `${p.y}%`,
+            left: `${p.x}%`,
+            animationDelay: `${p.delay}s`
+          }} />
+        ))}
+      </div>
 
       {isOwned && (
-        <div className="absolute inset-0 bg-green-900/60 backdrop-blur-[2px] flex items-center justify-center z-20">
-          <div className="flex flex-col items-center gap-2 transform group-hover:scale-110 transition-transform">
-            <span className="text-3xl drop-shadow-[0_0_10px_rgba(74,222,128,0.8)]">✅</span>
-            <span className="font-heading text-green-300 text-sm font-bold uppercase tracking-widest drop-shadow-md">Adquirido</span>
+        <div className="absolute inset-0 bg-green-950/70 backdrop-blur-md flex flex-col items-center justify-center z-30 animate-in fade-in duration-500">
+          <div className="flex flex-col items-center gap-3 transform group-hover:scale-110 transition-all duration-700">
+            <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center border border-green-500/40 shadow-[0_0_30px_rgba(34,197,94,0.4)]">
+                <span className="text-4xl">✅</span>
+            </div>
+            <span className="font-heading text-green-400 text-sm font-bold uppercase tracking-[0.3em] drop-shadow-lg">Relíquia Obtida</span>
           </div>
         </div>
       )}

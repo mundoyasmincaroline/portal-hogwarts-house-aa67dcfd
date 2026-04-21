@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Trophy, Shield, Zap, Star, Sparkles } from "lucide-react";
 import HouseCrest from "./HouseCrest";
+import MagicalEmoji from "./MagicalEmoji";
 import { House } from "@/lib/store";
 
 interface HouseScore {
@@ -93,9 +94,9 @@ export default function HouseCupWidget({ isLanding = false }: { isLanding?: bool
             {scores.map((s) => (
               <div key={s.house} className="flex flex-col gap-2 group/bar">
                 <div className="flex items-center justify-between px-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm">{s.icon}</span>
-                    <span className={`font-heading text-[10px] uppercase tracking-wider ${s.color.replace('bg-', 'text-')}`}>{s.label}</span>
+                  <div className="flex items-center gap-3">
+                    <MagicalEmoji emoji={s.icon} size="xs" glowColor={s.glow.split('rgba(')[1]?.split(')')[0] ? `rgba(${s.glow.split('rgba(')[1].split(')')[0]})` : undefined} />
+                    <span className={`font-heading text-[11px] uppercase tracking-wider ${s.color.replace('bg-', 'text-')}`}>{s.label}</span>
                   </div>
                   <span className="text-[10px] font-mono text-white/40">{s.points} pts</span>
                 </div>
@@ -126,11 +127,12 @@ export default function HouseCupWidget({ isLanding = false }: { isLanding?: bool
           <div className="shrink-0 flex flex-col items-center lg:items-end text-center lg:text-right gap-3 pl-0 lg:pl-6 border-t lg:border-t-0 lg:border-l border-white/10 pt-6 lg:pt-0">
             <div>
                 <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest block mb-1">Destaque do Castelo</span>
-                <div className="flex items-center gap-3">
-                    <div className="relative">
-                        <div className={`absolute inset-0 blur-xl ${leader?.glow.replace('shadow-', 'bg-')} opacity-20`} />
-                        <span className="text-3xl relative">{leader?.icon}</span>
-                    </div>
+                <div className="flex items-center gap-4">
+                    <MagicalEmoji 
+                        emoji={leader?.icon || '🏆'} 
+                        size="sm" 
+                        glowColor={leader?.glow.split('rgba(')[1]?.split(')')[0] ? `rgba(${leader.glow.split('rgba(')[1].split(')')[0]})` : undefined} 
+                    />
                     <div>
                         <p className={`font-heading text-lg ${leader?.color.replace('bg-', 'text-')} animate-pulse`}>{leader?.label}</p>
                         <p className="text-[9px] text-white/40 font-mono">Liderando com {leader?.points} pontos</p>

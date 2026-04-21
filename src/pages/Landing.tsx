@@ -6,6 +6,7 @@ import { type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
 import { ChevronRight, Star, Zap, Crown, BookOpen, Users, ShoppingBag, Trophy, MessageCircle, Sparkles } from "lucide-react";
 import HouseCupWidget from "@/components/HouseCupWidget";
+import MagicalEmoji from "@/components/MagicalEmoji";
 
 const HOUSES: { id: House; name: string; color: string; animal: string; trait: string }[] = [
   { id: "gryffindor", name: "Grifinória", color: "from-red-900/80 to-yellow-900/60 border-red-500/50", animal: "🦁", trait: "Coragem & Bravura" },
@@ -169,10 +170,12 @@ export default function Landing() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {HOUSES.map(h => (
             <div key={h.id} onClick={() => navigate("/register")}
-              className={`glass rounded-2xl p-5 border bg-gradient-to-br ${h.color} text-center cursor-pointer hover:-translate-y-2 hover:shadow-lg transition-all duration-300 group`}>
-              <div className="text-4xl mb-2 group-hover:scale-110 transition-transform">{h.animal}</div>
-              <h3 className="font-heading text-base text-foreground">{h.name}</h3>
-              <p className="text-[11px] text-muted-foreground mt-1">{h.trait}</p>
+              className={`glass rounded-[2.5rem] p-8 border bg-gradient-to-br ${h.color} text-center cursor-pointer hover:-translate-y-3 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 group flex flex-col items-center gap-5`}>
+              <MagicalEmoji emoji={h.animal} size="lg" className="group-hover:rotate-12 transition-transform duration-500" />
+              <div>
+                <h3 className="font-heading text-xl text-foreground mb-1">{h.name}</h3>
+                <p className="text-[10px] text-white/50 uppercase tracking-[0.2em] font-bold">{h.trait}</p>
+              </div>
             </div>
           ))}
         </div>
@@ -239,10 +242,12 @@ export default function Landing() {
                 { icon: "⭐", label: "Premium",  price: "R$ 9,90/mês",  glow: "border-slate-400/40" },
                 { icon: "🪙", label: "Galeões",  price: "a partir de R$4,90", glow: "border-amber-500/40" },
               ].map(p => (
-                <div key={p.label} className={`glass rounded-xl p-4 border ${p.glow} text-center hover:scale-105 transition-transform`}>
-                  <div className="text-2xl mb-1">{p.icon}</div>
-                  <p className="font-heading text-xs text-foreground">{p.label}</p>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">{p.price}</p>
+                <div key={p.label} className={`glass rounded-2xl p-4 border ${p.glow} flex flex-col items-center gap-3 hover:scale-110 transition-transform duration-500`}>
+                  <MagicalEmoji emoji={p.icon} size="sm" />
+                  <div className="text-center">
+                    <p className="font-heading text-xs text-foreground uppercase tracking-tighter">{p.label}</p>
+                    <p className="text-[9px] text-white/40 mt-0.5 font-mono">{p.price}</p>
+                  </div>
                 </div>
               ))}
             </div>

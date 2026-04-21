@@ -307,7 +307,7 @@ export default function GringottsStore() {
       )}
 
       {/* ── CATEGORY NAVIGATION: MONSTER STYLE ── */}
-      <div className="sticky top-4 z-40 flex justify-center py-2">
+      <div className="relative z-40 flex justify-center py-6 mb-8">
         <div className="glass p-2.5 rounded-full border border-white/10 inline-flex flex-wrap justify-center gap-2 bg-black/60 backdrop-blur-3xl shadow-2xl">
           {TABS.map(t => {
             const isActive = tab === t.id;
