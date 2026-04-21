@@ -247,7 +247,13 @@ export default function DashboardLayout() {
     );
   }
 
-  if (!user || !profile) return null;
+  if (!user || !profile) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <p className="text-muted-foreground text-lg">Carregando portal...</p>
+      </div>
+    );
+  }
   
 
   if (!profile.approved && !isAdmin) return <PendingApproval />;
@@ -433,7 +439,8 @@ export default function DashboardLayout() {
           <EngagementBot />
           <FilchWatcher />
           <MagicalEventSystem />
-          <MagicalPartyOverlay />
+          {/* Magical Party Overlay – show only when active */}
+          {false && <MagicalPartyOverlay />}
           <GlobalChallengeWatcher />
           <DailyRewardSystem />
           {/* <TimedMysteryChest /> */}
