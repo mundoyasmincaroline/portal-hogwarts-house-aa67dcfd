@@ -341,33 +341,6 @@ export default function DashboardLayout() {
 
         <div className="flex-1 overflow-y-auto p-6 md:p-16 custom-scrollbar relative z-10">
           <div className="max-w-7xl mx-auto pb-40">
-            {showHouseCup && (
-              <div className="mb-10 bg-black/60 backdrop-blur-3xl rounded-[3rem] border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.9)] p-6 relative overflow-hidden group/cup animate-in slide-in-from-top-10 duration-1000">
-                <div className="flex flex-col lg:flex-row items-center justify-between gap-6 mb-4">
-                    <div className="flex items-center gap-6">
-                      <div className="w-16 h-16 bg-white/5 rounded-2xl border border-white/10 flex items-center justify-center shadow-2xl animate-float">
-                          <Trophy size={32} className="text-yellow-400" />
-                      </div>
-                      <div className="space-y-0.5">
-                          <h2 className="text-3xl font-heading text-white tracking-tighter italic">Torneio das Casas</h2>
-                          <p className="text-[10px] font-heading text-primary uppercase tracking-[0.4em]">A Glória Eterna</p>
-                      </div>
-                    </div>
-                    <button onClick={toggleHouseCup} className="p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-colors"><X size={18} className="text-white/40" /></button>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {Object.values(HOUSES).map((h) => (
-                      <div key={h.id} className="bg-white/[0.02] rounded-[2rem] p-4 border border-white/5 flex flex-col items-center">
-                        <span className="text-xl mb-1">{h.id === 'gryffindor' ? '🦁' : h.id === 'slytherin' ? '🐍' : h.id === 'ravenclaw' ? '🦅' : '🦡'}</span>
-                        <p className="text-[9px] font-heading text-white/20 uppercase mb-1">{h.name}</p>
-                        <div className="h-1.5 w-full bg-black/40 rounded-full overflow-hidden border border-white/5">
-                            <div className={`h-full bg-primary`} style={{ width: '50%' }} />
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              </div>
-            )}
              {showVipBanner && !profile?.vip_plan && (
                <VipUpsellBanner currentVip={profile?.vip_plan} galeons={profile?.galeons} username={profile?.username} onClose={toggleVipBanner} />
              )}

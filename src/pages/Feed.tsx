@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Zap, Sparkles, MessageCircle, ChevronRight, Users, Trophy, Star } from "lucide-react";
+import { Zap, Sparkles, MessageCircle, ChevronRight, Users, Trophy, Star, X } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import { HOUSES, type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
@@ -53,6 +53,7 @@ export default function Feed() {
   const [activeChallenges, setActiveChallenges] = useState<{ id: string; title: string; xp_reward: number; type: string }[]>([]);
   const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
   const [bannedWords, setBannedWords] = useState<string[]>([]);
+  const [showHouseCup, setShowHouseCup] = useState(true);
 
   const loadFeed = useCallback(async () => {
     const { data: postsData } = await supabase
@@ -249,6 +250,33 @@ export default function Feed() {
                galeons={(profile as any)?.galeons ?? 0}
                username={profile?.full_name}
              />
+             
+             {showHouseCup && (
+               <div className="bg-black/40 backdrop-blur-3xl rounded-[2.5rem] border border-white/10 shadow-2xl p-5 relative overflow-hidden group/cup animate-in fade-in slide-in-from-top-4 duration-1000">
+                 <div className="flex items-center justify-between gap-4 mb-4">
+                    <div className="flex items-center gap-3">
+                       <div className="w-10 h-10 bg-white/5 rounded-xl border border-white/10 flex items-center justify-center shadow-lg">
+                           <Trophy size={20} className="text-yellow-400" />
+                       </div>
+                       <h2 className="text-lg font-heading text-white tracking-tighter italic">Torneio das Casas</h2>
+                    </div>
+                    <button onClick={() => setShowHouseCup(false)} className="p-2 hover:bg-white/10 rounded-lg transition-colors"><X size={14} className="text-white/40" /></button>
+                 </div>
+                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                     {sortedHouses.map((h) => (
+                       <div key={h.id} className="bg-white/[0.02] rounded-2xl p-3 border border-white/5 flex flex-col items-center gap-2">
+                         <div className="flex items-center gap-2">
+                            <span className="text-base">{h.id === 'gryffindor' ? '🦁' : h.id === 'slytherin' ? '🐍' : h.id === 'ravenclaw' ? '🦅' : '🦡'}</span>
+                            <span className="text-[8px] font-heading text-white/30 uppercase tracking-widest">{h.name.substring(0, 3)}</span>
+                         </div>
+                         <div className="h-1 w-full bg-black/40 rounded-full overflow-hidden border border-white/5">
+                             <div className={`h-full bg-primary`} style={{ width: '50%' }} />
+                         </div>
+                       </div>
+                     ))}
+                 </div>
+               </div>
+             )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
