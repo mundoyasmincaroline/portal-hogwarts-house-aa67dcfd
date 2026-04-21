@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 import { Trophy, Shield, Zap, Star, Sparkles } from "lucide-react";
 import HouseCrest from "./HouseCrest";
 import { House } from "@/lib/store";

@@ -700,27 +700,3 @@ export default function GringottsStore() {
     </div>
   );
 }
-sName={`text-xs px-4 h-8 ${isOwned ? 'border-green-500/30 text-green-400' : ''}`}>
-                          {isOwned ? "Adquirido" : !canAfford ? "Sem Saldo" : buying === item.id ? "..." : "Comprar"}
-                        </Button>
-                      </div>
-                      
-                      {!isOwned && !canAfford && (
-                        <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-background via-background/90 to-transparent translate-y-full group-hover:translate-y-0 transition-transform flex flex-col items-center justify-end z-20">
-                          <p className="text-[11px] text-red-400 font-bold text-center bg-red-500/10 px-2 py-1 rounded w-full border border-red-500/20">
-                            Faltam 🪙 {item.price_galeons - galeons}
-                          </p>
-                          <button onClick={() => setTab("galeons")} className="text-[10px] text-yellow-400 hover:underline mt-1">Obter Galeões</button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
