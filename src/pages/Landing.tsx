@@ -59,7 +59,7 @@ export default function Landing() {
       <MagicalParticles />
 
       {/* ── HERO ── */}
-      <div className="relative min-h-[110vh] flex flex-col items-center justify-center px-4 text-center overflow-hidden">
+      <div className="relative min-h-[110vh] flex flex-col items-center md:justify-center justify-start px-4 text-center overflow-hidden pt-32 md:pt-0">
         <div className="absolute inset-0 z-0">
           <img src={bgUrl} alt="Hogwarts Castle" className="w-full h-full object-cover scale-105" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-background" />
@@ -95,7 +95,7 @@ export default function Landing() {
 
           {/* Main Title Area */}
           <div className="relative mb-12">
-            <h1 className="font-heading text-6xl sm:text-7xl md:text-9xl text-gold-gradient mb-4 tracking-tighter drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] animate-fade-in">
+            <h1 className="font-heading text-5xl sm:text-7xl md:text-9xl text-gold-gradient mb-4 tracking-tighter drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] animate-fade-in">
               Hogwarts House
             </h1>
             <div className="flex items-center justify-center gap-4">

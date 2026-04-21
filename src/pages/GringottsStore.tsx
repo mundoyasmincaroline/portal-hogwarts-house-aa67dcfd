@@ -24,28 +24,28 @@ interface StoreItem {
 const GALEON_PACKAGES = [
   { id: "bolsinha",  name: "Bolsinha de Galeões",     galeons: 100,  price_brl: 4.90,  icon: "💰", image_url: "https://i.pinimg.com/736x/8b/6e/8b/8b6e8b4e7a2b9a1e8b4e7a2b9a1e8b4e.jpg", color: "from-amber-800/40 to-amber-900/40", border: "border-amber-600/40", glow: "group-hover:shadow-[0_0_20px_rgba(217,119,6,0.3)]" },
   { id: "saco",      name: "Saco de Galeões",          galeons: 300,  price_brl: 12.90, icon: "🪙", image_url: "https://i.pinimg.com/736x/2c/31/31/2c313181232812328123281232812328.jpg", color: "from-amber-700/50 to-yellow-800/40", border: "border-yellow-500/50", glow: "group-hover:shadow-[0_0_25px_rgba(234,179,8,0.4)]", badge: "Mais Popular" },
-  { id: "bau",       name: "Baú de Galeões",           galeons: 700,  price_brl: 24.90, icon: "💎", image_url: "/legendary_chest_3d.png", color: "from-yellow-600/50 to-amber-700/50", border: "border-amber-400/60", glow: "group-hover:shadow-[0_0_30_rgba(251,191,36,0.5)]" },
-  { id: "tesouro",   name: "Tesouro de Gringotts",     galeons: 1500, price_brl: 44.90, icon: "👑", image_url: "/vip_coroa.png", color: "from-yellow-500/60 to-amber-600/50", border: "border-yellow-400/70", glow: "group-hover:shadow-[0_0_35px_rgba(250,204,21,0.6)]", badge: "Melhor Valor" },
-  { id: "cofre",     name: "Cofre Lendário",           galeons: 4000, price_brl: 99.90, icon: "🏆", image_url: "/medalha_ouro.png", color: "from-yellow-400/70 to-amber-500/60", border: "border-yellow-300/80", glow: "group-hover:shadow-[0_0_45px_rgba(253,224,71,0.7)]", badge: "Lendário" },
+  { id: "bau",       name: "Baú de Galeões",           galeons: 700,  price_brl: 24.90, icon: "💎", image_url: "/bau_lendario_3d.png", color: "from-yellow-600/50 to-amber-700/50", border: "border-amber-400/60", glow: "group-hover:shadow-[0_0_30_rgba(251,191,36,0.5)]" },
+  { id: "tesouro",   name: "Tesouro de Gringotts",     galeons: 1500, price_brl: 44.90, icon: "👑", image_url: "/liquid_luck_3d.png", color: "from-yellow-500/60 to-amber-600/50", border: "border-yellow-400/70", glow: "group-hover:shadow-[0_0_35px_rgba(250,204,21,0.6)]", badge: "Melhor Valor" },
+  { id: "cofre",     name: "Cofre Lendário",           galeons: 4000, price_brl: 99.90, icon: "🏆", image_url: "/medalha_ouro_3d.png", color: "from-yellow-400/70 to-amber-500/60", border: "border-yellow-300/80", glow: "group-hover:shadow-[0_0_45px_rgba(253,224,71,0.7)]", badge: "Lendário" },
 ];
 
 // ─── Planos VIP ────────────────────────────────────────────
 const VIP_PLANS = [
   {
-    id: "premium", name: "Estudante Premium", icon: "✨", price_brl: 9.90, image_url: "/medalha_ouro.png",
+    id: "premium", name: "Estudante Premium", icon: "✨", price_brl: 9.90, image_url: "/medalha_ouro_3d.png",
     color: "from-blue-900/60 to-indigo-900/40", border: "border-blue-400/50", textColor: "text-blue-300", glow: "hover:shadow-[0_0_30px_rgba(96,165,250,0.3)]",
     benefits: ["+50% XP em todas as atividades", "Badge exclusivo ✨ no perfil", "Acesso a salas Premium", "Nome com brilho especial"],
     galeons_monthly: 0,
   },
   {
-    id: "vip", name: "Auror VIP", icon: "🥇", price_brl: 19.90, image_url: "/vip_coroa.png",
+    id: "vip", name: "Auror VIP", icon: "🥇", price_brl: 19.90, image_url: "/liquid_luck_3d.png",
     color: "from-purple-900/60 to-fuchsia-900/40", border: "border-purple-400/60", textColor: "text-purple-300", glow: "hover:shadow-[0_0_40px_rgba(192,132,252,0.4)]",
     benefits: ["Tudo do Premium", "+200 Galeões todo mês", "Nome dourado em todo portal", "Skin exclusiva de Auror", "Acesso antecipado a eventos"],
     galeons_monthly: 200,
     badge: "MAIS ESCOLHIDO"
   },
   {
-    id: "founder", name: "Fundador Hogwarts", icon: "👑", price_brl: 39.90, image_url: "/legendary_chest_3d.png",
+    id: "founder", name: "Fundador Hogwarts", icon: "👑", price_brl: 39.90, image_url: "/bau_lendario_3d.png",
     color: "from-yellow-700/60 to-amber-900/50", border: "border-yellow-400/70", textColor: "text-yellow-300", glow: "hover:shadow-[0_0_50px_rgba(251,191,36,0.5)]",
     benefits: ["Tudo do VIP", "+500 Galeões todo mês", "Acesso ao Conselho Secreto", "Título permanente 👑 Fundador", "Participação em decisões do portal"],
     galeons_monthly: 500,
@@ -67,6 +67,7 @@ const TABS = [
   { id: "wand",     label: "🪄 Varinhas",   icon: Wand2 },
   { id: "spell",    label: "📜 Feitiços",   icon: Sparkles },
   { id: "potion",   label: "🧪 Poções",     icon: Gem },
+  { id: "stickers", label: "🖼️ Figurinhas",  icon: Trophy },
   { id: "clothing", label: "👗 Roupas",     icon: Shirt },
   { id: "upgrade",  label: "⚡ Upgrades",   icon: Zap },
 ];
@@ -225,6 +226,42 @@ export default function GringottsStore() {
   const currentVip = profile?.vip_plan;
   const filteredItems = items.filter(i => i.category === tab);
   const featuredItems = items.filter(i => i.is_featured || i.rarity === 'legendary').slice(0, 4);
+
+  // Injetar itens lendários 3D se as abas correspondentes forem selecionadas
+  const displayItems = tab === "stickers" 
+    ? [...filteredItems, { 
+        id: "3d_sticker_pack", 
+        name: "Pacote de Figurinhas Mágicas", 
+        description: "Contém 3 figurinhas aleatórias. Chance de vir Lendária!", 
+        category: "stickers", 
+        price_galeons: 25, 
+        image_url: "/stickers_pack_3d.png", 
+        rarity: "rare", 
+        is_featured: true 
+      }]
+    : tab === "wand"
+    ? [...filteredItems, {
+        id: "3d_elder_wand",
+        name: "A Varinha das Varinhas",
+        description: "A varinha mais poderosa que já existiu. Feita de sabugueiro.",
+        category: "wand",
+        price_galeons: 5000,
+        image_url: "/elder_wand_3d.png",
+        rarity: "legendary",
+        is_featured: true
+      }]
+    : tab === "clothing"
+    ? [...filteredItems, {
+        id: "3d_invisibility_cloak",
+        name: "Manto da Invisibilidade",
+        description: "Um dos três itens das Relíquias da Morte. Verdadeira invisibilidade.",
+        category: "clothing",
+        price_galeons: 8000,
+        image_url: "/invisibility_cloak_3d.png",
+        rarity: "legendary",
+        is_featured: true
+      }]
+    : filteredItems;
 
   return (
     <div className="max-w-7xl mx-auto space-y-10 pb-20 px-4">
@@ -641,13 +678,13 @@ export default function GringottsStore() {
       )}
 
       {/* ── ABAS DE ITENS (Roupas, Varinhas, Feitiços, Poções, etc) - MONSTER QUALITY ── */}
-      {["clothing","wand","spell","potion","upgrade"].includes(tab) && (
+      {["clothing","wand","spell","potion","upgrade","stickers"].includes(tab) && (
         <div className="animate-in fade-in duration-500">
           {loading ? (
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
               {[1,2,3,4,5,6,7,8,9,10].map(i => <div key={i} className="glass aspect-[3/4.5] rounded-[2.5rem] animate-pulse bg-white/5" />)}
             </div>
-          ) : filteredItems.length === 0 ? (
+          ) : displayItems.length === 0 ? (
             <div className="relative overflow-hidden rounded-[3rem] p-20 text-center max-w-2xl mx-auto border border-white/5 bg-white/[0.02]">
               <div className="w-24 h-24 mx-auto bg-white/5 rounded-3xl flex items-center justify-center mb-8 border border-white/10">
                 <ShoppingBag size={48} className="text-white/20" />
@@ -659,7 +696,7 @@ export default function GringottsStore() {
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
-              {filteredItems.map(item => {
+              {displayItems.map(item => {
                 const rar = RARITY[item.rarity as keyof typeof RARITY] || RARITY.common;
                 const isOwned = owned.includes(item.id);
                 const canAfford = galeons >= item.price_galeons;
