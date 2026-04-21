@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMagicalSound } from "@/hooks/useMagicalSound";
 import { Button } from "@/components/ui/button";
 import MagicalParticles from "@/components/MagicalParticles";
 import { type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronRight, Star, Zap, Crown, BookOpen, Users, ShoppingBag, Trophy, MessageCircle, Sparkles, Wand2, Shield, Flame, Menu, X } from "lucide-react";
+import { ChevronRight, Star, Zap, Crown, BookOpen, Users, ShoppingBag, Trophy, MessageCircle, Sparkles } from "lucide-react";
 
 const HOUSES: { id: House; name: string; color: string; animal: string; trait: string }[] = [
   { id: "gryffindor", name: "Grifinória", color: "from-red-900/80 to-yellow-900/60 border-red-500/50", animal: "🦁", trait: "Coragem & Bravura" },
@@ -15,65 +14,35 @@ const HOUSES: { id: House; name: string; color: string; animal: string; trait: s
 ];
 
 const FEATURES = [
-  { icon: <Users size={24} className="text-blue-400" />, title: "Comunidade RPG", desc: "Feed, DMs, amigos e stories. Viva Hogwarts com outros fãs.", color: "border-blue-500/30 bg-blue-900/10" },
-  { icon: <ShoppingBag size={24} className="text-yellow-400" />, title: "Gringotts Store", desc: "Mantos, varinhas, amuletos e itens mágicos com Galeões.", color: "border-yellow-500/30 bg-yellow-900/10" },
-  { icon: <Trophy size={24} className="text-amber-400" />, title: "Álbum de Figurinhas", desc: "Colecione personagens raros e complete seu álbum mágico.", color: "border-amber-500/30 bg-amber-900/10" },
-  { icon: <Zap size={24} className="text-purple-400" />, title: "Gamificação Extrema", desc: "XP, níveis, conquistas, ranking das casas e desafios diários.", color: "border-purple-500/30 bg-purple-900/10" },
-  { icon: <Crown size={24} className="text-rose-400" />, title: "VIP & Recompensas", desc: "Planos VIP com Galeões mensais, skins exclusivas e badges.", color: "border-rose-500/30 bg-rose-900/10" },
-  { icon: <MessageCircle size={24} className="text-green-400" />, title: "Chats & Casas", desc: "Salas de RPG por casa, missões coletivas e eventos ao vivo.", color: "border-green-500/30 bg-green-900/10" },
+  { icon: <Users size={22} className="text-blue-400" />, title: "Comunidade RPG", desc: "Feed, DMs, amigos e stories. Viva Hogwarts com outros fãs.", color: "border-blue-500/30 bg-blue-900/10" },
+  { icon: <ShoppingBag size={22} className="text-yellow-400" />, title: "Gringotts Store", desc: "Mantos, varinhas, amuletos e itens mágicos com Galeões.", color: "border-yellow-500/30 bg-yellow-900/10" },
+  { icon: <Trophy size={22} className="text-amber-400" />, title: "Álbum de Figurinhas", desc: "Colecione personagens raros e complete seu álbum mágico.", color: "border-amber-500/30 bg-amber-900/10" },
+  { icon: <Zap size={22} className="text-purple-400" />, title: "Gamificação Extrema", desc: "XP, níveis, conquistas, ranking das casas e desafios diários.", color: "border-purple-500/30 bg-purple-900/10" },
+  { icon: <Crown size={22} className="text-rose-400" />, title: "VIP & Recompensas", desc: "Planos VIP com Galeões mensais, skins exclusivas e badges.", color: "border-rose-500/30 bg-rose-900/10" },
+  { icon: <MessageCircle size={22} className="text-green-400" />, title: "Chats & Casas", desc: "Salas de RPG por casa, missões coletivas e eventos ao vivo.", color: "border-green-500/30 bg-green-900/10" },
+];
+
+const TESTIMONIALS = [
+  { house: "gryffindor", emoji: "🦁", name: "Ana L.", quote: "Finalmente um portal que parece de verdade! Me sinto dentro de Hogwarts." },
+  { house: "slytherin",  emoji: "🐍", name: "Marcos V.", quote: "As figurinhas são viciantes demais. Já completei metade do álbum!" },
+  { house: "ravenclaw",  emoji: "🦅", name: "Julia R.", quote: "O sistema de Galeões e a loja são incrívels. Quero mais itens!" },
 ];
 
 export default function Landing() {
   const navigate = useNavigate();
-  const { play } = useMagicalSound();
   const [showContent, setShowContent] = useState(false);
   const [memberCount, setMemberCount] = useState<number | null>(null);
-  const [scrollY, setScrollY] = useState(0);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const [stats, setStats] = useState({ wizards: 10, houses: 4, items: 28 });
-  const [housePoints, setHousePoints] = useState<Record<string, number>>({
-    gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0
-  });
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0, secs: 0 });
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     const t = setTimeout(() => setShowContent(true), 600);
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", handleScroll);
-    return () => { clearTimeout(t); window.removeEventListener("scroll", handleScroll); };
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => { clearTimeout(t); clearInterval(timer); };
   }, []);
 
   useEffect(() => {
     supabase.from("profiles").select("*", { count: "exact", head: true })
-      .then(({ count }) => setStats(prev => ({ ...prev, wizards: Math.max(count ?? 0, 10) })));
-    supabase.from("products").select("*", { count: "exact", head: true })
-      .then(({ count }) => setStats(prev => ({ ...prev, items: Math.max(count ?? 0, 28) })));
-    supabase.from("house_points").select("house, points")
-      .then(({ data }) => {
-        if (data) {
-          const p: Record<string, number> = { gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0 };
-          data.forEach(row => p[row.house] = (p[row.house] || 0) + row.points);
-          setHousePoints(p);
-        }
-      });
-
-    const target = new Date();
-    target.setDate(target.getDate() + ((5 + 7 - target.getDay()) % 7 || 7));
-    target.setHours(20, 0, 0, 0);
-    const timer = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = Math.max(0, target.getTime() - now);
-      setTimeLeft({
-        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-        mins: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-        secs: Math.floor((distance % (1000 * 60)) / 1000)
-      });
-      setCurrentTime(new Date());
-    }, 1000);
-    return () => clearInterval(timer);
+      .then(({ count }) => setMemberCount(Math.max(count ?? 0, 10)));
   }, []);
 
   const hour = new Date().getHours();
@@ -81,356 +50,242 @@ export default function Landing() {
   if (hour >= 5 && hour < 12) timeOfDay = "morning";
   else if (hour >= 12 && hour < 18) timeOfDay = "afternoon";
 
-  const bgUrl = "https://images.unsplash.com/photo-1547756536-cde3673fa2e5?q=80&w=2141&auto=format&fit=crop";
+  let bgUrl = new URL('../assets/hogwarts_night.png', import.meta.url).href;
+  if (timeOfDay === "morning") bgUrl = new URL('../assets/hogwarts_morning.png', import.meta.url).href;
+  else if (timeOfDay === "afternoon") bgUrl = new URL('../assets/hogwarts_afternoon.png', import.meta.url).href;
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-[#050505] selection:bg-primary/30 selection:text-primary">
+    <div className="relative min-h-screen overflow-x-hidden bg-background">
       <MagicalParticles />
 
-      {/* ── PERSISTENT NAV ── */}
-      <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 px-4 md:px-12 flex items-center justify-between ${scrollY > 50 || mobileMenuOpen ? "bg-black/80 backdrop-blur-2xl border-b border-white/5 py-3 md:py-4" : "py-6 md:py-8"}`}>
-        <div className="flex items-center gap-3">
-          <div className="relative group cursor-pointer" onClick={() => navigate("/")}>
-            <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-white/5 rounded-xl md:rounded-2xl flex items-center justify-center border border-white/10 shadow-2xl transition-transform group-hover:scale-110">
-               <Trophy size={20} className="text-yellow-400 md:text-yellow-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]" />
-            </div>
-          </div>
-          <div>
-            <span className="font-heading text-lg md:text-2xl text-gold-gradient tracking-tighter block leading-none">Hogwarts</span>
-            <span className="font-heading text-[8px] md:text-[10px] text-primary uppercase tracking-[0.4em] leading-none mt-1 block opacity-70">Portal Oficial</span>
-          </div>
+      {/* ── HERO ── */}
+      <div className="relative min-h-screen flex flex-col items-center justify-center px-4 text-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img src={bgUrl} alt="Hogwarts Castle" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-background" />
         </div>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-6">
-           {/* Monster Quality Live Clock */}
-           <div className="flex items-center gap-3 px-4 py-2 bg-black/40 backdrop-blur-md border border-white/10 rounded-xl shadow-[0_0_15px_rgba(251,191,36,0.1)]">
-             <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
-             <span className="text-[9px] font-heading text-primary/80 uppercase tracking-widest">{currentTime.toLocaleDateString('pt-BR', { weekday: 'long' }).split('-')[0]}</span>
-             <div className="w-px h-3 bg-white/20" />
-             <span className="text-[10px] font-mono font-medium text-white/90 tracking-wider">{currentTime.toLocaleTimeString('pt-BR')}</span>
-           </div>
-           <button onClick={() => navigate("/login")} className="text-[10px] font-heading text-white/50 hover:text-white transition-colors tracking-widest uppercase">Entrar</button>
-           <button onClick={() => navigate("/register")}
-            className="group relative px-8 py-3 rounded-2xl bg-primary text-white font-heading text-[10px] tracking-widest overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_10px_30px_rgba(var(--primary),0.3)]">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-            <span className="relative z-10 flex items-center gap-2">SOLICITAR VAGA <ChevronRight size={14} /></span>
+        <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-6 py-4">
+          <span className="font-heading text-lg text-gold-gradient drop-shadow-md">✦ Hogwarts House</span>
+          <button onClick={() => navigate("/login")}
+            className="text-sm font-heading text-white bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 hover:border-primary/50 transition-all px-5 py-2 rounded-full shadow-lg">
+            Entrar
           </button>
         </div>
 
-        {/* Mobile Menu Toggle */}
-        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 text-white/70 hover:text-white transition-colors">
-           {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <div className={`relative z-20 transition-all duration-1000 ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
 
-        {/* Mobile Menu Content */}
-        {mobileMenuOpen && (
-          <div className="absolute top-full left-0 right-0 bg-black/95 backdrop-blur-3xl border-b border-white/10 p-8 flex flex-col items-center gap-6 animate-in slide-in-from-top-10 duration-300 md:hidden">
-             {/* Monster Quality Live Clock Mobile */}
-             <div className="flex items-center gap-3 px-5 py-2.5 bg-white/5 border border-white/10 rounded-xl w-full justify-center shadow-[0_0_15px_rgba(251,191,36,0.05)]">
-               <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-               <span className="text-[10px] font-heading text-primary/80 uppercase tracking-widest">{currentTime.toLocaleDateString('pt-BR', { weekday: 'long' }).split('-')[0]}</span>
-               <div className="w-px h-3 bg-white/20" />
-               <span className="text-[11px] font-mono font-medium text-white/90 tracking-wider">{currentTime.toLocaleTimeString('pt-BR')}</span>
-             </div>
-             <button onClick={() => { navigate("/login"); setMobileMenuOpen(false); }} className="text-sm font-heading text-white/70 uppercase tracking-[0.2em]">Entrar no Castelo</button>
-             <button onClick={() => { navigate("/register"); setMobileMenuOpen(false); }} className="w-full py-4 rounded-2xl bg-primary text-white font-heading text-sm tracking-widest">SOLICITAR MINHA VAGA</button>
-             <div className="flex gap-6 mt-4">
-                <span className="text-[10px] font-heading text-white/30 uppercase tracking-widest">Regras</span>
-                <span className="text-[10px] font-heading text-white/30 uppercase tracking-widest">Sobre o Projeto</span>
-             </div>
-          </div>
-        )}
-      </nav>
-
-      {/* ── HERO SECTION (MONSTER PARALLAX) ── */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center pt-24 md:pt-20 px-4 text-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <div 
-            className="w-full h-[120vh] transition-transform duration-300 ease-out will-change-transform"
-            style={{ transform: `translateY(${scrollY * 0.4}px) scale(${1 + scrollY * 0.0005})` }}
-          >
-            <img src={bgUrl} alt="Hogwarts Castle" className="w-full h-full object-cover opacity-60" />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/40 via-transparent to-[#050505]" />
-          </div>
-          
-          {/* Magic Light Points */}
-          <div className="absolute top-1/4 left-1/4 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-primary/20 rounded-full blur-[100px] md:blur-[140px] animate-pulse-glow" />
-          <div className="absolute bottom-1/4 right-1/4 w-[250px] md:w-[500px] h-[250px] md:h-[500px] bg-indigo-500/10 rounded-full blur-[80px] md:blur-[120px]" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)]" />
-        </div>
-
-        <div className={`relative z-20 w-full max-w-6xl transition-all duration-1000 delay-300 ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"}`}>
-          
-          {/* Floating Badge - Next Gen */}
-          <div className="inline-flex items-center gap-2 md:gap-3 bg-white/5 backdrop-blur-3xl border border-white/10 rounded-full px-4 md:px-6 py-2 mb-8 md:mb-12 shadow-[0_0_30px_rgba(0,0,0,0.5)] animate-float">
-             <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-primary animate-ping" />
-             <span className="text-[8px] md:text-[10px] font-heading text-white tracking-[0.4em] uppercase">Mundo Aberto • Roleplay Imersivo</span>
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/30 rounded-full px-4 py-1.5 mb-6">
+            <Sparkles size={12} className="text-primary animate-pulse" />
+            <span className="text-xs font-heading text-primary tracking-widest uppercase">Portal Oficial de Fãs · RPG & Comunidade</span>
           </div>
 
-          <h1 className="relative font-heading text-6xl sm:text-7xl md:text-8xl lg:text-[13rem] text-gold-gradient mb-4 md:mb-6 tracking-tighter leading-[0.75] drop-shadow-[0_20px_60px_rgba(0,0,0,1)] animate-in zoom-in-95 duration-1000 px-2 group cursor-default">
-            <span className="animate-shimmer bg-[length:200%_auto] inline-block hover:scale-[1.02] transition-transform duration-700">Hogwarts</span><br/>
-            <span className="text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.15)] inline-block hover:scale-[1.02] transition-transform duration-700">House</span>
+          {/* Title */}
+          <h1 className="font-heading text-5xl sm:text-6xl md:text-8xl text-gold-gradient mb-3 tracking-wide drop-shadow-2xl">
+            Hogwarts House
           </h1>
+          <div className="w-32 h-px bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mb-5" />
 
-          <div className="flex flex-col items-center gap-4 md:gap-8 mb-14 md:mb-20 px-4">
-             <div className="flex items-center justify-center gap-4 md:gap-8">
-                <div className="h-[2px] w-12 md:w-32 bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
-                <p className="text-[10px] md:text-xl font-heading text-primary uppercase tracking-[0.4em] md:tracking-[0.8em] drop-shadow-[0_0_20px_rgba(251,191,36,0.6)]">Viva sua própria lenda</p>
-                <div className="h-[2px] w-12 md:w-32 bg-gradient-to-l from-transparent via-primary/60 to-transparent" />
-             </div>
-          </div>
+          <p className="text-base sm:text-lg text-white/90 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] max-w-xl mx-auto mb-8 leading-relaxed font-serif font-medium bg-black/20 p-4 rounded-2xl backdrop-blur-sm border border-white/5">
+            O portal de fãs de Harry Potter com gamificação, RPG, álbum de figurinhas, 
+            loja mágica e uma comunidade que vive e respira magia.
+          </p>
 
-          <div className="flex flex-col sm:flex-row gap-6 md:gap-8 justify-center items-center scale-100 md:scale-110 px-6">
-             <button 
-              onClick={() => { play('click'); navigate("/register"); }}
-              onMouseEnter={() => play('hover')}
-              className="w-full sm:w-auto group relative px-12 md:px-20 py-5 md:py-8 rounded-2xl md:rounded-[2rem] bg-primary text-white font-heading text-sm md:text-2xl tracking-[0.3em] overflow-hidden shadow-[0_20px_50px_rgba(var(--primary),0.5)] hover:scale-105 hover:shadow-primary/70 transition-all duration-500 active:scale-95 border border-white/20">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-              <div className="flex items-center justify-center gap-3 md:gap-5">
-                 <Wand2 size={24} className="md:size-[32px] group-hover:rotate-12 group-hover:scale-110 transition-all duration-500" />
-                 SOLICITAR VAGA
-                 <ChevronRight size={24} className="md:size-[32px] group-hover:translate-x-2 transition-transform" />
-              </div>
-            </button>
-          </div>
-        </div>
-
-        {/* Scroll Down Hint */}
-        <div className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-40">
-           <span className="text-[8px] md:text-[10px] font-heading tracking-widest text-white">DESCER</span>
-           <div className="w-px h-8 md:h-12 bg-gradient-to-b from-white to-transparent" />
-        </div>
-      </section>
-
-      {/* ── LIVE DATA BAR (TRIPLE-A GLORY) ── */}
-      <section className="relative z-30 -mt-10 md:-mt-24 px-4 md:px-6">
-         <div className="max-w-7xl mx-auto glass rounded-[3rem] md:rounded-[5rem] border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.9)] p-8 md:p-16 overflow-hidden relative group">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(251,191,36,0.1),transparent_70%)]" />
-            
-            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-16 items-center">
-               
-               <div className="lg:col-span-4 space-y-8 md:space-y-12 text-center lg:text-left">
-                  <div className="space-y-4">
-                     <div className="flex items-center justify-center lg:justify-start gap-4">
-                        <div className="w-12 h-12 md:w-16 md:h-16 bg-yellow-500/10 rounded-2xl border border-yellow-500/30 flex items-center justify-center shadow-[0_0_30px_rgba(234,179,8,0.2)]">
-                           <Trophy size={28} className="text-yellow-400 animate-pulse-glow" />
-                        </div>
-                        <div>
-                           <h3 className="font-heading text-2xl md:text-3xl text-white tracking-tighter uppercase">Copa das Casas</h3>
-                           <p className="text-[10px] font-heading text-primary uppercase tracking-[0.4em] opacity-60">Status de Glória • 2024</p>
-                        </div>
-                     </div>
-                     <p className="text-white/40 text-xs md:text-base font-serif italic leading-relaxed">
-                        "Onde cada ponto conquistado ecoa pelos corredores do castelo e consagra seu nome na história."
-                     </p>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-4 md:gap-8 border-t border-white/5 pt-8">
-                     <div className="text-center lg:text-left">
-                        <p className="font-heading text-2xl md:text-4xl text-gold-gradient tracking-tighter leading-none">{stats.wizards}</p>
-                        <p className="text-[8px] md:text-[10px] text-white/30 font-heading tracking-widest mt-2 uppercase">Lendas</p>
-                     </div>
-                     <div className="text-center lg:text-left">
-                        <p className="font-heading text-2xl md:text-4xl text-gold-gradient tracking-tighter leading-none">4</p>
-                        <p className="text-[8px] md:text-[10px] text-white/30 font-heading tracking-widest mt-2 uppercase">Casas</p>
-                     </div>
-                     <div className="text-center lg:text-left">
-                        <p className="font-heading text-2xl md:text-4xl text-gold-gradient tracking-tighter leading-none">{stats.items}+</p>
-                        <p className="text-[8px] md:text-[10px] text-white/30 font-heading tracking-widest mt-2 uppercase">Relíquias</p>
-                     </div>
-                  </div>
-
-                  {/* Next Tournament - High End */}
-                  <div className="relative overflow-hidden rounded-3xl bg-red-950/20 border border-red-500/20 p-6 group/event cursor-pointer hover:bg-red-950/30 transition-all duration-500">
-                     <div className="absolute top-0 right-0 p-4 opacity-10 group-hover/event:scale-125 transition-transform duration-700">
-                        <Zap size={60} className="text-red-500" />
-                     </div>
-                     <div className="flex flex-col gap-4">
-                        <div className="flex justify-between items-center">
-                           <span className="text-[10px] font-heading text-red-400 uppercase tracking-[0.3em]">Próximo Torneio</span>
-                           <span className="text-[10px] font-heading text-white/40 italic">Baile de Inverno</span>
-                        </div>
-                        <div className="flex gap-4">
-                           {[timeLeft.days, timeLeft.hours, timeLeft.mins, timeLeft.secs].map((t, i) => (
-                              <div key={i} className="flex-1 text-center">
-                                 <p className="text-2xl md:text-3xl font-heading text-white leading-none">{String(t).padStart(2, '0')}</p>
-                                 <p className="text-[8px] text-white/20 font-heading mt-1">{['DIAS', 'HORAS', 'MINS', 'SEGS'][i]}</p>
-                              </div>
-                           ))}
-                        </div>
-                     </div>
-                  </div>
-               </div>
-
-               <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
-                  {HOUSES.map((house) => {
-                    const points = housePoints[house.id] || 0;
-                    const maxPoints = Math.max(...Object.values(housePoints), 100);
-                    const progress = (points / maxPoints) * 100;
-                    return (
-                      <div key={house.name} className={`glass rounded-[2rem] md:rounded-[3rem] p-8 border border-white/5 bg-white/[0.01] hover:bg-white/[0.04] transition-all duration-700 hover:-translate-y-2 group/h shadow-2xl`}>
-                        <div className="flex items-center justify-between mb-6">
-                           <div className="flex items-center gap-4">
-                              <span className="text-4xl md:text-6xl group-hover/h:scale-110 transition-transform duration-700 filter drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">{house.animal}</span>
-                              <div>
-                                 <p className="text-[10px] md:text-xs font-heading text-white/30 uppercase tracking-[0.2em]">{house.name}</p>
-                                 <h4 className="text-xl md:text-2xl font-heading text-white">{points} PTS</h4>
-                              </div>
-                           </div>
-                           <div className="w-1.5 h-1.5 rounded-full bg-primary animate-ping" />
-                        </div>
-                        <div className="h-2.5 w-full bg-black/40 rounded-full overflow-hidden border border-white/5 p-[2px]">
-                            <div 
-                              className={`h-full rounded-full bg-gradient-to-r ${house.color} transition-all duration-1000 ease-out relative shadow-[0_0_20px_rgba(var(--primary),0.3)]`} 
-                              style={{ width: `${Math.max(progress, 5)}%` }} 
-                            >
-                               <div className="absolute inset-0 bg-white/20 opacity-0 group-hover/h:opacity-100 transition-opacity animate-shimmer" />
-                            </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-               </div>
-
+          {/* Stats */}
+          <div className="flex items-center justify-center gap-6 mb-8 flex-wrap">
+            <div className="text-center">
+              <p className="font-heading text-2xl text-primary">
+                {memberCount !== null ? memberCount.toLocaleString("pt-BR") : "..."}
+              </p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Bruxos</p>
             </div>
-         </div>
-      </section>
+            <div className="w-px h-8 bg-border" />
+            <div className="text-center">
+              <p className="font-heading text-2xl text-primary">4</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Casas</p>
+            </div>
+            <div className="w-px h-8 bg-border" />
+            <div className="text-center">
+              <p className="font-heading text-2xl text-primary">28+</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Itens na Loja</p>
+            </div>
+            <div className="w-px h-8 bg-border" />
+            <div className="text-center">
+              <p className="font-heading text-2xl text-primary">∞</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Magia</p>
+            </div>
+          </div>
 
-      {/* ── FEATURES (MONSTER QUALITY CARDS) ── */}
-      <section className="relative z-10 px-6 py-20 md:py-32 max-w-7xl mx-auto">
-        <div className="text-center mb-12 md:mb-20 space-y-3 md:space-y-4">
-           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/30 bg-primary/10 text-primary font-heading text-[8px] md:text-[10px] tracking-[0.2em] md:tracking-[0.3em] uppercase">
-              Recursos Exclusivos
-           </div>
-           <h2 className="font-heading text-3xl md:text-7xl text-white tracking-tighter leading-tight">Muito além de um fórum</h2>
-           <p className="text-white/40 max-w-2xl mx-auto text-sm md:text-lg px-4">
-             Criamos um ecossistema completo onde cada pixel foi desenhado para te fazer esquecer que você está no mundo dos trouxas.
-           </p>
+          {/* Dynamic time-of-day card */}
+          <div className="glass rounded-2xl px-6 py-4 mb-6 max-w-md mx-auto border border-primary/20 text-center">
+            <p className="text-primary font-heading text-xs tracking-widest uppercase mb-1">
+              {timeOfDay === "morning" ? "Amanhecer Mágico" : timeOfDay === "afternoon" ? "Tarde em Hogwarts" : "Magia Noturna"}
+            </p>
+            <p className="text-muted-foreground text-sm font-serif leading-relaxed">
+              {timeOfDay === "morning"
+                ? "Os primeiros raios de sol iluminam as portas de carvalho do castelo. O Grande Salão desperta com o voo das corujas."
+                : timeOfDay === "afternoon"
+                ? "O sol da tarde aquece as pedras milenares de Hogwarts. Pelas janelas, você pode ver os alunos praticando feitiços nos jardins."
+                : "O castelo repousa sob um céu estrelado. Os feitiços brilham mais forte à noite. Os segredos aguardam na escuridão."}
+            </p>
+          </div>
+
+          {/* CTA */}
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
+            <Button variant="magical" size="lg" onClick={() => navigate("/register")}
+              className="font-heading text-base px-10 py-4 h-auto shadow-lg shadow-primary/20 hover:shadow-primary/40">
+              <Sparkles size={16} className="mr-2" />
+              Solicitar minha vaga
+              <ChevronRight size={16} className="ml-1" />
+            </Button>
+            <Button variant="outline" size="lg" onClick={() => navigate("/login")}
+              className="font-heading text-base px-8 py-4 h-auto border-border/50 hover:border-primary/40">
+              Já tenho conta
+            </Button>
+          </div>
+
+          <p className="text-[11px] text-muted-foreground/60">
+            Gratuito para entrar · Conteúdo premium disponível na Gringotts
+          </p>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 px-2 md:px-0">
-          {FEATURES.map((f, i) => (
-            <div key={i} className={`group relative glass rounded-[2.5rem] md:rounded-[3rem] p-8 md:p-10 border border-white/10 transition-all duration-500 hover:-translate-y-2 md:hover:-translate-y-4 hover:bg-white/[0.04] overflow-hidden ${f.color}`}>
-              <div className="absolute -bottom-10 -right-10 opacity-[0.03] rotate-12 transition-transform group-hover:scale-150 group-hover:rotate-0 duration-700 pointer-events-none">
-                 {f.icon}
-              </div>
-              
-              <div className="relative z-10 space-y-4 md:space-y-6">
-                 <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl md:rounded-3xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:scale-110 group-hover:bg-primary/20 transition-all">
-                    {f.icon}
-                 </div>
-                 <div className="space-y-2 md:space-y-3">
-                    <h3 className="font-heading text-xl md:text-2xl text-white tracking-tight">{f.title}</h3>
-                    <p className="text-white/40 leading-relaxed font-serif italic text-xs md:text-base">{f.desc}</p>
-                 </div>
-              </div>
+      {/* ── CASAS ── */}
+      <div className="relative z-10 px-4 py-16 max-w-5xl mx-auto">
+        <div className="text-center mb-10">
+          <p className="text-xs font-heading text-primary uppercase tracking-widest mb-2">Escolha seu destino</p>
+          <h2 className="font-heading text-3xl md:text-4xl text-foreground">Qual é a sua casa?</h2>
+          <p className="text-muted-foreground text-sm mt-2 max-w-md mx-auto">
+            O Chapéu Seletor aguarda. Entre no portal e descubra onde você pertence.
+          </p>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {HOUSES.map(h => (
+            <div key={h.id} onClick={() => navigate("/register")}
+              className={`glass rounded-2xl p-5 border bg-gradient-to-br ${h.color} text-center cursor-pointer hover:-translate-y-2 hover:shadow-lg transition-all duration-300 group`}>
+              <div className="text-4xl mb-2 group-hover:scale-110 transition-transform">{h.animal}</div>
+              <h3 className="font-heading text-base text-foreground">{h.name}</h3>
+              <p className="text-[11px] text-muted-foreground mt-1">{h.trait}</p>
             </div>
           ))}
         </div>
-      </section>
+      </div>
 
-      {/* ── SHOP PREVIEW (MONSTER QUALITY) ── */}
-      <section className="relative z-10 px-4 md:px-6 py-12 md:py-20 max-w-7xl mx-auto">
-         <div className="relative overflow-hidden rounded-[3rem] md:rounded-[4rem] bg-gradient-to-br from-white/[0.05] to-black p-8 md:p-20 border border-yellow-500/20 shadow-[0_50px_100px_rgba(0,0,0,0.8)]">
-            
-            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-center">
-               <div className="space-y-6 md:space-y-8 text-center lg:text-left">
-                  <div className="inline-flex items-center gap-2 md:gap-3 bg-yellow-500/10 border border-yellow-500/30 rounded-full px-4 md:px-5 py-1.5 md:py-2 mx-auto lg:mx-0">
-                    <Crown size={16} className="text-yellow-400 md:text-yellow-400" />
-                    <span className="text-[10px] md:text-xs font-heading text-yellow-400 uppercase tracking-widest">Loja Gringotts • Status VIP</span>
-                  </div>
-                  <h2 className="font-heading text-3xl md:text-7xl text-white tracking-tighter leading-tight md:leading-none">
-                    Economia <span className="text-gold-gradient">Mágica</span> Real
-                  </h2>
-                  <p className="text-white/50 text-sm md:text-xl leading-relaxed max-w-xl mx-auto lg:mx-0">
-                    Ganhe Galeões participando de eventos, subindo de nível e completando desafios. Use seu ouro para comprar varinhas lendárias e mantos raros.
-                  </p>
-                  <Button variant="magical" onClick={() => navigate("/register")} className="w-full sm:w-auto h-14 md:h-16 px-8 md:px-10 text-sm md:text-lg font-heading rounded-2xl shadow-yellow-500/20">
-                     VER CATÁLOGO DA LOJA <ChevronRight size={16} className="ml-2" />
-                  </Button>
-               </div>
+      {/* ── FEATURES ── */}
+      <div className="relative z-10 px-4 py-16 bg-gradient-to-b from-transparent via-secondary/20 to-transparent">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-10">
+            <p className="text-xs font-heading text-primary uppercase tracking-widest mb-2">Tudo que você precisa</p>
+            <h2 className="font-heading text-3xl md:text-4xl text-foreground">O portal mais completo do fandom</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {FEATURES.map((f, i) => (
+              <div key={i} className={`glass rounded-2xl p-5 border ${f.color} hover:-translate-y-1 transition-transform`}>
+                <div className="mb-3">{f.icon}</div>
+                <h3 className="font-heading text-base text-foreground mb-1">{f.title}</h3>
+                <p className="text-[12px] text-muted-foreground leading-relaxed">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
-               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 scale-100 lg:scale-110">
-                  {[
-                    { label: "Varinha das Varinhas", price: "2.500 🪙", icon: <Wand2 size={32} className="text-yellow-500" />, rarity: "LENDÁRIO" },
-                    { label: "Manto Invisibilidade", price: "4.000 🪙", icon: <Shield size={32} className="text-blue-500" />, rarity: "MÍSTICO" },
-                    { label: "Vira-Tempo", price: "1.200 🪙", icon: <Sparkles size={32} className="text-purple-500" />, rarity: "EPICO" },
-                    { label: "Ovo de Dragão", price: "5.000 🪙", icon: <Flame size={32} className="text-red-500" />, rarity: "LENDÁRIO" }
-                  ].map((item, i) => (
-                    <div key={i} className="glass rounded-[2rem] p-6 md:p-8 border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] transition-all group cursor-pointer flex flex-row sm:flex-col items-center gap-4 sm:gap-4 text-left sm:text-center">
-                       <div className="w-12 h-12 sm:w-16 sm:h-16 bg-black/40 rounded-2xl flex items-center justify-center border border-white/10 group-hover:scale-110 transition-transform shrink-0">
-                          {item.icon}
-                       </div>
-                       <div className="flex-1">
-                          <p className="text-[8px] md:text-[10px] font-heading text-primary uppercase mb-0.5 tracking-widest">{item.rarity}</p>
-                          <h4 className="font-heading text-sm md:text-lg text-white mb-1">{item.label}</h4>
-                          <p className="text-yellow-400 font-heading text-xs md:text-sm">{item.price}</p>
-                       </div>
-                    </div>
-                  ))}
-               </div>
+      {/* ── MONETIZAÇÃO PREVIEW ── */}
+      <div className="relative z-10 px-4 py-16 max-w-4xl mx-auto">
+        <div className="glass rounded-3xl p-8 md:p-10 border border-yellow-500/30 bg-gradient-to-br from-yellow-900/20 to-amber-900/10 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-yellow-400/60 to-transparent" />
+          <div className="absolute -top-20 -right-20 w-64 h-64 bg-yellow-500/5 rounded-full blur-3xl" />
+          <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
+            <div className="flex-1 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/30 rounded-full px-3 py-1 mb-4">
+                <Crown size={12} className="text-yellow-400" />
+                <span className="text-[10px] font-heading text-yellow-400 uppercase tracking-widest">Gringotts · VIP</span>
+              </div>
+              <h2 className="font-heading text-2xl md:text-3xl text-foreground mb-3">
+                Galeões, itens e status de bruxo premium
+              </h2>
+              <p className="text-sm text-muted-foreground mb-5 leading-relaxed">
+                Compre Galeões para adquirir itens exclusivos na loja. Assine o VIP e receba Galeões todo mês, badge exclusivo, XP bônus e acesso a conteúdos secretos.
+              </p>
+              <div className="flex flex-wrap gap-2 justify-center md:justify-start mb-5">
+                {["👑 VIP a partir de R$9,90/mês", "🪙 Galeões a partir de R$4,90", "✨ Cancele quando quiser"].map(b => (
+                  <span key={b} className="text-[11px] bg-yellow-900/30 border border-yellow-500/20 text-yellow-300 px-3 py-1 rounded-full">{b}</span>
+                ))}
+              </div>
+              <Button variant="magical" onClick={() => navigate("/register")} className="font-heading">
+                Entrar e ver a loja <ChevronRight size={14} className="ml-1" />
+              </Button>
             </div>
-         </div>
-      </section>
+            <div className="shrink-0 grid grid-cols-2 gap-3 w-full md:w-auto">
+              {[
+                { icon: "👑", label: "Fundador", price: "R$ 39,90/mês", glow: "border-yellow-400/50" },
+                { icon: "💜", label: "VIP",      price: "R$ 19,90/mês", glow: "border-purple-400/50" },
+                { icon: "⭐", label: "Premium",  price: "R$ 9,90/mês",  glow: "border-slate-400/40" },
+                { icon: "🪙", label: "Galeões",  price: "a partir de R$4,90", glow: "border-amber-500/40" },
+              ].map(p => (
+                <div key={p.label} className={`glass rounded-xl p-4 border ${p.glow} text-center hover:scale-105 transition-transform`}>
+                  <div className="text-2xl mb-1">{p.icon}</div>
+                  <p className="font-heading text-xs text-foreground">{p.label}</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">{p.price}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
 
-      {/* ── FINAL CALL TO ACTION ── */}
-      <section className="relative z-10 px-6 py-24 md:py-40 text-center">
-         <div className="max-w-4xl mx-auto space-y-8 md:space-y-12">
-            <div className="relative inline-block">
-               <div className="absolute inset-0 bg-primary/40 blur-2xl md:blur-3xl rounded-full animate-pulse" />
-               <div className="relative z-10 text-7xl md:text-[10rem] animate-float">✉️</div>
+      {/* ── DEPOIMENTOS ── */}
+      <div className="relative z-10 px-4 py-12 max-w-4xl mx-auto">
+        <div className="text-center mb-8">
+          <p className="text-xs font-heading text-primary uppercase tracking-widest mb-2">O que dizem os membros</p>
+          <h2 className="font-heading text-2xl text-foreground">Bruxos reais, experiências reais</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {TESTIMONIALS.map((t, i) => (
+            <div key={i} className="glass rounded-2xl p-5 border border-border/30">
+              <div className="text-2xl mb-3">{t.emoji}</div>
+              <p className="text-sm text-foreground italic mb-3">"{t.quote}"</p>
+              <p className="text-xs text-muted-foreground font-heading">— {t.name}</p>
             </div>
-            <div className="space-y-3 md:space-y-4 px-2">
-               <h2 className="font-heading text-3xl md:text-8xl text-gold-gradient tracking-tighter drop-shadow-2xl leading-tight">
-                 A carta chegou.
-               </h2>
-               <p className="text-white/40 text-base md:text-2xl font-serif italic max-w-2xl mx-auto leading-relaxed">
-                 "Não espere mais. O Expresso de Hogwarts parte em poucos minutos e sua vaga no grande salão está garantida."
-               </p>
-            </div>
-            <div className="pt-4 md:pt-8 flex flex-col items-center gap-6 px-4">
-               <Button variant="magical" size="lg" onClick={() => navigate("/register")} 
-                 className="w-full sm:w-auto h-16 md:h-20 px-10 md:px-16 text-sm md:text-2xl font-heading rounded-2xl md:rounded-3xl shadow-[0_20px_50px_rgba(var(--primary),0.3)] hover:scale-105 transition-all">
-                 ENTRAR AGORA <ChevronRight size={20} className="ml-2" />
-               </Button>
-               <div className="flex flex-wrap items-center justify-center gap-3 md:gap-6 text-white/30 font-heading text-[8px] md:text-xs tracking-[0.2em] uppercase px-4">
-                  <span>✨ Registro Gratuito</span>
-                  <div className="hidden sm:block w-1 h-1 bg-white/20 rounded-full" />
-                  <span>🔮 RPG Ativo 24/7</span>
-                  <div className="hidden sm:block w-1 h-1 bg-white/20 rounded-full" />
-                  <span>🏰 Comunidade Secreta</span>
-               </div>
-            </div>
-         </div>
-      </section>
+          ))}
+        </div>
+      </div>
+
+      {/* ── CTA FINAL ── */}
+      <div className="relative z-10 px-4 py-20 text-center">
+        <div className="max-w-2xl mx-auto">
+          <div className="text-5xl mb-4">⚡</div>
+          <h2 className="font-heading text-3xl md:text-5xl text-gold-gradient mb-4">
+            Sua carta de Hogwarts chegou.
+          </h2>
+          <p className="text-muted-foreground text-sm mb-8 max-w-md mx-auto leading-relaxed">
+            Não perca mais tempo no mundo dos trouxas. A comunidade está te esperando.
+          </p>
+          <Button variant="magical" size="lg" onClick={() => navigate("/register")}
+            className="font-heading text-lg px-12 py-5 h-auto shadow-2xl shadow-primary/30 hover:shadow-primary/50 hover:scale-105 transition-all">
+            <Sparkles size={18} className="mr-2" />
+            Solicitar minha vaga agora
+          </Button>
+          <p className="text-[11px] text-muted-foreground/50 mt-4">
+            {currentTime.toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" })} · Vagas limitadas
+          </p>
+        </div>
+      </div>
 
       {/* ── FOOTER ── */}
-      <footer className="relative z-10 border-t border-white/5 bg-black/40 backdrop-blur-3xl px-6 py-10 md:py-12">
-         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
-            <div className="flex items-center gap-4">
-               <Trophy size={24} className="text-yellow-400" />
-               <div>
-                  <p className="font-heading text-lg text-white tracking-tighter">Hogwarts House</p>
-                  <p className="text-[8px] md:text-[10px] text-white/30 font-heading uppercase tracking-widest">✦ Mundo Yasmin Caroline ✦</p>
-               </div>
-            </div>
-            
-            <div className="flex flex-wrap justify-center gap-6 md:gap-8">
-               <button onClick={() => navigate("/rules")} className="text-[8px] md:text-[10px] font-heading text-white/40 hover:text-white uppercase tracking-[0.2em] transition-colors">Termos & Regras</button>
-               <button onClick={() => navigate("/login")} className="text-[8px] md:text-[10px] font-heading text-white/40 hover:text-white uppercase tracking-[0.2em] transition-colors">Entrar</button>
-               <button onClick={() => navigate("/register")} className="text-[8px] md:text-[10px] font-heading text-primary hover:text-white uppercase tracking-[0.2em] transition-colors">Cadastrar</button>
-            </div>
-
-            <p className="text-[8px] md:text-[9px] text-white/20 max-w-xs italic leading-relaxed">
-              Este é um projeto de fãs para fãs. Harry Potter e todos os personagens são marcas registradas da Warner Bros. Entertainment.
-            </p>
-         </div>
+      <footer className="relative z-10 border-t border-border/30 px-4 py-6 text-center">
+        <p className="text-xs text-muted-foreground/50 font-heading">
+          ✦ Portal Hogwarts House · Mundo Yasmin Caroline · 2026 ✦
+        </p>
+        <p className="text-[10px] text-muted-foreground/30 mt-1">
+          Projeto de fã. Não afiliado à Warner Bros. ou J.K. Rowling.
+        </p>
+        <div className="flex gap-4 justify-center mt-3">
+          <button onClick={() => navigate("/login")} className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground transition-colors">Entrar</button>
+          <button onClick={() => navigate("/register")} className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground transition-colors">Cadastrar</button>
+        </div>
       </footer>
-
-      {/* Background Noise Layer */}
-      <div className="fixed inset-0 pointer-events-none z-[200] opacity-[0.015] bg-[url('https://www.transparenttextures.com/patterns/pinstriped-suit.png')]" />
     </div>
   );
 }

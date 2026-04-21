@@ -213,11 +213,12 @@ export const useAuth = create<AuthState>((set, get) => ({
     const { data: prof } = await supabase.from("profiles").select("current_session_id").eq("user_id", userId).single();
     
     if (prof?.current_session_id && prof.current_session_id !== sessionId) {
-      // Soft check: Only kick if session is significantly different and not just after login
-      console.warn("Session ID mismatch detected. If this persists, the user will be logged out.");
-      // Temporarily disabled kick to stabilize user experience
-      // window.location.href = "/login?kicked=true";
-      // return;
+      // Foi logado em outro dispositivo
+      await supabase.auth.signOut();
+      localStorage.removeItem("hogwarts_session_id");
+      set({ user: null, profile: null, isAuthenticated: false, isAdmin: false });
+      window.location.href = "/login?kicked=true";
+      return;
     }
 
     await supabase

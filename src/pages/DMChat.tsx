@@ -114,96 +114,61 @@ export default function DMChat() {
   }, {} as Record<string, DM[]>);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-140px)] max-w-3xl mx-auto bg-black/40 backdrop-blur-3xl rounded-[3.5rem] overflow-hidden border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] relative animate-in fade-in zoom-in duration-1000">
-      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-      
-      {/* Header - MONSTER QUALITY */}
-      <div className="relative z-10 p-6 md:p-8 border-b border-white/5 bg-gradient-to-b from-white/[0.05] to-transparent flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-6">
-          <button 
-            onClick={() => navigate("/dashboard/dm")} 
-            className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:scale-110 active:scale-95 transition-all shadow-xl group"
-          >
-            <ArrowLeft size={18} className="text-white/40 group-hover:text-white transition-colors" />
-          </button>
-          
-          {partner && (
-            <div className="flex items-center gap-5">
-              <div className="relative group/av">
-                <div className="absolute -inset-1 rounded-full bg-primary/20 blur-md opacity-0 group-hover/av:opacity-100 transition-opacity" />
-                <div className="relative z-10 w-14 h-14 rounded-full border border-white/10 overflow-hidden shadow-2xl">
-                  <SafeImage
-                    src={partner.avatar_url}
-                    alt={partner.full_name}
-                    fallbackText={partner.full_name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-black rounded-full z-20 shadow-lg" />
-              </div>
-              <div>
-                <h2 className="font-heading text-lg text-white tracking-tight leading-none mb-1">{partner.full_name}</h2>
-                <p className="text-[10px] font-heading text-white/20 uppercase tracking-[0.2em]">Bruxo Ativo • @{partner.username}</p>
-              </div>
+    <div className="flex flex-col h-[calc(100vh-120px)] max-w-xl mx-auto">
+      {/* Header */}
+      <div className="glass rounded-2xl p-4 mb-3 flex items-center gap-3 shrink-0">
+        <button onClick={() => navigate("/dashboard/dm")} className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors">
+          <ArrowLeft size={18} />
+        </button>
+        {partner && (
+          <>
+            <SafeImage
+              src={partner.avatar_url}
+              alt={partner.full_name}
+              fallbackText={partner.full_name}
+              className="w-10 h-10 rounded-full object-cover"
+            />
+            <div>
+              <p className="font-heading text-sm text-foreground">{partner.full_name}</p>
+              <p className="text-xs text-muted-foreground">@{partner.username}</p>
             </div>
-          )}
-        </div>
+          </>
+        )}
       </div>
 
-      {/* Messages - MONSTER QUALITY */}
-      <div className="relative z-10 flex-1 overflow-y-auto px-8 py-8 space-y-6 scroll-smooth custom-scrollbar">
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto space-y-1 px-1 pb-2">
         {loading ? (
-          <div className="h-full flex flex-col items-center justify-center space-y-4 opacity-20">
-             <div className="w-12 h-12 border-t-2 border-primary rounded-full animate-spin" />
-             <p className="text-[10px] font-heading text-white uppercase tracking-[0.5em]">Buscando Pergaminhos...</p>
-          </div>
+          <p className="text-center text-muted-foreground py-10 text-sm">Buscando penas e pergaminhos...</p>
         ) : messages.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-center space-y-6 opacity-30">
-             <div className="w-24 h-24 bg-white/5 rounded-full border border-white/5 flex items-center justify-center">
-                <span className="text-5xl animate-float">🦉</span>
-             </div>
-             <div>
-                <p className="text-[10px] font-heading text-white uppercase tracking-[0.5em]">O silêncio do Corujal...</p>
-                <p className="text-[9px] font-heading text-white/40 uppercase tracking-[0.3em] mt-2">Envie uma coruja e comece a conversa.</p>
-             </div>
+          <div className="text-center py-16">
+            <div className="text-4xl mb-3">🦉</div>
+            <p className="text-muted-foreground text-sm">Nenhuma mensagem ainda.<br />Seja o primeiro a escrever!</p>
           </div>
         ) : (
           Object.entries(groupedByDate).map(([date, msgs]) => (
-            <div key={date} className="space-y-6">
-              <div className="flex items-center gap-4 py-4">
-                <div className="flex-1 h-px bg-white/5" />
-                <span className="text-[9px] font-heading text-white/20 uppercase tracking-[0.4em]">{date}</span>
-                <div className="flex-1 h-px bg-white/5" />
+            <div key={date}>
+              <div className="flex items-center gap-2 my-3">
+                <div className="flex-1 h-px bg-border/50" />
+                <span className="text-[10px] text-muted-foreground px-2">{date}</span>
+                <div className="flex-1 h-px bg-border/50" />
               </div>
-              
               {msgs.map(m => {
                 const isMe = m.sender_id === user?.id;
                 return (
-                  <div key={m.id} className={`flex ${isMe ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-2 duration-500`}>
+                  <div key={m.id} className={`flex mb-1 ${isMe ? "justify-end" : "justify-start"}`}>
                     <div
-                      className={`relative group max-w-[80%] md:max-w-[70%] px-6 py-4 rounded-[2rem] shadow-2xl transition-all duration-500 ${
+                      className={`max-w-[75%] px-4 py-2 rounded-2xl text-sm leading-relaxed shadow-sm ${
                         isMe
-                          ? "bg-primary text-white rounded-br-lg shadow-[0_15px_30px_rgba(251,191,36,0.2)]"
-                          : "bg-white/[0.03] border border-white/5 text-white/90 rounded-bl-lg hover:bg-white/[0.05] hover:border-white/10"
+                          ? "bg-primary text-primary-foreground rounded-br-sm"
+                          : "glass rounded-bl-sm text-foreground"
                       }`}
                     >
-                      {/* Inner Shine */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent pointer-events-none rounded-[2rem]" />
-                      
-                      <p className="relative z-10 text-sm md:text-base leading-relaxed break-words whitespace-pre-wrap font-serif italic">
-                        {m.content}
+                      <p className="break-words whitespace-pre-wrap">{m.content}</p>
+                      <p className={`text-[10px] mt-1 text-right ${isMe ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
+                        {new Date(m.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+                        {isMe && <span className="ml-1">{m.read ? " ✓✓" : " ✓"}</span>}
                       </p>
-                      
-                      <div className={`relative z-10 flex items-center justify-end gap-2 mt-2 opacity-40 group-hover:opacity-100 transition-opacity`}>
-                        <span className="text-[9px] font-heading uppercase tracking-widest">
-                          {new Date(m.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
-                        </span>
-                        {isMe && (
-                          <span className="text-[10px] font-bold">
-                            {m.read ? "✓✓" : "✓"}
-                          </span>
-                        )}
-                      </div>
                     </div>
                   </div>
                 );
@@ -214,37 +179,24 @@ export default function DMChat() {
         <div ref={bottomRef} />
       </div>
 
-      {/* Input - MONSTER QUALITY */}
-      <div className="relative z-20 p-8 border-t border-white/5 bg-gradient-to-t from-black/80 to-transparent shrink-0">
-        <div className="max-w-2xl mx-auto flex gap-4 items-end">
-          <div className="flex-1 relative group/input">
-            <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-transparent blur-xl opacity-0 group-focus-within/input:opacity-100 transition-opacity duration-1000" />
-            <textarea
-              value={text}
-              onChange={e => setText(e.target.value)}
-              onKeyDown={handleKey}
-              placeholder="Sussurre seu segredo..."
-              rows={1}
-              className="w-full relative z-10 bg-black/60 backdrop-blur-2xl border border-white/5 focus:border-primary/40 rounded-[2rem] px-8 py-5 text-base text-white placeholder:text-white/20 focus:outline-none transition-all shadow-inner font-serif italic resize-none max-h-32 leading-relaxed"
-              style={{ minHeight: "64px" }}
-              disabled={sending}
-            />
-          </div>
-          
-          <button
-            onClick={send}
-            disabled={!text.trim() || sending}
-            className={`w-16 h-16 rounded-[1.8rem] flex items-center justify-center relative z-10 shadow-2xl transition-all duration-500 hover:scale-105 active:scale-95 shrink-0 ${
-              !text.trim() || sending ? 'bg-white/5 border border-white/10 text-white/20 cursor-not-allowed' : 'bg-primary text-white shadow-[0_15px_30px_rgba(251,191,36,0.3)]'
-            }`}
-          >
-            {sending ? (
-              <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-            ) : (
-              <Send size={24} className="drop-shadow-lg" />
-            )}
-          </button>
-        </div>
+      {/* Input */}
+      <div className="glass rounded-2xl p-3 flex items-end gap-2 shrink-0 mt-2">
+        <textarea
+          value={text}
+          onChange={e => setText(e.target.value)}
+          onKeyDown={handleKey}
+          placeholder="Escreva uma mensagem..."
+          rows={1}
+          className="flex-1 bg-transparent text-foreground text-sm placeholder:text-muted-foreground resize-none focus:outline-none max-h-32 leading-relaxed py-1"
+          style={{ minHeight: "36px" }}
+        />
+        <button
+          onClick={send}
+          disabled={!text.trim() || sending}
+          className="p-2 rounded-xl bg-primary text-primary-foreground disabled:opacity-40 hover:bg-primary/90 transition-colors shrink-0"
+        >
+          <Send size={16} />
+        </button>
       </div>
     </div>
   );

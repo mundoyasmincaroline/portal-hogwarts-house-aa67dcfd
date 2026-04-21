@@ -60,9 +60,9 @@ export default function DMInbox() {
 
     if (partnerMap.size === 0) { setThreads([]); setLoading(false); return; }
 
-    // Fetch partner profiles with HOUSE info
+    // Fetch partner profiles
     const ids = Array.from(partnerMap.keys());
-    const { data: profiles } = await supabase.from("profiles").select("user_id, full_name, username, avatar_url, house").in("user_id", ids);
+    const { data: profiles } = await supabase.from("profiles").select("user_id, full_name, username, avatar_url").in("user_id", ids);
 
     const result: DMThread[] = ids.map(pid => {
       const prof = profiles?.find(p => p.user_id === pid);
@@ -72,7 +72,6 @@ export default function DMInbox() {
         partner_name: prof?.full_name || "Bruxo desconhecido",
         partner_username: prof?.username || "",
         partner_avatar: prof?.avatar_url || null,
-        partner_house: prof?.house as any,
         last_message: info.lastMsg.content,
         last_at: info.lastMsg.created_at,
         unread: info.unread,
@@ -84,85 +83,53 @@ export default function DMInbox() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-10 pb-20 animate-in fade-in duration-1000">
-      {/* Hero Header - MONSTER QUALITY */}
-      <div className="relative group overflow-hidden bg-black/40 backdrop-blur-3xl rounded-[3.5rem] border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] p-12 text-center">
-        <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[100px] bg-primary/20 blur-[100px] rounded-full pointer-events-none" />
-        
-        <div className="relative z-10 space-y-6">
-           <div className="w-24 h-24 bg-white/5 rounded-[2.5rem] border border-white/10 flex items-center justify-center mx-auto shadow-2xl group-hover:scale-110 transition-transform duration-700 animate-float">
-              <MessageCircle size={40} className="text-primary drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]" />
-           </div>
-           <div>
-              <h1 className="font-heading text-4xl text-white tracking-tighter mb-4">Corujoteca Real</h1>
-              <p className="text-[10px] font-heading text-white/20 uppercase tracking-[0.5em]">Onde as mensagens voam em silêncio</p>
-           </div>
+    <div className="max-w-xl mx-auto space-y-4">
+      <div className="glass rounded-2xl p-6 flex items-center gap-3">
+        <MessageCircle size={24} className="text-primary" />
+        <div>
+          <h1 className="font-heading text-xl text-gold-gradient">Corujoteca — Mensagens Diretas</h1>
+          <p className="text-xs text-muted-foreground">Suas conversas privadas mágicas</p>
         </div>
       </div>
 
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 space-y-6 opacity-20">
-           <div className="w-12 h-12 border-t-2 border-primary rounded-full animate-spin" />
-           <p className="text-[10px] font-heading text-white uppercase tracking-[0.4em]">Invocando Mensagens...</p>
-        </div>
+        <p className="text-center text-muted-foreground py-10">Acordando as corujas...</p>
       ) : threads.length === 0 ? (
-        <div className="bg-black/20 backdrop-blur-3xl rounded-[3rem] border border-white/5 p-20 text-center space-y-8">
-          <div className="text-6xl animate-pulse grayscale opacity-30">🦉</div>
-          <div className="space-y-2">
-            <p className="text-sm text-white/40 font-serif italic">"Nenhuma coruja cruzou o seu caminho ainda."</p>
-            <p className="text-[10px] font-heading text-white/20 uppercase tracking-widest leading-loose">
-               Visite o perfil de um bruxo e inicie uma conexão mágica.
-            </p>
-          </div>
+        <div className="glass rounded-2xl p-10 text-center">
+          <div className="text-4xl mb-3">🦉</div>
+          <p className="text-muted-foreground text-sm">Nenhuma conversa ainda.<br />Visite o perfil de um membro e clique em "💬 Mensagem".</p>
         </div>
       ) : (
-        <div className="grid gap-4">
+        <div className="space-y-2">
           {threads.map(t => (
             <div
               key={t.partner_id}
               onClick={() => navigate(`/dashboard/dm/${t.partner_id}`)}
-              className="group relative bg-black/40 backdrop-blur-3xl rounded-[2.5rem] border border-white/5 p-6 flex items-center gap-6 cursor-pointer hover:border-white/20 hover:bg-white/5 transition-all duration-500 shadow-xl overflow-hidden"
+              className="glass rounded-xl p-4 flex items-center gap-3 cursor-pointer hover:border-primary/40 border border-transparent transition-colors"
             >
-              {/* House Aura Background */}
-              <div className={`absolute -inset-1.5 opacity-0 group-hover:opacity-10 transition-opacity duration-1000 ${
-                 (t as any).partner_house === 'gryffindor' ? 'bg-red-500' :
-                 (t as any).partner_house === 'slytherin' ? 'bg-green-500' :
-                 (t as any).partner_house === 'ravenclaw' ? 'bg-blue-500' : 'bg-yellow-500'
-              }`} />
-              
               <div className="relative shrink-0">
-                 <div className="w-16 h-16 rounded-2xl border border-white/10 overflow-hidden shadow-2xl group-hover:scale-105 transition-transform duration-500">
-                    <SafeImage
-                      src={t.partner_avatar}
-                      alt={t.partner_name}
-                      fallbackText={t.partner_name}
-                      className="w-full h-full object-cover"
-                    />
-                 </div>
-                 {t.unread > 0 && (
-                   <span className="absolute -top-2 -right-2 w-7 h-7 bg-primary text-white rounded-xl text-[10px] flex items-center justify-center font-heading shadow-[0_10px_20px_rgba(251,191,36,0.4)] animate-bounce">
-                     {t.unread}
-                   </span>
-                 )}
+                <SafeImage
+                  src={t.partner_avatar}
+                  alt={t.partner_name}
+                  fallbackText={t.partner_name}
+                  className="w-12 h-12 rounded-full object-cover"
+                />
+                {t.unread > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground rounded-full text-[10px] flex items-center justify-center font-bold">
+                    {t.unread}
+                  </span>
+                )}
               </div>
-
-              <div className="flex-1 min-w-0 relative z-10">
-                <div className="flex items-center justify-between mb-1.5">
-                  <p className="font-heading text-lg text-white group-hover:text-primary transition-colors truncate tracking-tight">{t.partner_name}</p>
-                  <span className="text-[9px] font-heading text-white/20 uppercase tracking-widest shrink-0 ml-4">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                  <p className="font-heading text-sm text-foreground truncate">{t.partner_name}</p>
+                  <span className="text-[10px] text-muted-foreground shrink-0 ml-2">
                     {new Date(t.last_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
                   </span>
                 </div>
-                <div className="flex items-center gap-3">
-                   <p className={`text-sm truncate font-serif italic ${t.unread > 0 ? "text-white font-medium" : "text-white/30"}`}>
-                     {t.last_message}
-                   </p>
-                </div>
-              </div>
-              
-              <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-4 transition-all duration-500">
-                 <span className="text-white/40 text-xs">→</span>
+                <p className={`text-xs truncate ${t.unread > 0 ? "text-foreground font-medium" : "text-muted-foreground"}`}>
+                  {t.last_message}
+                </p>
               </div>
             </div>
           ))}

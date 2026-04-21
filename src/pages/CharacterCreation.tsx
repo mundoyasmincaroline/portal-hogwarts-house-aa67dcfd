@@ -10,34 +10,21 @@ import MagicalParticles from "@/components/MagicalParticles";
 interface Props { onComplete: () => void; onCancel?: () => void; canCancel?: boolean; }
 
 const FIELD = ({ label, name, value, onChange, placeholder, type = "text", rows }: any) => (
-  <div className="space-y-2 group/field">
-    <label className="text-[10px] font-heading text-primary uppercase tracking-[0.3em] opacity-60 group-focus-within/field:opacity-100 transition-opacity block ml-2">{label}</label>
+  <div>
+    <label className="text-xs font-heading text-muted-foreground block mb-1">{label}</label>
     {rows ? (
-      <textarea 
-        name={name} value={value} onChange={onChange} placeholder={placeholder} rows={rows}
-        className="w-full bg-white/[0.03] backdrop-blur-3xl rounded-2xl px-6 py-4 text-sm text-white/90 focus:outline-none resize-none border border-white/10 focus:border-primary/50 transition-all shadow-inner placeholder:text-white/10" 
-      />
+      <textarea name={name} value={value} onChange={onChange} placeholder={placeholder} rows={rows}
+        className="w-full bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground focus:outline-none resize-none border border-border focus:border-primary/50 transition-colors" />
     ) : (
-      <Input 
-        name={name} type={type} value={value} onChange={onChange} placeholder={placeholder} 
-        className="h-14 bg-white/[0.03] backdrop-blur-3xl rounded-2xl px-6 border-white/10 focus:border-primary/50 text-white shadow-inner placeholder:text-white/10" 
-      />
+      <Input name={name} type={type} value={value} onChange={onChange} placeholder={placeholder} className="bg-secondary/50" />
     )}
   </div>
 );
 
 const SECTION = ({ title, icon, children }: any) => (
-  <div className="relative overflow-hidden bg-black/40 backdrop-blur-3xl rounded-[2.5rem] p-8 md:p-10 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] group/section space-y-8">
-    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover/section:opacity-100 transition-opacity duration-1000" />
-    <div className="flex items-center gap-4 relative z-10 border-b border-white/5 pb-6">
-       <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/40 shadow-inner">
-          <span className="text-xl drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]">{icon}</span>
-       </div>
-       <h3 className="font-heading text-xl text-white tracking-tighter uppercase">{title}</h3>
-    </div>
-    <div className="relative z-10 space-y-6">
-       {children}
-    </div>
+  <div className="glass rounded-xl p-5 space-y-4 border border-border/50">
+    <h3 className="font-heading text-primary flex items-center gap-2">{icon} {title}</h3>
+    {children}
   </div>
 );
 
@@ -168,84 +155,51 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
   // ---------- TELA DE SELEÇÃO ----------
   if (step === "select") {
     return (
-      <div className="relative min-h-screen flex flex-col items-center justify-center p-6 bg-black">
-        {/* Cinematic Auras */}
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-yellow-500/5 blur-[150px] rounded-full animate-pulse-slow" />
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-purple-600/5 blur-[150px] rounded-full animate-pulse-slow" />
-        
+      <div className="relative min-h-screen flex flex-col items-center justify-center p-6">
+        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-0" />
         <MagicalParticles />
-        
-        <div className="relative z-10 max-w-5xl w-full space-y-16">
-          <div className="text-center space-y-4 animate-in fade-in slide-in-from-top-10 duration-1000">
-            <h1 className="font-heading text-6xl md:text-8xl text-gold-gradient tracking-tighter drop-shadow-2xl">
-              CRIAR IDENTIDADE
-            </h1>
-            <p className="text-white/40 font-heading text-xs tracking-[0.5em] uppercase">Manifeste sua alma bruxa no mundo mágico</p>
+        <div className="relative z-10 max-w-3xl w-full">
+          <div className="text-center mb-10">
+            <h1 className="font-heading text-4xl text-gold-gradient mb-3">Criar Ficha de Personagem</h1>
+            <p className="text-muted-foreground">Escolha o tipo de personagem que deseja registrar no portal.</p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            {/* OC - MONSTER CARD */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* OC */}
             <button onClick={() => setStep("oc")}
-              className="relative overflow-hidden rounded-[3.5rem] bg-gradient-to-b from-white/[0.08] to-black p-1 group/oc transition-all duration-700 hover:-translate-y-4 shadow-[0_50px_100px_rgba(0,0,0,0.8)]">
-              <div className="absolute inset-0 bg-yellow-500/10 opacity-0 group-hover/oc:opacity-100 transition-opacity blur-3xl" />
-              <div className="relative glass h-full rounded-[3.3rem] p-10 md:p-14 text-center space-y-8 overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03]" />
-                <div className="relative w-32 h-32 mx-auto bg-yellow-500/10 rounded-[2.5rem] border border-yellow-500/30 flex items-center justify-center group-hover/oc:scale-110 transition-transform duration-700 shadow-2xl">
-                   <span className="text-7xl drop-shadow-[0_0_20px_rgba(251,191,36,0.6)]">⭐</span>
-                </div>
-                <div className="space-y-3">
-                  <h2 className="font-heading text-4xl text-yellow-400 tracking-tighter">PERSONAGEM OC</h2>
-                  <p className="text-white/40 text-sm font-serif italic leading-relaxed">
-                    "Uma tela em branco para sua imaginação mais profunda. Crie uma lenda do zero."
-                  </p>
-                </div>
-                <ul className="text-[10px] text-white/30 space-y-3 font-heading uppercase tracking-[0.2em] pt-4 border-t border-white/5">
-                  <li>✦ Nome e História Originais</li>
-                  <li>✦ Liberdade Criativa Total</li>
-                  <li>✦ Sem Limites Canônicos</li>
-                </ul>
-                <div className="pt-8">
-                   <div className="inline-flex items-center gap-2 text-yellow-500 font-heading text-[10px] tracking-widest uppercase group-hover/oc:gap-4 transition-all">
-                      INICIAR MANIFESTAÇÃO <ChevronLeft className="rotate-180" size={14} />
-                   </div>
-                </div>
-              </div>
+              className="glass rounded-3xl p-8 border border-yellow-500/30 hover:border-yellow-400/70 hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(234,179,8,0.2)] transition-all text-left group">
+              <div className="text-5xl mb-4">⭐</div>
+              <h2 className="font-heading text-2xl text-yellow-400 mb-2">Personagem OC</h2>
+              <p className="text-sm text-muted-foreground mb-4">
+                <strong className="text-foreground">Original Character</strong> — um personagem criado por você! Nome, história, personalidade e aparência são completamente da sua imaginação.
+              </p>
+              <ul className="text-xs text-muted-foreground space-y-1 mb-6">
+                <li>✦ Nome e história originais</li>
+                <li>✦ Livre para criar do zero</li>
+                <li>✦ Personalidade única</li>
+                <li>✦ Sem restrição de personagem</li>
+              </ul>
+              <span className="font-heading text-yellow-400 text-sm group-hover:underline">Criar ficha OC →</span>
             </button>
-
-            {/* Canon - MONSTER CARD */}
+            {/* Canon */}
             <button onClick={() => setStep("canon")}
-              className="relative overflow-hidden rounded-[3.5rem] bg-gradient-to-b from-white/[0.08] to-black p-1 group/canon transition-all duration-700 hover:-translate-y-4 shadow-[0_50px_100px_rgba(0,0,0,0.8)]">
-              <div className="absolute inset-0 bg-purple-500/10 opacity-0 group-hover/canon:opacity-100 transition-opacity blur-3xl" />
-              <div className="relative glass h-full rounded-[3.3rem] p-10 md:p-14 text-center space-y-8 overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03]" />
-                <div className="relative w-32 h-32 mx-auto bg-purple-500/10 rounded-[2.5rem] border border-purple-500/30 flex items-center justify-center group-hover/canon:scale-110 transition-transform duration-700 shadow-2xl">
-                   <span className="text-7xl drop-shadow-[0_0_20px_rgba(168,85,247,0.6)]">📖</span>
-                </div>
-                <div className="space-y-3">
-                  <h2 className="font-heading text-4xl text-purple-400 tracking-tighter">PERSONAGEM CANON</h2>
-                  <p className="text-white/40 text-sm font-serif italic leading-relaxed">
-                    "Assuma o manto de uma lenda consagrada e escreva um novo capítulo em sua história."
-                  </p>
-                </div>
-                <ul className="text-[10px] text-white/30 space-y-3 font-heading uppercase tracking-[0.2em] pt-4 border-t border-white/5">
-                  <li>✦ Ícones da Saga Oficial</li>
-                  <li>✦ 1 Canon por Usuário</li>
-                  <li>✦ Fidelidade aos Livros/Filmes</li>
-                </ul>
-                <div className="pt-8">
-                   <div className="inline-flex items-center gap-2 text-purple-500 font-heading text-[10px] tracking-widest uppercase group-hover/canon:gap-4 transition-all">
-                      ASSUMIR O MANTO <ChevronLeft className="rotate-180" size={14} />
-                   </div>
-                </div>
-              </div>
+              className="glass rounded-3xl p-8 border border-purple-500/30 hover:border-purple-400/70 hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(168,85,247,0.2)] transition-all text-left group">
+              <div className="text-5xl mb-4">📖</div>
+              <h2 className="font-heading text-2xl text-purple-400 mb-2">Personagem Canon</h2>
+              <p className="text-sm text-muted-foreground mb-4">
+                <strong className="text-foreground">Personagem Canônico</strong> — um personagem oficial da saga Harry Potter que você irá interpretar no portal (ex: Hermione, Draco, Luna…).
+              </p>
+              <ul className="text-xs text-muted-foreground space-y-1 mb-6">
+                <li>✦ Personagem da saga oficial</li>
+                <li>✦ 1 Canon por usuário no portal</li>
+                <li>✦ Baseado nos livros/filmes</li>
+                <li>✦ Campos extras de referência</li>
+              </ul>
+              <span className="font-heading text-purple-400 text-sm group-hover:underline">Criar ficha Canon →</span>
             </button>
           </div>
-
           {canCancel && onCancel && (
-            <div className="text-center mt-12">
-              <button onClick={onCancel} className="text-[10px] font-heading text-white/20 hover:text-white/60 tracking-[0.5em] transition-colors uppercase border-b border-transparent hover:border-white/20 pb-1">
-                ABORTAR REGISTRO
-              </button>
+            <div className="text-center mt-8">
+              <button onClick={onCancel} className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2">Cancelar</button>
             </div>
           )}
         </div>
@@ -281,37 +235,21 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
 
         <form onSubmit={e => { e.preventDefault(); handleSubmit(step); }} className="space-y-5">
 
-          {/* FOTO - MONSTER PEDESTAL */}
-          <SECTION title="Manifestação Visual" icon="📷">
-            <div className="flex flex-col md:flex-row items-center gap-10">
-              <div className="relative group/avatar shrink-0">
-                {/* 3D Aura Rings */}
-                <div className="absolute -inset-6 border-2 border-dashed border-primary/20 rounded-full animate-spin-slow pointer-events-none" />
-                <div className="absolute -inset-3 border border-white/10 rounded-full pointer-events-none" />
-                
-                <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-white/20 to-transparent p-1.5 shadow-2xl relative z-10 overflow-hidden group-hover/avatar:scale-105 transition-transform duration-700">
-                  <div className="w-full h-full rounded-full overflow-hidden bg-black/60 flex items-center justify-center border border-white/10">
-                    {avatarPreview || form.avatar_url
-                      ? <img src={avatarPreview || form.avatar_url} className="w-full h-full object-cover" />
-                      : <span className="text-5xl">🧙</span>}
-                  </div>
-                </div>
-
-                <label className="absolute -bottom-2 -right-2 z-20 w-12 h-12 rounded-2xl bg-primary text-white shadow-2xl flex items-center justify-center cursor-pointer hover:scale-110 active:scale-90 transition-all border border-white/20">
-                   <Upload size={20} />
-                   <input type="file" accept="image/*" className="hidden" onChange={handleAvatar} />
-                </label>
+          {/* FOTO */}
+          <SECTION title="Foto do Personagem" icon="📷">
+            <div className="flex items-center gap-4">
+              <div className="w-24 h-24 rounded-full border-2 border-border overflow-hidden flex-shrink-0 bg-secondary flex items-center justify-center">
+                {avatarPreview || form.avatar_url
+                  ? <img src={avatarPreview || form.avatar_url} className="w-full h-full object-cover" />
+                  : <span className="text-3xl">🧙</span>}
               </div>
-
-              <div className="flex-1 w-full space-y-4">
-                <p className="text-[10px] text-white/30 font-heading uppercase tracking-[0.3em] text-center md:text-left">Envie um pergaminho visual ou cole o elo direto</p>
-                <Input 
-                   name="avatar_url" 
-                   value={form.avatar_url} 
-                   onChange={handleChange} 
-                   placeholder="https://sua-imagem-magica.jpg" 
-                   className="h-14 bg-white/[0.03] rounded-2xl border-white/10 text-xs placeholder:text-white/5" 
-                />
+              <div className="flex-1 space-y-2">
+                <label className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border-2 border-dashed border-primary/40 bg-primary/5 hover:bg-primary/10 cursor-pointer transition-colors text-sm font-heading text-primary">
+                  📁 Upload de foto
+                  <input type="file" accept="image/*" className="hidden" onChange={handleAvatar} />
+                </label>
+                <p className="text-[10px] text-muted-foreground text-center">ou cole o link abaixo</p>
+                <Input name="avatar_url" value={form.avatar_url} onChange={handleChange} placeholder="https://link-da-imagem.jpg" className="bg-secondary/50 text-xs" />
               </div>
             </div>
           </SECTION>

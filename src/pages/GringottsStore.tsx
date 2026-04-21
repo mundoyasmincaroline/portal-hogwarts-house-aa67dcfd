@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ShoppingBag, Coins, Crown, Wand2, Shirt, Gem, Sparkles, Star, ExternalLink, Check, Flame, Gift, Zap, Trophy } from "lucide-react";
+import { ShoppingBag, Coins, Crown, Wand2, Shirt, Gem, Sparkles, Star, ExternalLink, Check, Flame, Gift, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import StoreItemVisual from "@/components/StoreItemVisual";
@@ -22,30 +22,30 @@ interface StoreItem {
 
 // ─── Pacotes de Galeões ────────────────────────────────────
 const GALEON_PACKAGES = [
-  { id: "bolsinha",  name: "Bolsinha de Galeões",     galeons: 100,  price_brl: 4.90,  icon: "💰", image_url: "https://i.pinimg.com/736x/8b/6e/8b/8b6e8b4e7a2b9a1e8b4e7a2b9a1e8b4e.jpg", color: "from-amber-800/40 to-amber-900/40", border: "border-amber-600/40", glow: "group-hover:shadow-[0_0_20px_rgba(217,119,6,0.3)]" },
-  { id: "saco",      name: "Saco de Galeões",          galeons: 300,  price_brl: 12.90, icon: "🪙", image_url: "https://i.pinimg.com/736x/2c/31/31/2c313181232812328123281232812328.jpg", color: "from-amber-700/50 to-yellow-800/40", border: "border-yellow-500/50", glow: "group-hover:shadow-[0_0_25px_rgba(234,179,8,0.4)]", badge: "Mais Popular" },
-  { id: "bau",       name: "Baú de Galeões",           galeons: 700,  price_brl: 24.90, icon: "💎", image_url: "/bau_lendario_3d.png", color: "from-yellow-600/50 to-amber-700/50", border: "border-amber-400/60", glow: "group-hover:shadow-[0_0_30_rgba(251,191,36,0.5)]" },
-  { id: "tesouro",   name: "Tesouro de Gringotts",     galeons: 1500, price_brl: 44.90, icon: "👑", image_url: "/liquid_luck_3d.png", color: "from-yellow-500/60 to-amber-600/50", border: "border-yellow-400/70", glow: "group-hover:shadow-[0_0_35px_rgba(250,204,21,0.6)]", badge: "Melhor Valor" },
-  { id: "cofre",     name: "Cofre Lendário",           galeons: 4000, price_brl: 99.90, icon: "🏆", image_url: "/medalha_ouro_3d.png", color: "from-yellow-400/70 to-amber-500/60", border: "border-yellow-300/80", glow: "group-hover:shadow-[0_0_45px_rgba(253,224,71,0.7)]", badge: "Lendário" },
+  { id: "bolsinha",  name: "Bolsinha de Galeões",     galeons: 100,  price_brl: 4.90,  icon: "💰", image_url: "https://images.unsplash.com/photo-1610484826917-0f101a7bf7f4?q=80&w=600&auto=format&fit=crop", color: "from-amber-800/40 to-amber-900/40", border: "border-amber-600/40", glow: "group-hover:shadow-[0_0_20px_rgba(217,119,6,0.3)]" },
+  { id: "saco",      name: "Saco de Galeões",          galeons: 300,  price_brl: 12.90, icon: "🪙", image_url: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?q=80&w=600&auto=format&fit=crop", color: "from-amber-700/50 to-yellow-800/40", border: "border-yellow-500/50", glow: "group-hover:shadow-[0_0_25px_rgba(234,179,8,0.4)]", badge: "Mais Popular" },
+  { id: "bau",       name: "Baú de Galeões",           galeons: 700,  price_brl: 24.90, icon: "💎", image_url: "https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?q=80&w=600&auto=format&fit=crop", color: "from-yellow-600/50 to-amber-700/50", border: "border-amber-400/60", glow: "group-hover:shadow-[0_0_30px_rgba(251,191,36,0.5)]" },
+  { id: "tesouro",   name: "Tesouro de Gringotts",     galeons: 1500, price_brl: 44.90, icon: "👑", image_url: "https://images.unsplash.com/photo-1599839619722-39751411ea63?q=80&w=600&auto=format&fit=crop", color: "from-yellow-500/60 to-amber-600/50", border: "border-yellow-400/70", glow: "group-hover:shadow-[0_0_35px_rgba(250,204,21,0.6)]", badge: "Melhor Valor" },
+  { id: "cofre",     name: "Cofre Lendário",           galeons: 4000, price_brl: 99.90, icon: "🏆", image_url: "https://images.unsplash.com/photo-1565373677928-90e963765eac?q=80&w=600&auto=format&fit=crop", color: "from-yellow-400/70 to-amber-500/60", border: "border-yellow-300/80", glow: "group-hover:shadow-[0_0_45px_rgba(253,224,71,0.7)]", badge: "Lendário" },
 ];
 
 // ─── Planos VIP ────────────────────────────────────────────
 const VIP_PLANS = [
   {
-    id: "premium", name: "Estudante Premium", icon: "✨", price_brl: 9.90, image_url: "/medalha_ouro_3d.png",
+    id: "premium", name: "Estudante Premium", icon: "✨", price_brl: 9.90, image_url: "/vip_coroa.png",
     color: "from-blue-900/60 to-indigo-900/40", border: "border-blue-400/50", textColor: "text-blue-300", glow: "hover:shadow-[0_0_30px_rgba(96,165,250,0.3)]",
     benefits: ["+50% XP em todas as atividades", "Badge exclusivo ✨ no perfil", "Acesso a salas Premium", "Nome com brilho especial"],
     galeons_monthly: 0,
   },
   {
-    id: "vip", name: "Auror VIP", icon: "🥇", price_brl: 19.90, image_url: "/liquid_luck_3d.png",
+    id: "vip", name: "Auror VIP", icon: "🥇", price_brl: 19.90, image_url: "/vip_coroa.png",
     color: "from-purple-900/60 to-fuchsia-900/40", border: "border-purple-400/60", textColor: "text-purple-300", glow: "hover:shadow-[0_0_40px_rgba(192,132,252,0.4)]",
     benefits: ["Tudo do Premium", "+200 Galeões todo mês", "Nome dourado em todo portal", "Skin exclusiva de Auror", "Acesso antecipado a eventos"],
     galeons_monthly: 200,
     badge: "MAIS ESCOLHIDO"
   },
   {
-    id: "founder", name: "Fundador Hogwarts", icon: "👑", price_brl: 39.90, image_url: "/bau_lendario_3d.png",
+    id: "founder", name: "Fundador Hogwarts", icon: "👑", price_brl: 39.90, image_url: "/vip_coroa.png",
     color: "from-yellow-700/60 to-amber-900/50", border: "border-yellow-400/70", textColor: "text-yellow-300", glow: "hover:shadow-[0_0_50px_rgba(251,191,36,0.5)]",
     benefits: ["Tudo do VIP", "+500 Galeões todo mês", "Acesso ao Conselho Secreto", "Título permanente 👑 Fundador", "Participação em decisões do portal"],
     galeons_monthly: 500,
@@ -67,7 +67,6 @@ const TABS = [
   { id: "wand",     label: "🪄 Varinhas",   icon: Wand2 },
   { id: "spell",    label: "📜 Feitiços",   icon: Sparkles },
   { id: "potion",   label: "🧪 Poções",     icon: Gem },
-  { id: "stickers", label: "🖼️ Figurinhas",  icon: Trophy },
   { id: "clothing", label: "👗 Roupas",     icon: Shirt },
   { id: "upgrade",  label: "⚡ Upgrades",   icon: Zap },
 ];
@@ -227,487 +226,443 @@ export default function GringottsStore() {
   const filteredItems = items.filter(i => i.category === tab);
   const featuredItems = items.filter(i => i.is_featured || i.rarity === 'legendary').slice(0, 4);
 
-  const INJECTED_ITEMS: StoreItem[] = [
-    // VARINHAS
-    { id: "3d_elder_wand", name: "Varinha das Varinhas", description: "A varinha mais poderosa que já existiu. Feita de sabugueiro.", category: "wand", price_galeons: 5000, image_url: "/items/elder_wand.png", rarity: "legendary", is_featured: true },
-    { id: "3d_crystal_wand", name: "Varinha de Cristal Ártico", description: "Canaliza magias de gelo com perfeição absoluta.", category: "wand", price_galeons: 1200, image_url: "https://i.pinimg.com/736x/83/81/1b/83811b7d52f9a2e6e3c6691c2b5f548a.jpg", rarity: "legendary", is_featured: false },
-    { id: "3d_phoenix_wand", name: "Varinha de Pena de Fênix", description: "Leal e extremamente poderosa em feitiços defensivos.", category: "wand", price_galeons: 2500, image_url: "https://i.pinimg.com/736x/5c/5e/5e/5c5e5e4e7a2b9a1e8b4e7a2b9a1e8b4e.jpg", rarity: "legendary", is_featured: true },
-    { id: "3d_dark_oak_wand", name: "Varinha de Carvalho Negro", description: "Sintonizada com as artes das trevas e magias de impacto.", category: "wand", price_galeons: 3000, image_url: "https://i.pinimg.com/736x/2c/31/31/2c313181232812328123281232812328.jpg", rarity: "legendary", is_featured: false },
-    { id: "3d_dragon_scale_wand", name: "Varinha de Escama de Dragão", description: "Dura como aço, canaliza o fogo interior do bruxo.", category: "wand", price_galeons: 3500, image_url: "https://i.pinimg.com/736x/8b/6e/8b/8b6e8b4e7a2b9a1e8b4e7a2b9a1e8b4e.jpg", rarity: "legendary", is_featured: false },
-
-    // POÇÕES
-    { id: "3d_liquid_luck", name: "Felix Felicis (Sorte Líquida)", description: "Garante sucesso em todas as suas ações por 24h.", category: "potion", price_galeons: 500, image_url: "/items/liquid_luck.png", rarity: "legendary", is_featured: true },
-    { id: "3d_polyjuice", name: "Poção Polissuco", description: "Permite assumir a forma de outro bruxo temporariamente.", category: "potion", price_galeons: 350, image_url: "https://i.pinimg.com/736x/6c/2c/2c/6c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c.jpg", rarity: "rare", is_featured: false },
-    { id: "3d_amortentia", name: "Poção Amortentia", description: "A poção do amor mais poderosa do mundo.", category: "potion", price_galeons: 400, image_url: "https://i.pinimg.com/736x/9d/9d/9d/9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d9d.jpg", rarity: "rare", is_featured: false },
-    { id: "3d_elixir_life", name: "Elixir da Vida", description: "Extraído da Pedra Filosofal. Garante imortalidade temporária.", category: "potion", price_galeons: 2000, image_url: "https://i.pinimg.com/736x/7b/7b/7b/7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b7b.jpg", rarity: "legendary", is_featured: true },
-    { id: "3d_living_death", name: "Poção do Morto-Vivo", description: "Induz um sono tão profundo que parece a morte.", category: "potion", price_galeons: 300, image_url: "https://i.pinimg.com/736x/5a/5a/5a/5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a.jpg", rarity: "rare", is_featured: false },
-
-    // ROUPAS
-    { id: "3d_invisibility_cloak", name: "Manto da Invisibilidade", description: "Uma das Relíquias da Morte. Fica invisível de verdade.", category: "clothing", price_galeons: 8000, image_url: "/items/invisibility_cloak.png", rarity: "legendary", is_featured: true },
-    { id: "3d_sapphire_robe", name: "Robe de Safira", description: "Tecido com fios de consciência pelo próprio Morpheus.", category: "clothing", price_galeons: 1500, image_url: "/robe_safira_premium.png", rarity: "legendary", is_featured: true },
-    { id: "3d_quidditch_uniform", name: "Uniforme de Quadribol Pro", description: "Aumenta sua agilidade e velocidade de voo.", category: "clothing", price_galeons: 850, image_url: "https://i.pinimg.com/736x/3d/3d/3d/3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d.jpg", rarity: "rare", is_featured: false },
-    { id: "3d_sorting_hat", name: "O Chapéu Seletor (Antigo)", description: "Um artefato que conhece seus pensamentos mais profundos.", category: "clothing", price_galeons: 3000, image_url: "https://i.pinimg.com/736x/4f/4f/4f/4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f4f.jpg", rarity: "legendary", is_featured: true },
-    { id: "3d_dragon_boots", name: "Botas de Couro de Dragão", description: "Resistentes a fogo e maldições de solo.", category: "clothing", price_galeons: 600, image_url: "https://i.pinimg.com/736x/2a/2a/2a/2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a2a.jpg", rarity: "rare", is_featured: false },
-
-    // FIGURINHAS
-    { id: "3d_snitch_sticker", name: "Figurinha: Pomo de Ouro", description: "Card 3D Holográfico do Pomo de Ouro.", category: "stickers", price_galeons: 150, image_url: "/items/golden_snitch.png", rarity: "legendary", is_featured: true },
-    { id: "3d_dumbledore_sticker", name: "Figurinha: Alvo Dumbledore", description: "Card 3D Holográfico do maior diretor de todos os tempos.", category: "stickers", price_galeons: 100, image_url: "https://i.pinimg.com/736x/1a/1a/1a/1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a.jpg", rarity: "legendary", is_featured: true },
-    { id: "3d_harry_sticker", name: "Figurinha: Harry Potter", description: "Card 3D Holográfico do Menino que Sobreviveu.", category: "stickers", price_galeons: 80, image_url: "https://i.pinimg.com/736x/2b/2b/2b/2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b.jpg", rarity: "legendary", is_featured: false },
-    { id: "3d_voldemort_sticker", name: "Figurinha: Lord Voldemort", description: "Card 3D Holográfico dAquele-Que-Não-Deve-Ser-Nomeado.", category: "stickers", price_galeons: 120, image_url: "https://i.pinimg.com/736x/3c/3c/3c/3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c.jpg", rarity: "legendary", is_featured: false },
-    { id: "3d_griffin_sticker", name: "Figurinha: Grifo de Ouro", description: "Card 3D Holográfico da criatura lendária.", category: "stickers", price_galeons: 50, image_url: "https://i.pinimg.com/736x/4d/4d/4d/4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d.jpg", rarity: "rare", is_featured: false },
-
-    // FEITIÇOS
-    { id: "3d_patronum", name: "Expecto Patronum (Elite)", description: "Invoque um patrono corpóreo 3D no seu perfil.", category: "spell", price_galeons: 1000, image_url: "https://i.pinimg.com/736x/5e/5e/5e/5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e.jpg", rarity: "legendary", is_featured: true },
-    { id: "3d_sectumsempra", name: "Sectumsempra", description: "Um feitiço para inimigos. Efeito visual de corte no alvo.", category: "spell", price_galeons: 600, image_url: "https://i.pinimg.com/736x/6f/6f/6f/6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f.jpg", rarity: "rare", is_featured: false },
-    { id: "3d_protego", name: "Protego Maxima", description: "Cria um escudo esférico impenetrável ao seu redor.", category: "spell", price_galeons: 450, image_url: "https://i.pinimg.com/736x/7a/7a/7a/7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a.jpg", rarity: "rare", is_featured: false },
-    { id: "3d_lumos", name: "Lumos Solem", description: "Ilumine tudo com o brilho do sol. Efeito de luz intensa.", category: "spell", price_galeons: 200, image_url: "https://i.pinimg.com/736x/8b/8b/8b/8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b.jpg", rarity: "common", is_featured: false },
-    { id: "3d_avada", name: "Avada Kedavra (Visual)", description: "Efeito visual da maldição da morte. Apenas cosmético.", category: "spell", price_galeons: 5000, image_url: "https://i.pinimg.com/736x/9c/9c/9c/9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c.jpg", rarity: "legendary", is_featured: true },
-
-    // UPGRADES
-    { id: "3d_xp_booster", name: "Booster de XP 2x", description: "Dobra todo o XP ganho por 7 dias.", category: "upgrade", price_galeons: 400, image_url: "https://i.pinimg.com/736x/1d/1d/1d/1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d1d.jpg", rarity: "rare", is_featured: true },
-    { id: "3d_galeon_finder", name: "Detector de Galeões", description: "Aumenta a chance de encontrar ouro no feed.", category: "upgrade", price_galeons: 350, image_url: "https://i.pinimg.com/736x/2e/2e/2e/2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e.jpg", rarity: "rare", is_featured: false },
-    { id: "3d_custom_title", name: "Título Personalizado", description: "Mude seu título para qualquer coisa que desejar.", category: "upgrade", price_galeons: 1200, image_url: "https://i.pinimg.com/736x/3f/3f/3f/3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f3f.jpg", rarity: "legendary", is_featured: true },
-    { id: "3d_lucky_charm", name: "Amuleto da Sorte", description: "Melhora suas chances em todos os jogos do portal.", category: "upgrade", price_galeons: 300, image_url: "https://i.pinimg.com/736x/4a/4a/4a/4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a4a.jpg", rarity: "common", is_featured: false },
-    { id: "3d_privacy_shield", name: "Escudo de Privacidade", description: "Fique invisível na lista de bruxos online.", category: "upgrade", price_galeons: 250, image_url: "https://i.pinimg.com/736x/5b/5b/5b/5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b.jpg", rarity: "common", is_featured: false },
-  ];
-
-  const displayItems = [...filteredItems, ...INJECTED_ITEMS.filter(i => i.category === tab)];
-
-
   return (
     <div className="max-w-7xl mx-auto space-y-10 pb-20 px-4">
       
-      {/* ── MONSTER HERO BANNER: THE VAULT ENTRANCE ── */}
-      <div className="relative overflow-hidden rounded-[3.5rem] bg-gradient-to-b from-white/[0.08] to-black/80 backdrop-blur-3xl p-10 md:p-20 border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.9)] group">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=2000')] bg-cover bg-center opacity-10 mix-blend-overlay scale-110 group-hover:scale-100 transition-transform duration-1000" />
+      {/* ── SUPER HERO BANNER ── */}
+      <div className="relative overflow-hidden rounded-[2.5rem] border border-yellow-500/20 shadow-2xl group min-h-[360px] flex items-center mb-6">
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-900/80 via-yellow-900/60 to-black z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-yellow-500/20 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 opacity-30 mix-blend-overlay pointer-events-none" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=2000')" }} />
         
-        {/* Magic Light Beams */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-yellow-500/10 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute -bottom-20 -left-20 w-[400px] h-[400px] bg-amber-600/10 rounded-full blur-[100px]" />
-
-        <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12">
-          <div className="flex-1 text-center lg:text-left space-y-8">
-            <div className="inline-flex items-center gap-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full px-6 py-2 shadow-2xl">
-              <Sparkles size={14} className="text-yellow-400 animate-spin-slow" />
-              <span className="text-[10px] font-heading text-yellow-400 uppercase tracking-[0.3em]">Cofre de Elite Gringotts</span>
+        <div className="relative z-10 p-8 sm:p-12 lg:p-16 flex flex-col md:flex-row items-center justify-between w-full gap-8">
+          <div className="flex-1 text-left space-y-6">
+            <div className="inline-flex items-center gap-2 border border-yellow-500/40 rounded-full px-4 py-1.5">
+              <Sparkles size={12} className="text-yellow-500" />
+              <span className="text-[10px] font-heading text-yellow-500 uppercase tracking-widest">Empório Exclusivo</span>
             </div>
             
-            <h1 className="text-6xl md:text-8xl font-heading text-gold-gradient leading-[0.9] tracking-tighter drop-shadow-2xl">
-              GRINGOTTS<br/><span className="text-white/90">SUPREME</span>
+            <h1 className="text-5xl md:text-7xl font-heading text-gold-gradient drop-shadow-lg leading-tight">
+              GRINGOTTS<br/>VAULT
             </h1>
             
-            <p className="text-white/60 text-lg md:text-xl max-w-xl leading-relaxed font-serif italic">
-              "Fortuna, prestígio e artefatos de poder incomensurável. Onde a magia encontra o luxo absoluto."
+            <p className="text-yellow-100/70 text-base md:text-lg max-w-lg leading-relaxed font-serif">
+              Bem-vindo à vitrine mais seleta do mundo bruxo. Descubra artefatos lendários, feitiçarias ancestrais e ostente o prestígio que você merece.
             </p>
             
-            <div className="flex flex-wrap justify-center lg:justify-start gap-4">
-              <Button variant="magical" size="lg" className="h-16 px-10 rounded-2xl bg-gradient-to-r from-yellow-500 to-amber-600 text-black font-heading text-xs tracking-widest shadow-2xl shadow-yellow-500/20 hover:scale-105 transition-all" onClick={() => setTab("featured")}>
-                EXPLORAR EXCLUSIVOS <Flame className="ml-2" size={18} />
-              </Button>
-            </div>
+            <Button variant="magical" size="lg" className="bg-gradient-to-r from-yellow-500 to-amber-500 text-black border-none font-bold text-base px-8 py-6 rounded-xl hover:scale-105 transition-transform" onClick={() => setTab("featured")}>
+              Ver Exclusivos <Flame className="ml-2" size={18} />
+            </Button>
           </div>
           
-          {/* Balance Card - Monster 3D Supreme Gold */}
-          <div className="w-full max-w-sm relative group/card">
-            <div className="absolute inset-0 bg-yellow-400/30 blur-3xl opacity-0 group-hover/card:opacity-100 transition-opacity" />
-            <div className="relative gold-card rounded-[3rem] p-10 text-center shadow-2xl transform transition-transform group-hover/card:rotate-2">
-               <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-yellow-400 to-amber-600 rounded-[2rem] flex items-center justify-center shadow-[0_10px_40px_rgba(184,134,11,0.5)] animate-float border-2 border-white/20">
-                  <Coins size={48} className="text-black" />
-               </div>
-               <p className="text-yellow-500/80 text-[10px] font-heading uppercase tracking-[0.4em] mb-2">Seu Tesouro Real</p>
-               <h2 className="text-6xl font-heading text-gold-gradient mb-2 tracking-tighter drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
-                  {galeons.toLocaleString("pt-BR")}
-               </h2>
-               <p className="text-xs text-white/40 font-heading uppercase tracking-widest mb-8 font-light">Galeões de Ouro Maciço</p>
-               <Button variant="magical" className="w-full h-14 rounded-2xl font-heading text-[10px] tracking-widest shadow-lg" onClick={() => setTab("galeons")}>
-                  ADQUIRIR MAIS RIQUEZA
-               </Button>
+          <div className="w-full md:w-80 glass bg-black/60 border border-yellow-500/20 rounded-[2rem] p-8 text-center backdrop-blur-md shadow-2xl">
+            <p className="text-yellow-500/80 text-[10px] font-heading uppercase tracking-widest mb-6">Acesso ao Cofre</p>
+            <div className="w-12 h-16 mx-auto border border-yellow-500/40 rounded-sm mb-6 flex items-center justify-center relative shadow-[0_0_15px_rgba(234,179,8,0.2)]">
             </div>
+            <p className="text-5xl font-heading text-yellow-400 mb-2 drop-shadow-md">
+              {galeons.toLocaleString("pt-BR")}
+            </p>
+            <p className="text-xs text-yellow-100/60 mb-8 font-serif">Galeões Disponíveis</p>
+            <Button variant="outline" className="w-full border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/10 rounded-xl" onClick={() => setTab("galeons")}>
+              Adquirir Mais
+            </Button>
           </div>
         </div>
       </div>
 
       {pendingOrderId && (
-        <div className="relative overflow-hidden rounded-[2rem] p-6 border border-yellow-500/40 bg-yellow-900/20 backdrop-blur-xl flex flex-col md:flex-row items-center gap-6 animate-pulse-glow shadow-2xl">
-          <div className="w-12 h-12 rounded-xl bg-yellow-500/20 flex items-center justify-center border border-yellow-500/40 shrink-0">
-             <Zap size={24} className="text-yellow-400" />
+        <div className="glass rounded-2xl p-5 border border-yellow-400/50 bg-yellow-900/20 flex flex-col sm:flex-row items-center gap-4 animate-pulse">
+          <div className="text-3xl">⏳</div>
+          <div className="flex-1 text-center sm:text-left">
+            <p className="font-heading text-yellow-400 text-lg">Pagamento em Processamento</p>
+            <p className="text-sm text-yellow-200/70">A magia está acontecendo. Clique para confirmar se a transação foi concluída.</p>
           </div>
-          <div className="flex-1 text-center md:text-left">
-            <p className="font-heading text-yellow-400 text-lg tracking-tight">TRANSAÇÃO EM CURSO</p>
-            <p className="text-xs text-yellow-200/60 font-medium">Os duendes estão processando seu ouro. Clique para validar a magia.</p>
-          </div>
-          <div className="flex items-center gap-3">
-             <Button variant="magical" size="sm" className="h-10 rounded-xl px-6" onClick={() => verifyAndCreditPayment(pendingOrderId, "", "")}>
-               VERIFICAR AGORA
-             </Button>
-             <button onClick={() => setPendingOrderId(null)} className="p-2 text-white/20 hover:text-white transition-colors">
-               <Check size={20} />
-             </button>
-          </div>
+          <Button variant="magical" size="sm" onClick={() => verifyAndCreditPayment(pendingOrderId, "", "")}>
+            🔍 Verificar Status
+          </Button>
+          <button onClick={() => setPendingOrderId(null)} className="text-yellow-500/60 hover:text-yellow-400 text-xs underline">
+            Ocultar
+          </button>
         </div>
       )}
 
-      {/* ── NAVIGATION TABS - MONSTER QUALITY ── */}
-      <div className="flex justify-center sticky top-4 z-40 px-4">
-        <div className="glass p-2 rounded-[2rem] border border-white/10 inline-flex flex-wrap justify-center gap-2 bg-black/60 backdrop-blur-3xl shadow-2xl">
+      {/* ── NAVIGATION TABS ── */}
+      <div className="flex justify-center">
+        <div className="glass p-2 rounded-full border border-border/50 inline-flex flex-wrap justify-center gap-2 bg-background/40 backdrop-blur-xl">
           {TABS.map(t => {
             const isActive = tab === t.id;
             const Icon = t.icon;
             return (
               <button key={t.id} onClick={() => setTab(t.id)}
-                className={`relative flex items-center gap-3 px-6 py-3 rounded-2xl text-xs font-heading tracking-widest transition-all duration-500 overflow-hidden group/tab ${
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold font-heading transition-all duration-300 ${
                   isActive 
-                    ? "bg-primary text-white shadow-xl shadow-primary/20 scale-105" 
-                    : "text-white/40 hover:text-white hover:bg-white/5"
+                    ? t.id === 'featured' ? "bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg shadow-orange-500/30 border border-orange-400/50" 
+                    : "bg-primary text-primary-foreground shadow-lg shadow-primary/30 border border-primary/50"
+                    : "bg-transparent text-muted-foreground hover:bg-secondary/80 hover:text-foreground border border-transparent"
                 }`}>
-                {isActive && (
-                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
-                )}
-                <Icon size={14} className={`relative z-10 ${isActive ? "animate-pulse" : ""}`} />
-                <span className="relative z-10">{t.label.toUpperCase()}</span>
+                <Icon size={16} className={isActive ? "animate-pulse" : ""} />
+                {t.label}
               </button>
             )
           })}
         </div>
       </div>
 
-      {/* ── ABA: DESTAQUES / EXCLUSIVOS - MONSTER QUALITY ── */}
+      {/* ── ABA: DESTAQUES / EXCLUSIVOS ── */}
       {tab === "featured" && (
-        <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <div className="text-center max-w-3xl mx-auto space-y-4">
-            <h2 className="text-4xl font-heading text-white tracking-tight flex items-center justify-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center border border-orange-500/40">
-                <Flame className="text-orange-500" size={20} />
-              </div>
-              OFERTAS LENDÁRIAS
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <h2 className="text-3xl font-heading text-foreground mb-3 flex items-center justify-center gap-2">
+              <Flame className="text-orange-500" /> Ofertas Limitadas & Lendárias
             </h2>
-            <p className="text-white/40 text-sm font-heading tracking-widest uppercase">Artefatos Únicos e Relíquias de Colecionador</p>
+            <p className="text-muted-foreground">Itens raríssimos de colecionador. Uma vez que o estoque mágico acabe, eles podem nunca mais voltar.</p>
           </div>
 
-          {/* LIGHTNING OFFER: THE SAPPHIRE ROBE */}
-          <div className="relative overflow-hidden rounded-[4rem] bg-gradient-to-br from-blue-900/40 via-black to-blue-900/20 border border-blue-400/30 p-1 group shadow-[0_0_80px_rgba(37,99,235,0.2)]">
-             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=2000')] bg-cover bg-center opacity-5 mix-blend-overlay" />
-             <div className="relative glass rounded-[3.5rem] p-8 md:p-16 flex flex-col lg:flex-row items-center gap-12 overflow-hidden">
-                <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-blue-500/10 blur-[120px] rounded-full" />
-                
-                <div className="relative w-64 h-64 md:w-80 md:h-80 group-hover:scale-110 transition-transform duration-700 shrink-0">
-                    <div className="absolute inset-0 bg-blue-400/20 blur-[80px] animate-pulse" />
-                    <img src="/robe_safira_premium.png" alt="Robe Safira" className="w-full h-full object-contain drop-shadow-[0_0_50px_rgba(59,130,246,0.8)] relative z-10" />
-                </div>
-
-                <div className="flex-1 space-y-8 text-center lg:text-left">
-                   <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-blue-500/20 border border-blue-400/40 text-blue-400 text-[10px] font-heading tracking-[0.3em] uppercase">
-                      <span className="relative flex h-2 w-2">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-                      </span>
-                      LOTE LIMITADO: 03 UNIDADES
-                   </div>
-                   
-                   <div className="space-y-4">
-                      <h2 className="text-4xl md:text-6xl font-heading text-white leading-none tracking-tighter">Manto de Safira do Arquiteto</h2>
-                      <p className="text-blue-100/60 text-lg font-serif italic max-w-xl">"Dizem que este manto foi tecido com fios de pura consciência pelo próprio Morpheus."</p>
-                   </div>
-
-                   <div className="flex flex-wrap items-center justify-center lg:justify-start gap-10">
-                      <div className="space-y-1">
-                         <p className="text-[10px] text-white/40 uppercase font-heading tracking-widest">Tempo Restante</p>
-                         <div className="flex gap-4 font-heading text-3xl text-yellow-500">
-                            <div className="flex flex-col items-center">
-                               <span className="text-white drop-shadow-2xl">04</span>
-                               <span className="text-[8px] text-white/20">HORAS</span>
-                            </div>
-                            <span className="opacity-20">:</span>
-                            <div className="flex flex-col items-center">
-                               <span className="text-white drop-shadow-2xl">12</span>
-                               <span className="text-[8px] text-white/20">MIN</span>
-                            </div>
-                         </div>
-                      </div>
-
-                      <div className="space-y-1">
-                         <p className="text-[10px] text-white/40 uppercase font-heading tracking-widest">Troca Requerida</p>
-                         <div className="flex items-center gap-4">
-                            <span className="text-xl text-white/20 line-through">2.500</span>
-                            <span className="text-4xl font-heading text-yellow-400 drop-shadow-[0_0_20px_rgba(251,191,36,0.6)]">🪙 1.500</span>
-                         </div>
-                      </div>
-                   </div>
-
-                   <Button size="lg" variant="magical" className="h-16 px-12 rounded-2xl shadow-2xl shadow-yellow-500/20 hover:scale-105 transition-transform font-heading text-xs tracking-widest group/btn" onClick={() => buyItem({ id: "featured_robe_safira", name: "Robe Azul-Safira", category: "clothing", price_galeons: 1500, image_url: "/robe_safira_premium.png" })}>
-                      ADQUIRIR AGORA <Sparkles className="ml-2 group-hover/btn:rotate-12 transition-transform" />
-                   </Button>
-                </div>
-             </div>
-          </div>
-
-          {/* MYSTERY VAULT - MONSTER 3D */}
-          <div className="relative overflow-hidden rounded-[4rem] bg-gradient-to-br from-purple-900/40 via-black to-purple-900/20 border border-purple-500/30 p-10 md:p-20 text-center lg:text-left">
-             <div className="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent" />
-             <div className="relative z-10 flex flex-col lg:flex-row items-center gap-16">
-                <div className="relative shrink-0 group/vault">
-                    <div className="absolute inset-0 bg-purple-500/20 blur-[100px] animate-pulse" />
-                    <div className="relative w-48 h-48 md:w-64 md:h-64 bg-white/5 rounded-[3rem] border border-white/10 flex items-center justify-center group-hover/vault:scale-110 transition-transform duration-700 shadow-[0_40px_80px_rgba(0,0,0,0.5)]">
-                        <Gift size={100} className="text-purple-400 drop-shadow-[0_0_30px_rgba(168,85,247,0.8)] animate-bounce-slow" />
+          {/* LOOT BOX: O COFRE MISTERIOSO (GAMBLE) */}
+          <div className="relative group rounded-[3rem] overflow-hidden border-2 border-purple-500/30 bg-gradient-to-br from-purple-900/40 via-background to-black p-1 shadow-[0_0_50px_rgba(168,85,247,0.2)] mb-12">
+            <div className="absolute inset-0 bg-[url('/hogwarts-castle.jpg')] bg-cover bg-center opacity-10 mix-blend-overlay" />
+            <div className="relative glass rounded-[2.5rem] p-10 flex flex-col md:flex-row items-center gap-10">
+                <div className="relative shrink-0">
+                    <div className="absolute inset-0 bg-purple-500/20 blur-3xl rounded-full animate-pulse" />
+                    <div className="w-40 h-40 bg-gradient-to-b from-purple-500/20 to-transparent rounded-full flex items-center justify-center border border-purple-500/30 group-hover:scale-110 transition-transform duration-700">
+                        <Gift size={80} className="text-purple-400 drop-shadow-[0_0_20px_rgba(168,85,247,0.8)]" />
                     </div>
-                    <div className="absolute -bottom-4 inset-x-0 mx-auto w-fit bg-purple-600 text-white text-[9px] font-heading px-6 py-2 rounded-full tracking-[0.3em] shadow-2xl">MYSTERY VAULT</div>
+                    <div className="absolute -bottom-2 inset-x-0 w-fit mx-auto bg-purple-500 text-white text-[10px] font-bold border-none px-4 py-1 animate-bounce rounded-full shadow-lg">SORTE GRANDE</div>
                 </div>
+                
+                    <div className="flex-1 space-y-6 text-center md:text-left">
+                        {/* Oferta Relâmpago - Gatilho de Escassez */}
+                        <div className="relative overflow-hidden rounded-[2.5rem] border border-yellow-500/40 bg-gradient-to-br from-amber-900/60 via-black to-blue-900/40 p-8 md:p-12 group shadow-[0_0_50px_rgba(251,191,36,0.25)] animate-fade-in mb-8">
+                            <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/20 blur-[120px] -z-10 animate-pulse" />
+                            <div className="absolute bottom-0 left-0 w-64 h-64 bg-yellow-500/20 blur-[100px] -z-10" />
+                            
+                            <div className="flex flex-col lg:flex-row items-center gap-10 relative z-10">
+                            <div className="w-56 h-56 md:w-64 md:h-64 relative group-hover:scale-110 transition-transform duration-700 shrink-0">
+                                <div className="absolute inset-0 bg-blue-400/30 blur-3xl animate-pulse" />
+                                <img src="/robe_safira.png" alt="Featured Item" className="w-full h-full object-contain drop-shadow-[0_0_40px_rgba(37,99,235,0.6)]" />
+                            </div>
+                            
+                            <div className="flex-1 text-center lg:text-left space-y-4">
+                                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/20 border border-blue-400/40 text-blue-400 text-[10px] font-heading tracking-widest uppercase shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+                                <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                                </span>
+                                Oferta Mística de 24h
+                                </div>
+                                
+                                <h2 className="text-3xl md:text-5xl font-heading text-gold-gradient leading-tight tracking-tighter">Robe Azul-Safira do Conhecimento</h2>
+                                <p className="text-blue-100/70 text-sm md:text-base font-serif italic">
+                                "Sinta o poder da sabedoria ancestral fluindo por cada fio de seda prateada."
+                                </p>
+                                
+                                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 pt-2">
+                                <div className="space-y-1">
+                                    <p className="text-[10px] text-muted-foreground uppercase font-heading tracking-widest">O portal fecha em:</p>
+                                    <div className="flex gap-2 font-heading text-xl text-yellow-500">
+                                    <div className="flex flex-col items-center">
+                                        <span className="bg-black/60 px-2 py-1.5 rounded-lg border border-yellow-500/30 min-w-[40px]">04</span>
+                                        <span className="text-[7px] mt-1 text-muted-foreground">horas</span>
+                                    </div>
+                                    <span className="animate-pulse pt-1">:</span>
+                                    <div className="flex flex-col items-center">
+                                        <span className="bg-black/60 px-2 py-1.5 rounded-lg border border-yellow-500/30 min-w-[40px]">12</span>
+                                        <span className="text-[7px] mt-1 text-muted-foreground">minutos</span>
+                                    </div>
+                                    <span className="animate-pulse pt-1">:</span>
+                                    <div className="flex flex-col items-center">
+                                        <span className="bg-black/60 px-2 py-1.5 rounded-lg border border-yellow-500/30 min-w-[40px]">45</span>
+                                        <span className="text-[7px] mt-1 text-muted-foreground">segundos</span>
+                                    </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex flex-col items-center lg:items-start space-y-1">
+                                    <p className="text-[10px] text-muted-foreground uppercase font-heading tracking-widest">Valor de Troca:</p>
+                                    <div className="flex items-center gap-2">
+                                    <span className="text-lg text-muted-foreground line-through opacity-40">🪙 2.500</span>
+                                    <span className="text-3xl font-heading text-yellow-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]">🪙 1.500</span>
+                                    </div>
+                                </div>
+                                </div>
+                                
+                                <div className="pt-4">
+                                <Button size="sm" variant="magical" className="px-8 h-12 rounded-xl shadow-[0_0_30px_rgba(212,175,55,0.3)] hover:scale-105 transition-transform group" onClick={() => buyItem({ id: "featured_robe_safira", name: "Robe Azul-Safira", category: "clothing", price_galeons: 1500, image_url: "/robe_safira.png" })}>
+                                    Adquirir Relíquia ✨
+                                </Button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
 
-                <div className="flex-1 space-y-8">
-                   <div className="space-y-4">
-                      <h2 className="text-4xl md:text-6xl font-heading text-white tracking-tighter">O Cofre do Desconhecido</h2>
-                      <p className="text-purple-200/50 text-lg font-serif italic max-w-2xl">"O que reside além das sombras? Apenas os mais corajosos — ou mais ricos — descobrirão o que os duendes esconderam por milênios."</p>
-                   </div>
+                        <div>
+                            <h2 className="text-3xl font-heading text-purple-300 mb-2">Gringotts Mystery Vault</h2>
+                            <p className="text-muted-foreground text-sm max-w-xl font-serif">Uma chance de obter itens lendários, feitiços raros ou grandes fortunas em Galeões por um preço único.</p>
+                        </div>
 
-                   <div className="flex flex-wrap items-center justify-center lg:justify-start gap-8">
-                      <div className="bg-black/40 backdrop-blur-2xl px-8 py-4 rounded-2xl border border-white/10">
-                         <p className="text-[10px] text-white/40 font-heading tracking-widest uppercase mb-1">Custo da Chave</p>
-                         <p className="text-4xl font-heading text-yellow-400 tracking-tighter">🪙 30</p>
-                      </div>
-
-                      <Button 
-                        variant="magical" 
-                        className="h-20 px-12 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border-none font-heading text-lg tracking-widest shadow-2xl shadow-purple-500/30 group/vaultbtn"
-                        onClick={() => {
-                            if (galeons < 30) return toast.error("Galeões insuficientes!");
-                            toast.promise(new Promise(r => setTimeout(r, 2000)), {
-                                loading: '🪄 Abrindo selos do cofre...',
-                                success: '🎁 Cofre aberto! Verifique seu inventário.',
-                                error: 'Erro na abertura.',
-                            });
-                        }}
-                      >
-                        TENTAR A SORTE <Star size={24} className="ml-3 group-hover/vaultbtn:rotate-180 transition-transform duration-500" />
-                      </Button>
-                   </div>
+                    <div className="flex items-center gap-6">
+                        <div className="text-left shrink-0">
+                            <p className="text-[10px] text-muted-foreground uppercase mb-1">Custo por Tentativa</p>
+                            <p className="text-3xl font-heading text-yellow-400">🪙 30</p>
+                        </div>
+                        <Button 
+                            variant="magical" 
+                            className="flex-1 py-8 text-xl rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border-none shadow-[0_10px_20px_rgba(124,58,237,0.3)] transition-all active:scale-95"
+                            onClick={() => {
+                                if (galeons < 30) return toast.error("Galeões insuficientes!");
+                                toast.promise(new Promise(r => setTimeout(r, 2000)), {
+                                    loading: '🪄 Conjurando abertura do cofre...',
+                                    success: () => {
+                                        const rng = Math.random();
+                                        if (rng < 0.05) return "💎 INCRÍVEL! Você ganhou a Varinha das Varinhas (Lendária)!";
+                                        if (rng < 0.25) return "📜 Raro! Você obteve o Feitiço de Invisibilidade!";
+                                        return "🪙 Ganhou 10 Galeões de volta!";
+                                    },
+                                    error: 'Erro na magia.',
+                                });
+                            }}
+                        >
+                            Tentar a Sorte ✨
+                        </Button>
+                    </div>
                 </div>
-             </div>
+            </div>
           </div>
 
-          {/* GRID DESTAQUES - MONSTER QUALITY */}
-          <div className="space-y-8">
-             <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-heading text-white tracking-tight flex items-center gap-3">
-                   <Star className="text-yellow-400" size={20} />
-                   RELÍQUIAS FEATURED
+          {/* Hardcoded Mystery Box Offer */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            <div className="relative group rounded-3xl overflow-hidden border border-purple-500/40 bg-gradient-to-br from-purple-900/30 to-indigo-950/40 p-1">
+              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618944913456-11f422b404d0?q=80&w=2070')] bg-cover opacity-10 group-hover:scale-110 group-hover:opacity-20 transition-all duration-700" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+              <div className="relative glass h-full rounded-2xl p-8 border border-purple-400/20 flex flex-col items-center text-center justify-center backdrop-blur-sm">
+                <span className="absolute top-4 right-4 bg-purple-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider animate-pulse">
+                  Mais Desejado
+                </span>
+                <div className="w-24 h-24 mb-6 relative">
+                  <div className="absolute inset-0 bg-purple-500/30 blur-2xl rounded-full" />
+                  <Gift size={80} className="text-purple-300 drop-shadow-[0_0_15px_rgba(168,85,247,0.8)] relative z-10" />
+                </div>
+                <h3 className="text-3xl font-heading text-purple-200 mb-2">Caixa Surpresa VIP</h3>
+                <p className="text-purple-200/60 text-sm mb-6 max-w-md">Contém 1 item Lendário garantido, 3 itens Raros e uma chance de desbloquear um Título Exclusivo permanente.</p>
+                <div className="flex items-center gap-4 w-full">
+                  <div className="flex-1 bg-black/40 rounded-xl p-3 border border-purple-500/20">
+                    <p className="text-xs text-purple-300/50 uppercase">Preço Especial</p>
+                    <p className="text-xl font-heading text-yellow-400">🪙 2.500</p>
+                  </div>
+                  <Button 
+                    className="flex-1 bg-purple-600 hover:bg-purple-500 text-white font-bold h-full shadow-[0_0_20px_rgba(147,51,234,0.4)] transition-transform hover:scale-105"
+                    onClick={() => buyItem({ id: "3d_mystery_box", name: "Caixa Surpresa VIP", description: "Contém 1 item Lendário garantido, 3 itens Raros e uma chance de desbloquear um Título Exclusivo permanente.", category: "featured", price_galeons: 2500, image_url: "https://images.unsplash.com/photo-1634152962476-4b8a00e1915c?q=80&w=800&auto=format&fit=crop", rarity: "legendary", is_featured: true })}
+                    disabled={buying === "3d_mystery_box" || galeons < 2500}
+                  >
+                    {buying === "3d_mystery_box" ? "Comprando..." : galeons < 2500 ? "Sem Saldo" : "Adquirir Caixa"}
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative group rounded-3xl overflow-hidden border border-yellow-500/40 bg-gradient-to-br from-yellow-900/30 to-amber-950/40 p-1">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+              <div className="relative glass h-full rounded-2xl p-8 border border-yellow-400/20 flex flex-col items-center text-center justify-center backdrop-blur-sm">
+                <span className="absolute top-4 right-4 bg-yellow-500 text-black text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                  Estoque: 3/10
+                </span>
+                <div className="w-24 h-24 mb-6 relative">
+                  <div className="absolute inset-0 bg-yellow-500/30 blur-2xl rounded-full" />
+                  <Crown size={80} className="text-yellow-300 drop-shadow-[0_0_15px_rgba(253,224,71,0.8)] relative z-10" />
+                </div>
+                <h3 className="text-3xl font-heading text-yellow-200 mb-2">Coroa de Merlin</h3>
+                <p className="text-yellow-200/60 text-sm mb-6 max-w-md">O artefato mais raro do portal. Concede uma aura dourada permanente ao seu perfil e destaque máximo no ranking.</p>
+                <div className="flex items-center gap-4 w-full">
+                  <div className="flex-1 bg-black/40 rounded-xl p-3 border border-yellow-500/20">
+                    <p className="text-xs text-yellow-300/50 uppercase">Valor Lendário</p>
+                    <p className="text-xl font-heading text-yellow-400">🪙 10.000</p>
+                  </div>
+                  <Button 
+                    className="flex-1 bg-yellow-600 hover:bg-yellow-500 text-black font-bold h-full shadow-[0_0_20px_rgba(202,138,4,0.4)] transition-transform hover:scale-105"
+                    onClick={() => buyItem({ id: "3d_merlin_crown", name: "Coroa de Merlin", description: "O artefato mais raro do portal. Concede uma aura dourada permanente ao seu perfil e destaque máximo no ranking.", category: "featured", price_galeons: 10000, image_url: "https://images.unsplash.com/photo-1580234797602-22c37b4a6217?q=80&w=800&auto=format&fit=crop", rarity: "legendary", is_featured: true })}
+                    disabled={buying === "3d_merlin_crown" || galeons < 10000}
+                  >
+                    {buying === "3d_merlin_crown" ? "Comprando..." : galeons < 10000 ? "Sem Saldo" : "Comprar Artefato"}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {featuredItems.length > 0 && (
+             <div>
+                <h3 className="text-2xl font-heading text-foreground mb-6 flex items-center gap-2">
+                  <Star className="text-yellow-400" /> Em Destaque
                 </h3>
-                <div className="h-[1px] flex-1 mx-8 bg-gradient-to-r from-white/10 to-transparent" />
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  {featuredItems.map(item => {
+                    const isOwned = owned.includes(item.id);
+                    const canAfford = galeons >= item.price_galeons;
+                    return (
+                      <div key={item.id} className="group glass rounded-2xl border border-yellow-500/30 bg-gradient-to-b from-background to-secondary/20 overflow-hidden flex flex-col hover:-translate-y-2 transition-all duration-300 hover:shadow-[0_0_30px_rgba(234,179,8,0.2)]">
+                        <div className="relative aspect-square overflow-hidden bg-black/40">
+                          <StoreItemVisual imageUrl={item.image_url} name={item.name} category={item.category} isOwned={isOwned} />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
+                            {!isOwned && <Button size="sm" variant="magical" onClick={() => buyItem(item)} disabled={!canAfford || buying === item.id}>Comprar Rápido</Button>}
+                          </div>
+                        </div>
+                        <div className="p-4 flex flex-col flex-1 text-center">
+                          <h4 className="font-heading text-lg text-foreground mb-1 group-hover:text-yellow-400 transition-colors">{item.name}</h4>
+                          <p className="text-xs text-muted-foreground line-clamp-2 mb-3 flex-1">{item.description}</p>
+                          <div className="inline-block bg-yellow-900/30 border border-yellow-500/20 rounded-lg px-3 py-1.5 mx-auto">
+                            <span className="font-heading text-yellow-400 font-bold text-lg">🪙 {item.price_galeons}</span>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
              </div>
-
-             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-               {featuredItems.map(item => {
-                 const isOwned = owned.includes(item.id);
-                 const canAfford = galeons >= item.price_galeons;
-                 return (
-                   <div key={item.id} className="relative group/item overflow-hidden rounded-[2.5rem] bg-white/[0.03] border border-white/5 p-6 transition-all duration-500 hover:bg-white/[0.06] hover:border-white/10 hover:-translate-y-2">
-                     <div className="relative aspect-square rounded-[2rem] overflow-hidden bg-black/40 border border-white/5 mb-6">
-                        <StoreItemVisual imageUrl={item.image_url} name={item.name} category={item.category} isOwned={isOwned} />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover/item:opacity-100 transition-opacity flex items-center justify-center">
-                           {!isOwned && canAfford && (
-                              <Button variant="magical" className="rounded-xl font-heading text-[10px] tracking-widest px-6" onClick={() => buyItem(item)}>COMPRAR</Button>
-                           )}
-                        </div>
-                     </div>
-                     <div className="space-y-4 text-center">
-                        <div className="space-y-1">
-                           <h4 className="font-heading text-lg text-white group-hover/item:text-yellow-400 transition-colors">{item.name.toUpperCase()}</h4>
-                           <p className="text-[10px] text-white/30 font-heading tracking-widest uppercase">{item.category}</p>
-                        </div>
-                        <div className="inline-flex items-center gap-2 bg-yellow-400/10 border border-yellow-400/20 px-4 py-2 rounded-xl">
-                           <span className="text-sm text-yellow-400 font-heading">🪙 {item.price_galeons}</span>
-                        </div>
-                     </div>
-                   </div>
-                 )
-               })}
-             </div>
-          </div>
+          )}
         </div>
       )}
 
-      {/* ── ABA: GALEÕES - MONSTER QUALITY ── */}
+      {/* ── ABA: GALEÕES ── */}
       {tab === "galeons" && (
-        <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <div className="text-center max-w-3xl mx-auto space-y-4">
-            <h2 className="text-4xl font-heading text-white tracking-tight flex items-center justify-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center border border-yellow-500/40">
-                <Coins className="text-yellow-400" size={20} />
-              </div>
-              CÂMBIO GRINGOTTS
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <h2 className="text-3xl font-heading text-foreground mb-3 flex items-center justify-center gap-2">
+              <Coins className="text-yellow-400" /> Adquira Riquezas Mágicas
             </h2>
-            <p className="text-white/40 text-sm font-heading tracking-widest uppercase">Abasteça seu Cofre com as Melhores Taxas</p>
+            <p className="text-muted-foreground">O Banco Gringotts oferece as melhores taxas de câmbio. Abasteça seu cofre instantaneamente via Pix ou Cartão.</p>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             {GALEON_PACKAGES.map((pkg, i) => (
               <div key={pkg.id}
-                className={`group/pkg relative overflow-hidden rounded-[2.5rem] p-1 transition-all duration-500 hover:-translate-y-4 ${pkg.glow}`}>
-                <div className={`relative ${i >= 2 ? 'gold-card' : 'glass bg-white/[0.03]'} h-full rounded-[2.3rem] p-6 flex flex-col items-center text-center overflow-hidden border ${pkg.border}`}>
-                  <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-0 group-hover/pkg:opacity-100 transition-opacity" />
-                  
+                className={`group glass rounded-3xl p-1 border ${pkg.border} bg-gradient-to-br ${pkg.color} relative transition-all duration-500 hover:-translate-y-3 ${pkg.glow} flex flex-col ${i === 2 || i === 3 ? 'lg:-translate-y-4' : ''}`}>
+                <div className="glass h-full bg-background/80 backdrop-blur-md rounded-[1.3rem] p-6 flex flex-col items-center text-center relative overflow-hidden">
                   {pkg.badge && (
-                    <div className="absolute top-0 inset-x-0 bg-gradient-to-r from-yellow-500 to-amber-600 text-black text-[9px] font-heading uppercase tracking-[0.2em] py-2 shadow-lg z-20">
+                    <div className="absolute top-0 inset-x-0 bg-gradient-to-r from-yellow-500 to-amber-500 text-black text-[10px] font-bold uppercase tracking-widest py-1">
                       {pkg.badge}
                     </div>
                   )}
-                  
-                  <div className="relative w-32 h-32 mb-6 mt-4 group-hover/pkg:scale-110 transition-transform duration-700">
-                    <div className="absolute inset-0 bg-yellow-400/20 blur-3xl opacity-0 group-hover/pkg:opacity-100 transition-opacity" />
-                    <SafeImage src={pkg.image_url} alt={pkg.name} className="w-full h-full object-contain relative z-10 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]" />
+                  <div className="w-24 h-24 mb-4 mt-2 relative rounded-2xl overflow-hidden border-2 border-yellow-500/30 group-hover:scale-110 transition-transform duration-500 shadow-[0_0_15px_rgba(251,191,36,0.3)]">
+                    <SafeImage src={pkg.image_url} alt={pkg.name} className="w-full h-full object-cover mix-blend-overlay opacity-80" />
+                    <div className="absolute inset-0 flex items-center justify-center text-4xl drop-shadow-[0_0_15px_rgba(251,191,36,0.8)]">{pkg.icon}</div>
                   </div>
-                  <div className="space-y-4 flex-1 w-full">
-                     <div className="space-y-1">
-                        <h3 className="font-heading text-xs text-white/60 group-hover/pkg:text-white transition-colors tracking-tighter uppercase">{pkg.name}</h3>
-                        <p className="text-4xl font-heading text-gold-gradient drop-shadow-2xl">{pkg.galeons}</p>
-                     </div>
-                     
-                     <div className="py-2 border-y border-white/5">
-                        <p className="text-[10px] text-white/40 font-heading tracking-widest uppercase">
-                           GALEÕES DE OURO
-                        </p>
-                     </div>
- 
-                     <Button variant="magical" className="w-full h-14 rounded-2xl font-heading text-xs tracking-widest shadow-xl group/pkgbtn overflow-hidden relative" disabled={buying === pkg.id} onClick={() => buyGaleons(pkg)}>
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/pkgbtn:animate-[shimmer_2s_infinite]" />
-                        <span className="relative z-10">{buying === pkg.id ? "..." : `R$ ${pkg.price_brl.toFixed(2).replace(".", ",")}`}</span>
-                     </Button>
-                  </div>
+                  <h3 className="font-heading text-lg text-foreground mb-1 group-hover:text-yellow-400 transition-colors">{pkg.name}</h3>
+                  <p className="text-2xl font-heading text-yellow-400 font-bold mb-1 drop-shadow-md">🪙 {pkg.galeons}</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-6 flex-1">
+                    ~{(pkg.galeons / pkg.price_brl).toFixed(0)} Galeões / R$
+                  </p>
+                  <Button variant={pkg.badge ? "magical" : "outline"} className={`w-full font-bold ${!pkg.badge && 'border-yellow-500/50 text-yellow-400 hover:bg-yellow-500/20'}`} disabled={buying === pkg.id} onClick={() => buyGaleons(pkg)}>
+                    {buying === pkg.id ? "Aguarde..." : `R$ ${pkg.price_brl.toFixed(2).replace(".", ",")}`}
+                  </Button>
                 </div>
               </div>
             ))}
           </div>
           
-          <div className="relative overflow-hidden rounded-[3rem] bg-white/[0.02] border border-white/5 p-8 md:p-12 flex flex-col md:flex-row items-center justify-center gap-10 max-w-4xl mx-auto shadow-2xl">
-            <div className="w-20 h-20 rounded-3xl bg-green-500/20 flex items-center justify-center border border-green-500/40 shrink-0 shadow-[0_0_40px_rgba(34,197,94,0.2)]">
-               <Check size={40} className="text-green-500" />
-            </div>
-            <div className="text-center md:text-left space-y-2">
-              <h4 className="font-heading text-2xl text-white tracking-tight uppercase">Selo de Segurança Gringotts</h4>
-              <p className="text-white/40 text-sm leading-relaxed max-w-xl">
-                 Todas as transações são protegidas por feitiços de criptografia antiga. O ouro será creditado no seu cofre instantaneamente após a confirmação.
-              </p>
+          <div className="glass rounded-2xl p-6 border border-primary/20 bg-primary/5 flex items-center justify-center gap-6 max-w-3xl mx-auto mt-12">
+            <div className="p-3 bg-primary/20 rounded-full text-primary"><Check size={24} /></div>
+            <div>
+              <p className="font-heading text-lg">Garantia Duende Gringotts</p>
+              <p className="text-sm text-muted-foreground">Transações criptografadas e liberação <strong>imediata</strong> dos fundos após confirmação.</p>
             </div>
           </div>
         </div>
       )}
 
-      {/* ── ABA: VIP - MONSTER QUALITY ── */}
+      {/* ── ABA: VIP ── */}
       {tab === "vip" && (
-        <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <div className="text-center max-w-3xl mx-auto space-y-4">
-            <h2 className="text-4xl font-heading text-white tracking-tight flex items-center justify-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center border border-purple-500/40">
-                <Crown className="text-purple-400" size={20} />
-              </div>
-              SOCIEDADE DE ELITE
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <h2 className="text-3xl font-heading text-foreground mb-3 flex items-center justify-center gap-2">
+              <Crown className="text-yellow-400" /> Clube dos Sangue-Puro (VIP)
             </h2>
-            <p className="text-white/40 text-sm font-heading tracking-widest uppercase">Ascenda ao Status de Lenda em Hogwarts</p>
+            <p className="text-muted-foreground">Eleve seu status no portal com benefícios exclusivos, mesada em Galeões e cosméticos impossíveis de obter de outra forma.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-7xl mx-auto px-4">
-            {VIP_PLANS.map((plan, i) => {
-              const isCenter = i === 1;
-              const isLenda = i === 2;
-              return (
-                <div key={plan.id}
-                  className={`group/vip relative overflow-hidden rounded-[3.5rem] p-1 transition-all duration-700 hover:-translate-y-6 ${isCenter || isLenda ? 'md:scale-105 z-10' : ''}`}>
-                  <div className={`relative h-full rounded-[3.3rem] p-8 md:p-10 flex flex-col overflow-hidden ${isLenda ? 'gold-card border-yellow-500/40' : 'glass bg-black/60 border-white/10'}`}>
-                    <div className="absolute -top-20 -right-20 w-40 h-40 bg-current opacity-5 blur-[80px] rounded-full pointer-events-none" style={{ color: plan.textColor.split('-')[1] }} />
-                    
-                    {currentVip === plan.id && (
-                      <div className="absolute top-6 right-6 bg-green-500/20 border border-green-500/40 text-green-400 text-[9px] font-heading tracking-widest px-4 py-1.5 rounded-full backdrop-blur-3xl animate-pulse">
-                        PLANO ATUAL
-                      </div>
-                    )}
-                    
-                    {plan.badge && (
-                      <div className="absolute top-0 inset-x-0 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-[9px] font-heading uppercase tracking-[0.2em] py-2 text-center shadow-lg">
-                        {plan.badge}
-                      </div>
-                    )}
-
-                    <div className="space-y-8 flex-1">
-                       <div className="space-y-4 text-center mt-4">
-                          <div className="w-24 h-24 mx-auto bg-white/5 rounded-[2rem] border border-white/10 flex items-center justify-center group-hover/vip:scale-110 transition-transform duration-500 shadow-2xl">
-                             <span className="text-5xl drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]">{plan.icon}</span>
-                          </div>
-                          <h3 className={`font-heading text-2xl tracking-tighter ${isLenda ? 'text-gold-gradient' : plan.textColor}`}>{plan.name.toUpperCase()}</h3>
-                       </div>
-
-                       <div className="text-center">
-                          <div className="inline-flex items-baseline gap-1">
-                             <span className={`text-6xl font-heading tracking-tighter ${isLenda ? 'text-white' : plan.textColor}`}>R$ {plan.price_brl.toFixed(2).replace(".", ",")}</span>
-                             <span className="text-[10px] text-white/20 font-heading tracking-widest uppercase">/MÊS</span>
-                          </div>
-                       </div>
-
-                       <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-
-                       <ul className="space-y-4">
-                         {plan.benefits.map(b => (
-                           <li key={b} className="flex items-start gap-4 group/item">
-                             <div className={`w-5 h-5 rounded-full ${isLenda ? 'bg-yellow-500/20 border-yellow-500/40' : 'bg-white/5 border-white/10'} flex items-center justify-center border mt-0.5 shrink-0`}>
-                                <Check size={10} className={isLenda ? 'text-yellow-500' : 'text-white/60'} />
-                             </div>
-                             <span className="text-xs text-white/50 group-hover/item:text-white transition-colors leading-tight">{b}</span>
-                           </li>
-                         ))}
-                       </ul>
-                       
-                       {plan.galeons_monthly > 0 && (
-                          <div className={`mt-8 p-4 rounded-2xl ${isLenda ? 'bg-yellow-500/10 border-yellow-500/20' : 'bg-white/5 border-white/10'} flex items-center gap-4 group/galeon animate-pulse-glow`}>
-                             <div className={`w-10 h-10 rounded-xl ${isLenda ? 'bg-yellow-500/20' : 'bg-white/5'} flex items-center justify-center border ${isLenda ? 'border-yellow-500/40' : 'border-white/10'} shadow-inner`}>
-                                <Coins size={18} className="text-yellow-400" />
-                             </div>
-                             <div>
-                                <p className="text-[9px] font-heading text-white/40 uppercase tracking-widest">Mesada Real</p>
-                                <p className={`text-sm font-heading ${isLenda ? 'text-yellow-400' : 'text-white'}`}>+{plan.galeons_monthly} GALEÕES</p>
-                             </div>
-                          </div>
-                       )}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {VIP_PLANS.map((plan, i) => (
+              <div key={plan.id}
+                className={`group glass rounded-3xl p-1 border ${plan.border} bg-gradient-to-br ${plan.color} relative flex flex-col transition-all duration-500 hover:-translate-y-3 ${plan.glow} ${i === 1 ? 'md:-translate-y-6 md:scale-105' : ''}`}>
+                
+                <div className="glass h-full bg-background/90 backdrop-blur-xl rounded-[1.3rem] p-8 flex flex-col relative overflow-hidden">
+                  {/* Background decoration */}
+                  <div className="absolute -top-20 -right-20 w-40 h-40 bg-current opacity-5 blur-3xl rounded-full pointer-events-none" style={{ color: plan.textColor.split('-')[1] }} />
+                  
+                  {currentVip === plan.id && (
+                    <div className="absolute top-4 right-4 bg-green-500/20 border border-green-500/50 text-green-400 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 backdrop-blur-md">
+                      <Check size={12} /> Ativo
                     </div>
-
-                    <div className="mt-12 pt-8 border-t border-white/5">
-                       <Button size="lg" className={`w-full h-16 rounded-2xl font-heading text-[10px] tracking-[0.3em] shadow-2xl transition-all duration-500 overflow-hidden relative group/vipbtn ${
-                           currentVip === plan.id ? "bg-white/5 text-white/20 border border-white/5" : 
-                           isLenda ? "bg-gradient-to-r from-yellow-500 to-amber-600 text-black border-none hover:scale-105 shadow-yellow-500/20" :
-                           isCenter ? "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white border-none" :
-                           "bg-white/5 hover:bg-white/10 text-white border border-white/10"
-                         }`} disabled={buying === plan.id || currentVip === plan.id}
-                         onClick={() => { play('click'); buyVip(plan); }}
-                         onMouseEnter={() => play('hover')}>
-                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/vipbtn:animate-[shimmer_2s_infinite]" />
-                         <span className="relative z-10 uppercase">{buying === plan.id ? "..." : currentVip === plan.id ? "FEITIÇO ATIVO" : "ASCENDER AGORA"}</span>
-                       </Button>
+                  )}
+                  {plan.badge && (
+                    <div className="absolute top-0 inset-x-0 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-[10px] font-bold uppercase tracking-widest py-1 text-center">
+                      {plan.badge}
                     </div>
+                  )}
+
+                  <div className="w-full h-32 mb-6 mt-2 relative rounded-2xl overflow-hidden border border-current shadow-lg group-hover:scale-105 transition-transform duration-500" style={{ borderColor: plan.textColor.split('-')[1] }}>
+                    <SafeImage src={plan.image_url} alt={plan.name} className="w-full h-full object-cover opacity-60 mix-blend-overlay" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent" />
+                    <div className="absolute inset-0 flex items-center justify-center text-5xl drop-shadow-[0_0_20px_currentColor]">{plan.icon}</div>
                   </div>
+                  <h3 className={`font-heading text-2xl mb-2 ${plan.textColor}`}>{plan.name}</h3>
+                  <div className="flex items-end gap-1 mb-8">
+                    <span className={`font-heading text-4xl font-bold ${plan.textColor}`}>R$ {plan.price_brl.toFixed(2).replace(".", ",")}</span>
+                    <span className="text-sm text-muted-foreground pb-1">/mês</span>
+                  </div>
+
+                  <ul className="space-y-4 flex-1 mb-8 relative z-10">
+                    {plan.benefits.map(b => (
+                      <li key={b} className="flex items-start gap-3 text-sm text-muted-foreground/90">
+                        <div className={`p-1 rounded-full bg-current opacity-20 shrink-0 mt-0.5`} style={{ color: plan.textColor.split('-')[1] }}>
+                           <Check size={10} className={plan.textColor} />
+                        </div>
+                        {b}
+                      </li>
+                    ))}
+                    {plan.galeons_monthly > 0 && (
+                      <li className="flex items-start gap-3 text-sm font-bold text-yellow-400 mt-6 pt-4 border-t border-border/50">
+                         <div className="p-1 rounded-full bg-yellow-500/20 shrink-0 mt-0.5">
+                           <Coins size={12} className="text-yellow-400" />
+                        </div>
+                        +{plan.galeons_monthly} Galeões/mês grátis!
+                      </li>
+                    )}
+                  </ul>
+
+                  <Button size="lg" className={`w-full font-bold shadow-lg transition-all ${
+                      currentVip === plan.id ? "bg-green-600/20 text-green-400 border border-green-500/50 hover:bg-green-600/30" : 
+                      i === 1 ? "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white border-none" :
+                      i === 2 ? "bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-500 hover:to-amber-500 text-black border-none" :
+                      "bg-secondary hover:bg-secondary/80 text-foreground"
+                    }`} disabled={buying === plan.id || currentVip === plan.id}
+                    onClick={() => buyVip(plan)}>
+                    {buying === plan.id ? "Processando..." : currentVip === plan.id ? "Seu Plano Atual" : "Assinar Agora"}
+                  </Button>
                 </div>
-              )
-            })}
+              </div>
+            ))}
           </div>
         </div>
       )}
 
-      {/* ── ABAS DE ITENS (Roupas, Varinhas, Feitiços, Poções, etc) - MONSTER QUALITY ── */}
-      {["clothing","wand","spell","potion","upgrade","stickers"].includes(tab) && (
+      {/* ── ABAS DE ITENS (Roupas, Varinhas, Feitiços, Poções, etc) ── */}
+      {["clothing","wand","spell","potion","upgrade"].includes(tab) && (
         <div className="animate-in fade-in duration-500">
           {loading ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
-              {[1,2,3,4,5,6,7,8,9,10].map(i => <div key={i} className="glass aspect-[3/4.5] rounded-[2.5rem] animate-pulse bg-white/5" />)}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+              {[1,2,3,4,5,6,7,8].map(i => <div key={i} className="glass aspect-[3/4] rounded-2xl animate-pulse bg-secondary/50" />)}
             </div>
-          ) : displayItems.length === 0 ? (
-            <div className="relative overflow-hidden rounded-[3rem] p-20 text-center max-w-2xl mx-auto border border-white/5 bg-white/[0.02]">
-              <div className="w-24 h-24 mx-auto bg-white/5 rounded-3xl flex items-center justify-center mb-8 border border-white/10">
-                <ShoppingBag size={48} className="text-white/20" />
+          ) : filteredItems.length === 0 ? (
+            <div className="glass rounded-3xl p-16 text-center max-w-2xl mx-auto border-dashed border-2 border-muted">
+              <div className="w-24 h-24 mx-auto bg-secondary/50 rounded-full flex items-center justify-center mb-6">
+                <ShoppingBag size={40} className="text-muted-foreground opacity-50" />
               </div>
-              <h3 className="text-3xl font-heading text-white mb-4 tracking-tight">Estoque Esgotado</h3>
-              <p className="text-white/40 text-sm font-medium leading-relaxed">
-                 Nossos artesãos estão trabalhando em novas relíquias. Volte em breve para descobrir o que os duendes prepararam para você.
-              </p>
+              <h3 className="text-2xl font-heading mb-2">Coleção em Desenvolvimento</h3>
+              <p className="text-muted-foreground">Nossos artesãos mágicos estão forjando novos itens para esta categoria. Volte em breve!</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
-              {displayItems.map(item => {
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+              {filteredItems.map(item => {
                 const rar = RARITY[item.rarity as keyof typeof RARITY] || RARITY.common;
                 const isOwned = owned.includes(item.id);
                 const canAfford = galeons >= item.price_galeons;
@@ -715,45 +670,55 @@ export default function GringottsStore() {
 
                 return (
                   <div key={item.id}
-                    className={`group/item relative overflow-hidden rounded-[2.5rem] bg-white/[0.03] border ${rar.border.replace('border-', 'border-white/10 group-hover/item:border-')} p-1 transition-all duration-500 hover:-translate-y-4 hover:bg-white/[0.06] ${rar.glow}`}>
-                    <div className="relative glass h-full rounded-[2.3rem] p-5 flex flex-col overflow-hidden">
-                       <div className="relative aspect-square rounded-2xl overflow-hidden bg-black/40 border border-white/5 mb-4 group-hover/item:scale-[1.02] transition-transform duration-500">
-                          <StoreItemVisual imageUrl={item.image_url} name={item.name} category={item.category} isOwned={isOwned} />
-                          <div className={`absolute top-2 right-2 px-3 py-1 rounded-full text-[8px] font-heading tracking-widest border backdrop-blur-3xl z-10 ${rar.cls}`}>
-                             {rar.label.toUpperCase()}
+                    className={`group glass rounded-2xl border overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-2 hover:bg-secondary/40 ${rar.border} ${rar.glow} ${
+                      item.rarity === "legendary" ? "bg-gradient-to-br from-yellow-900/10 to-transparent" : ""
+                    }`}>
+                    <div className="relative aspect-square overflow-hidden bg-black/50">
+                      <StoreItemVisual
+                        imageUrl={item.image_url}
+                        name={item.name}
+                        category={item.category}
+                        isOwned={isOwned}
+                      />
+                      <span className={`absolute top-2 right-2 text-[10px] font-bold tracking-wider px-2 py-1 rounded-full border ${rar.cls} bg-background/90 backdrop-blur-md shadow-lg z-10 uppercase`}>
+                        {rar.label}
+                      </span>
+                    </div>
+                    <div className="p-4 flex flex-col flex-1 relative">
+                      <h4 className="font-heading text-base text-foreground leading-tight mb-2 group-hover:text-primary transition-colors">{item.name}</h4>
+                      <p className="text-[11px] text-muted-foreground flex-1 mb-3 leading-relaxed line-clamp-2">{item.description}</p>
+                      
+                      {/* Atributos de RPG */}
+                      {stats && (stats.atk > 0 || stats.def > 0 || stats.mana > 0 || stats.hp > 0) && (
+                          <div className="grid grid-cols-2 gap-1 mb-4">
+                              {stats.atk > 0 && <div className="text-[9px] font-bold text-red-400 bg-red-400/10 px-2 py-0.5 rounded border border-red-400/20 flex items-center gap-1"><Swords size={8} /> ATK +{stats.atk}</div>}
+                              {stats.def > 0 && <div className="text-[9px] font-bold text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded border border-blue-400/20 flex items-center gap-1"><Shield size={8} /> DEF +{stats.def}</div>}
+                              {stats.mana > 0 && <div className="text-[9px] font-bold text-indigo-400 bg-indigo-400/10 px-2 py-0.5 rounded border border-indigo-400/20 flex items-center gap-1"><Zap size={8} /> MANA +{stats.mana}</div>}
+                              {stats.hp > 0 && <div className="text-[9px] font-bold text-green-400 bg-green-400/10 px-2 py-0.5 rounded border border-green-400/20 flex items-center gap-1"><Flame size={8} /> HP +{stats.hp}</div>}
                           </div>
-                       </div>
+                      )}
 
-                       <div className="space-y-4 flex-1 flex flex-col">
-                          <div className="space-y-1">
-                             <h4 className="font-heading text-sm text-white/90 leading-tight group-hover/item:text-white transition-colors">{item.name.toUpperCase()}</h4>
-                             <p className="text-[10px] text-white/30 font-medium line-clamp-2 leading-relaxed">{item.description}</p>
-                          </div>
-
-                          {stats && (stats.atk > 0 || stats.def > 0 || stats.mana > 0 || stats.hp > 0) && (
-                              <div className="grid grid-cols-2 gap-1.5">
-                                  {stats.atk > 0 && <div className="text-[8px] font-heading text-red-400 bg-red-400/10 px-2 py-1 rounded-lg border border-red-400/20">ATK +{stats.atk}</div>}
-                                  {stats.def > 0 && <div className="text-[8px] font-heading text-blue-400 bg-blue-400/10 px-2 py-1 rounded-lg border border-blue-400/20">DEF +{stats.def}</div>}
-                                  {stats.mana > 0 && <div className="text-[8px] font-heading text-indigo-400 bg-indigo-400/10 px-2 py-1 rounded-lg border border-indigo-400/20">MANA +{stats.mana}</div>}
-                                  {stats.hp > 0 && <div className="text-[8px] font-heading text-green-400 bg-green-400/10 px-2 py-1 rounded-lg border border-green-400/20">HP +{stats.hp}</div>}
-                              </div>
-                          )}
-
-                          <div className="pt-4 mt-auto border-t border-white/5 flex items-center justify-between gap-3">
-                             <div className="flex items-center gap-2">
-                                <span className="text-sm">🪙</span>
-                                <span className="font-heading text-yellow-400 text-base tracking-tighter">{item.price_galeons}</span>
-                             </div>
-                             <Button 
-                                size="sm" 
-                                variant={isOwned ? "outline" : "magical"}
-                                disabled={isOwned || buying === item.id || (!canAfford && !isOwned)}
-                                onClick={() => !isOwned && buyItem(item)}
-                                className={`h-10 rounded-xl px-4 text-[10px] font-heading tracking-widest ${isOwned ? 'border-green-500/20 text-green-400' : 'shadow-lg shadow-primary/20'}`}>
-                                {isOwned ? "OK" : buying === item.id ? "..." : "BUY"}
-                             </Button>
-                          </div>
-                       </div>
+                      <div className="flex items-center justify-between mt-auto">
+                        <div className="flex items-center gap-1.5 bg-background/50 px-2 py-1 rounded-md border border-border/50">
+                           <span className="text-xs">🪙</span>
+                           <span className="font-heading text-yellow-400 text-sm">{item.price_galeons}</span>
+                        </div>
+                        <Button size="sm" variant={isOwned ? "outline" : "magical"}
+                          disabled={isOwned || buying === item.id || (!canAfford && !isOwned)}
+                          onClick={() => !isOwned && buyItem(item)}
+                          className={`text-xs px-4 h-8 ${isOwned ? 'border-green-500/30 text-green-400' : ''}`}>
+                          {isOwned ? "Adquirido" : !canAfford ? "Sem Saldo" : buying === item.id ? "..." : "Comprar"}
+                        </Button>
+                      </div>
+                      
+                      {!isOwned && !canAfford && (
+                        <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-background via-background/90 to-transparent translate-y-full group-hover:translate-y-0 transition-transform flex flex-col items-center justify-end z-20">
+                          <p className="text-[11px] text-red-400 font-bold text-center bg-red-500/10 px-2 py-1 rounded w-full border border-red-500/20">
+                            Faltam 🪙 {item.price_galeons - galeons}
+                          </p>
+                          <button onClick={() => setTab("galeons")} className="text-[10px] text-yellow-400 hover:underline mt-1">Obter Galeões</button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 );

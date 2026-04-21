@@ -11,27 +11,35 @@ interface Props {
   currentVip?: string | null;
   galeons?: number;
   username?: string;
-  onClose?: () => void;
 }
 
 const VIP_BENEFITS = [
-  { img: "/medalha_ouro_3d.png", text: "Badge VIP exclusivo no perfil" },
-  { img: "/sticker_harry_gold.png", text: "Galeões mensais automáticos" },
-  { img: "/robe_safira.png", text: "Skins e itens exclusivos desbloqueados" },
-  { img: "/liquid_luck_3d.png", text: "XP bônus em todas as atividades" },
-  { img: "/legendary_chest_3d.png", text: "Acesso antecipado a novidades" },
-  { img: "/vip_coroa.png", text: "Título de Mago(a) Premium no ranking" },
+  { img: "https://images.unsplash.com/photo-1589802790933-f5fb3d2f93cb?q=80&w=200", text: "Badge VIP exclusivo no perfil" },
+  { img: "https://images.unsplash.com/photo-1621508654686-809f23efdabc?q=80&w=200", text: "Galeões mensais automáticos" },
+  { img: "https://images.unsplash.com/photo-1618944847023-38aa001235f0?q=80&w=200", text: "Skins e itens exclusivos desbloqueados" },
+  { img: "https://images.unsplash.com/photo-1517404215738-15263e9f9178?q=80&w=200", text: "XP bônus em todas as atividades" },
+  { img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=200", text: "Acesso antecipado a novidades" },
+  { img: "https://images.unsplash.com/photo-1574280367876-0f862cd5d082?q=80&w=200", text: "Título de Mago(a) Premium no ranking" },
 ];
 
 const PLANS = [
-  { id: "premium", name: "Iniciante", price: "R$ 9,90", color: "from-slate-800 to-slate-700", border: "border-slate-500/40", img: "/invisibility_cloak_3d.png", galeons: 0 },
-  { id: "vip", name: "VIP", price: "R$ 19,90", color: "from-purple-900 to-violet-800", border: "border-purple-400/50", img: "/vip_coroa.png", galeons: 200, highlight: true },
-  { id: "founder", name: "Fundador", price: "R$ 39,90", color: "from-yellow-900 to-amber-800", border: "border-yellow-400/50", img: "/elder_wand_3d.png", galeons: 500 },
+  { id: "premium", name: "Iniciante", price: "R$ 9,90", color: "from-slate-800 to-slate-700", border: "border-slate-500/40", img: "https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=200", galeons: 0 },
+  { id: "vip", name: "VIP", price: "R$ 19,90", color: "from-purple-900 to-violet-800", border: "border-purple-400/50", img: "https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?q=80&w=200", galeons: 200, highlight: true },
+  { id: "founder", name: "Fundador", price: "R$ 39,90", color: "from-yellow-900 to-amber-800", border: "border-yellow-400/50", img: "https://images.unsplash.com/photo-1574280367876-0f862cd5d082?q=80&w=200", galeons: 500 },
 ];
 
-export default function VipUpsellBanner({ currentVip, galeons = 0, username, onClose }: Props) {
+export default function VipUpsellBanner({ currentVip, galeons = 0, username }: Props) {
+  const [dismissed, setDismissed] = useState(() =>
+    localStorage.getItem("vip_banner_dismissed") === new Date().toDateString()
+  );
+
   // Não mostrar para VIPs
-  if (currentVip) return null;
+  if (currentVip || dismissed) return null;
+
+  const handleDismiss = () => {
+    localStorage.setItem("vip_banner_dismissed", new Date().toDateString());
+    setDismissed(true);
+  };
 
   return (
     <div className="relative overflow-hidden rounded-3xl border border-yellow-500/30 bg-gradient-to-br from-slate-900 via-purple-950/60 to-slate-900 mb-6 animate-fade-in-up">
@@ -44,10 +52,9 @@ export default function VipUpsellBanner({ currentVip, galeons = 0, username, onC
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-yellow-400/60 to-transparent" />
 
       {/* Dismiss */}
-      <button onClick={onClose}
-        className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-white transition-all shadow-lg border border-white/5"
-      >
-        <X size={16} />
+      <button onClick={handleDismiss}
+        className="absolute top-3 right-3 z-10 p-1.5 rounded-full bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground transition-colors">
+        <X size={14} />
       </button>
 
       <div className="p-6 md:p-8">

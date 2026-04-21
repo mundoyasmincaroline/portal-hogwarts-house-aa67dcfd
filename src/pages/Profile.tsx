@@ -14,10 +14,8 @@ import ProfileAlbum from "@/components/ProfileAlbum";
 import CharacterSheetView from "@/components/CharacterSheetView";
 import MemberCard from "@/components/MemberCard";
 import AdminMemberModal from "@/components/AdminMemberModal";
-import { Info, Users, Search, Scroll, Book, Lock, Trophy, ShoppingBag, Flame, Sparkles, Star, CheckCircle2, Crown, ChevronRight, Zap } from "lucide-react";
+import { Info, Users, Search, Scroll, Book, Lock, Trophy, ShoppingBag, Flame, Sparkles, Star, CheckCircle2, Crown } from "lucide-react";
 import SafeImage from "@/components/SafeImage";
-import MagicalParticles from "@/components/MagicalParticles";
-import { useMagicalSound } from "@/hooks/useMagicalSound";
 
 // ---- Componente embutido: lista de membros para solicitar amizade ----
 function MembersTab({ currentUserId }: { currentUserId?: string }) {
@@ -83,6 +81,7 @@ function MembersTab({ currentUserId }: { currentUserId?: string }) {
               member={m}
               friendshipStatus={(friendships[m.user_id] as any) || "none"}
               onFriendshipChange={() => {
+                // Reload friendships after action
                 if (!currentUserId) return;
                 supabase
                   .from("friendships")
@@ -107,16 +106,14 @@ function MembersTab({ currentUserId }: { currentUserId?: string }) {
     </div>
   );
 }
+// -----------------------------------------------------------------------
 
 export default function Profile() {
   const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
   const { profile: currentUserProfile, user, updateProfile, updatePassword, isAdmin } = useAuth();
-  const { play } = useMagicalSound();
   
   const [targetProfile, setTargetProfile] = useState<any>(null);
-  const [characters, setCharacters] = useState<any[]>([]);
-  const [viewingType, setViewingType] = useState<"real" | "oc" | "canon">("real");
   const [friendship, setFriendship] = useState<any>(null);
   const [friends, setFriends] = useState<any[]>([]);
   const [loadingTarget, setLoadingTarget] = useState(false);
@@ -124,11 +121,6 @@ export default function Profile() {
   const [userChallenges, setUserChallenges] = useState<any[]>([]);
   const [userItems, setUserItems] = useState<any[]>([]);
   const [loadingExtras, setLoadingExtras] = useState(false);
-  const [myReferrals, setMyReferrals] = useState<any[]>([]);
-  
-  // Segurança adicional para evitar ReferenceError em builds cacheados
-  const referrals = (window as any).referrals || myReferrals;
-  const setReferrals = (window as any).setReferrals || (() => {});
   const [activeTab, setActiveTab] = useState<"about" | "fichas" | "friends" | "members" | "security" | "album" | "referral" | "achievements" | "inventory">("about");
 
   const [editing, setEditing] = useState(false);
@@ -147,12 +139,7 @@ export default function Profile() {
   const [adminEditModal, setAdminEditModal] = useState(false);
 
   const isMe = !userId || userId === user?.id;
-  const realProfile = isMe ? currentUserProfile : targetProfile;
-  
-  const activeIdentity = viewingType === 'real' ? realProfile : 
-                         characters.find(c => c.type === viewingType) || realProfile;
-
-  const profile = realProfile; // Keep original reference for some stats
+  const profile = isMe ? currentUserProfile : targetProfile;
 
   useEffect(() => {
     if (isMe && currentUserProfile) {
@@ -168,31 +155,21 @@ export default function Profile() {
       loadReferrals(user!.id);
       loadBadges(user!.id);
       loadExtras(user!.id);
-      loadCharacters(user!.id);
     } else if (userId) {
       loadTargetProfile();
       loadFriends(userId);
       loadReferrals(userId);
       loadBadges(userId);
       loadExtras(userId);
-      loadCharacters(userId);
     }
   }, [userId, isMe, currentUserProfile]);
-
-  const loadCharacters = async (targetId: string) => {
-    const { data } = await supabase
-      .from("characters")
-      .select("*")
-      .eq("user_id", targetId)
-      .order("created_at");
-    if (data) setCharacters(data);
-  };
 
   const loadTargetProfile = async () => {
     setLoadingTarget(true);
     const { data } = await supabase.from("profiles").select("*").eq("user_id", userId).single();
     if (data) setTargetProfile(data);
     
+    // Check friendship status
     if (user && data) {
       const { data: fData } = await supabase.from("friendships")
         .select("*")
@@ -216,34 +193,17 @@ export default function Profile() {
   };
 
   const loadReferrals = async (targetId: string) => {
-    try {
-      const { data: refs, error: refsError } = await supabase
-        .from("referrals")
-        .select("*")
-        .eq("inviter_id", targetId);
-      
-      if (refsError) throw refsError;
-
-      if (refs && refs.length > 0) {
-        const invitedIds = refs.map(r => r.invited_id);
-        const { data: profs, error: profsError } = await supabase
-          .from("profiles")
-          .select("user_id, full_name, username, avatar_url")
-          .in("user_id", invitedIds);
-
-        if (profsError) throw profsError;
-
-        const enriched = refs.map(r => ({
-          ...r,
-          profile: profs?.find(p => p.user_id === r.invited_id) || null
-        }));
-        setMyReferrals(enriched);
-      } else {
-        setMyReferrals([]);
-      }
-    } catch (error) {
-      console.error("Erro ao carregar recrutamentos:", error);
-      setMyReferrals([]);
+    const { data: refs } = await supabase.from("referrals").select("*").eq("inviter_id", targetId);
+    if (refs && refs.length > 0) {
+      const invitedIds = refs.map(r => r.invited_id);
+      const { data: profs } = await supabase.from("profiles").select("*").in("user_id", invitedIds);
+      const enriched = refs.map(r => ({
+        ...r,
+        profile: profs?.find(p => p.user_id === r.invited_id)
+      }));
+      setReferrals(enriched);
+    } else {
+      setReferrals([]);
     }
   };
 
@@ -326,6 +286,21 @@ export default function Profile() {
     }
   };
 
+  const handleBlockUser = async () => {
+    if (!user || !targetProfile) return;
+    if (friendship) {
+      await supabase.from("friendships").delete().eq("id", friendship.id);
+    }
+    const { data, error } = await supabase.from("friendships").insert({
+      user_id: user.id,
+      friend_id: targetProfile.user_id,
+      status: "blocked",
+    }).select().single();
+    if (error) return toast.error("Erro ao bloquear.");
+    setFriendship(data);
+    toast.success("Usuário bloqueado. 🚫");
+  };
+
   const toggleEquip = async (itemId: string, currentStatus: boolean) => {
     if (!isMe) return;
     const { error } = await supabase.from("user_items").update({ is_equipped: !currentStatus } as never).eq("id", itemId);
@@ -333,6 +308,15 @@ export default function Profile() {
     else {
       toast.success(!currentStatus ? "Item equipado! ⚔️" : "Item removido.");
       loadExtras(user!.id);
+    }
+  };
+
+  const handleUnblock = async () => {
+    if (!friendship) return;
+    const { error } = await supabase.from("friendships").delete().eq("id", friendship.id);
+    if (!error) {
+      setFriendship(null);
+      toast.success("Desbloqueado.");
     }
   };
 
@@ -349,6 +333,7 @@ export default function Profile() {
   const save = async () => {
     setSaving(true);
     const updates: any = { ...form };
+    // Only update avatar_url from the URL field if it was changed
     if (!updates.avatar_url) delete updates.avatar_url;
     const result = await updateProfile(updates);
     setSaving(false);
@@ -393,245 +378,368 @@ export default function Profile() {
     toast.success("Foto atualizada!");
   };
 
-  let tabContent = null;
+  return (
+    <div className="max-w-2xl mx-auto space-y-6">
+      {/* Abas */}
+      <div className="flex gap-4 border-b border-border mb-6 overflow-x-auto pb-1 scrollbar-hide whitespace-nowrap">
+        <button 
+          onClick={() => { setActiveTab("about"); setEditing(false); }} 
+          className={`pb-2 font-heading text-sm transition-colors ${activeTab === "about" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          Sobre
+        </button>
+        <button
+          onClick={() => { setActiveTab("friends"); setEditing(false); }}
+          className={`pb-2 font-heading text-sm transition-colors ${activeTab === "friends" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          Amigos ({friends.length})
+        </button>
+        <button
+          onClick={() => { setActiveTab("members"); setEditing(false); }}
+          className={`pb-2 font-heading text-sm transition-colors ${activeTab === "members" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          👥 Membros
+        </button>
+        <button 
+          onClick={() => { setActiveTab("fichas"); setEditing(false); }} 
+          className={`pb-2 font-heading text-sm transition-colors ${activeTab === "fichas" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          Fichas 📜
+        </button>
+        <button 
+          onClick={() => { setActiveTab("album"); setEditing(false); }} 
+          className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "album" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          Álbum
+        </button>
+        <button 
+          onClick={() => { setActiveTab("achievements"); setEditing(false); }} 
+          className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "achievements" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          🏆 Conquistas
+        </button>
+        <button 
+          onClick={() => { setActiveTab("inventory"); setEditing(false); }} 
+          className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "inventory" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
+        >
+          🎒 Inventário
+        </button>
+        {isMe && (
+          <button 
+            onClick={() => { setActiveTab("referral"); setEditing(false); }} 
+            className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "referral" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            Recrutamento
+          </button>
+        )}
+        {isMe && (
+          <button 
+            onClick={() => { setActiveTab("security"); setEditing(false); }} 
+            className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "security" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            Segurança
+          </button>
+        )}
+      </div>
 
-  if (activeTab === "about") {
-    tabContent = (
-      <>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            { label: "XP Total", value: profile.xp, icon: <Zap size={24} />, color: "from-amber-400 to-yellow-600", glow: "shadow-amber-500/20" },
-            { label: "Nível Bruxo", value: levelInfo.level, icon: <Trophy size={24} />, color: "from-blue-400 to-indigo-600", glow: "shadow-blue-500/20" },
-            { label: "Insígnias", value: userBadges.length, icon: <Crown size={24} />, color: "from-purple-400 to-fuchsia-600", glow: "shadow-purple-500/20" }
-          ].map((stat, i) => (
-            <div key={i} className={`relative overflow-hidden bg-black/40 backdrop-blur-3xl rounded-[2.5rem] p-8 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 hover:-translate-y-2 hover:border-white/20 group ${stat.glow}`}>
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative z-10 flex flex-col items-center gap-4">
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-500`}>
-                  {stat.icon}
-                </div>
-                <div className="text-center">
-                  <p className="text-3xl font-heading text-white tracking-tighter">{stat.value.toLocaleString()}</p>
-                  <p className="text-[10px] text-white/30 uppercase tracking-[0.3em] font-heading mt-1">{stat.label}</p>
-                </div>
+      <div className="glass rounded-2xl p-8 text-center">
+        <div className="relative inline-block mb-4">
+          <div className="w-24 h-24 shrink-0 mx-auto">
+            <SafeImage
+              src={profile.avatar_url}
+              alt={profile.full_name}
+              className="w-full h-full rounded-full object-cover animate-pulse-glow"
+              fallbackText={profile.full_name[0]}
+            />
+          </div>
+          <div className="absolute -bottom-1 -right-1">
+            <HouseCrest house={profile.house as House} size="sm" />
+          </div>
+          {isMe && (
+            <label className="absolute -top-1 -right-1 w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center cursor-pointer hover:scale-110 transition-transform" title="Trocar foto">
+              📷
+              <input type="file" accept="image/*" className="hidden" onChange={uploadAvatar} disabled={uploading} />
+            </label>
+          )}
+        </div>
+
+        {!editing ? (
+          <>
+            <h1 className="font-heading text-2xl text-foreground flex items-center justify-center gap-2 flex-wrap">
+              {profile.full_name}
+              <MedalBadge xp={profile.xp} />
+              {/* Badge VIP */}
+              {profile.vip_plan === "founder" && (
+                <span className="text-xs font-heading px-2 py-0.5 rounded-full bg-gradient-to-r from-yellow-600 to-amber-400 text-black">👑 Fundador</span>
+              )}
+              {profile.vip_plan === "vip" && (
+                <span className="text-xs font-heading px-2 py-0.5 rounded-full bg-gradient-to-r from-purple-600 to-purple-400 text-white">🥇 VIP</span>
+              )}
+              {profile.vip_plan === "premium" && (
+                <span className="text-xs font-heading px-2 py-0.5 rounded-full bg-gradient-to-r from-blue-600 to-blue-400 text-white">✨ Premium</span>
+              )}
+            </h1>
+            <p className="text-muted-foreground text-sm">@{profile.username}</p>
+            <p className="text-sm text-muted-foreground mt-3 font-serif italic">{profile.bio || "Sem bio ainda..."}</p>
+            {/* Saldo de Galeões — visível apenas no próprio perfil */}
+            {isMe && (
+              <div className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-yellow-500/30 bg-yellow-900/10 text-yellow-400 text-sm font-heading">
+                🪙 {((profile as any).galeons || 0).toLocaleString("pt-BR")} Galeões
               </div>
-            </div>
-          ))}
-        </div>
+            )}
+            
+            <div className="mt-4 flex justify-center gap-2">
+              {isMe ? (
+                <>
+                  <Button variant="magical" size="sm" className="font-heading text-xs" onClick={startEdit}>
+                    ✏️ Editar perfil
+                  </Button>
+                  {isAdmin && (
+                    <Button variant="outline" size="sm" className="font-heading text-xs text-primary border-primary hover:bg-primary/10" onClick={() => setAdminEditModal(true)}>
+                      🪄 Edição Suprema (Admin)
+                    </Button>
+                  )}
+                </>
+              ) : (
+                <>
+                {isAdmin && (
+                  <Button variant="outline" size="sm" className="font-heading text-xs text-primary border-primary hover:bg-primary/10" onClick={() => setAdminEditModal(true)}>
+                    🪄 Edição Suprema (Admin)
+                  </Button>
+                )}
+                {/* Botão de MENSAGEM sempre visível para qualquer perfil que não seja o meu */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate(`/dashboard/dm/${profile.user_id}`)}
+                >
+                  💬 Mensagem
+                </Button>
 
-        <div className="relative overflow-hidden bg-black/40 backdrop-blur-3xl rounded-[3.5rem] p-10 border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] group">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10 mb-8">
-             <div className="flex items-center gap-6">
-                <div className="w-16 h-16 rounded-3xl bg-primary/20 border border-primary/40 flex items-center justify-center shadow-inner group-hover:rotate-12 transition-transform duration-500">
-                   <Scroll size={32} className="text-primary drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]" />
-                </div>
-                <div className="space-y-1">
-                  <h3 className="font-heading text-2xl text-white tracking-tighter">Caminho da Maestria</h3>
-                  <p className="text-[10px] text-primary uppercase tracking-[0.4em] font-heading opacity-60">{levelInfo.name}</p>
-                </div>
-             </div>
-             <div className="px-6 py-2 bg-white/5 rounded-full border border-white/10">
-                <p className="text-[10px] text-white/40 uppercase tracking-widest font-heading">
-                  Faltam <span className="text-primary font-bold">{levelInfo.next - profile.xp} XP</span> para o Próximo Nível
-                </p>
-             </div>
-          </div>
-          <div className="relative z-10">
-            <XPBar xp={profile.xp} house={profile.house} />
-          </div>
-          <div className="absolute -top-20 -right-20 w-64 h-64 bg-primary/5 rounded-full blur-[100px] pointer-events-none animate-pulse" />
-        </div>
-
-        <div className={`relative overflow-hidden bg-black/40 backdrop-blur-3xl rounded-[3.5rem] p-8 border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] group transition-all duration-700 hover:border-white/20`}>
-          <div className={`absolute inset-0 bg-gradient-to-r ${
-            profile.house === 'gryffindor' ? 'from-red-900/10' :
-            profile.house === 'slytherin' ? 'from-green-900/10' :
-            profile.house === 'ravenclaw' ? 'from-blue-900/10' : 'from-yellow-900/10'
-          } to-transparent opacity-50`} />
-          <div className="flex flex-col md:flex-row items-center gap-10 relative z-10 text-center md:text-left">
-            <div className="relative">
-               <div className="absolute inset-0 bg-white/20 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-               <HouseCrest house={profile.house as House} size="lg" className="relative z-10 drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform duration-700" />
+                {/* Botoes de amizade conforme estado */}
+                {friendship?.status === "blocked" && friendship.user_id === user?.id ? (
+                  <Button variant="outline" size="sm" onClick={handleUnblock}>Desbloquear</Button>
+                ) : friendship?.status === "accepted" ? (
+                  <>
+                    <Button variant="outline" size="sm" className="text-green-500 border-green-500/30">✓ Amigos</Button>
+                    <Button variant="outline" size="sm" className="text-destructive" onClick={handleRemoveFriend}>Desfazer</Button>
+                  </>
+                ) : friendship?.status === "pending" && friendship.friend_id === user?.id ? (
+                  <>
+                    <Button variant="magical" size="sm" onClick={handleAcceptFriend}>Aceitar ✅</Button>
+                    <Button variant="outline" size="sm" onClick={handleRejectFriend}>Recusar ❌</Button>
+                  </>
+                ) : friendship?.status === "pending" && friendship.user_id === user?.id ? (
+                  <Button variant="outline" size="sm" onClick={handleRemoveFriend}>Cancelar ⏳</Button>
+                ) : (
+                  <>
+                    <Button variant="magical" size="sm" onClick={handleAddFriend}>Adicionar Amigo +</Button>
+                    <Button variant="outline" size="sm" className="text-destructive" onClick={handleBlockUser}>Bloquear 🚫</Button>
+                  </>
+                )}
+              </>
+              )}
             </div>
-            <div className="flex-1 space-y-3">
-              <div className="space-y-1">
-                 <h3 className="font-heading text-4xl text-gold-gradient tracking-tighter">{house.name.toUpperCase()}</h3>
-                 <div className="h-1 w-20 bg-primary/40 rounded-full mx-auto md:mx-0" />
-              </div>
-              <p className="text-lg text-white/40 italic font-serif leading-relaxed">"{house.motto}"</p>
+          </>
+        ) : (
+          <div className="space-y-3 text-left">
+            <div>
+              <label className="text-xs font-heading text-muted-foreground block mb-1">Nome completo</label>
+              <Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} />
             </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-black/40 backdrop-blur-3xl rounded-[2.5rem] p-8 border border-white/10 shadow-2xl space-y-6">
-            <h3 className="font-heading text-xs text-primary tracking-[0.3em] uppercase opacity-60">Registros Oficiais</h3>
-            <div className="space-y-4">
-              {[
-                { label: "Idade Bruxa", value: `${profile.age} anos`, icon: "🎂" },
-                { label: "Membro Desde", value: new Date(profile.created_at).toLocaleDateString("pt-BR"), icon: "📅" },
-                { label: "Status de Presença", value: isUserOnline(profile) ? "No Castelo" : "Fora do Castelo", icon: "📍", color: isUserOnline(profile) ? "text-green-400" : "text-white/40" }
-              ].map((item, i) => (
-                <div key={i} className="flex items-center justify-between py-3 border-b border-white/5 last:border-0">
-                  <div className="flex items-center gap-3">
-                     <span className="text-lg grayscale group-hover:grayscale-0 transition-all">{item.icon}</span>
-                     <span className="text-[10px] font-heading text-white/40 uppercase tracking-widest">{item.label}</span>
+            <div>
+              <label className="text-xs font-heading text-muted-foreground block mb-1">@Username</label>
+              <Input value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value.toLowerCase().replace(/\s/g, "") })} />
+            </div>
+            <div>
+              <label className="text-xs font-heading text-muted-foreground block mb-1">Data de Nascimento (Aniversário)</label>
+              <Input type="date" value={form.birth_date} onChange={(e) => setForm({ ...form, birth_date: e.target.value })} className="bg-secondary/50 border-border" />
+            </div>
+            <div>
+              <label className="text-xs font-heading text-muted-foreground block mb-1">Idade</label>
+              <Input type="number" value={form.age} onChange={(e) => setForm({ ...form, age: parseInt(e.target.value) || 11 })} />
+            </div>
+            <div>
+              <label className="text-xs font-heading text-muted-foreground block mb-1">Bio</label>
+              <textarea
+                value={form.bio}
+                maxLength={200}
+                onChange={(e) => setForm({ ...form, bio: e.target.value })}
+                className="w-full bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground focus:outline-none min-h-[80px]"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-heading text-muted-foreground block mb-1">📷 Foto de Perfil</label>
+              {/* Upload de arquivo — botão grande e visível */}
+              <label className="flex items-center justify-center gap-2 w-full py-3 rounded-xl border-2 border-dashed border-primary/50 bg-primary/5 hover:bg-primary/10 cursor-pointer transition-colors text-sm font-heading text-primary mb-2">
+                {uploading ? "⏳ Fazendo upload..." : "📁 Clique aqui para fazer upload da sua foto"}
+                <input type="file" accept="image/*" className="hidden" onChange={uploadAvatar} disabled={uploading} />
+              </label>
+              <p className="text-[10px] text-muted-foreground text-center mb-2">ou cole o link direto abaixo ↓</p>
+              <div className="flex gap-2 items-center">
+                <Input
+                  value={form.avatar_url}
+                  onChange={(e) => setForm({ ...form, avatar_url: e.target.value })}
+                  placeholder="https://exemplo.com/sua-foto.jpg"
+                  className="flex-1"
+                />
+                {form.avatar_url && (
+                  <div className="w-10 h-10 shrink-0">
+                    <SafeImage 
+                      src={form.avatar_url} 
+                      alt="preview" 
+                      className="w-full h-full rounded-full object-cover border border-border" 
+                    />
                   </div>
-                  <span className={`text-xs font-medium ${item.color || "text-white/80"}`}>{item.value}</span>
-                </div>
-              ))}
+                )}
+              </div>
+            </div>
+            <div className="flex gap-2 justify-center pt-2">
+              <Button variant="outline" size="sm" onClick={() => setEditing(false)}>Cancelar</Button>
+              <Button variant="magical" size="sm" onClick={save} disabled={saving}>{saving ? "Salvando..." : "Salvar"}</Button>
             </div>
           </div>
-          <div className="bg-black/40 backdrop-blur-3xl rounded-[2.5rem] p-8 border border-white/10 shadow-2xl space-y-6">
-            <h3 className="font-heading text-xs text-primary tracking-[0.3em] uppercase opacity-60">Coleção Borgin & Burkes</h3>
-            {userBadges.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-8 opacity-20">
-                 <div className="w-12 h-12 rounded-full border border-dashed border-white/40 mb-3" />
-                 <p className="text-[10px] font-heading uppercase tracking-widest">Nenhum Artefato</p>
+        )}
+      </div>
+
+      {activeTab === "about" ? (
+        <>
+          <div className="grid grid-cols-3 gap-3">
+            <div className="glass rounded-xl p-4 text-center">
+              <p className="text-2xl font-heading text-primary">{profile.xp}</p>
+              <p className="text-xs text-muted-foreground">XP Total</p>
+            </div>
+            <div className="glass rounded-xl p-4 text-center">
+              <p className="text-2xl font-heading text-foreground">{levelInfo.level}</p>
+              <p className="text-xs text-muted-foreground">Nível</p>
+            </div>
+            <div className="glass rounded-xl p-4 text-center">
+              <p className="text-2xl font-heading text-foreground">{getMedalForXP(profile.xp) ? 1 : 0}</p>
+              <p className="text-xs text-muted-foreground">Badges</p>
+            </div>
+          </div>
+
+          <div className="glass rounded-xl p-4">
+            <h3 className="font-heading text-sm text-primary mb-3">Progresso</h3>
+            <XPBar xp={profile.xp} />
+            <p className="text-xs text-muted-foreground mt-2 text-center">
+              {levelInfo.name} → Faltam {levelInfo.next - profile.xp} XP para o próximo nível
+            </p>
+          </div>
+
+          <div className="glass rounded-xl p-4">
+            <div className="flex items-center gap-3">
+              <HouseCrest house={profile.house} size="md" />
+              <div>
+                <h3 className="font-heading text-foreground">{house.name}</h3>
+                <p className="text-xs text-muted-foreground italic font-serif">"{house.motto}"</p>
               </div>
+            </div>
+          </div>
+
+          <div className="glass rounded-xl p-4">
+            <h3 className="font-heading text-sm text-primary mb-3">Informações</h3>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Idade</span>
+                <span className="text-foreground">{profile.age} anos</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Membro desde</span>
+                <span className="text-foreground">{new Date(profile.created_at).toLocaleDateString("pt-BR")}</span>
+              </div>
+              <div className="flex justify-between items-center text-sm py-2 border-b border-border">
+                <span className="text-muted-foreground">Status</span>
+                <span className="text-foreground">{isUserOnline(profile) ? "🟢 Online" : "⚫ Offline"}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="glass rounded-xl p-4">
+            <h3 className="font-heading text-sm text-primary mb-3">Coleção Borgin & Burkes</h3>
+            {userBadges.length === 0 ? (
+              <p className="text-xs text-muted-foreground text-center italic py-2">Nenhuma insígnia adquirida ainda.</p>
             ) : (
-              <div className="grid grid-cols-4 gap-4">
+              <div className="flex flex-wrap gap-3">
                 {userBadges.map(badge => (
-                  <div key={badge.id} className="aspect-square bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 hover:bg-white/10 hover:border-primary/40 transition-all group/badge cursor-help" title={badge.name}>
-                    <span className="text-2xl drop-shadow-xl group-hover/badge:scale-125 transition-transform duration-500">{badge.icon}</span>
+                  <div key={badge.id} className="bg-secondary/50 rounded-lg p-2 flex items-center justify-center gap-2 border border-border" title={badge.name}>
+                    <span className="text-2xl drop-shadow-md">{badge.icon}</span>
                   </div>
                 ))}
               </div>
             )}
           </div>
-        </div>
-      </>
-    );
-  } else if (activeTab === "friends") {
-    tabContent = (
-      <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white/5 backdrop-blur-2xl p-8 rounded-[2.5rem] border border-white/10 shadow-2xl">
-           <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center border border-primary/40 shadow-inner">
-                 <Users size={28} className="text-primary drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]" />
-              </div>
-              <div>
-                 <h2 className="font-heading text-2xl text-white tracking-tighter">Círculo de Amizade</h2>
-                 <p className="text-[10px] text-white/30 uppercase tracking-[0.3em] font-heading">Bruxos e Bruxas de Confiança</p>
-              </div>
-           </div>
-           <div className="px-6 py-2 bg-primary/10 rounded-full border border-primary/20 text-center">
-              <span className="text-xs font-heading text-primary tracking-widest">{friends.length} Conexões Mágicas</span>
-           </div>
-        </div>
-        {friends.length === 0 ? (
-          <div className="bg-black/40 backdrop-blur-3xl rounded-[3rem] p-16 text-center border border-white/10 shadow-inner space-y-6">
-            <div className="w-20 h-20 mx-auto bg-white/5 rounded-full flex items-center justify-center border border-white/5 opacity-20">
-               <span className="text-5xl">🤝</span>
-            </div>
-            <div className="space-y-2">
-               <p className="text-white/60 font-serif italic text-lg text-center">"Amizade é a magia mais poderosa de todas."</p>
-               <p className="text-[10px] font-heading text-white/20 uppercase tracking-[0.3em]">Você ainda não possui amigos registrados</p>
-            </div>
-            <button onClick={() => setActiveTab("members")} className="px-8 py-3 rounded-2xl bg-primary/10 border border-primary/30 text-primary font-heading text-[10px] tracking-widest hover:bg-primary/20 transition-all uppercase">
-              Explorar o Castelo →
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {friends.map(f => f && (
-              <MemberCard key={f.user_id} member={{ ...f, online: isUserOnline(f) }} compact />
-            ))}
-          </div>
-        )}
-      </div>
-    );
-  } else if (activeTab === "members") {
-    tabContent = (
-      <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-         <div className="bg-white/5 backdrop-blur-2xl p-8 rounded-[2.5rem] border border-white/10 shadow-2xl">
-            <div className="flex items-center gap-4 mb-8">
-               <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center border border-primary/40 shadow-inner">
-                  <Search size={28} className="text-primary drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]" />
-               </div>
-               <div>
-                  <h2 className="font-heading text-2xl text-white tracking-tighter uppercase">Diretório de Hogwarts</h2>
-                  <p className="text-[10px] text-white/30 uppercase tracking-[0.3em] font-heading">Encontre seus Aliados e Rivais</p>
-               </div>
-            </div>
-            <MembersTab currentUserId={user?.id} />
-         </div>
-      </div>
-    );
-  } else if (activeTab === "fichas") {
-    tabContent = (
-      <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000">
-         <CharacterSheetView userId={realProfile.user_id} isOwner={isMe} selectedType={viewingType} />
-      </div>
-    );
-  } else if (activeTab === "album") {
-    tabContent = (
-      <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-         <ProfileAlbum userId={profile.user_id} />
-      </div>
-    );
-  } else if (activeTab === "referral") {
-    if (!isMe) {
-      tabContent = (
-        <div className="text-center py-20 opacity-40">
-           <Lock size={48} className="mx-auto mb-4" />
-           <p className="font-heading text-sm uppercase tracking-widest">Acesso Restrito</p>
-        </div>
-      );
-    } else {
-      tabContent = (
-      <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-        <div className="relative overflow-hidden bg-gradient-to-br from-primary/20 to-amber-900/40 backdrop-blur-3xl rounded-[3rem] p-10 border border-primary/30 shadow-[0_30px_60px_rgba(0,0,0,0.5)] group text-center">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 mix-blend-overlay pointer-events-none" />
-          <div className="relative z-10 space-y-6">
-            <div className="w-20 h-20 mx-auto bg-primary/20 rounded-full flex items-center justify-center border border-primary/40 shadow-inner mb-4">
-               <Scroll size={40} className="text-primary animate-pulse" />
-            </div>
-            <div className="space-y-2">
-              <h2 className="font-heading text-3xl text-white tracking-tighter uppercase">Link de Recrutamento Mágico</h2>
-              <p className="text-sm text-white/50 max-w-md mx-auto italic font-serif leading-relaxed">
-                "Expanda a nossa comunidade. Convide novos bruxos e seja recompensado com <strong className="text-primary">500 XP</strong> por cada alma corajosa que alcançar o Nível 2!"
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row items-center gap-4 max-w-md mx-auto pt-4">
-              <div className="flex-1 w-full bg-black/40 rounded-2xl border border-white/10 p-4 font-mono text-xl text-primary tracking-widest shadow-inner">
-                 {profile.username}
-              </div>
-              <button 
-                onClick={() => {
-                  navigator.clipboard.writeText(`Entre na Hogwarts House e use meu código de convite: ${profile.username}`);
-                  toast.success("Código copiado! ✨");
-                }}
-                className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary text-white font-heading text-xs tracking-widest shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
+        </>
+      ) : activeTab === "friends" ? (
+        <div className="space-y-4">
+          <h2 className="font-heading text-xl text-foreground">Amigos de {profile.full_name}</h2>
+          {friends.length === 0 ? (
+            <div className="glass rounded-xl p-8 text-center">
+              <p className="text-4xl mb-3">🤝</p>
+              <p className="text-muted-foreground text-sm">Nenhum amigo adicionado ainda.</p>
+              <button
+                onClick={() => setActiveTab("members")}
+                className="mt-3 text-xs text-primary hover:underline"
               >
-                COPIAR CÓDIGO
+                Ver todos os membros para adicionar →
               </button>
             </div>
-          </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {friends.map(f => f && (
+                <MemberCard
+                  key={f.user_id}
+                  member={{ ...f, online: isUserOnline(f) }}
+                  compact
+                />
+              ))}
+            </div>
+          )}
         </div>
-        <div className="space-y-6">
-          <div className="flex items-center gap-4">
-             <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
-                <Users size={20} className="text-white/60" />
-             </div>
-             <h3 className="font-heading text-xl text-white tracking-tight">Bruxos Recrutados por Você <span className="text-primary/40 ml-2">({(myReferrals || []).length})</span></h3>
+      ) : activeTab === "members" ? (
+        <MembersTab currentUserId={user?.id} />
+      ) : activeTab === "fichas" ? (
+        <CharacterSheetView userId={profile.user_id} isOwner={isMe} />
+      ) : activeTab === "album" ? (
+        <ProfileAlbum userId={profile.user_id} />
+      ) : activeTab === "referral" && isMe ? (
+        <div className="space-y-4">
+          <div className="glass rounded-2xl p-6 text-center border border-primary/20 bg-primary/5">
+            <h2 className="font-heading text-xl text-primary mb-2">Seu Link de Convite Mágico</h2>
+            <p className="text-sm text-muted-foreground mb-4">
+              Convide novos bruxos e ganhe <strong>500 XP</strong> assim que eles chegarem ao Nível 2!
+            </p>
+            <div className="flex items-center gap-2 max-w-sm mx-auto">
+              <Input readOnly value={profile.username} className="text-center font-bold text-lg bg-background" />
+              <Button variant="magical" onClick={() => {
+                navigator.clipboard.writeText(`Entre na Hogwarts House e use meu código de convite: ${profile.username}`);
+                toast.success("Código copiado!");
+              }}>Copiar</Button>
+            </div>
           </div>
-          {(!myReferrals || myReferrals.length === 0) ? (
-            <div className="bg-black/40 backdrop-blur-3xl rounded-[2.5rem] p-12 text-center border border-white/10 opacity-40">
-              <p className="text-[10px] font-heading uppercase tracking-[0.4em]">Nenhum recrutamento registrado</p>
+
+          <h3 className="font-heading text-lg text-foreground mt-8">Bruxos que você recrutou ({referrals.length})</h3>
+          
+          {referrals.length === 0 ? (
+            <div className="glass rounded-xl p-6 text-center text-muted-foreground text-sm">
+              Você ainda não recrutou ninguém. Compartilhe seu código!
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {(myReferrals || []).map(r => (
+              {referrals.map(r => (
                 <div key={r.id} className="glass rounded-xl p-3 flex items-center gap-3">
                   <div className="w-10 h-10 shrink-0">
-                    <SafeImage src={r.profile?.avatar_url} alt={r.profile?.full_name || "Membro"} className="w-full h-full rounded-full object-cover" fallbackText={r.profile?.full_name?.[0]} />
+                    <SafeImage 
+                      src={r.profile?.avatar_url} 
+                      alt={r.profile?.full_name || "Membro"} 
+                      className="w-full h-full rounded-full object-cover" 
+                      fallbackText={r.profile?.full_name?.[0]}
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-heading text-foreground truncate">{r.profile?.full_name}</p>
                     <p className="text-xs text-muted-foreground truncate">
-                      {r.status === 'completed' ? <span className="text-green-500">✅ 500 XP Ganhos</span> : <span className="text-amber-500">⏳ Pendente (Nv. 2)</span>}
+                      {r.status === 'completed' ? <span className="text-green-500">✅ 500 XP Ganhos</span> : <span className="text-amber-500">⏳ Pendente (Aguardando Nv. 2)</span>}
                     </p>
                   </div>
                 </div>
@@ -639,270 +747,183 @@ export default function Profile() {
             </div>
           )}
         </div>
-      </div>
-    );
-    }
-  } else if (activeTab === "achievements") {
-    tabContent = (
-      <div className="space-y-10">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-center md:text-left">
-              <h2 className="font-heading text-2xl text-foreground">🏆 Sala de Troféus</h2>
-              <p className="text-sm text-muted-foreground">Suas glórias e conquistas eternizadas no castelo.</p>
+      ) : activeTab === "achievements" ? (
+        <div className="space-y-10">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="text-center md:text-left">
+                <h2 className="font-heading text-2xl text-foreground">🏆 Sala de Troféus</h2>
+                <p className="text-sm text-muted-foreground">Suas glórias e conquistas eternizadas no castelo.</p>
+            </div>
+            <div className="flex gap-2">
+                <div className="px-4 py-2 bg-primary/10 rounded-xl border border-primary/20 text-center">
+                    <p className="text-[10px] text-muted-foreground uppercase font-heading">Conquistas</p>
+                    <p className="text-xl font-heading text-primary">{userChallenges.length}</p>
+                </div>
+            </div>
           </div>
-          <div className="flex gap-2">
-              <div className="px-4 py-2 bg-primary/10 rounded-xl border border-primary/20 text-center">
-                  <p className="text-[10px] text-muted-foreground uppercase font-heading">Conquistas</p>
-                  <p className="text-xl font-heading text-primary">{userChallenges.length}</p>
-              </div>
-          </div>
-        </div>
 
-        {userChallenges.length === 0 ? (
-          <div className="glass rounded-[3rem] p-16 text-center border-dashed border-2 border-primary/20 bg-primary/5">
-            <Trophy size={64} className="mx-auto text-primary/20 mb-6" />
-            <p className="text-muted-foreground font-serif italic text-lg">"Grandes feitos aguardam por você."</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {userChallenges.map(uc => (
-              <div key={uc.id} className="glass rounded-[2.5rem] p-6 border border-white/10 hover:border-primary/30 transition-all group overflow-hidden relative">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-primary/10 transition-all" />
-                <div className="flex items-start gap-5 relative z-10">
-                  <div className="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center border border-primary/40 shrink-0 group-hover:scale-110 transition-transform">
-                    <span className="text-3xl">🏆</span>
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-1">
-                      <h4 className="font-heading text-white text-lg">{uc.challenges?.title}</h4>
-                      <Badge variant="magical" className="text-[8px] tracking-widest">{uc.challenges?.xp_reward} XP</Badge>
+          {loadingExtras ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[1,2,3,4].map(i => <div key={i} className="glass h-32 rounded-2xl animate-pulse" />)}
+            </div>
+          ) : userChallenges.length === 0 ? (
+            <div className="glass rounded-[3rem] p-16 text-center border-dashed border-2 border-primary/20 bg-primary/5">
+              <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Trophy size={48} className="text-primary/30" />
+              </div>
+              <h3 className="font-heading text-xl text-foreground mb-2">O Mural está em branco</h3>
+              <p className="text-muted-foreground text-sm max-w-sm mx-auto italic">Explore o mapa, participe de aulas e vença desafios para preencher sua sala de troféus!</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {userChallenges.map(uc => (
+                <div key={uc.id} className="relative group perspective">
+                    <div className="glass rounded-[2rem] p-6 border border-primary/20 bg-gradient-to-br from-indigo-950/20 to-transparent hover:border-primary/50 transition-all duration-500 hover:-rotate-1 hover:scale-[1.02] overflow-hidden">
+                        {/* Status Check */}
+                        <div className="absolute top-4 right-4 p-1.5 bg-green-500/20 rounded-full text-green-500">
+                            <CheckCircle2 size={14} />
+                        </div>
+                        
+                        {/* Glow effect */}
+                        <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all" />
+
+                        <div className="space-y-4 relative z-10">
+                            <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary border border-primary/10">
+                                <Star size={24} />
+                            </div>
+                            <div>
+                                <h4 className="font-heading text-lg text-foreground mb-1 line-clamp-1">{uc.challenges?.title || "Desafio Místico"}</h4>
+                                <p className="text-xs text-muted-foreground line-clamp-2 h-8 leading-relaxed italic">
+                                    "{uc.challenges?.description}"
+                                </p>
+                            </div>
+                            <div className="flex items-center justify-between pt-2 border-t border-white/5">
+                                <Badge variant="outline" className="text-[9px] px-2 py-0.5 border-primary/30 text-primary">+{uc.challenges?.xp_reward} XP</Badge>
+                                <span className="text-[10px] text-muted-foreground font-mono">
+                                    {new Date(uc.completed_at || uc.created_at).toLocaleDateString("pt-BR")}
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    <p className="text-xs text-white/50 leading-relaxed mb-4">{uc.challenges?.description}</p>
-                    <div className="flex items-center gap-2">
-                       <CheckCircle2 size={14} className="text-green-400" />
-                       <span className="text-[10px] text-green-400 font-heading uppercase tracking-widest">Conquista Desbloqueada</span>
-                    </div>
-                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Seção de Medalhas de Nível */}
+          <div className="pt-10">
+            <h3 className="font-heading text-sm text-primary mb-6 flex items-center gap-2 uppercase tracking-widest">
+               <Crown size={16} /> Graus de Prestígio
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="glass rounded-2xl p-5 flex items-center gap-4 border border-yellow-500/20 bg-gradient-to-r from-yellow-500/10 to-transparent">
+                <div className="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center text-2xl">🏅</div>
+                <div>
+                  <p className="font-heading text-sm text-yellow-400">Veterano de Hogwarts</p>
+                  <p className="text-[10px] text-muted-foreground">Conquistado pelo seu XP total</p>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
-    );
-  } else if (activeTab === "inventory") {
-    tabContent = (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="font-heading text-xl text-foreground">🎒 Itens do Inventário</h2>
-          <span className="text-xs text-muted-foreground">{userItems.length} Itens Adquiridos</span>
-        </div>
-        {loadingExtras ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[1,2,3,4].map(i => <div key={i} className="glass aspect-square rounded-2xl animate-pulse" />)}
-          </div>
-        ) : userItems.length === 0 ? (
-          <div className="glass rounded-2xl p-10 text-center border-dashed border-2 border-border/50">
-            <ShoppingBag size={48} className="mx-auto text-muted-foreground opacity-20 mb-4" />
-            <p className="text-muted-foreground text-sm italic">O baú está vazio.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {userItems.map(ui => {
-              const item = ui.store_items;
-              if (!item) return null;
-              const isEquipped = ui.is_equipped;
-              return (
-                <div key={ui.id} className={`group glass rounded-2xl overflow-hidden border transition-all hover:-translate-y-1 ${isEquipped ? 'border-primary shadow-[0_0_15px_hsl(var(--primary)/0.3)]' : 'border-border/50 hover:border-primary/40'}`}>
-                  <div className="relative aspect-square">
-                    <SafeImage src={item.image_url} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" fallbackEmoji="📦" />
-                    {isEquipped && <div className="absolute top-2 right-2 bg-primary text-primary-foreground text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest z-10">Equipado</div>}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-end p-3 gap-2">
-                       <Button size="sm" variant={isEquipped ? "outline" : "magical"} className="w-full h-7 text-[10px] rounded-lg" onClick={() => toggleEquip(ui.id, isEquipped)}>
-                          {isEquipped ? "Desequipar" : "Equipar"}
-                      </Button>
+              
+              {profile.vip_plan && (
+                <div className="glass rounded-2xl p-5 flex items-center gap-4 border border-purple-500/20 bg-gradient-to-r from-purple-500/10 to-transparent">
+                    <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center text-2xl">✨</div>
+                    <div>
+                        <p className="font-heading text-sm text-purple-400">Membro Honorário</p>
+                        <p className="text-[10px] text-muted-foreground">Assinante do Plano {profile.vip_plan.toUpperCase()}</p>
                     </div>
-                  </div>
-                  <div className="p-3 text-center">
-                    <h4 className="font-heading text-xs text-foreground truncate">{item.name}</h4>
-                    <p className="text-[10px] text-primary uppercase tracking-tighter mt-1">{item.category}</p>
-                  </div>
                 </div>
-              )
-            })}
-          </div>
-        )}
-      </div>
-    );
-  } else if (activeTab === "security" && isMe) {
-    tabContent = (
-      <div className="glass rounded-2xl p-6">
-        <h2 className="font-heading text-xl text-foreground mb-1">🔐 Segurança</h2>
-        <form onSubmit={handleUpdatePassword} className="space-y-4 max-w-sm mx-auto">
-          <div>
-            <label className="text-xs font-heading text-muted-foreground block mb-1">Nova Senha</label>
-            <Input type="password" placeholder="Mínimo 6 caracteres..." value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-          </div>
-          <Button type="submit" variant="magical" className="w-full" disabled={savingPassword || !newPassword.trim()}>
-            {savingPassword ? "Atualizando..." : "Salvar Nova Senha"}
-          </Button>
-        </form>
-      </div>
-    );
-  }
-
-  return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <MagicalParticles house={profile.house} />
-
-      {/* ── SOUL SWITCHER (TRIPLE IDENTITY) ── */}
-      <div className="relative z-30 flex items-center justify-center p-2 bg-black/40 backdrop-blur-3xl rounded-full border border-white/10 shadow-2xl mb-12 max-w-md mx-auto">
-         <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 opacity-50" />
-         
-         {[
-           { id: 'real', label: 'Bruxo Real', icon: <User size={14} /> },
-           { id: 'oc',   label: 'Personagem OC', icon: <Scroll size={14} />, exists: characters.some(c => c.type === 'oc') },
-           { id: 'canon', label: 'Personagem Canon', icon: <Crown size={14} />, exists: characters.some(c => c.type === 'canon') }
-         ].map((soul) => (
-           <button
-             key={soul.id}
-             disabled={soul.id !== 'real' && !soul.exists}
-             onClick={() => { play('click'); setViewingType(soul.id as any); }}
-             className={`flex-1 relative flex items-center justify-center gap-2 py-3 px-4 rounded-full transition-all duration-500 group ${
-               viewingType === soul.id ? "bg-primary text-white shadow-lg scale-105" : 
-               (soul.id !== 'real' && !soul.exists) ? "opacity-20 grayscale cursor-not-allowed" :
-               "text-white/40 hover:text-white hover:bg-white/5"
-             }`}
-           >
-              {soul.icon}
-              <span className="text-[10px] font-heading tracking-widest uppercase hidden sm:inline">{soul.label}</span>
-              {viewingType === soul.id && (
-                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-white rounded-full animate-ping" />
               )}
-           </button>
-         ))}
-      </div>
-      
-      <div className={`fixed inset-0 pointer-events-none opacity-[0.1] transition-all duration-[2000ms] ease-in-out z-0 ${
-        profile.house === 'gryffindor' ? 'bg-gradient-to-b from-red-600/20 to-transparent' :
-        profile.house === 'slytherin' ? 'bg-gradient-to-b from-green-600/20 to-transparent' :
-        profile.house === 'ravenclaw' ? 'bg-gradient-to-b from-blue-600/20 to-transparent' : 
-        'bg-gradient-to-b from-yellow-600/20 to-transparent'
-      }`} />
-      
-      <div className="relative z-20 flex gap-2 md:gap-4 border-b border-white/5 mb-10 overflow-x-auto pb-4 scrollbar-hide whitespace-nowrap px-2">
-        {(["about", "fichas", "friends", "members", "album", "achievements", "inventory", "referral", "security"] as const).map((tab) => {
-           const labels: any = { about: "Sobre", fichas: "Fichas 📜", friends: `Amigos (${friends.length})`, members: "Membros 👥", album: "Álbum", achievements: "Conquistas 🏆", inventory: "Inventário 🎒", referral: "Recrutamento", security: "Segurança" };
-           if (!isMe && (tab === "security" || tab === "referral")) return null;
-           return (
-            <button key={tab} onClick={() => { setActiveTab(tab); setEditing(false); }} className={`px-6 py-3 font-heading text-[10px] tracking-[0.3em] uppercase transition-all duration-500 rounded-2xl border ${activeTab === tab ? "bg-primary text-white border-primary shadow-lg scale-105" : "text-white/30 border-transparent hover:text-white hover:bg-white/5"}`}>
-              {labels[tab]}
-            </button>
-           )
-        })}
-      </div>
-
-      <div className="relative overflow-hidden rounded-[3rem] bg-gradient-to-b from-white/[0.08] to-black/60 backdrop-blur-3xl p-8 md:p-12 border border-white/10 shadow-2xl text-center group">
-        <div className="relative z-10 flex flex-col items-center">
-          <div className="relative mb-8 group/avatar">
-            <div className="w-32 h-32 md:w-40 h-40 shrink-0 relative z-10">
-              <SafeImage src={activeIdentity.avatar_url || realProfile.avatar_url} alt={activeIdentity.full_name || realProfile.full_name} className="w-full h-full rounded-full object-cover border-2 border-white/10 shadow-inner" fallbackText={(activeIdentity.full_name || realProfile.full_name)[0]} />
-            </div>
-            <div className="absolute -bottom-2 -right-2 z-20 scale-125 md:scale-150">
-               <HouseCrest house={realProfile.house as House} size="sm" />
-            </div>
-            {isMe && viewingType === 'real' && (
-              <label className="absolute inset-0 z-30 flex items-center justify-center bg-black/60 opacity-0 group-hover/avatar:opacity-100 transition-opacity cursor-pointer rounded-full backdrop-blur-sm">
-                <input type="file" accept="image/*" onChange={uploadAvatar} className="hidden" />
-                <div className="text-center">
-                  <Sparkles size={24} className="text-primary mx-auto mb-1" />
-                  <span className="text-[8px] font-heading text-white uppercase tracking-tighter">{uploading ? "Conjurando..." : "Mudar Foto"}</span>
-                </div>
-              </label>
-            )}
-          </div>
-
-          <div className="space-y-4 relative z-10">
-            <div className="space-y-1">
-               <div className="flex flex-col items-center justify-center gap-2">
-                 <div className="flex items-center gap-3">
-                   <h1 className="text-4xl md:text-5xl font-heading text-white tracking-tighter uppercase drop-shadow-2xl">{activeIdentity.full_name || realProfile.full_name}</h1>
-                   {realProfile.approved && viewingType === 'real' && <Badge variant="magical" className="h-6"><CheckCircle2 size={12} className="mr-1" /> Bruxo Oficial</Badge>}
-                 </div>
-                 {viewingType !== 'real' && (
-                   <Badge variant="outline" className="border-primary/40 text-primary text-[8px] uppercase tracking-[0.2em]">
-                      Alma Ativa: {viewingType.toUpperCase()}
-                   </Badge>
-                 )}
-               </div>
-               <p className="text-primary font-heading text-xs tracking-[0.4em] uppercase opacity-70">@{realProfile.username}</p>
-            </div>
-
-            <p className="text-white/60 max-w-md mx-auto italic font-serif leading-relaxed px-4">
-              "{profile.bio || "Este bruxo ainda não escreveu sua história nos anais de Hogwarts..."}"
-            </p>
-
-            <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
-               {isMe ? (
-                 <>
-                   <Button variant="magical" size="sm" onClick={startEdit} className="rounded-xl px-8 shadow-xl shadow-primary/20">Editar Perfil</Button>
-                   {isAdmin && (
-                      <Button variant="outline" size="sm" onClick={() => setAdminEditModal(true)} className="rounded-xl border-white/10 bg-white/5 hover:bg-white/10">Painel Admin</Button>
-                   )}
-                 </>
-               ) : (
-                 <div className="flex gap-2">
-                   {friendship?.status === "accepted" ? (
-                     <Button variant="outline" size="sm" onClick={handleRemoveFriend} className="rounded-xl border-red-500/30 text-red-400 hover:bg-red-500/10">Desfazer Amizade</Button>
-                   ) : friendship?.status === "pending" ? (
-                     friendship.user_id === user?.id ? (
-                       <Button variant="outline" size="sm" disabled className="rounded-xl opacity-50">Convite Enviado</Button>
-                     ) : (
-                       <div className="flex gap-2">
-                         <Button variant="magical" size="sm" onClick={handleAcceptFriend} className="rounded-xl">Aceitar</Button>
-                         <Button variant="outline" size="sm" onClick={handleRejectFriend} className="rounded-xl border-red-500/30">Recusar</Button>
-                       </div>
-                     )
-                   ) : (
-                     <Button variant="magical" size="sm" onClick={handleAddFriend} className="rounded-xl">Enviar Coruja (Amizade)</Button>
-                   )}
-                 </div>
-               )}
             </div>
           </div>
         </div>
-
-        {editing && isMe && (
-          <div className="mt-12 p-8 bg-black/60 rounded-[2.5rem] border border-white/10 animate-in fade-in zoom-in duration-500">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
-              <div className="space-y-4">
-                <div>
-                  <label className="text-[10px] font-heading text-primary uppercase tracking-widest block mb-2">Nome Completo</label>
-                  <Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} className="bg-white/5 border-white/10 rounded-xl" />
-                </div>
-                <div>
-                  <label className="text-[10px] font-heading text-primary uppercase tracking-widest block mb-2">Data de Nascimento</label>
-                  <Input type="date" value={form.birth_date} onChange={(e) => setForm({ ...form, birth_date: e.target.value })} className="bg-white/5 border-white/10 rounded-xl" />
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div>
-                  <label className="text-[10px] font-heading text-primary uppercase tracking-widest block mb-2">Biografia Mágica</label>
-                  <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} className="w-full h-32 bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white resize-none focus:outline-none focus:border-primary/50 transition-all" />
-                </div>
-              </div>
-            </div>
-            <div className="flex gap-2 justify-center pt-4">
-              <Button variant="outline" size="sm" onClick={() => setEditing(false)} className="rounded-xl px-8">Cancelar</Button>
-              <Button variant="magical" size="sm" onClick={save} disabled={saving} className="rounded-xl px-8">{saving ? "Salvando..." : "Salvar"}</Button>
-            </div>
+      ) : activeTab === "inventory" ? (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="font-heading text-xl text-foreground">🎒 Itens do Inventário</h2>
+            <span className="text-xs text-muted-foreground">{userItems.length} Itens Adquiridos</span>
           </div>
-        )}
-      </div>
 
-      <div className="animate-in fade-in slide-in-from-bottom-6 duration-1000">
-        {tabContent}
-      </div>
+          {loadingExtras ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[1,2,3,4].map(i => <div key={i} className="glass aspect-square rounded-2xl animate-pulse" />)}
+            </div>
+          ) : userItems.length === 0 ? (
+            <div className="glass rounded-2xl p-10 text-center border-dashed border-2 border-border/50">
+              <ShoppingBag size={48} className="mx-auto text-muted-foreground opacity-20 mb-4" />
+              <p className="text-muted-foreground text-sm italic">O baú está vazio. Visite Gringotts para adquirir equipamentos!</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              {userItems.map(ui => {
+                const item = ui.store_items;
+                if (!item) return null;
+                const isEquipped = (ui as any).is_equipped;
+                const stats = (item as any).stats;
+
+                return (
+                  <div key={ui.id} className={`group glass rounded-2xl overflow-hidden border transition-all hover:-translate-y-1 ${isEquipped ? 'border-primary shadow-[0_0_15px_hsl(var(--primary)/0.3)]' : 'border-border/50 hover:border-primary/40'}`}>
+                    <div className="relative aspect-square">
+                      <SafeImage 
+                        src={item.image_url} 
+                        alt={item.name} 
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        fallbackEmoji="📦"
+                      />
+                      {isEquipped && (
+                          <div className="absolute top-2 right-2 bg-primary text-primary-foreground text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest z-10 animate-pulse">
+                              Equipado
+                          </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-end p-3 gap-2">
+                         {stats && (stats.atk > 0 || stats.def > 0 || stats.mana > 0 || stats.hp > 0) && (
+                             <div className="grid grid-cols-2 gap-1 w-full">
+                                 {stats.atk > 0 && <div className="text-[8px] font-bold text-red-400 bg-red-400/20 px-1.5 py-0.5 rounded border border-red-400/30">⚔️ +{stats.atk}</div>}
+                                 {stats.def > 0 && <div className="text-[8px] font-bold text-blue-400 bg-blue-400/20 px-1.5 py-0.5 rounded border border-blue-400/30">🛡️ +{stats.def}</div>}
+                                 {stats.mana > 0 && <div className="text-[8px] font-bold text-indigo-400 bg-indigo-400/20 px-1.5 py-0.5 rounded border border-indigo-400/30">✨ +{stats.mana}</div>}
+                                 {stats.hp > 0 && <div className="text-[8px] font-bold text-green-400 bg-green-400/20 px-1.5 py-0.5 rounded border border-green-400/30">❤️ +{stats.hp}</div>}
+                             </div>
+                         )}
+                         <Button 
+                            size="sm" 
+                            variant={isEquipped ? "outline" : "magical"} 
+                            className="w-full h-7 text-[10px] rounded-lg"
+                            onClick={() => toggleEquip(ui.id, isEquipped)}
+                        >
+                            {isEquipped ? "Desequipar" : "Equipar"}
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="p-3 text-center">
+                      <h4 className="font-heading text-xs text-foreground truncate">{item.name}</h4>
+                      <p className="text-[10px] text-primary uppercase tracking-tighter mt-1">{item.category}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      ) : activeTab === "security" && isMe ? (
+        <div className="glass rounded-2xl p-6">
+          <h2 className="font-heading text-xl text-foreground mb-1">🔐 Segurança e Acesso</h2>
+          <p className="text-sm text-muted-foreground mb-6">Altere sua senha mágica para manter sua conta protegida.</p>
+          
+          <form onSubmit={handleUpdatePassword} className="space-y-4 max-w-sm mx-auto">
+            <div>
+              <label className="text-xs font-heading text-muted-foreground block mb-1">Nova Senha</label>
+              <Input 
+                type="password" 
+                placeholder="No mínimo 6 caracteres..."
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </div>
+            <Button type="submit" variant="magical" className="w-full" disabled={savingPassword || !newPassword.trim()}>
+              {savingPassword ? "Atualizando..." : "Salvar Nova Senha"}
+            </Button>
+          </form>
+        </div>
+      ) : null}
 
       {adminEditModal && profile && (
         <AdminMemberModal

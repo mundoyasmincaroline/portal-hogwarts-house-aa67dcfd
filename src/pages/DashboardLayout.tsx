@@ -4,7 +4,7 @@ import {
   Castle, BookOpen, User, MessageCircle, Camera, Film, Trophy,
   Shield, Swords, BookMarked, Library, ShoppingBag, ScrollText,
   Settings, LogOut, Volume2, VolumeX, RefreshCw, Menu, Users,
-  Coins, Lock, Wallet, Map as MapIcon, Sparkles, Crown, Zap, X
+  Coins, Lock, Wallet, Map as MapIcon, Sparkles
 } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";
@@ -15,7 +15,6 @@ import { toast } from "sonner";
 
 import Notifications from "@/components/Notifications";
 import InterstitialAd from "@/components/InterstitialAd";
-import MagicalParticles from "@/components/MagicalParticles";
 
 import CastleEntrance from "@/pages/CastleEntrance";
 import EngagementBot from "@/components/EngagementBot";
@@ -33,14 +32,14 @@ import MagicalPartyOverlay from "@/components/MagicalPartyOverlay";
 import GlobalChallengeWatcher from "@/components/GlobalChallengeWatcher";
 import DailyRewardSystem from "@/components/DailyRewardSystem";
 import MaraudersMap from "@/components/MaraudersMap";
-import VipUpsellBanner from "@/components/VipUpsellBanner";
-import SocialProofWatcher from "@/components/SocialProofWatcher";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
+// import MagicalActivityFeed from "@/components/MagicalActivityFeed";
+// import TimedMysteryChest from "@/components/TimedMysteryChest";
 
 
 const NAV_ITEMS = [
   { icon: <Castle size={20} />, label: "O Castelo", path: "/dashboard" },
   { icon: <MapIcon size={20} />, label: "Mapa do Maroto", isMap: true },
+  // { icon: <Trophy size={20} />, label: "Sagas Mágicas", path: "/dashboard/sagas" },
   { icon: <BookOpen size={20} />, label: "Guia do Maroto", path: "/dashboard/guide" },
   { icon: <User size={20} />, label: "Meu Perfil", path: "/dashboard/profile" },
   { icon: <MessageCircle size={20} />, label: "Mensagens", path: "/dashboard/dm" },
@@ -62,6 +61,7 @@ const NAV_ITEMS = [
   { icon: <Lock size={20} />, label: "Azkaban", path: "/dashboard/azkaban" },
 ];
 
+
 const ADMIN_ITEMS = [
   { icon: <Settings size={20} />, label: "Admin", path: "/dashboard/admin" },
 ];
@@ -75,32 +75,12 @@ export default function DashboardLayout() {
   const [encounterDone, setEncounterDone] = useState(false);
   const [soundOn, setSoundOn] = useState(isSoundEnabled());
   const [dmUnread, setDmUnread] = useState(0);
-  const [hasCharacters, setHasCharacters] = useState<boolean | null>(null);
+  const [hasCharacters, setHasCharacters] = useState<boolean | null>(null); // null = still loading
 
-  const [showHouseCup, setShowHouseCup] = useState(() => {
-    const saved = localStorage.getItem("hp_show_house_cup");
-    return saved !== null ? JSON.parse(saved) : true;
-  });
-
-  const toggleHouseCup = () => {
-    const next = !showHouseCup;
-    setShowHouseCup(next);
-    localStorage.setItem("hp_show_house_cup", JSON.stringify(next));
-  };
-
+  // Auto-conquistas baseadas em XP e nível
   useAchievements(user?.id, profile?.xp ?? 0, profile?.level ?? 1);
 
-  const [showVipBanner, setShowVipBanner] = useState(() => {
-    const saved = localStorage.getItem("hp_show_vip_banner");
-    return saved !== null ? JSON.parse(saved) : true;
-  });
-
-  const toggleVipBanner = () => {
-    const next = !showVipBanner;
-    setShowVipBanner(next);
-    localStorage.setItem("hp_show_vip_banner", JSON.stringify(next));
-  };
-
+  // Verificar se usuário tem personagens (pega membros antigos sem ficha)
   useEffect(() => {
     if (!user) return;
     const checkChars = async () => {
@@ -114,12 +94,14 @@ export default function DashboardLayout() {
         setHasCharacters((count ?? 0) > 0);
       } catch (err) {
         console.error("Erro ao verificar personagens:", err);
+        // Em caso de erro, assume que não tem para não travar a tela
         setHasCharacters(false);
       }
     };
     checkChars();
   }, [user?.id]);
 
+  // DM unread badge
   useEffect(() => {
     if (!user) return;
     const countUnread = async () => {
@@ -137,18 +119,20 @@ export default function DashboardLayout() {
     return () => { supabase.removeChannel(ch); };
   }, [user]);
 
+  // Daily login streak — concede XP uma vez por dia
   useEffect(() => {
     if (!user || !profile) return;
     const key = `daily_login_${user.id}`;
     const today = new Date().toDateString();
     const lastLogin = localStorage.getItem(key);
-    if (lastLogin === today) return;
+    if (lastLogin === today) return; // já ganhou hoje
 
     const awardStreak = async () => {
       const streakKey = `streak_${user.id}`;
       const lastDate = localStorage.getItem(streakKey);
       const yesterday = new Date(Date.now() - 86400000).toDateString();
       
+      // Calcular streak atual
       const currentStreak = (() => {
         const saved = localStorage.getItem(`streak_count_${user.id}`);
         if (lastDate === yesterday) return (parseInt(saved || "0") + 1);
@@ -159,14 +143,31 @@ export default function DashboardLayout() {
       localStorage.setItem(`streak_count_${user.id}`, String(currentStreak));
       localStorage.setItem(key, today);
       
+      // XP escalona com o streak (máx 7 dias = 75 XP)
       const xpBonus = Math.min(25 + (currentStreak - 1) * 5, 75);
       await supabase.rpc("award_xp_action", { _action: "daily_login", _user_id: user.id, _xp: xpBonus });
 
+      // 🪙 Galeões pelo login (5 base + 2 por dia de streak, máx 15)
       const galeonsBonus = Math.min(5 + (currentStreak - 1) * 2, 15);
       supabase.rpc("award_galeons", { _user_id: user.id, _amount: galeonsBonus, _reason: "daily_login" }).then(() => {});
       
       const streakMsg = currentStreak > 1 ? ` 🔥 ${currentStreak} dias seguidos!` : "";
       toast.success(`☀️ Bom dia, ${profile.full_name?.split(" ")[0]}! +${xpBonus} XP pela sua presença diária!${streakMsg}`, { duration: 4000 });
+      
+      // Check level-up: refetch profile after xp
+      setTimeout(async () => {
+        const { data: fresh } = await supabase.from("profiles").select("level, xp").eq("user_id", user.id).single();
+        if (fresh && fresh.level > (profile.level || 1)) {
+          toast(
+            <div className="text-center">
+              <div className="text-3xl mb-1">⚡</div>
+              <p className="font-heading text-primary font-bold">NÍVEL {fresh.level}!</p>
+              <p className="text-xs text-muted-foreground">Você subiu de nível, bruxo(a)!</p>
+            </div>,
+            { duration: 6000 }
+          );
+        }
+      }, 2000);
     };
     awardStreak();
   }, [user, profile]);
@@ -177,12 +178,28 @@ export default function DashboardLayout() {
 
   useEffect(() => {
     playMagicSound();
+    
+    // Morpheus Security Protocol Alert
+    setTimeout(() => {
+      toast(
+        <div className="font-mono text-green-500 bg-black p-1 w-full">
+          <p className="font-bold border-b border-green-500/50 mb-1 flex justify-between">
+            <span>&gt; MORPHEUS_PROTOCOL</span>
+            <span className="text-red-500">ACTIVE</span>
+          </p>
+          <p className="text-xs">&gt; System Secured & Encrypted.</p>
+          <p className="text-xs">&gt; Tracking all unauthorized access...</p>
+        </div>,
+        { duration: 5000, className: "bg-black border border-green-500 rounded-none p-0" }
+      );
+    }, 1500);
   }, []);
 
   useEffect(() => {
     if (!isLoading && !user) navigate("/login");
   }, [isLoading, user, navigate]);
 
+  // Heartbeat de presença + offline ao sair
   useEffect(() => {
     if (!user) return;
     pingPresence();
@@ -199,12 +216,41 @@ export default function DashboardLayout() {
     };
   }, [user, pingPresence]);
 
+  // Sistema de Recrutamento (Referral)
+  useEffect(() => {
+    const processReferral = async () => {
+      if (!user || !profile) return;
+      
+      // 1. Registra o convite se o usuário acabou de se cadastrar com um código
+      const pendingRef = localStorage.getItem("pending_referral");
+      if (pendingRef) {
+        const { data: inviter } = await supabase.from("profiles").select("user_id").eq("username", pendingRef).single();
+        if (inviter) {
+          await supabase.from("referrals").insert({
+            inviter_id: inviter.user_id,
+            invited_id: user.id
+          } as never);
+        }
+        localStorage.removeItem("pending_referral");
+      }
+
+      // 2. Anti-Burla: Se chegou no Nível 2, conclui o convite
+      if (profile.level >= 2) {
+        const { data: ref } = await supabase.from("referrals").select("status").eq("invited_id", user.id).maybeSingle();
+        if (ref && ref.status === 'pending') {
+          await supabase.rpc("complete_referral_action", { _invited_id: user.id });
+        }
+      }
+    };
+    processReferral();
+  }, [user, profile]);
+
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-black">
-        <div className="relative">
-          <div className="w-24 h-24 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
-          <div className="absolute inset-0 flex items-center justify-center text-2xl">⚡</div>
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="text-4xl animate-float mb-4">⚡</div>
+          <p className="font-heading text-muted-foreground">Carregando portal...</p>
         </div>
       </div>
     );
@@ -212,182 +258,265 @@ export default function DashboardLayout() {
 
   if (!user || !profile) {
     return (
-      <div className="flex h-screen items-center justify-center bg-black">
-        <div className="text-center space-y-4">
-          <div className="text-6xl animate-float">🔮</div>
-          <p className="font-heading text-white/40 text-sm tracking-[0.3em] uppercase">Despertando Magia</p>
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="text-4xl animate-pulse mb-4">🔮</div>
+          <p className="font-heading text-muted-foreground text-lg">Despertando sua magia...</p>
+          <p className="text-xs text-muted-foreground/50 mt-2">Se esta tela persistir por muito tempo, verifique sua conexão.</p>
         </div>
       </div>
     );
   }
+  
 
   if (!profile.approved && !isAdmin) return <PendingApproval />;
-  if (!isAdmin && !profile.has_accepted_rules) return <RulesAgreement />;
+  
+  if (!isAdmin) {
+    if (!profile.has_accepted_rules) return <RulesAgreement />;
+  }
 
+  // Admin also goes through character selection, but can skip (canCancel)
   const adminSkipped = isAdmin && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
 
+  // Se ainda está verificando personagens, aguarda
   if (hasCharacters === null) {
     return (
-      <div className="flex h-screen items-center justify-center bg-black">
-        <div className="text-center space-y-4">
-          <div className="text-4xl animate-spin-slow">⏳</div>
-          <p className="font-heading text-white/20 text-[10px] tracking-widest uppercase">Sincronizando Almas</p>
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="text-4xl animate-float mb-4">⚡</div>
+          <p className="font-heading text-muted-foreground">Carregando personagens...</p>
         </div>
       </div>
     );
   }
 
+  // Redireciona para seleção de personagem se:
+  // 1. Não tem active_character_id, OU
+  // 2. Não tem personagens reais na tabela (membros antigos sem ficha)
   if ((!profile.active_character_id || !hasCharacters) && !adminSkipped) {
     return <CharacterSelection adminMode={isAdmin} />;
   }
-
-  const todayStr = new Date().toISOString().split('T')[0];
+  const today = new Date().toISOString().split('T')[0];
   const lastSeenIntro = localStorage.getItem(`intro_last_seen_${user.id}`);
-  if (lastSeenIntro !== todayStr) return <CastleEntrance />;
+  const shouldShowIntro = lastSeenIntro !== today;
+
+  if (shouldShowIntro) return <CastleEntrance />;
   
   const lastSeenEncounter = localStorage.getItem(`encounter_last_seen_${user.id}`);
-  if (lastSeenEncounter !== todayStr && !encounterDone) {
+  const shouldShowEncounter = lastSeenEncounter !== today && !encounterDone;
+
+  if (shouldShowEncounter) {
     return <DailyEncounter onComplete={() => {
-      localStorage.setItem(`encounter_last_seen_${user.id}`, todayStr);
+      localStorage.setItem(`encounter_last_seen_${user.id}`, today);
       setEncounterDone(true);
     }} />;
   }
   
   const house = HOUSES[profile.house as House] || HOUSES.gryffindor;
-  const navItems = isAdmin ? [...NAV_ITEMS, ...ADMIN_ITEMS] : NAV_ITEMS;
+  const items = isAdmin ? [...NAV_ITEMS, ...ADMIN_ITEMS] : NAV_ITEMS;
 
   return (
-    <div className="flex h-screen bg-[#050505] overflow-hidden relative">
-      <MagicalParticles house={profile.house} />
-      <div className={`absolute inset-0 pointer-events-none opacity-20 z-0 transition-all duration-1000 ${
-        profile.house === 'gryffindor' ? 'bg-[radial-gradient(circle_at_20%_20%,rgba(220,38,38,0.15)_0%,transparent_50%)]' :
-        profile.house === 'slytherin' ? 'bg-[radial-gradient(circle_at_20%_20%,rgba(22,163,74,0.15)_0%,transparent_50%)]' :
-        profile.house === 'ravenclaw' ? 'bg-[radial-gradient(circle_at_20%_20%,rgba(37,99,235,0.15)_0%,transparent_50%)]' :
-        'bg-[radial-gradient(circle_at_20%_20%,rgba(202,138,4,0.15)_0%,transparent_50%)]'
-      }`} />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(20,20,20,1)_0%,rgba(0,0,0,1)_100%)] z-0" />
-      <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+    <div className="flex h-screen bg-background overflow-hidden relative">
 
       <InterstitialAd />
       {sidebarOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 md:hidden" onClick={() => setSidebarOpen(false)} />
+        <div className="fixed inset-0 bg-background/80 z-30 md:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
-      <aside className={`fixed md:static inset-y-0 left-0 z-[60] w-72 bg-black/40 backdrop-blur-3xl border-r border-white/5 flex flex-col transition-all duration-500 ease-in-out md:translate-x-0 ${sidebarOpen ? "translate-x-0 shadow-[20px_0_100px_rgba(0,0,0,0.9)]" : "-translate-x-full"}`}>
-        <div className="p-8 border-b border-white/5 relative group">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <Link to="/dashboard" className="relative z-10 flex items-center gap-4">
-            <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 shadow-inner group-hover:scale-110 transition-transform duration-500">
-               <Castle size={24} className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]" />
+      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-64 bg-card border-r border-border flex flex-col transition-transform md:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        <div className="p-4 border-b border-border">
+          <Link to="/dashboard" className="flex items-center gap-3">
+            <div className="bg-primary/20 p-2 rounded-lg text-primary">
+              <Castle size={24} />
             </div>
-            <div className="space-y-0.5">
-              <span className="font-heading text-xl text-white tracking-tighter leading-none block">HOGWARTS</span>
-              <span className="font-heading text-xs text-primary tracking-[0.3em] leading-none block opacity-80">PORTAL</span>
-            </div>
+            <span className="font-heading text-lg text-gold-gradient leading-tight">Hogwarts<br/>House</span>
           </Link>
         </div>
 
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto custom-scrollbar">
-          {navItems.map((item) => {
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+          {items.map((item) => {
             const isActive = location.pathname === item.path;
-            return item.isMap ? (
-              <button key={item.label} onClick={() => { playMagicSound(); setMapOpen(true); setSidebarOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 group text-white/40 hover:bg-white/5 hover:text-white">
-                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center border border-white/5 group-hover:border-primary/30 transition-colors">
-                   {item.icon}
-                </div>
-                <span className="font-heading text-[10px] tracking-widest uppercase">{item.label}</span>
-              </button>
-            ) : (
-              <Link key={item.path} to={item.path!} onClick={() => { playMagicSound(); setSidebarOpen(false); }} className={`flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-500 group relative overflow-hidden ${isActive ? "bg-white/5 text-white border border-white/10 shadow-xl" : "text-white/40 hover:text-white hover:bg-white/[0.02]"}`}>
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${isActive ? "bg-primary text-white shadow-lg shadow-primary/20 scale-110" : "bg-white/5 group-hover:bg-white/10"}`}>
-                   {item.icon}
-                </div>
-                <span className="font-heading text-[10px] tracking-widest uppercase relative z-10">{item.label}</span>
-                {item.label === "Mensagens" && dmUnread > 0 && <span className="ml-auto px-2 py-0.5 bg-primary text-white rounded-full text-[8px] font-heading shadow-lg">{dmUnread > 9 ? "9+" : dmUnread}</span>}
-              </Link>
-            );
+              return item.isMap ? (
+                <button
+                  key={item.label}
+                  onClick={() => {
+                    playMagicSound();
+                    setMapOpen(true);
+                    setSidebarOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
+                >
+                  <span className="text-muted-foreground group-hover:text-primary transition-colors">{item.icon}</span>
+                  <span className="font-heading text-sm">{item.label}</span>
+                </button>
+              ) : (
+                <Link
+                  key={item.path}
+                  to={item.path!}
+                  onClick={() => {
+                    playMagicSound();
+                    setSidebarOpen(false);
+                  }}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group ${
+                    isActive ? "bg-primary/10 text-primary font-bold border border-primary/20" : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
+                  }`}
+                >
+                  <span className="text-muted-foreground group-hover:text-primary transition-colors">{item.icon}</span>
+                  <span className="font-heading text-sm">{item.label}</span>
+                  {item.label === "Guia do Maroto" && (
+                    <span className="ml-auto w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                  )}
+                  {item.label === "Mensagens" && dmUnread > 0 && (
+                    <span className="ml-auto min-w-[18px] h-[18px] px-1 bg-primary text-primary-foreground rounded-full text-[10px] flex items-center justify-center font-bold">
+                      {dmUnread > 9 ? "9+" : dmUnread}
+                    </span>
+                  )}
+                </Link>
+              );
           })}
         </nav>
 
-        <div className="p-6 border-t border-white/5 bg-black/40 backdrop-blur-3xl space-y-6">
-          <Link to="/dashboard/store" className="relative group block overflow-hidden rounded-2xl bg-gradient-to-br from-yellow-600/10 to-transparent border border-yellow-500/20 p-4 transition-all hover:border-yellow-500/50 hover:-translate-y-1">
-            <div className="flex items-center justify-between relative z-10">
-               <div className="space-y-0.5">
-                  <p className="text-[9px] font-heading text-yellow-500/60 uppercase tracking-widest">Saldo no Cofre</p>
-                  <p className="font-heading text-xl text-white tracking-tighter">🪙 {(profile.galeons || 0).toLocaleString("pt-BR")}</p>
-               </div>
-               <div className="w-10 h-10 rounded-xl bg-yellow-500/10 flex items-center justify-center border border-yellow-500/20 group-hover:rotate-12 transition-transform">
-                  <Coins size={20} className="text-yellow-500" />
-               </div>
+        <div className="p-3 border-t border-border bg-card/80 backdrop-blur-sm relative z-50">
+          {/* Saldo de Galeões */}
+          <Link to="/dashboard/store" className="flex items-center justify-between px-4 py-3 mb-2 rounded-2xl border border-yellow-500/40 bg-gradient-to-br from-amber-600/20 via-yellow-900/40 to-black hover:border-yellow-300 transition-all group shadow-[0_0_15px_rgba(251,191,36,0.1)] hover:shadow-[0_0_25px_rgba(251,191,36,0.2)]">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">🪙</span>
+              <span className="text-[11px] text-yellow-400/90 font-heading group-hover:text-yellow-300 uppercase tracking-wider">Galeões</span>
             </div>
+            <span className="font-heading text-lg text-yellow-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]">{((profile as any).galeons || 0).toLocaleString("pt-BR")}</span>
           </Link>
-
-          {/* RPG Progress Section */}
-          <div className="space-y-3 bg-white/[0.02] border border-white/5 rounded-2xl p-4">
-             <div className="flex justify-between items-end mb-1">
-                <div className="flex items-center gap-2">
-                   <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/30 text-primary font-heading text-sm shadow-[0_0_10px_rgba(var(--primary),0.3)]">
-                      {profile.level || 1}
-                   </div>
-                   <span className="text-[9px] font-heading text-white/60 uppercase tracking-widest">Nível Atual</span>
-                </div>
-                <span className="text-[8px] font-heading text-primary uppercase tracking-tighter">{(profile.xp || 0)} / {((profile.level || 1) * 1000)} XP</span>
-             </div>
-             <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
-                <div 
-                    className="h-full bg-gradient-to-r from-primary to-amber-500 shadow-[0_0_10px_rgba(var(--primary),0.5)] transition-all duration-1000" 
-                    style={{ width: `${Math.min(((profile.xp || 0) / ((profile.level || 1) * 1000)) * 100, 100)}%` }} 
-                />
-             </div>
-             <p className="text-[7px] text-center font-heading text-white/20 uppercase tracking-[0.2em] pt-1">
-                {profile.level >= 60 ? "🧙‍♂️ Grão-Mestre Bruxo" : profile.level >= 40 ? "✨ Monitor-Chefe" : profile.level >= 20 ? "📜 Estudante Veterano" : "🌱 Jovem Aprendiz"}
-             </p>
-          </div>
-
-          <div className="flex items-center justify-between gap-3">
-             <Link to="/dashboard/profile" className="flex items-center gap-3 group">
+          {/* VIP upgrade CTA — só para não-VIPs */}
+          {!(profile as any).vip_plan && (
+            <Link to="/dashboard/store"
+              className="flex items-center gap-2 px-3 py-2 mb-2 rounded-xl border border-purple-500/40 bg-gradient-to-r from-purple-900/30 to-violet-900/20 hover:border-purple-400/60 hover:from-purple-900/50 transition-all group animate-pulse-glow">
+              <span className="text-base">👑</span>
+              <span className="text-[11px] text-purple-300 font-heading group-hover:text-purple-200 flex-1">Ativar VIP</span>
+              <span className="text-[9px] bg-purple-500/30 text-purple-300 px-1.5 py-0.5 rounded-full font-heading">R$9,90</span>
+            </Link>
+          )}
+          {/* Badge VIP ativo */}
+          {(profile as any).vip_plan && (
+            <div className="flex items-center gap-2 px-3 py-2 mb-2 rounded-xl border border-yellow-500/40 bg-gradient-to-r from-yellow-900/20 to-amber-900/10">
+              <span className="text-base">✨</span>
+              <span className="text-[11px] text-yellow-400 font-heading capitalize">{(profile as any).vip_plan} Ativo</span>
+            </div>
+          )}
+          <div className="flex items-center justify-between gap-1 w-full flex-wrap">
+            <Link to="/dashboard/profile" className="flex items-center gap-2 max-w-[120px] hover:bg-secondary/50 p-1.5 rounded-lg transition-colors cursor-pointer group">
+              <div className="relative shrink-0">
                 <HouseCrest house={profile.house} size="sm" />
-                <div className="min-w-0">
-                   <p className="text-[11px] font-heading text-white truncate uppercase tracking-wider group-hover:text-primary transition-colors">{profile.full_name?.split(' ')[0]}</p>
-                   <p className="text-[9px] text-white/30 truncate uppercase font-medium">{house.name}</p>
-                </div>
-             </Link>
-             <div className="flex items-center gap-1">
-                <button onClick={handleToggleSound} className="p-2 text-white/20 hover:text-white transition-colors">{soundOn ? <Volume2 size={14} /> : <VolumeX size={14} />}</button>
-                <Notifications />
-                <button onClick={async () => { await logout(); navigate("/"); }} className="p-2 text-white/20 hover:text-red-500 transition-colors"><LogOut size={14} /></button>
-             </div>
+                <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-card ${isUserOnline(profile) ? "bg-green-500" : "bg-muted-foreground"}`} title={isUserOnline(profile) ? "Online" : "Offline"} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[13px] leading-tight font-heading truncate text-foreground group-hover:text-primary transition-colors" title={profile.full_name}>{profile.full_name}</p>
+                <p className="text-[10px] leading-tight text-muted-foreground truncate">{house.name}</p>
+              </div>
+            </Link>
+            
+            <div className="flex items-center gap-1 shrink-0">
+              <button 
+                onClick={async () => {
+                  await supabase.from("profiles").update({ active_character_id: null } as never).eq("user_id", user.id);
+                  useAuth.setState((state) => ({ profile: state.profile ? { ...state.profile, active_character_id: null } : null }));
+                  window.location.reload();
+                }} 
+                className="p-1.5 text-muted-foreground hover:bg-secondary/80 hover:text-primary rounded-md transition-colors" 
+                title="Trocar Personagem"
+              >
+                <RefreshCw size={14} />
+              </button>
+              <button
+                onClick={handleToggleSound}
+                className="p-1.5 text-muted-foreground hover:bg-secondary/80 hover:text-primary rounded-md transition-colors"
+                title={soundOn ? "Desativar Som" : "Ativar Som"}
+              >
+                {soundOn ? <Volume2 size={14} /> : <VolumeX size={14} />}
+              </button>
+              <div className="scale-90 origin-center"><Notifications /></div>
+              <button 
+                onClick={async () => { await logout(); navigate("/"); }} 
+                className="p-1.5 text-muted-foreground hover:bg-destructive/20 hover:text-destructive rounded-md transition-colors"
+                title="Sair"
+              >
+                <LogOut size={14} />
+              </button>
+            </div>
+          </div>
+          <div className="mt-3 text-center opacity-40">
+            <p className="text-[9px] text-muted-foreground/60 text-center px-2 font-mono uppercase tracking-widest">Mundo Yasmin</p>
           </div>
         </div>
       </aside>
 
-      <main className="flex-1 flex flex-col min-w-0 relative">
+      <main className="flex-1 flex flex-col min-w-0">
         <NotificationBanner />
         <div className="md:hidden flex items-center gap-3 p-3 border-b border-border bg-card">
-          <button onClick={() => setSidebarOpen(true)} className="p-2 -ml-2 text-muted-foreground hover:text-foreground"><Menu size={20} /></button>
+          <button onClick={() => setSidebarOpen(true)} className="p-2 -ml-2 text-muted-foreground hover:text-foreground">
+            <Menu size={20} />
+          </button>
           <span className="font-heading text-sm text-gold-gradient">Hogwarts House</span>
         </div>
         
+        {/* House Cup Progress Bar - Gamification Engine */}
+        <div className="px-4 md:px-8 mt-4">
+          <div className="glass rounded-2xl p-4 border-primary/20 bg-gradient-to-r from-amber-900/20 via-black/40 to-amber-900/10 relative overflow-hidden group">
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5" />
+            <div className="relative z-10 flex flex-col md:flex-row items-center gap-4">
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="text-2xl animate-float">🏆</span>
+                <span className="font-heading text-sm text-gold-gradient uppercase tracking-tighter">Taça das Casas</span>
+              </div>
+              
+              <div className="flex-1 w-full grid grid-cols-4 gap-2 h-3 items-end">
+                 {/* As barras crescem conforme a pontuação real via backend, aqui simulamos a UI premium */}
+                 <div className="group/house relative h-full bg-red-600/30 rounded-full overflow-hidden border border-red-500/20">
+                    <div className="h-full bg-red-600 shadow-[0_0_10px_rgba(220,38,38,0.5)] animate-pulse" style={{ width: '65%' }} />
+                    <span className="absolute -top-5 left-0 text-[8px] font-heading text-red-400 opacity-0 group-hover/house:opacity-100 transition-opacity">Grifinória</span>
+                 </div>
+                 <div className="group/house relative h-full bg-green-600/30 rounded-full overflow-hidden border border-green-500/20">
+                    <div className="h-full bg-green-600 shadow-[0_0_10px_rgba(22,163,74,0.5)]" style={{ width: '82%' }} />
+                    <span className="absolute -top-5 left-0 text-[8px] font-heading text-green-400 opacity-0 group-hover/house:opacity-100 transition-opacity">Sonserina</span>
+                 </div>
+                 <div className="group/house relative h-full bg-blue-600/30 rounded-full overflow-hidden border border-blue-500/20">
+                    <div className="h-full bg-blue-600 shadow-[0_0_10px_rgba(37,99,235,0.5)]" style={{ width: '45%' }} />
+                    <span className="absolute -top-5 left-0 text-[8px] font-heading text-blue-400 opacity-0 group-hover/house:opacity-100 transition-opacity">Corvinal</span>
+                 </div>
+                 <div className="group/house relative h-full bg-yellow-600/30 rounded-full overflow-hidden border border-yellow-500/20">
+                    <div className="h-full bg-yellow-600 shadow-[0_0_10px_rgba(202,138,4,0.5)]" style={{ width: '30%' }} />
+                    <span className="absolute -top-5 left-0 text-[8px] font-heading text-yellow-400 opacity-0 group-hover/house:opacity-100 transition-opacity">Lufa-Lufa</span>
+                 </div>
+              </div>
+              
+              <div className="hidden md:block text-right shrink-0">
+                <span className="text-[10px] text-muted-foreground uppercase block font-heading">Liderança Atual</span>
+                <span className="text-xs font-heading text-green-400 animate-pulse">🐍 Sonserina +120</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <div className="flex-1 overflow-y-auto p-6 md:p-16 custom-scrollbar relative z-10">
-          <div className="max-w-7xl mx-auto pb-40">
-             {showVipBanner && !profile?.vip_plan && (
-               <VipUpsellBanner currentVip={profile?.vip_plan} galeons={profile?.galeons} username={profile?.username} onClose={toggleVipBanner} />
-             )}
-             <SocialProofWatcher />
-             <ErrorBoundary>
-                <Outlet />
-              </ErrorBoundary>
+        <div className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
+          {/* <MagicalActivityFeed /> */}
+          <div className="mt-2 md:mt-0 pb-10">
+             <Outlet />
           </div>
           <EngagementBot />
           <FilchWatcher />
           <MagicalEventSystem />
+          {/* Magical Party Overlay – show only when active */}
+          {false && <MagicalPartyOverlay />}
           <GlobalChallengeWatcher />
-          {/* <DailyRewardSystem /> */}
+          <DailyRewardSystem />
           <MagicalCelebration />
+          {/* <TimedMysteryChest /> */}
           <MaraudersMap isOpen={mapOpen} onClose={() => setMapOpen(false)} />
         </div>
       </main>
     </div>
   );
 }
+
+
+
+
+

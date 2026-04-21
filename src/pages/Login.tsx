@@ -216,18 +216,6 @@ export default function Login() {
           <Link to="/" className="text-xs text-muted-foreground hover:text-primary mt-4 inline-block">
             ← Voltar ao início
           </Link>
-          <div className="mt-8 pt-4 border-t border-white/5">
-             <button 
-               onClick={() => {
-                 localStorage.clear();
-                 sessionStorage.clear();
-                 window.location.reload();
-               }}
-               className="text-[9px] font-heading text-white/20 hover:text-primary transition-colors tracking-widest uppercase"
-             >
-               🪄 Problemas ao entrar? Limpar Cache Mágico
-             </button>
-          </div>
         </div>
       </div>
     </div>

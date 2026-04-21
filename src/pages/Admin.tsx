@@ -11,7 +11,7 @@ import AdminMemberModal from "@/components/AdminMemberModal";
 import PedidosTab from "@/components/PedidosTab";
 import SafeImage from "@/components/SafeImage";
 
-type Tab = "members" | "pending_members" | "challenges" | "houses" | "fichas" | "tasks" | "banned" | "channels" | "monetization" | "moderation" | "filch" | "pedidos" | "festas" | "notifications";
+type Tab = "members" | "pending_members" | "challenges" | "houses" | "fichas" | "tasks" | "banned" | "channels" | "monetization" | "moderation" | "filch" | "pedidos" | "festas";
 
 interface MemberProfile {
   id: string;
@@ -645,7 +645,6 @@ export default function Admin() {
     { id: "monetization", label: "Monetização", icon: "💰" },
     { id: "pedidos", label: "Pedidos 🪙", icon: "🧾" },
     { id: "moderation", label: "Moderação", icon: "👁️" },
-    { id: "notifications", label: "Berrador Global", icon: "📢" },
   ];
 
   return (
@@ -1108,88 +1107,6 @@ export default function Admin() {
           )}
 
           {tab === "festas" && <PartiesTab />}
-
-          {tab === "notifications" && (
-            <div className="glass rounded-2xl p-6 space-y-6">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30">
-                  <span className="text-2xl">📢</span>
-                </div>
-                <div>
-                  <h2 className="font-heading text-xl text-white">Berrador Global</h2>
-                  <p className="text-xs text-white/40 italic uppercase tracking-widest">Enviar comunicado para todo o castelo</p>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-heading text-primary uppercase tracking-widest">Destinatário</label>
-                  <select 
-                    id="notif-target"
-                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-primary/40 transition-all"
-                  >
-                    <option value="all">@TODOS (Global)</option>
-                    {members.map(m => (
-                      <option key={m.user_id} value={m.user_id}>{m.full_name} (@{m.username})</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[10px] font-heading text-primary uppercase tracking-widest">Conteúdo da Mensagem</label>
-                  <textarea 
-                    id="notif-content"
-                    placeholder="Escreva sua mensagem aqui..."
-                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-primary/40 transition-all min-h-[120px]"
-                  />
-                </div>
-
-                <Button 
-                  onClick={async () => {
-                    const target = (document.getElementById('notif-target') as HTMLSelectElement).value;
-                    const content = (document.getElementById('notif-content') as HTMLTextAreaElement).value;
-                    
-                    if (!content.trim()) return toast.error("Escreva o conteúdo da mensagem.");
-                    
-                    try {
-                      if (target === "all") {
-                        const { data: all } = await supabase.from('profiles').select('user_id');
-                        if (all) {
-                          const notifs = all.map(p => ({
-                            user_id: p.user_id,
-                            type: 'admin_global',
-                            title: '📢 COMUNICADO MINISTERIAL',
-                            message: content,
-                            read: false
-                          }));
-                          for (let i = 0; i < notifs.length; i += 100) {
-                            await supabase.from('notifications').insert(notifs.slice(i, i + 100));
-                          }
-                          toast.success("Berrador enviado para todo o castelo!");
-                        }
-                      } else {
-                        await supabase.from('notifications').insert({
-                          user_id: target,
-                          type: 'admin_direct',
-                          title: '✉️ MENSAGEM DA DIRETORIA',
-                          message: content,
-                          read: false
-                        });
-                        toast.success("Mensagem enviada com sucesso!");
-                      }
-                      (document.getElementById('notif-content') as HTMLTextAreaElement).value = "";
-                    } catch (err) {
-                      toast.error("Erro ao enviar notificação.");
-                    }
-                  }}
-                  variant="magical" 
-                  className="w-full h-14"
-                >
-                  DISPARAR COMUNICADO ✨
-                </Button>
-              </div>
-            </div>
-          )}
 
         </>
       )}

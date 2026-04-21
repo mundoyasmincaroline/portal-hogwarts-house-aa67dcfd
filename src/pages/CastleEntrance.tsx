@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
-import { Sparkles, ChevronRight } from "lucide-react";
 
 export default function CastleEntrance() {
   const [step, setStep] = useState(0);
@@ -73,57 +72,31 @@ export default function CastleEntrance() {
   else if (timeOfDay === "afternoon") bgUrl = "https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2000"; // Afternoon castle
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl animate-in fade-in duration-1000">
-      {/* Background Magic Layer */}
-      <div className="absolute inset-0 z-0">
-          <img src={bgUrl} alt="Hogwarts Background" className="w-full h-full object-cover opacity-40 scale-110 animate-pulse-slow" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/90" />
-      </div>
-
-      <div className="relative overflow-hidden w-full max-w-2xl rounded-[3rem] bg-gradient-to-b from-white/[0.08] to-black/60 backdrop-blur-3xl p-8 md:p-14 border border-white/10 shadow-[0_50px_150px_rgba(0,0,0,1)] text-center animate-in zoom-in-95 duration-700">
-        {/* Ambient Glows */}
-        <div className="absolute -top-20 -left-20 w-80 h-80 bg-primary/20 rounded-full blur-[120px] pointer-events-none animate-pulse" />
-        <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-amber-500/10 rounded-full blur-[100px] pointer-events-none" />
+    <div className="fixed inset-0 bg-background/95 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay" style={{ backgroundImage: `url('${bgUrl}')` }}></div>
+      <div className="max-w-2xl w-full bg-secondary/80 border border-primary/20 rounded-2xl p-8 shadow-2xl relative overflow-hidden animate-in fade-in zoom-in duration-700">
         
-        <div className="relative z-10 space-y-10">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-heading text-primary uppercase tracking-[0.3em] mb-4">
-              <Sparkles size={10} className="animate-spin-slow" /> O Portal se Abre
-            </div>
-            <h1 className="text-4xl md:text-5xl font-heading text-gold-gradient tracking-tight drop-shadow-2xl">O Retorno a Hogwarts</h1>
-            <div className="h-px w-32 bg-gradient-to-r from-transparent via-primary/50 to-transparent mx-auto mt-4" />
-          </div>
+        <div className="relative z-10 space-y-8 text-center">
+          <h1 className="font-heading text-3xl text-gold-gradient mb-6">O Retorno a Hogwarts</h1>
           
-          <div className="relative min-h-[160px] flex items-center justify-center">
-            <p className="text-lg md:text-2xl text-white/90 leading-relaxed font-serif italic drop-shadow-md animate-in fade-in slide-in-from-bottom-4 duration-1000">
-              "{current.text}"
-            </p>
-          </div>
+          <p className="text-lg md:text-xl text-foreground leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
+            {current.text}
+          </p>
 
-          <div className="flex flex-col gap-4 mt-12">
+          <div className="flex flex-col gap-3 mt-8 pt-4">
             {current.options.map((opt, i) => (
-              <button 
+              <Button 
                 key={i} 
-                disabled={opt.next === -1 ? loading : false}
+                variant="magical" 
+                size="lg" 
+                className="w-full text-md font-heading animate-in fade-in duration-500 delay-500"
                 onClick={() => opt.next === -1 ? handleFinish() : setStep(opt.next)}
-                className="group relative w-full overflow-hidden p-6 rounded-2xl bg-white/[0.03] border border-white/10 text-white font-heading text-lg tracking-widest transition-all duration-300 hover:bg-white/[0.08] hover:border-primary/50 hover:-translate-y-1 active:scale-[0.98] shadow-2xl"
+                disabled={opt.next === -1 ? loading : false}
               >
-                {/* Internal Shimmer */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/choice:translate-x-full transition-transform duration-1000" />
-                
-                <span className="relative z-10 flex items-center justify-center gap-3">
-                  {opt.next === -1 && loading ? (
-                    <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                  ) : (
-                    <ChevronRight size={18} className="text-primary group-hover:translate-x-1 transition-transform" />
-                  )}
-                  {opt.next === -1 && loading ? "CONECTANDO..." : opt.text.toUpperCase()}
-                </span>
-              </button>
+                {opt.next === -1 && loading ? "Iniciando..." : opt.text}
+              </Button>
             ))}
           </div>
-
-          <p className="text-[10px] font-heading text-white/20 uppercase tracking-[0.2em]">Sua história em Hogwarts continua agora</p>
         </div>
       </div>
     </div>

@@ -238,18 +238,22 @@ export default function MagicalEventSystem() {
       {!activeEvent && (
         <button 
           onClick={() => {
-            toast.info(`Próximo Evento: ${nextEventIn}`, {
-              description: "Prepare sua varinha! Um novo desafio global está prestes a começar.",
+            const next = dailyEvents.find(e => {
+              const [h, m] = e.start.split(":").map(Number);
+              const now = new Date();
+              const ev = new Date(); ev.setHours(h, m, 0, 0);
+              return ev > now;
+            }) || dailyEvents[0];
+            if (!next) return;
+            toast.info(`🔮 Próximo: ${next.name}`, {
+              description: `${next.description} (${next.audience === 'all' ? 'Todos' : next.audience === 'canons' ? 'Canons' : 'OCs'}) às ${next.start}`,
               duration: 5000
             });
           }}
-          className="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-[90] flex items-center gap-3 bg-black/60 backdrop-blur-xl px-5 py-2.5 rounded-2xl border border-primary/30 text-[10px] font-heading text-primary shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:scale-105 hover:bg-primary/10 transition-all group animate-fade-in"
+          className="fixed top-4 right-20 z-[40] hidden lg:flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-primary/20 text-[10px] font-heading text-primary/80 hover:bg-primary/10 transition-colors"
         >
-          <div className="relative">
-            <div className="absolute inset-0 bg-primary/20 blur-md rounded-full animate-pulse" />
-            <Timer size={14} className="relative z-10 animate-spin-slow" />
-          </div>
-          <span className="tracking-widest uppercase">Próximo Evento em: <span className="text-white ml-1">{nextEventIn}</span></span>
+          <Timer size={12} className="animate-pulse" />
+          <span>PRÓXIMO EVENTO EM: {nextEventIn}</span>
         </button>
       )}
 
@@ -308,7 +312,7 @@ export default function MagicalEventSystem() {
                 </div>
                 <h2 className="text-3xl font-heading text-white mb-2">{activeEvent.name}</h2>
                 <div className="flex justify-center gap-1 mb-6">
-                  {activeEvent.riddles.map((_, i) => (
+                  {RIDDLES[activeEvent.type as keyof typeof RIDDLES].map((_, i) => (
                     <div key={i} className={`h-1.5 w-12 rounded-full transition-colors ${i <= step ? "bg-primary" : "bg-secondary"}`} />
                   ))}
                 </div>

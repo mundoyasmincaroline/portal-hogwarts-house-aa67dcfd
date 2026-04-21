@@ -59,98 +59,57 @@ export default function StickerVisual({ name, rarity, unlocked, imageUrl, failed
   const theme = THEME_MAP[detect(name)] || THEME_MAP.wizard;
 
   // Se tem imagem real e carregou
-  if (imageUrl && !failedImage) return null;
+  if (imageUrl && !failedImage) return null; // let parent render the <img>
 
-  const particles = Array.from({ length: 12 }, (_, i) => ({
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 2 + 1,
-    delay: Math.random() * 5,
-    duration: Math.random() * 3 + 2,
+  const stars = Array.from({ length: 6 }, (_, i) => ({
+    x: 10 + (i * 73) % 85,
+    y: 5 + (i * 57) % 85,
+    size: 1.5 + (i % 3) * 0.8,
+    delay: i * 0.4,
   }));
 
   return (
-    <div className={`absolute inset-0 bg-gradient-to-br ${style.bg} flex items-center justify-center overflow-hidden group/sticker-content`}>
-      {/* MONSTER QUALITY BACKGROUND PATTERN */}
-      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/papyros.png')] opacity-10 mix-blend-overlay pointer-events-none" />
-      
-      {/* PREMIUM PARTICLES */}
-      {unlocked && particles.map((p, i) => (
-        <div 
-          key={i} 
-          className="absolute rounded-full animate-pulse pointer-events-none"
-          style={{ 
-            left: `${p.x}%`, 
-            top: `${p.y}%`, 
-            width: p.size, 
-            height: p.size,
-            background: i % 2 === 0 ? style.shine : theme.color,
-            opacity: 0.4,
-            animationDelay: `${p.delay}s`,
-            animationDuration: `${p.duration}s`,
-            boxShadow: `0 0 10px ${style.shine}`
-          }} 
-        />
+    <div className={`absolute inset-0 bg-gradient-to-br ${style.bg} flex items-center justify-center overflow-hidden`}>
+
+      {/* Stars */}
+      {stars.map((s, i) => (
+        <div key={i} className="absolute rounded-full animate-pulse"
+          style={{ left: `${s.x}%`, top: `${s.y}%`, width: s.size * 2, height: s.size * 2,
+            background: style.shine, opacity: unlocked ? 0.5 : 0.15,
+            animationDelay: `${s.delay}s`, animationDuration: "2s" }} />
       ))}
 
-      {/* AAA AURA GLOW */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div 
-          className="w-48 h-48 rounded-full blur-[60px] opacity-20 animate-pulse transition-all duration-1000 group-hover/sticker-content:scale-150 group-hover/sticker-content:opacity-40"
-          style={{ background: `radial-gradient(circle, ${theme.color}, transparent)` }}
-        />
-      </div>
+      {/* Glow circle */}
+      <div className="absolute" style={{
+        width: 100, height: 100,
+        background: `radial-gradient(circle, ${theme.color}30 0%, transparent 70%)`,
+        borderRadius: "50%", filter: "blur(16px)",
+      }} />
 
-      {/* MAIN ICON - MONSTER QUALITY */}
-      <div className="relative z-10 flex flex-col items-center gap-4 group-hover/sticker-content:scale-110 transition-transform duration-700">
-        <div className="relative">
-           {/* Shadow depth */}
-           <div className="absolute top-4 left-1/2 -translate-x-1/2 w-12 h-4 bg-black/40 blur-xl rounded-full" />
-           <span 
-             className={`text-7xl select-none transition-all duration-1000 drop-shadow-[0_20px_30px_rgba(0,0,0,0.8)] ${
-               unlocked ? "animate-float" : "grayscale opacity-10"
-             }`}
-             style={{ 
-               filter: unlocked ? `drop-shadow(0 0 20px ${theme.color}40)` : "none" 
-             }}
-           >
-             {theme.emoji}
-           </span>
-        </div>
-        
-        {unlocked && (
-           <div className="space-y-1">
-              <p className="text-[8px] font-heading text-white tracking-[0.4em] uppercase opacity-40">Guardião da {theme.label}</p>
-              {rarity === "gold" && (
-                <div className="flex items-center gap-2 justify-center">
-                   <div className="w-1 h-1 rounded-full bg-yellow-400 animate-ping" />
-                   <span className="text-[10px] font-heading text-yellow-400 tracking-[0.2em] uppercase italic drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]">Lendária</span>
-                   <div className="w-1 h-1 rounded-full bg-yellow-400 animate-ping" />
-                </div>
-              )}
-           </div>
+      {/* Main emoji — big and glowing */}
+      <div className="relative z-10 flex flex-col items-center gap-1"
+        style={{ filter: unlocked ? `drop-shadow(0 0 14px ${theme.color}80)` : "none" }}>
+        <span className={`text-6xl select-none transition-all ${unlocked ? "" : "grayscale opacity-30"}`}>
+          {theme.emoji}
+        </span>
+        {rarity === "gold" && unlocked && (
+          <span className="text-[10px] font-heading text-yellow-400 tracking-widest uppercase opacity-80">✦ Raro ✦</span>
         )}
       </div>
 
-      {/* HOLOGRAPHIC SHIMMER OVERLAY - AAA */}
-      {unlocked && (
-        <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-0 group-hover/sticker-content:opacity-100 transition-opacity duration-1000">
-          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover/sticker-content:animate-[shimmer_2s_infinite] mix-blend-overlay" />
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-400/5 via-purple-400/5 to-pink-400/5 mix-blend-screen opacity-40" />
-        </div>
-      )}
+      {/* Shimmer overlay on hover */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
-      {/* CARD DEPTH BEZEL */}
-      <div className="absolute inset-0 border border-white/5 rounded-[inherit] pointer-events-none" />
-      <div className="absolute inset-0 shadow-[inset_0_0_40px_rgba(0,0,0,0.4)] pointer-events-none" />
+      {/* Rarity top line */}
+      <div className="absolute top-0 left-0 right-0 h-px"
+        style={{ background: `linear-gradient(90deg, transparent, ${style.shine}80, transparent)` }} />
 
-      {/* LOCKED STATE - MONSTER QUALITY */}
+      {/* Locked overlay */}
       {!unlocked && (
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center border-t border-white/5">
-           <div className="relative group/lock">
-              <div className="absolute -inset-4 bg-primary/10 blur-xl rounded-full opacity-0 group-hover/lock:opacity-100 transition-opacity" />
-              <span className="text-3xl opacity-20 relative z-10 group-hover:scale-125 transition-transform duration-500">🔮</span>
-           </div>
+        <div className="absolute inset-0 bg-background/40 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-2xl opacity-60">🔮</span>
+          </div>
         </div>
       )}
     </div>

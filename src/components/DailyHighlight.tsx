@@ -53,7 +53,7 @@ export default function DailyHighlight() {
       <div className="relative z-10">
         <h2 className="font-heading text-xl text-gold-gradient mb-4 drop-shadow-md">{highlightTitle}</h2>
         <div className="flex flex-col items-center gap-3">
-          <div className="w-20 h-20 rounded-full border-2 border-primary overflow-hidden shadow-[0_0_15px_hsl(var(--primary)/0.5)]">
+          <div className="w-20 h-20 rounded-full border-2 border-primary overflow-hidden shadow-[0_0_15px_rgba(var(--primary),0.5)]">
             <img 
               src={highlightedUser.avatar_url || `https://api.dicebear.com/7.x/adventurer/svg?seed=${highlightedUser.username}`} 
               alt={highlightedUser.username}

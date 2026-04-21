@@ -161,40 +161,30 @@ function getEpicPlaceholder(category: string, name: string): string {
 export default function StoreItemVisual({ imageUrl, name, category, isOwned }: Props) {
   const finalImage = (imageUrl && !imageUrl.includes("placeholder")) 
     ? imageUrl 
-    : "/legendary_chest_3d.png"; // Usar o baú lendário como fallback premium
+    : getEpicPlaceholder(category, name);
 
   return (
-    <div className="relative w-full h-full bg-slate-950 group overflow-hidden border-b border-white/10">
-      {/* Background Depth */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,_rgba(251,191,36,0.15),_transparent_70%)] pointer-events-none" />
-      
+    <div className="relative w-full h-full bg-black group overflow-hidden">
       <SafeImage 
         src={finalImage} 
         alt={name}
-        className="w-full h-full object-contain p-4 group-hover:scale-110 group-hover:rotate-2 transition-all duration-700 drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] relative z-10"
+        className="w-full h-full object-cover mix-blend-lighten opacity-90 group-hover:scale-110 group-hover:opacity-100 transition-all duration-700"
         fallbackEmoji="📦"
       />
-
-      {/* Glossy Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/10 opacity-40 z-20 pointer-events-none" />
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent z-20" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_50%,_rgba(0,0,0,0.6)_100%)] pointer-events-none" />
       
-      {/* Ambient Glow */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-40 transition-opacity duration-700 bg-gradient-to-br from-amber-500/20 via-transparent to-blue-500/20 pointer-events-none z-0" />
+      {/* Glow Effect */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-30 mix-blend-overlay transition-opacity duration-700 bg-gradient-to-br from-yellow-500 to-purple-500 pointer-events-none" />
 
       {isOwned && (
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-30">
+        <div className="absolute inset-0 bg-green-900/60 backdrop-blur-[2px] flex items-center justify-center z-20">
           <div className="flex flex-col items-center gap-2 transform group-hover:scale-110 transition-transform">
-            <div className="w-12 h-12 rounded-full bg-green-500/20 border border-green-400/40 flex items-center justify-center shadow-[0_0_20px_rgba(74,222,128,0.4)]">
-              <span className="text-xl">✅</span>
-            </div>
-            <span className="font-heading text-green-300 text-[10px] font-bold uppercase tracking-[0.2em] drop-shadow-md">Item Adquirido</span>
+            <span className="text-3xl drop-shadow-[0_0_10px_rgba(74,222,128,0.8)]">✅</span>
+            <span className="font-heading text-green-300 text-sm font-bold uppercase tracking-widest drop-shadow-md">Adquirido</span>
           </div>
         </div>
       )}
-
-      {/* Decorative Corner Shimmer */}
-      <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-white/10 to-transparent pointer-events-none" />
     </div>
   );
 }

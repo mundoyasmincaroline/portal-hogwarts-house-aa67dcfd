@@ -190,13 +190,12 @@ export default function StoriesBar() {
         {/* Adicionar Story */}
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex flex-col items-center gap-2 shrink-0 group transition-all duration-300"
+          className="flex flex-col items-center gap-2 shrink-0 group"
         >
-          <div className="relative w-20 h-20 rounded-full p-[3px] bg-white/[0.03] border-2 border-dashed border-primary/40 flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:bg-primary/5 group-hover:border-primary/60 group-active:scale-95 shadow-lg">
-             <div className="absolute inset-0 bg-primary/5 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-             <span className="text-3xl text-primary/60 group-hover:text-primary transition-colors">+</span>
+          <div className="w-16 h-16 rounded-full bg-secondary border-2 border-dashed border-primary flex items-center justify-center group-hover:scale-105 transition-transform">
+            <span className="text-2xl text-primary">+</span>
           </div>
-          <span className="text-[10px] font-heading text-white/40 group-hover:text-primary/80 uppercase tracking-tighter">Novo Story</span>
+          <span className="text-xs font-heading text-muted-foreground group-hover:text-primary">Novo Story</span>
         </button>
 
         {/* Lista de Stories */}
@@ -207,38 +206,23 @@ export default function StoriesBar() {
             <button
               key={userId}
               onClick={() => openStory(userId)}
-              className="flex flex-col items-center gap-2 shrink-0 group transition-all duration-300"
+              className="flex flex-col items-center gap-2 shrink-0 group"
             >
-              <div className={`relative w-20 h-20 rounded-full p-[3px] transition-transform duration-500 group-hover:scale-110 group-active:scale-95 ${
-                isMe 
-                ? "bg-gradient-to-tr from-primary/40 via-primary/10 to-primary/40 border border-primary/20" 
-                : "bg-gradient-to-tr from-primary via-amber-400 to-primary p-[2.5px] shadow-[0_0_15px_hsl(var(--primary)/0.3)]"
-              }`}>
-                {/* 3D Inner Shadow / Ring */}
-                <div className="absolute inset-0 rounded-full bg-black/20 z-10 pointer-events-none shadow-inner" />
-                
-                <div className="w-full h-full rounded-full bg-slate-900 overflow-hidden relative border border-white/10">
+              <div className={`w-16 h-16 rounded-full p-0.5 group-hover:scale-105 transition-transform ${isMe ? "border-2 border-dashed border-primary/70" : "border-2 border-primary"}`}>
+                <div className="w-full h-full rounded-full bg-secondary overflow-hidden relative">
                   <SafeImage
                     src={prof?.avatar_url}
                     alt={prof?.full_name || ""}
                     fallbackText={prof?.full_name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-full object-cover"
                   />
-                  {/* Glass Overlay on Avatar */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent opacity-40" />
-                  
-                  <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 shadow-lg z-20">
+                  <div className="absolute bottom-0 right-0 w-4 h-4 bg-background rounded-full flex items-center justify-center">
                     <HouseCrest house={prof?.house} size="sm" />
                   </div>
                 </div>
-
-                {/* Animated Rotating Ring (optional for extra flair) */}
-                {!isMe && (
-                  <div className="absolute inset-0 rounded-full border-2 border-primary/30 border-t-transparent animate-spin-slow opacity-0 group-hover:opacity-100 transition-opacity" />
-                )}
               </div>
-              <span className="text-[10px] font-heading text-white/80 truncate w-20 text-center uppercase tracking-tighter">
-                {isMe ? "Seu Story" : (prof?.full_name?.split(" ")[0] || "?")}
+              <span className="text-xs font-heading text-foreground truncate w-16 text-center">
+                {isMe ? "Você" : (prof?.full_name?.split(" ")[0] || "?")}
               </span>
             </button>
           );
