@@ -11,6 +11,7 @@ interface Props {
   currentVip?: string | null;
   galeons?: number;
   username?: string;
+  onClose?: () => void;
 }
 
 const VIP_BENEFITS = [
@@ -28,18 +29,9 @@ const PLANS = [
   { id: "founder", name: "Fundador", price: "R$ 39,90", color: "from-yellow-900 to-amber-800", border: "border-yellow-400/50", img: "https://hp-api.herokuapp.com/images/dumbledore.jpg", galeons: 500 },
 ];
 
-export default function VipUpsellBanner({ currentVip, galeons = 0, username }: Props) {
-  const [dismissed, setDismissed] = useState(() =>
-    localStorage.getItem("vip_banner_dismissed") === new Date().toDateString()
-  );
-
+export default function VipUpsellBanner({ currentVip, galeons = 0, username, onClose }: Props) {
   // Não mostrar para VIPs
-  if (currentVip || dismissed) return null;
-
-  const handleDismiss = () => {
-    localStorage.setItem("vip_banner_dismissed", new Date().toDateString());
-    setDismissed(true);
-  };
+  if (currentVip) return null;
 
   return (
     <div className="relative overflow-hidden rounded-3xl border border-yellow-500/30 bg-gradient-to-br from-slate-900 via-purple-950/60 to-slate-900 mb-6 animate-fade-in-up">
@@ -52,9 +44,10 @@ export default function VipUpsellBanner({ currentVip, galeons = 0, username }: P
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-yellow-400/60 to-transparent" />
 
       {/* Dismiss */}
-      <button onClick={handleDismiss}
-        className="absolute top-3 right-3 z-10 p-1.5 rounded-full bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-foreground transition-colors">
-        <X size={14} />
+      <button onClick={onClose}
+        className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-white transition-all shadow-lg border border-white/5"
+      >
+        <X size={16} />
       </button>
 
       <div className="p-6 md:p-8">

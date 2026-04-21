@@ -135,15 +135,23 @@ export default function DailyRewardSystem() {
                     const isLocked = r.day > streak + (canClaim ? 1 : 0);
 
                     return (
-                        <div key={r.day} className={`flex flex-col items-center gap-2 transition-all ${isNext ? "scale-110" : ""}`}>
-                            <div className={`w-full aspect-square rounded-2xl flex items-center justify-center text-xl border-2 transition-all ${
-                                isCompleted ? "bg-green-500/20 border-green-500/50 text-green-500" :
-                                isNext ? "bg-primary/30 border-primary animate-pulse shadow-[0_0_15px_hsl(var(--primary)/0.5)]" :
-                                "bg-secondary/40 border-border/50 opacity-40"
+                        <div key={r.day} className={`flex flex-col items-center gap-3 transition-all duration-500 ${isNext ? "scale-110" : ""}`}>
+                            <div className={`relative w-full aspect-square rounded-2xl flex items-center justify-center border-2 transition-all duration-500 overflow-hidden ${
+                                isCompleted ? "bg-green-500/10 border-green-500/40 shadow-[0_0_15px_rgba(34,197,94,0.2)]" :
+                                isNext ? "bg-primary/20 border-primary shadow-[0_0_20px_rgba(var(--primary),0.4)] animate-pulse" :
+                                "bg-white/[0.03] border-white/5 opacity-30"
                             }`}>
-                                {isCompleted ? <CheckCircle2 size={20} /> : <img src={r.img} className="w-full h-full object-contain" alt="recompensa" />}
+                                {isCompleted ? (
+                                  <div className="relative z-10 flex flex-col items-center">
+                                    <CheckCircle2 size={24} className="text-green-400" />
+                                    <span className="text-[8px] font-heading text-green-400/70 mt-1">OK</span>
+                                  </div>
+                                ) : (
+                                  <img src={r.img} className="w-10 h-10 object-contain drop-shadow-lg" alt="reward" />
+                                )}
+                                <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-transparent opacity-40" />
                             </div>
-                            <span className={`text-[10px] font-heading uppercase ${isNext ? "text-primary font-bold" : "text-muted-foreground"}`}>
+                            <span className={`text-[10px] font-heading uppercase tracking-tighter ${isNext ? "text-primary font-bold" : "text-white/40"}`}>
                                 Dia {r.day}
                             </span>
                         </div>

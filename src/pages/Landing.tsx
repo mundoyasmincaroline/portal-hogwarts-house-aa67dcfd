@@ -59,95 +59,128 @@ export default function Landing() {
       <MagicalParticles />
 
       {/* ── HERO ── */}
-      <div className="relative min-h-screen flex flex-col items-center justify-center px-4 text-center overflow-hidden">
+      <div className="relative min-h-[110vh] flex flex-col items-center justify-center px-4 text-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img src={bgUrl} alt="Hogwarts Castle" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-background" />
+          <img src={bgUrl} alt="Hogwarts Castle" className="w-full h-full object-cover scale-105" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-background" />
+          {/* Ambient Glows */}
+          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-amber-500/10 rounded-full blur-[100px]" />
         </div>
 
-        <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-6 py-4">
-          <span className="font-heading text-lg text-gold-gradient drop-shadow-md">✦ Hogwarts House</span>
+        <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-6 py-6 md:px-12">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-primary/20 rounded-xl border border-primary/40 flex items-center justify-center shadow-[0_0_15px_rgba(var(--primary),0.3)]">
+               <Trophy size={20} className="text-primary" />
+            </div>
+            <span className="font-heading text-xl text-gold-gradient drop-shadow-md tracking-tighter">Hogwarts House</span>
+          </div>
           <button onClick={() => navigate("/login")}
-            className="text-sm font-heading text-white bg-black/40 backdrop-blur-md border border-white/20 hover:bg-black/60 hover:border-primary/50 transition-all px-5 py-2 rounded-full shadow-lg">
-            Entrar
+            className="group relative px-8 py-2.5 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-white font-heading text-sm overflow-hidden transition-all hover:scale-105 hover:border-primary/50">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <span className="relative z-10">Entrar no Castelo</span>
           </button>
         </div>
 
-        <div className={`relative z-20 transition-all duration-1000 ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+        <div className={`relative z-20 w-full max-w-6xl transition-all duration-1000 ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
 
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/30 rounded-full px-4 py-1.5 mb-6">
-            <Sparkles size={12} className="text-primary animate-pulse" />
-            <span className="text-xs font-heading text-primary tracking-widest uppercase">Portal Oficial de Fãs · RPG & Comunidade</span>
+          {/* Next Event Indicator - Monster Quality */}
+          <div className="inline-flex items-center gap-3 bg-black/40 backdrop-blur-2xl border border-primary/30 rounded-2xl px-6 py-2.5 mb-8 shadow-2xl animate-bounce-slow">
+            <div className="relative">
+              <div className="absolute inset-0 bg-primary/40 blur-md rounded-full animate-pulse" />
+              <Sparkles size={16} className="text-primary relative z-10" />
+            </div>
+            <span className="text-[10px] md:text-xs font-heading text-white uppercase tracking-[0.3em]">Próximo Evento Global em: <span className="text-primary ml-1">02:14:55</span></span>
           </div>
 
-          {/* Title */}
-          <h1 className="font-heading text-5xl sm:text-6xl md:text-8xl text-gold-gradient mb-3 tracking-wide drop-shadow-2xl">
-            Hogwarts House
-          </h1>
-          <div className="w-32 h-px bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mb-5" />
-
-          <p className="text-base sm:text-lg text-white/90 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] max-w-xl mx-auto mb-8 leading-relaxed font-serif font-medium bg-black/20 p-4 rounded-2xl backdrop-blur-sm border border-white/5">
-            O portal de fãs de Harry Potter com gamificação, RPG, álbum de figurinhas, 
-            loja mágica e uma comunidade que vive e respira magia.
-          </p>
-
-          {/* Stats */}
-          <div className="flex items-center justify-center gap-6 mb-8 flex-wrap">
-            <div className="text-center">
-              <p className="font-heading text-2xl text-primary">
-                {memberCount !== null ? memberCount.toLocaleString("pt-BR") : "..."}
-              </p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Bruxos</p>
-            </div>
-            <div className="w-px h-8 bg-border" />
-            <div className="text-center">
-              <p className="font-heading text-2xl text-primary">4</p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Casas</p>
-            </div>
-            <div className="w-px h-8 bg-border" />
-            <div className="text-center">
-              <p className="font-heading text-2xl text-primary">28+</p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Itens na Loja</p>
-            </div>
-            <div className="w-px h-8 bg-border" />
-            <div className="text-center">
-              <p className="font-heading text-2xl text-primary">∞</p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Magia</p>
+          {/* Main Title Area */}
+          <div className="relative mb-12">
+            <h1 className="font-heading text-6xl sm:text-7xl md:text-9xl text-gold-gradient mb-4 tracking-tighter drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] animate-fade-in">
+              Hogwarts House
+            </h1>
+            <div className="flex items-center justify-center gap-4">
+               <div className="h-px w-24 bg-gradient-to-r from-transparent to-primary/50" />
+               <p className="text-xs md:text-sm font-heading text-primary uppercase tracking-[0.5em] opacity-80">Onde a Magia Ganha Vida</p>
+               <div className="h-px w-24 bg-gradient-to-l from-transparent to-primary/50" />
             </div>
           </div>
 
-          {/* Dynamic time-of-day card */}
-          <div className="glass rounded-2xl px-6 py-4 mb-6 max-w-md mx-auto border border-primary/20 text-center">
-            <p className="text-primary font-heading text-xs tracking-widest uppercase mb-1">
-              {timeOfDay === "morning" ? "Amanhecer Mágico" : timeOfDay === "afternoon" ? "Tarde em Hogwarts" : "Magia Noturna"}
-            </p>
-            <p className="text-muted-foreground text-sm font-serif leading-relaxed">
-              {timeOfDay === "morning"
-                ? "Os primeiros raios de sol iluminam as portas de carvalho do castelo. O Grande Salão desperta com o voo das corujas."
-                : timeOfDay === "afternoon"
-                ? "O sol da tarde aquece as pedras milenares de Hogwarts. Pelas janelas, você pode ver os alunos praticando feitiços nos jardins."
-                : "O castelo repousa sob um céu estrelado. Os feitiços brilham mais forte à noite. Os segredos aguardam na escuridão."}
-            </p>
+          {/* House Cup Preview - Monster Quality 3D */}
+          <div className="max-w-4xl mx-auto mb-16 px-4">
+             <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-b from-white/[0.08] to-black/60 backdrop-blur-2xl p-6 md:p-8 border border-white/10 shadow-[0_30px_80px_rgba(0,0,0,0.7)] group">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
+                   <div className="flex items-center gap-4">
+                      <div className="w-14 h-14 bg-yellow-500/20 rounded-2xl border border-yellow-500/30 flex items-center justify-center shadow-[0_0_20px_rgba(251,191,36,0.2)]">
+                         <Trophy size={30} className="text-yellow-400 animate-pulse" />
+                      </div>
+                      <div className="text-left">
+                         <h3 className="font-heading text-xl text-white tracking-tight">Copa das Casas em Tempo Real</h3>
+                         <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Sonserina está na frente por 120 pontos!</p>
+                      </div>
+                   </div>
+                   <div className="flex -space-x-3">
+                      {['🐍', '🦁', '🦅', '🦡'].map((emoji, i) => (
+                        <div key={i} className="w-10 h-10 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-lg shadow-xl relative z-[i]">
+                          {emoji}
+                        </div>
+                      ))}
+                   </div>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                   {[
+                     { name: "Grifinória", color: "from-red-500 via-red-600 to-red-950", progress: "65%", icon: "🦁" },
+                     { name: "Sonserina", color: "from-green-400 via-green-600 to-green-950", progress: "82%", icon: "🐍" },
+                     { name: "Corvinal", color: "from-blue-400 via-blue-600 to-blue-950", progress: "45%", icon: "🦅" },
+                     { name: "Lufa-Lufa", color: "from-yellow-400 via-amber-600 to-amber-950", progress: "30%", icon: "🦡" }
+                   ].map((house) => (
+                     <div key={house.name} className="space-y-2 group/house">
+                        <div className="flex justify-between items-end px-1">
+                           <span className="text-[9px] font-heading text-white/60 uppercase tracking-widest">{house.name}</span>
+                           <span className="text-[9px] font-heading text-white/30">{house.progress}</span>
+                        </div>
+                        <div className="h-2 w-full bg-black/40 rounded-full border border-white/5 p-[1.5px] relative overflow-hidden">
+                           <div 
+                             className={`h-full rounded-full bg-gradient-to-r ${house.color} transition-all duration-1000 ease-out relative`}
+                             style={{ width: house.progress }}
+                           >
+                              <div className="absolute inset-0 bg-gradient-to-b from-white/30 to-transparent opacity-40" />
+                              <div className="absolute inset-0 w-full h-full bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)] -translate-x-full group-hover/house:translate-x-full transition-transform duration-1000" />
+                           </div>
+                        </div>
+                     </div>
+                   ))}
+                </div>
+             </div>
           </div>
 
-          {/* CTA */}
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
-            <Button variant="magical" size="lg" onClick={() => navigate("/register")}
-              className="font-heading text-base px-10 py-4 h-auto shadow-lg shadow-primary/20 hover:shadow-primary/40">
-              <Sparkles size={16} className="mr-2" />
-              Solicitar minha vaga
-              <ChevronRight size={16} className="ml-1" />
-            </Button>
-            <Button variant="outline" size="lg" onClick={() => navigate("/login")}
-              className="font-heading text-base px-8 py-4 h-auto border-border/50 hover:border-primary/40">
-              Já tenho conta
-            </Button>
+          {/* CTA Area */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <button 
+              onClick={() => navigate("/register")}
+              className="relative group px-12 py-5 rounded-2xl bg-primary text-white font-heading text-lg tracking-widest overflow-hidden shadow-[0_15px_40px_rgba(var(--primary),0.3)] hover:scale-105 hover:shadow-primary/50 transition-all active:scale-95"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+              <div className="flex items-center gap-3">
+                 <Sparkles size={20} className="animate-spin-slow" />
+                 SOLICITAR MINHA VAGA AGORA
+                 <ChevronRight size={20} />
+              </div>
+            </button>
+            
+            <button 
+              onClick={() => navigate("/login")}
+              className="px-10 py-5 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 text-white font-heading text-lg tracking-widest hover:bg-white/10 hover:border-white/20 transition-all"
+            >
+              JÁ TENHO CONTA
+            </button>
           </div>
 
-          <p className="text-[11px] text-muted-foreground/60">
-            Gratuito para entrar · Conteúdo premium disponível na Gringotts
-          </p>
+          <div className="mt-8 flex items-center justify-center gap-8 text-[10px] text-white/40 font-heading uppercase tracking-[0.2em]">
+             <span className="flex items-center gap-2"><Zap size={12} className="text-primary" /> {memberCount?.toLocaleString()}+ Bruxos Ativos</span>
+             <div className="w-1 h-1 bg-white/20 rounded-full" />
+             <span className="flex items-center gap-2"><Crown size={12} className="text-yellow-500" /> Vagas de Fundador Abertas</span>
+          </div>
         </div>
       </div>
 

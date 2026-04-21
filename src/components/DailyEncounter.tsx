@@ -96,46 +96,67 @@ export default function DailyEncounter({ onComplete }: { onComplete: () => void 
   if (!encounter) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-background/90 backdrop-blur-md" />
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-500">
       <MagicalParticles />
-
-      <div className="relative z-10 glass max-w-lg w-full p-8 rounded-2xl border border-primary/20 shadow-2xl text-center animate-scale-in">
-        <div className="text-6xl mb-6 animate-bounce">{encounter.icon}</div>
+      
+      <div className="relative overflow-hidden w-full max-w-xl rounded-[3rem] bg-gradient-to-b from-white/[0.05] to-black/60 backdrop-blur-2xl p-8 md:p-12 border border-white/10 shadow-[0_40px_120px_rgba(0,0,0,0.9)] text-center animate-in zoom-in-95 duration-500">
+        {/* Ambient Magic Glow */}
+        <div className="absolute -top-20 -right-20 w-80 h-80 bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
         
-        {!result ? (
-          <>
-            <h2 className="font-heading text-2xl text-gold-gradient mb-4">{encounter.title}</h2>
-            <p className="text-muted-foreground mb-8 leading-relaxed">
-              {encounter.description}
-            </p>
-
-            <div className="space-y-3">
-              {encounter.choices.map((choice, i) => (
-                <Button
-                  key={i}
-                  variant="outline"
-                  className="w-full h-auto py-4 px-6 text-left flex justify-start items-center gap-4 hover:border-primary/50 hover:bg-primary/10 transition-all whitespace-normal"
-                  onClick={() => handleChoice(choice)}
-                  disabled={resolving}
-                >
-                  <span className="text-primary/60">✦</span>
-                  <span className="flex-1 font-serif text-sm">{choice.label}</span>
-                </Button>
-              ))}
-            </div>
-          </>
-        ) : (
-          <div className="animate-fade-in-up py-8">
-            <h2 className="font-heading text-2xl text-primary mb-6">O Destino foi Selado!</h2>
-            <p className="text-foreground/90 font-serif text-lg leading-relaxed mb-8">
-              "{result}"
-            </p>
-            <div className="inline-block px-4 py-2 rounded-full glass border border-primary/30 text-primary font-heading animate-pulse">
-              Preparando seu turno...
-            </div>
+        <div className="relative z-10">
+          <div className="relative inline-flex mb-8">
+              <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full animate-pulse" />
+              <div className="relative w-24 h-24 bg-gradient-to-br from-primary/30 to-amber-600/10 rounded-full border border-primary/40 flex items-center justify-center text-5xl shadow-[0_0_40px_rgba(var(--primary),0.3)] animate-float">
+                  {encounter.icon}
+              </div>
           </div>
-        )}
+          
+          {!result ? (
+            <>
+              <div className="mb-8">
+                <h2 className="text-3xl md:text-4xl font-heading text-gold-gradient tracking-tight mb-3">{encounter.title}</h2>
+                <div className="h-px w-32 bg-gradient-to-r from-transparent via-primary/50 to-transparent mx-auto mb-6" />
+                <p className="text-muted-foreground leading-relaxed font-serif text-base italic">
+                  "{encounter.description}"
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                {encounter.choices.map((choice, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleChoice(choice)}
+                    disabled={resolving}
+                    className="w-full relative overflow-hidden group/choice p-5 rounded-2xl bg-white/[0.03] border border-white/10 text-left transition-all duration-300 hover:bg-white/[0.08] hover:border-primary/50 hover:-translate-y-1 active:scale-[0.98]"
+                  >
+                    {/* Shimmer on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent -translate-x-full group-hover/choice:translate-x-full transition-transform duration-1000" />
+                    
+                    <div className="flex items-center gap-4 relative z-10">
+                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary border border-primary/20 group-hover/choice:bg-primary group-hover/choice:text-white transition-colors">
+                        <span className="text-xs font-bold">{i + 1}</span>
+                      </div>
+                      <span className="flex-1 font-heading text-sm text-white/80 group-hover/choice:text-white transition-colors">{choice.label}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="py-10 animate-in fade-in slide-in-from-bottom-10 duration-700">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-heading text-primary uppercase tracking-[0.2em] mb-8">
+                <Sparkles size={10} /> O Destino foi Selado
+              </div>
+              <p className="text-xl md:text-2xl text-foreground font-serif italic leading-relaxed mb-10 text-white/90">
+                "{result}"
+              </p>
+              <div className="relative inline-block px-8 py-3 rounded-2xl bg-primary/5 border border-primary/20 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/20 to-transparent animate-[shimmer_2s_infinite]" />
+                <span className="relative z-10 text-[10px] font-heading text-primary uppercase tracking-[0.3em] animate-pulse">Invocando recompensas...</span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
