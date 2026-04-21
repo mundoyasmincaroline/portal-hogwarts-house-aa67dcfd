@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Zap, Sparkles, MessageCircle, ChevronRight, Users, Trophy, Star, X } from "lucide-react";
+import { Zap, Sparkles, MessageCircle, ChevronRight, Users, Trophy, Star, X, Trash2 } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import { HOUSES, type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
@@ -39,7 +39,7 @@ interface FeedPost {
 }
 
 export default function Feed() {
-  const { profile, user } = useAuth();
+  const { profile, user, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [newPost, setNewPost] = useState("");
   const [newMusicUrl, setNewMusicUrl] = useState("");
@@ -54,6 +54,34 @@ export default function Feed() {
   const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
   const [bannedWords, setBannedWords] = useState<string[]>([]);
   const [showHouseCup, setShowHouseCup] = useState(true);
+  const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; type: "post" | "comment"; id: string } | null>(null);
+
+  const confirmDelete = async () => {
+    if (!deleteModal) return;
+    const { type, id } = deleteModal;
+    
+    if (type === "post") {
+      const { error } = await supabase.from("posts").delete().eq("id", id);
+      if (!error) {
+        setPosts((prev) => prev.filter((p) => p.id !== id));
+        toast.success("Publicação apagada das existências!");
+      } else {
+        toast.error("Erro ao apagar: " + error.message);
+      }
+    } else {
+      const { error } = await supabase.from("post_comments").delete().eq("id", id);
+      if (!error) {
+        setPosts((prev) => prev.map((p) => ({
+          ...p,
+          comments: p.comments.filter((c) => c.id !== id),
+        })));
+        toast.success("Comentário apagado das existências!");
+      } else {
+        toast.error("Erro ao apagar: " + error.message);
+      }
+    }
+    setDeleteModal(null);
+  };
 
   const loadFeed = useCallback(async () => {
     const { data: postsData } = await supabase
@@ -189,6 +217,26 @@ export default function Feed() {
     toast.success("Publicado! ✨");
     // +2 Galeões por publicar
     supabase.rpc("award_galeons", { _user_id: user.id, _amount: 2, _reason: "post" }).then(() => {});
+
+    // Notificação Global para @todos
+    if (content.toLowerCase().includes("@todos") && isAdmin) {
+      toast("Enviando corujas para todo o castelo...", { icon: "🦉" });
+      const { data: usersToNotify } = await supabase.from("profiles").select("user_id").eq("approved", true);
+      if (usersToNotify && usersToNotify.length > 0) {
+        const notifications = usersToNotify
+          .filter((u) => u.user_id !== user.id)
+          .map((u) => ({
+            user_id: u.user_id,
+            title: "Aviso Global",
+            message: `${profile?.full_name || 'A Direção'} enviou uma mensagem para todos no feed!`,
+            link: "/dashboard/feed"
+          }));
+        
+        if (notifications.length > 0) {
+           await supabase.from("notifications").insert(notifications);
+        }
+      }
+    }
   };
 
   const toggleReaction = async (postId: string, emoji: string, mine: boolean) => {
@@ -391,6 +439,17 @@ export default function Feed() {
                              </p>
                           </div>
                         </div>
+
+                        {/* Botão de Apagar Post */}
+                        {(isAdmin || user?.id === post.user_id) && (
+                          <button 
+                            onClick={() => setDeleteModal({ isOpen: true, type: "post", id: post.id })} 
+                            className="p-2 text-white/20 hover:text-red-400 hover:bg-red-400/10 rounded-xl transition-all self-start shadow-inner border border-transparent hover:border-red-500/20"
+                            title="Apagar Publicação"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        )}
                       </div>
 
                       <div className="space-y-8">
@@ -476,8 +535,19 @@ export default function Feed() {
                                 </div>
                                 <div className="flex-1 bg-white/[0.03] rounded-[2rem] px-6 py-4 border border-white/5 group-hover/comment:border-white/10 transition-all duration-500 shadow-inner">
                                   <div className="flex justify-between items-center mb-2">
-                                    <p className="text-[10px] font-heading text-primary uppercase tracking-[0.3em]">{c.author?.full_name}</p>
-                                    <span className="text-[8px] text-white/20 font-heading tracking-widest">{new Date(c.created_at).toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' })}</span>
+                                    <div className="flex items-center gap-2">
+                                      <p className="text-[10px] font-heading text-primary uppercase tracking-[0.3em]">{c.author?.full_name}</p>
+                                      <span className="text-[8px] text-white/20 font-heading tracking-widest">{new Date(c.created_at).toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' })}</span>
+                                    </div>
+                                    {(isAdmin || user?.id === c.user_id) && (
+                                      <button 
+                                        onClick={() => setDeleteModal({ isOpen: true, type: "comment", id: c.id })} 
+                                        className="p-1.5 text-white/20 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                                        title="Apagar Comentário"
+                                      >
+                                        <Trash2 size={12} />
+                                      </button>
+                                    )}
                                   </div>
                                   <p className="text-sm text-white/60 leading-relaxed italic">"{c.content}"</p>
                                 </div>
@@ -611,6 +681,32 @@ export default function Feed() {
           </div>
         </div>
       </div>
+
+      {deleteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm px-4">
+          <div className="bg-black/90 border border-red-500/30 rounded-3xl p-8 max-w-sm w-full text-center shadow-[0_0_50px_rgba(239,68,68,0.2)] animate-in zoom-in-95 duration-300">
+            <div className="w-16 h-16 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto mb-6 shadow-inner">
+              <Trash2 size={32} className="text-red-500" />
+            </div>
+            <h3 className="text-xl font-heading text-white mb-2 tracking-wide">Apagar {deleteModal.type === "post" ? "Publicação" : "Comentário"}?</h3>
+            <p className="text-sm text-white/60 mb-8 italic">Essa ação é permanente como uma Maldição Imperdoável. Não há volta.</p>
+            <div className="flex gap-4">
+              <button 
+                onClick={() => setDeleteModal(null)} 
+                className="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white font-heading text-xs tracking-widest transition-all"
+              >
+                CANCELAR
+              </button>
+              <button 
+                onClick={confirmDelete} 
+                className="flex-1 py-3 rounded-xl bg-red-500/20 hover:bg-red-500/40 border border-red-500/50 text-red-500 font-heading text-xs tracking-widest shadow-[0_0_20px_rgba(239,68,68,0.3)] transition-all"
+              >
+                APAGAR
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
