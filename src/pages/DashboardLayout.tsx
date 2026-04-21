@@ -266,7 +266,16 @@ export default function DashboardLayout() {
   const adminSkipped = isAdmin && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
 
   // Se ainda está verificando personagens, aguarda
-  if (hasCharacters === null) return null;
+  if (hasCharacters === null) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="text-4xl animate-float mb-4">⚡</div>
+          <p className="font-heading text-muted-foreground">Carregando personagens...</p>
+        </div>
+      </div>
+    );
+  }
 
   // Redireciona para seleção de personagem se:
   // 1. Não tem active_character_id, OU
