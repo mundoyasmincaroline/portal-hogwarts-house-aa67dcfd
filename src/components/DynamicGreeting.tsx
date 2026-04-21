@@ -41,7 +41,7 @@ export default function DynamicGreeting() {
       </div>
       <div className="relative z-10">
         <h2 className="text-2xl font-heading text-gold-gradient mb-1">
-          {greeting.title}, {profile.full_name.split(' ')[0]}!
+          {greeting.title}, {profile.full_name?.split(' ')[0]}!
         </h2>
         <p className="text-sm text-muted-foreground">{greeting.desc}</p>
       </div>

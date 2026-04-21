@@ -212,7 +212,7 @@ export default function StoriesBar() {
               <div className={`relative w-20 h-20 rounded-full p-[3px] transition-transform duration-500 group-hover:scale-110 group-active:scale-95 ${
                 isMe 
                 ? "bg-gradient-to-tr from-primary/40 via-primary/10 to-primary/40 border border-primary/20" 
-                : "bg-gradient-to-tr from-primary via-amber-400 to-primary p-[2.5px] shadow-[0_0_15px_rgba(var(--primary),0.3)]"
+                : "bg-gradient-to-tr from-primary via-amber-400 to-primary p-[2.5px] shadow-[0_0_15px_hsl(var(--primary)/0.3)]"
               }`}>
                 {/* 3D Inner Shadow / Ring */}
                 <div className="absolute inset-0 rounded-full bg-black/20 z-10 pointer-events-none shadow-inner" />

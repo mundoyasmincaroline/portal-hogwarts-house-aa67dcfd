@@ -138,7 +138,7 @@ export default function DailyRewardSystem() {
                         <div key={r.day} className={`flex flex-col items-center gap-3 transition-all duration-500 ${isNext ? "scale-110" : ""}`}>
                             <div className={`relative w-full aspect-square rounded-2xl flex items-center justify-center border-2 transition-all duration-500 overflow-hidden ${
                                 isCompleted ? "bg-green-500/10 border-green-500/40 shadow-[0_0_15px_rgba(34,197,94,0.2)]" :
-                                isNext ? "bg-primary/20 border-primary shadow-[0_0_20px_rgba(var(--primary),0.4)] animate-pulse" :
+                                isNext ? "bg-primary/20 border-primary shadow-[0_0_20px_hsl(var(--primary)/0.4)] animate-pulse" :
                                 "bg-white/[0.03] border-white/5 opacity-30"
                             }`}>
                                 {isCompleted ? (

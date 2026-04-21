@@ -70,7 +70,7 @@ export default function Landing() {
 
         <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-6 py-6 md:px-12">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary/20 rounded-xl border border-primary/40 flex items-center justify-center shadow-[0_0_15px_rgba(var(--primary),0.3)]">
+            <div className="w-10 h-10 bg-primary/20 rounded-xl border border-primary/40 flex items-center justify-center shadow-[0_0_15px_hsl(var(--primary)/0.3)]">
                <Trophy size={20} className="text-primary" />
             </div>
             <span className="font-heading text-xl text-gold-gradient drop-shadow-md tracking-tighter">Hogwarts House</span>
@@ -158,7 +158,7 @@ export default function Landing() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button 
               onClick={() => navigate("/register")}
-              className="relative group px-12 py-5 rounded-2xl bg-primary text-white font-heading text-lg tracking-widest overflow-hidden shadow-[0_15px_40px_rgba(var(--primary),0.3)] hover:scale-105 hover:shadow-primary/50 transition-all active:scale-95"
+              className="relative group px-12 py-5 rounded-2xl bg-primary text-white font-heading text-lg tracking-widest overflow-hidden shadow-[0_15px_40px_hsl(var(--primary)/0.3)] hover:scale-105 hover:shadow-primary/50 transition-all active:scale-95"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
               <div className="flex items-center gap-3">

@@ -34,6 +34,8 @@ import DailyRewardSystem from "@/components/DailyRewardSystem";
 import MaraudersMap from "@/components/MaraudersMap";
 import VipUpsellBanner from "@/components/VipUpsellBanner";
 import SocialProofWatcher from "@/components/SocialProofWatcher";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+
 
 const NAV_ITEMS = [
   { icon: <Castle size={20} />, label: "O Castelo", path: "/dashboard" },
@@ -372,7 +374,9 @@ export default function DashboardLayout() {
                <VipUpsellBanner currentVip={profile?.vip_plan} galeons={profile?.galeons} username={profile?.username} onClose={toggleVipBanner} />
              )}
              <SocialProofWatcher />
-             <Outlet />
+             <ErrorBoundary>
+                <Outlet />
+              </ErrorBoundary>
           </div>
           <EngagementBot />
           <FilchWatcher />

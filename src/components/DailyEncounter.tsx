@@ -107,7 +107,7 @@ export default function DailyEncounter({ onComplete }: { onComplete: () => void 
         <div className="relative z-10">
           <div className="relative inline-flex mb-8">
               <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full animate-pulse" />
-              <div className="relative w-24 h-24 bg-gradient-to-br from-primary/30 to-amber-600/10 rounded-full border border-primary/40 flex items-center justify-center text-5xl shadow-[0_0_40px_rgba(var(--primary),0.3)] animate-float">
+              <div className="relative w-24 h-24 bg-gradient-to-br from-primary/30 to-amber-600/10 rounded-full border border-primary/40 flex items-center justify-center text-5xl shadow-[0_0_40px_hsl(var(--primary)/0.3)] animate-float">
                   {encounter.icon}
               </div>
           </div>

@@ -6,7 +6,7 @@ import HouseCrest from "@/components/HouseCrest";
 import MedalBadge from "@/components/MedalBadge";
 import SafeImage from "@/components/SafeImage";
 import { useNavigate } from "react-router-dom";
-import { Trophy, Zap, Crown } from "lucide-react";
+import { Trophy, Zap, Crown, Sparkles, Users } from "lucide-react";
 
 interface RankMember {
   user_id: string;

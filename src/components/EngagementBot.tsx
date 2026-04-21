@@ -55,7 +55,7 @@ export default function EngagementBot() {
         
         <div className="relative z-10 flex gap-4">
           <div className="shrink-0">
-            <div className="relative w-12 h-12 flex items-center justify-center bg-primary/20 rounded-2xl border border-primary/40 shadow-[0_0_15px_rgba(var(--primary),0.3)]">
+            <div className="relative w-12 h-12 flex items-center justify-center bg-primary/20 rounded-2xl border border-primary/40 shadow-[0_0_15px_hsl(var(--primary)/0.3)]">
                <Bot size={24} className="text-primary animate-float" />
                <div className="absolute -top-1 -right-1">
                   <Sparkles size={12} className="text-yellow-400 animate-pulse" />

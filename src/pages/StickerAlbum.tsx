@@ -3,7 +3,7 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Trophy } from "lucide-react";
+import { Trophy, Zap, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import StickerVisual from "@/components/StickerVisual";
 
@@ -288,7 +288,7 @@ export default function StickerAlbum() {
         <div className="relative">
            <div className="h-6 bg-black/40 rounded-full border border-white/5 p-1.5 overflow-hidden shadow-inner relative">
               <div
-                className={`h-full rounded-full transition-all duration-1000 ease-out relative shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)] ${
+                className={`h-full rounded-full transition-all duration-1000 ease-out relative shadow-[0_0_20px_hsl(var(--primary)/0.4)] ${
                   pct === 100
                     ? "bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 animate-pulse"
                     : "bg-primary"

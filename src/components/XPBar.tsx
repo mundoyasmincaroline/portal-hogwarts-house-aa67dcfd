@@ -8,7 +8,7 @@ export default function XPBar({ xp, showLabel = true }: { xp: number; showLabel?
         <div className="flex justify-between items-end px-1">
           <div className="flex flex-col">
             <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-heading opacity-70">Nível Atual</span>
-            <span className="text-sm font-heading text-primary drop-shadow-[0_0_8px_rgba(var(--primary),0.5)]">{info.name}</span>
+            <span className="text-sm font-heading text-primary drop-shadow-[0_0_8px_hsl(var(--primary)/0.5)]">{info.name}</span>
           </div>
           <span className="text-[10px] font-mono text-primary/60">{xp} <span className="text-white/20">/</span> {info.next} XP</span>
         </div>
@@ -16,7 +16,7 @@ export default function XPBar({ xp, showLabel = true }: { xp: number; showLabel?
       <div className="h-3 bg-black/40 rounded-full border border-white/5 p-[2px] relative overflow-hidden shadow-inner">
         {/* Magic Liquid Fill */}
         <div
-          className="h-full bg-gradient-to-r from-primary via-primary/80 to-primary/60 rounded-full transition-all duration-1000 ease-out relative shadow-[0_0_15px_rgba(var(--primary),0.4)]"
+          className="h-full bg-gradient-to-r from-primary via-primary/80 to-primary/60 rounded-full transition-all duration-1000 ease-out relative shadow-[0_0_15px_hsl(var(--primary)/0.4)]"
           style={{ width: `${info.progress}%` }}
         >
           {/* Shimmer & Glass Effects */}
