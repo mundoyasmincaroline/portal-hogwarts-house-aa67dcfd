@@ -861,7 +861,7 @@ export default function Profile() {
                 const stats = (item as any).stats;
 
                 return (
-                  <div key={ui.id} className={`group glass rounded-2xl overflow-hidden border transition-all hover:-translate-y-1 ${isEquipped ? 'border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]' : 'border-border/50 hover:border-primary/40'}`}>
+                  <div key={ui.id} className={`group glass rounded-2xl overflow-hidden border transition-all hover:-translate-y-1 ${isEquipped ? 'border-primary shadow-[0_0_15px_hsl(var(--primary)/0.3)]' : 'border-border/50 hover:border-primary/40'}`}>
                     <div className="relative aspect-square">
                       <SafeImage 
                         src={item.image_url} 

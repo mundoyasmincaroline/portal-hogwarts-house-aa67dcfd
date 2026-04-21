@@ -138,7 +138,7 @@ export default function DailyRewardSystem() {
                         <div key={r.day} className={`flex flex-col items-center gap-2 transition-all ${isNext ? "scale-110" : ""}`}>
                             <div className={`w-full aspect-square rounded-2xl flex items-center justify-center text-xl border-2 transition-all ${
                                 isCompleted ? "bg-green-500/20 border-green-500/50 text-green-500" :
-                                isNext ? "bg-primary/30 border-primary animate-pulse shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]" :
+                                isNext ? "bg-primary/30 border-primary animate-pulse shadow-[0_0_15px_hsl(var(--primary)/0.5)]" :
                                 "bg-secondary/40 border-border/50 opacity-40"
                             }`}>
                                 {isCompleted ? <CheckCircle2 size={20} /> : r.icon}

@@ -114,7 +114,7 @@ export default function Events() {
             <div 
               key={event.id}
               className={`relative group rounded-[2rem] border-2 transition-all duration-500 overflow-hidden ${
-                isActive ? "border-primary shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)] bg-primary/5 -translate-y-2" :
+                isActive ? "border-primary shadow-[0_0_30px_hsl(var(--primary)/0.3)] bg-primary/5 -translate-y-2" :
                 isCompleted ? "border-green-500/30 bg-green-500/5 opacity-80" :
                 isPast ? "border-muted/20 bg-secondary/10 opacity-60 grayscale" :
                 "border-border/50 bg-card/50"

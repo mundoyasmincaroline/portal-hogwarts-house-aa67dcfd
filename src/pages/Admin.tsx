@@ -473,7 +473,7 @@ function PartiesTab() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {parties.map(party => (
-          <div key={party.id} className={`glass rounded-[2rem] overflow-hidden border-2 transition-all ${party.active ? "border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]" : "border-border/30 opacity-70"}`}>
+          <div key={party.id} className={`glass rounded-[2rem] overflow-hidden border-2 transition-all ${party.active ? "border-primary shadow-[0_0_20px_hsl(var(--primary)/0.3)]" : "border-border/30 opacity-70"}`}>
             {party.image_url && <SafeImage src={party.image_url} alt={party.title} className="w-full h-40 object-cover" />}
             <div className="p-6 space-y-4">
               <div className="flex justify-between items-start">

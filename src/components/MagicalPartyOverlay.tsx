@@ -42,7 +42,7 @@ export default function MagicalPartyOverlay() {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-500">
-      <div className="glass w-full max-w-4xl rounded-[3rem] overflow-hidden border border-primary/30 shadow-[0_0_50px_rgba(var(--primary-rgb),0.4)] relative">
+      <div className="glass w-full max-w-4xl rounded-[3rem] overflow-hidden border border-primary/30 shadow-[0_0_50px_hsl(var(--primary)/0.4)] relative">
         <button onClick={() => setMinimized(true)} className="absolute top-6 right-6 z-10 p-2 bg-black/40 hover:bg-black/60 rounded-full text-white/70 hover:text-white transition-colors">
           <X size={24} />
         </button>

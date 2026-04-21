@@ -72,7 +72,7 @@ export default function AlchemyTable() {
                 
                 <Button 
                     variant="magical" 
-                    className="mt-10 px-12 py-7 rounded-2xl text-lg shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)]"
+                    className="mt-10 px-12 py-7 rounded-2xl text-lg shadow-[0_0_20px_hsl(var(--primary)/0.4)]"
                     disabled={selectedItems.length < 2 || isCrafting}
                     onClick={handleCraft}
                 >
