@@ -243,7 +243,6 @@ export default function ChatRoom() {
     };
   }, [channel?.id, selectedDate]);
 
-<<<<<<< HEAD
   const pinMessage = async (messageId: string, currentPinStatus: boolean = false) => {
     if (!isAdmin) return;
     
@@ -256,8 +255,6 @@ export default function ChatRoom() {
     }
   };
 
-=======
->>>>>>> aff47b3ae43661dc7b229a76de27213d0b19eb4e
   const deleteMessage = async (messageId: string) => {
     if (!isAdmin) return;
     if (!confirm("Deseja realmente expurgar esta mensagem para sempre?")) return;
@@ -339,11 +336,8 @@ export default function ChatRoom() {
       if (mentionMatches) {
         const usernames = mentionMatches.map(m => m.slice(1));
         const isMentionTodos = usernames.some(u => u.toLowerCase() === 'todos');
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> aff47b3ae43661dc7b229a76de27213d0b19eb4e
+
         if (isMentionTodos && isAdmin) {
            // Notificar TODOS os membros
            const { data: allProfiles } = await supabase.from('profiles').select('user_id');
@@ -355,19 +349,12 @@ export default function ChatRoom() {
                  user_id: p.user_id,
                  type: 'mention',
                  title: '📢 Convocação Global',
-<<<<<<< HEAD
                  message: `@${senderName} enviou: "${content.replace('@todos', '').trim()}"`,
-=======
-                 message: `@${senderName} chamou @TODOS no chat "${channel.name}"!`,
->>>>>>> aff47b3ae43661dc7b229a76de27213d0b19eb4e
                  read: false
                }));
              // Lote de notificações em massa
              if (notifs.length > 0) {
-<<<<<<< HEAD
-=======
                // Enviar em blocos de 100 para evitar limites
->>>>>>> aff47b3ae43661dc7b229a76de27213d0b19eb4e
                for (let i = 0; i < notifs.length; i += 100) {
                  await supabase.from('notifications').insert(notifs.slice(i, i + 100));
                }
@@ -583,7 +570,6 @@ export default function ChatRoom() {
                           <span className="text-[10px] text-white/10 font-heading uppercase tracking-widest ml-auto">
                              {formatDate(m.created_at)}
                           </span>
-<<<<<<< HEAD
 
                           {isAdmin && (
                             <div className="flex gap-1 ml-2">
@@ -602,16 +588,6 @@ export default function ChatRoom() {
                                   🗑️
                                </button>
                             </div>
-=======
-                          {isAdmin && (
-                             <button 
-                               onClick={() => deleteMessage(m.id)}
-                               className="w-8 h-8 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-all ml-2"
-                               title="Expurgar Mensagem"
-                             >
-                                🗑️
-                             </button>
->>>>>>> aff47b3ae43661dc7b229a76de27213d0b19eb4e
                           )}
                        </div>
 
