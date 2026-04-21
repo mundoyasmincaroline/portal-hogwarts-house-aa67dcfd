@@ -320,7 +320,7 @@ export default function GringottsStore() {
 
           {/* LOOT BOX: O COFRE MISTERIOSO (GAMBLE) */}
           <div className="relative group rounded-[3rem] overflow-hidden border-2 border-purple-500/30 bg-gradient-to-br from-purple-900/40 via-background to-black p-1 shadow-[0_0_50px_rgba(168,85,247,0.2)] mb-12">
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=2000')] opacity-5 mix-blend-overlay" />
+            <div className="absolute inset-0 bg-[url('/hogwarts-castle.jpg')] bg-cover bg-center opacity-10 mix-blend-overlay" />
             <div className="relative glass rounded-[2.5rem] p-10 flex flex-col md:flex-row items-center gap-10">
                 <div className="relative shrink-0">
                     <div className="absolute inset-0 bg-purple-500/20 blur-3xl rounded-full animate-pulse" />
