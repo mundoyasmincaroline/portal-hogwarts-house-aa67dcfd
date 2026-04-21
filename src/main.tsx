@@ -1,8 +1,13 @@
 // Hogwarts Portal - Sync Test
+import "./safety_fallbacks";
 import { createRoot } from "react-dom/client";
 import React from "react";
 import App from "./App.tsx";
 import "./index.css";
+
+// Solução Paliativa: Define globais para evitar ReferenceError de código legado
+(window as any).referrals = [];
+(window as any).setReferrals = () => { console.warn("Chamada legada para setReferrals detectada."); };
 
 class ErrorBoundary extends React.Component {
   state = { hasError: false, error: null };

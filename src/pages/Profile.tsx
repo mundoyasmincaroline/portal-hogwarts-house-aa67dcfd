@@ -119,7 +119,11 @@ export default function Profile() {
   const [userChallenges, setUserChallenges] = useState<any[]>([]);
   const [userItems, setUserItems] = useState<any[]>([]);
   const [loadingExtras, setLoadingExtras] = useState(false);
-  const [referrals, setReferrals] = useState<any[]>([]);
+  const [myReferrals, setMyReferrals] = useState<any[]>([]);
+  
+  // Segurança adicional para evitar ReferenceError em builds cacheados
+  const referrals = (window as any).referrals || myReferrals;
+  const setReferrals = (window as any).setReferrals || (() => {});
   const [activeTab, setActiveTab] = useState<"about" | "fichas" | "friends" | "members" | "security" | "album" | "referral" | "achievements" | "inventory">("about");
 
   const [editing, setEditing] = useState(false);
@@ -212,13 +216,13 @@ export default function Profile() {
           ...r,
           profile: profs?.find(p => p.user_id === r.invited_id) || null
         }));
-        setReferrals(enriched);
+        setMyReferrals(enriched);
       } else {
-        setReferrals([]);
+        setMyReferrals([]);
       }
     } catch (error) {
       console.error("Erro ao carregar recrutamentos:", error);
-      setReferrals([]);
+      setMyReferrals([]);
     }
   };
 
@@ -590,15 +594,15 @@ export default function Profile() {
              <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
                 <Users size={20} className="text-white/60" />
              </div>
-             <h3 className="font-heading text-xl text-white tracking-tight">Bruxos Recrutados por Você <span className="text-primary/40 ml-2">({(referrals || []).length})</span></h3>
+             <h3 className="font-heading text-xl text-white tracking-tight">Bruxos Recrutados por Você <span className="text-primary/40 ml-2">({(myReferrals || []).length})</span></h3>
           </div>
-          {(!referrals || referrals.length === 0) ? (
+          {(!myReferrals || myReferrals.length === 0) ? (
             <div className="bg-black/40 backdrop-blur-3xl rounded-[2.5rem] p-12 text-center border border-white/10 opacity-40">
               <p className="text-[10px] font-heading uppercase tracking-[0.4em]">Nenhum recrutamento registrado</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {(referrals || []).map(r => (
+              {(myReferrals || []).map(r => (
                 <div key={r.id} className="glass rounded-xl p-3 flex items-center gap-3">
                   <div className="w-10 h-10 shrink-0">
                     <SafeImage src={r.profile?.avatar_url} alt={r.profile?.full_name || "Membro"} className="w-full h-full rounded-full object-cover" fallbackText={r.profile?.full_name?.[0]} />

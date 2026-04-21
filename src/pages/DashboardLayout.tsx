@@ -353,7 +353,7 @@ export default function DashboardLayout() {
           <FilchWatcher />
           <MagicalEventSystem />
           <GlobalChallengeWatcher />
-          <DailyRewardSystem />
+          {/* <DailyRewardSystem /> */}
           <MagicalCelebration />
           <MaraudersMap isOpen={mapOpen} onClose={() => setMapOpen(false)} />
         </div>
