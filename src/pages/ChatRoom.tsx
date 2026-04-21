@@ -25,6 +25,7 @@ interface Message {
   content: string;
   created_at: string;
   user_role?: string;
+  is_pinned?: boolean;
   profiles: {
     full_name: string;
     username: string;
@@ -242,6 +243,18 @@ export default function ChatRoom() {
     };
   }, [channel?.id, selectedDate]);
 
+  const pinMessage = async (messageId: string, currentPinStatus: boolean = false) => {
+    if (!isAdmin) return;
+    
+    const { error } = await supabase.from("messages").update({ is_pinned: !currentPinStatus }).eq("id", messageId);
+    if (error) {
+      toast.error("Erro ao fixar mensagem.");
+    } else {
+      setMessages(prev => prev.map(m => m.id === messageId ? { ...m, is_pinned: !currentPinStatus } : m));
+      toast.success(currentPinStatus ? "Mensagem desfixada!" : "Mensagem fixada com sucesso!");
+    }
+  };
+
   const deleteMessage = async (messageId: string) => {
     if (!isAdmin) return;
     if (!confirm("Deseja realmente expurgar esta mensagem para sempre?")) return;
@@ -335,7 +348,7 @@ export default function ChatRoom() {
                  user_id: p.user_id,
                  type: 'mention',
                  title: '📢 Convocação Global',
-                 message: `@${senderName} chamou @TODOS no chat "${channel.name}"!`,
+                 message: `@${senderName} enviou: "${content.replace('@todos', '').trim()}"`,
                  read: false
                }));
              // Lote de notificações em massa
@@ -555,9 +568,33 @@ export default function ChatRoom() {
                           <span className="text-[10px] text-white/10 font-heading uppercase tracking-widest ml-auto">
                              {formatDate(m.created_at)}
                           </span>
+
+                          {isAdmin && (
+                            <div className="flex gap-1 ml-2">
+                               <button 
+                                 onClick={() => pinMessage(m.id, m.is_pinned)}
+                                 className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all ${m.is_pinned ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'bg-white/5 text-white/40 hover:text-white hover:bg-white/10 border border-white/5'}`}
+                                 title={m.is_pinned ? "Desfixar" : "Fixar Mensagem"}
+                               >
+                                  📌
+                               </button>
+                               <button 
+                                 onClick={() => deleteMessage(m.id)}
+                                 className="w-7 h-7 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-all"
+                                 title="Expurgar Mensagem"
+                               >
+                                  🗑️
+                               </button>
+                            </div>
+                          )}
                        </div>
 
-                       <div className={`relative overflow-hidden rounded-3xl px-6 py-4 border shadow-2xl transition-all duration-500 group/msg ${
+                       {m.is_pinned && (
+                          <div className="mb-2 flex items-center gap-2 text-amber-400 text-[10px] font-heading uppercase tracking-widest">
+                             <span>📌</span> Mensagem Fixada da Diretoria
+                          </div>
+                       )}
+                       <div className={`relative overflow-hidden rounded-3xl px-6 py-4 border shadow-2xl transition-all duration-500 group/msg ${m.is_pinned ? 'ring-1 ring-amber-500/50 bg-amber-500/10' : ''} ${
                           isMorpheus ? 'bg-black border-green-500/30 shadow-[0_0_30px_rgba(34,197,94,0.1)]' :
                           isYasmin ? 'bg-yellow-500/10 border-yellow-500/20 shadow-[0_0_30px_rgba(250,204,21,0.1)]' :
                           isCarolina ? 'bg-blue-500/10 border-blue-500/20 shadow-[0_0_30px_rgba(96,165,250,0.1)]' :
