@@ -120,7 +120,6 @@ export default function StickerAlbum() {
         return;
       }
 
-      // Check if already owns it (upsert handles duplicate)
       await supabase.from("user_stickers").upsert({ user_id: user.id, sticker_id: picked.id } as never);
       await fetchProfile(user.id);
       setUserStickers(prev => ({ ...prev, [picked.id]: true }));
@@ -148,166 +147,200 @@ export default function StickerAlbum() {
     .filter(s => activeRarity === "all" || s.rarity === activeRarity)
     .sort((a, b) => RARITY_ORDER[b.rarity] - RARITY_ORDER[a.rarity]);
 
-  if (loading) return <div className="text-center py-10 text-muted-foreground animate-pulse">Abrindo a vitrine mágica...</div>;
+  if (loading) return <div className="text-center py-20 text-muted-foreground animate-pulse font-heading text-xl">Revelando o Álbum Encantado...</div>;
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 pb-10">
-      {/* Header */}
-      <div className="glass rounded-3xl p-8 text-center relative overflow-hidden border border-primary/20">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2070')] bg-cover bg-center opacity-10" />
-        <div className="relative z-10">
-          <h1 className="font-heading text-4xl md:text-5xl text-gold-gradient mb-3 drop-shadow-lg">
-            {completedBanner ? "🏆 Álbum Completo! 🏆" : "Álbum de Figurinhas"}
+    <div className="max-w-7xl mx-auto space-y-12 pb-20 px-4">
+      {/* ── HEADER MONSTER QUALITY ── */}
+      <div className="relative glass rounded-[3rem] p-10 md:p-16 text-center overflow-hidden border border-yellow-500/20 shadow-2xl group">
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-900/40 via-black to-blue-900/40 opacity-60 z-0" />
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2070')] bg-cover bg-center opacity-10 group-hover:scale-105 transition-transform duration-1000" />
+        
+        <div className="relative z-10 space-y-6">
+          <div className="inline-flex items-center gap-3 bg-black/40 backdrop-blur-md border border-yellow-500/30 rounded-full px-6 py-2">
+            <Sparkles size={16} className="text-yellow-500 animate-pulse" />
+            <span className="text-xs font-heading text-yellow-500 uppercase tracking-widest font-bold">Coleção de Relíquias Card</span>
+          </div>
+          
+          <h1 className="font-heading text-5xl md:text-7xl text-gold-gradient mb-3 drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
+            {completedBanner ? "🏆 ÁLBUM LENDÁRIO 🏆" : "Álbum de Figurinhas"}
           </h1>
-          <p className="text-muted-foreground text-sm max-w-2xl mx-auto">
-            Colecione figurinhas usando XP. Ouro e Prata brilham com magia!
+          <p className="text-yellow-100/70 text-lg max-w-2xl mx-auto font-serif italic">
+            "Cada carta conta uma história, cada herói guarda um segredo. Complete sua coleção e torne-se uma lenda viva de Hogwarts."
           </p>
 
-          <div className="mt-4 inline-flex items-center gap-3 bg-secondary/50 backdrop-blur-md px-6 py-3 rounded-xl border border-border/50">
-            <span className="text-sm text-muted-foreground uppercase tracking-widest">Saldo:</span>
-            <span className="font-heading text-2xl text-primary">{profile?.xp || 0} XP</span>
+          <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-6">
+            <div className="inline-flex items-center gap-4 bg-yellow-500/10 backdrop-blur-xl px-8 py-4 rounded-2xl border border-yellow-500/30 shadow-xl">
+              <div className="w-10 h-10 bg-yellow-500/20 rounded-full flex items-center justify-center text-xl shadow-inner">⚡</div>
+              <div className="text-left">
+                <p className="text-[10px] text-yellow-500/60 uppercase font-bold tracking-widest">Saldo de Magia</p>
+                <p className="font-heading text-3xl text-yellow-400">{profile?.xp || 0} XP</p>
+              </div>
+            </div>
+            
+            <Button variant="magical" size="lg" className="h-16 px-10 rounded-2xl shadow-2xl hover:scale-105 transition-transform" onClick={openSurprisePack} disabled={openingPack || (profile?.xp ?? 0) < 80}>
+               Abrir Pacote Místico (80 XP) <Gift className="ml-2" />
+            </Button>
           </div>
         </div>
       </div>
 
-      {/* Animação de abertura de pack */}
+      {/* ── REVEAL ANIMATION ── */}
       {openingPack && (
-        <div className="fixed inset-0 z-50 bg-background/90 backdrop-blur-md flex flex-col items-center justify-center gap-6" onClick={packPhase === "reveal" ? closePack : undefined}>
+        <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-2xl flex flex-col items-center justify-center gap-10 p-4" onClick={packPhase === "reveal" ? closePack : undefined}>
           {packPhase === "shaking" && (
-            <>
-              <div className="text-8xl animate-bounce">🎁</div>
-              <p className="font-heading text-2xl text-primary animate-pulse">Abrindo o pacote...</p>
-              <p className="text-xs text-muted-foreground">A magia está agindo!</p>
-            </>
+            <div className="relative group cursor-pointer animate-float">
+              <div className="absolute inset-0 bg-purple-500/30 blur-[100px] rounded-full animate-pulse" />
+              <div className="text-[12rem] md:text-[16rem] animate-bounce filter drop-shadow-[0_0_50px_rgba(168,85,247,0.6)]">🎁</div>
+              <div className="mt-8 text-center space-y-2">
+                <p className="font-heading text-3xl text-purple-400 animate-pulse uppercase tracking-widest">Invocando Magia...</p>
+                <p className="text-sm text-purple-200/40 font-serif italic">O destino está sendo escrito nas estrelas</p>
+              </div>
+              {/* Magic Particles */}
+              <div className="absolute inset-0 z-0 pointer-events-none">
+                 {[...Array(12)].map((_, i) => (
+                    <div key={i} className="absolute w-2 h-2 bg-yellow-400 rounded-full animate-ping" style={{
+                        top: `${Math.random() * 100}%`,
+                        left: `${Math.random() * 100}%`,
+                        animationDelay: `${Math.random() * 2}s`
+                    }} />
+                 ))}
+              </div>
+            </div>
           )}
           {packPhase === "reveal" && packReveal && (
-            <>
-              <div className="text-6xl mb-2 animate-bounce">
-                {packReveal.rarity === "gold" ? "🥇" : packReveal.rarity === "silver" ? "🥈" : "🥉"}
+            <div className="relative flex flex-col items-center gap-8 max-w-sm w-full animate-in zoom-in-50 duration-700">
+              <div className="absolute inset-0 bg-white/5 blur-[120px] rounded-full -z-10" />
+              
+              <div className="text-center space-y-2 mb-4">
+                <div className={`inline-block px-6 py-2 rounded-full text-xs font-bold uppercase tracking-[0.3em] backdrop-blur-md shadow-2xl border ${
+                    packReveal.rarity === "gold" ? "bg-yellow-400/20 text-yellow-400 border-yellow-400/50"
+                    : packReveal.rarity === "silver" ? "bg-slate-300/20 text-slate-200 border-slate-300/50"
+                    : "bg-amber-700/20 text-amber-500 border-amber-700/50"
+                }`}>
+                    {packReveal.rarity === "gold" ? "🥇 Relíquia Lendária" : packReveal.rarity === "silver" ? "🥈 Carta Incomum" : "🥉 Carta Comum"}
+                </div>
               </div>
-              <div className={`relative w-48 h-64 rounded-2xl overflow-hidden border-4 shadow-2xl animate-fade-in-up ${
-                packReveal.rarity === "gold" ? "border-yellow-400 shadow-yellow-400/50"
-                : packReveal.rarity === "silver" ? "border-slate-300 shadow-white/20"
-                : "border-amber-600 shadow-amber-900/50"
+
+              <div className={`relative w-72 h-[420px] rounded-[2.5rem] overflow-hidden border-4 shadow-[0_0_100px_rgba(0,0,0,0.8)] group transition-all duration-1000 ${
+                packReveal.rarity === "gold" ? "border-yellow-400 shadow-yellow-400/30 ring-4 ring-yellow-400/20"
+                : packReveal.rarity === "silver" ? "border-slate-300 shadow-white/10 ring-2 ring-slate-300/10"
+                : "border-amber-800 shadow-amber-900/20"
               }`}>
-                {packReveal.image_url ? (
-                  <img src={packReveal.image_url} alt={packReveal.character_name} className="w-full h-full object-cover object-top" referrerPolicy="no-referrer" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-secondary text-6xl">{packReveal.character_name.charAt(0)}</div>
+                {/* Holographic Overlays */}
+                {packReveal.rarity === "gold" && (
+                    <div className="absolute inset-0 z-20 bg-gradient-to-tr from-yellow-400/20 via-transparent to-white/20 mix-blend-overlay animate-pulse pointer-events-none" />
                 )}
-                {packReveal.rarity === "gold" && <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,215,0,0.3),transparent_60%)] animate-pulse" />}
+                
+                <div className="absolute inset-0 z-0">
+                    {packReveal.image_url ? (
+                    <img src={packReveal.image_url} alt={packReveal.character_name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
+                    ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-secondary text-8xl font-heading opacity-20">{packReveal.character_name.charAt(0)}</div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+                </div>
+                
+                <div className="absolute bottom-10 inset-x-0 text-center z-30 px-6">
+                    <h3 className="font-heading text-4xl text-white drop-shadow-2xl mb-2">{packReveal.character_name}</h3>
+                    <div className="h-1 w-12 bg-current mx-auto opacity-50 rounded-full" style={{ color: packReveal.rarity === 'gold' ? '#facc15' : packReveal.rarity === 'silver' ? '#cbd5e1' : '#92400e' }} />
+                </div>
               </div>
-              <p className="font-heading text-2xl text-foreground">{packReveal.character_name}</p>
-              <p className={`text-sm font-bold uppercase tracking-widest ${
-                packReveal.rarity === "gold" ? "text-yellow-400" : packReveal.rarity === "silver" ? "text-slate-300" : "text-amber-600"
-              }`}>
-                {packReveal.rarity === "gold" ? "🌟 FIGURINHA RARA!" : packReveal.rarity === "silver" ? "⭐ Figurinha Incomum" : "✨ Figurinha Obtida"}
-              </p>
-              <button onClick={closePack} className="mt-2 text-sm text-muted-foreground hover:text-foreground underline">Fechar</button>
-            </>
+
+              <div className="text-center space-y-6">
+                <div className="space-y-2">
+                    <h2 className="font-heading text-4xl text-white drop-shadow-lg">¡Nova Figurinha!</h2>
+                    <p className="text-muted-foreground font-serif italic text-lg">"Uma adição magnífica ao seu álbum."</p>
+                </div>
+                <Button variant="magical" size="lg" className="w-full h-16 text-xl rounded-2xl shadow-2xl" onClick={closePack}>
+                    Adicionar à Coleção
+                </Button>
+              </div>
+            </div>
           )}
         </div>
       )}
 
-      {/* Pacote Surpresa + Mercado */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="glass rounded-2xl p-6 flex flex-col items-center gap-4 text-center border border-primary/20 hover:border-primary/50 transition-all">
-          <div className="text-4xl">🎁</div>
-          <div>
-            <h3 className="font-heading text-lg text-foreground">Pacote Surpresa</h3>
-            <p className="text-xs text-muted-foreground mt-1">Uma figurinha aleatória! Chances: 10% Ouro · 30% Prata · 60% Bronze</p>
-          </div>
-          <Button
-            variant="magical"
-            className="w-full font-heading"
-            onClick={openSurprisePack}
-            disabled={openingPack || (profile?.xp ?? 0) < 80}
-          >
-            {openingPack ? "Abrindo..." : `Abrir Pacote — 80 XP ${(profile?.xp ?? 0) < 80 ? `(faltam ${80 - (profile?.xp ?? 0)} XP)` : ""}`}
-          </Button>
-        </div>
-        <div className="glass rounded-2xl p-6 flex flex-col items-center gap-4 text-center border border-border hover:border-primary/30 transition-all">
-          <div className="text-4xl">🔄</div>
-          <div>
-            <h3 className="font-heading text-lg text-foreground">Mercado de Trocas</h3>
-            <p className="text-xs text-muted-foreground mt-1">Troque figurinhas duplicadas com outros membros de Hogwarts</p>
-          </div>
-          <Button variant="outline" className="w-full font-heading" onClick={() => navigate("/dashboard/trades")}>
-            Acessar Mercado 🏪
-          </Button>
-        </div>
-      </div>
-
-      {/* Barra de progresso geral */}
-      <div className="glass rounded-2xl p-6 space-y-4">
-        <div className="flex items-center justify-between mb-1">
-          <span className="font-heading text-foreground flex items-center gap-2">
-            <Trophy size={18} className="text-primary" /> Progresso da Coleção
-          </span>
-          <span className="font-heading text-primary text-lg">{owned}/{total} ({pct}%)</span>
-        </div>
-        <div className="h-4 bg-secondary rounded-full overflow-hidden border border-border/50">
-          <div
-            className={`h-full transition-all duration-1000 ease-out rounded-full ${
-              pct === 100
-                ? "bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 animate-pulse"
-                : pct >= 66
-                ? "bg-gradient-to-r from-primary to-primary/60"
-                : "bg-primary/70"
-            }`}
-            style={{ width: `${pct}%` }}
-          />
-        </div>
-
-        <div className="grid grid-cols-3 gap-3 mt-2">
-          {[
-            { label: "Bronze", owned: bronzeOwned, total: bronzeTotal, color: "text-amber-600", bg: "bg-amber-900/20 border-amber-700/40" },
-            { label: "Prata", owned: silverOwned, total: silverTotal, color: "text-slate-300", bg: "bg-slate-700/20 border-slate-400/30" },
-            { label: "Ouro", owned: goldOwned, total: goldTotal, color: "text-yellow-400", bg: "bg-yellow-900/20 border-yellow-400/30" },
-          ].map(r => (
-            <div key={r.label} className={`rounded-xl p-3 text-center border ${r.bg}`}>
-              <p className={`font-heading text-xl ${r.color}`}>{r.owned}/{r.total}</p>
-              <p className="text-xs text-muted-foreground">{r.label}</p>
-              <div className="h-1 bg-secondary rounded-full mt-1 overflow-hidden">
-                <div className={`h-full ${r.color.replace("text-", "bg-")} transition-all`} style={{ width: r.total > 0 ? `${(r.owned / r.total) * 100}%` : "0%" }} />
-              </div>
+      {/* ── STATS & PROGRESS ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 glass rounded-[2.5rem] p-10 space-y-8 border border-white/5 bg-gradient-to-br from-white/5 to-transparent relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[100px] -z-10 group-hover:opacity-20 transition-opacity" />
+            
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div className="space-y-2 text-center sm:text-left">
+                    <h3 className="font-heading text-2xl text-foreground flex items-center gap-3">
+                        <Trophy size={28} className="text-yellow-500" /> Domínio da Coleção
+                    </h3>
+                    <p className="text-muted-foreground text-sm font-serif">Seu progresso total através das eras de Hogwarts</p>
+                </div>
+                <div className="text-center sm:text-right">
+                    <p className="font-heading text-5xl text-primary drop-shadow-md">{pct}%</p>
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">{owned} de {total} CARTAS</p>
+                </div>
             </div>
-          ))}
+
+            <div className="relative h-6 bg-black/40 rounded-full overflow-hidden border border-white/10 p-1">
+                <div className={`h-full transition-all duration-1500 ease-out rounded-full relative overflow-hidden ${
+                    pct === 100 ? "bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-600" : "bg-gradient-to-r from-primary to-blue-600"
+                }`} style={{ width: `${pct}%` }}>
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+                </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-6 pt-4">
+                {[
+                    { label: "Bronze", owned: bronzeOwned, total: bronzeTotal, color: "text-amber-600", bg: "bg-amber-950/20 border-amber-800/30", icon: "🥉" },
+                    { label: "Prata", owned: silverOwned, total: silverTotal, color: "text-slate-200", bg: "bg-slate-800/20 border-slate-400/20", icon: "🥈" },
+                    { label: "Ouro", owned: goldOwned, total: goldTotal, color: "text-yellow-400", bg: "bg-yellow-950/20 border-yellow-500/30", icon: "🥇" },
+                ].map(r => (
+                    <div key={r.label} className={`rounded-[2rem] p-6 text-center border-2 backdrop-blur-sm transition-transform hover:scale-105 ${r.bg}`}>
+                        <div className="text-3xl mb-3">{r.icon}</div>
+                        <p className={`font-heading text-3xl mb-1 ${r.color}`}>{r.owned}<span className="text-lg opacity-40">/{r.total}</span></p>
+                        <p className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-bold">{r.label}</p>
+                    </div>
+                ))}
+            </div>
         </div>
 
-        {completedBanner && (
-          <div className="mt-4 p-4 rounded-2xl bg-gradient-to-r from-yellow-900/40 via-yellow-700/20 to-yellow-900/40 border border-yellow-400 text-center animate-pulse">
-            <p className="font-heading text-yellow-400 text-lg">🏆 LENDA DE HOGWARTS 🏆</p>
-            <p className="text-xs text-yellow-300/80">Você completou o álbum completo! Um feito histórico no castelo.</p>
+        <div className="glass rounded-[2.5rem] p-10 flex flex-col items-center justify-center text-center gap-8 border border-white/5 bg-gradient-to-t from-black/40 to-white/5 relative group">
+            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?q=80&w=2000')] bg-cover opacity-5 group-hover:scale-110 transition-transform duration-1000" />
+            <div className="text-6xl group-hover:rotate-12 transition-transform duration-500">🔄</div>
+            <div className="space-y-3 relative z-10">
+                <h3 className="font-heading text-2xl text-foreground">Mercado de Trocas</h3>
+                <p className="text-sm text-muted-foreground font-serif italic">"Um Galeão por uma história, uma carta por um amigo."</p>
+            </div>
+            <Button variant="outline" className="w-full h-14 rounded-2xl border-white/10 hover:bg-white/5 font-heading uppercase tracking-widest text-xs" onClick={() => navigate("/dashboard/trades")}>
+                Acessar Mercado 🏪
+            </Button>
+            <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Trocas seguras auditadas por Gringotts</p>
+        </div>
+      </div>
+
+      {/* ── FILTERS ── */}
+      <div className="flex justify-center py-4">
+          <div className="glass p-2 rounded-full border border-white/5 bg-black/40 backdrop-blur-2xl inline-flex flex-wrap gap-3">
+            {(["all", "gold", "silver", "bronze"] as const).map(r => (
+            <button key={r} onClick={() => setActiveRarity(r)}
+                className={`px-8 py-3 rounded-full text-xs font-bold font-heading transition-all duration-500 relative overflow-hidden group ${
+                activeRarity === r
+                    ? r === "gold" ? "bg-yellow-400 text-black shadow-lg shadow-yellow-400/20"
+                    : r === "silver" ? "bg-slate-200 text-black shadow-lg shadow-white/10"
+                    : r === "bronze" ? "bg-amber-700 text-white shadow-lg shadow-amber-900/20"
+                    : "bg-primary text-white shadow-lg shadow-primary/20"
+                    : "bg-transparent text-muted-foreground hover:bg-white/5 hover:text-white"
+                }`}>
+                <span className="relative z-10 uppercase tracking-widest">
+                    {r === "all" ? "✨ Todas" : r === "gold" ? "🥇 Ouro" : r === "silver" ? "🥈 Prata" : "🥉 Bronze"}
+                </span>
+                {activeRarity === r && <div className="absolute inset-0 bg-white/10 animate-pulse" />}
+            </button>
+            ))}
           </div>
-        )}
       </div>
 
-      {/* Filtros */}
-      <div className="flex gap-3 flex-wrap">
-        {(["all", "gold", "silver", "bronze"] as const).map(r => (
-          <button
-            key={r}
-            onClick={() => setActiveRarity(r)}
-            className={`px-4 py-2 rounded-full text-sm font-heading transition-all border ${
-              activeRarity === r
-                ? r === "gold" ? "bg-yellow-400/20 border-yellow-400 text-yellow-400"
-                  : r === "silver" ? "bg-slate-300/20 border-slate-300 text-slate-300"
-                  : r === "bronze" ? "bg-amber-700/20 border-amber-600 text-amber-600"
-                  : "bg-primary/20 border-primary text-primary"
-                : "border-border text-muted-foreground hover:border-primary/50"
-            }`}
-          >
-            {r === "all" ? "✨ Todas" : r === "gold" ? "🥇 Ouro" : r === "silver" ? "🥈 Prata" : "🥉 Bronze"}
-            <span className="ml-1 text-xs opacity-70">
-              ({r === "all" ? `${owned}/${total}` : r === "gold" ? `${goldOwned}/${goldTotal}` : r === "silver" ? `${silverOwned}/${silverTotal}` : `${bronzeOwned}/${bronzeTotal}`})
-            </span>
-          </button>
-        ))}
-      </div>
-
-      {/* Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+      {/* ── GRID MONSTER QUALITY ── */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
         {filtered.map(s => {
           const unlocked = userStickers[s.id];
           const isGold = s.rarity === "gold";
@@ -316,92 +349,107 @@ export default function StickerAlbum() {
           const levelOk = profile ? profile.level >= s.level_required : false;
           const xpOk = profile ? profile.xp >= cost : false;
 
-          let rarityStyle = "border-amber-700/50 from-amber-900/40 to-black shadow-[0_0_15px_rgba(180,83,9,0.2)]";
-          if (isSilver) rarityStyle = "border-slate-300/60 from-slate-700/40 to-black shadow-[0_0_20px_rgba(255,255,255,0.1)]";
-          if (isGold) rarityStyle = "border-yellow-400 from-yellow-600/40 to-black shadow-[0_0_30px_rgba(251,191,36,0.3)] ring-2 ring-yellow-400/30 animate-pulse-glow";
+          let rarityStyle = "border-amber-900/40 bg-gradient-to-b from-amber-950/20 to-black";
+          if (isSilver) rarityStyle = "border-slate-300/20 bg-gradient-to-b from-slate-900/40 to-black shadow-[0_0_20px_rgba(255,255,255,0.05)]";
+          if (isGold) rarityStyle = "border-yellow-400/30 bg-gradient-to-b from-yellow-900/20 to-black shadow-[0_0_30px_rgba(251,191,36,0.15)] ring-1 ring-yellow-400/20";
 
           return (
-            <div
-              key={s.id}
-              className={`relative aspect-[3/4] rounded-2xl flex flex-col overflow-hidden border-2 transition-all duration-500 group ${
-                unlocked ? rarityStyle : "border-border/50 bg-secondary/10 hover:border-primary/50"
-              }`}
+            <div key={s.id}
+              className={`relative aspect-[3/4.5] rounded-[2.5rem] flex flex-col overflow-hidden border-2 transition-all duration-700 group ${
+                unlocked ? rarityStyle : "border-white/5 bg-secondary/5 hover:border-white/20"
+              } ${unlocked && isGold ? 'hover:shadow-[0_0_40px_rgba(251,191,36,0.3)]' : ''}`}
             >
-              <div className="absolute inset-0 z-0">
-                {/* StickerVisual como base — mostra se imagem falhar ou não existir */}
-                <StickerVisual
-                  name={s.character_name}
-                  rarity={s.rarity}
-                  unlocked={unlocked}
-                  imageUrl={s.image_url}
-                  failedImage={failedImages[s.id]}
-                />
-                {s.image_url && !failedImages[s.id] && (
-                  <img
-                    src={s.image_url}
-                    alt={s.character_name}
-                    referrerPolicy="no-referrer"
-                    onError={() => setFailedImages(prev => ({ ...prev, [s.id]: true }))}
-                    className={`w-full h-full object-cover object-top transition-all duration-700 ${
-                      unlocked ? "opacity-90 group-hover:scale-105" : "opacity-40 grayscale group-hover:grayscale-0 group-hover:opacity-60"
-                    }`}
-                  />
+              <div className="absolute inset-0 z-0 overflow-hidden">
+                <div className={`absolute inset-0 transition-transform duration-1000 ${unlocked ? 'group-hover:scale-110' : ''}`}>
+                    <StickerVisual
+                    name={s.character_name}
+                    rarity={s.rarity}
+                    unlocked={unlocked}
+                    imageUrl={s.image_url}
+                    failedImage={failedImages[s.id]}
+                    />
+                    {s.image_url && !failedImages[s.id] && (
+                    <img src={s.image_url} alt={s.character_name} referrerPolicy="no-referrer"
+                        onError={() => setFailedImages(prev => ({ ...prev, [s.id]: true }))}
+                        className={`w-full h-full object-cover object-top transition-all duration-1000 ${
+                        unlocked ? "opacity-80" : "opacity-20 grayscale brightness-50"
+                        }`}
+                    />
+                    )}
+                </div>
+                
+                {/* Holographic Flash for Unlocked Cards */}
+                {unlocked && (
+                    <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none z-10" />
                 )}
+                
                 <div className={`absolute inset-0 bg-gradient-to-t ${
-                  unlocked ? "from-background via-background/50 to-transparent" : "from-background via-background/80 to-background/30"
-                }`} />
+                  unlocked ? "from-black via-black/40 to-transparent" : "from-black/90 via-black/60 to-transparent"
+                } z-10`} />
               </div>
 
-              <div className="relative z-10 h-full flex flex-col justify-between p-4">
+              <div className="relative z-20 h-full flex flex-col justify-between p-6">
                 <div className="flex justify-between items-start">
-                  <span className={`text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full shadow-sm ${
-                    isGold ? "bg-yellow-400/20 text-yellow-400 border border-yellow-400/50"
-                    : isSilver ? "bg-slate-300/20 text-slate-300 border border-slate-300/50"
-                    : "bg-amber-700/20 text-amber-600 border border-amber-700/50"
+                  <div className={`text-[9px] uppercase font-bold tracking-[0.2em] px-3 py-1.5 rounded-full border backdrop-blur-xl shadow-lg ${
+                    isGold ? "bg-yellow-400/20 text-yellow-400 border-yellow-400/50"
+                    : isSilver ? "bg-slate-300/20 text-slate-200 border-slate-300/50"
+                    : "bg-amber-900/40 text-amber-500 border-amber-800/50"
                   }`}>
-                    {s.rarity === "gold" ? "🥇" : s.rarity === "silver" ? "🥈" : "🥉"} {s.rarity}
-                  </span>
-                  {unlocked
-                    ? <span className="text-xl drop-shadow-md">✨</span>
-                    : <span className={`text-[10px] uppercase font-bold tracking-widest px-2 py-1 rounded-md ${levelOk ? "bg-background/80 text-primary" : "bg-destructive/20 text-destructive"}`}>
-                        Nv.{s.level_required}
-                      </span>
-                  }
+                    {s.rarity}
+                  </div>
+                  {!unlocked && (
+                    <div className={`px-2.5 py-1 rounded-lg text-[9px] font-bold border ${levelOk ? 'bg-primary/20 text-primary border-primary/30' : 'bg-red-500/20 text-red-400 border-red-500/30'}`}>
+                        NV.{s.level_required}
+                    </div>
+                  )}
                 </div>
 
-                <div className="mt-auto space-y-3">
-                  <h3 className={`font-heading text-sm leading-tight text-center drop-shadow-md ${
-                    unlocked && isGold ? "text-yellow-400" : unlocked ? "text-foreground" : "text-muted-foreground group-hover:text-foreground transition-colors"
-                  }`}>
-                    {unlocked ? s.character_name : "???"}
-                  </h3>
+                <div className="mt-auto space-y-4">
+                  <div className="text-center">
+                    <h3 className={`font-heading text-lg leading-tight transition-colors duration-500 ${
+                        unlocked ? isGold ? "text-yellow-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]" : "text-white" : "text-white/20 group-hover:text-white/40"
+                    }`}>
+                        {unlocked ? s.character_name : "Desconhecido"}
+                    </h3>
+                    {unlocked && isGold && <div className="text-[8px] text-yellow-500/60 uppercase tracking-[0.4em] font-bold mt-1">Artefato Lendário</div>}
+                  </div>
 
                   {!unlocked && (
-                    <Button
-                      variant="magical"
-                      className="w-full h-9 text-xs font-heading"
-                      disabled={!levelOk || !xpOk || buyingId === s.id}
-                      onClick={() => buySticker(s)}
-                    >
-                      {buyingId === s.id ? "Comprando..." : !levelOk ? `Nv.${s.level_required} req.` : !xpOk ? `${cost} XP req.` : `Comprar ${cost} XP`}
+                    <Button variant="magical" className="w-full h-11 text-[10px] font-heading uppercase tracking-widest rounded-xl shadow-xl transition-all active:scale-95"
+                      disabled={!levelOk || !xpOk || buyingId === s.id} onClick={() => buySticker(s)}>
+                      {buyingId === s.id ? "..." : !levelOk ? `Bloqueado` : !xpOk ? `Faltam XP` : `Comprar ${cost} XP`}
                     </Button>
+                  )}
+                  
+                  {unlocked && (
+                    <div className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                         <div className="h-1 w-8 bg-current opacity-20 rounded-full" style={{ color: isGold ? '#facc15' : isSilver ? '#e2e8f0' : '#b45309' }} />
+                         <span className="text-[10px] text-white/40 font-heading uppercase tracking-widest">Coletado</span>
+                         <div className="h-1 w-8 bg-current opacity-20 rounded-full" style={{ color: isGold ? '#facc15' : isSilver ? '#e2e8f0' : '#b45309' }} />
+                    </div>
                   )}
                 </div>
               </div>
 
               {unlocked && isGold && (
-                <div className="absolute inset-0 z-20 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(255,215,0,0.15),transparent_60%)] animate-pulse" />
-              )}
-
-              {!unlocked && !levelOk && (
-                <div className="absolute inset-0 z-20 pointer-events-none flex items-center justify-center bg-background/30">
-                  <span className="text-2xl opacity-50">🔒</span>
-                </div>
+                <div className="absolute inset-0 z-30 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(255,215,0,0.1),transparent_70%)] animate-pulse" />
               )}
             </div>
           );
         })}
       </div>
+
+      {completedBanner && (
+        <div className="glass rounded-[3rem] p-12 text-center border-2 border-yellow-400 bg-gradient-to-r from-yellow-900/40 via-black/60 to-yellow-900/40 shadow-[0_0_80px_rgba(251,191,36,0.3)] animate-pulse-glow">
+            <h2 className="font-heading text-5xl text-yellow-400 mb-4 tracking-tighter">🏆 LENDA DE HOGWARTS 🏆</h2>
+            <p className="text-xl text-yellow-100/70 font-serif italic max-w-2xl mx-auto leading-relaxed">
+                "Você reuniu todos os fragmentos da história. Seu nome agora ecoa pelos corredores do castelo como o maior colecionador de todos os tempos."
+            </p>
+            <div className="mt-8 flex justify-center gap-4">
+                <div className="bg-yellow-400 text-black px-8 py-3 rounded-full font-heading font-bold uppercase tracking-widest shadow-2xl">Título Desbloqueado</div>
+            </div>
+        </div>
+      )}
     </div>
   );
 }

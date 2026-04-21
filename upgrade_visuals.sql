@@ -1,22 +1,119 @@
--- ============================================================
--- UPGRADE VISUALS — Colunas e Dados de Elite
--- Execute no Supabase SQL Editor
--- ============================================================
+-- script para adicionar itens monster quality e figurinhas
+-- Categorias: clothing, wand, spell, potion, upgrade
 
--- 1. Adicionar coluna image_url se não existir
-DO $$ 
-BEGIN 
-    IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='badges' AND COLUMN_NAME='image_url') THEN
-        ALTER TABLE public.badges ADD COLUMN image_url TEXT;
-    END IF;
-END $$;
+-- Limpar itens antigos se necessário (opcional, melhor apenas inserir)
+-- DELETE FROM store_items WHERE id LIKE 'mq_%';
 
--- 2. Limpar e Inserir Badges de Elite
-TRUNCATE TABLE public.badges CASCADE;
+INSERT INTO store_items (id, name, description, category, price_galeons, image_url, rarity, is_featured, is_active)
+VALUES 
+-- 🪄 VARINHAS (WANDS)
+('mq_wand_elder', 'Varinha das Varinhas', 'A varinha mais poderosa já fabricada. Concedida pela própria Morte.', 'wand', 5000, 'https://images.unsplash.com/photo-1610484826917-0f101a7bf7f4?q=80&w=800', 'legendary', true, true),
+('mq_wand_holly', 'Varinha de Azevinho', 'Azevinho e pena de fênix, 28cm. Uma varinha para grandes destinos.', 'wand', 1500, 'https://images.unsplash.com/photo-1590595906931-81f04f0ccebb?q=80&w=800', 'rare', true, true),
+('mq_wand_vine', 'Varinha de Videira', 'Videira e fibra de coração de dragão. Elegante e extremamente capaz.', 'wand', 1200, 'https://images.unsplash.com/photo-1626964413661-8f4277717646?q=80&w=800', 'rare', false, true),
+('mq_wand_yew', 'Varinha de Teixo', 'Teixo e pena de fênix. Uma varinha com um passado sombrio e poderoso.', 'wand', 4800, 'https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=800', 'legendary', false, true),
+('mq_wand_ebony', 'Varinha de Ébano', 'Ébano e pelo de unicórnio. Ideal para feitiços de combate e transfiguração.', 'wand', 800, 'https://images.unsplash.com/photo-1610484826917-0f101a7bf7f4?q=80&w=800', 'common', false, true),
+('mq_wand_willow', 'Varinha de Salgueiro', 'Salgueiro e pelo de unicórnio. Excelente para feitiços de cura.', 'wand', 700, 'https://images.unsplash.com/photo-1590595906931-81f04f0ccebb?q=80&w=800', 'common', false, true),
+('mq_wand_cedar', 'Varinha de Cedro', 'Uma varinha que denota força de caráter e lealdade incomum.', 'wand', 600, 'https://images.unsplash.com/photo-1626964413661-8f4277717646?q=80&w=800', 'common', false, true),
+('mq_wand_hawthorn', 'Varinha de Espinheiro', 'Uma varinha para bruxos em períodos de turbulência ou transição.', 'wand', 1100, 'https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=800', 'rare', false, true),
+('mq_wand_walnut', 'Varinha de Nogueira', 'Nogueira e fibra de coração de dragão. Uma ferramenta para gênios.', 'wand', 1300, 'https://images.unsplash.com/photo-1610484826917-0f101a7bf7f4?q=80&w=800', 'rare', false, true),
+('mq_wand_ash', 'Varinha de Freixo', 'Uma varinha que permanece fiel ao seu dono original.', 'wand', 550, 'https://images.unsplash.com/photo-1590595906931-81f04f0ccebb?q=80&w=800', 'common', false, true),
+('mq_wand_mahogany', 'Varinha de Mogno', 'Excelente para transfiguração. 28cm de pura elegância.', 'wand', 500, 'https://images.unsplash.com/photo-1626964413661-8f4277717646?q=80&w=800', 'common', false, true),
+('mq_wand_birch', 'Varinha de Bétula', 'Uma varinha leve e flexível para feitiços rápidos.', 'wand', 450, 'https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=800', 'common', false, true),
+('mq_wand_cherry', 'Varinha de Cerejeira', 'Extremamente poderosa e letal se usada incorretamente.', 'wand', 1400, 'https://images.unsplash.com/photo-1610484826917-0f101a7bf7f4?q=80&w=800', 'rare', false, true),
+('mq_wand_fir', 'Varinha de Abeto', 'Uma varinha para os que possuem poder de concentração e mente forte.', 'wand', 1250, 'https://images.unsplash.com/photo-1590595906931-81f04f0ccebb?q=80&w=800', 'rare', false, true),
+('mq_wand_larch', 'Varinha de Lariço', 'Famosa por instilar coragem e confiança em quem a empunha.', 'wand', 1350, 'https://images.unsplash.com/photo-1626964413661-8f4277717646?q=80&w=800', 'rare', false, true),
+('mq_wand_pine', 'Varinha de Pinheiro', 'Uma varinha que sempre escolhe um dono independente e misterioso.', 'wand', 1150, 'https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=800', 'rare', false, true),
+('mq_wand_rowan', 'Varinha de Sorveira', 'Reputada por ser excelente em feitiços de defesa e proteção.', 'wand', 1450, 'https://images.unsplash.com/photo-1610484826917-0f101a7bf7f4?q=80&w=800', 'rare', false, true),
+('mq_wand_spruce', 'Varinha de Picea', 'Requer mão firme e senso de humor para ser dominada.', 'wand', 1050, 'https://images.unsplash.com/photo-1590595906931-81f04f0ccebb?q=80&w=800', 'rare', false, true),
+('mq_wand_sycamore', 'Varinha de Sicômoro', 'Anseia por novas experiências e perde o brilho se ficar entediada.', 'wand', 1180, 'https://images.unsplash.com/photo-1626964413661-8f4277717646?q=80&w=800', 'rare', false, true),
+('mq_wand_blackthorn', 'Varinha de Abrunheiro', 'Uma varinha de guerreiro, excelente para combates de alto nível.', 'wand', 1600, 'https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=800', 'rare', false, true),
 
-INSERT INTO public.badges (name, description, xp_required, icon, image_url) VALUES
-('Ordem de Merlin', 'Pela excepcional coragem e distinção mágica.', 500, '🎖️', 'https://images.unsplash.com/photo-1590736704728-f4730bb30770?w=400&q=80'),
-('Mestre de Poções', 'Reconhecimento por habilidades avançadas em preparos.', 200, '🧪', 'https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=400&q=80'),
-('Duelista de Elite', 'Venceu 50 duelos sem ser desarmado.', 350, '⚔️', 'https://images.unsplash.com/photo-1616423642775-690a424266c2?w=400&q=80'),
-('Monitor Chefe', 'Destaque em liderança e conduta exemplar.', 300, '👤', 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=400&q=80'),
-('Apanhador Lendário', 'Capturou o Pomo de Ouro em tempo recorde.', 400, '✨', 'https://images.unsplash.com/photo-1582232400901-8c7694901962?w=400&q=80');
+-- 👗 ROUPAS (CLOTHING)
+('mq_cloth_cloak', 'Capa da Invisibilidade', 'Uma das Relíquias da Morte. Oculta o portador de qualquer olhar.', 'clothing', 10000, 'https://images.unsplash.com/photo-1514336021614-72213a8a3068?q=80&w=800', 'legendary', true, true),
+('mq_cloth_founder', 'Manto dos Fundadores', 'Uma réplica encantada dos trajes usados pelos criadores de Hogwarts.', 'clothing', 8000, 'https://images.unsplash.com/photo-1533601017-dc61895e03c0?q=80&w=800', 'legendary', true, true),
+('mq_cloth_quidditch', 'Uniforme de Quadribol Profissional', 'Traje completo com proteções e cores da sua casa.', 'clothing', 2000, 'https://images.unsplash.com/photo-1491446559770-3ff03a481977?q=80&w=800', 'rare', true, true),
+('mq_cloth_ball', 'Traje de Gala do Baile de Inverno', 'O ápice da elegância bruxa para eventos formais.', 'clothing', 2500, 'https://images.unsplash.com/photo-1518893883800-45cd0954574b?q=80&w=800', 'rare', false, true),
+('mq_cloth_robe', 'Manto Escolar de Seda', 'Manto de alta qualidade com acabamento em seda mágica.', 'clothing', 1000, 'https://images.unsplash.com/photo-1514336021614-72213a8a3068?q=80&w=800', 'common', false, true),
+('mq_cloth_scarf', 'Cachecol Encantado', 'Aquece automaticamente em climas frios. Cores da casa.', 'clothing', 400, 'https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?q=80&w=800', 'common', false, true),
+('mq_cloth_gloves', 'Luvas de Couro de Dragão', 'Proteção essencial para Herbologia e poções perigosas.', 'clothing', 1800, 'https://images.unsplash.com/photo-1516715667182-c515c1f92f68?q=80&w=800', 'rare', false, true),
+('mq_cloth_hat', 'Chapéu de Bruxo Pontudo', 'Um clássico atemporal que nunca sai de moda em Hogsmeade.', 'clothing', 600, 'https://images.unsplash.com/photo-1533601017-dc61895e03c0?q=80&w=800', 'common', false, true),
+('mq_cloth_socks', 'Meias de Dobby', 'Um par de meias que nunca combinam, mas são extremamente confortáveis.', 'clothing', 300, 'https://images.unsplash.com/photo-1582967788606-a171c1080cb0?q=80&w=800', 'common', false, true),
+('mq_cloth_sweater', 'Suéter Tricotado pela Sra. Weasley', 'Quente, aconchegante e feito com amor (e magia).', 'clothing', 1500, 'https://images.unsplash.com/photo-1491446559770-3ff03a481977?q=80&w=800', 'rare', false, true),
+('mq_cloth_diadem', 'Diadema de Ravenclaw (Réplica)', 'Uma réplica perfeita do artefato perdido, aumenta o foco.', 'clothing', 7500, 'https://images.unsplash.com/photo-1518893883800-45cd0954574b?q=80&w=800', 'legendary', false, true),
+('mq_cloth_locket', 'Medalhão de Slytherin (Réplica)', 'Elegância ancestral para os ambiciosos.', 'clothing', 7000, 'https://images.unsplash.com/photo-1514336021614-72213a8a3068?q=80&w=800', 'legendary', false, true),
+('mq_cloth_cup', 'Taça de Hufflepuff (Réplica)', 'Um símbolo de lealdade e trabalho árduo.', 'clothing', 6500, 'https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?q=80&w=800', 'legendary', false, true),
+('mq_cloth_sword', 'Espada de Gryffindor (Acessório)', 'Uma réplica para pendurar no seu perfil, símbolo de bravura.', 'clothing', 9000, 'https://images.unsplash.com/photo-1516715667182-c515c1f92f68?q=80&w=800', 'legendary', false, true),
+('mq_cloth_boots', 'Botas de Viagem Encantadas', 'Nunca cansam os pés e repelem lama automaticamente.', 'clothing', 1200, 'https://images.unsplash.com/photo-1533601017-dc61895e03c0?q=80&w=800', 'rare', false, true),
+('mq_cloth_belt', 'Cinto de Utilidades de Alquimista', 'Espaço extra para carregar pequenas poções e frascos.', 'clothing', 900, 'https://images.unsplash.com/photo-1582967788606-a171c1080cb0?q=80&w=800', 'common', false, true),
+('mq_cloth_spectacles', 'Óculos de Luna (Spectrespecs)', 'Permite ver Zonzobulos (ou apenas ficar estiloso).', 'clothing', 1400, 'https://images.unsplash.com/photo-1491446559770-3ff03a481977?q=80&w=800', 'rare', false, true),
+('mq_cloth_earrings', 'Brincos de Dirigível', 'Feitos de rabanetes mágicos verdadeiros.', 'clothing', 500, 'https://images.unsplash.com/photo-1518893883800-45cd0954574b?q=80&w=800', 'common', false, true),
+('mq_cloth_watch', 'Relógio de Bolso Mágico', 'Marca o tempo e avisa se você está em perigo mortal.', 'clothing', 3000, 'https://images.unsplash.com/photo-1514336021614-72213a8a3068?q=80&w=800', 'rare', false, true),
+('mq_cloth_pendant', 'Pingente de Vira-Tempo', 'Uma peça belíssima (não permite viagens reais no tempo).', 'clothing', 4000, 'https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?q=80&w=800', 'rare', false, true),
+
+-- 🧪 POÇÕES (POTIONS)
+('mq_pot_felix', 'Felix Felicis', 'Sorte líquida. Faz com que tudo o que você tente hoje dê certo.', 'potion', 5000, 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?q=80&w=800', 'legendary', true, true),
+('mq_pot_polyjuice', 'Poção Polissuco', 'Permite assumir a forma de outra pessoa por uma hora.', 'potion', 2000, 'https://images.unsplash.com/photo-1550985543-f47f38aeee65?q=80&w=800', 'rare', true, true),
+('mq_pot_veritaserum', 'Veritaserum', 'O soro da verdade mais poderoso. Três gotas e segredos são revelados.', 'potion', 3500, 'https://images.unsplash.com/photo-1603513492128-ba7bc9b3e143?q=80&w=800', 'rare', false, true),
+('mq_pot_amortentia', 'Amortentia', 'A poção do amor mais poderosa do mundo. Cheiro personalizado.', 'potion', 3000, 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?q=80&w=800', 'rare', false, true),
+('mq_pot_wiggenweld', 'Poção Wiggenweld', 'Cura ferimentos leves e desperta de sonos mágicos.', 'potion', 500, 'https://images.unsplash.com/photo-1550985543-f47f38aeee65?q=80&w=800', 'common', false, true),
+('mq_pot_draught', 'Poção do Morto-Vivo', 'Induz o bebedor a um sono profundo semelhante à morte.', 'potion', 2500, 'https://images.unsplash.com/photo-1603513492128-ba7bc9b3e143?q=80&w=800', 'rare', false, true),
+('mq_pot_pepperup', 'Poção Pimenta', 'Cura resfriados instantaneamente (com vapor saindo pelas orelhas).', 'potion', 400, 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?q=80&w=800', 'common', false, true),
+('mq_pot_skelegro', 'Esquerece', 'Faz os ossos crescerem novamente. O gosto é horrível.', 'potion', 1800, 'https://images.unsplash.com/photo-1550985543-f47f38aeee65?q=80&w=800', 'rare', false, true),
+('mq_pot_wolfsbane', 'Poção de Acônito', 'Permite que lobisomens mantenham a sanidade durante a lua cheia.', 'potion', 4500, 'https://images.unsplash.com/photo-1603513492128-ba7bc9b3e143?q=80&w=800', 'legendary', false, true),
+('mq_pot_invigorate', 'Poção Revigorante', 'Restaura a energia após um longo dia de aulas.', 'potion', 300, 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?q=80&w=800', 'common', false, true),
+('mq_pot_gillyweed', 'Guelricho', 'Permite respirar debaixo d''água e desenvolve nadadeiras.', 'potion', 1200, 'https://images.unsplash.com/photo-1550985543-f47f38aeee65?q=80&w=800', 'rare', false, true),
+('mq_pot_shrink', 'Poção Redutora', 'Faz objetos ou seres vivos encolherem drasticamente.', 'potion', 800, 'https://images.unsplash.com/photo-1603513492128-ba7bc9b3e143?q=80&w=800', 'common', false, true),
+('mq_pot_swell', 'Poção Incha-Olho', 'Faz o alvo inchar como um balão.', 'potion', 700, 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?q=80&w=800', 'common', false, true),
+('mq_pot_memory', 'Poção da Memória', 'Ajuda a focar e lembrar de fatos para os N.O.M.s.', 'potion', 1500, 'https://images.unsplash.com/photo-1550985543-f47f38aeee65?q=80&w=800', 'rare', false, true),
+('mq_pot_sleeping', 'Poção do Sono', 'Garante uma noite de sono sem sonhos agitados.', 'potion', 450, 'https://images.unsplash.com/photo-1603513492128-ba7bc9b3e143?q=80&w=800', 'common', false, true),
+('mq_pot_calming', 'Poção Calmante', 'Alivia a ansiedade e o choque após encontros com dementadores.', 'potion', 600, 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?q=80&w=800', 'common', false, true),
+('mq_pot_burn', 'Pasta de Cura para Queimaduras', 'Essencial para quem lida com dragões ou explosivos.', 'potion', 900, 'https://images.unsplash.com/photo-1550985543-f47f38aeee65?q=80&w=800', 'common', false, true),
+('mq_pot_blood', 'Poção de Sangue de Dragão', 'Extremamente potente para fortificação mágica.', 'potion', 4000, 'https://images.unsplash.com/photo-1603513492128-ba7bc9b3e143?q=80&w=800', 'legendary', false, true),
+('mq_pot_wit', 'Poção Aguçadora de Engenho', 'Faz o bebedor pensar com mais clareza e rapidez.', 'potion', 1300, 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?q=80&w=800', 'rare', false, true),
+('mq_pot_herb', 'Essência de Arruda', 'Neutraliza a maioria dos venenos comuns.', 'potion', 550, 'https://images.unsplash.com/photo-1550985543-f47f38aeee65?q=80&w=800', 'common', false, true),
+
+-- 📜 FEITIÇOS (SPELLS)
+('mq_spell_expecto', 'Expecto Patronum', 'Conjura um guardião de luz para repelir dementadores.', 'spell', 5000, 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800', 'legendary', true, true),
+('mq_spell_avada', 'Avada Kedavra', 'A maldição da morte. (Uso restrito apenas para RPG).', 'spell', 10000, 'https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=800', 'legendary', true, true),
+('mq_spell_crucio', 'Cruciatus', 'A maldição da tortura. Causa dor insuportável.', 'spell', 8000, 'https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=800', 'legendary', false, true),
+('mq_spell_imperio', 'Imperius', 'Dá controle total sobre as ações de outra pessoa.', 'spell', 8000, 'https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=800', 'legendary', false, true),
+('mq_spell_lumos', 'Lumos Maxima', 'Ilumina grandes áreas com uma luz intensa.', 'spell', 500, 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800', 'common', false, true),
+('mq_spell_alohomora', 'Alohomora', 'Abre portas e fechaduras trancadas por magia simples.', 'spell', 600, 'https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=800', 'common', false, true),
+('mq_spell_expelliarmus', 'Expelliarmus', 'Desarma o oponente, lançando a varinha longe.', 'spell', 1200, 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800', 'rare', false, true),
+('mq_spell_protego', 'Protego Totalum', 'Cria um escudo de proteção ao redor de uma área.', 'spell', 1500, 'https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=800', 'rare', false, true),
+('mq_spell_sectumsempra', 'Sectumsempra', 'Um feitiço perigoso que corta o alvo como se por espadas.', 'spell', 4500, 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800', 'legendary', false, true),
+('mq_spell_stupefy', 'Stupefy (Estupore)', 'Atordoa o alvo, deixando-o inconsciente.', 'spell', 1000, 'https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=800', 'common', false, true),
+('mq_spell_reparo', 'Oculus Reparo', 'Conserta objetos quebrados instantaneamente.', 'spell', 300, 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800', 'common', false, true),
+('mq_spell_wingardium', 'Wingardium Leviosa', 'Faz objetos levitarem (lembre-se do Levi-ô-sa).', 'spell', 400, 'https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=800', 'common', false, true),
+('mq_spell_incendio', 'Incendio', 'Conjura chamas mágicas.', 'spell', 800, 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800', 'common', false, true),
+('mq_spell_aguamenti', 'Aguamenti', 'Conjura um jato de água limpa da varinha.', 'spell', 550, 'https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=800', 'common', false, true),
+('mq_spell_accio', 'Accio (Feitiço Convocatório)', 'Traz objetos distantes para as mãos do bruxo.', 'spell', 1100, 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800', 'rare', false, true),
+('mq_spell_diffindo', 'Diffindo', 'Corta materiais de forma precisa.', 'spell', 700, 'https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=800', 'common', false, true),
+('mq_spell_riddikulus', 'Riddikulus', 'Transforma um bicho-papão em algo engraçado.', 'spell', 1300, 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800', 'rare', false, true),
+('mq_spell_obliviate', 'Obliviate', 'Apaga memórias específicas do alvo.', 'spell', 4000, 'https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=800', 'rare', false, true),
+('mq_spell_legilimens', 'Legilimens', 'Permite navegar pelas memórias e pensamentos alheios.', 'spell', 5500, 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800', 'legendary', false, true),
+('mq_spell_morsmordre', 'Morsmordre', 'Conjura a Marca Negra no céu.', 'spell', 9000, 'https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=800', 'legendary', false, true);
+
+-- 🃏 FIGURINHAS (STICKERS)
+INSERT INTO stickers (id, character_name, rarity, image_url, level_required)
+VALUES
+('s_harry', 'Harry Potter', 'gold', 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800', 10),
+('s_hermione', 'Hermione Granger', 'gold', 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800', 8),
+('s_ron', 'Ron Weasley', 'silver', 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800', 5),
+('s_dumbledore', 'Alvo Dumbledore', 'gold', 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800', 15),
+('s_voldemort', 'Lord Voldemort', 'gold', 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800', 20),
+('s_snape', 'Severus Snape', 'gold', 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800', 12),
+('s_draco', 'Draco Malfoy', 'silver', 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800', 6),
+('s_luna', 'Luna Lovegood', 'silver', 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800', 7),
+('s_neville', 'Neville Longbottom', 'bronze', 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800', 3),
+('s_ginny', 'Ginny Weasley', 'silver', 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800', 5),
+('s_sirius', 'Sirius Black', 'gold', 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800', 14),
+('s_lupin', 'Remus Lupin', 'silver', 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800', 10),
+('s_bellatrix', 'Bellatrix Lestrange', 'gold', 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800', 18),
+('s_hagrid', 'Rubeus Hagrid', 'bronze', 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800', 4),
+('s_dobby', 'Dobby', 'silver', 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800', 3),
+('s_cedric', 'Cedric Diggory', 'silver', 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800', 6),
+('s_fred', 'Fred Weasley', 'bronze', 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800', 5),
+('s_george', 'George Weasley', 'bronze', 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800', 5),
+('s_mcgonagall', 'Minerva McGonagall', 'gold', 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800', 13),
+('s_newt', 'Newt Scamander', 'silver', 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=800', 10);

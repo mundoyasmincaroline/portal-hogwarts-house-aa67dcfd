@@ -331,40 +331,77 @@ export default function ChatRoom() {
     }
   };
 
-  if (loading || !channel) return <div className="text-center py-20 text-muted-foreground">Abrindo as portas do salão...</div>;
+  const deleteMessage = async (messageId: string) => {
+    if (!isAdmin) return;
+    try {
+      const { error } = await supabase.from("messages").delete().eq("id", messageId);
+      if (error) throw error;
+      setMessages(prev => prev.filter(m => m.id !== messageId));
+      toast.success("Mensagem banida para a Seção Reservada! 📚");
+    } catch (err: any) {
+      toast.error("Erro ao deletar: " + err.message);
+    }
+  };
+
+  if (loading || !channel) return (
+    <div className="h-screen flex items-center justify-center bg-black">
+      <div className="text-center space-y-4">
+        <div className="w-16 h-16 border-4 border-yellow-500/20 border-t-yellow-500 rounded-full animate-spin mx-auto" />
+        <p className="font-heading text-xl text-yellow-500/60 animate-pulse">Abrindo os portais do Salão Comunal...</p>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="max-w-4xl mx-auto h-[calc(100vh-100px)] flex flex-col glass rounded-2xl overflow-hidden border border-border">
-      {/* Header da Sala */}
-      <div className="p-4 border-b border-border bg-card/50 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard/chats")} className="shrink-0">
-            ⬅️
+    <div className="max-w-5xl mx-auto h-[calc(100vh-120px)] flex flex-col glass rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl relative">
+      {/* ── BACKGROUND DE IMERSÃO ── */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60 z-0 pointer-events-none" />
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-20 pointer-events-none" />
+      
+      {/* ── HEADER MONSTER QUALITY ── */}
+      <div className="relative z-10 p-6 border-b border-white/5 bg-white/5 backdrop-blur-2xl flex items-center justify-between shadow-lg">
+        <div className="flex items-center gap-5">
+          <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard/chats")} className="shrink-0 hover:bg-white/5 rounded-2xl w-12 h-12">
+            <ExternalLink size={20} className="rotate-180" />
           </Button>
           <div>
-            <h2 className="font-heading text-lg text-foreground flex items-center gap-2">
-              {channel.name} {channel.is_premium && <span className="text-xl">⭐</span>}
-            </h2>
-            <p className="text-xs text-muted-foreground hidden sm:block">{channel.description}</p>
+            <div className="flex items-center gap-3">
+              <h2 className="font-heading text-2xl text-foreground flex items-center gap-2 tracking-tight">
+                {channel.name}
+              </h2>
+              {channel.is_premium && (
+                <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/40 animate-pulse-glow">PREMIUM ⭐</Badge>
+              )}
+            </div>
+            <p className="text-xs text-muted-foreground font-serif italic mt-0.5">{channel.description}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <input 
-            type="date" 
-            value={selectedDate} 
-            onChange={(e) => setSelectedDate(e.target.value)}
-            className="bg-secondary/50 text-xs text-foreground px-2 py-1.5 rounded border border-border focus:outline-none"
-            title="Penseira: Ver mensagens de outro dia"
-          />
+        
+        <div className="flex items-center gap-4">
+          <div className="hidden md:flex flex-col items-end mr-2">
+            <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Penseira de Hogwarts</span>
+            <input 
+              type="date" 
+              value={selectedDate} 
+              onChange={(e) => setSelectedDate(e.target.value)}
+              className="bg-black/40 text-xs text-white/80 px-4 py-2 rounded-xl border border-white/10 focus:border-yellow-500/50 focus:outline-none transition-all cursor-pointer"
+            />
+          </div>
+          <div className="h-10 w-[1px] bg-white/10 mx-2 hidden md:block" />
+          <div className="flex -space-x-3">
+             {/* Simulação de membros online */}
+             <div className="w-8 h-8 rounded-full border-2 border-black bg-yellow-500/20 flex items-center justify-center text-[10px] font-bold text-yellow-400">⚡</div>
+             <div className="w-8 h-8 rounded-full border-2 border-black bg-blue-500/20 flex items-center justify-center text-[10px] font-bold text-blue-400">🛡️</div>
+          </div>
         </div>
       </div>
 
-      {/* Integração Meet / Jitsi / Vídeo */}
+      {/* ── ÁREA DE VÍDEO (CASO EXISTA) ── */}
       {channel.meet_link && (
-        <div className="bg-black/90 border-b border-border h-[250px] sm:h-[400px] shrink-0 relative flex flex-col">
-          <div className="absolute top-2 right-2 z-10">
-            <Button variant="outline" size="sm" onClick={() => window.open(channel.meet_link, "_blank")} className="bg-black/50 hover:bg-black text-xs h-7">
-              Abrir Externa 🔗
+        <div className="relative z-10 bg-black/95 border-b border-white/5 h-[280px] sm:h-[450px] shrink-0 group">
+          <div className="absolute top-4 right-4 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+            <Button variant="outline" size="sm" onClick={() => window.open(channel.meet_link, "_blank")} className="bg-black/60 backdrop-blur-md border-white/20 text-xs rounded-xl hover:bg-white/10">
+              Ver em Tela Cheia 🔗
             </Button>
           </div>
           <iframe 
@@ -373,169 +410,180 @@ export default function ChatRoom() {
             className="w-full h-full border-0"
           />
           {channel.meet_link.includes('meet.google') && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-secondary/20">
-              <span className="text-4xl mb-4">🎥</span>
-              <h3 className="font-heading text-lg mb-2">Transmissão Ativa no Google Meet</h3>
-              <p className="text-sm text-muted-foreground mb-4">O Google Meet não permite visualização interna. Clique no botão abaixo para participar.</p>
-              <Button variant="magical" onClick={() => window.open(channel.meet_link, "_blank")}>Entrar na Chamada 📞</Button>
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8 bg-gradient-to-t from-black via-transparent to-black/40">
+              <div className="w-20 h-20 bg-yellow-500/10 rounded-full flex items-center justify-center text-5xl mb-6 shadow-inner animate-pulse">🎥</div>
+              <h3 className="font-heading text-2xl text-white mb-2">Transmissão em Andamento</h3>
+              <p className="text-sm text-white/50 max-w-sm mb-8 font-serif italic">"O Google Meet protege a privacidade de seus alunos. Clique abaixo para conjurar sua presença na sala."</p>
+              <Button variant="magical" size="lg" className="rounded-2xl h-14 px-10 shadow-2xl" onClick={() => window.open(channel.meet_link, "_blank")}>
+                Participar da Aula 📞
+              </Button>
             </div>
           )}
         </div>
       )}
 
-      {/* Área de Mensagens */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-background/50">
-        <ErrorBoundary fallback={<div className="text-center py-10 text-red-500">Erro ao carregar as mensagens.</div>}>
+      {/* ── MENSAGENS MONSTER QUALITY ── */}
+      <div className="relative z-10 flex-1 overflow-y-auto p-6 md:p-8 space-y-8 scrollbar-hide">
+        <ErrorBoundary fallback={<div className="text-center py-20 text-red-500/50 font-serif">A magia deste salão foi perturbada...</div>}>
           {messages.length === 0 ? (
-            <div className="h-full flex items-center justify-center text-center">
-              <div>
-                <div className="text-5xl mb-4 opacity-50">🕯️</div>
-                <p className="text-muted-foreground text-sm">O silêncio ecoa por este salão.</p>
-                <p className="text-xs text-muted-foreground">Seja o primeiro a falar!</p>
+            <div className="h-full flex items-center justify-center">
+              <div className="text-center space-y-6 max-w-xs animate-in fade-in zoom-in duration-1000">
+                <div className="text-7xl opacity-20 grayscale filter drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">🕯️</div>
+                <div className="space-y-2">
+                  <p className="text-white/40 text-lg font-serif italic">"O silêncio é a primeira página de um grande livro."</p>
+                  <p className="text-[10px] text-white/20 uppercase tracking-[0.3em] font-bold">Seja o primeiro a escrever</p>
+                </div>
               </div>
             </div>
           ) : (
-            messages.map((m, i) => {
-              const profileData: any = m.characters || m.profiles || { full_name: "Bruxo Desconhecido", username: "desconhecido", house: "gryffindor", avatar_url: null };
-              const profileName = profileData.full_name || "Desconhecido";
-              const profileUser = profileData.username || "desconhecido";
-              
-              const isMorpheus = profileName.toLowerCase().includes('morpheus') || profileUser.toLowerCase().includes('morpheus');
-              const isYasmin = profileName.toLowerCase().includes('yasmin') || profileUser.toLowerCase().includes('mundoyasmincaroline');
-              const isCarolina = profileName.toLowerCase().includes('carolina') || profileUser.toLowerCase().includes('carolinaas.assis');
+            <div className="flex flex-col gap-6">
+              {messages.slice().reverse().map((m) => {
+                const profileData: any = m.characters || m.profiles || { full_name: "Bruxo Desconhecido", username: "desconhecido", house: "gryffindor", avatar_url: null };
+                const profileName = profileData.full_name || "Desconhecido";
+                const profileUser = profileData.username || "desconhecido";
+                const isMe = m.user_id === user?.id;
+                
+                const isMorpheus = profileName.toLowerCase().includes('morpheus') || profileUser.toLowerCase().includes('morpheus');
+                const isYasmin = profileName.toLowerCase().includes('yasmin') || profileUser.toLowerCase().includes('mundoyasmincaroline');
+                const isCarolina = profileName.toLowerCase().includes('carolina') || profileUser.toLowerCase().includes('carolinaas.assis');
 
-              return (
-                <ErrorBoundary key={m.id}>
-                  <div className="glass rounded-xl p-4 animate-fade-in-up mb-4">
-                    <div className="flex items-center gap-3 mb-3">
-                      <Link to={`/dashboard/profile/${m.user_id}`} className={`w-10 h-10 shrink-0 border block transition-transform hover:scale-105 ${
-                        isMorpheus ? 'rounded-none border-green-500 bg-black flex items-center justify-center font-mono text-green-500 font-bold text-lg' 
-                        : isYasmin ? 'rounded-full overflow-hidden border-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.5)]'
-                        : isCarolina ? 'rounded-full overflow-hidden border-blue-400 shadow-[0_0_10px_rgba(96,165,250,0.5)]'
-                        : 'rounded-full overflow-hidden border-border'
+                let houseColor = "border-white/10 bg-white/5";
+                let nameColor = "text-foreground";
+                let glowColor = "shadow-none";
+
+                if (profileData.house === 'gryffindor') { houseColor = "border-red-900/30 bg-red-950/10"; nameColor = "text-red-400"; glowColor = "group-hover:shadow-[0_0_20px_rgba(153,27,27,0.1)]"; }
+                if (profileData.house === 'slytherin') { houseColor = "border-emerald-900/30 bg-emerald-950/10"; nameColor = "text-emerald-400"; glowColor = "group-hover:shadow-[0_0_20px_rgba(6,78,59,0.1)]"; }
+                if (profileData.house === 'ravenclaw') { houseColor = "border-blue-900/30 bg-blue-950/10"; nameColor = "text-blue-400"; glowColor = "group-hover:shadow-[0_0_20px_rgba(30,58,138,0.1)]"; }
+                if (profileData.house === 'hufflepuff') { houseColor = "border-amber-900/30 bg-amber-950/10"; nameColor = "text-amber-400"; glowColor = "group-hover:shadow-[0_0_20px_rgba(146,64,14,0.1)]"; }
+
+                if (isMorpheus) { houseColor = "border-green-500/30 bg-black/40"; nameColor = "text-green-500"; glowColor = "shadow-[0_0_30px_rgba(34,197,94,0.15)]"; }
+                if (isYasmin) { houseColor = "border-yellow-500/30 bg-yellow-950/10"; nameColor = "text-yellow-400"; glowColor = "shadow-[0_0_30px_rgba(234,179,8,0.15)]"; }
+                if (isCarolina) { houseColor = "border-blue-500/30 bg-blue-950/10"; nameColor = "text-blue-400"; glowColor = "shadow-[0_0_30px_rgba(59,130,246,0.15)]"; }
+
+                return (
+                  <div key={m.id} className={`flex gap-4 group ${isMe ? 'flex-row-reverse' : ''}`}>
+                    {/* Avatar */}
+                    <div className="shrink-0 relative">
+                      <Link to={`/dashboard/profile/${m.user_id}`} className={`block w-12 h-12 rounded-2xl overflow-hidden border-2 transition-all duration-500 hover:scale-110 shadow-xl ${
+                        isMorpheus ? 'border-green-500/50 rounded-lg animate-pulse' 
+                        : isYasmin ? 'border-yellow-500/50 shadow-yellow-500/20' 
+                        : isCarolina ? 'border-blue-500/50 shadow-blue-500/20'
+                        : `border-${profileData.house === 'hufflepuff' ? 'amber' : profileData.house === 'ravenclaw' ? 'blue' : profileData.house === 'slytherin' ? 'emerald' : 'red'}-500/30`
                       }`}>
-                        {isMorpheus ? (
-                          <span className="animate-pulse">M</span>
-                        ) : profileData.avatar_url ? (
+                        {profileData.avatar_url ? (
                           <img src={profileData.avatar_url} alt={profileName} className="w-full h-full object-cover" />
                         ) : (
-                          <div className="w-full h-full bg-secondary flex items-center justify-center text-sm font-heading text-primary">
-                            {profileName.charAt(0).toUpperCase() || "?"}
+                          <div className={`w-full h-full flex items-center justify-center font-heading text-lg ${nameColor} bg-secondary/50`}>
+                            {profileName.charAt(0)}
                           </div>
                         )}
                       </Link>
-
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <Link to={`/dashboard/profile/${m.user_id}`} className="hover:opacity-80 transition-opacity">
-                            {isMorpheus ? (
-                              <span className="font-mono text-sm font-bold text-green-500 tracking-widest">&gt; MORPHEUS [O ARQUITETO]</span>
-                            ) : isYasmin ? (
-                              <span className="font-heading text-sm font-bold text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]">✨ YASMIN [A FUNDADORA]</span>
-                            ) : isCarolina ? (
-                              <span className="font-heading text-sm font-bold text-blue-400 drop-shadow-[0_0_5px_rgba(96,165,250,0.8)]">🛡️ CAROLINA [A GUARDIÃ]</span>
-                            ) : (
-                              <span className="font-heading text-sm font-medium text-foreground">{profileName}</span>
-                            )}
-                          </Link>
-
-                          {!isMorpheus && !isYasmin && !isCarolina && m.user_role === 'admin' && (
-                            <span className="text-[10px] font-bold bg-primary/20 text-primary px-1.5 py-0.5 rounded flex items-center gap-1" title="Administrador Master">👑 Admin</span>
-                          )}
-                          {!isMorpheus && !isYasmin && !isCarolina && m.user_role === 'moderator' && (
-                            <span className="text-[10px] font-bold bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded flex items-center gap-1" title="Moderador Ativo">🛡️ Mod</span>
-                          )}
-                        </div>
-                        <p className="text-xs text-muted-foreground">@{profileUser} • {m.created_at ? formatDate(m.created_at) : ''}</p>
+                      <div className={`absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-black flex items-center justify-center bg-black/80 shadow-lg`}>
+                         <HouseCrest house={profileData.house} size="xs" />
                       </div>
-                      
-                      {!isMorpheus && !isYasmin && !isCarolina && <HouseCrest house={profileData.house} size="sm" />}
                     </div>
 
-                    <div className={`text-sm ${
-                      isMorpheus ? 'text-green-500 font-mono drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]' 
-                      : isYasmin ? 'text-yellow-100'
-                      : isCarolina ? 'text-blue-100'
-                      : 'text-foreground'
-                    }`}>
-                      <p className="whitespace-pre-wrap leading-relaxed">{renderRPGText(m.content)}</p>
+                    {/* Conteúdo da Mensagem */}
+                    <div className={`flex flex-col max-w-[75%] ${isMe ? 'items-end' : ''}`}>
+                      <div className="flex items-center gap-3 mb-1.5 px-1">
+                        <span className={`text-[11px] font-heading font-bold uppercase tracking-wider ${nameColor}`}>
+                          {isMorpheus ? "MORPHEUS [ARQUITETO]" : isYasmin ? "YASMIN [FUNDADORA]" : isCarolina ? "CAROLINA [GUARDIÃ]" : profileName}
+                        </span>
+                        <span className="text-[9px] text-white/20 font-serif italic">{formatDate(m.created_at)}</span>
+                        {isAdmin && !isMe && (
+                          <button onClick={() => deleteMessage(m.id)} className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-400 transition-all text-[10px] font-bold uppercase ml-2">
+                             Banir 🚫
+                          </button>
+                        )}
+                      </div>
+
+                      <div className={`relative px-5 py-3.5 rounded-[1.8rem] border backdrop-blur-xl transition-all duration-500 ${houseColor} ${glowColor} ${
+                        isMe ? 'rounded-tr-none' : 'rounded-tl-none'
+                      }`}>
+                        {/* Hero Effects */}
+                        {(isYasmin || isMorpheus || isCarolina) && (
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer pointer-events-none rounded-[1.8rem]" />
+                        )}
+                        
+                        <div className={`text-[14px] leading-relaxed break-words ${
+                           isMorpheus ? 'font-mono text-green-400 drop-shadow-[0_0_5px_rgba(34,197,94,0.4)]'
+                           : isYasmin ? 'text-yellow-50 drop-shadow-[0_0_5px_rgba(250,204,21,0.2)]'
+                           : 'text-foreground/90'
+                        }`}>
+                          {renderRPGText(m.content)}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </ErrorBoundary>
-              );
-            })
+                );
+              })}
+            </div>
           )}
           <div ref={messagesEndRef} />
         </ErrorBoundary>
       </div>
 
-      {/* Input */}
-      <div className="p-4 bg-card/50 border-t border-border flex flex-col gap-2">
-        {isAdmin && channel?.name === "𝐅𝐢𝐜𝐡𝐚𝐬 𝐏𝐞𝐬𝐬𝐨𝐚𝐢𝐬 ₊ ෆ ˚" && (
-          <div className="flex gap-2 pb-2">
-            <Button size="sm" variant="outline" className="text-[10px] h-6" onClick={() => setInput("✨ ~ 𝐅𝐢𝐜𝐡𝐚 𝐏𝐞𝐬𝐬𝐨𝐚𝐥 ~ ✨\n\n📸 𝐅𝐨𝐭𝐨:\n👤 𝐍𝐨𝐦𝐞 𝐜𝐨𝐦𝐩𝐥𝐞𝐭𝐨:\n🏷️ 𝐀𝐩𝐞𝐥𝐢𝐝𝐨 / 𝐜𝐨𝐦𝐨 𝐠𝐨𝐬𝐭𝐚 𝐝𝐞 𝐬𝐞𝐫 𝐜𝐡𝐚𝐦𝐚𝐝𝐨(𝐚): \n⏳  𝐈𝐝𝐚𝐝𝐞: \n🎉 𝐀𝐧𝐢𝐯𝐞𝐫𝐬𝐚́𝐫𝐢𝐨:\n🕊️ 𝐑𝐞𝐥𝐢𝐠𝐢ã𝐨: \n📍 𝐄𝐬𝐭𝐚𝐝𝐨:\n🏰 𝐂𝐚𝐬𝐚 𝐝𝐞 𝐇𝐨𝐠𝐰𝐚𝐫𝐭𝐬 (𝐩𝐫𝐢𝐧𝐜𝐢𝐩𝐚𝐥):\n🏰 𝐒𝐞𝐠𝐮𝐧𝐝𝐚 𝐜𝐚𝐬𝐚 𝐝𝐞 𝐇𝐨𝐠𝐰𝐚𝐫𝐭𝐬:\n 🌀 𝐏𝐚𝐭𝐫𝐨𝐧𝐨:\n🎭 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐧𝐬 𝐪𝐮𝐞 𝐯𝐨𝐜ê 𝐪𝐮𝐞𝐫 𝐢𝐧𝐭𝐞𝐫𝐩𝐫𝐞𝐭𝐚𝐫 𝐧𝐚 𝐡𝐨𝐮𝐬𝐞:\n⭐ 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐦 𝐟𝐚𝐯𝐨𝐫𝐢𝐭𝐨:\n🎥 𝐅𝐢𝐥𝐦𝐞 𝐟𝐚𝐯𝐨𝐫𝐢𝐭𝐨 𝐝𝐚 𝐬𝐚𝐠𝐚:\n📚 𝐋𝐢𝐯𝐫𝐨 𝐟𝐚𝐯𝐨𝐫𝐢𝐭𝐨 𝐝𝐚 𝐬𝐚𝐠𝐚:")}>
-              📋 Enviar Modelo Pessoal
+      {/* ── INPUT MONSTER QUALITY ── */}
+      <div className="relative z-10 p-5 bg-black/40 backdrop-blur-3xl border-t border-white/5">
+        {isAdmin && (channel?.name?.includes("Fichas") || channel?.name?.includes("𝐅𝐢𝐜𝐡𝐚𝐬")) && (
+          <div className="flex flex-wrap gap-2 mb-4 scrollbar-hide">
+            <Button size="sm" variant="outline" className="text-[9px] h-7 bg-white/5 border-white/10 rounded-xl" onClick={() => setInput("✨ ~ 𝐅𝐢𝐜𝐡𝐚 𝐏𝐞𝐬𝐬𝐨𝐚𝐥 ~ ✨\n\n📸 𝐅𝐨𝐭𝐨:\n👤 𝐍𝐨𝐦𝐞:\n⏳ 𝐈𝐝𝐚𝐝𝐞:\n🏰 𝐂𝐚𝐬𝐚:\n🌀 𝐏𝐚𝐭𝐫𝐨𝐧𝐨:\n💫 𝐅𝐞𝐢𝐭𝐢ç𝐨 𝐅𝐚𝐯𝐨𝐫𝐢𝐭𝐨:")}>
+              📋 Modelo Pessoal
+            </Button>
+            <Button size="sm" variant="outline" className="text-[9px] h-7 bg-white/5 border-white/10 rounded-xl" onClick={() => setInput("𝐅𝐈𝐂𝐇𝐀 𝐀𝐋𝐔𝐍𝐎(𝐀) \n\n⚡ ~ 𝐅𝐢𝐜𝐡𝐚 𝐝𝐨 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐦 ~ ⚡\n\n📜 𝐍𝐨𝐦𝐞:\n⏳ 𝐈𝐝𝐚𝐝𝐞:\n🏰 𝐂𝐚𝐬𝐚:\n📚 𝐇𝐢𝐬𝐭ó𝐫𝐢𝐚:\n✨ 𝐕𝐚𝐫𝐢𝐧𝐡𝐚:\n🩸 𝐒𝐚𝐧𝐠𝐮𝐞:")}>
+              🏰 Ficha Aluno
             </Button>
           </div>
         )}
-        {isAdmin && channel?.name === "𝐅𝐢𝐜𝐡𝐚𝐬 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐧𝐬 ₊ ෆ ˚" && (
-          <div className="flex flex-wrap gap-2 pb-2">
-            <Button size="sm" variant="outline" className="text-[10px] h-6" onClick={() => setInput("𝐅𝐈𝐂𝐇𝐀 𝐅𝐄𝐌𝐈𝐍𝐈𝐍𝐀 - 𝐀𝐋𝐔𝐍𝐀𝐒 \n\n⚡ ~ 𝐅𝐢𝐜𝐡𝐚 𝐝𝐚 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐦 ~ ⚡\n\n(𝐯𝐞𝐫𝐬ã𝐨 𝐟𝐞𝐦𝐢𝐧𝐢𝐧𝐚 𝐩𝐚𝐫𝐚 𝐚𝐥𝐮𝐧𝐚𝐬 𝐝𝐞 𝐇𝐨𝐠𝐰𝐚𝐫𝐭𝐬! 🏰)\n\n📷 𝐅𝐨𝐭𝐨 (𝐞𝐧𝐯𝐢𝐚𝐫 𝐚𝐜𝐢𝐦𝐚!):\n📜 𝐍𝐨𝐦𝐞:\n⏳ 𝐈𝐝𝐚𝐝𝐞:\n🏰 𝐂𝐚𝐬𝐚 𝐝𝐞 𝐇𝐨𝐠𝐰𝐚𝐫𝐭𝐬 (𝐩𝐫𝐢𝐧𝐜𝐢𝐩𝐚𝐥):\n🏰 𝐒𝐞𝐠𝐮𝐧𝐝𝐚 𝐜𝐚𝐬𝐚 𝐝𝐞 𝐇𝐨𝐠𝐰𝐚𝐫𝐭𝐬:\n📚 𝐇𝐢𝐬𝐭ó𝐫𝐢𝐚:\n✨ 𝐕𝐚𝐫𝐢𝐧𝐡𝐚:\n🌀 𝐏𝐚𝐭𝐫𝐨𝐧𝐨: \n🐾 𝐀𝐧𝐢𝐦𝐚𝐥 𝐝𝐞 𝐞𝐬𝐭𝐢𝐦𝐚𝐜̧𝐚̃𝐨:\n💗 𝐍𝐨𝐦𝐞 𝐝𝐨 𝐚𝐧𝐢𝐦𝐚𝐥 𝐝𝐞 𝐞𝐬𝐭𝐢𝐦𝐚çã𝐨:\n📷 𝐅𝐨𝐭𝐨 𝐝𝐨 𝐚𝐧𝐢𝐦𝐚𝐥 𝐝𝐞 𝐞𝐬𝐭𝐢𝐦𝐚çã𝐨 (𝐞𝐧𝐯𝐢𝐚𝐫 𝐚𝐜𝐢𝐦𝐚!):\n🩸 𝐒𝐚𝐧𝐠𝐮𝐞:\n🎓 𝐀𝐧𝐨 𝐞𝐦 𝐇𝐨𝐠𝐰𝐚𝐫𝐭𝐬:\n📚 𝐌𝐚𝐭𝐞́𝐫𝐢𝐚 𝐟𝐚𝐯𝐨𝐫𝐢𝐭𝐚:\n💫 𝐅𝐞𝐢𝐭𝐢ç𝐨 𝐟𝐚𝐯𝐨𝐫𝐢𝐭𝐨:\n🧠 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐥𝐢𝐝𝐚𝐝𝐞:\n💘 𝐏𝐚𝐫:\n😔 𝐏𝐨𝐧𝐭𝐨 𝐟𝐫𝐚𝐜𝐨:\n💪 𝐏𝐨𝐧𝐭𝐨 𝐟𝐨𝐫𝐭𝐞:\n🔒 𝐒𝐞𝐠𝐫𝐞𝐝𝐨𝐬:\n😱 𝐌𝐞𝐝𝐨𝐬: \n✨ 𝐒𝐨𝐧𝐡𝐨𝐬:\n🧩 𝐌𝐚𝐧𝐢𝐚𝐬:\n💬 𝐅𝐫𝐚𝐬𝐞𝐬 𝐦𝐚𝐫𝐜𝐚𝐧𝐭𝐞𝐬:\n📸 𝐂𝐨𝐧𝐭𝐚𝐬 𝐧𝐨 𝐈𝐧𝐬𝐭𝐚𝐠𝐫𝐚𝐦:\n🎭 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐦 𝐢𝐧𝐭𝐞𝐫𝐩𝐫𝐞𝐭𝐚𝐝𝐨 𝐩𝐨𝐫:\n\n 💗 ~ 𝐅𝐚𝐦í𝐥𝐢𝐚 𝐝𝐚 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐦 ~💗\n\n❤️ 𝐌ã𝐞:\n💙 𝐏𝐚𝐢:\n👨👩👧👦 𝐈𝐫𝐦ã𝐨𝐬(𝐚𝐬):\n👥 𝐏𝐚𝐫𝐞𝐧𝐭𝐞𝐬 𝐢𝐦𝐩𝐨𝐫𝐭𝐚𝐧𝐭𝐞𝐬:")}>
-              👧 Alunas
-            </Button>
-            <Button size="sm" variant="outline" className="text-[10px] h-6" onClick={() => setInput("𝐅𝐈𝐂𝐇𝐀 𝐌𝐀𝐒𝐂𝐔𝐋𝐈𝐍𝐀 - 𝐀𝐋𝐔𝐍𝐎𝐒 \n\n⚡ ~ 𝐅𝐢𝐜𝐡𝐚 𝐝𝐨 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐦 ~ ⚡\n\n(𝐯𝐞𝐫𝐬ã𝐨 𝐦𝐚𝐬𝐜𝐮𝐥𝐢𝐧𝐚 𝐩𝐚𝐫𝐚 𝐚𝐥𝐮𝐧𝐨𝐬 𝐝𝐞 𝐇𝐨𝐠𝐰𝐚𝐫𝐭𝐬! 🏰)\n\n📷 𝐅𝐨𝐭𝐨 (𝐞𝐧𝐯𝐢𝐚𝐫 𝐚𝐜𝐢𝐦𝐚!):\n📜 𝐍𝐨𝐦𝐞:\n⏳ 𝐈𝐝𝐚𝐝𝐞:\n🏰 𝐂𝐚𝐬𝐚 𝐝𝐞 𝐇𝐨𝐠𝐰𝐚𝐫𝐭𝐬 (𝐩𝐫𝐢𝐧𝐜𝐢𝐩𝐚𝐥):\n🏰 𝐒𝐞𝐠𝐮𝐧𝐝𝐚 𝐜𝐚𝐬𝐚 𝐝𝐞 𝐇𝐨𝐠𝐰𝐚𝐫𝐭𝐬:\n📚 𝐇𝐢𝐬𝐭ó𝐫𝐢𝐚:\n✨ 𝐕𝐚𝐫𝐢𝐧𝐡𝐚:\n🌀 𝐏𝐚𝐭𝐫𝐨𝐧𝐨: \n🐾 𝐀𝐧𝐢𝐦𝐚𝐥 𝐝𝐞 𝐞𝐬𝐭𝐢𝐦𝐚𝐜̧𝐚̃𝐨:\n💗 𝐍𝐨𝐦𝐞 𝐝𝐨 𝐚𝐧𝐢𝐦𝐚𝐥 𝐝𝐞 𝐞𝐬𝐭𝐢𝐦𝐚çã𝐨:\n📷 𝐅𝐨𝐭𝐨 𝐝𝐨 𝐚𝐧𝐢𝐦𝐚𝐥 𝐝𝐞 𝐞𝐬𝐭𝐢𝐦𝐚çã𝐨 (𝐞𝐧𝐯𝐢𝐚𝐫 𝐚𝐜𝐢𝐦𝐚!):\n🩸 𝐒𝐚𝐧𝐠𝐮𝐞:\n🎓 𝐀𝐧𝐨 𝐞𝐦 𝐇𝐨𝐠𝐰𝐚𝐫𝐭𝐬:\n📚 𝐌𝐚𝐭𝐞́𝐫𝐢𝐚 𝐟𝐚𝐯𝐨𝐫𝐢𝐭𝐚:\n💫 𝐅𝐞𝐢𝐭𝐢ç𝐨 𝐟𝐚𝐯𝐨𝐫𝐢𝐭𝐨:\n🧠 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐥𝐢𝐝𝐚𝐝𝐞:\n💘 𝐏𝐚𝐫:\n😔 𝐏𝐨𝐧𝐭𝐨 𝐟𝐫𝐚𝐜𝐨:\n💪 𝐏𝐨𝐧𝐭𝐨 𝐟𝐨𝐫𝐭𝐞:\n🔒 𝐒𝐞𝐠𝐫𝐞𝐝𝐨𝐬:\n😱 𝐌𝐞𝐝𝐨𝐬: \n✨ 𝐒𝐨𝐧𝐡𝐨𝐬:\n🧩 𝐌𝐚𝐧𝐢𝐚𝐬:\n💬 𝐅𝐫𝐚𝐬𝐞𝐬 𝐦𝐚𝐫𝐜𝐚𝐧𝐭𝐞𝐬:\n📸 𝐂𝐨𝐧𝐭𝐚𝐬 𝐧𝐨 𝐈𝐧𝐬𝐭𝐚𝐠𝐫𝐚𝐦:\n🎭 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐦 𝐢𝐧𝐭𝐞𝐫𝐩𝐫𝐞𝐭𝐚𝐝𝐨 𝐩𝐨𝐫:\n\n 💗 ~ 𝐅𝐚𝐦í𝐥𝐢𝐚 𝐝𝐨 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐦 ~💗\n\n❤️ 𝐌ã𝐞:\n💙 𝐏𝐚𝐢:\n👨👩👧👦 𝐈𝐫𝐦ã𝐨𝐬(𝐚𝐬):\n👥 𝐏𝐚𝐫𝐞𝐧𝐭𝐞𝐬 𝐢𝐦𝐩𝐨𝐫𝐭𝐚𝐧𝐭𝐞𝐬:")}>
-              👦 Alunos
-            </Button>
-            <Button size="sm" variant="outline" className="text-[10px] h-6" onClick={() => setInput("𝐅𝐈𝐂𝐇𝐀 𝐅𝐄𝐌𝐈𝐍𝐈𝐍𝐀 - 𝐀𝐃𝐔𝐋𝐓𝐀𝐒 \n\n⚡ ~ 𝐅𝐢𝐜𝐡𝐚 𝐝𝐚 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐦 ~ ⚡\n\n(𝐯𝐞𝐫𝐬ã𝐨 𝐟𝐞𝐦𝐢𝐧𝐢𝐧𝐚 𝐩𝐚𝐫𝐚 𝐚𝐝𝐮𝐥𝐭𝐚𝐬 𝐝𝐨 𝐦𝐮𝐧𝐝𝐨 𝐛𝐫𝐮𝐱𝐨! 🧙♀️)\n\n📷 𝐅𝐨𝐭𝐨 (𝐞𝐧𝐯𝐢𝐚𝐫 𝐚𝐜𝐢𝐦𝐚!):\n📜 𝐍𝐨𝐦𝐞:\n⏳ 𝐈𝐝𝐚𝐝𝐞:\n🏰 𝐂𝐚𝐬𝐚 𝐝𝐞 𝐇𝐨𝐠𝐰𝐚𝐫𝐭𝐬 (𝐩𝐫𝐢𝐧𝐜𝐢𝐩𝐚𝐥):\n🏰 𝐒𝐞𝐠𝐮𝐧𝐝𝐚 𝐜𝐚𝐬𝐚 𝐝𝐞 𝐇𝐨𝐠𝐰𝐚𝐫𝐭𝐬:\n📚 𝐇𝐢𝐬𝐭ó𝐫𝐢𝐚:\n✨ 𝐕𝐚𝐫𝐢𝐧𝐡𝐚:\n🌀 𝐏𝐚𝐭𝐫𝐨𝐧𝐨: \n🐾 𝐀𝐧𝐢𝐦𝐚𝐥 𝐝𝐞 𝐞𝐬𝐭𝐢𝐦𝐚𝐜̧𝐚̃𝐨:\n💗 𝐍𝐨𝐦𝐞 𝐝𝐨 𝐚𝐧𝐢𝐦𝐚𝐥 𝐝𝐞 𝐞𝐬𝐭𝐢𝐦𝐚çã𝐨:\n📷 𝐅𝐨𝐭𝐨 𝐝𝐨 𝐚𝐧𝐢𝐦𝐚𝐥 𝐝𝐞 𝐞𝐬𝐭𝐢𝐦𝐚çã𝐨 (𝐞𝐧𝐯𝐢𝐚𝐫 𝐚𝐜𝐢𝐦𝐚!):\n🩸 𝐒𝐚𝐧𝐠𝐮𝐞:\n💫 𝐅𝐞𝐢𝐭𝐢ç𝐨 𝐟𝐚𝐯𝐨𝐫𝐢𝐭𝐨:\n🧠 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐥𝐢𝐝𝐚𝐝𝐞:\n💘 𝐏𝐚𝐫:\n😔 𝐏𝐨𝐧𝐭𝐨 𝐟𝐫𝐚𝐜𝐨:\n💪 𝐏𝐨𝐧𝐭𝐨 𝐟𝐨𝐫𝐭𝐞:\n🔒 𝐒𝐞𝐠𝐫𝐞𝐝𝐨𝐬:\n😱 𝐌𝐞𝐝𝐨𝐬: \n✨ 𝐒𝐨𝐧𝐡𝐨𝐬:\n🧩 𝐌𝐚𝐧𝐢𝐚𝐬:\n💬 𝐅𝐫𝐚𝐬𝐞𝐬 𝐦𝐚𝐫𝐜𝐚𝐧𝐭𝐞𝐬:\n📸 𝐂𝐨𝐧𝐭𝐚𝐬 𝐧𝐨 𝐈𝐧𝐬𝐭𝐚𝐠𝐫𝐚𝐦:\n💼 𝐓𝐫𝐚𝐛𝐚𝐥𝐡𝐨:\n🎭 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐦 𝐢𝐧𝐭𝐞𝐫𝐩𝐫𝐞𝐭𝐚𝐝𝐨 𝐩𝐨𝐫:\n\n 💗 ~ 𝐅𝐚𝐦í𝐥𝐢𝐚 𝐝𝐚 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐦 ~💗\n\n❤️ 𝐌ã𝐞:\n💙 𝐏𝐚𝐢:\n👨👩👧👦 𝐈𝐫𝐦ã𝐨𝐬(𝐚𝐬):\n👥 𝐏𝐚𝐫𝐞𝐧𝐭𝐞𝐬 𝐢𝐦𝐩𝐨𝐫𝐭𝐚𝐧𝐭𝐞𝐬:")}>
-              👩 Adultas
-            </Button>
-            <Button size="sm" variant="outline" className="text-[10px] h-6" onClick={() => setInput("𝐅𝐈𝐂𝐇𝐀 𝐌𝐀𝐒𝐂𝐔𝐋𝐈𝐍𝐀 - 𝐀𝐃𝐔𝐋𝐓𝐎𝐒 \n\n⚡ ~ 𝐅𝐢𝐜𝐡𝐚 𝐝𝐨 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐦 ~ ⚡\n\n(𝐯𝐞𝐫𝐬ã𝐨 𝐦𝐚𝐬𝐜𝐮𝐥𝐢𝐧𝐚 𝐩𝐚𝐫𝐚 𝐚𝐝𝐮𝐥𝐭𝐨𝐬 𝐝𝐨 𝐦𝐮𝐧𝐝𝐨 𝐛𝐫𝐮𝐱𝐨! 🧙)\n\n📷 𝐅𝐨𝐭𝐨 (𝐞𝐧𝐯𝐢𝐚𝐫 𝐚𝐜𝐢𝐦𝐚!):\n📜 𝐍𝐨𝐦𝐞:\n⏳ 𝐈𝐝𝐚𝐝𝐞:\n🏰 𝐂𝐚𝐬𝐚 𝐝𝐞 𝐇𝐨𝐠𝐰𝐚𝐫𝐭𝐬 (𝐩𝐫𝐢𝐧𝐜𝐢𝐩𝐚𝐥):\n🏰 𝐒𝐞𝐠𝐮𝐧𝐝𝐚 𝐜𝐚𝐬𝐚 𝐝𝐞 𝐇𝐨𝐠𝐰𝐚𝐫𝐭𝐬:\n📚 𝐇𝐢𝐬𝐭ó𝐫𝐢𝐚:\n✨ 𝐕𝐚𝐫𝐢𝐧𝐡𝐚:\n🌀 𝐏𝐚𝐭𝐫𝐨𝐧𝐨: \n🐾 𝐀𝐧𝐢𝐦𝐚𝐥 𝐝𝐞 𝐞𝐬𝐭𝐢𝐦𝐚𝐜̧𝐚̃𝐨:\n💗 𝐍𝐨𝐦𝐞 𝐝𝐨 𝐚𝐧𝐢𝐦𝐚𝐥 𝐝𝐞 𝐞𝐬𝐭𝐢𝐦𝐚çã𝐨:\n📷 𝐅𝐨𝐭𝐨 𝐝𝐨 𝐚𝐧𝐢𝐦𝐚𝐥 𝐝𝐞 𝐞𝐬𝐭𝐢𝐦𝐚çã𝐨 (𝐞𝐧𝐯𝐢𝐚𝐫 𝐚𝐜𝐢𝐦𝐚!):\n🩸 𝐒𝐚𝐧𝐠𝐮𝐞:\n💫 𝐅𝐞𝐢𝐭𝐢ç𝐨 𝐟𝐚𝐯𝐨𝐫𝐢𝐭𝐨:\n🧠 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐥𝐢𝐝𝐚𝐝𝐞:\n💘 𝐏𝐚𝐫:\n😔 𝐏𝐨𝐧𝐭𝐨 𝐟𝐫𝐚𝐜𝐨:\n💪 𝐏𝐨𝐧𝐭𝐨 𝐟𝐨𝐫𝐭𝐞:\n🔒 𝐒𝐞𝐠𝐫𝐞𝐝𝐨𝐬:\n😱 𝐌𝐞𝐝𝐨𝐬: \n✨ 𝐒𝐨𝐧𝐡𝐨𝐬:\n🧩 𝐌𝐚𝐧𝐢𝐚𝐬:\n💬 𝐅𝐫𝐚𝐬𝐞𝐬 𝐦𝐚𝐫𝐜𝐚𝐧𝐭𝐞𝐬:\n📸 𝐂𝐨𝐧𝐭𝐚𝐬 𝐧𝐨 𝐈𝐧𝐬𝐭𝐚𝐠𝐫𝐚𝐦:\n💼 𝐓𝐫𝐚𝐛𝐚𝐥𝐡𝐨:\n🎭 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐦 𝐢𝐧𝐭𝐞𝐫𝐩𝐫𝐞𝐭𝐚𝐝𝐨 𝐩𝐨𝐫:\n\n 💗 ~ 𝐅𝐚𝐦í𝐥𝐢𝐚 𝐝𝐨 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐦 ~💗\n\n❤️ 𝐌ã𝐞:\n💙 𝐏𝐚𝐢:\n👨👩👧👦 𝐈𝐫𝐦ã𝐨𝐬(𝐚𝐬):\n👥 𝐏𝐚𝐫𝐞𝐧𝐭𝐞𝐬 𝐢𝐦𝐩𝐨𝐫𝐭𝐚𝐧𝐭𝐞𝐬:")}>
-              👨 Adultos
-            </Button>
-          </div>
-        )}
-        <div className="relative">
-          {/* Dropdown de @mention */}
+
+        <div className="relative group">
           {showMentionMenu && mentionSuggestions.length > 0 && (
-            <div className="absolute bottom-full left-0 right-0 mb-1 bg-card border border-border rounded-xl shadow-xl z-50 overflow-hidden">
-              <div className="p-1.5 text-[10px] text-muted-foreground font-semibold px-3 pt-2 pb-1">🔮 Mencionar membro</div>
-              {mentionSuggestions.map(member => (
-                <button
-                  key={member.user_id}
-                  type="button"
-                  onMouseDown={(e) => { e.preventDefault(); selectMention(member); }}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 hover:bg-secondary/60 transition-colors text-left"
-                >
-                  {member.avatar_url ? (
-                    <img src={member.avatar_url} alt={member.full_name} className="w-7 h-7 rounded-full object-cover border border-border" />
-                  ) : (
-                    <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center text-xs font-heading text-primary">
-                      {member.full_name?.charAt(0) || '?'}
+            <div className="absolute bottom-full left-0 right-0 mb-4 bg-[#0a0a0a] border border-white/10 rounded-[1.5rem] shadow-[0_10px_40px_rgba(0,0,0,0.8)] z-50 overflow-hidden animate-in slide-in-from-bottom-2 duration-300">
+              <div className="p-3 text-[9px] text-yellow-500/60 font-bold uppercase tracking-widest px-4 border-b border-white/5">Invocando Membros... 🔮</div>
+              <div className="max-h-[250px] overflow-y-auto">
+                {mentionSuggestions.map(member => (
+                  <button
+                    key={member.user_id}
+                    type="button"
+                    onMouseDown={(e) => { e.preventDefault(); selectMention(member); }}
+                    className="w-full flex items-center gap-3.5 px-4 py-3 hover:bg-white/5 transition-all text-left border-b border-white/5 last:border-0"
+                  >
+                    <div className="w-9 h-9 rounded-xl overflow-hidden border border-white/10">
+                       {member.avatar_url ? <img src={member.avatar_url} alt={member.username} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-secondary/50 flex items-center justify-center font-heading text-primary">{member.username.charAt(0)}</div>}
                     </div>
-                  )}
-                  <div>
-                    <p className="text-sm font-medium text-foreground leading-none">{member.full_name}</p>
-                    <p className="text-[10px] text-muted-foreground">@{member.username}</p>
-                  </div>
-                </button>
-              ))}
+                    <div>
+                      <p className="text-sm font-medium text-white/90 leading-none mb-1">{member.full_name}</p>
+                      <p className="text-[10px] text-white/30 font-mono tracking-tight">@{member.username}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
           )}
-          <form onSubmit={sendMessage} className="flex gap-2">
-            <Input
-              ref={inputRef}
-              value={input}
-              onChange={handleInputChange}
-              onKeyDown={(e) => {
-                if (e.key === 'Escape') setShowMentionMenu(false);
-              }}
-              placeholder={cooldown > 0 ? `Aguarde ${cooldown}s para conjurar novamente...` : `Enviar mensagem em ${channel.name}... (use @ para mencionar)`}
-              className="flex-1 bg-secondary/50 border-border"
-              disabled={cooldown > 0}
-              autoComplete="off"
-            />
-            <Button type="submit" variant="magical" size="icon" disabled={!input.trim() || cooldown > 0}>
-              {cooldown > 0 ? cooldown : '✨'}
+
+          <form onSubmit={sendMessage} className="flex gap-3 items-center">
+            <div className="relative flex-1">
+               <Input
+                ref={inputRef}
+                value={input}
+                onChange={handleInputChange}
+                onKeyDown={(e) => { if (e.key === 'Escape') setShowMentionMenu(false); }}
+                placeholder={cooldown > 0 ? `Silêncio! Aguarde ${cooldown}s...` : `Escreva sua mensagem... (use @ para mencionar)`}
+                className="w-full h-14 bg-white/5 border-white/10 rounded-2xl px-6 focus:ring-2 focus:ring-primary/20 transition-all text-sm font-serif italic"
+                disabled={cooldown > 0}
+                autoComplete="off"
+              />
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 flex gap-2">
+                 <span className="text-white/10 hover:text-white/30 transition-colors cursor-pointer text-xl">📸</span>
+              </div>
+            </div>
+            
+            <Button type="submit" variant="magical" size="icon" className="w-14 h-14 rounded-2xl shadow-xl shadow-primary/10 active:scale-95 transition-transform" disabled={!input.trim() || cooldown > 0}>
+              {cooldown > 0 ? (
+                <span className="text-xs font-bold text-white/40">{cooldown}</span>
+              ) : (
+                <Zap size={22} className="text-white animate-pulse" />
+              )}
             </Button>
           </form>
         </div>
