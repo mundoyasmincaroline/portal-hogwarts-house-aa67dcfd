@@ -38,7 +38,7 @@ import TimedMysteryChest from "@/components/TimedMysteryChest";
 const NAV_ITEMS = [
   { icon: <Castle size={20} />, label: "O Castelo", path: "/dashboard" },
   { icon: <MapIcon size={20} />, label: "Mapa do Maroto", isMap: true },
-  { icon: <Trophy size={20} />, label: "Sagas Mágicas", path: "/dashboard/sagas" },
+  // { icon: <Trophy size={20} />, label: "Sagas Mágicas", path: "/dashboard/sagas" },
   { icon: <BookOpen size={20} />, label: "Guia do Maroto", path: "/dashboard/guide" },
   { icon: <User size={20} />, label: "Meu Perfil", path: "/dashboard/profile" },
   { icon: <MessageCircle size={20} />, label: "Mensagens", path: "/dashboard/dm" },
@@ -426,7 +426,7 @@ export default function DashboardLayout() {
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 md:p-6">
-          <MagicalActivityFeed />
+          {/* <MagicalActivityFeed /> */}
           <div className="mt-4">
              <Outlet />
           </div>
@@ -436,7 +436,7 @@ export default function DashboardLayout() {
           <MagicalPartyOverlay />
           <GlobalChallengeWatcher />
           <DailyRewardSystem />
-          <TimedMysteryChest />
+          {/* <TimedMysteryChest /> */}
           <MaraudersMap isOpen={mapOpen} onClose={() => setMapOpen(false)} />
         </div>
       </main>
