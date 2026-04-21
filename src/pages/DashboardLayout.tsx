@@ -257,6 +257,13 @@ export default function DashboardLayout() {
 
   return (
     <div className="flex h-screen bg-[#050505] overflow-hidden relative">
+      <MagicalParticles house={profile.house} />
+      <div className={`absolute inset-0 pointer-events-none opacity-20 z-0 transition-all duration-1000 ${
+        profile.house === 'gryffindor' ? 'bg-[radial-gradient(circle_at_20%_20%,rgba(220,38,38,0.15)_0%,transparent_50%)]' :
+        profile.house === 'slytherin' ? 'bg-[radial-gradient(circle_at_20%_20%,rgba(22,163,74,0.15)_0%,transparent_50%)]' :
+        profile.house === 'ravenclaw' ? 'bg-[radial-gradient(circle_at_20%_20%,rgba(37,99,235,0.15)_0%,transparent_50%)]' :
+        'bg-[radial-gradient(circle_at_20%_20%,rgba(202,138,4,0.15)_0%,transparent_50%)]'
+      }`} />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(20,20,20,1)_0%,rgba(0,0,0,1)_100%)] z-0" />
       <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
 
@@ -313,6 +320,28 @@ export default function DashboardLayout() {
                </div>
             </div>
           </Link>
+
+          {/* RPG Progress Section */}
+          <div className="space-y-3 bg-white/[0.02] border border-white/5 rounded-2xl p-4">
+             <div className="flex justify-between items-end mb-1">
+                <div className="flex items-center gap-2">
+                   <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/30 text-primary font-heading text-sm shadow-[0_0_10px_rgba(var(--primary),0.3)]">
+                      {profile.level || 1}
+                   </div>
+                   <span className="text-[9px] font-heading text-white/60 uppercase tracking-widest">Nível Atual</span>
+                </div>
+                <span className="text-[8px] font-heading text-primary uppercase tracking-tighter">{(profile.xp || 0)} / {((profile.level || 1) * 1000)} XP</span>
+             </div>
+             <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
+                <div 
+                    className="h-full bg-gradient-to-r from-primary to-amber-500 shadow-[0_0_10px_rgba(var(--primary),0.5)] transition-all duration-1000" 
+                    style={{ width: `${Math.min(((profile.xp || 0) / ((profile.level || 1) * 1000)) * 100, 100)}%` }} 
+                />
+             </div>
+             <p className="text-[7px] text-center font-heading text-white/20 uppercase tracking-[0.2em] pt-1">
+                {profile.level >= 60 ? "🧙‍♂️ Grão-Mestre Bruxo" : profile.level >= 40 ? "✨ Monitor-Chefe" : profile.level >= 20 ? "📜 Estudante Veterano" : "🌱 Jovem Aprendiz"}
+             </p>
+          </div>
 
           <div className="flex items-center justify-between gap-3">
              <Link to="/dashboard/profile" className="flex items-center gap-3 group">

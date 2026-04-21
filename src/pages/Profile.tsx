@@ -112,6 +112,8 @@ export default function Profile() {
   const { profile: currentUserProfile, user, updateProfile, updatePassword, isAdmin } = useAuth();
   
   const [targetProfile, setTargetProfile] = useState<any>(null);
+  const [characters, setCharacters] = useState<any[]>([]);
+  const [viewingType, setViewingType] = useState<"real" | "oc" | "canon">("real");
   const [friendship, setFriendship] = useState<any>(null);
   const [friends, setFriends] = useState<any[]>([]);
   const [loadingTarget, setLoadingTarget] = useState(false);
@@ -142,7 +144,12 @@ export default function Profile() {
   const [adminEditModal, setAdminEditModal] = useState(false);
 
   const isMe = !userId || userId === user?.id;
-  const profile = isMe ? currentUserProfile : targetProfile;
+  const realProfile = isMe ? currentUserProfile : targetProfile;
+  
+  const activeIdentity = viewingType === 'real' ? realProfile : 
+                         characters.find(c => c.type === viewingType) || realProfile;
+
+  const profile = realProfile; // Keep original reference for some stats
 
   useEffect(() => {
     if (isMe && currentUserProfile) {
@@ -158,14 +165,25 @@ export default function Profile() {
       loadReferrals(user!.id);
       loadBadges(user!.id);
       loadExtras(user!.id);
+      loadCharacters(user!.id);
     } else if (userId) {
       loadTargetProfile();
       loadFriends(userId);
       loadReferrals(userId);
       loadBadges(userId);
       loadExtras(userId);
+      loadCharacters(userId);
     }
   }, [userId, isMe, currentUserProfile]);
+
+  const loadCharacters = async (targetId: string) => {
+    const { data } = await supabase
+      .from("characters")
+      .select("*")
+      .eq("user_id", targetId)
+      .order("created_at");
+    if (data) setCharacters(data);
+  };
 
   const loadTargetProfile = async () => {
     setLoadingTarget(true);
@@ -417,7 +435,7 @@ export default function Profile() {
              </div>
           </div>
           <div className="relative z-10">
-            <XPBar xp={profile.xp} />
+            <XPBar xp={profile.xp} house={profile.house} />
           </div>
           <div className="absolute -top-20 -right-20 w-64 h-64 bg-primary/5 rounded-full blur-[100px] pointer-events-none animate-pulse" />
         </div>
@@ -541,7 +559,7 @@ export default function Profile() {
   } else if (activeTab === "fichas") {
     tabContent = (
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000">
-         <CharacterSheetView userId={profile.user_id} isOwner={isMe} />
+         <CharacterSheetView userId={realProfile.user_id} isOwner={isMe} selectedType={viewingType} />
       </div>
     );
   } else if (activeTab === "album") {
@@ -732,10 +750,41 @@ export default function Profile() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <div className={`fixed inset-0 pointer-events-none opacity-[0.07] transition-all duration-[2000ms] ease-in-out z-0 ${
-        profile.house === 'gryffindor' ? 'bg-red-600' :
-        profile.house === 'slytherin' ? 'bg-green-600' :
-        profile.house === 'ravenclaw' ? 'bg-blue-600' : 'bg-yellow-600'
+      <MagicalParticles house={profile.house} />
+
+      {/* ── SOUL SWITCHER (TRIPLE IDENTITY) ── */}
+      <div className="relative z-30 flex items-center justify-center p-2 bg-black/40 backdrop-blur-3xl rounded-full border border-white/10 shadow-2xl mb-12 max-w-md mx-auto">
+         <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 opacity-50" />
+         
+         {[
+           { id: 'real', label: 'Bruxo Real', icon: <User size={14} /> },
+           { id: 'oc',   label: 'Personagem OC', icon: <Scroll size={14} />, exists: characters.some(c => c.type === 'oc') },
+           { id: 'canon', label: 'Personagem Canon', icon: <Crown size={14} />, exists: characters.some(c => c.type === 'canon') }
+         ].map((soul) => (
+           <button
+             key={soul.id}
+             disabled={soul.id !== 'real' && !soul.exists}
+             onClick={() => { play('click'); setViewingType(soul.id as any); }}
+             className={`flex-1 relative flex items-center justify-center gap-2 py-3 px-4 rounded-full transition-all duration-500 group ${
+               viewingType === soul.id ? "bg-primary text-white shadow-lg scale-105" : 
+               (soul.id !== 'real' && !soul.exists) ? "opacity-20 grayscale cursor-not-allowed" :
+               "text-white/40 hover:text-white hover:bg-white/5"
+             }`}
+           >
+              {soul.icon}
+              <span className="text-[10px] font-heading tracking-widest uppercase hidden sm:inline">{soul.label}</span>
+              {viewingType === soul.id && (
+                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-white rounded-full animate-ping" />
+              )}
+           </button>
+         ))}
+      </div>
+      
+      <div className={`fixed inset-0 pointer-events-none opacity-[0.1] transition-all duration-[2000ms] ease-in-out z-0 ${
+        profile.house === 'gryffindor' ? 'bg-gradient-to-b from-red-600/20 to-transparent' :
+        profile.house === 'slytherin' ? 'bg-gradient-to-b from-green-600/20 to-transparent' :
+        profile.house === 'ravenclaw' ? 'bg-gradient-to-b from-blue-600/20 to-transparent' : 
+        'bg-gradient-to-b from-yellow-600/20 to-transparent'
       }`} />
       
       <div className="relative z-20 flex gap-2 md:gap-4 border-b border-white/5 mb-10 overflow-x-auto pb-4 scrollbar-hide whitespace-nowrap px-2">
@@ -754,12 +803,12 @@ export default function Profile() {
         <div className="relative z-10 flex flex-col items-center">
           <div className="relative mb-8 group/avatar">
             <div className="w-32 h-32 md:w-40 h-40 shrink-0 relative z-10">
-              <SafeImage src={profile.avatar_url} alt={profile.full_name} className="w-full h-full rounded-full object-cover border-2 border-white/10 shadow-inner" fallbackText={profile.full_name[0]} />
+              <SafeImage src={activeIdentity.avatar_url || realProfile.avatar_url} alt={activeIdentity.full_name || realProfile.full_name} className="w-full h-full rounded-full object-cover border-2 border-white/10 shadow-inner" fallbackText={(activeIdentity.full_name || realProfile.full_name)[0]} />
             </div>
             <div className="absolute -bottom-2 -right-2 z-20 scale-125 md:scale-150">
-               <HouseCrest house={profile.house as House} size="sm" />
+               <HouseCrest house={realProfile.house as House} size="sm" />
             </div>
-            {isMe && (
+            {isMe && viewingType === 'real' && (
               <label className="absolute inset-0 z-30 flex items-center justify-center bg-black/60 opacity-0 group-hover/avatar:opacity-100 transition-opacity cursor-pointer rounded-full backdrop-blur-sm">
                 <input type="file" accept="image/*" onChange={uploadAvatar} className="hidden" />
                 <div className="text-center">
@@ -772,11 +821,18 @@ export default function Profile() {
 
           <div className="space-y-4 relative z-10">
             <div className="space-y-1">
-               <div className="flex items-center justify-center gap-2">
-                 <h1 className="text-4xl md:text-5xl font-heading text-white tracking-tighter uppercase drop-shadow-2xl">{profile.full_name}</h1>
-                 {profile.approved && <Badge variant="magical" className="h-6"><CheckCircle2 size={12} className="mr-1" /> Bruxo Oficial</Badge>}
+               <div className="flex flex-col items-center justify-center gap-2">
+                 <div className="flex items-center gap-3">
+                   <h1 className="text-4xl md:text-5xl font-heading text-white tracking-tighter uppercase drop-shadow-2xl">{activeIdentity.full_name || realProfile.full_name}</h1>
+                   {realProfile.approved && viewingType === 'real' && <Badge variant="magical" className="h-6"><CheckCircle2 size={12} className="mr-1" /> Bruxo Oficial</Badge>}
+                 </div>
+                 {viewingType !== 'real' && (
+                   <Badge variant="outline" className="border-primary/40 text-primary text-[8px] uppercase tracking-[0.2em]">
+                      Alma Ativa: {viewingType.toUpperCase()}
+                   </Badge>
+                 )}
                </div>
-               <p className="text-primary font-heading text-xs tracking-[0.4em] uppercase opacity-70">@{profile.username}</p>
+               <p className="text-primary font-heading text-xs tracking-[0.4em] uppercase opacity-70">@{realProfile.username}</p>
             </div>
 
             <p className="text-white/60 max-w-md mx-auto italic font-serif leading-relaxed px-4">

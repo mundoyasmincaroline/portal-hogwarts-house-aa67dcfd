@@ -1,7 +1,12 @@
 import { useEffect, useRef } from "react";
 import { getSeasonalEvent } from "@/lib/seasonal";
+import { type House } from "@/lib/store";
 
-export default function MagicalParticles() {
+interface Props {
+  house?: House | string;
+}
+
+export default function MagicalParticles({ house }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -11,7 +16,11 @@ export default function MagicalParticles() {
     if (!ctx) return;
 
     const season = getSeasonalEvent();
-    const theme = season?.particleTheme || "magic";
+    const seasonTheme = season?.particleTheme || "magic";
+    
+    // House Override
+    let theme = seasonTheme;
+    if (house) theme = `house-${house}`;
 
     let animationId: number;
     const particles: any[] = [];
@@ -23,19 +32,23 @@ export default function MagicalParticles() {
     resize();
     window.addEventListener("resize", resize);
 
-    // Initial setup based on theme
-    const count = theme === "snow" ? 100 : theme === "leaves" ? 30 : 50;
+    // Config based on theme
+    let count = 50;
+    if (theme === "snow") count = 100;
+    else if (theme === "leaves") count = 30;
+    else if (theme?.startsWith("house-")) count = 60;
     
     for (let i = 0; i < count; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        size: theme === "snow" ? Math.random() * 2 + 1 : Math.random() * 2 + 0.5,
-        speedY: theme === "snow" ? (Math.random() * 1 + 0.5) : theme === "leaves" ? (Math.random() * 0.8 + 0.4) : -(Math.random() * 0.3 + 0.1),
-        speedX: theme === "leaves" ? (Math.random() * 1 - 0.5) : 0,
+        size: Math.random() * 2 + 0.5,
+        speedY: theme === "snow" ? (Math.random() * 1 + 0.5) : theme === "leaves" ? (Math.random() * 0.8 + 0.4) : -(Math.random() * 0.4 + 0.2),
+        speedX: theme === "leaves" ? (Math.random() * 1 - 0.5) : (Math.random() * 0.4 - 0.2),
         opacity: Math.random() * 0.5 + 0.2,
         flicker: Math.random() * Math.PI * 2,
         angle: Math.random() * Math.PI * 2,
+        life: Math.random() * 100,
       });
     }
 
@@ -45,6 +58,7 @@ export default function MagicalParticles() {
       particles.forEach((p) => {
         p.y += p.speedY;
         p.x += p.speedX;
+        p.life += 0.05;
         
         if (theme === "leaves") {
           p.x += Math.sin(p.angle) * 0.5;
@@ -52,56 +66,52 @@ export default function MagicalParticles() {
         }
 
         let opacity = p.opacity;
-        if (theme === "magic" || theme === "sparks") {
-          p.flicker += 0.02;
-          opacity = p.opacity * (0.5 + Math.sin(p.flicker) * 0.5);
-        }
+        p.flicker += 0.03;
+        opacity = p.opacity * (0.5 + Math.sin(p.flicker) * 0.5);
 
         // Reset positions
         if ((theme === "snow" || theme === "leaves") && p.y > canvas.height + 10) {
           p.y = -10;
           p.x = Math.random() * canvas.width;
-        } else if ((theme === "magic" || theme === "hearts" || theme === "sparks") && p.y < -10) {
+        } else if (p.y < -10) {
           p.y = canvas.height + 10;
           p.x = Math.random() * canvas.width;
         }
 
         ctx.beginPath();
         
-        if (theme === "hearts") {
-          // Simple heart shape
-          ctx.save();
-          ctx.translate(p.x, p.y);
-          ctx.scale(p.size * 0.5, p.size * 0.5);
-          ctx.moveTo(0, 0);
-          ctx.bezierCurveTo(0, -3, -5, -3, -5, 0);
-          ctx.bezierCurveTo(-5, 3, 0, 5, 0, 8);
-          ctx.bezierCurveTo(0, 5, 5, 3, 5, 0);
-          ctx.bezierCurveTo(5, -3, 0, -3, 0, 0);
-          ctx.fillStyle = `hsla(340, 80%, 60%, ${opacity})`;
-          ctx.fill();
-          ctx.restore();
-        } else {
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          
-          if (theme === "snow") {
-            ctx.fillStyle = `hsla(0, 0%, 100%, ${opacity})`;
-          } else if (theme === "leaves") {
-            ctx.fillStyle = `hsla(30, 80%, 40%, ${opacity})`;
-          } else {
-            ctx.fillStyle = `hsla(43, 65%, 54%, ${opacity})`;
-          }
-          ctx.fill();
+        let color = `hsla(43, 65%, 54%, ${opacity})`; // Default gold
+        let glowColor = `hsla(43, 65%, 54%, ${opacity * 0.2})`;
+
+        if (theme === "snow") {
+          color = `hsla(0, 0%, 100%, ${opacity})`;
+        } else if (theme === "leaves") {
+          color = `hsla(30, 80%, 40%, ${opacity})`;
+        } else if (theme === "house-gryffindor") {
+          color = `hsla(0, 80%, 60%, ${opacity})`; // Red sparks
+          glowColor = `hsla(43, 80%, 50%, ${opacity * 0.3})`; // Gold glow
+        } else if (theme === "house-slytherin") {
+          color = `hsla(145, 80%, 40%, ${opacity})`; // Green bubbles
+          glowColor = `hsla(200, 10%, 70%, ${opacity * 0.3})`; // Silver glow
+        } else if (theme === "house-ravenclaw") {
+          color = `hsla(215, 80%, 60%, ${opacity})`; // Blue stars
+          glowColor = `hsla(0, 0%, 100%, ${opacity * 0.4})`; // White glow
+        } else if (theme === "house-hufflepuff") {
+          color = `hsla(48, 80%, 55%, ${opacity})`; // Yellow dust
+          glowColor = `hsla(30, 60%, 40%, ${opacity * 0.3})`; // Earth glow
         }
 
-        // Glow for magic/sparks
-        if (theme === "magic" || theme === "sparks") {
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
-          ctx.fillStyle = `hsla(43, 65%, 54%, ${opacity * 0.15})`;
-          ctx.fill();
-        }
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+
+        // Glow
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 4, 0, Math.PI * 2);
+        ctx.fillStyle = glowColor;
+        ctx.fill();
       });
+
       animationId = requestAnimationFrame(animate);
     };
     animate();
@@ -110,7 +120,7 @@ export default function MagicalParticles() {
       cancelAnimationFrame(animationId);
       window.removeEventListener("resize", resize);
     };
-  }, []);
+  }, [house]);
 
   return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-10" />;
 }

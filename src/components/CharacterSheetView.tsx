@@ -9,6 +9,7 @@ import { Upload, Link as LinkIcon, Edit2, Save, X } from "lucide-react";
 interface Props {
   userId: string;
   isOwner?: boolean; // true = o próprio membro vendo sua ficha
+  selectedType?: "real" | "oc" | "canon";
 }
 
 const HOUSE_LABELS: Record<string, string> = {
@@ -18,12 +19,21 @@ const HOUSE_LABELS: Record<string, string> = {
   hufflepuff: "🦡 Hufflepuff",
 };
 
-function Field({ label, value }: { label: string; value?: string | number | null }) {
-  if (!value && value !== 0) return null;
+function Field({ label, value, editing, onChange, placeholder }: { label: string; value?: string | number | null; editing?: boolean; onChange?: (val: string) => void; placeholder?: string }) {
+  if (!editing && !value && value !== 0) return null;
   return (
     <div className="space-y-0.5">
       <p className="text-[10px] uppercase tracking-widest text-muted-foreground/70 font-heading">{label}</p>
-      <p className="text-sm text-foreground leading-relaxed">{value}</p>
+      {editing ? (
+        <Input 
+          value={value || ""} 
+          onChange={e => onChange?.(e.target.value)} 
+          placeholder={placeholder || label}
+          className="h-10 bg-white/5 border-white/10 rounded-xl text-xs text-white"
+        />
+      ) : (
+        <p className="text-sm text-foreground leading-relaxed">{value}</p>
+      )}
     </div>
   );
 }
@@ -37,12 +47,13 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-export default function CharacterSheetView({ userId, isOwner }: Props) {
+export default function CharacterSheetView({ userId, isOwner, selectedType }: Props) {
   const [characters, setCharacters] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeChar, setActiveChar] = useState(0);
-  const [editingPhoto, setEditingPhoto] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [editForm, setEditForm] = useState<any>({});
   const [tempUrl, setTempUrl] = useState("");
 
   useEffect(() => {
@@ -52,10 +63,17 @@ export default function CharacterSheetView({ userId, isOwner }: Props) {
       .eq("user_id", userId)
       .order("created_at")
       .then(({ data }) => {
-        if (data) setCharacters(data);
+        if (data) {
+          setCharacters(data);
+          // Auto-select by type if provided
+          if (selectedType && selectedType !== 'real') {
+            const idx = data.findIndex(c => c.character_type === selectedType);
+            if (idx !== -1) setActiveChar(idx);
+          }
+        }
         setLoading(false);
       });
-  }, [userId]);
+  }, [userId, selectedType]);
 
   if (loading) return <p className="text-center text-muted-foreground py-8 text-sm">Consultando registros do Ministério...</p>;
 
@@ -98,26 +116,33 @@ export default function CharacterSheetView({ userId, isOwner }: Props) {
     }
   };
 
-  const saveUrl = async () => {
-    if (!tempUrl.trim()) return;
-    setUploading(true);
+  const handleSave = async () => {
+    if (!char) return;
+    setSaving(true);
     try {
-      const { error } = await supabase.from("characters").update({ avatar_url: tempUrl } as never).eq("id", char.id);
+      const { id, user_id, created_at, updated_at, ...rest } = editForm;
+      const { error } = await supabase.from("characters").update(rest as never).eq("id", char.id);
       if (error) throw error;
-      setCharacters(prev => prev.map((c, i) => i === activeChar ? { ...c, avatar_url: tempUrl } : c));
-      toast.success("URL da foto atualizada! 🪄");
-      setEditingPhoto(false);
+      
+      setCharacters(prev => prev.map((c, i) => i === activeChar ? { ...c, ...rest } : c));
+      toast.success("Ficha atualizada com sucesso! ✨");
+      setIsEditing(false);
     } catch (err: any) {
-      toast.error("Erro ao salvar URL: " + err.message);
+      toast.error("Erro ao salvar: " + err.message);
     } finally {
-      setUploading(false);
+      setSaving(false);
     }
+  };
+
+  const startEditing = () => {
+    setEditForm(char);
+    setIsEditing(true);
   };
 
   return (
     <div className="space-y-4">
-      {/* Tab selector se tiver mais de 1 ficha */}
-      {characters.length > 1 && (
+      {/* Tab selector se tiver mais de 1 ficha e não estiver sendo controlado externamente */}
+      {!selectedType && characters.length > 1 && (
         <div className="flex gap-3 overflow-x-auto pb-4 no-scrollbar">
           {characters.map((c, i) => (
             <button
@@ -203,7 +228,24 @@ export default function CharacterSheetView({ userId, isOwner }: Props) {
                     {char.character_type === "oc" ? "Personagem Original" : "Personagem Canon"}
                   </span>
                 </div>
-                <h2 className="font-heading text-4xl md:text-6xl text-white tracking-tighter drop-shadow-2xl">{char.full_name}</h2>
+                <div className="flex flex-col md:flex-row items-center gap-4 justify-center md:justify-start">
+                   <h2 className="font-heading text-4xl md:text-6xl text-white tracking-tighter drop-shadow-2xl">{char.full_name}</h2>
+                   {isOwner && !isEditing && (
+                     <Button size="sm" variant="outline" className="h-8 rounded-xl border-white/10 text-white/40 hover:text-white hover:bg-white/10 font-heading text-[8px] tracking-widest uppercase" onClick={startEditing}>
+                        Editar Ficha <Edit2 size={12} className="ml-2" />
+                     </Button>
+                   )}
+                   {isEditing && (
+                     <div className="flex gap-2">
+                        <Button size="sm" className="h-8 rounded-xl bg-green-600 hover:bg-green-500 text-white font-heading text-[8px] tracking-widest uppercase" onClick={handleSave} disabled={saving}>
+                           {saving ? "Salvando..." : "Salvar"} <Save size={12} className="ml-2" />
+                        </Button>
+                        <Button size="sm" variant="outline" className="h-8 rounded-xl border-white/10 text-white/40 hover:text-white font-heading text-[8px] tracking-widest uppercase" onClick={() => setIsEditing(false)}>
+                           Cancelar <X size={12} className="ml-2" />
+                        </Button>
+                     </div>
+                   )}
+                </div>
               </div>
 
               <div className="flex flex-wrap gap-3 mt-4 justify-center md:justify-start">
@@ -247,9 +289,11 @@ export default function CharacterSheetView({ userId, isOwner }: Props) {
                  <h4 className="font-heading text-xs uppercase tracking-[0.3em] text-white/60">Registros Civis</h4>
               </div>
               <div className="grid grid-cols-1 gap-6">
-                <Field label="Status Sanguíneo" value={char.blood_status} />
-                <Field label="Faceclaim Oficial" value={char.actor_faceclaim} />
-                <Field label="Instagram Bruxo" value={char.instagram} />
+                <Field label="Nome Completo" value={isEditing ? editForm.full_name : char.full_name} editing={isEditing} onChange={v => setEditForm({...editForm, full_name: v})} />
+                <Field label="Idade" value={isEditing ? editForm.age : char.age} editing={isEditing} onChange={v => setEditForm({...editForm, age: v})} />
+                <Field label="Status Sanguíneo" value={isEditing ? editForm.blood_status : char.blood_status} editing={isEditing} onChange={v => setEditForm({...editForm, blood_status: v})} />
+                <Field label="Faceclaim Oficial" value={isEditing ? editForm.actor_faceclaim : char.actor_faceclaim} editing={isEditing} onChange={v => setEditForm({...editForm, actor_faceclaim: v})} />
+                <Field label="Instagram Bruxo" value={isEditing ? editForm.instagram : char.instagram} editing={isEditing} onChange={v => setEditForm({...editForm, instagram: v})} />
               </div>
             </div>
 
@@ -262,22 +306,31 @@ export default function CharacterSheetView({ userId, isOwner }: Props) {
                  <h4 className="font-heading text-xs uppercase tracking-[0.3em] text-white/60">Artes Mágicas</h4>
               </div>
               <div className="grid grid-cols-1 gap-6">
-                <Field label="Varinha" value={char.wand} />
-                <Field label="Forma do Patrono" value={char.patronus} />
-                <Field label="Feitiço Assinatura" value={char.favorite_spell} />
-                <Field label="Matéria de Estudo" value={char.favorite_class} />
+                <Field label="Varinha" value={isEditing ? editForm.wand : char.wand} editing={isEditing} onChange={v => setEditForm({...editForm, wand: v})} />
+                <Field label="Forma do Patrono" value={isEditing ? editForm.patronus : char.patronus} editing={isEditing} onChange={v => setEditForm({...editForm, patronus: v})} />
+                <Field label="Feitiço Assinatura" value={isEditing ? editForm.favorite_spell : char.favorite_spell} editing={isEditing} onChange={v => setEditForm({...editForm, favorite_spell: v})} />
+                <Field label="Matéria de Estudo" value={isEditing ? editForm.favorite_class : char.favorite_class} editing={isEditing} onChange={v => setEditForm({...editForm, favorite_class: v})} />
               </div>
             </div>
           </div>
 
           {/* Personalidade Hero Section */}
-          {char.personality && (
+          {(char.personality || isEditing) && (
             <div className="relative p-10 bg-white/5 rounded-[2.5rem] border border-white/10 overflow-hidden group/personality">
               <div className="absolute top-0 right-0 p-8 text-6xl opacity-5 group-hover/personality:rotate-12 transition-transform duration-1000 select-none">🧠</div>
               <h4 className="font-heading text-[10px] uppercase tracking-[0.4em] text-primary mb-6">Essência e Comportamento</h4>
-              <p className="text-xl text-white/80 leading-relaxed font-serif italic relative z-10">
-                "{char.personality}"
-              </p>
+              {isEditing ? (
+                <Textarea 
+                  value={editForm.personality || ""} 
+                  onChange={e => setEditForm({...editForm, personality: e.target.value})}
+                  className="bg-black/40 border-white/10 rounded-2xl min-h-[120px] text-white italic font-serif"
+                  placeholder="Descreva a personalidade..."
+                />
+              ) : (
+                <p className="text-xl text-white/80 leading-relaxed font-serif italic relative z-10">
+                  "{char.personality}"
+                </p>
+              )}
             </div>
           )}
 
@@ -291,10 +344,10 @@ export default function CharacterSheetView({ userId, isOwner }: Props) {
                  <h4 className="font-heading text-xs uppercase tracking-[0.3em] text-white/60">Equilíbrio Bruxo</h4>
               </div>
               <div className="grid grid-cols-1 gap-6">
-                <Field label="Virtude Suprema" value={char.strength} />
-                <Field label="Fraqueza Fatal" value={char.weakness} />
-                <Field label="Medos Profundos" value={char.fears} />
-                <Field label="Grandes Sonhos" value={char.dreams} />
+                <Field label="Virtude Suprema" value={isEditing ? editForm.strength : char.strength} editing={isEditing} onChange={v => setEditForm({...editForm, strength: v})} />
+                <Field label="Fraqueza Fatal" value={isEditing ? editForm.weakness : char.weakness} editing={isEditing} onChange={v => setEditForm({...editForm, weakness: v})} />
+                <Field label="Medos Profundos" value={isEditing ? editForm.fears : char.fears} editing={isEditing} onChange={v => setEditForm({...editForm, fears: v})} />
+                <Field label="Grandes Sonhos" value={isEditing ? editForm.dreams : char.dreams} editing={isEditing} onChange={v => setEditForm({...editForm, dreams: v})} />
               </div>
             </div>
 
@@ -307,21 +360,32 @@ export default function CharacterSheetView({ userId, isOwner }: Props) {
                  <h4 className="font-heading text-xs uppercase tracking-[0.3em] text-white/60">Linhagem & Companhia</h4>
               </div>
               <div className="grid grid-cols-1 gap-6">
-                <Field label="Pai & Mãe" value={`${char.family_father || '-'} / ${char.family_mother || '-'}`} />
-                <Field label="Pet / Familiar" value={`${char.pet || '-'} (${char.pet_name || 'Sem nome'})`} />
-                <Field label="Citações" value={char.quotes} />
+                <Field label="Pai" value={isEditing ? editForm.family_father : char.family_father} editing={isEditing} onChange={v => setEditForm({...editForm, family_father: v})} />
+                <Field label="Mãe" value={isEditing ? editForm.family_mother : char.family_mother} editing={isEditing} onChange={v => setEditForm({...editForm, family_mother: v})} />
+                <Field label="Pet / Familiar" value={isEditing ? editForm.pet : char.pet} editing={isEditing} onChange={v => setEditForm({...editForm, pet: v})} />
+                <Field label="Nome do Pet" value={isEditing ? editForm.pet_name : char.pet_name} editing={isEditing} onChange={v => setEditForm({...editForm, pet_name: v})} />
+                <Field label="Citações Memoráveis" value={isEditing ? editForm.quotes : char.quotes} editing={isEditing} onChange={v => setEditForm({...editForm, quotes: v})} />
               </div>
             </div>
           </div>
 
           {/* Segredos (Se for o dono ou admin) */}
-          {(char.secrets) && (
+          {(char.secrets || isEditing) && (
             <div className="p-8 bg-red-950/20 rounded-[2rem] border border-red-500/20 text-center relative overflow-hidden group/secrets">
               <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 via-transparent to-red-500/5 opacity-0 group-hover/secrets:opacity-100 transition-opacity" />
               <h4 className="font-heading text-[10px] uppercase tracking-[0.5em] text-red-500/60 mb-4 flex items-center justify-center gap-3">
                  <Lock size={12} /> ARQUIVO RESTRITO
               </h4>
-              <p className="text-sm text-red-400/80 italic font-mono relative z-10">{char.secrets}</p>
+              {isEditing ? (
+                <Textarea 
+                  value={editForm.secrets || ""} 
+                  onChange={e => setEditForm({...editForm, secrets: e.target.value})}
+                  className="bg-black/40 border-red-500/10 rounded-xl min-h-[80px] text-red-400 font-mono"
+                  placeholder="Segredos do personagem..."
+                />
+              ) : (
+                <p className="text-sm text-red-400/80 italic font-mono relative z-10">{char.secrets}</p>
+              )}
             </div>
           )}
         </div>

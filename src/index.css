@@ -124,10 +124,40 @@
 
 /* Gold gradient text */
 .text-gold-gradient {
-  background: linear-gradient(135deg, hsl(43 80% 55%), hsl(43 65% 70%), hsl(43 80% 55%));
+  background: linear-gradient(
+    to bottom right,
+    #BF953F 0%,
+    #FCF6BA 20%,
+    #B38728 40%,
+    #FBF5B7 60%,
+    #AA771C 80%,
+    #BF953F 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  filter: drop-shadow(0 2px 10px rgba(184, 134, 11, 0.3));
+}
+
+.gold-card {
+  background: linear-gradient(135deg, rgba(184, 134, 11, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  box-shadow: 0 0 20px rgba(184, 134, 11, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.gold-card::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+  transform: rotate(45deg);
+  animation: shimmer 6s infinite linear;
+  pointer-events: none;
 }
 
 /* Glass effect */

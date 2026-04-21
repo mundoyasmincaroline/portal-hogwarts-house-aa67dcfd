@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useMagicalSound } from "@/hooks/useMagicalSound";
 import { Button } from "@/components/ui/button";
 import MagicalParticles from "@/components/MagicalParticles";
 import { type House } from "@/lib/store";
@@ -24,6 +25,7 @@ const FEATURES = [
 
 export default function Landing() {
   const navigate = useNavigate();
+  const { play } = useMagicalSound();
   const [showContent, setShowContent] = useState(false);
   const [memberCount, setMemberCount] = useState<number | null>(null);
   const [scrollY, setScrollY] = useState(0);
@@ -77,9 +79,7 @@ export default function Landing() {
   if (hour >= 5 && hour < 12) timeOfDay = "morning";
   else if (hour >= 12 && hour < 18) timeOfDay = "afternoon";
 
-  let bgUrl = "https://images.unsplash.com/photo-1547756536-cde3673fa2e5?q=80&w=2000"; // Night
-  if (timeOfDay === "morning") bgUrl = "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=2000"; // Morning
-  else if (timeOfDay === "afternoon") bgUrl = "https://images.unsplash.com/photo-1513622470522-26c3c8a854bc?q=80&w=2000"; // Afternoon
+  const bgUrl = "/hogwarts_monster_hero_1776800242941.png";
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[#050505] selection:bg-primary/30 selection:text-primary">
@@ -147,39 +147,35 @@ export default function Landing() {
 
         <div className={`relative z-20 w-full max-w-6xl transition-all duration-1000 delay-300 ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"}`}>
           
-          {/* Floating Badge */}
-          <div className="inline-flex items-center gap-2 md:gap-3 bg-white/5 backdrop-blur-3xl border border-white/10 rounded-full px-4 md:px-6 py-1.5 md:py-2 mb-6 md:mb-10 shadow-2xl animate-float">
+          {/* Floating Badge - Next Gen */}
+          <div className="inline-flex items-center gap-2 md:gap-3 bg-white/5 backdrop-blur-3xl border border-white/10 rounded-full px-4 md:px-6 py-2 mb-8 md:mb-12 shadow-[0_0_30px_rgba(0,0,0,0.5)] animate-float">
              <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-primary animate-ping" />
-             <span className="text-[8px] md:text-[10px] font-heading text-white/70 uppercase tracking-[0.2em] md:tracking-[0.4em]">Experiência Imersiva • Temporada 2024</span>
+             <span className="text-[8px] md:text-[10px] font-heading text-white tracking-[0.4em] uppercase">Mundo Aberto • Roleplay Imersivo</span>
           </div>
 
-          <h1 className="relative font-heading text-4xl sm:text-6xl md:text-8xl lg:text-[10rem] text-gold-gradient mb-4 md:mb-6 tracking-tighter leading-tight md:leading-none drop-shadow-[0_10px_30px_rgba(0,0,0,0.9)] animate-in zoom-in-95 duration-1000 px-2">
-            Hogwarts House
-            <div className="absolute -top-10 -right-10 hidden lg:block animate-bounce-slow">
-               <Sparkles size={60} className="text-yellow-400 opacity-30 blur-sm" />
-            </div>
+          <h1 className="relative font-heading text-6xl sm:text-7xl md:text-8xl lg:text-[13rem] text-gold-gradient mb-4 md:mb-6 tracking-tighter leading-[0.75] drop-shadow-[0_20px_60px_rgba(0,0,0,1)] animate-in zoom-in-95 duration-1000 px-2 group cursor-default">
+            <span className="animate-shimmer bg-[length:200%_auto] inline-block hover:scale-[1.02] transition-transform duration-700">Hogwarts</span><br/>
+            <span className="text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.15)] inline-block hover:scale-[1.02] transition-transform duration-700">House</span>
           </h1>
 
-          <div className="flex flex-col items-center gap-4 md:gap-6 mb-12 md:mb-16 px-4">
-             <div className="flex items-center justify-center gap-3 md:gap-6">
-                <div className="h-px w-12 md:w-24 bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-                <p className="text-[10px] md:text-lg font-heading text-primary uppercase tracking-[0.3em] md:tracking-[0.6em] opacity-90 drop-shadow-[0_0_15px_rgba(var(--primary),0.5)]">Onde a Magia Ganha Vida</p>
-                <div className="h-px w-12 md:w-24 bg-gradient-to-l from-transparent via-primary/50 to-transparent" />
+          <div className="flex flex-col items-center gap-4 md:gap-8 mb-14 md:mb-20 px-4">
+             <div className="flex items-center justify-center gap-4 md:gap-8">
+                <div className="h-[2px] w-12 md:w-32 bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+                <p className="text-[10px] md:text-xl font-heading text-primary uppercase tracking-[0.4em] md:tracking-[0.8em] drop-shadow-[0_0_20px_rgba(251,191,36,0.6)]">Viva sua própria lenda</p>
+                <div className="h-[2px] w-12 md:w-32 bg-gradient-to-l from-transparent via-primary/60 to-transparent" />
              </div>
-             <p className="text-white/40 max-w-lg md:max-w-2xl text-[10px] md:text-base font-serif italic leading-relaxed">
-               "A carta que você sempre esperou não vem por correio coruja, ela está esperando por você aqui."
-             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center scale-100 md:scale-110 px-6">
+          <div className="flex flex-col sm:flex-row gap-6 md:gap-8 justify-center items-center scale-100 md:scale-110 px-6">
              <button 
-              onClick={() => navigate("/register")}
-              className="w-full sm:w-auto group relative px-10 md:px-16 py-4 md:py-6 rounded-2xl md:rounded-3xl bg-primary text-white font-heading text-sm md:text-xl tracking-[0.2em] overflow-hidden shadow-[0_15px_40px_rgba(var(--primary),0.4)] hover:scale-105 hover:shadow-primary/60 transition-all active:scale-95">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-              <div className="flex items-center justify-center gap-3 md:gap-4">
-                 <Wand2 size={18} className="md:size-[24px] group-hover:rotate-12 transition-transform" />
-                 ENTRAR NO CASTELO
-                 <ChevronRight size={18} className="md:size-[24px]" />
+              onClick={() => { play('click'); navigate("/register"); }}
+              onMouseEnter={() => play('hover')}
+              className="w-full sm:w-auto group relative px-12 md:px-20 py-5 md:py-8 rounded-2xl md:rounded-[2rem] bg-primary text-white font-heading text-sm md:text-2xl tracking-[0.3em] overflow-hidden shadow-[0_20px_50px_rgba(var(--primary),0.5)] hover:scale-105 hover:shadow-primary/70 transition-all duration-500 active:scale-95 border border-white/20">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+              <div className="flex items-center justify-center gap-3 md:gap-5">
+                 <Wand2 size={24} className="md:size-[32px] group-hover:rotate-12 group-hover:scale-110 transition-all duration-500" />
+                 SOLICITAR VAGA
+                 <ChevronRight size={24} className="md:size-[32px] group-hover:translate-x-2 transition-transform" />
               </div>
             </button>
           </div>
@@ -192,78 +188,90 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── LIVE DATA BAR (MONSTER QUALITY) ── */}
-      <section className="relative z-30 -mt-10 md:-mt-20 px-4 md:px-6">
-         <div className="max-w-6xl mx-auto glass rounded-[2.5rem] md:rounded-[4rem] border border-white/10 shadow-[0_30px_80px_rgba(0,0,0,0.8)] p-8 md:p-14 overflow-hidden relative group">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-yellow-500/5" />
+      {/* ── LIVE DATA BAR (TRIPLE-A GLORY) ── */}
+      <section className="relative z-30 -mt-10 md:-mt-24 px-4 md:px-6">
+         <div className="max-w-7xl mx-auto glass rounded-[3rem] md:rounded-[5rem] border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.9)] p-8 md:p-16 overflow-hidden relative group">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(251,191,36,0.1),transparent_70%)]" />
             
-            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-12 items-center">
+            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-16 items-center">
                
-               <div className="lg:col-span-4 space-y-6 md:space-y-8 text-center lg:text-left">
-                  {/* Minimalist Stats (From user screenshot) */}
-                  <div className="flex items-center justify-center lg:justify-start gap-4 md:gap-8 opacity-80">
-                     <div className="text-center">
-                        <p className="font-heading text-xl md:text-3xl text-gold-gradient leading-none">{stats.wizards}</p>
-                        <p className="text-[7px] md:text-[9px] text-white/30 font-heading tracking-widest mt-1">BRUXOS</p>
+               <div className="lg:col-span-4 space-y-8 md:space-y-12 text-center lg:text-left">
+                  <div className="space-y-4">
+                     <div className="flex items-center justify-center lg:justify-start gap-4">
+                        <div className="w-12 h-12 md:w-16 md:h-16 bg-yellow-500/10 rounded-2xl border border-yellow-500/30 flex items-center justify-center shadow-[0_0_30px_rgba(234,179,8,0.2)]">
+                           <Trophy size={28} className="text-yellow-400 animate-pulse-glow" />
+                        </div>
+                        <div>
+                           <h3 className="font-heading text-2xl md:text-3xl text-white tracking-tighter uppercase">Copa das Casas</h3>
+                           <p className="text-[10px] font-heading text-primary uppercase tracking-[0.4em] opacity-60">Status de Glória • 2024</p>
+                        </div>
                      </div>
-                     <div className="h-8 w-px bg-white/10" />
-                     <div className="text-center">
-                        <p className="font-heading text-xl md:text-3xl text-gold-gradient leading-none">{stats.houses}</p>
-                        <p className="text-[7px] md:text-[9px] text-white/30 font-heading tracking-widest mt-1">CASAS</p>
+                     <p className="text-white/40 text-xs md:text-base font-serif italic leading-relaxed">
+                        "Onde cada ponto conquistado ecoa pelos corredores do castelo e consagra seu nome na história."
+                     </p>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4 md:gap-8 border-t border-white/5 pt-8">
+                     <div className="text-center lg:text-left">
+                        <p className="font-heading text-2xl md:text-4xl text-gold-gradient tracking-tighter leading-none">{stats.wizards}</p>
+                        <p className="text-[8px] md:text-[10px] text-white/30 font-heading tracking-widest mt-2 uppercase">Lendas</p>
                      </div>
-                     <div className="h-8 w-px bg-white/10" />
-                     <div className="text-center">
-                        <p className="font-heading text-xl md:text-3xl text-gold-gradient leading-none">{stats.items}+</p>
-                        <p className="text-[7px] md:text-[9px] text-white/30 font-heading tracking-widest mt-1">ITENS</p>
+                     <div className="text-center lg:text-left">
+                        <p className="font-heading text-2xl md:text-4xl text-gold-gradient tracking-tighter leading-none">4</p>
+                        <p className="text-[8px] md:text-[10px] text-white/30 font-heading tracking-widest mt-2 uppercase">Casas</p>
                      </div>
-                     <div className="h-8 w-px bg-white/10" />
-                     <div className="text-center">
-                        <p className="font-heading text-xl md:text-3xl text-gold-gradient leading-none">∞</p>
-                        <p className="text-[7px] md:text-[9px] text-white/30 font-heading tracking-widest mt-1">MAGIA</p>
+                     <div className="text-center lg:text-left">
+                        <p className="font-heading text-2xl md:text-4xl text-gold-gradient tracking-tighter leading-none">{stats.items}+</p>
+                        <p className="text-[8px] md:text-[10px] text-white/30 font-heading tracking-widest mt-2 uppercase">Relíquias</p>
                      </div>
                   </div>
 
-                  <div className="flex flex-col lg:flex-row items-center gap-4 border-t border-white/5 pt-6">
-                     <div className="w-12 h-12 md:w-14 md:h-14 bg-yellow-500/10 rounded-xl border border-yellow-500/30 flex items-center justify-center shadow-2xl">
-                        <Trophy size={20} className="text-yellow-400 animate-pulse" />
+                  {/* Next Tournament - High End */}
+                  <div className="relative overflow-hidden rounded-3xl bg-red-950/20 border border-red-500/20 p-6 group/event cursor-pointer hover:bg-red-950/30 transition-all duration-500">
+                     <div className="absolute top-0 right-0 p-4 opacity-10 group-hover/event:scale-125 transition-transform duration-700">
+                        <Zap size={60} className="text-red-500" />
                      </div>
-                     <div>
-                        <h3 className="font-heading text-lg md:text-xl text-white tracking-tighter">Copa das Casas</h3>
-                        <p className="text-[8px] font-heading text-primary uppercase tracking-widest">Tempo Real • 2024</p>
-                     </div>
-                  </div>
-
-                  {/* Countdown Timer */}
-                  <div className="bg-white/5 rounded-2xl p-4 border border-white/5 flex items-center justify-between gap-4">
-                     <div>
-                        <p className="text-[8px] font-heading text-white/40 uppercase tracking-widest mb-1">Próximo Evento</p>
-                        <p className="text-[10px] font-heading text-white tracking-tight italic">Baile de Inverno</p>
-                     </div>
-                     <div className="flex gap-2">
-                        {[timeLeft.days, timeLeft.hours, timeLeft.mins, timeLeft.secs].map((t, i) => (
-                           <div key={i} className="flex flex-col items-center">
-                              <span className="font-heading text-sm text-primary">{String(t).padStart(2, '0')}</span>
-                              <span className="text-[6px] text-white/20 font-heading">{['D', 'H', 'M', 'S'][i]}</span>
-                           </div>
-                        ))}
+                     <div className="flex flex-col gap-4">
+                        <div className="flex justify-between items-center">
+                           <span className="text-[10px] font-heading text-red-400 uppercase tracking-[0.3em]">Próximo Torneio</span>
+                           <span className="text-[10px] font-heading text-white/40 italic">Baile de Inverno</span>
+                        </div>
+                        <div className="flex gap-4">
+                           {[timeLeft.days, timeLeft.hours, timeLeft.mins, timeLeft.secs].map((t, i) => (
+                              <div key={i} className="flex-1 text-center">
+                                 <p className="text-2xl md:text-3xl font-heading text-white leading-none">{String(t).padStart(2, '0')}</p>
+                                 <p className="text-[8px] text-white/20 font-heading mt-1">{['DIAS', 'HORAS', 'MINS', 'SEGS'][i]}</p>
+                              </div>
+                           ))}
+                        </div>
                      </div>
                   </div>
                </div>
 
-               <div className="lg:col-span-8 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+               <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
                   {HOUSES.map((house) => {
                     const points = housePoints[house.id] || 0;
                     const maxPoints = Math.max(...Object.values(housePoints), 100);
                     const progress = (points / maxPoints) * 100;
                     return (
-                      <div key={house.name} className={`glass rounded-2xl md:rounded-3xl p-4 md:p-6 border border-white/5 flex flex-col items-center gap-3 md:gap-4 hover:bg-white/5 transition-all hover:-translate-y-1 shadow-xl`}>
-                        <span className="text-3xl md:text-4xl filter drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">{house.animal}</span>
-                        <div className="text-center">
-                            <p className="text-[7px] md:text-[9px] font-heading text-white/30 uppercase mb-0.5 md:mb-1">{house.name}</p>
-                            <p className="font-heading text-sm md:text-xl text-white">{points}</p>
+                      <div key={house.name} className={`glass rounded-[2rem] md:rounded-[3rem] p-8 border border-white/5 bg-white/[0.01] hover:bg-white/[0.04] transition-all duration-700 hover:-translate-y-2 group/h shadow-2xl`}>
+                        <div className="flex items-center justify-between mb-6">
+                           <div className="flex items-center gap-4">
+                              <span className="text-4xl md:text-6xl group-hover/h:scale-110 transition-transform duration-700 filter drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">{house.animal}</span>
+                              <div>
+                                 <p className="text-[10px] md:text-xs font-heading text-white/30 uppercase tracking-[0.2em]">{house.name}</p>
+                                 <h4 className="text-xl md:text-2xl font-heading text-white">{points} PTS</h4>
+                              </div>
+                           </div>
+                           <div className="w-1.5 h-1.5 rounded-full bg-primary animate-ping" />
                         </div>
-                        <div className="h-1 md:h-1.5 w-full bg-black/40 rounded-full overflow-hidden border border-white/5">
-                            <div className={`h-full bg-gradient-to-r ${house.color}`} style={{ width: `${Math.max(progress, 5)}%` }} />
+                        <div className="h-2.5 w-full bg-black/40 rounded-full overflow-hidden border border-white/5 p-[2px]">
+                            <div 
+                              className={`h-full rounded-full bg-gradient-to-r ${house.color} transition-all duration-1000 ease-out relative shadow-[0_0_20px_rgba(var(--primary),0.3)]`} 
+                              style={{ width: `${Math.max(progress, 5)}%` }} 
+                            >
+                               <div className="absolute inset-0 bg-white/20 opacity-0 group-hover/h:opacity-100 transition-opacity animate-shimmer" />
+                            </div>
                         </div>
                       </div>
                     );

@@ -296,20 +296,20 @@ export default function GringottsStore() {
             </div>
           </div>
           
-          {/* Balance Card - Monster 3D */}
+          {/* Balance Card - Monster 3D Supreme Gold */}
           <div className="w-full max-w-sm relative group/card">
-            <div className="absolute inset-0 bg-yellow-400/20 blur-3xl opacity-0 group-hover/card:opacity-100 transition-opacity" />
-            <div className="relative glass bg-black/60 border border-white/10 rounded-[3rem] p-10 text-center backdrop-blur-3xl shadow-2xl transform transition-transform group-hover/card:rotate-2">
-               <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-b from-yellow-500/20 to-transparent rounded-2xl border border-yellow-500/30 flex items-center justify-center shadow-inner">
-                  <Coins size={40} className="text-yellow-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)]" />
+            <div className="absolute inset-0 bg-yellow-400/30 blur-3xl opacity-0 group-hover/card:opacity-100 transition-opacity" />
+            <div className="relative gold-card rounded-[3rem] p-10 text-center shadow-2xl transform transition-transform group-hover/card:rotate-2">
+               <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-yellow-400 to-amber-600 rounded-[2rem] flex items-center justify-center shadow-[0_10px_40px_rgba(184,134,11,0.5)] animate-float border-2 border-white/20">
+                  <Coins size={48} className="text-black" />
                </div>
-               <p className="text-white/40 text-[10px] font-heading uppercase tracking-[0.4em] mb-2">Seu Tesouro</p>
-               <h2 className="text-5xl font-heading text-white mb-2 tracking-tighter drop-shadow-2xl">
+               <p className="text-yellow-500/80 text-[10px] font-heading uppercase tracking-[0.4em] mb-2">Seu Tesouro Real</p>
+               <h2 className="text-6xl font-heading text-gold-gradient mb-2 tracking-tighter drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
                   {galeons.toLocaleString("pt-BR")}
                </h2>
-               <p className="text-xs text-yellow-500/60 font-heading uppercase tracking-widest mb-8">Galeões de Ouro</p>
-               <Button variant="outline" className="w-full h-14 border-white/10 text-white hover:bg-white/5 rounded-2xl font-heading text-[10px] tracking-widest" onClick={() => setTab("galeons")}>
-                  ADQUIRIR MAIS
+               <p className="text-xs text-white/40 font-heading uppercase tracking-widest mb-8 font-light">Galeões de Ouro Maciço</p>
+               <Button variant="magical" className="w-full h-14 rounded-2xl font-heading text-[10px] tracking-widest shadow-lg" onClick={() => setTab("galeons")}>
+                  ADQUIRIR MAIS RIQUEZA
                </Button>
             </div>
           </div>
@@ -530,33 +530,32 @@ export default function GringottsStore() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
             {GALEON_PACKAGES.map((pkg, i) => (
               <div key={pkg.id}
-                className={`group/pkg relative overflow-hidden rounded-[2.5rem] bg-white/[0.03] border ${pkg.border} p-1 transition-all duration-500 hover:-translate-y-4 hover:bg-white/[0.06] ${pkg.glow}`}>
-                <div className="relative glass h-full rounded-[2.3rem] p-6 flex flex-col items-center text-center overflow-hidden">
+                className={`group/pkg relative overflow-hidden rounded-[2.5rem] p-1 transition-all duration-500 hover:-translate-y-4 ${pkg.glow}`}>
+                <div className={`relative ${i >= 2 ? 'gold-card' : 'glass bg-white/[0.03]'} h-full rounded-[2.3rem] p-6 flex flex-col items-center text-center overflow-hidden border ${pkg.border}`}>
                   <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-0 group-hover/pkg:opacity-100 transition-opacity" />
                   
                   {pkg.badge && (
-                    <div className="absolute top-0 inset-x-0 bg-gradient-to-r from-yellow-500 to-amber-600 text-black text-[9px] font-heading uppercase tracking-[0.2em] py-2 shadow-lg">
+                    <div className="absolute top-0 inset-x-0 bg-gradient-to-r from-yellow-500 to-amber-600 text-black text-[9px] font-heading uppercase tracking-[0.2em] py-2 shadow-lg z-20">
                       {pkg.badge}
                     </div>
                   )}
                   
                   <div className="relative w-32 h-32 mb-6 mt-4 group-hover/pkg:scale-110 transition-transform duration-700">
                     <div className="absolute inset-0 bg-yellow-400/20 blur-3xl opacity-0 group-hover/pkg:opacity-100 transition-opacity" />
-                    <SafeImage src={pkg.image_url} alt={pkg.name} className="w-full h-full object-contain relative z-10 drop-shadow-2xl" />
+                    <SafeImage src={pkg.image_url} alt={pkg.name} className="w-full h-full object-contain relative z-10 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]" />
                   </div>
-
                   <div className="space-y-4 flex-1 w-full">
                      <div className="space-y-1">
-                        <h3 className="font-heading text-base text-white/80 group-hover/pkg:text-white transition-colors">{pkg.name.toUpperCase()}</h3>
-                        <p className="text-4xl font-heading text-yellow-400 drop-shadow-2xl">🪙 {pkg.galeons}</p>
+                        <h3 className="font-heading text-xs text-white/60 group-hover/pkg:text-white transition-colors tracking-tighter uppercase">{pkg.name}</h3>
+                        <p className="text-4xl font-heading text-gold-gradient drop-shadow-2xl">{pkg.galeons}</p>
                      </div>
                      
                      <div className="py-2 border-y border-white/5">
-                        <p className="text-[10px] text-white/20 font-heading tracking-widest uppercase">
-                           {(pkg.galeons / pkg.price_brl).toFixed(0)} GAL / R$
+                        <p className="text-[10px] text-white/40 font-heading tracking-widest uppercase">
+                           GALEÕES DE OURO
                         </p>
                      </div>
-
+ 
                      <Button variant="magical" className="w-full h-14 rounded-2xl font-heading text-xs tracking-widest shadow-xl group/pkgbtn overflow-hidden relative" disabled={buying === pkg.id} onClick={() => buyGaleons(pkg)}>
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/pkgbtn:animate-[shimmer_2s_infinite]" />
                         <span className="relative z-10">{buying === pkg.id ? "..." : `R$ ${pkg.price_brl.toFixed(2).replace(".", ",")}`}</span>
@@ -597,10 +596,11 @@ export default function GringottsStore() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-7xl mx-auto px-4">
             {VIP_PLANS.map((plan, i) => {
               const isCenter = i === 1;
+              const isLenda = i === 2;
               return (
                 <div key={plan.id}
-                  className={`group/vip relative overflow-hidden rounded-[3.5rem] bg-white/[0.03] border ${plan.border} p-1 transition-all duration-700 hover:-translate-y-6 ${plan.glow} ${isCenter ? 'md:scale-105 md:-translate-y-4 z-10 shadow-2xl' : ''}`}>
-                  <div className={`relative glass h-full rounded-[3.3rem] p-8 md:p-10 flex flex-col overflow-hidden ${isCenter ? 'bg-black/60' : 'bg-black/40'}`}>
+                  className={`group/vip relative overflow-hidden rounded-[3.5rem] p-1 transition-all duration-700 hover:-translate-y-6 ${isCenter || isLenda ? 'md:scale-105 z-10' : ''}`}>
+                  <div className={`relative h-full rounded-[3.3rem] p-8 md:p-10 flex flex-col overflow-hidden ${isLenda ? 'gold-card border-yellow-500/40' : 'glass bg-black/60 border-white/10'}`}>
                     {/* Decorative Aura */}
                     <div className="absolute -top-20 -right-20 w-40 h-40 bg-current opacity-5 blur-[80px] rounded-full pointer-events-none" style={{ color: plan.textColor.split('-')[1] }} />
                     
@@ -636,29 +636,23 @@ export default function GringottsStore() {
                        <ul className="space-y-4">
                          {plan.benefits.map(b => (
                            <li key={b} className="flex items-start gap-4 group/item">
-                             <div className="w-5 h-5 rounded-full bg-white/5 flex items-center justify-center border border-white/10 mt-0.5 group-hover/item:border-white/20 transition-colors shrink-0">
-                                <Check size={10} className="text-white/60" />
+                             <div className={`w-5 h-5 rounded-full ${isLenda ? 'bg-yellow-500/20 border-yellow-500/40' : 'bg-white/5 border-white/10'} flex items-center justify-center border mt-0.5 shrink-0`}>
+                                <Check size={10} className={isLenda ? 'text-yellow-500' : 'text-white/60'} />
                              </div>
-                             <span className="text-xs text-white/60 leading-relaxed font-medium group-hover/item:text-white transition-colors">{b}</span>
-                           </li>
-                         ))}
-                       </ul>
-                       
-                       {plan.galeons_monthly > 0 && (
-                         <div className="mt-8 p-4 rounded-2xl bg-yellow-400/5 border border-yellow-400/20 flex items-center gap-4 group/galeon">
-                            <div className="w-10 h-10 rounded-xl bg-yellow-400/10 flex items-center justify-center border border-yellow-400/20 shadow-inner group-hover/galeon:scale-110 transition-transform">
-                               <Coins size={18} className="text-yellow-400" />
-                            </div>
-                            <div>
-                               <p className="text-[9px] font-heading text-yellow-400/40 uppercase tracking-widest">Mesada Mensal</p>
-                               <p className="text-sm font-heading text-yellow-400">+{plan.galeons_monthly} GALEÕES</p>
-                            </div>
-                         </div>
-                       )}
+                              <div className="mt-12 pt-8 border-t border-white/5">
+                       <Button size="lg" className={`w-full h-16 rounded-2xl font-heading text-[10px] tracking-[0.3em] shadow-2xl transition-all duration-500 overflow-hidden relative group/vipbtn ${
+                           currentVip === plan.id ? "bg-white/5 text-white/20 border border-white/5" : 
+                           isLenda ? "bg-gradient-to-r from-yellow-500 to-amber-600 text-black border-none hover:scale-105 shadow-yellow-500/20" :
+                           isCenter ? "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white border-none" :
+                           "bg-white/5 hover:bg-white/10 text-white border border-white/10"
+                         }`} disabled={buying === plan.id || currentVip === plan.id}
+                         onClick={() => { play('click'); buyVip(plan); }}
+                         onMouseEnter={() => play('hover')}>
+                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/vipbtn:animate-[shimmer_2s_infinite]" />
+                         <span className="relative z-10 uppercase">{buying === plan.id ? "..." : currentVip === plan.id ? "FEITIÇO ATIVO" : "ASCENDER AGORA"}</span>
+                       </Button>
                     </div>
-
-                    <div className="mt-12 pt-8 border-t border-white/5">
-                       <Button size="lg" className={`w-full h-16 rounded-2xl font-heading text-[10px] tracking-[0.2em] shadow-2xl transition-all duration-500 overflow-hidden relative group/vipbtn ${
+ont-heading text-[10px] tracking-[0.2em] shadow-2xl transition-all duration-500 overflow-hidden relative group/vipbtn ${
                            currentVip === plan.id ? "bg-white/5 text-white/20 border border-white/5" : 
                            isCenter ? "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white border-none" :
                            i === 2 ? "bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-500 hover:to-amber-500 text-black border-none" :
