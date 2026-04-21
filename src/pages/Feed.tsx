@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import { HOUSES, type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,6 +13,7 @@ import MagicAdBanner from "@/components/MagicAdBanner";
 import StoriesBar from "@/components/StoriesBar";
 import DynamicGreeting from "@/components/DynamicGreeting";
 import VipUpsellBanner from "@/components/VipUpsellBanner";
+import SafeImage from "@/components/SafeImage";
 
 const REACTIONS = ["⚡", "❤️", "🔥", "🦁", "🦅", "🐍", "🦡"];
 
@@ -37,6 +39,7 @@ interface FeedPost {
 
 export default function Feed() {
   const { profile, user } = useAuth();
+  const navigate = useNavigate();
   const [newPost, setNewPost] = useState("");
   const [newMusicUrl, setNewMusicUrl] = useState("");
   const [posts, setPosts] = useState<FeedPost[]>([]);
