@@ -242,6 +242,19 @@ export default function ChatRoom() {
     };
   }, [channel?.id, selectedDate]);
 
+  const deleteMessage = async (messageId: string) => {
+    if (!isAdmin) return;
+    if (!confirm("Deseja realmente expurgar esta mensagem para sempre?")) return;
+    
+    const { error } = await supabase.from("messages").delete().eq("id", messageId);
+    if (error) {
+      toast.error("Erro ao deletar mensagem.");
+    } else {
+      setMessages(prev => prev.filter(m => m.id !== messageId));
+      toast.success("Mensagem expurgada!");
+    }
+  };
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -309,22 +322,49 @@ export default function ChatRoom() {
       const mentionMatches = content.match(/@([\w.]+)/g);
       if (mentionMatches) {
         const usernames = mentionMatches.map(m => m.slice(1));
-        const { data: mentionedProfiles } = await supabase
-          .from('profiles')
-          .select('user_id, username')
-          .in('username', usernames);
-        if (mentionedProfiles && mentionedProfiles.length > 0) {
-          const senderName = profile?.username || 'alguém';
-          const notifs = mentionedProfiles
-            .filter(p => p.user_id !== user.id)
-            .map(p => ({
-              user_id: p.user_id,
-              type: 'mention',
-              content: `@${senderName} mencionou você no chat "${channel.name}"`,
-              read: false
-            }));
-          if (notifs.length > 0) {
-            await supabase.from('notifications').insert(notifs);
+        const isMentionTodos = usernames.some(u => u.toLowerCase() === 'todos');
+
+        if (isMentionTodos && isAdmin) {
+           // Notificar TODOS os membros
+           const { data: allProfiles } = await supabase.from('profiles').select('user_id');
+           if (allProfiles) {
+             const senderName = profile?.username || 'alguém';
+             const notifs = allProfiles
+               .filter(p => p.user_id !== user.id)
+               .map(p => ({
+                 user_id: p.user_id,
+                 type: 'mention',
+                 title: '📢 Convocação Global',
+                 message: `@${senderName} chamou @TODOS no chat "${channel.name}"!`,
+                 read: false
+               }));
+             // Lote de notificações em massa
+             if (notifs.length > 0) {
+               for (let i = 0; i < notifs.length; i += 100) {
+                 await supabase.from('notifications').insert(notifs.slice(i, i + 100));
+               }
+             }
+             toast.success("Convocação global enviada!");
+           }
+        } else {
+          const { data: mentionedProfiles } = await supabase
+            .from('profiles')
+            .select('user_id, username')
+            .in('username', usernames);
+          if (mentionedProfiles && mentionedProfiles.length > 0) {
+            const senderName = profile?.username || 'alguém';
+            const notifs = mentionedProfiles
+              .filter(p => p.user_id !== user.id)
+              .map(p => ({
+                user_id: p.user_id,
+                type: 'mention',
+                title: '✨ Nova Menção',
+                message: `@${senderName} mencionou você no chat "${channel.name}"`,
+                read: false
+              }));
+            if (notifs.length > 0) {
+              await supabase.from('notifications').insert(notifs);
+            }
           }
         }
       }

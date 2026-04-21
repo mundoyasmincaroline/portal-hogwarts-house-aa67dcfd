@@ -36,6 +36,7 @@ export default function Landing() {
     gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0
   });
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0, secs: 0 });
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     const t = setTimeout(() => setShowContent(true), 600);
@@ -70,6 +71,7 @@ export default function Landing() {
         mins: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
         secs: Math.floor((distance % (1000 * 60)) / 1000)
       });
+      setCurrentTime(new Date());
     }, 1000);
     return () => clearInterval(timer);
   }, []);
@@ -102,6 +104,13 @@ export default function Landing() {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-6">
+           {/* Monster Quality Live Clock */}
+           <div className="flex items-center gap-3 px-4 py-2 bg-black/40 backdrop-blur-md border border-white/10 rounded-xl shadow-[0_0_15px_rgba(251,191,36,0.1)]">
+             <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
+             <span className="text-[9px] font-heading text-primary/80 uppercase tracking-widest">{currentTime.toLocaleDateString('pt-BR', { weekday: 'long' }).split('-')[0]}</span>
+             <div className="w-px h-3 bg-white/20" />
+             <span className="text-[10px] font-mono font-medium text-white/90 tracking-wider">{currentTime.toLocaleTimeString('pt-BR')}</span>
+           </div>
            <button onClick={() => navigate("/login")} className="text-[10px] font-heading text-white/50 hover:text-white transition-colors tracking-widest uppercase">Entrar</button>
            <button onClick={() => navigate("/register")}
             className="group relative px-8 py-3 rounded-2xl bg-primary text-white font-heading text-[10px] tracking-widest overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_10px_30px_rgba(var(--primary),0.3)]">
@@ -118,6 +127,13 @@ export default function Landing() {
         {/* Mobile Menu Content */}
         {mobileMenuOpen && (
           <div className="absolute top-full left-0 right-0 bg-black/95 backdrop-blur-3xl border-b border-white/10 p-8 flex flex-col items-center gap-6 animate-in slide-in-from-top-10 duration-300 md:hidden">
+             {/* Monster Quality Live Clock Mobile */}
+             <div className="flex items-center gap-3 px-5 py-2.5 bg-white/5 border border-white/10 rounded-xl w-full justify-center shadow-[0_0_15px_rgba(251,191,36,0.05)]">
+               <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+               <span className="text-[10px] font-heading text-primary/80 uppercase tracking-widest">{currentTime.toLocaleDateString('pt-BR', { weekday: 'long' }).split('-')[0]}</span>
+               <div className="w-px h-3 bg-white/20" />
+               <span className="text-[11px] font-mono font-medium text-white/90 tracking-wider">{currentTime.toLocaleTimeString('pt-BR')}</span>
+             </div>
              <button onClick={() => { navigate("/login"); setMobileMenuOpen(false); }} className="text-sm font-heading text-white/70 uppercase tracking-[0.2em]">Entrar no Castelo</button>
              <button onClick={() => { navigate("/register"); setMobileMenuOpen(false); }} className="w-full py-4 rounded-2xl bg-primary text-white font-heading text-sm tracking-widest">SOLICITAR MINHA VAGA</button>
              <div className="flex gap-6 mt-4">
