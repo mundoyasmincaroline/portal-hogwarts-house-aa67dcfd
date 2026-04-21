@@ -258,7 +258,11 @@ export default function DashboardLayout() {
   if (!user || !profile) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
-        <p className="text-muted-foreground text-lg">Carregando portal...</p>
+        <div className="text-center">
+          <div className="text-4xl animate-pulse mb-4">🔮</div>
+          <p className="font-heading text-muted-foreground text-lg">Despertando sua magia...</p>
+          <p className="text-xs text-muted-foreground/50 mt-2">Se esta tela persistir por muito tempo, verifique sua conexão.</p>
+        </div>
       </div>
     );
   }
