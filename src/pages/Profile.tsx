@@ -436,9 +436,6 @@ export default function Profile() {
               </div>
               <p className="text-lg text-white/40 italic font-serif leading-relaxed">"{house.motto}"</p>
             </div>
-            <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center border border-white/10 opacity-20 group-hover:opacity-100 group-hover:bg-primary/20 transition-all duration-500">
-               <ChevronRight size={32} className="text-white group-hover:translate-x-1 transition-transform" />
-            </div>
           </div>
         </div>
 
@@ -601,7 +598,7 @@ export default function Profile() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {referrals?.map(r => (
+              {(referrals || []).map(r => (
                 <div key={r.id} className="glass rounded-xl p-3 flex items-center gap-3">
                   <div className="w-10 h-10 shrink-0">
                     <SafeImage src={r.profile?.avatar_url} alt={r.profile?.full_name || "Membro"} className="w-full h-full rounded-full object-cover" fallbackText={r.profile?.full_name?.[0]} />
@@ -773,7 +770,7 @@ export default function Profile() {
             <div className="space-y-1">
                <div className="flex items-center justify-center gap-2">
                  <h1 className="text-4xl md:text-5xl font-heading text-white tracking-tighter uppercase drop-shadow-2xl">{profile.full_name}</h1>
-                 {profile.approved && <Badge variant="magical" className="h-6"><CheckCircle2 size={12} className="mr-1" /> Bruxo Oficinal</Badge>}
+                 {profile.approved && <Badge variant="magical" className="h-6"><CheckCircle2 size={12} className="mr-1" /> Bruxo Oficial</Badge>}
                </div>
                <p className="text-primary font-heading text-xs tracking-[0.4em] uppercase opacity-70">@{profile.username}</p>
             </div>
