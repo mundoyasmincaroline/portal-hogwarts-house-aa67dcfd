@@ -29,6 +29,12 @@ export default function Landing() {
   const [scrollY, setScrollY] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const [stats, setStats] = useState({ wizards: 10, houses: 4, items: 28 });
+  const [housePoints, setHousePoints] = useState<Record<string, number>>({
+    gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0
+  });
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0, secs: 0 });
+
   useEffect(() => {
     const t = setTimeout(() => setShowContent(true), 600);
     const handleScroll = () => setScrollY(window.scrollY);
@@ -37,8 +43,41 @@ export default function Landing() {
   }, []);
 
   useEffect(() => {
+    // Fetch Wizards
     supabase.from("profiles").select("*", { count: "exact", head: true })
-      .then(({ count }) => setMemberCount(Math.max(count ?? 0, 10)));
+      .then(({ count }) => setStats(prev => ({ ...prev, wizards: Math.max(count ?? 0, 10) })));
+    
+    // Fetch Items
+    supabase.from("products").select("*", { count: "exact", head: true })
+      .then(({ count }) => setStats(prev => ({ ...prev, items: Math.max(count ?? 0, 28) })));
+
+    // Fetch House Points
+    supabase.from("house_points").select("house, points")
+      .then(({ data }) => {
+        if (data) {
+          const p: Record<string, number> = { gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0 };
+          data.forEach(row => p[row.house] = (p[row.house] || 0) + row.points);
+          setHousePoints(p);
+        }
+      });
+
+    // Countdown Logic (Example: Next Friday at 20:00)
+    const target = new Date();
+    target.setDate(target.getDate() + ((5 + 7 - target.getDay()) % 7 || 7));
+    target.setHours(20, 0, 0, 0);
+
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = target.getTime() - now;
+      setTimeLeft({
+        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        mins: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+        secs: Math.floor((distance % (1000 * 60)) / 1000)
+      });
+    }, 1000);
+    
+    return () => clearInterval(timer);
   }, []);
 
   const hour = new Date().getHours();
@@ -161,46 +200,90 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── LIVE DATA BAR (MONSTER QUALITY) ── */}
+      {/* ── LIVE DATA & EVENT COUNTDOWN (MONSTER QUALITY) ── */}
       <section className="relative z-30 -mt-10 md:-mt-20 px-4 md:px-6">
-         <div className="max-w-6xl mx-auto glass rounded-[2.5rem] md:rounded-[4rem] border border-white/10 shadow-[0_30px_80px_rgba(0,0,0,0.8)] p-8 md:p-14 overflow-hidden relative group">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-yellow-500/5" />
+         <div className="max-w-6xl mx-auto glass rounded-[2.5rem] md:rounded-[4rem] border border-white/10 shadow-[0_30px_80px_rgba(0,0,0,0.8)] p-8 md:p-12 overflow-hidden relative group">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-yellow-500/5 opacity-50" />
             
-            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-10 md:gap-12 items-center">
+            {/* Minimalist Stats Bar (As requested in screenshot) */}
+            <div className="relative z-10 flex flex-wrap justify-center items-center gap-8 md:gap-16 mb-12 border-b border-white/5 pb-12">
+               {[
+                 { value: stats.wizards, label: "BRUXOS" },
+                 { value: stats.houses, label: "CASAS" },
+                 { value: `${stats.items}+`, label: "ITENS NA LOJA" },
+                 { value: "∞", label: "MAGIA" }
+               ].map((stat, i) => (
+                 <div key={i} className="flex items-center gap-8 md:gap-16">
+                    <div className="text-center group/stat">
+                       <p className="font-heading text-3xl md:text-5xl text-gold-gradient mb-1 drop-shadow-[0_0_15px_rgba(var(--primary),0.3)] transition-transform group-hover/stat:scale-110">{stat.value}</p>
+                       <p className="text-[8px] md:text-[10px] text-white/30 font-heading tracking-[0.3em] uppercase">{stat.label}</p>
+                    </div>
+                    {i < 3 && <div className="h-10 w-px bg-white/10 hidden sm:block" />}
+                 </div>
+               ))}
+            </div>
+
+            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                
-               <div className="space-y-4 md:space-y-6 text-center lg:text-left">
-                  <div className="flex flex-col lg:flex-row items-center gap-4">
-                     <div className="w-12 h-12 md:w-16 md:h-16 bg-yellow-500/10 rounded-xl md:rounded-2xl border border-yellow-500/30 flex items-center justify-center shadow-2xl">
-                        <Trophy size={24} className="text-yellow-400 md:text-yellow-400 animate-pulse" />
-                     </div>
-                     <div>
-                        <h3 className="font-heading text-xl md:text-3xl text-white tracking-tighter">Copa das Casas</h3>
-                        <p className="text-[8px] md:text-[10px] text-primary font-heading uppercase tracking-widest">Tempo Real • Temporada 2024</p>
-                     </div>
+               {/* Event Countdown */}
+               <div className="space-y-6 text-center lg:text-left bg-white/5 p-8 rounded-[2rem] border border-white/10 relative overflow-hidden group/event">
+                  <div className="absolute top-0 right-0 p-4 opacity-10 group-hover/event:opacity-30 transition-opacity">
+                     <Zap size={80} className="text-primary" />
                   </div>
-                  <p className="text-white/40 text-[11px] md:text-sm leading-relaxed max-w-md mx-auto lg:mx-0">
-                    A cada feitiço lançado, a cada amizade feita e a cada desafio concluído, você traz glória para sua casa.
-                  </p>
+                  <div className="space-y-2">
+                     <h3 className="font-heading text-xl md:text-2xl text-white tracking-tighter italic">Próximo Grande Evento</h3>
+                     <p className="text-[10px] text-primary font-heading uppercase tracking-[0.4em]">Baile de Inverno • Salão Principal</p>
+                  </div>
+                  
+                  <div className="flex justify-center lg:justify-start gap-4">
+                     {[
+                       { v: timeLeft.days, l: "DIAS" },
+                       { v: timeLeft.hours, l: "HORAS" },
+                       { v: timeLeft.mins, l: "MINS" },
+                       { v: timeLeft.secs, l: "SEGS" }
+                     ].map((t, i) => (
+                       <div key={i} className="flex flex-col items-center min-w-[60px] md:min-w-[80px]">
+                          <div className="w-full aspect-square bg-black/40 rounded-xl md:rounded-2xl border border-white/10 flex items-center justify-center mb-2 shadow-inner">
+                             <span className="font-heading text-xl md:text-3xl text-white">{String(t.v).padStart(2, '0')}</span>
+                          </div>
+                          <span className="text-[7px] md:text-[8px] text-white/30 font-heading tracking-widest">{t.l}</span>
+                       </div>
+                     ))}
+                  </div>
                </div>
 
-               <div className="lg:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                  {[
-                    { name: "Grifinória", color: "from-red-600 to-red-950", progress: "65%", icon: "🦁", glow: "shadow-red-500/10" },
-                    { name: "Sonserina", color: "from-green-500 to-green-950", progress: "82%", icon: "🐍", glow: "shadow-green-500/10" },
-                    { name: "Corvinal", color: "from-blue-500 to-blue-950", progress: "45%", icon: "🦅", glow: "shadow-blue-500/10" },
-                    { name: "Lufa-Lufa", color: "from-yellow-500 to-amber-950", progress: "30%", icon: "🦡", glow: "shadow-yellow-500/10" }
-                  ].map((house) => (
-                    <div key={house.name} className={`glass rounded-2xl md:rounded-3xl p-4 md:p-6 border border-white/5 flex flex-col items-center gap-3 md:gap-4 hover:bg-white/5 transition-all hover:-translate-y-1 shadow-xl ${house.glow}`}>
-                       <span className="text-3xl md:text-4xl filter drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">{house.icon}</span>
-                       <div className="text-center">
-                          <p className="text-[7px] md:text-[9px] font-heading text-white/30 uppercase mb-0.5 md:mb-1">{house.name}</p>
-                          <p className="font-heading text-sm md:text-xl text-white">{house.progress}</p>
-                       </div>
-                       <div className="h-1 md:h-1.5 w-full bg-black/40 rounded-full overflow-hidden border border-white/5">
-                          <div className={`h-full bg-gradient-to-r ${house.color}`} style={{ width: house.progress }} />
-                       </div>
-                    </div>
-                  ))}
+               {/* Updated House Tournament */}
+               <div className="space-y-6">
+                  <div className="flex items-center justify-between mb-2">
+                     <h3 className="font-heading text-lg text-white tracking-tight">Copa das Casas</h3>
+                     <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,1)]" />
+                        <span className="text-[8px] font-heading text-white/40 uppercase tracking-widest">LIVE DATA</span>
+                     </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                     {HOUSES.map((house) => {
+                       const points = housePoints[house.id] || 0;
+                       const maxPoints = Math.max(...Object.values(housePoints), 100);
+                       const progress = (points / maxPoints) * 100;
+                       
+                       return (
+                        <div key={house.id} className="bg-white/5 rounded-2xl p-4 border border-white/5 hover:border-white/10 transition-all group/h">
+                           <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center gap-3">
+                                 <span className="text-xl group-hover/h:scale-125 transition-transform">{house.animal}</span>
+                                 <span className="text-[9px] font-heading text-white/60 uppercase tracking-widest">{house.name}</span>
+                              </div>
+                              <span className="text-[10px] font-heading text-primary">{points} pts</span>
+                           </div>
+                           <div className="h-1.5 w-full bg-black/40 rounded-full overflow-hidden border border-white/5 p-[1px]">
+                              <div className={`h-full rounded-full bg-gradient-to-r ${house.color}`} style={{ width: `${Math.max(progress, 5)}%` }} />
+                           </div>
+                        </div>
+                       );
+                     })}
+                  </div>
                </div>
 
             </div>
