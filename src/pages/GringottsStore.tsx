@@ -601,7 +601,6 @@ export default function GringottsStore() {
                 <div key={plan.id}
                   className={`group/vip relative overflow-hidden rounded-[3.5rem] p-1 transition-all duration-700 hover:-translate-y-6 ${isCenter || isLenda ? 'md:scale-105 z-10' : ''}`}>
                   <div className={`relative h-full rounded-[3.3rem] p-8 md:p-10 flex flex-col overflow-hidden ${isLenda ? 'gold-card border-yellow-500/40' : 'glass bg-black/60 border-white/10'}`}>
-                    {/* Decorative Aura */}
                     <div className="absolute -top-20 -right-20 w-40 h-40 bg-current opacity-5 blur-[80px] rounded-full pointer-events-none" style={{ color: plan.textColor.split('-')[1] }} />
                     
                     {currentVip === plan.id && (
@@ -621,12 +620,12 @@ export default function GringottsStore() {
                           <div className="w-24 h-24 mx-auto bg-white/5 rounded-[2rem] border border-white/10 flex items-center justify-center group-hover/vip:scale-110 transition-transform duration-500 shadow-2xl">
                              <span className="text-5xl drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]">{plan.icon}</span>
                           </div>
-                          <h3 className={`font-heading text-2xl tracking-tighter ${plan.textColor}`}>{plan.name.toUpperCase()}</h3>
+                          <h3 className={`font-heading text-2xl tracking-tighter ${isLenda ? 'text-gold-gradient' : plan.textColor}`}>{plan.name.toUpperCase()}</h3>
                        </div>
 
                        <div className="text-center">
                           <div className="inline-flex items-baseline gap-1">
-                             <span className={`text-5xl font-heading tracking-tighter ${plan.textColor}`}>R$ {plan.price_brl.toFixed(2).replace(".", ",")}</span>
+                             <span className={`text-6xl font-heading tracking-tighter ${isLenda ? 'text-white' : plan.textColor}`}>R$ {plan.price_brl.toFixed(2).replace(".", ",")}</span>
                              <span className="text-[10px] text-white/20 font-heading tracking-widest uppercase">/MÊS</span>
                           </div>
                        </div>
@@ -639,7 +638,25 @@ export default function GringottsStore() {
                              <div className={`w-5 h-5 rounded-full ${isLenda ? 'bg-yellow-500/20 border-yellow-500/40' : 'bg-white/5 border-white/10'} flex items-center justify-center border mt-0.5 shrink-0`}>
                                 <Check size={10} className={isLenda ? 'text-yellow-500' : 'text-white/60'} />
                              </div>
-                              <div className="mt-12 pt-8 border-t border-white/5">
+                             <span className="text-xs text-white/50 group-hover/item:text-white transition-colors leading-tight">{b}</span>
+                           </li>
+                         ))}
+                       </ul>
+                       
+                       {plan.galeons_monthly > 0 && (
+                          <div className={`mt-8 p-4 rounded-2xl ${isLenda ? 'bg-yellow-500/10 border-yellow-500/20' : 'bg-white/5 border-white/10'} flex items-center gap-4 group/galeon animate-pulse-glow`}>
+                             <div className={`w-10 h-10 rounded-xl ${isLenda ? 'bg-yellow-500/20' : 'bg-white/5'} flex items-center justify-center border ${isLenda ? 'border-yellow-500/40' : 'border-white/10'} shadow-inner`}>
+                                <Coins size={18} className="text-yellow-400" />
+                             </div>
+                             <div>
+                                <p className="text-[9px] font-heading text-white/40 uppercase tracking-widest">Mesada Real</p>
+                                <p className={`text-sm font-heading ${isLenda ? 'text-yellow-400' : 'text-white'}`}>+{plan.galeons_monthly} GALEÕES</p>
+                             </div>
+                          </div>
+                       )}
+                    </div>
+
+                    <div className="mt-12 pt-8 border-t border-white/5">
                        <Button size="lg" className={`w-full h-16 rounded-2xl font-heading text-[10px] tracking-[0.3em] shadow-2xl transition-all duration-500 overflow-hidden relative group/vipbtn ${
                            currentVip === plan.id ? "bg-white/5 text-white/20 border border-white/5" : 
                            isLenda ? "bg-gradient-to-r from-yellow-500 to-amber-600 text-black border-none hover:scale-105 shadow-yellow-500/20" :
@@ -650,17 +667,6 @@ export default function GringottsStore() {
                          onMouseEnter={() => play('hover')}>
                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/vipbtn:animate-[shimmer_2s_infinite]" />
                          <span className="relative z-10 uppercase">{buying === plan.id ? "..." : currentVip === plan.id ? "FEITIÇO ATIVO" : "ASCENDER AGORA"}</span>
-                       </Button>
-                    </div>
-ont-heading text-[10px] tracking-[0.2em] shadow-2xl transition-all duration-500 overflow-hidden relative group/vipbtn ${
-                           currentVip === plan.id ? "bg-white/5 text-white/20 border border-white/5" : 
-                           isCenter ? "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white border-none" :
-                           i === 2 ? "bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-500 hover:to-amber-500 text-black border-none" :
-                           "bg-white/5 hover:bg-white/10 text-white border border-white/10"
-                         }`} disabled={buying === plan.id || currentVip === plan.id}
-                         onClick={() => buyVip(plan)}>
-                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/vipbtn:animate-[shimmer_2s_infinite]" />
-                         <span className="relative z-10 uppercase">{buying === plan.id ? "..." : currentVip === plan.id ? "PLANO ATIVO" : "ASSINAR AGORA"}</span>
                        </Button>
                     </div>
                   </div>
