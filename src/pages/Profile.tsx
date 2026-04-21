@@ -14,7 +14,7 @@ import ProfileAlbum from "@/components/ProfileAlbum";
 import CharacterSheetView from "@/components/CharacterSheetView";
 import MemberCard from "@/components/MemberCard";
 import AdminMemberModal from "@/components/AdminMemberModal";
-import { Info, Users, Search, Scroll, Book, Lock, Trophy, ShoppingBag, Flame, Sparkles, Star, CheckCircle2, Crown } from "lucide-react";
+import { Info, Users, Search, Scroll, Book, Lock, Trophy, ShoppingBag, Flame, Sparkles, Star, CheckCircle2, Crown, ChevronRight, Zap } from "lucide-react";
 import SafeImage from "@/components/SafeImage";
 
 // ---- Componente embutido: lista de membros para solicitar amizade ----
@@ -81,7 +81,6 @@ function MembersTab({ currentUserId }: { currentUserId?: string }) {
               member={m}
               friendshipStatus={(friendships[m.user_id] as any) || "none"}
               onFriendshipChange={() => {
-                // Reload friendships after action
                 if (!currentUserId) return;
                 supabase
                   .from("friendships")
@@ -106,7 +105,6 @@ function MembersTab({ currentUserId }: { currentUserId?: string }) {
     </div>
   );
 }
-// -----------------------------------------------------------------------
 
 export default function Profile() {
   const { userId } = useParams<{ userId: string }>();
@@ -121,6 +119,7 @@ export default function Profile() {
   const [userChallenges, setUserChallenges] = useState<any[]>([]);
   const [userItems, setUserItems] = useState<any[]>([]);
   const [loadingExtras, setLoadingExtras] = useState(false);
+  const [referrals, setReferrals] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState<"about" | "fichas" | "friends" | "members" | "security" | "album" | "referral" | "achievements" | "inventory">("about");
 
   const [editing, setEditing] = useState(false);
@@ -169,7 +168,6 @@ export default function Profile() {
     const { data } = await supabase.from("profiles").select("*").eq("user_id", userId).single();
     if (data) setTargetProfile(data);
     
-    // Check friendship status
     if (user && data) {
       const { data: fData } = await supabase.from("friendships")
         .select("*")
@@ -286,21 +284,6 @@ export default function Profile() {
     }
   };
 
-  const handleBlockUser = async () => {
-    if (!user || !targetProfile) return;
-    if (friendship) {
-      await supabase.from("friendships").delete().eq("id", friendship.id);
-    }
-    const { data, error } = await supabase.from("friendships").insert({
-      user_id: user.id,
-      friend_id: targetProfile.user_id,
-      status: "blocked",
-    }).select().single();
-    if (error) return toast.error("Erro ao bloquear.");
-    setFriendship(data);
-    toast.success("Usuário bloqueado. 🚫");
-  };
-
   const toggleEquip = async (itemId: string, currentStatus: boolean) => {
     if (!isMe) return;
     const { error } = await supabase.from("user_items").update({ is_equipped: !currentStatus } as never).eq("id", itemId);
@@ -308,15 +291,6 @@ export default function Profile() {
     else {
       toast.success(!currentStatus ? "Item equipado! ⚔️" : "Item removido.");
       loadExtras(user!.id);
-    }
-  };
-
-  const handleUnblock = async () => {
-    if (!friendship) return;
-    const { error } = await supabase.from("friendships").delete().eq("id", friendship.id);
-    if (!error) {
-      setFriendship(null);
-      toast.success("Desbloqueado.");
     }
   };
 
@@ -333,7 +307,6 @@ export default function Profile() {
   const save = async () => {
     setSaving(true);
     const updates: any = { ...form };
-    // Only update avatar_url from the URL field if it was changed
     if (!updates.avatar_url) delete updates.avatar_url;
     const result = await updateProfile(updates);
     setSaving(false);
@@ -383,7 +356,6 @@ export default function Profile() {
   if (activeTab === "about") {
     tabContent = (
       <>
-        {/* MONSTER QUALITY STATS GRID */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             { label: "XP Total", value: profile.xp, icon: <Zap size={24} />, color: "from-amber-400 to-yellow-600", glow: "shadow-amber-500/20" },
@@ -405,10 +377,8 @@ export default function Profile() {
           ))}
         </div>
 
-        {/* PROGRESS TRACKER */}
         <div className="relative overflow-hidden bg-black/40 backdrop-blur-3xl rounded-[3.5rem] p-10 border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] group">
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
-          
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10 mb-8">
              <div className="flex items-center gap-6">
                 <div className="w-16 h-16 rounded-3xl bg-primary/20 border border-primary/40 flex items-center justify-center shadow-inner group-hover:rotate-12 transition-transform duration-500">
@@ -425,27 +395,22 @@ export default function Profile() {
                 </p>
              </div>
           </div>
-          
           <div className="relative z-10">
             <XPBar xp={profile.xp} />
           </div>
-
-          {/* Ambient Background Glow */}
           <div className="absolute -top-20 -right-20 w-64 h-64 bg-primary/5 rounded-full blur-[100px] pointer-events-none animate-pulse" />
         </div>
 
-        {/* HOUSE PRIDE SECTION */}
         <div className={`relative overflow-hidden bg-black/40 backdrop-blur-3xl rounded-[3.5rem] p-8 border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] group transition-all duration-700 hover:border-white/20`}>
           <div className={`absolute inset-0 bg-gradient-to-r ${
             profile.house === 'gryffindor' ? 'from-red-900/10' :
             profile.house === 'slytherin' ? 'from-green-900/10' :
             profile.house === 'ravenclaw' ? 'from-blue-900/10' : 'from-yellow-900/10'
           } to-transparent opacity-50`} />
-          
           <div className="flex flex-col md:flex-row items-center gap-10 relative z-10 text-center md:text-left">
             <div className="relative">
                <div className="absolute inset-0 bg-white/20 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-               <HouseCrest house={profile.house} size="lg" className="relative z-10 drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform duration-700" />
+               <HouseCrest house={profile.house as House} size="lg" className="relative z-10 drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform duration-700" />
             </div>
             <div className="flex-1 space-y-3">
               <div className="space-y-1">
@@ -460,7 +425,6 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* INFO & BADGES GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-black/40 backdrop-blur-3xl rounded-[2.5rem] p-8 border border-white/10 shadow-2xl space-y-6">
             <h3 className="font-heading text-xs text-primary tracking-[0.3em] uppercase opacity-60">Registros Oficiais</h3>
@@ -480,7 +444,6 @@ export default function Profile() {
               ))}
             </div>
           </div>
-
           <div className="bg-black/40 backdrop-blur-3xl rounded-[2.5rem] p-8 border border-white/10 shadow-2xl space-y-6">
             <h3 className="font-heading text-xs text-primary tracking-[0.3em] uppercase opacity-60">Coleção Borgin & Burkes</h3>
             {userBadges.length === 0 ? (
@@ -518,7 +481,6 @@ export default function Profile() {
               <span className="text-xs font-heading text-primary tracking-widest">{friends.length} Conexões Mágicas</span>
            </div>
         </div>
-
         {friends.length === 0 ? (
           <div className="bg-black/40 backdrop-blur-3xl rounded-[3rem] p-16 text-center border border-white/10 shadow-inner space-y-6">
             <div className="w-20 h-20 mx-auto bg-white/5 rounded-full flex items-center justify-center border border-white/5 opacity-20">
@@ -528,21 +490,14 @@ export default function Profile() {
                <p className="text-white/60 font-serif italic text-lg text-center">"Amizade é a magia mais poderosa de todas."</p>
                <p className="text-[10px] font-heading text-white/20 uppercase tracking-[0.3em]">Você ainda não possui amigos registrados</p>
             </div>
-            <button
-              onClick={() => setActiveTab("members")}
-              className="px-8 py-3 rounded-2xl bg-primary/10 border border-primary/30 text-primary font-heading text-[10px] tracking-widest hover:bg-primary/20 transition-all uppercase"
-            >
+            <button onClick={() => setActiveTab("members")} className="px-8 py-3 rounded-2xl bg-primary/10 border border-primary/30 text-primary font-heading text-[10px] tracking-widest hover:bg-primary/20 transition-all uppercase">
               Explorar o Castelo →
             </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {friends.map(f => f && (
-              <MemberCard
-                key={f.user_id}
-                member={{ ...f, online: isUserOnline(f) }}
-                compact
-              />
+              <MemberCard key={f.user_id} member={{ ...f, online: isUserOnline(f) }} compact />
             ))}
           </div>
         )}
@@ -582,7 +537,6 @@ export default function Profile() {
       <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
         <div className="relative overflow-hidden bg-gradient-to-br from-primary/20 to-amber-900/40 backdrop-blur-3xl rounded-[3rem] p-10 border border-primary/30 shadow-[0_30px_60px_rgba(0,0,0,0.5)] group text-center">
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 mix-blend-overlay pointer-events-none" />
-          
           <div className="relative z-10 space-y-6">
             <div className="w-20 h-20 mx-auto bg-primary/20 rounded-full flex items-center justify-center border border-primary/40 shadow-inner mb-4">
                <Scroll size={40} className="text-primary animate-pulse" />
@@ -593,7 +547,6 @@ export default function Profile() {
                 "Expanda a nossa comunidade. Convide novos bruxos e seja recompensado com <strong className="text-primary">500 XP</strong> por cada alma corajosa que alcançar o Nível 2!"
               </p>
             </div>
-
             <div className="flex flex-col sm:flex-row items-center gap-4 max-w-md mx-auto pt-4">
               <div className="flex-1 w-full bg-black/40 rounded-2xl border border-white/10 p-4 font-mono text-xl text-primary tracking-widest shadow-inner">
                  {profile.username}
@@ -610,7 +563,6 @@ export default function Profile() {
             </div>
           </div>
         </div>
-
         <div className="space-y-6">
           <div className="flex items-center gap-4">
              <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
@@ -618,35 +570,29 @@ export default function Profile() {
              </div>
              <h3 className="font-heading text-xl text-white tracking-tight">Bruxos Recrutados por Você <span className="text-primary/40 ml-2">({referrals.length})</span></h3>
           </div>
-          
           {referrals.length === 0 ? (
             <div className="bg-black/40 backdrop-blur-3xl rounded-[2.5rem] p-12 text-center border border-white/10 opacity-40">
               <p className="text-[10px] font-heading uppercase tracking-[0.4em]">Nenhum recrutamento registrado</p>
             </div>
           ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {referrals.map(r => (
-              <div key={r.id} className="glass rounded-xl p-3 flex items-center gap-3">
-                <div className="w-10 h-10 shrink-0">
-                  <SafeImage 
-                    src={r.profile?.avatar_url} 
-                    alt={r.profile?.full_name || "Membro"} 
-                    className="w-full h-full rounded-full object-cover" 
-                    fallbackText={r.profile?.full_name?.[0]}
-                  />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {referrals.map(r => (
+                <div key={r.id} className="glass rounded-xl p-3 flex items-center gap-3">
+                  <div className="w-10 h-10 shrink-0">
+                    <SafeImage src={r.profile?.avatar_url} alt={r.profile?.full_name || "Membro"} className="w-full h-full rounded-full object-cover" fallbackText={r.profile?.full_name?.[0]} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-heading text-foreground truncate">{r.profile?.full_name}</p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {r.status === 'completed' ? <span className="text-green-500">✅ 500 XP Ganhos</span> : <span className="text-amber-500">⏳ Pendente (Nv. 2)</span>}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-heading text-foreground truncate">{r.profile?.full_name}</p>
-                  <p className="text-xs text-muted-foreground truncate">
-                    {r.status === 'completed' ? <span className="text-green-500">✅ 500 XP Ganhos</span> : <span className="text-amber-500">⏳ Pendente (Aguardando Nv. 2)</span>}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
     );
   } else if (activeTab === "achievements") {
     tabContent = (
@@ -663,7 +609,6 @@ export default function Profile() {
               </div>
           </div>
         </div>
-
         {loadingExtras ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[1,2,3,4].map(i => <div key={i} className="glass h-32 rounded-2xl animate-pulse" />)}
@@ -674,36 +619,23 @@ export default function Profile() {
               <Trophy size={48} className="text-primary/30" />
             </div>
             <h3 className="font-heading text-xl text-foreground mb-2">O Mural está em branco</h3>
-            <p className="text-muted-foreground text-sm max-w-sm mx-auto italic">Explore o mapa, participe de aulas e vença desafios para preencher sua sala de troféus!</p>
+            <p className="text-muted-foreground text-sm max-w-sm mx-auto italic">Explore o mapa e vença desafios!</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {userChallenges.map(uc => (
               <div key={uc.id} className="relative group perspective">
-                  <div className="glass rounded-[2rem] p-6 border border-primary/20 bg-gradient-to-br from-indigo-950/20 to-transparent hover:border-primary/50 transition-all duration-500 hover:-rotate-1 hover:scale-[1.02] overflow-hidden">
-                      {/* Status Check */}
-                      <div className="absolute top-4 right-4 p-1.5 bg-green-500/20 rounded-full text-green-500">
-                          <CheckCircle2 size={14} />
-                      </div>
-                      
-                      {/* Glow effect */}
-                      <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all" />
-
+                  <div className="glass rounded-[2rem] p-6 border border-primary/20 bg-gradient-to-br from-indigo-950/20 to-transparent hover:border-primary/50 transition-all duration-500 overflow-hidden">
+                      <div className="absolute top-4 right-4 p-1.5 bg-green-500/20 rounded-full text-green-500"><CheckCircle2 size={14} /></div>
                       <div className="space-y-4 relative z-10">
-                          <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary border border-primary/10">
-                              <Star size={24} />
-                          </div>
+                          <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary border border-primary/10"><Star size={24} /></div>
                           <div>
                               <h4 className="font-heading text-lg text-foreground mb-1 line-clamp-1">{uc.challenges?.title || "Desafio Místico"}</h4>
-                              <p className="text-xs text-muted-foreground line-clamp-2 h-8 leading-relaxed italic">
-                                  "{uc.challenges?.description}"
-                              </p>
+                              <p className="text-xs text-muted-foreground line-clamp-2 h-8 leading-relaxed italic">"{uc.challenges?.description}"</p>
                           </div>
                           <div className="flex items-center justify-between pt-2 border-t border-white/5">
                               <Badge variant="outline" className="text-[9px] px-2 py-0.5 border-primary/30 text-primary">+{uc.challenges?.xp_reward} XP</Badge>
-                              <span className="text-[10px] text-muted-foreground font-mono">
-                                  {new Date(uc.completed_at || uc.created_at).toLocaleDateString("pt-BR")}
-                              </span>
+                              <span className="text-[10px] text-muted-foreground font-mono">{new Date(uc.completed_at || uc.created_at).toLocaleDateString("pt-BR")}</span>
                           </div>
                       </div>
                   </div>
@@ -711,28 +643,17 @@ export default function Profile() {
             ))}
           </div>
         )}
-
-        {/* Seção de Medalhas de Nível */}
         <div className="pt-10">
-          <h3 className="font-heading text-sm text-primary mb-6 flex items-center gap-2 uppercase tracking-widest">
-             <Crown size={16} /> Graus de Prestígio
-          </h3>
+          <h3 className="font-heading text-sm text-primary mb-6 flex items-center gap-2 uppercase tracking-widest"><Crown size={16} /> Graus de Prestígio</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             <div className="glass rounded-2xl p-5 flex items-center gap-4 border border-yellow-500/20 bg-gradient-to-r from-yellow-500/10 to-transparent">
               <div className="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center text-2xl">🏅</div>
-              <div>
-                <p className="font-heading text-sm text-yellow-400">Veterano de Hogwarts</p>
-                <p className="text-[10px] text-muted-foreground">Conquistado pelo seu XP total</p>
-              </div>
+              <div><p className="font-heading text-sm text-yellow-400">Veterano de Hogwarts</p><p className="text-[10px] text-muted-foreground">XP Total</p></div>
             </div>
-            
             {profile.vip_plan && (
               <div className="glass rounded-2xl p-5 flex items-center gap-4 border border-purple-500/20 bg-gradient-to-r from-purple-500/10 to-transparent">
                   <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center text-2xl">✨</div>
-                  <div>
-                      <p className="font-heading text-sm text-purple-400">Membro Honorário</p>
-                      <p className="text-[10px] text-muted-foreground">Assinante do Plano {profile.vip_plan.toUpperCase()}</p>
-                  </div>
+                  <div><p className="font-heading text-sm text-purple-400">Membro Honorário</p><p className="text-[10px] text-muted-foreground">{profile.vip_plan.toUpperCase()}</p></div>
               </div>
             )}
           </div>
@@ -746,7 +667,6 @@ export default function Profile() {
           <h2 className="font-heading text-xl text-foreground">🎒 Itens do Inventário</h2>
           <span className="text-xs text-muted-foreground">{userItems.length} Itens Adquiridos</span>
         </div>
-
         {loadingExtras ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[1,2,3,4].map(i => <div key={i} className="glass aspect-square rounded-2xl animate-pulse" />)}
@@ -754,45 +674,21 @@ export default function Profile() {
         ) : userItems.length === 0 ? (
           <div className="glass rounded-2xl p-10 text-center border-dashed border-2 border-border/50">
             <ShoppingBag size={48} className="mx-auto text-muted-foreground opacity-20 mb-4" />
-            <p className="text-muted-foreground text-sm italic">O baú está vazio. Visite Gringotts para adquirir equipamentos!</p>
+            <p className="text-muted-foreground text-sm italic">O baú está vazio.</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {userItems.map(ui => {
               const item = ui.store_items;
               if (!item) return null;
-              const isEquipped = (ui as any).is_equipped;
-              const stats = (item as any).stats;
-
+              const isEquipped = ui.is_equipped;
               return (
                 <div key={ui.id} className={`group glass rounded-2xl overflow-hidden border transition-all hover:-translate-y-1 ${isEquipped ? 'border-primary shadow-[0_0_15px_hsl(var(--primary)/0.3)]' : 'border-border/50 hover:border-primary/40'}`}>
                   <div className="relative aspect-square">
-                    <SafeImage 
-                      src={item.image_url} 
-                      alt={item.name} 
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      fallbackEmoji="📦"
-                    />
-                    {isEquipped && (
-                        <div className="absolute top-2 right-2 bg-primary text-primary-foreground text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest z-10 animate-pulse">
-                            Equipado
-                        </div>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-end p-3 gap-2">
-                       {stats && (stats.atk > 0 || stats.def > 0 || stats.mana > 0 || stats.hp > 0) && (
-                           <div className="grid grid-cols-2 gap-1 w-full">
-                               {stats.atk > 0 && <div className="text-[8px] font-bold text-red-400 bg-red-400/20 px-1.5 py-0.5 rounded border border-red-400/30">⚔️ +{stats.atk}</div>}
-                               {stats.def > 0 && <div className="text-[8px] font-bold text-blue-400 bg-blue-400/20 px-1.5 py-0.5 rounded border border-blue-400/30">🛡️ +{stats.def}</div>}
-                               {stats.mana > 0 && <div className="text-[8px] font-bold text-indigo-400 bg-indigo-400/20 px-1.5 py-0.5 rounded border border-indigo-400/30">✨ +{stats.mana}</div>}
-                               {stats.hp > 0 && <div className="text-[8px] font-bold text-green-400 bg-green-400/20 px-1.5 py-0.5 rounded border border-green-400/30">❤️ +{stats.hp}</div>}
-                           </div>
-                       )}
-                       <Button 
-                          size="sm" 
-                          variant={isEquipped ? "outline" : "magical"} 
-                          className="w-full h-7 text-[10px] rounded-lg"
-                          onClick={() => toggleEquip(ui.id, isEquipped)}
-                      >
+                    <SafeImage src={item.image_url} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" fallbackEmoji="📦" />
+                    {isEquipped && <div className="absolute top-2 right-2 bg-primary text-primary-foreground text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest z-10">Equipado</div>}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-end p-3 gap-2">
+                       <Button size="sm" variant={isEquipped ? "outline" : "magical"} className="w-full h-7 text-[10px] rounded-lg" onClick={() => toggleEquip(ui.id, isEquipped)}>
                           {isEquipped ? "Desequipar" : "Equipar"}
                       </Button>
                     </div>
@@ -811,18 +707,11 @@ export default function Profile() {
   } else if (activeTab === "security" && isMe) {
     tabContent = (
       <div className="glass rounded-2xl p-6">
-        <h2 className="font-heading text-xl text-foreground mb-1">🔐 Segurança e Acesso</h2>
-        <p className="text-sm text-muted-foreground mb-6">Altere sua senha mágica para manter sua conta protegida.</p>
-        
+        <h2 className="font-heading text-xl text-foreground mb-1">🔐 Segurança</h2>
         <form onSubmit={handleUpdatePassword} className="space-y-4 max-w-sm mx-auto">
           <div>
             <label className="text-xs font-heading text-muted-foreground block mb-1">Nova Senha</label>
-            <Input 
-              type="password" 
-              placeholder="No mínimo 6 caracteres..."
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
+            <Input type="password" placeholder="Mínimo 6 caracteres..." value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
           </div>
           <Button type="submit" variant="magical" className="w-full" disabled={savingPassword || !newPassword.trim()}>
             {savingPassword ? "Atualizando..." : "Salvar Nova Senha"}
@@ -839,65 +728,30 @@ export default function Profile() {
         profile.house === 'slytherin' ? 'bg-green-600' :
         profile.house === 'ravenclaw' ? 'bg-blue-600' : 'bg-yellow-600'
       }`} />
-      <div className="fixed inset-0 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] z-0" />
-
+      
       <div className="relative z-20 flex gap-2 md:gap-4 border-b border-white/5 mb-10 overflow-x-auto pb-4 scrollbar-hide whitespace-nowrap px-2">
         {(["about", "fichas", "friends", "members", "album", "achievements", "inventory", "referral", "security"] as const).map((tab) => {
            const labels: any = { about: "Sobre", fichas: "Fichas 📜", friends: `Amigos (${friends.length})`, members: "Membros 👥", album: "Álbum", achievements: "Conquistas 🏆", inventory: "Inventário 🎒", referral: "Recrutamento", security: "Segurança" };
            if (!isMe && (tab === "security" || tab === "referral")) return null;
            return (
-            <button 
-              key={tab}
-              onClick={() => { setActiveTab(tab); setEditing(false); }} 
-              className={`px-6 py-3 font-heading text-[10px] tracking-[0.3em] uppercase transition-all duration-500 rounded-2xl border ${
-                activeTab === tab 
-                  ? "bg-primary text-white border-primary shadow-[0_10px_20px_rgba(251,191,36,0.2)] scale-105" 
-                  : "text-white/30 border-transparent hover:text-white hover:bg-white/5"
-              }`}
-            >
+            <button key={tab} onClick={() => { setActiveTab(tab); setEditing(false); }} className={`px-6 py-3 font-heading text-[10px] tracking-[0.3em] uppercase transition-all duration-500 rounded-2xl border ${activeTab === tab ? "bg-primary text-white border-primary shadow-lg scale-105" : "text-white/30 border-transparent hover:text-white hover:bg-white/5"}`}>
               {labels[tab]}
             </button>
            )
         })}
       </div>
 
-      <div className="relative overflow-hidden rounded-[3rem] bg-gradient-to-b from-white/[0.08] to-black/60 backdrop-blur-3xl p-8 md:p-12 border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] text-center group">
-        <div className={`absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full blur-[120px] opacity-20 group-hover:opacity-30 transition-opacity duration-1000 ${
-          profile.house === 'gryffindor' ? 'bg-red-600' :
-          profile.house === 'slytherin' ? 'bg-green-600' :
-          profile.house === 'ravenclaw' ? 'bg-blue-600' : 'bg-yellow-600'
-        }`} />
-        <div className={`absolute -bottom-40 -right-40 w-[400px] h-[400px] rounded-full blur-[100px] opacity-10 group-hover:opacity-20 transition-opacity duration-1000 ${
-          profile.house === 'gryffindor' ? 'bg-amber-600' :
-          profile.house === 'slytherin' ? 'bg-emerald-600' :
-          profile.house === 'ravenclaw' ? 'bg-cyan-600' : 'bg-orange-600'
-        }`} />
-
+      <div className="relative overflow-hidden rounded-[3rem] bg-gradient-to-b from-white/[0.08] to-black/60 backdrop-blur-3xl p-8 md:p-12 border border-white/10 shadow-2xl text-center group">
         <div className="relative z-10 flex flex-col items-center">
           <div className="relative mb-8 group/avatar">
-            <div className={`absolute -inset-4 rounded-full border-2 border-dashed opacity-20 animate-spin-slow ${
-               profile.house === 'gryffindor' ? 'border-red-500' :
-               profile.house === 'slytherin' ? 'border-green-500' :
-               profile.house === 'ravenclaw' ? 'border-blue-500' : 'border-yellow-500'
-            }`} />
-            
             <div className="w-32 h-32 md:w-40 h-40 shrink-0 relative z-10">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-full p-1.5 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
-                <SafeImage
-                  src={profile.avatar_url}
-                  alt={profile.full_name}
-                  className="w-full h-full rounded-full object-cover border-2 border-white/10 shadow-inner group-hover/avatar:scale-105 transition-transform duration-500"
-                  fallbackText={profile.full_name[0]}
-                />
-              </div>
+              <SafeImage src={profile.avatar_url} alt={profile.full_name} className="w-full h-full rounded-full object-cover border-2 border-white/10 shadow-inner" fallbackText={profile.full_name[0]} />
             </div>
-
-            <div className="absolute -bottom-2 -right-2 z-20 scale-125 md:scale-150 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
+            <div className="absolute -bottom-2 -right-2 z-20 scale-125 md:scale-150">
               <HouseCrest house={profile.house as House} size="sm" />
             </div>
-
             {isMe && (
-              <label className="absolute -top-2 -right-2 z-20 w-10 h-10 rounded-full bg-primary text-white shadow-2xl flex items-center justify-center cursor-pointer hover:scale-110 active:scale-90 transition-all border border-white/20" title="Trocar foto">
+              <label className="absolute -top-2 -right-2 z-20 w-10 h-10 rounded-full bg-primary text-white shadow-2xl flex items-center justify-center cursor-pointer border border-white/20">
                 <Sparkles size={16} />
                 <input type="file" accept="image/*" className="hidden" onChange={uploadAvatar} disabled={uploading} />
               </label>
@@ -907,7 +761,7 @@ export default function Profile() {
           {!editing ? (
             <div className="space-y-4">
               <div className="space-y-1">
-                <h1 className="font-heading text-3xl md:text-5xl text-gold-gradient tracking-tight drop-shadow-2xl flex items-center justify-center gap-4 flex-wrap">
+                <h1 className="font-heading text-3xl md:text-5xl text-gold-gradient tracking-tight flex items-center justify-center gap-4 flex-wrap">
                   {profile.full_name}
                   <MedalBadge xp={profile.xp} />
                 </h1>
@@ -915,19 +769,9 @@ export default function Profile() {
               </div>
 
               <div className="flex flex-wrap justify-center gap-3">
-                {profile.vip_plan === "founder" && (
-                  <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-600 text-black font-heading text-xs shadow-lg animate-pulse-slow">
-                    <Crown size={14} /> FUNDADOR
-                  </div>
-                )}
-                {profile.vip_plan === "vip" && (
-                  <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-purple-600 to-purple-400 text-white font-heading text-xs shadow-lg">
-                    <Crown size={14} /> VIP
-                  </div>
-                )}
-                {profile.vip_plan === "premium" && (
-                  <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-600 to-blue-400 text-white font-heading text-xs shadow-lg">
-                    <Star size={14} /> PREMIUM
+                {profile.vip_plan && (
+                  <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-purple-600 to-purple-400 text-white font-heading text-xs shadow-lg uppercase">
+                    <Crown size={14} /> {profile.vip_plan}
                   </div>
                 )}
                 <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/60 font-heading text-[10px] tracking-widest">
@@ -936,19 +780,11 @@ export default function Profile() {
               </div>
 
               <div className="max-w-lg mx-auto py-4">
-                <p className="text-lg text-white/70 font-serif italic leading-relaxed">
-                  {profile.bio || "Este bruxo ainda não escreveu sua lenda no castelo..."}
-                </p>
+                <p className="text-lg text-white/70 font-serif italic leading-relaxed">{profile.bio || "Este bruxo ainda não escreveu sua lenda..."}</p>
               </div>
 
               {isMe && (
-                <div className="inline-flex items-center gap-4 px-8 py-4 rounded-[2rem] bg-gradient-to-b from-yellow-500/10 via-amber-900/30 to-black/60 border border-yellow-500/20 shadow-[0_20px_50px_rgba(251,191,36,0.1)] group/galeon animate-in zoom-in duration-1000">
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-yellow-400 blur-lg opacity-20 animate-pulse" />
-                    <div className="w-12 h-12 bg-black border border-yellow-500/40 rounded-2xl flex items-center justify-center text-yellow-400 shadow-inner group-hover/galeon:rotate-12 transition-transform">
-                       <ShoppingBag size={24} />
-                    </div>
-                  </div>
+                <div className="inline-flex items-center gap-4 px-8 py-4 rounded-[2rem] bg-gradient-to-b from-yellow-500/10 to-black/60 border border-yellow-500/20 shadow-lg group/galeon">
                   <div className="text-left">
                      <p className="text-[9px] text-yellow-500/60 font-heading uppercase tracking-[0.4em]">Cofre em Gringotes</p>
                      <p className="text-3xl font-heading text-yellow-400 tracking-tighter leading-none mt-1">
@@ -962,22 +798,14 @@ export default function Profile() {
               <div className="flex flex-wrap justify-center gap-4 pt-6">
                 {isMe ? (
                   <>
-                    <button onClick={startEdit} className="relative group px-8 py-3 rounded-2xl bg-primary text-white font-heading text-sm tracking-widest overflow-hidden shadow-xl shadow-primary/20 transition-all hover:scale-105 active:scale-95">
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                      EDITAR PERFIL
-                    </button>
+                    <button onClick={startEdit} className="px-8 py-3 rounded-2xl bg-primary text-white font-heading text-sm tracking-widest shadow-xl shadow-primary/20 hover:scale-105 transition-all">EDITAR PERFIL</button>
                     {isAdmin && (
-                      <button onClick={() => setAdminEditModal(true)} className="px-8 py-3 rounded-2xl bg-white/5 border border-primary/40 text-primary font-heading text-sm tracking-widest hover:bg-primary/10 transition-all">
-                        EDIÇÃO SUPREMA
-                      </button>
+                      <button onClick={() => setAdminEditModal(true)} className="px-8 py-3 rounded-2xl bg-white/5 border border-primary/40 text-primary font-heading text-sm tracking-widest hover:bg-primary/10 transition-all">EDIÇÃO SUPREMA</button>
                     )}
                   </>
                 ) : (
                   <>
-                    <button onClick={() => navigate(`/dashboard/dm/${profile.user_id}`)} className="px-8 py-3 rounded-2xl bg-white/5 border border-white/20 text-white font-heading text-sm tracking-widest hover:bg-white/10 transition-all">
-                      ENVIAR CORUJA
-                    </button>
-                    
+                    <button onClick={() => navigate(`/dashboard/dm/${profile.user_id}`)} className="px-8 py-3 rounded-2xl bg-white/5 border border-white/20 text-white font-heading text-sm tracking-widest hover:bg-white/10 transition-all">ENVIAR CORUJA</button>
                     {friendship?.status === "accepted" ? (
                       <div className="flex gap-2">
                         <div className="px-6 py-3 rounded-2xl bg-green-500/10 border border-green-500/30 text-green-500 font-heading text-sm tracking-widest">AMIGO ✓</div>
@@ -996,63 +824,38 @@ export default function Profile() {
               </div>
             </div>
           ) : (
-          <div className="space-y-3 text-left">
-            <div>
-              <label className="text-xs font-heading text-muted-foreground block mb-1">Nome completo</label>
-              <Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} />
-            </div>
-            <div>
-              <label className="text-xs font-heading text-muted-foreground block mb-1">@Username</label>
-              <Input value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value.toLowerCase().replace(/\s/g, "") })} />
-            </div>
-            <div>
-              <label className="text-xs font-heading text-muted-foreground block mb-1">Data de Nascimento (Aniversário)</label>
-              <Input type="date" value={form.birth_date} onChange={(e) => setForm({ ...form, birth_date: e.target.value })} className="bg-secondary/50 border-border" />
-            </div>
-            <div>
-              <label className="text-xs font-heading text-muted-foreground block mb-1">Idade</label>
-              <Input type="number" value={form.age} onChange={(e) => setForm({ ...form, age: parseInt(e.target.value) || 11 })} />
-            </div>
-            <div>
-              <label className="text-xs font-heading text-muted-foreground block mb-1">Bio</label>
-              <textarea
-                value={form.bio}
-                maxLength={200}
-                onChange={(e) => setForm({ ...form, bio: e.target.value })}
-                className="w-full bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground focus:outline-none min-h-[80px]"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-heading text-muted-foreground block mb-1">📷 Foto de Perfil</label>
-              <label className="flex items-center justify-center gap-2 w-full py-3 rounded-xl border-2 border-dashed border-primary/50 bg-primary/5 hover:bg-primary/10 cursor-pointer transition-colors text-sm font-heading text-primary mb-2">
-                {uploading ? "⏳ Fazendo upload..." : "📁 Clique aqui para fazer upload da sua foto"}
-                <input type="file" accept="image/*" className="hidden" onChange={uploadAvatar} disabled={uploading} />
-              </label>
-              <p className="text-[10px] text-muted-foreground text-center mb-2">ou cole o link direto abaixo ↓</p>
-              <div className="flex gap-2 items-center">
-                <Input
-                  value={form.avatar_url}
-                  onChange={(e) => setForm({ ...form, avatar_url: e.target.value })}
-                  placeholder="https://exemplo.com/sua-foto.jpg"
-                  className="flex-1"
-                />
-                {form.avatar_url && (
-                  <div className="w-10 h-10 shrink-0">
-                    <SafeImage 
-                      src={form.avatar_url} 
-                      alt="preview" 
-                      className="w-full h-full rounded-full object-cover border border-border" 
-                    />
+            <div className="space-y-4 w-full max-w-md mx-auto text-left">
+              <div className="grid grid-cols-1 gap-4">
+                <div>
+                  <label className="text-xs font-heading text-muted-foreground block mb-1">Nome completo</label>
+                  <Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} />
+                </div>
+                <div>
+                  <label className="text-xs font-heading text-muted-foreground block mb-1">@Username</label>
+                  <Input value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value.toLowerCase().replace(/\s/g, "") })} />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-heading text-muted-foreground block mb-1">Aniversário</label>
+                    <Input type="date" value={form.birth_date} onChange={(e) => setForm({ ...form, birth_date: e.target.value })} />
                   </div>
-                )}
+                  <div>
+                    <label className="text-xs font-heading text-muted-foreground block mb-1">Idade</label>
+                    <Input type="number" value={form.age} onChange={(e) => setForm({ ...form, age: parseInt(e.target.value) || 11 })} />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs font-heading text-muted-foreground block mb-1">Bio</label>
+                  <textarea value={form.bio} maxLength={200} onChange={(e) => setForm({ ...form, bio: e.target.value })} className="w-full bg-secondary/50 rounded-2xl px-4 py-3 text-sm text-foreground focus:outline-none min-h-[100px] border border-white/5" />
+                </div>
+              </div>
+              <div className="flex gap-2 justify-center pt-4">
+                <Button variant="outline" size="sm" onClick={() => setEditing(false)} className="rounded-xl px-8">Cancelar</Button>
+                <Button variant="magical" size="sm" onClick={save} disabled={saving} className="rounded-xl px-8">{saving ? "Salvando..." : "Salvar"}</Button>
               </div>
             </div>
-            <div className="flex gap-2 justify-center pt-2">
-              <Button variant="outline" size="sm" onClick={() => setEditing(false)}>Cancelar</Button>
-              <Button variant="magical" size="sm" onClick={save} disabled={saving}>{saving ? "Salvando..." : "Salvar"}</Button>
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       <div className="animate-in fade-in slide-in-from-bottom-6 duration-1000">
