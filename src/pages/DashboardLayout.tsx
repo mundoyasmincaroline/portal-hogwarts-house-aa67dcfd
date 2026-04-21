@@ -83,11 +83,19 @@ export default function DashboardLayout() {
   useEffect(() => {
     if (!user) return;
     const checkChars = async () => {
-      const { count } = await supabase
-        .from("characters")
-        .select("*", { count: "exact", head: true })
-        .eq("user_id", user.id);
-      setHasCharacters((count ?? 0) > 0);
+      try {
+        const { count, error } = await supabase
+          .from("characters")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", user.id);
+        
+        if (error) throw error;
+        setHasCharacters((count ?? 0) > 0);
+      } catch (err) {
+        console.error("Erro ao verificar personagens:", err);
+        // Em caso de erro, assume que não tem para não travar a tela
+        setHasCharacters(false);
+      }
     };
     checkChars();
   }, [user?.id]);
