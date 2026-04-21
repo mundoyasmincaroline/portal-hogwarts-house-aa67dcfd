@@ -1,5 +1,25 @@
 import { createRoot } from "react-dom/client";
+import React from "react";
 import App from "./App.tsx";
 import "./index.css";
 
-createRoot(document.getElementById("root")!).render(<App />);
+class ErrorBoundary extends React.Component {
+  state = { hasError: false, error: null };
+  static getDerivedStateFromError(error) { return { hasError: true, error }; }
+  render() {
+    if (this.state.hasError) {
+      return <div style={{padding: 20, color: "red", background: "white", fontSize: 20, zIndex: 9999, position: "absolute"}}>
+        <h1>Something went wrong.</h1>
+        <pre>{this.state.error?.toString()}</pre>
+        <pre>{this.state.error?.stack}</pre>
+      </div>;
+    }
+    return this.props.children;
+  }
+}
+
+createRoot(document.getElementById("root")!).render(
+  <ErrorBoundary>
+    <App />
+  </ErrorBoundary>
+);
