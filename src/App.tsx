@@ -35,7 +35,7 @@ import Azkaban from "./pages/Azkaban";
 import Members from "./pages/Members";
 import GringottsStore from "./pages/GringottsStore";
 import Wallet from "./pages/Wallet";
-import MagicalTournaments from "./components/MagicalTournaments";
+// import MagicalTournaments from "./components/MagicalTournaments";
 
 
 const queryClient = new QueryClient();

@@ -31,8 +31,8 @@ import MagicalPartyOverlay from "@/components/MagicalPartyOverlay";
 import GlobalChallengeWatcher from "@/components/GlobalChallengeWatcher";
 import DailyRewardSystem from "@/components/DailyRewardSystem";
 import MaraudersMap from "@/components/MaraudersMap";
-import MagicalActivityFeed from "@/components/MagicalActivityFeed";
-import TimedMysteryChest from "@/components/TimedMysteryChest";
+// import MagicalActivityFeed from "@/components/MagicalActivityFeed";
+// import TimedMysteryChest from "@/components/TimedMysteryChest";
 
 
 const NAV_ITEMS = [

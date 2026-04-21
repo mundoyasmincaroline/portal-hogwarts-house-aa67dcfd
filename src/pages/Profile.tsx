@@ -798,7 +798,7 @@ export default function Profile() {
                                 </p>
                             </div>
                             <div className="flex items-center justify-between pt-2 border-t border-white/5">
-                                <Badge variant="magical" className="text-[9px] px-2 py-0.5">+{uc.challenges?.xp_reward} XP</Badge>
+                                <Badge variant="outline" className="text-[9px] px-2 py-0.5 border-primary/30 text-primary">+{uc.challenges?.xp_reward} XP</Badge>
                                 <span className="text-[10px] text-muted-foreground font-mono">
                                     {new Date(uc.completed_at || uc.created_at).toLocaleDateString("pt-BR")}
                                 </span>
