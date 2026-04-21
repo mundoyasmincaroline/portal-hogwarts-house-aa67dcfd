@@ -308,7 +308,7 @@ export default function MagicalEventSystem() {
                 </div>
                 <h2 className="text-3xl font-heading text-white mb-2">{activeEvent.name}</h2>
                 <div className="flex justify-center gap-1 mb-6">
-                  {RIDDLES[activeEvent.type as keyof typeof RIDDLES].map((_, i) => (
+                  {activeEvent.riddles.map((_, i) => (
                     <div key={i} className={`h-1.5 w-12 rounded-full transition-colors ${i <= step ? "bg-primary" : "bg-secondary"}`} />
                   ))}
                 </div>
