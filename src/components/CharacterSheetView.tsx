@@ -118,15 +118,15 @@ export default function CharacterSheetView({ userId, isOwner }: Props) {
     <div className="space-y-4">
       {/* Tab selector se tiver mais de 1 ficha */}
       {characters.length > 1 && (
-        <div className="flex gap-2">
+        <div className="flex gap-3 overflow-x-auto pb-4 no-scrollbar">
           {characters.map((c, i) => (
             <button
               key={c.id}
               onClick={() => setActiveChar(i)}
-              className={`px-4 py-1.5 rounded-full text-xs font-heading transition-colors ${
+              className={`px-6 py-2.5 rounded-2xl text-[10px] font-heading tracking-widest uppercase transition-all duration-500 shrink-0 border ${
                 i === activeChar
-                  ? "bg-primary/10 text-primary border border-primary/30"
-                  : "text-muted-foreground hover:bg-secondary border border-transparent"
+                  ? "bg-primary text-white border-primary shadow-[0_10px_20px_rgba(251,191,36,0.3)] scale-105"
+                  : "bg-white/5 text-white/40 border-white/5 hover:text-white hover:bg-white/10"
               }`}
             >
               {c.character_type === "oc" ? "⭐ OC" : "📖 Canon"}: {c.full_name || "—"}
@@ -135,167 +135,194 @@ export default function CharacterSheetView({ userId, isOwner }: Props) {
         </div>
       )}
 
-      {/* Ficha Card */}
-      <div className="glass rounded-2xl overflow-hidden border border-border/50">
-        {/* Header com foto */}
-        <div className="relative bg-gradient-to-br from-primary/10 via-background to-secondary/30 p-6">
-          <div className="flex flex-col sm:flex-row gap-5 items-center sm:items-start">
-            <div className="shrink-0 group relative">
-              <SafeImage
-                src={char.avatar_url}
-                alt={char.full_name}
-                fallbackEmoji="🧙"
-                className="w-28 h-28 rounded-2xl object-cover border-2 border-primary/30 shadow-xl"
-              />
-              {isOwner && (
-                <button 
-                  onClick={() => { setEditingPhoto(!editingPhoto); setTempUrl(char.avatar_url || ""); }}
-                  className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground p-1.5 rounded-full shadow-lg hover:scale-110 transition-transform z-10"
-                  title="Editar foto do personagem"
-                >
-                  <Edit2 size={14} />
-                </button>
-              )}
+      {/* Ficha Card - Monster Quality */}
+      <div className="relative overflow-hidden bg-black/40 backdrop-blur-3xl rounded-[3rem] border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] group">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+        
+        {/* Header com foto Pedestal 3D */}
+        <div className="relative p-8 md:p-12 bg-gradient-to-br from-white/5 via-transparent to-transparent">
+          <div className="flex flex-col md:flex-row gap-10 items-center md:items-start text-center md:text-left">
+            <div className="shrink-0 relative">
+              {/* Pedestal Shadow */}
+              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-20 h-4 bg-black/60 blur-xl rounded-full" />
+              
+              <div className="relative z-10 w-40 h-40 md:w-48 md:h-48 rounded-[2rem] bg-gradient-to-br from-white/20 to-transparent p-1.5 shadow-2xl group-hover:scale-105 transition-transform duration-700">
+                <SafeImage
+                  src={char.avatar_url}
+                  alt={char.full_name}
+                  fallbackEmoji="🧙"
+                  className="w-full h-full rounded-[1.8rem] object-cover border border-white/10 shadow-inner"
+                />
+                {isOwner && (
+                  <button 
+                    onClick={() => { setEditingPhoto(!editingPhoto); setTempUrl(char.avatar_url || ""); }}
+                    className="absolute -bottom-3 -right-3 bg-primary text-white p-3 rounded-2xl shadow-2xl hover:scale-110 active:scale-90 transition-all border border-white/20 z-20"
+                    title="Editar foto do personagem"
+                  >
+                    <Edit2 size={16} />
+                  </button>
+                )}
+              </div>
+
+              {/* Aura dynamic by type */}
+              <div className={`absolute inset-0 blur-3xl opacity-20 animate-pulse-slow ${char.character_type === 'oc' ? 'bg-primary' : 'bg-blue-500'}`} />
             </div>
             
-            <div className="text-center sm:text-left flex-1">
+            <div className="flex-1 space-y-4 pt-4">
               {editingPhoto && isOwner && (
-                <div className="mb-4 p-3 bg-card/80 backdrop-blur-md rounded-xl border border-primary/30 space-y-3 animate-in fade-in slide-in-from-top-2">
-                  <p className="text-[10px] font-heading text-primary uppercase tracking-widest">Atualizar Foto do Personagem</p>
-                  <div className="flex flex-col gap-2">
-                    <label className="flex items-center justify-center gap-2 w-full py-2 rounded-lg border border-dashed border-primary/50 bg-primary/5 hover:bg-primary/10 cursor-pointer transition-colors text-xs font-heading text-primary">
-                      <Upload size={14} />
-                      {uploading ? "Carregando..." : "Upload de Arquivo"}
+                <div className="mb-6 p-6 bg-white/5 backdrop-blur-3xl rounded-[2rem] border border-primary/30 space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
+                  <p className="text-[10px] font-heading text-primary uppercase tracking-[0.3em]">Registro de Identidade Bruxa</p>
+                  <div className="space-y-4">
+                    <label className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl border-2 border-dashed border-primary/40 bg-primary/5 hover:bg-primary/10 cursor-pointer transition-all text-[10px] font-heading text-primary tracking-widest uppercase">
+                      <Upload size={18} />
+                      {uploading ? "TRANSFERINDO..." : "CLIQUE PARA UPLOAD"}
                       <input type="file" accept="image/*" className="hidden" onChange={handleUpload} disabled={uploading} />
                     </label>
                     <div className="flex gap-2">
                       <Input 
                         value={tempUrl} 
                         onChange={e => setTempUrl(e.target.value)} 
-                        placeholder="Ou cole o link da foto aqui..." 
-                        className="h-8 text-xs bg-secondary/50"
+                        placeholder="Ou cole o link direto..." 
+                        className="h-12 bg-black/40 border-white/10 rounded-xl text-xs"
                       />
-                      <Button size="sm" className="h-8" onClick={saveUrl} disabled={uploading || !tempUrl}>
-                        <Save size={14} />
-                      </Button>
-                      <Button size="sm" variant="ghost" className="h-8" onClick={() => setEditingPhoto(false)}>
-                        <X size={14} />
-                      </Button>
+                      <button onClick={saveUrl} disabled={uploading || !tempUrl} className="p-3 bg-primary rounded-xl text-white shadow-lg shadow-primary/20 hover:scale-105 transition-all">
+                        <Save size={20} />
+                      </button>
+                      <button onClick={() => setEditingPhoto(false)} className="p-3 bg-white/5 rounded-xl text-white/40 hover:text-white transition-all">
+                        <X size={20} />
+                      </button>
                     </div>
                   </div>
                 </div>
               )}
-              <div className="flex items-center gap-2 justify-center sm:justify-start mb-1">
-                <span className="text-xs uppercase tracking-widest text-primary/70 font-heading">
-                  {char.character_type === "oc" ? "⭐ Personagem Original (OC)" : "📖 Personagem Canon (Saga)"}
-                </span>
+
+              <div className="space-y-1">
+                <div className="flex items-center gap-3 justify-center md:justify-start">
+                  <div className={`w-2 h-2 rounded-full animate-pulse ${char.character_type === 'oc' ? 'bg-primary shadow-[0_0_10px_rgba(251,191,36,0.8)]' : 'bg-blue-400 shadow-[0_0_10px_rgba(96,165,250,0.8)]'}`} />
+                  <span className="text-[10px] uppercase tracking-[0.4em] text-white/40 font-heading">
+                    {char.character_type === "oc" ? "Personagem Original" : "Personagem Canon"}
+                  </span>
+                </div>
+                <h2 className="font-heading text-4xl md:text-6xl text-white tracking-tighter drop-shadow-2xl">{char.full_name}</h2>
               </div>
-              <h2 className="font-heading text-2xl text-foreground">{char.full_name}</h2>
-              <div className="flex flex-wrap gap-2 mt-2 justify-center sm:justify-start">
+
+              <div className="flex flex-wrap gap-3 mt-4 justify-center md:justify-start">
                 {char.house && (
-                  <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full border border-primary/20">
+                  <div className="px-4 py-1.5 bg-primary/10 text-primary rounded-full border border-primary/30 text-[10px] font-heading tracking-widest uppercase">
                     {HOUSE_LABELS[char.house] || char.house}
-                  </span>
+                  </div>
                 )}
-                {char.age && (
-                  <span className="text-xs bg-secondary px-2 py-0.5 rounded-full border border-border text-foreground">
-                    {char.age} anos
-                  </span>
-                )}
-                {char.gender && (
-                  <span className="text-xs bg-secondary px-2 py-0.5 rounded-full border border-border text-foreground">
-                    {char.gender === "female" ? "Feminino" : "Masculino"}
-                  </span>
-                )}
-                {char.age_category && (
-                  <span className="text-xs bg-secondary px-2 py-0.5 rounded-full border border-border text-foreground">
-                    {char.age_category === "student" ? "Aluno(a)" : "Adulto(a)"}
-                  </span>
-                )}
-                {char.adult_job && (
-                  <span className="text-xs bg-secondary px-2 py-0.5 rounded-full border border-border text-foreground">
-                    {char.adult_job}
-                  </span>
-                )}
+                <div className="px-4 py-1.5 bg-white/5 text-white/60 rounded-full border border-white/10 text-[10px] font-heading tracking-widest uppercase">
+                  {char.age} ANOS
+                </div>
+                <div className="px-4 py-1.5 bg-white/5 text-white/60 rounded-full border border-white/10 text-[10px] font-heading tracking-widest uppercase">
+                  {char.gender === "female" ? "FEMININO" : "MASCULINO"}
+                </div>
               </div>
-              <div className="flex gap-4 mt-3 text-sm text-muted-foreground justify-center sm:justify-start">
-                <span>Nível <strong className="text-primary">{char.level || 1}</strong></span>
-                <span><strong className="text-primary">{char.xp || 0}</strong> XP</span>
+
+              <div className="flex gap-8 pt-6 border-t border-white/5 justify-center md:justify-start">
+                <div className="space-y-1">
+                   <p className="text-[10px] text-white/20 uppercase tracking-widest font-heading text-center md:text-left">Nível de Maestria</p>
+                   <p className="text-2xl font-heading text-primary tracking-tighter text-center md:text-left">{char.level || 1}</p>
+                </div>
+                <div className="space-y-1">
+                   <p className="text-[10px] text-white/20 uppercase tracking-widest font-heading text-center md:text-left">XP Acumulado</p>
+                   <p className="text-2xl font-heading text-white tracking-tighter text-center md:text-left">{char.xp || 0}</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Corpo da ficha */}
-        <div className="p-6 space-y-6">
+        {/* Corpo da ficha - Seções 3D */}
+        <div className="p-8 md:p-12 space-y-12 bg-gradient-to-b from-transparent to-black/40">
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            {/* Dados Básicos */}
+            <div className="space-y-6">
+              <div className="flex items-center gap-3 border-b border-white/5 pb-4">
+                 <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/40 shadow-inner">
+                    <span className="text-sm">📋</span>
+                 </div>
+                 <h4 className="font-heading text-xs uppercase tracking-[0.3em] text-white/60">Registros Civis</h4>
+              </div>
+              <div className="grid grid-cols-1 gap-6">
+                <Field label="Status Sanguíneo" value={char.blood_status} />
+                <Field label="Faceclaim Oficial" value={char.actor_faceclaim} />
+                <Field label="Instagram Bruxo" value={char.instagram} />
+              </div>
+            </div>
 
-          {/* Dados Básicos */}
-          <Section title="📋 Dados Básicos">
-            <Field label="Status Sanguíneo" value={char.blood_status} />
-            <Field label="Faceclaim (Ator / Atriz)" value={char.actor_faceclaim} />
-            <Field label="Instagram do Personagem" value={char.instagram} />
-          </Section>
+            {/* Magia */}
+            <div className="space-y-6">
+              <div className="flex items-center gap-3 border-b border-white/5 pb-4">
+                 <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center border border-blue-500/40 shadow-inner">
+                    <span className="text-sm">🪄</span>
+                 </div>
+                 <h4 className="font-heading text-xs uppercase tracking-[0.3em] text-white/60">Artes Mágicas</h4>
+              </div>
+              <div className="grid grid-cols-1 gap-6">
+                <Field label="Varinha" value={char.wand} />
+                <Field label="Forma do Patrono" value={char.patronus} />
+                <Field label="Feitiço Assinatura" value={char.favorite_spell} />
+                <Field label="Matéria de Estudo" value={char.favorite_class} />
+              </div>
+            </div>
+          </div>
 
-          {/* Magia */}
-          <Section title="🪄 Magia & Habilidades">
-            <Field label="Varinha" value={char.wand} />
-            <Field label="Patrono" value={char.patronus} />
-            <Field label="Feitiço Favorito" value={char.favorite_spell} />
-            <Field label="Matéria Favorita" value={char.favorite_class} />
-          </Section>
-
-          {/* Personalidade */}
+          {/* Personalidade Hero Section */}
           {char.personality && (
-            <div className="space-y-2">
-              <h4 className="font-heading text-xs uppercase tracking-widest text-primary border-b border-primary/20 pb-1">🧠 Personalidade</h4>
-              <p className="text-sm text-foreground/90 leading-relaxed italic">{char.personality}</p>
+            <div className="relative p-10 bg-white/5 rounded-[2.5rem] border border-white/10 overflow-hidden group/personality">
+              <div className="absolute top-0 right-0 p-8 text-6xl opacity-5 group-hover/personality:rotate-12 transition-transform duration-1000 select-none">🧠</div>
+              <h4 className="font-heading text-[10px] uppercase tracking-[0.4em] text-primary mb-6">Essência e Comportamento</h4>
+              <p className="text-xl text-white/80 leading-relaxed font-serif italic relative z-10">
+                "{char.personality}"
+              </p>
             </div>
           )}
 
-          {/* Pontos & Medos */}
-          <Section title="⚖️ Pontos Forte, Fraco & Medos">
-            <Field label="Ponto Forte" value={char.strength} />
-            <Field label="Ponto Fraco" value={char.weakness} />
-            <Field label="Medos" value={char.fears} />
-            <Field label="Sonhos" value={char.dreams} />
-          </Section>
-
-          {/* Segredos & Quotes */}
-          {(char.secrets || char.quotes) && (
-            <Section title="🔐 Segredos & Citações">
-              <div className="sm:col-span-2 space-y-3">
-                {char.secrets && (
-                  <div className="bg-secondary/40 rounded-xl p-3 border border-border/50">
-                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground/70 font-heading mb-1">Segredos</p>
-                    <p className="text-sm text-foreground/90 italic">{char.secrets}</p>
-                  </div>
-                )}
-                {char.quotes && (
-                  <div className="bg-primary/5 rounded-xl p-3 border border-primary/20">
-                    <p className="text-[10px] uppercase tracking-widest text-primary/70 font-heading mb-1">Citações</p>
-                    <p className="text-sm text-foreground/90 italic">"{char.quotes}"</p>
-                  </div>
-                )}
+          {/* Atributos Psicológicos */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div className="space-y-6">
+              <div className="flex items-center gap-3 border-b border-white/5 pb-4">
+                 <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center border border-red-500/40 shadow-inner">
+                    <span className="text-sm">⚔️</span>
+                 </div>
+                 <h4 className="font-heading text-xs uppercase tracking-[0.3em] text-white/60">Equilíbrio Bruxo</h4>
               </div>
-            </Section>
-          )}
+              <div className="grid grid-cols-1 gap-6">
+                <Field label="Virtude Suprema" value={char.strength} />
+                <Field label="Fraqueza Fatal" value={char.weakness} />
+                <Field label="Medos Profundos" value={char.fears} />
+                <Field label="Grandes Sonhos" value={char.dreams} />
+              </div>
+            </div>
 
-          {/* Família */}
-          {(char.family_mother || char.family_father || char.family_siblings || char.family_relatives) && (
-            <Section title="👨‍👩‍👧 Família">
-              <Field label="Mãe" value={char.family_mother} />
-              <Field label="Pai" value={char.family_father} />
-              <Field label="Irmãos" value={char.family_siblings} />
-              <Field label="Outros Parentes" value={char.family_relatives} />
-            </Section>
-          )}
+            {/* Família & Pets */}
+            <div className="space-y-6">
+              <div className="flex items-center gap-3 border-b border-white/5 pb-4">
+                 <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center border border-green-500/40 shadow-inner">
+                    <span className="text-sm">👨‍👩‍👧</span>
+                 </div>
+                 <h4 className="font-heading text-xs uppercase tracking-[0.3em] text-white/60">Linhagem & Companhia</h4>
+              </div>
+              <div className="grid grid-cols-1 gap-6">
+                <Field label="Pai & Mãe" value={`${char.family_father || '-'} / ${char.family_mother || '-'}`} />
+                <Field label="Pet / Familiar" value={`${char.pet || '-'} (${char.pet_name || 'Sem nome'})`} />
+                <Field label="Citações" value={char.quotes} />
+              </div>
+            </div>
+          </div>
 
-          {/* Pet */}
-          {(char.pet || char.pet_name) && (
-            <Section title="🦉 Pet / Familiar">
-              <Field label="Tipo de Pet" value={char.pet} />
-              <Field label="Nome do Pet" value={char.pet_name} />
-            </Section>
+          {/* Segredos (Se for o dono ou admin) */}
+          {(char.secrets) && (
+            <div className="p-8 bg-red-950/20 rounded-[2rem] border border-red-500/20 text-center relative overflow-hidden group/secrets">
+              <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 via-transparent to-red-500/5 opacity-0 group-hover/secrets:opacity-100 transition-opacity" />
+              <h4 className="font-heading text-[10px] uppercase tracking-[0.5em] text-red-500/60 mb-4 flex items-center justify-center gap-3">
+                 <Lock size={12} /> ARQUIVO RESTRITO
+              </h4>
+              <p className="text-sm text-red-400/80 italic font-mono relative z-10">{char.secrets}</p>
+            </div>
           )}
         </div>
       </div>

@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import MagicalParticles from "@/components/MagicalParticles";
 import { toast } from "sonner";
+import { Sparkles } from "lucide-react";
 
 interface Choice {
   label: string;

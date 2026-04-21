@@ -227,84 +227,118 @@ export default function InstaHogwarts() {
   const activeChar = myChars.find(c => c.id === selectedCharId);
 
   return (
-    <div className="max-w-xl mx-auto space-y-6 pb-10">
-      <div className="glass rounded-2xl p-6 text-center mb-2">
-        <h1 className="font-heading text-3xl text-gold-gradient mb-1">📸 Insta Hogwarts</h1>
-        <p className="text-muted-foreground text-sm">O feed dos personagens do castelo.</p>
+    <div className="max-w-2xl mx-auto space-y-10 pb-20 animate-in fade-in duration-1000">
+      <div className="relative overflow-hidden bg-black/40 backdrop-blur-3xl rounded-[3rem] p-10 text-center border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] group">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-50" />
+        <div className="relative z-10 space-y-2">
+          <h1 className="font-heading text-4xl text-white tracking-tighter uppercase drop-shadow-2xl">📸 Insta Hogwarts</h1>
+          <p className="text-white/30 text-[10px] font-heading uppercase tracking-[0.4em]">O Profeta Fotográfico do Castelo</p>
+        </div>
       </div>
 
-      {/* Área de postagem */}
-      <div className="glass rounded-2xl p-5 space-y-4">
+      {/* ÁREA DE POSTAGEM - PREMIUM COMPOSER */}
+      <div className="relative overflow-hidden bg-black/40 backdrop-blur-3xl rounded-[3rem] p-8 border border-white/10 shadow-2xl group transition-all duration-700 hover:border-primary/30">
         {myChars.length === 0 ? (
-          <p className="text-center text-muted-foreground text-sm py-2">Crie uma ficha de personagem para poder postar aqui.</p>
+          <div className="py-6 text-center space-y-4">
+             <div className="w-16 h-16 bg-white/5 rounded-full mx-auto flex items-center justify-center border border-white/5 opacity-20">
+                <Users size={32} />
+             </div>
+             <p className="text-[10px] font-heading text-white/20 uppercase tracking-widest">Crie uma identidade bruxa para poder postar aqui.</p>
+          </div>
         ) : (
-          <>
-            <div className="flex items-center gap-3 mb-2">
-              <SafeImage
-                src={activeChar?.avatar_url}
-                alt={activeChar?.full_name || ""}
-                fallbackEmoji="🧙"
-                className="w-10 h-10 rounded-full object-cover border border-primary/30 shrink-0"
-              />
-              <select
-                value={selectedCharId}
-                onChange={e => setSelectedCharId(e.target.value)}
-                className="flex-1 bg-secondary/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground"
-              >
-                {myChars.map(c => (
-                  <option key={c.id} value={c.id}>
-                    {c.character_type === "oc" ? "⭐" : "📖"} {c.full_name}
-                  </option>
-                ))}
-              </select>
+          <div className="space-y-6">
+            <div className="flex flex-col md:flex-row items-center gap-6">
+               <div className="relative shrink-0 group/avatar">
+                  <div className="absolute -inset-1 bg-primary blur-md opacity-20 group-hover/avatar:opacity-50 transition-opacity rounded-2xl" />
+                  <SafeImage
+                    src={activeChar?.avatar_url}
+                    alt={activeChar?.full_name || ""}
+                    fallbackEmoji="🧙"
+                    className="w-16 h-16 rounded-2xl object-cover border border-white/10 relative z-10 shadow-2xl"
+                  />
+               </div>
+               <div className="flex-1 w-full space-y-2">
+                  <p className="text-[10px] font-heading text-primary uppercase tracking-[0.3em] ml-1">Postar como:</p>
+                  <select
+                    value={selectedCharId}
+                    onChange={e => setSelectedCharId(e.target.value)}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-primary/40 transition-all font-heading tracking-tight"
+                  >
+                    {myChars.map(c => (
+                      <option key={c.id} value={c.id} className="bg-neutral-900 text-white">
+                        {c.character_type === "oc" ? "⭐" : "📖"} {c.full_name}
+                      </option>
+                    ))}
+                  </select>
+               </div>
             </div>
 
-            <textarea
-              className="w-full bg-secondary/50 rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none border border-border resize-none"
-              placeholder={`O que ${activeChar?.full_name || "seu personagem"} está fazendo?`}
-              value={caption}
-              onChange={e => setCaption(e.target.value)}
-              rows={2}
-            />
+            <div className="relative group/caption">
+               <textarea
+                 className="w-full bg-black/40 rounded-[2rem] px-6 py-5 text-base text-white placeholder:text-white/20 focus:outline-none border border-white/5 focus:border-primary/30 transition-all resize-none font-serif italic shadow-inner"
+                 placeholder={`O que ${activeChar?.full_name?.split(' ')[0] || "seu bruxo"} está aprontando?`}
+                 value={caption}
+                 onChange={e => setCaption(e.target.value)}
+                 rows={3}
+               />
+            </div>
+
             {selectedFile && (
-              <div className="relative inline-block">
-                <img src={URL.createObjectURL(selectedFile)} className="h-36 rounded-xl object-cover border border-border" />
+              <div className="relative animate-in zoom-in duration-500">
+                <div className="absolute -inset-2 bg-primary/20 blur-2xl rounded-[2.5rem] opacity-50" />
+                <img src={URL.createObjectURL(selectedFile)} className="w-full h-64 rounded-[2rem] object-cover border border-white/10 relative z-10 shadow-2xl" />
                 <button
-                  className="absolute -top-2 -right-2 bg-destructive text-white rounded-full w-6 h-6 text-xs flex items-center justify-center"
+                  className="absolute -top-3 -right-3 bg-red-500 text-white rounded-2xl w-10 h-10 flex items-center justify-center shadow-2xl hover:scale-110 active:scale-90 transition-all z-20 border border-white/20"
                   onClick={() => setSelectedFile(null)}
                 >✕</button>
               </div>
             )}
-            <Input
-              placeholder="Link do Spotify (opcional)..."
-              value={spotifyUri}
-              onChange={e => setSpotifyUri(e.target.value)}
-              className="bg-secondary/50 border-border"
-            />
-            <div className="flex justify-between items-center">
-              <label className="cursor-pointer text-muted-foreground hover:text-primary text-sm flex items-center gap-2 transition-colors">
-                <span>📷 Foto</span>
-                <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => setSelectedFile(e.target.files?.[0] || null)} />
-              </label>
-              <Button variant="magical" size="sm" onClick={handleUpload} disabled={!selectedFile || uploading || !selectedCharId}>
-                {uploading ? "Publicando..." : "Publicar ✨"}
-              </Button>
+
+            <div className="space-y-4">
+               <div className="relative group/spotify">
+                  <Zap size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within/spotify:text-primary transition-colors" />
+                  <input
+                    placeholder="Link do Spotify ou MP3 (opcional)..."
+                    value={spotifyUri}
+                    onChange={e => setSpotifyUri(e.target.value)}
+                    className="w-full bg-white/5 border border-white/5 rounded-xl pl-10 pr-4 py-3 text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-primary/30 transition-all"
+                  />
+               </div>
+
+               <div className="flex justify-between items-center pt-2">
+                 <label className="cursor-pointer group/photo">
+                    <div className="flex items-center gap-3 px-6 py-3 bg-white/5 rounded-2xl border border-white/10 group-hover/photo:bg-white/10 group-hover/photo:border-primary/40 transition-all shadow-inner">
+                       <span className="text-xl">📷</span>
+                       <span className="text-[10px] font-heading text-white/40 group-hover/photo:text-white tracking-widest uppercase">Anexar Fotografia</span>
+                    </div>
+                    <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => setSelectedFile(e.files?.[0] || null)} />
+                 </label>
+                 <button 
+                   disabled={!selectedFile || uploading || !selectedCharId} 
+                   onClick={handleUpload}
+                   className="px-8 py-3 bg-primary text-white font-heading text-[10px] tracking-[0.3em] rounded-2xl shadow-[0_15px_30px_rgba(251,191,36,0.3)] hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 uppercase"
+                 >
+                   {uploading ? "TRANSFIGURANDO..." : "PUBLICAR ✨"}
+                 </button>
+               </div>
             </div>
-          </>
+          </div>
         )}
       </div>
 
-      {/* Feed */}
-      <div className="space-y-6">
+      {/* FEED - MONSTER QUALITY POSTS */}
+      <div className="space-y-12">
         {loading ? (
-          <p className="text-center text-muted-foreground py-10">Revelando fotografias...</p>
+          <div className="py-20 text-center animate-pulse">
+             <div className="w-16 h-16 bg-white/5 rounded-full mx-auto mb-4 border border-white/5" />
+             <p className="text-[10px] font-heading text-white/20 uppercase tracking-[0.5em]">Invocando Memórias...</p>
+          </div>
         ) : posts.length === 0 ? (
-          <div className="glass rounded-2xl p-10 text-center">
-            <div className="text-4xl mb-3 opacity-50">📷</div>
-            <p className="text-muted-foreground text-sm">Nenhuma foto no Profeta Diário de hoje.</p>
+          <div className="bg-black/40 backdrop-blur-3xl rounded-[3rem] p-20 text-center border border-white/10 opacity-40">
+             <p className="text-[10px] font-heading uppercase tracking-[0.5em]">O Profeta Diário está vazio hoje.</p>
           </div>
         ) : (
-          posts.map(post => {
+          posts.map((post, index) => {
             const disp = getPostDisplay(post);
             const isMyPost = post.user_id === user?.id;
             const isFollowingUser = followedUserIds.has(post.user_id);
@@ -313,108 +347,164 @@ export default function InstaHogwarts() {
             const charFollowers = disp.charId ? (charFollowCounts[disp.charId] || 0) : 0;
 
             return (
-              <div key={post.id} className="glass rounded-2xl overflow-hidden border border-border/30">
-                {/* Post Header */}
-                <div className="p-4 flex items-center gap-3 border-b border-border/50">
-                  <SafeImage
-                    src={disp.avatar}
-                    alt={disp.name}
-                    fallbackText={disp.name}
-                    className="w-11 h-11 rounded-full object-cover border border-border shrink-0"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <p className="font-heading text-sm text-foreground truncate">{disp.name}</p>
-                      {disp.type && <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full shrink-0">{disp.type}</span>}
-                      {disp.house && <HouseCrest house={disp.house} size="sm" />}
+              <div key={post.id} className="relative overflow-hidden bg-black/40 backdrop-blur-3xl rounded-[3.5rem] border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] group/post animate-in fade-in slide-in-from-bottom-10 duration-1000" style={{ animationDelay: `${index * 200}ms` }}>
+                {/* House Glow Backdrop */}
+                <div className={`absolute -top-40 -right-40 w-96 h-96 rounded-full blur-[120px] opacity-[0.05] transition-opacity duration-1000 group-hover/post:opacity-[0.12] ${
+                   disp.house === 'gryffindor' ? 'bg-red-600' :
+                   disp.house === 'slytherin' ? 'bg-green-600' :
+                   disp.house === 'ravenclaw' ? 'bg-blue-600' : 'bg-yellow-600'
+                }`} />
+
+                {/* Header */}
+                <div className="relative z-10 p-6 md:p-8 flex items-center gap-5 border-b border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent">
+                  <div className="relative group/author cursor-pointer shrink-0" onClick={() => navigate(`/dashboard/profile/${post.user_id}`)}>
+                    <div className={`absolute -inset-1.5 rounded-2xl blur-lg opacity-20 group-hover/author:opacity-60 transition-opacity ${
+                       disp.house === 'gryffindor' ? 'bg-red-500' :
+                       disp.house === 'slytherin' ? 'bg-green-500' :
+                       disp.house === 'ravenclaw' ? 'bg-blue-500' : 'bg-yellow-500'
+                    }`} />
+                    <SafeImage
+                      src={disp.avatar}
+                      alt={disp.name}
+                      fallbackText={disp.name}
+                      className="w-14 h-14 rounded-2xl object-cover border border-white/10 relative z-10 shadow-2xl group-hover/author:scale-105 transition-transform"
+                    />
+                    <div className="absolute -bottom-2 -right-2 z-20 scale-125 drop-shadow-[0_5px_10px_rgba(0,0,0,0.5)]">
+                       {disp.house && <HouseCrest house={disp.house} size="sm" />}
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span>@{disp.username}</span>
-                      <span>·</span>
-                      <span>{new Date(post.created_at).toLocaleDateString("pt-BR")}</span>
+                  </div>
+                  
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3">
+                      <p className="font-heading text-lg text-white tracking-tight truncate">{disp.name}</p>
+                      {disp.type && <span className="text-[8px] font-heading bg-primary/10 text-primary border border-primary/20 px-3 py-0.5 rounded-full uppercase tracking-widest">{disp.type}</span>}
+                    </div>
+                    <div className="flex items-center gap-2 mt-1">
+                      <p className="text-[10px] text-white/30 font-heading uppercase tracking-widest">@{disp.username}</p>
+                      <span className="w-1 h-1 rounded-full bg-white/10" />
+                      <p className="text-[10px] text-white/30 font-heading uppercase tracking-widest">
+                        {new Date(post.created_at).toLocaleDateString("pt-BR")}
+                      </p>
                       {disp.charId && charFollowers > 0 && (
                         <>
-                          <span>·</span>
-                          <span className="flex items-center gap-1">
-                            <Users size={10} />
-                            {charFollowers}
-                          </span>
+                          <span className="w-1 h-1 rounded-full bg-white/10" />
+                          <div className="flex items-center gap-1.5 text-[10px] font-heading text-primary/60 uppercase tracking-widest">
+                            <Users size={12} className="opacity-40" />
+                            {charFollowers} SEGUIDORES
+                          </div>
                         </>
                       )}
                     </div>
                   </div>
 
-                  {/* Action buttons: follow user and/or follow character */}
                   {!isMyPost && (
-                    <div className="flex flex-col gap-1 shrink-0">
-                      {/* Follow user */}
+                    <div className="flex flex-col gap-2 shrink-0">
                       <button
                         onClick={() => toggleFollowUser(post.user_id)}
-                        className={`flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-heading transition-all ${
+                        className={`px-4 py-1.5 rounded-xl text-[8px] font-heading uppercase tracking-widest transition-all border ${
                           isFollowingUser
-                            ? "bg-secondary text-muted-foreground border border-border hover:border-destructive/50"
-                            : "bg-primary/10 text-primary border border-primary/30 hover:bg-primary/20"
+                            ? "bg-white/5 text-white/40 border-white/10 hover:border-red-500/50 hover:text-red-500"
+                            : "bg-primary/20 text-primary border-primary/40 hover:bg-primary hover:text-white"
                         }`}
                       >
-                        {isFollowingUser ? <><UserCheck size={10} /> Seguindo</> : <><UserPlus size={10} /> Seguir</>}
+                        {isFollowingUser ? "Seguindo Bruxo" : "Seguir Bruxo"}
                       </button>
-                      {/* Follow character (only if post has a character) */}
                       {disp.charId && (
                         <button
                           onClick={() => toggleFollowChar(disp.charId!, disp.charOwnerId)}
-                          className={`flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-heading transition-all ${
+                          className={`px-4 py-1.5 rounded-xl text-[8px] font-heading uppercase tracking-widest transition-all border ${
                             isFollowingChar
-                              ? "bg-secondary text-muted-foreground border border-border"
-                              : "bg-amber-500/10 text-amber-400 border border-amber-400/30 hover:bg-amber-500/20"
+                              ? "bg-white/5 text-white/40 border-white/10"
+                              : "bg-amber-500/20 text-amber-400 border-amber-400/40 hover:bg-amber-500 hover:text-black"
                           }`}
                         >
-                          {isFollowingChar ? "⭐ Seguindo Personagem" : "⭐ Seguir Personagem"}
+                          {isFollowingChar ? "Seguindo Ficha" : "Seguir Ficha"}
                         </button>
                       )}
                     </div>
                   )}
                 </div>
 
-                {/* Image */}
-                <div className="relative w-full bg-black flex items-center justify-center max-h-[540px] overflow-hidden">
+                {/* Main Content Image - MONSTER QUALITY */}
+                <div className="relative aspect-square md:aspect-[4/5] bg-black/60 overflow-hidden group/image cursor-pointer">
+                  {/* Premium Glass Frame Overlay */}
+                  <div className="absolute inset-0 border-[12px] border-black/20 z-20 pointer-events-none" />
+                  <div className="absolute inset-4 border border-white/10 z-20 pointer-events-none" />
+                  
+                  {/* Cinematic Shadow/Glow */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/20 opacity-40 z-10" />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1),transparent_70%)] z-10 opacity-0 group-hover/image:opacity-100 transition-opacity duration-1000" />
+                  
                   <SafeImage
                     src={post.image_url}
                     alt="Post"
-                    className="max-w-full max-h-[540px] object-contain w-full"
+                    className="w-full h-full object-cover group-hover/image:scale-110 transition-transform duration-[2000ms]"
                     fallbackEmoji="📸"
                   />
+                  
+                  {/* 3D Reflection Effect */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent -translate-x-full group-hover/image:animate-[shimmer_3s_infinite] z-20 pointer-events-none" />
+
+                  {/* Floating Action Hint */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/image:opacity-100 transition-opacity duration-500 z-30 pointer-events-none">
+                     <div className="relative">
+                        <div className={`absolute -inset-10 blur-3xl opacity-40 rounded-full ${hasLiked ? 'bg-red-500' : 'bg-white'}`} />
+                        <Heart size={80} className={`relative z-10 transition-all duration-700 ${hasLiked ? 'scale-110 fill-red-500 text-red-500' : 'scale-90 text-white opacity-40'}`} />
+                     </div>
+                  </div>
                 </div>
 
-                {/* Spotify */}
+                {/* Spotify Player - MONSTER QUALITY */}
                 {post.spotify_uri && (
-                  <div className="px-4 pt-4">
-                    <iframe
-                      src={post.spotify_uri.replace("open.spotify.com", "open.spotify.com/embed")}
-                      width="100%" height="80" frameBorder="0" allow="encrypted-media"
-                      className="rounded-lg border border-border/50"
-                    />
+                  <div className="relative px-8 pt-8 -mb-4">
+                    <div className="absolute inset-x-12 top-8 h-20 bg-primary/10 blur-[50px] rounded-full opacity-30 pointer-events-none" />
+                    <div className="relative z-10 rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl bg-black/40 group/spotify-frame">
+                       <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover/spotify-frame:opacity-100 transition-opacity" />
+                       <iframe
+                         src={post.spotify_uri.replace("open.spotify.com", "open.spotify.com/embed")}
+                         width="100%" height="80" frameBorder="0" allow="encrypted-media"
+                         className="relative z-10 grayscale hover:grayscale-0 transition-all duration-700"
+                       />
+                    </div>
                   </div>
                 )}
 
-                {/* Actions + Caption */}
-                <div className="p-4">
-                  <div className="flex items-center gap-4 mb-2">
+                {/* Footer Actions - MONSTER QUALITY */}
+                <div className="p-10 md:p-12 space-y-8">
+                  <div className="flex items-center justify-between">
                     <button
                       onClick={() => toggleLike(post)}
-                      className={`flex items-center gap-1.5 transition-all hover:scale-110 ${hasLiked ? "text-red-500" : "text-muted-foreground hover:text-red-400"}`}
+                      className={`group/like flex items-center gap-4 transition-all ${hasLiked ? "text-red-500" : "text-white/30 hover:text-red-400"}`}
                     >
-                      <Heart size={20} fill={hasLiked ? "currentColor" : "none"} />
-                      <span className="text-sm font-heading">{post.likes.length}</span>
+                      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 border ${
+                        hasLiked 
+                          ? 'bg-red-500/20 border-red-500/40 shadow-[0_10px_30px_rgba(239,68,68,0.4)]' 
+                          : 'bg-white/5 border-white/10 group/like:bg-red-500/10 group/like:border-red-500/30'
+                      }`}>
+                         <Heart size={28} fill={hasLiked ? "currentColor" : "none"} className={hasLiked ? "animate-heartbeat" : "group/like:scale-110 transition-transform"} />
+                      </div>
+                      <div className="flex flex-col text-left">
+                         <span className="text-2xl font-heading text-white tracking-tighter leading-none">{post.likes.length}</span>
+                         <span className="text-[9px] font-heading uppercase tracking-[0.3em] opacity-30">Pulsos de Magia</span>
+                      </div>
                     </button>
+
                     {!hasLiked && !isMyPost && (
-                      <span className="text-[10px] text-muted-foreground">+{XP_LIKE} XP ao curtir</span>
+                      <div className="px-6 py-2 rounded-full bg-primary/5 border border-primary/20 text-[9px] font-heading text-primary/60 tracking-[0.3em] uppercase animate-pulse">
+                         Manifestar +{XP_LIKE} XP
+                      </div>
                     )}
                   </div>
+
                   {post.caption && (
-                    <p className="text-sm">
-                      <span className="font-heading font-medium mr-2 text-foreground">{disp.name}</span>
-                      <span className="text-foreground/85">{post.caption}</span>
-                    </p>
+                    <div className="relative p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 group-hover/post:border-white/10 transition-all shadow-inner overflow-hidden">
+                       <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary/40 to-transparent" />
+                       <p className="text-xl md:text-2xl text-white/90 leading-relaxed font-serif italic relative z-10">
+                         "{post.caption}"
+                       </p>
+                       {/* Decorative Quote Mark */}
+                       <span className="absolute -bottom-4 -right-2 text-8xl font-serif text-white/5 italic select-none">"</span>
+                    </div>
                   )}
                 </div>
               </div>

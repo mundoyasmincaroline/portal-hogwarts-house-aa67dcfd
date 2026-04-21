@@ -152,20 +152,37 @@ export default function StickerAlbum() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 pb-10">
-      {/* Header */}
-      <div className="glass rounded-3xl p-8 text-center relative overflow-hidden border border-primary/20">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2070')] bg-cover bg-center opacity-10" />
-        <div className="relative z-10">
-          <h1 className="font-heading text-4xl md:text-5xl text-gold-gradient mb-3 drop-shadow-lg">
-            {completedBanner ? "🏆 Álbum Completo! 🏆" : "Álbum de Figurinhas"}
-          </h1>
-          <p className="text-muted-foreground text-sm max-w-2xl mx-auto">
-            Colecione figurinhas usando XP. Ouro e Prata brilham com magia!
-          </p>
+      {/* Header - Monster Quality */}
+      <div className="relative overflow-hidden rounded-[3rem] bg-gradient-to-b from-white/[0.08] to-black/60 backdrop-blur-3xl p-10 md:p-16 border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] text-center group">
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2070')] bg-cover bg-center opacity-10 mix-blend-overlay" />
+        
+        {/* Ambient Glows */}
+        <div className="absolute -top-20 -left-20 w-80 h-80 bg-primary/20 rounded-full blur-[100px] animate-pulse" />
+        <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-yellow-500/10 rounded-full blur-[100px]" />
 
-          <div className="mt-4 inline-flex items-center gap-3 bg-secondary/50 backdrop-blur-md px-6 py-3 rounded-xl border border-border/50">
-            <span className="text-sm text-muted-foreground uppercase tracking-widest">Saldo:</span>
-            <span className="font-heading text-2xl text-primary">{profile?.xp || 0} XP</span>
+        <div className="relative z-10 space-y-6">
+          <div className="relative inline-block">
+             <div className="absolute inset-0 bg-primary/40 blur-2xl rounded-full animate-pulse" />
+             <div className="relative z-10 w-20 h-20 md:w-24 h-24 bg-white/5 rounded-3xl border border-white/20 flex items-center justify-center rotate-3 group-hover:rotate-0 transition-transform duration-500 shadow-2xl">
+                <Trophy size={48} className="text-yellow-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.6)]" />
+             </div>
+          </div>
+          
+          <div className="space-y-2">
+            <h1 className="font-heading text-4xl md:text-6xl text-gold-gradient tracking-tighter drop-shadow-2xl">
+              {completedBanner ? "Álbum Lendário" : "Coleção Mística"}
+            </h1>
+            <p className="text-xs md:text-sm font-heading text-primary uppercase tracking-[0.4em] opacity-70">Fragmentos da História de Hogwarts</p>
+          </div>
+
+          <div className="inline-flex items-center gap-4 bg-white/5 backdrop-blur-2xl px-8 py-4 rounded-2xl border border-white/10 shadow-2xl group/xp">
+            <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/40 group-hover/xp:scale-110 transition-transform">
+               <Zap size={20} className="text-primary" />
+            </div>
+            <div className="text-left">
+               <p className="text-[10px] font-heading text-white/40 uppercase tracking-widest">Seu Equilíbrio Máxico</p>
+               <p className="font-heading text-2xl text-white">{profile?.xp || 0} XP</p>
+            </div>
           </div>
         </div>
       </div>
@@ -209,76 +226,103 @@ export default function StickerAlbum() {
         </div>
       )}
 
-      {/* Pacote Surpresa + Mercado */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="glass rounded-2xl p-6 flex flex-col items-center gap-4 text-center border border-primary/20 hover:border-primary/50 transition-all">
-          <div className="text-4xl">🎁</div>
-          <div>
-            <h3 className="font-heading text-lg text-foreground">Pacote Surpresa</h3>
-            <p className="text-xs text-muted-foreground mt-1">Uma figurinha aleatória! Chances: 10% Ouro · 30% Prata · 60% Bronze</p>
+      {/* Surprise Pack + Market - Monster Quality */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="relative overflow-hidden glass rounded-[2.5rem] p-8 flex flex-col items-center gap-6 text-center border border-primary/20 shadow-xl group/pack hover:border-primary/50 transition-all">
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
+          <div className="relative">
+             <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full animate-pulse" />
+             <div className="relative z-10 w-20 h-20 bg-white/5 rounded-2xl border border-white/10 flex items-center justify-center group-hover/pack:scale-110 transition-transform duration-500 shadow-2xl">
+                <span className="text-4xl animate-bounce-slow">🎁</span>
+             </div>
+          </div>
+          <div className="space-y-1 relative z-10">
+            <h3 className="font-heading text-xl text-white tracking-tight">Pacote Surpresa</h3>
+            <p className="text-[10px] text-white/40 font-heading uppercase tracking-widest leading-relaxed">Chance de Relíquias Raras</p>
           </div>
           <Button
             variant="magical"
-            className="w-full font-heading"
+            className="w-full h-14 rounded-xl font-heading text-xs tracking-[0.2em] shadow-xl shadow-primary/20 relative overflow-hidden group/btn"
             onClick={openSurprisePack}
             disabled={openingPack || (profile?.xp ?? 0) < 80}
           >
-            {openingPack ? "Abrindo..." : `Abrir Pacote — 80 XP ${(profile?.xp ?? 0) < 80 ? `(faltam ${80 - (profile?.xp ?? 0)} XP)` : ""}`}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:animate-[shimmer_2s_infinite]" />
+            <span className="relative z-10">{openingPack ? "ABRINDO..." : `ABRIR PACOTE • 80 XP`}</span>
           </Button>
         </div>
-        <div className="glass rounded-2xl p-6 flex flex-col items-center gap-4 text-center border border-border hover:border-primary/30 transition-all">
-          <div className="text-4xl">🔄</div>
-          <div>
-            <h3 className="font-heading text-lg text-foreground">Mercado de Trocas</h3>
-            <p className="text-xs text-muted-foreground mt-1">Troque figurinhas duplicadas com outros membros de Hogwarts</p>
+
+        <div className="relative overflow-hidden glass rounded-[2.5rem] p-8 flex flex-col items-center gap-6 text-center border border-white/5 shadow-xl group/market hover:border-white/20 transition-all">
+          <div className="relative">
+             <div className="w-20 h-20 bg-white/5 rounded-2xl border border-white/10 flex items-center justify-center group-hover/market:rotate-12 transition-transform duration-500 shadow-2xl">
+                <span className="text-4xl">🔄</span>
+             </div>
           </div>
-          <Button variant="outline" className="w-full font-heading" onClick={() => navigate("/dashboard/trades")}>
-            Acessar Mercado 🏪
+          <div className="space-y-1 relative z-10">
+            <h3 className="font-heading text-xl text-white tracking-tight">Mercado Místico</h3>
+            <p className="text-[10px] text-white/40 font-heading uppercase tracking-widest">Troque Duplicatas</p>
+          </div>
+          <Button variant="outline" className="w-full h-14 rounded-xl font-heading text-xs tracking-[0.2em] border-white/10 text-white hover:bg-white/5" onClick={() => navigate("/dashboard/trades")}>
+            ACESSAR MERCADO 🏪
           </Button>
         </div>
       </div>
 
-      {/* Barra de progresso geral */}
-      <div className="glass rounded-2xl p-6 space-y-4">
-        <div className="flex items-center justify-between mb-1">
-          <span className="font-heading text-foreground flex items-center gap-2">
-            <Trophy size={18} className="text-primary" /> Progresso da Coleção
-          </span>
-          <span className="font-heading text-primary text-lg">{owned}/{total} ({pct}%)</span>
-        </div>
-        <div className="h-4 bg-secondary rounded-full overflow-hidden border border-border/50">
-          <div
-            className={`h-full transition-all duration-1000 ease-out rounded-full ${
-              pct === 100
-                ? "bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 animate-pulse"
-                : pct >= 66
-                ? "bg-gradient-to-r from-primary to-primary/60"
-                : "bg-primary/70"
-            }`}
-            style={{ width: `${pct}%` }}
-          />
+      {/* Progress Bar - Monster Quality */}
+      <div className="relative overflow-hidden glass rounded-[3rem] p-8 md:p-10 border border-white/10 shadow-2xl space-y-8">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+             <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center border border-primary/40">
+                <Trophy size={20} className="text-primary" />
+             </div>
+             <div className="text-left">
+                <h3 className="font-heading text-xl text-white tracking-tight">Status da Coleção</h3>
+                <p className="text-[10px] text-white/40 font-heading uppercase tracking-widest">Rumo ao Álbum Lendário</p>
+             </div>
+          </div>
+          <div className="text-center md:text-right">
+             <p className="font-heading text-4xl text-primary drop-shadow-2xl">{pct}%</p>
+             <p className="text-[10px] text-white/40 font-heading uppercase tracking-widest">{owned} de {total} Figurinhas</p>
+          </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-3 mt-2">
+        <div className="relative">
+           <div className="h-6 bg-black/40 rounded-full border border-white/5 p-1.5 overflow-hidden shadow-inner relative">
+              <div
+                className={`h-full rounded-full transition-all duration-1000 ease-out relative shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)] ${
+                  pct === 100
+                    ? "bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 animate-pulse"
+                    : "bg-primary"
+                }`}
+                style={{ width: `${pct}%` }}
+              >
+                 {/* Liquid Shimmer */}
+                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
+              </div>
+           </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
-            { label: "Bronze", owned: bronzeOwned, total: bronzeTotal, color: "text-amber-600", bg: "bg-amber-900/20 border-amber-700/40" },
-            { label: "Prata", owned: silverOwned, total: silverTotal, color: "text-slate-300", bg: "bg-slate-700/20 border-slate-400/30" },
-            { label: "Ouro", owned: goldOwned, total: goldTotal, color: "text-yellow-400", bg: "bg-yellow-900/20 border-yellow-400/30" },
+            { label: "BRONZE", owned: bronzeOwned, total: bronzeTotal, color: "text-amber-600", bg: "bg-amber-900/10 border-amber-900/30" },
+            { label: "PRATA", owned: silverOwned, total: silverTotal, color: "text-slate-300", bg: "bg-slate-700/10 border-slate-700/30" },
+            { label: "OURO", owned: goldOwned, total: goldTotal, color: "text-yellow-400", bg: "bg-yellow-900/10 border-yellow-900/30" },
           ].map(r => (
-            <div key={r.label} className={`rounded-xl p-3 text-center border ${r.bg}`}>
-              <p className={`font-heading text-xl ${r.color}`}>{r.owned}/{r.total}</p>
-              <p className="text-xs text-muted-foreground">{r.label}</p>
-              <div className="h-1 bg-secondary rounded-full mt-1 overflow-hidden">
-                <div className={`h-full ${r.color.replace("text-", "bg-")} transition-all`} style={{ width: r.total > 0 ? `${(r.owned / r.total) * 100}%` : "0%" }} />
+            <div key={r.label} className={`relative overflow-hidden rounded-2xl p-4 border ${r.bg} flex items-center justify-between group/stat`}>
+              <div>
+                 <p className="text-[9px] font-heading text-white/40 uppercase tracking-widest mb-1">{r.label}</p>
+                 <p className={`font-heading text-2xl ${r.color}`}>{r.owned}/{r.total}</p>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-black/20 flex items-center justify-center font-heading text-[10px] text-white/60">
+                 {r.total > 0 ? Math.round((r.owned / r.total) * 100) : 0}%
               </div>
             </div>
           ))}
         </div>
 
         {completedBanner && (
-          <div className="mt-4 p-4 rounded-2xl bg-gradient-to-r from-yellow-900/40 via-yellow-700/20 to-yellow-900/40 border border-yellow-400 text-center animate-pulse">
-            <p className="font-heading text-yellow-400 text-lg">🏆 LENDA DE HOGWARTS 🏆</p>
-            <p className="text-xs text-yellow-300/80">Você completou o álbum completo! Um feito histórico no castelo.</p>
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-yellow-500/20 via-yellow-500/10 to-yellow-500/20 border border-yellow-500/30 p-6 text-center animate-pulse-glow">
+            <p className="font-heading text-yellow-400 text-xl tracking-[0.2em] mb-1">Mestre Colecionador 👑</p>
+            <p className="text-[10px] text-yellow-400/60 font-heading uppercase tracking-widest">Sua lenda está completa no Salão das Figurinhas</p>
           </div>
         )}
       </div>
@@ -306,8 +350,8 @@ export default function StickerAlbum() {
         ))}
       </div>
 
-      {/* Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+      {/* Sticker Grid - Monster Quality */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 md:gap-10">
         {filtered.map(s => {
           const unlocked = userStickers[s.id];
           const isGold = s.rarity === "gold";
@@ -316,19 +360,19 @@ export default function StickerAlbum() {
           const levelOk = profile ? profile.level >= s.level_required : false;
           const xpOk = profile ? profile.xp >= cost : false;
 
-          let rarityStyle = "border-amber-700/50 from-amber-900/40 to-black shadow-[0_0_15px_rgba(180,83,9,0.2)]";
-          if (isSilver) rarityStyle = "border-slate-300/60 from-slate-700/40 to-black shadow-[0_0_20px_rgba(255,255,255,0.1)]";
-          if (isGold) rarityStyle = "border-yellow-400 from-yellow-600/40 to-black shadow-[0_0_30px_rgba(251,191,36,0.3)] ring-2 ring-yellow-400/30 animate-pulse-glow";
+          let rarityStyle = "border-amber-700/50 from-amber-900/40 to-black/80 shadow-2xl hover:shadow-amber-900/40";
+          if (isSilver) rarityStyle = "border-slate-300/60 from-slate-700/40 to-black/80 shadow-2xl hover:shadow-slate-300/20";
+          if (isGold) rarityStyle = "border-yellow-400 from-yellow-600/40 to-black/80 shadow-2xl hover:shadow-yellow-400/30 animate-pulse-glow";
 
           return (
             <div
               key={s.id}
-              className={`relative aspect-[3/4] rounded-2xl flex flex-col overflow-hidden border-2 transition-all duration-500 group ${
-                unlocked ? rarityStyle : "border-border/50 bg-secondary/10 hover:border-primary/50"
+              className={`relative aspect-[3/4.5] rounded-[2rem] flex flex-col overflow-hidden border-2 transition-all duration-500 group/stick ${
+                unlocked ? rarityStyle : "border-white/5 bg-white/[0.02] grayscale"
               }`}
             >
-              <div className="absolute inset-0 z-0">
-                {/* StickerVisual como base — mostra se imagem falhar ou não existir */}
+              {/* Sticker Content */}
+              <div className="absolute inset-0 z-0 overflow-hidden">
                 <StickerVisual
                   name={s.character_name}
                   rarity={s.rarity}
@@ -340,63 +384,60 @@ export default function StickerAlbum() {
                   <img
                     src={s.image_url}
                     alt={s.character_name}
-                    referrerPolicy="no-referrer"
-                    onError={() => setFailedImages(prev => ({ ...prev, [s.id]: true }))}
                     className={`w-full h-full object-cover object-top transition-all duration-700 ${
-                      unlocked ? "opacity-90 group-hover:scale-105" : "opacity-40 grayscale group-hover:grayscale-0 group-hover:opacity-60"
+                      unlocked ? "opacity-80 group-hover/stick:scale-110 group-hover/stick:rotate-1" : "opacity-20"
                     }`}
                   />
                 )}
-                <div className={`absolute inset-0 bg-gradient-to-t ${
-                  unlocked ? "from-background via-background/50 to-transparent" : "from-background via-background/80 to-background/30"
-                }`} />
+                {/* Vignette */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60" />
               </div>
 
-              <div className="relative z-10 h-full flex flex-col justify-between p-4">
+              {/* Status & Info */}
+              <div className="relative z-10 h-full flex flex-col justify-between p-5">
                 <div className="flex justify-between items-start">
-                  <span className={`text-[10px] uppercase font-bold tracking-widest px-3 py-1 rounded-full shadow-sm ${
-                    isGold ? "bg-yellow-400/20 text-yellow-400 border border-yellow-400/50"
-                    : isSilver ? "bg-slate-300/20 text-slate-300 border border-slate-300/50"
-                    : "bg-amber-700/20 text-amber-600 border border-amber-700/50"
-                  }`}>
-                    {s.rarity === "gold" ? "🥇" : s.rarity === "silver" ? "🥈" : "🥉"} {s.rarity}
-                  </span>
-                  {unlocked
-                    ? <span className="text-xl drop-shadow-md">✨</span>
-                    : <span className={`text-[10px] uppercase font-bold tracking-widest px-2 py-1 rounded-md ${levelOk ? "bg-background/80 text-primary" : "bg-destructive/20 text-destructive"}`}>
-                        Nv.{s.level_required}
-                      </span>
-                  }
+                   <div className={`px-3 py-1 rounded-full text-[8px] font-heading tracking-[0.2em] border backdrop-blur-md ${
+                      isGold ? "bg-yellow-400/20 border-yellow-400/40 text-yellow-400" :
+                      isSilver ? "bg-slate-300/20 border-slate-300/40 text-slate-300" :
+                      "bg-amber-700/20 border-amber-700/40 text-amber-600"
+                   }`}>
+                      {s.rarity.toUpperCase()}
+                   </div>
+                   {!unlocked && (
+                      <div className="w-8 h-8 rounded-full bg-black/60 border border-white/10 flex items-center justify-center backdrop-blur-md">
+                         <Lock size={12} className="text-white/40" />
+                      </div>
+                   )}
                 </div>
 
-                <div className="mt-auto space-y-3">
-                  <h3 className={`font-heading text-sm leading-tight text-center drop-shadow-md ${
-                    unlocked && isGold ? "text-yellow-400" : unlocked ? "text-foreground" : "text-muted-foreground group-hover:text-foreground transition-colors"
-                  }`}>
-                    {unlocked ? s.character_name : "???"}
-                  </h3>
+                <div className="space-y-4 text-center">
+                   <div className="space-y-1">
+                      <p className={`font-heading text-sm tracking-tighter ${
+                         unlocked ? 'text-white' : 'text-white/20'
+                      }`}>
+                         {unlocked ? s.character_name.toUpperCase() : "DESCONHECIDO"}
+                      </p>
+                      {!unlocked && (
+                         <p className="text-[8px] font-heading text-white/40 tracking-[0.2em]">REQUER NÍVEL {s.level_required}</p>
+                      )}
+                   </div>
 
-                  {!unlocked && (
-                    <Button
-                      variant="magical"
-                      className="w-full h-9 text-xs font-heading"
-                      disabled={!levelOk || !xpOk || buyingId === s.id}
-                      onClick={() => buySticker(s)}
-                    >
-                      {buyingId === s.id ? "Comprando..." : !levelOk ? `Nv.${s.level_required} req.` : !xpOk ? `${cost} XP req.` : `Comprar ${cost} XP`}
-                    </Button>
-                  )}
+                   {!unlocked && (
+                     <Button
+                       variant="magical"
+                       className="w-full h-10 rounded-xl font-heading text-[10px] tracking-widest shadow-lg"
+                       disabled={!levelOk || !xpOk || buyingId === s.id}
+                       onClick={() => buySticker(s)}
+                     >
+                        {buyingId === s.id ? "..." : levelOk && xpOk ? `COMPRAR: ${cost} XP` : levelOk ? "XP INSUFICIENTE" : "NÍVEL BAIXO"}
+                     </Button>
+                   )}
                 </div>
               </div>
 
+              {/* Rarity Auras */}
               {unlocked && isGold && (
-                <div className="absolute inset-0 z-20 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(255,215,0,0.15),transparent_60%)] animate-pulse" />
-              )}
-
-              {!unlocked && !levelOk && (
-                <div className="absolute inset-0 z-20 pointer-events-none flex items-center justify-center bg-background/30">
-                  <span className="text-2xl opacity-50">🔒</span>
-                </div>
+                <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(255,215,0,0.2),transparent_70%)] animate-pulse" />
               )}
             </div>
           );

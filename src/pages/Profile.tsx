@@ -380,168 +380,175 @@ export default function Profile() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      {/* Abas */}
-      <div className="flex gap-4 border-b border-border mb-6 overflow-x-auto pb-1 scrollbar-hide whitespace-nowrap">
-        <button 
-          onClick={() => { setActiveTab("about"); setEditing(false); }} 
-          className={`pb-2 font-heading text-sm transition-colors ${activeTab === "about" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          Sobre
-        </button>
-        <button
-          onClick={() => { setActiveTab("friends"); setEditing(false); }}
-          className={`pb-2 font-heading text-sm transition-colors ${activeTab === "friends" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          Amigos ({friends.length})
-        </button>
-        <button
-          onClick={() => { setActiveTab("members"); setEditing(false); }}
-          className={`pb-2 font-heading text-sm transition-colors ${activeTab === "members" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          👥 Membros
-        </button>
-        <button 
-          onClick={() => { setActiveTab("fichas"); setEditing(false); }} 
-          className={`pb-2 font-heading text-sm transition-colors ${activeTab === "fichas" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          Fichas 📜
-        </button>
-        <button 
-          onClick={() => { setActiveTab("album"); setEditing(false); }} 
-          className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "album" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          Álbum
-        </button>
-        <button 
-          onClick={() => { setActiveTab("achievements"); setEditing(false); }} 
-          className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "achievements" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          🏆 Conquistas
-        </button>
-        <button 
-          onClick={() => { setActiveTab("inventory"); setEditing(false); }} 
-          className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "inventory" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          🎒 Inventário
-        </button>
-        {isMe && (
-          <button 
-            onClick={() => { setActiveTab("referral"); setEditing(false); }} 
-            className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "referral" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-          >
-            Recrutamento
-          </button>
-        )}
-        {isMe && (
-          <button 
-            onClick={() => { setActiveTab("security"); setEditing(false); }} 
-            className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "security" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-          >
-            Segurança
-          </button>
-        )}
+      {/* MONSTER QUALITY BACKGROUND AURA - FULL PAGE */}
+      <div className={`fixed inset-0 pointer-events-none opacity-[0.07] transition-all duration-[2000ms] ease-in-out z-0 ${
+        profile.house === 'gryffindor' ? 'bg-red-600' :
+        profile.house === 'slytherin' ? 'bg-green-600' :
+        profile.house === 'ravenclaw' ? 'bg-blue-600' : 'bg-yellow-600'
+      }`} />
+      <div className="fixed inset-0 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] z-0" />
+
+      {/* Abas Mágicas - MONSTER QUALITY */}
+      <div className="relative z-20 flex gap-2 md:gap-4 border-b border-white/5 mb-10 overflow-x-auto pb-4 scrollbar-hide whitespace-nowrap px-2">
+        {(["about", "fichas", "friends", "members", "album", "achievements", "inventory", "referral", "security"] as const).map((tab) => {
+           const labels: any = { about: "Sobre", fichas: "Fichas 📜", friends: `Amigos (${friends.length})`, members: "Membros 👥", album: "Álbum", achievements: "Conquistas 🏆", inventory: "Inventário 🎒", referral: "Recrutamento", security: "Segurança" };
+           if (!isMe && (tab === "security" || tab === "referral")) return null;
+           return (
+            <button 
+              key={tab}
+              onClick={() => { setActiveTab(tab); setEditing(false); }} 
+              className={`px-6 py-3 font-heading text-[10px] tracking-[0.3em] uppercase transition-all duration-500 rounded-2xl border ${
+                activeTab === tab 
+                  ? "bg-primary text-white border-primary shadow-[0_10px_20px_rgba(251,191,36,0.2)] scale-105" 
+                  : "text-white/30 border-transparent hover:text-white hover:bg-white/5"
+              }`}
+            >
+              {labels[tab]}
+            </button>
+           );
+        })}
       </div>
 
-      <div className="glass rounded-2xl p-8 text-center">
-        <div className="relative inline-block mb-4">
-          <div className="w-24 h-24 shrink-0 mx-auto">
-            <SafeImage
-              src={profile.avatar_url}
-              alt={profile.full_name}
-              className="w-full h-full rounded-full object-cover animate-pulse-glow"
-              fallbackText={profile.full_name[0]}
-            />
-          </div>
-          <div className="absolute -bottom-1 -right-1">
-            <HouseCrest house={profile.house as House} size="sm" />
-          </div>
-          {isMe && (
-            <label className="absolute -top-1 -right-1 w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center cursor-pointer hover:scale-110 transition-transform" title="Trocar foto">
-              📷
-              <input type="file" accept="image/*" className="hidden" onChange={uploadAvatar} disabled={uploading} />
-            </label>
-          )}
-        </div>
+      <div className="relative overflow-hidden rounded-[3rem] bg-gradient-to-b from-white/[0.08] to-black/60 backdrop-blur-3xl p-8 md:p-12 border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] text-center group">
+        {/* House Specific Aura Glow */}
+        <div className={`absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full blur-[120px] opacity-20 group-hover:opacity-30 transition-opacity duration-1000 ${
+          profile.house === 'gryffindor' ? 'bg-red-600' :
+          profile.house === 'slytherin' ? 'bg-green-600' :
+          profile.house === 'ravenclaw' ? 'bg-blue-600' : 'bg-yellow-600'
+        }`} />
+        <div className={`absolute -bottom-40 -right-40 w-[400px] h-[400px] rounded-full blur-[100px] opacity-10 group-hover:opacity-20 transition-opacity duration-1000 ${
+          profile.house === 'gryffindor' ? 'bg-amber-600' :
+          profile.house === 'slytherin' ? 'bg-emerald-600' :
+          profile.house === 'ravenclaw' ? 'bg-cyan-600' : 'bg-orange-600'
+        }`} />
 
-        {!editing ? (
-          <>
-            <h1 className="font-heading text-2xl text-foreground flex items-center justify-center gap-2 flex-wrap">
-              {profile.full_name}
-              <MedalBadge xp={profile.xp} />
-              {/* Badge VIP */}
-              {profile.vip_plan === "founder" && (
-                <span className="text-xs font-heading px-2 py-0.5 rounded-full bg-gradient-to-r from-yellow-600 to-amber-400 text-black">👑 Fundador</span>
-              )}
-              {profile.vip_plan === "vip" && (
-                <span className="text-xs font-heading px-2 py-0.5 rounded-full bg-gradient-to-r from-purple-600 to-purple-400 text-white">🥇 VIP</span>
-              )}
-              {profile.vip_plan === "premium" && (
-                <span className="text-xs font-heading px-2 py-0.5 rounded-full bg-gradient-to-r from-blue-600 to-blue-400 text-white">✨ Premium</span>
-              )}
-            </h1>
-            <p className="text-muted-foreground text-sm">@{profile.username}</p>
-            <p className="text-sm text-muted-foreground mt-3 font-serif italic">{profile.bio || "Sem bio ainda..."}</p>
-            {/* Saldo de Galeões — visível apenas no próprio perfil */}
-            {isMe && (
-              <div className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-yellow-500/30 bg-yellow-900/10 text-yellow-400 text-sm font-heading">
-                🪙 {((profile as any).galeons || 0).toLocaleString("pt-BR")} Galeões
-              </div>
-            )}
+        <div className="relative z-10 flex flex-col items-center">
+          <div className="relative mb-8 group/avatar">
+            {/* 3D Avatar Ring */}
+            <div className={`absolute -inset-4 rounded-full border-2 border-dashed opacity-20 animate-spin-slow ${
+               profile.house === 'gryffindor' ? 'border-red-500' :
+               profile.house === 'slytherin' ? 'border-green-500' :
+               profile.house === 'ravenclaw' ? 'border-blue-500' : 'border-yellow-500'
+            }`} />
             
-            <div className="mt-4 flex justify-center gap-2">
-              {isMe ? (
-                <>
-                  <Button variant="magical" size="sm" className="font-heading text-xs" onClick={startEdit}>
-                    ✏️ Editar perfil
-                  </Button>
-                  {isAdmin && (
-                    <Button variant="outline" size="sm" className="font-heading text-xs text-primary border-primary hover:bg-primary/10" onClick={() => setAdminEditModal(true)}>
-                      🪄 Edição Suprema (Admin)
-                    </Button>
-                  )}
-                </>
-              ) : (
-                <>
-                {isAdmin && (
-                  <Button variant="outline" size="sm" className="font-heading text-xs text-primary border-primary hover:bg-primary/10" onClick={() => setAdminEditModal(true)}>
-                    🪄 Edição Suprema (Admin)
-                  </Button>
-                )}
-                {/* Botão de MENSAGEM sempre visível para qualquer perfil que não seja o meu */}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => navigate(`/dashboard/dm/${profile.user_id}`)}
-                >
-                  💬 Mensagem
-                </Button>
+            <div className="w-32 h-32 md:w-40 h-40 shrink-0 relative z-10">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-full p-1.5 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+                <SafeImage
+                  src={profile.avatar_url}
+                  alt={profile.full_name}
+                  className="w-full h-full rounded-full object-cover border-2 border-white/10 shadow-inner group-hover/avatar:scale-105 transition-transform duration-500"
+                  fallbackText={profile.full_name[0]}
+                />
+              </div>
+            </div>
 
-                {/* Botoes de amizade conforme estado */}
-                {friendship?.status === "blocked" && friendship.user_id === user?.id ? (
-                  <Button variant="outline" size="sm" onClick={handleUnblock}>Desbloquear</Button>
-                ) : friendship?.status === "accepted" ? (
+            {/* Crest Badge */}
+            <div className="absolute -bottom-2 -right-2 z-20 scale-125 md:scale-150 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
+              <HouseCrest house={profile.house as House} size="sm" />
+            </div>
+
+            {isMe && (
+              <label className="absolute -top-2 -right-2 z-20 w-10 h-10 rounded-full bg-primary text-white shadow-2xl flex items-center justify-center cursor-pointer hover:scale-110 active:scale-90 transition-all border border-white/20" title="Trocar foto">
+                <Sparkles size={16} />
+                <input type="file" accept="image/*" className="hidden" onChange={uploadAvatar} disabled={uploading} />
+              </label>
+            )}
+          </div>
+
+          {!editing ? (
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <h1 className="font-heading text-3xl md:text-5xl text-gold-gradient tracking-tight drop-shadow-2xl flex items-center justify-center gap-4 flex-wrap">
+                  {profile.full_name}
+                  <MedalBadge xp={profile.xp} />
+                </h1>
+                <p className="text-primary/60 font-heading text-lg tracking-widest uppercase opacity-80">@{profile.username}</p>
+              </div>
+
+              {/* VIP Badges - Monster Quality */}
+              <div className="flex flex-wrap justify-center gap-3">
+                {profile.vip_plan === "founder" && (
+                  <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-600 text-black font-heading text-xs shadow-lg animate-pulse-slow">
+                    <Crown size={14} /> FUNDADOR
+                  </div>
+                )}
+                {profile.vip_plan === "vip" && (
+                  <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-purple-600 to-purple-400 text-white font-heading text-xs shadow-lg">
+                    <Crown size={14} /> VIP
+                  </div>
+                )}
+                {profile.vip_plan === "premium" && (
+                  <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-600 to-blue-400 text-white font-heading text-xs shadow-lg">
+                    <Star size={14} /> PREMIUM
+                  </div>
+                )}
+                <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/60 font-heading text-[10px] tracking-widest">
+                   {isUserOnline(profile) ? "● ONLINE" : "○ OFFLINE"}
+                </div>
+              </div>
+
+              <div className="max-w-lg mx-auto py-4">
+                <p className="text-lg text-white/70 font-serif italic leading-relaxed">
+                  {profile.bio || "Este bruxo ainda não escreveu sua lenda no castelo..."}
+                </p>
+              </div>
+
+              {/* Galeons - MONSTER QUALITY */}
+              {isMe && (
+                <div className="inline-flex items-center gap-4 px-8 py-4 rounded-[2rem] bg-gradient-to-b from-yellow-500/10 via-amber-900/30 to-black/60 border border-yellow-500/20 shadow-[0_20px_50px_rgba(251,191,36,0.1)] group/galeon animate-in zoom-in duration-1000">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-yellow-400 blur-lg opacity-20 animate-pulse" />
+                    <div className="w-12 h-12 bg-black border border-yellow-500/40 rounded-2xl flex items-center justify-center text-yellow-400 shadow-inner group-hover/galeon:rotate-12 transition-transform">
+                       <ShoppingBag size={24} />
+                    </div>
+                  </div>
+                  <div className="text-left">
+                     <p className="text-[9px] text-yellow-500/60 font-heading uppercase tracking-[0.4em]">Cofre em Gringotes</p>
+                     <p className="text-3xl font-heading text-yellow-400 tracking-tighter leading-none mt-1">
+                        {((profile as any).galeons || 0).toLocaleString("pt-BR")}
+                        <span className="text-[10px] ml-2 opacity-60 uppercase tracking-widest font-heading">Galeões</span>
+                     </p>
+                  </div>
+                </div>
+              )}
+              
+              <div className="flex flex-wrap justify-center gap-4 pt-6">
+                {isMe ? (
                   <>
-                    <Button variant="outline" size="sm" className="text-green-500 border-green-500/30">✓ Amigos</Button>
-                    <Button variant="outline" size="sm" className="text-destructive" onClick={handleRemoveFriend}>Desfazer</Button>
+                    <button onClick={startEdit} className="relative group px-8 py-3 rounded-2xl bg-primary text-white font-heading text-sm tracking-widest overflow-hidden shadow-xl shadow-primary/20 transition-all hover:scale-105 active:scale-95">
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                      EDITAR PERFIL
+                    </button>
+                    {isAdmin && (
+                      <button onClick={() => setAdminEditModal(true)} className="px-8 py-3 rounded-2xl bg-white/5 border border-primary/40 text-primary font-heading text-sm tracking-widest hover:bg-primary/10 transition-all">
+                        EDIÇÃO SUPREMA
+                      </button>
+                    )}
                   </>
-                ) : friendship?.status === "pending" && friendship.friend_id === user?.id ? (
-                  <>
-                    <Button variant="magical" size="sm" onClick={handleAcceptFriend}>Aceitar ✅</Button>
-                    <Button variant="outline" size="sm" onClick={handleRejectFriend}>Recusar ❌</Button>
-                  </>
-                ) : friendship?.status === "pending" && friendship.user_id === user?.id ? (
-                  <Button variant="outline" size="sm" onClick={handleRemoveFriend}>Cancelar ⏳</Button>
                 ) : (
                   <>
-                    <Button variant="magical" size="sm" onClick={handleAddFriend}>Adicionar Amigo +</Button>
-                    <Button variant="outline" size="sm" className="text-destructive" onClick={handleBlockUser}>Bloquear 🚫</Button>
+                    <button onClick={() => navigate(`/dashboard/dm/${profile.user_id}`)} className="px-8 py-3 rounded-2xl bg-white/5 border border-white/20 text-white font-heading text-sm tracking-widest hover:bg-white/10 transition-all">
+                      ENVIAR CORUJA
+                    </button>
+                    
+                    {friendship?.status === "accepted" ? (
+                      <div className="flex gap-2">
+                        <div className="px-6 py-3 rounded-2xl bg-green-500/10 border border-green-500/30 text-green-500 font-heading text-sm tracking-widest">AMIGO ✓</div>
+                        <button onClick={handleRemoveFriend} className="p-3 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-500 hover:bg-red-500/20 transition-all"><Users size={20} /></button>
+                      </div>
+                    ) : friendship?.status === "pending" && friendship.friend_id === user?.id ? (
+                      <div className="flex gap-2">
+                        <button onClick={handleAcceptFriend} className="px-6 py-3 rounded-2xl bg-primary text-white font-heading text-sm tracking-widest hover:scale-105 transition-all shadow-lg shadow-primary/20">ACEITAR ✓</button>
+                        <button onClick={handleRejectFriend} className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 text-white/40 hover:text-white transition-all">RECUSAR</button>
+                      </div>
+                    ) : (
+                      <button onClick={handleAddFriend} className="px-8 py-3 rounded-2xl bg-primary text-white font-heading text-sm tracking-widest shadow-xl shadow-primary/20 hover:scale-105 transition-all">ADICIONAR AMIGO +</button>
+                    )}
                   </>
                 )}
-              </>
-              )}
+              </div>
             </div>
-          </>
-        ) : (
+          ) : (
           <div className="space-y-3 text-left">
             <div>
               <label className="text-xs font-heading text-muted-foreground block mb-1">Nome completo</label>
@@ -600,88 +607,156 @@ export default function Profile() {
             </div>
           </div>
         )}
-      </div>
-
-      {activeTab === "about" ? (
+           {activeTab === "about" ? (
         <>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="glass rounded-xl p-4 text-center">
-              <p className="text-2xl font-heading text-primary">{profile.xp}</p>
-              <p className="text-xs text-muted-foreground">XP Total</p>
-            </div>
-            <div className="glass rounded-xl p-4 text-center">
-              <p className="text-2xl font-heading text-foreground">{levelInfo.level}</p>
-              <p className="text-xs text-muted-foreground">Nível</p>
-            </div>
-            <div className="glass rounded-xl p-4 text-center">
-              <p className="text-2xl font-heading text-foreground">{getMedalForXP(profile.xp) ? 1 : 0}</p>
-              <p className="text-xs text-muted-foreground">Badges</p>
-            </div>
+          {/* MONSTER QUALITY STATS GRID */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { label: "XP Total", value: profile.xp, icon: <Zap size={24} />, color: "from-amber-400 to-yellow-600", glow: "shadow-amber-500/20" },
+              { label: "Nível Bruxo", value: levelInfo.level, icon: <Trophy size={24} />, color: "from-blue-400 to-indigo-600", glow: "shadow-blue-500/20" },
+              { label: "Insígnias", value: userBadges.length, icon: <Crown size={24} />, color: "from-purple-400 to-fuchsia-600", glow: "shadow-purple-500/20" }
+            ].map((stat, i) => (
+              <div key={i} className={`relative overflow-hidden bg-black/40 backdrop-blur-3xl rounded-[2.5rem] p-8 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 hover:-translate-y-2 hover:border-white/20 group ${stat.glow}`}>
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative z-10 flex flex-col items-center gap-4">
+                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-500`}>
+                    {stat.icon}
+                  </div>
+                  <div className="text-center">
+                    <p className="text-3xl font-heading text-white tracking-tighter">{stat.value.toLocaleString()}</p>
+                    <p className="text-[10px] text-white/30 uppercase tracking-[0.3em] font-heading mt-1">{stat.label}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
 
-          <div className="glass rounded-xl p-4">
-            <h3 className="font-heading text-sm text-primary mb-3">Progresso</h3>
-            <XPBar xp={profile.xp} />
-            <p className="text-xs text-muted-foreground mt-2 text-center">
-              {levelInfo.name} → Faltam {levelInfo.next - profile.xp} XP para o próximo nível
-            </p>
+          {/* PROGRESS TRACKER */}
+          <div className="relative overflow-hidden bg-black/40 backdrop-blur-3xl rounded-[3.5rem] p-10 border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] group">
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+            
+            <div className="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10 mb-8">
+               <div className="flex items-center gap-6">
+                  <div className="w-16 h-16 rounded-3xl bg-primary/20 border border-primary/40 flex items-center justify-center shadow-inner group-hover:rotate-12 transition-transform duration-500">
+                     <Scroll size={32} className="text-primary drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]" />
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="font-heading text-2xl text-white tracking-tighter">Caminho da Maestria</h3>
+                    <p className="text-[10px] text-primary uppercase tracking-[0.4em] font-heading opacity-60">{levelInfo.name}</p>
+                  </div>
+               </div>
+               <div className="px-6 py-2 bg-white/5 rounded-full border border-white/10">
+                  <p className="text-[10px] text-white/40 uppercase tracking-widest font-heading">
+                    Faltam <span className="text-primary font-bold">{levelInfo.next - profile.xp} XP</span> para o Próximo Nível
+                  </p>
+               </div>
+            </div>
+            
+            <div className="relative z-10">
+              <XPBar xp={profile.xp} />
+            </div>
+
+            {/* Ambient Background Glow */}
+            <div className="absolute -top-20 -right-20 w-64 h-64 bg-primary/5 rounded-full blur-[100px] pointer-events-none animate-pulse" />
           </div>
 
-          <div className="glass rounded-xl p-4">
-            <div className="flex items-center gap-3">
-              <HouseCrest house={profile.house} size="md" />
-              <div>
-                <h3 className="font-heading text-foreground">{house.name}</h3>
-                <p className="text-xs text-muted-foreground italic font-serif">"{house.motto}"</p>
+          {/* HOUSE PRIDE SECTION */}
+          <div className={`relative overflow-hidden bg-black/40 backdrop-blur-3xl rounded-[3.5rem] p-8 border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] group transition-all duration-700 hover:border-white/20`}>
+            <div className={`absolute inset-0 bg-gradient-to-r ${
+              profile.house === 'gryffindor' ? 'from-red-900/10' :
+              profile.house === 'slytherin' ? 'from-green-900/10' :
+              profile.house === 'ravenclaw' ? 'from-blue-900/10' : 'from-yellow-900/10'
+            } to-transparent opacity-50`} />
+            
+            <div className="flex flex-col md:flex-row items-center gap-10 relative z-10 text-center md:text-left">
+              <div className="relative">
+                 <div className="absolute inset-0 bg-white/20 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                 <HouseCrest house={profile.house} size="lg" className="relative z-10 drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform duration-700" />
+              </div>
+              <div className="flex-1 space-y-3">
+                <div className="space-y-1">
+                   <h3 className="font-heading text-4xl text-gold-gradient tracking-tighter">{house.name.toUpperCase()}</h3>
+                   <div className="h-1 w-20 bg-primary/40 rounded-full mx-auto md:mx-0" />
+                </div>
+                <p className="text-lg text-white/40 italic font-serif leading-relaxed">"{house.motto}"</p>
+              </div>
+              <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center border border-white/10 opacity-20 group-hover:opacity-100 group-hover:bg-primary/20 transition-all duration-500">
+                 <ChevronRight size={32} className="text-white group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
           </div>
 
-          <div className="glass rounded-xl p-4">
-            <h3 className="font-heading text-sm text-primary mb-3">Informações</h3>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Idade</span>
-                <span className="text-foreground">{profile.age} anos</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Membro desde</span>
-                <span className="text-foreground">{new Date(profile.created_at).toLocaleDateString("pt-BR")}</span>
-              </div>
-              <div className="flex justify-between items-center text-sm py-2 border-b border-border">
-                <span className="text-muted-foreground">Status</span>
-                <span className="text-foreground">{isUserOnline(profile) ? "🟢 Online" : "⚫ Offline"}</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="glass rounded-xl p-4">
-            <h3 className="font-heading text-sm text-primary mb-3">Coleção Borgin & Burkes</h3>
-            {userBadges.length === 0 ? (
-              <p className="text-xs text-muted-foreground text-center italic py-2">Nenhuma insígnia adquirida ainda.</p>
-            ) : (
-              <div className="flex flex-wrap gap-3">
-                {userBadges.map(badge => (
-                  <div key={badge.id} className="bg-secondary/50 rounded-lg p-2 flex items-center justify-center gap-2 border border-border" title={badge.name}>
-                    <span className="text-2xl drop-shadow-md">{badge.icon}</span>
+          {/* INFO & BADGES GRID */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-black/40 backdrop-blur-3xl rounded-[2.5rem] p-8 border border-white/10 shadow-2xl space-y-6">
+              <h3 className="font-heading text-xs text-primary tracking-[0.3em] uppercase opacity-60">Registros Oficiais</h3>
+              <div className="space-y-4">
+                {[
+                  { label: "Idade Bruxa", value: `${profile.age} anos`, icon: "🎂" },
+                  { label: "Membro Desde", value: new Date(profile.created_at).toLocaleDateString("pt-BR"), icon: "📅" },
+                  { label: "Status de Presença", value: isUserOnline(profile) ? "No Castelo" : "Fora do Castelo", icon: "📍", color: isUserOnline(profile) ? "text-green-400" : "text-white/40" }
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center justify-between py-3 border-b border-white/5 last:border-0">
+                    <div className="flex items-center gap-3">
+                       <span className="text-lg grayscale group-hover:grayscale-0 transition-all">{item.icon}</span>
+                       <span className="text-[10px] font-heading text-white/40 uppercase tracking-widest">{item.label}</span>
+                    </div>
+                    <span className={`text-xs font-medium ${item.color || "text-white/80"}`}>{item.value}</span>
                   </div>
                 ))}
               </div>
-            )}
+            </div>
+
+            <div className="bg-black/40 backdrop-blur-3xl rounded-[2.5rem] p-8 border border-white/10 shadow-2xl space-y-6">
+              <h3 className="font-heading text-xs text-primary tracking-[0.3em] uppercase opacity-60">Coleção Borgin & Burkes</h3>
+              {userBadges.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-8 opacity-20">
+                   <div className="w-12 h-12 rounded-full border border-dashed border-white/40 mb-3" />
+                   <p className="text-[10px] font-heading uppercase tracking-widest">Nenhum Artefato</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-4 gap-4">
+                  {userBadges.map(badge => (
+                    <div key={badge.id} className="aspect-square bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 hover:bg-white/10 hover:border-primary/40 transition-all group/badge cursor-help" title={badge.name}>
+                      <span className="text-2xl drop-shadow-xl group-hover/badge:scale-125 transition-transform duration-500">{badge.icon}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </>
       ) : activeTab === "friends" ? (
-        <div className="space-y-4">
-          <h2 className="font-heading text-xl text-foreground">Amigos de {profile.full_name}</h2>
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white/5 backdrop-blur-2xl p-8 rounded-[2.5rem] border border-white/10 shadow-2xl">
+             <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center border border-primary/40 shadow-inner">
+                   <Users size={28} className="text-primary drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]" />
+                </div>
+                <div>
+                   <h2 className="font-heading text-2xl text-white tracking-tighter">Círculo de Amizade</h2>
+                   <p className="text-[10px] text-white/30 uppercase tracking-[0.3em] font-heading">Bruxos e Bruxas de Confiança</p>
+                </div>
+             </div>
+             <div className="px-6 py-2 bg-primary/10 rounded-full border border-primary/20 text-center">
+                <span className="text-xs font-heading text-primary tracking-widest">{friends.length} Conexões Mágicas</span>
+             </div>
+          </div>
+
           {friends.length === 0 ? (
-            <div className="glass rounded-xl p-8 text-center">
-              <p className="text-4xl mb-3">🤝</p>
-              <p className="text-muted-foreground text-sm">Nenhum amigo adicionado ainda.</p>
+            <div className="bg-black/40 backdrop-blur-3xl rounded-[3rem] p-16 text-center border border-white/10 shadow-inner space-y-6">
+              <div className="w-20 h-20 mx-auto bg-white/5 rounded-full flex items-center justify-center border border-white/5 opacity-20">
+                 <span className="text-5xl">🤝</span>
+              </div>
+              <div className="space-y-2">
+                 <p className="text-white/60 font-serif italic text-lg text-center">"Amizade é a magia mais poderosa de todas."</p>
+                 <p className="text-[10px] font-heading text-white/20 uppercase tracking-[0.3em]">Você ainda não possui amigos registrados</p>
+              </div>
               <button
                 onClick={() => setActiveTab("members")}
-                className="mt-3 text-xs text-primary hover:underline"
+                className="px-8 py-3 rounded-2xl bg-primary/10 border border-primary/30 text-primary font-heading text-[10px] tracking-widest hover:bg-primary/20 transition-all uppercase"
               >
-                Ver todos os membros para adicionar →
+                Explorar o Castelo →
               </button>
             </div>
           ) : (
@@ -697,34 +772,74 @@ export default function Profile() {
           )}
         </div>
       ) : activeTab === "members" ? (
-        <MembersTab currentUserId={user?.id} />
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+           <div className="bg-white/5 backdrop-blur-2xl p-8 rounded-[2.5rem] border border-white/10 shadow-2xl">
+              <div className="flex items-center gap-4 mb-8">
+                 <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center border border-primary/40 shadow-inner">
+                    <Search size={28} className="text-primary drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]" />
+                 </div>
+                 <div>
+                    <h2 className="font-heading text-2xl text-white tracking-tighter uppercase">Diretório de Hogwarts</h2>
+                    <p className="text-[10px] text-white/30 uppercase tracking-[0.3em] font-heading">Encontre seus Aliados e Rivais</p>
+                 </div>
+              </div>
+              <MembersTab currentUserId={user?.id} />
+           </div>
+        </div>
       ) : activeTab === "fichas" ? (
-        <CharacterSheetView userId={profile.user_id} isOwner={isMe} />
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000">
+           <CharacterSheetView userId={profile.user_id} isOwner={isMe} />
+        </div>
       ) : activeTab === "album" ? (
-        <ProfileAlbum userId={profile.user_id} />
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+           <ProfileAlbum userId={profile.user_id} />
+        </div>
       ) : activeTab === "referral" && isMe ? (
-        <div className="space-y-4">
-          <div className="glass rounded-2xl p-6 text-center border border-primary/20 bg-primary/5">
-            <h2 className="font-heading text-xl text-primary mb-2">Seu Link de Convite Mágico</h2>
-            <p className="text-sm text-muted-foreground mb-4">
-              Convide novos bruxos e ganhe <strong>500 XP</strong> assim que eles chegarem ao Nível 2!
-            </p>
-            <div className="flex items-center gap-2 max-w-sm mx-auto">
-              <Input readOnly value={profile.username} className="text-center font-bold text-lg bg-background" />
-              <Button variant="magical" onClick={() => {
-                navigator.clipboard.writeText(`Entre na Hogwarts House e use meu código de convite: ${profile.username}`);
-                toast.success("Código copiado!");
-              }}>Copiar</Button>
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="relative overflow-hidden bg-gradient-to-br from-primary/20 to-amber-900/40 backdrop-blur-3xl rounded-[3rem] p-10 border border-primary/30 shadow-[0_30px_60px_rgba(0,0,0,0.5)] group text-center">
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 mix-blend-overlay pointer-events-none" />
+            
+            <div className="relative z-10 space-y-6">
+              <div className="w-20 h-20 mx-auto bg-primary/20 rounded-full flex items-center justify-center border border-primary/40 shadow-inner mb-4">
+                 <Scroll size={40} className="text-primary animate-pulse" />
+              </div>
+              <div className="space-y-2">
+                <h2 className="font-heading text-3xl text-white tracking-tighter uppercase">Link de Recrutamento Mágico</h2>
+                <p className="text-sm text-white/50 max-w-md mx-auto italic font-serif leading-relaxed">
+                  "Expanda a nossa comunidade. Convide novos bruxos e seja recompensado com <strong className="text-primary">500 XP</strong> por cada alma corajosa que alcançar o Nível 2!"
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center gap-4 max-w-md mx-auto pt-4">
+                <div className="flex-1 w-full bg-black/40 rounded-2xl border border-white/10 p-4 font-mono text-xl text-primary tracking-widest shadow-inner">
+                   {profile.username}
+                </div>
+                <button 
+                  onClick={() => {
+                    navigator.clipboard.writeText(`Entre na Hogwarts House e use meu código de convite: ${profile.username}`);
+                    toast.success("Código copiado! ✨");
+                  }}
+                  className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary text-white font-heading text-xs tracking-widest shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
+                >
+                  COPIAR CÓDIGO
+                </button>
+              </div>
             </div>
           </div>
 
-          <h3 className="font-heading text-lg text-foreground mt-8">Bruxos que você recrutou ({referrals.length})</h3>
-          
-          {referrals.length === 0 ? (
-            <div className="glass rounded-xl p-6 text-center text-muted-foreground text-sm">
-              Você ainda não recrutou ninguém. Compartilhe seu código!
+          <div className="space-y-6">
+            <div className="flex items-center gap-4">
+               <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
+                  <Users size={20} className="text-white/60" />
+               </div>
+               <h3 className="font-heading text-xl text-white tracking-tight">Bruxos Recrutados por Você <span className="text-primary/40 ml-2">({referrals.length})</span></h3>
             </div>
-          ) : (
+            
+            {referrals.length === 0 ? (
+              <div className="bg-black/40 backdrop-blur-3xl rounded-[2.5rem] p-12 text-center border border-white/10 opacity-40">
+                <p className="text-[10px] font-heading uppercase tracking-[0.4em]">Nenhum recrutamento registrado</p>
+              </div>
+            ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {referrals.map(r => (
                 <div key={r.id} className="glass rounded-xl p-3 flex items-center gap-3">

@@ -192,76 +192,122 @@ export default function MaraudersGuide() {
   ];
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
-      <div className="glass rounded-2xl p-8 text-center relative overflow-hidden border border-primary/30">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/old-mathematics.png')] opacity-10"></div>
-        <div className="relative z-10">
-          <span className="text-5xl drop-shadow-md">📜</span>
-          <h1 className="font-heading text-3xl text-gold-gradient mt-4 mb-2">O Guia do Maroto</h1>
-          <p className="text-muted-foreground text-sm">Juro solenemente não fazer nada de bom.</p>
-          <p className="text-xs text-foreground/80 mt-1">Conheça as novas atualizações do castelo.</p>
+    <div className="max-w-4xl mx-auto space-y-12 pb-20 animate-in fade-in duration-1000">
+      {/* Hero Header - MONSTER QUALITY */}
+      <div className="relative group overflow-hidden bg-black/40 backdrop-blur-3xl rounded-[3.5rem] border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] p-12 text-center">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/old-mathematics.png')] opacity-10 pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[100px] bg-primary/20 blur-[100px] rounded-full pointer-events-none" />
+        
+        <div className="relative z-10 space-y-6">
+           <div className="w-24 h-24 bg-white/5 rounded-[2.5rem] border border-white/10 flex items-center justify-center mx-auto shadow-2xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-700 animate-float">
+              <span className="text-5xl drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">📜</span>
+           </div>
+           <div className="space-y-2">
+              <h1 className="font-heading text-4xl text-white tracking-tighter uppercase italic">O Guia do Maroto</h1>
+              <p className="text-[10px] font-heading text-primary uppercase tracking-[0.6em] animate-pulse">Juro solenemente não fazer nada de bom</p>
+           </div>
+           <div className="flex justify-center gap-4 pt-4">
+              <div className="px-6 py-2 rounded-full bg-white/5 border border-white/10 text-[8px] font-heading text-white/40 uppercase tracking-widest">Versão 3.0</div>
+              <div className="px-6 py-2 rounded-full bg-primary/10 border border-primary/20 text-[8px] font-heading text-primary uppercase tracking-widest">Protocolo Morpheus</div>
+           </div>
         </div>
       </div>
 
-      {/* Índice rápido */}
-      <div className="flex flex-wrap gap-2">
+      {/* Índice rápido - MONSTER QUALITY */}
+      <div className="flex flex-wrap justify-center gap-3 relative z-20">
         {guidePages.map((page, i) => (
           <button
             key={i}
             onClick={() => setActivePage(i + 1)}
-            className={`text-xs px-3 py-1.5 rounded-full font-heading transition-all border ${
+            className={`px-6 py-3 rounded-2xl font-heading text-[9px] uppercase tracking-[0.2em] transition-all border duration-500 shadow-xl ${
               activePage === i + 1
-                ? "bg-primary/20 border-primary text-primary"
-                : "border-border text-muted-foreground hover:border-primary/50"
+                ? "bg-primary text-white border-primary shadow-[0_10px_20px_rgba(251,191,36,0.3)] scale-110"
+                : "bg-black/40 text-white/30 border-white/5 hover:border-white/20 hover:text-white"
             }`}
           >
-            {page.title.split(" ").slice(0, 2).join(" ")}
+            {page.title.split(" ").slice(1, 3).join(" ")}
           </button>
         ))}
       </div>
 
-      <div className="glass rounded-2xl p-6 sm:p-10 border border-border">
-        <div className="flex justify-between items-center mb-6 border-b border-border pb-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setActivePage(p => Math.max(1, p - 1))}
-            disabled={activePage === 1}
-          >
-            ← Anterior
-          </Button>
-          <span className="font-heading text-primary text-sm">
-            Página {activePage} de {guidePages.length}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setActivePage(p => Math.min(guidePages.length, p + 1))}
-            disabled={activePage === guidePages.length}
-          >
-            Próxima →
-          </Button>
-        </div>
+      {/* Parchment Content - MONSTER QUALITY */}
+      <div className="relative group/book">
+        <div className="absolute -inset-4 bg-primary/10 blur-3xl opacity-0 group-hover/book:opacity-100 transition-opacity duration-1000" />
+        
+        <div className="relative z-10 bg-[#f4e4bc] text-[#4a3728] rounded-[3rem] p-8 md:p-16 shadow-[0_50px_100px_rgba(0,0,0,0.9)] overflow-hidden border-[12px] border-[#3d2b1f]/20 transform hover:rotate-1 transition-transform duration-700">
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/papyros.png')] opacity-40 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-black/5 via-transparent to-black/10 pointer-events-none" />
+          
+          <div className="relative z-10 flex flex-col h-full min-h-[500px]">
+             {/* Navigation Controls */}
+             <div className="flex justify-between items-center mb-12 border-b border-[#3d2b1f]/10 pb-6">
+                <button
+                  onClick={() => setActivePage(p => Math.max(1, p - 1))}
+                  disabled={activePage === 1}
+                  className="w-12 h-12 rounded-full border border-[#3d2b1f]/20 flex items-center justify-center hover:bg-[#3d2b1f]/5 transition-all disabled:opacity-20"
+                >
+                  <span className="text-xl">⇠</span>
+                </button>
+                
+                <div className="text-center">
+                   <p className="font-heading text-[9px] uppercase tracking-[0.4em] mb-1 opacity-40 text-[#3d2b1f]">Capítulo Mágico</p>
+                   <p className="font-heading text-sm text-[#3d2b1f]">0{activePage} — 0{guidePages.length}</p>
+                </div>
 
-        <div className="animate-fade-in" key={activePage}>
-          <h2 className="font-heading text-2xl text-foreground mb-6 flex items-center gap-3">
-            {guidePages[activePage - 1].title}
-          </h2>
-          <div className="text-foreground/90 leading-relaxed">
-            {guidePages[activePage - 1].content}
-          </div>
-        </div>
+                <button
+                  onClick={() => setActivePage(p => Math.min(guidePages.length, p + 1))}
+                  disabled={activePage === guidePages.length}
+                  className="w-12 h-12 rounded-full border border-[#3d2b1f]/20 flex items-center justify-center hover:bg-[#3d2b1f]/5 transition-all disabled:opacity-20"
+                >
+                  <span className="text-xl">⇢</span>
+                </button>
+             </div>
 
-        {activePage === guidePages.length && (
-          <div className="mt-10 text-center animate-fade-in-up">
-            <h3 className="font-heading text-lg text-primary mb-3">Malfeito, feito!</h3>
-            <Link to="/dashboard">
-              <Button variant="magical" size="lg" className="font-heading">
-                Voltar para o Salão Principal ⚡
-              </Button>
-            </Link>
+             {/* Page Content */}
+             <div className="flex-1 animate-in fade-in slide-in-from-right-8 duration-700" key={activePage}>
+                <div className="flex items-center gap-6 mb-10">
+                   <div className="w-16 h-16 rounded-full bg-[#3d2b1f]/5 border border-[#3d2b1f]/10 flex items-center justify-center text-3xl">
+                      {guidePages[activePage - 1].title.split(" ")[0]}
+                   </div>
+                   <h2 className="font-heading text-3xl text-[#3d2b1f] tracking-tight leading-none uppercase italic">
+                      {guidePages[activePage - 1].title.split(" ").slice(1).join(" ")}
+                   </h2>
+                </div>
+                
+                <div className="font-serif text-lg leading-relaxed space-y-6 opacity-90 first-letter:text-5xl first-letter:font-heading first-letter:mr-3 first-letter:float-left first-letter:text-[#3d2b1f]">
+                   {guidePages[activePage - 1].content}
+                </div>
+             </div>
+
+             {/* Footer Button */}
+             {activePage === guidePages.length && (
+               <div className="mt-16 text-center animate-in fade-in zoom-in duration-1000">
+                  <div className="w-24 h-px bg-[#3d2b1f]/20 mx-auto mb-8" />
+                  <h3 className="font-heading text-xl text-[#3d2b1f] mb-6 italic uppercase">Malfeito, feito!</h3>
+                  <Link to="/dashboard">
+                    <button className="px-12 py-5 bg-[#3d2b1f] text-[#f4e4bc] font-heading text-[10px] tracking-[0.4em] rounded-[2rem] shadow-2xl hover:scale-110 active:scale-95 transition-all uppercase">
+                      Fechar o Mapa ⚡
+                    </button>
+                  </Link>
+               </div>
+             )}
           </div>
-        )}
+          
+          {/* Decorative Corners */}
+          <div className="absolute top-4 left-4 w-12 h-12 border-t-2 border-l-2 border-[#3d2b1f]/10" />
+          <div className="absolute top-4 right-4 w-12 h-12 border-t-2 border-r-2 border-[#3d2b1f]/10" />
+          <div className="absolute bottom-4 left-4 w-12 h-12 border-b-2 border-l-2 border-[#3d2b1f]/10" />
+          <div className="absolute bottom-4 right-4 w-12 h-12 border-b-2 border-r-2 border-[#3d2b1f]/10" />
+        </div>
+      </div>
+      
+      {/* Tip Box - MONSTER QUALITY */}
+      <div className="bg-black/40 backdrop-blur-3xl rounded-[2.5rem] border border-white/5 p-8 flex items-center gap-8 shadow-2xl group">
+         <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-2xl group-hover:rotate-12 transition-transform duration-500">💡</div>
+         <div className="flex-1">
+            <p className="text-[9px] font-heading text-primary uppercase tracking-[0.4em] mb-1">Dica de Bruxo</p>
+            <p className="text-sm text-white/40 font-serif italic">"O mapa revela-se apenas para quem tem sede de conhecimento. Explore cada página para dominar os segredos do portal."</p>
+         </div>
       </div>
     </div>
   );

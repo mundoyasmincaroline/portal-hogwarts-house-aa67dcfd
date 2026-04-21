@@ -201,20 +201,33 @@ export default function DashboardLayout() {
   useEffect(() => {
     playMagicSound();
     
-    // Morpheus Security Protocol Alert
+    // ── MONSTER QUALITY MORPHEUS PROTOCOL ──
     setTimeout(() => {
       toast(
-        <div className="font-mono text-green-500 bg-black p-1 w-full">
-          <p className="font-bold border-b border-green-500/50 mb-1 flex justify-between">
-            <span>&gt; MORPHEUS_PROTOCOL</span>
-            <span className="text-red-500">ACTIVE</span>
-          </p>
-          <p className="text-xs">&gt; System Secured & Encrypted.</p>
-          <p className="text-xs">&gt; Tracking all unauthorized access...</p>
+        <div className="relative overflow-hidden rounded-xl bg-black/90 border border-green-500/30 p-4 shadow-[0_0_30px_rgba(34,197,94,0.2)] group/morpheus">
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%] pointer-events-none" />
+          <div className="relative z-10 font-mono text-[10px] space-y-2">
+            <div className="flex items-center justify-between border-b border-green-500/20 pb-2">
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                <span className="text-green-500 font-bold tracking-tighter">MORPHEUS_PROTOCOL_v4.0</span>
+              </div>
+              <span className="text-green-900 bg-green-500/10 px-2 py-0.5 rounded text-[8px]">ENCRYPTED</span>
+            </div>
+            <div className="text-green-400/80 space-y-1">
+              <p>&gt; Inicializando escudos de Hogwarts...</p>
+              <p>&gt; Verificando assinaturas de magia negra... <span className="text-green-500">[LIMPO]</span></p>
+              <p>&gt; Conexão segura estabelecida.</p>
+            </div>
+          </div>
         </div>,
-        { duration: 5000, className: "bg-black border border-green-500 rounded-none p-0" }
+        { 
+          duration: 6000, 
+          className: "p-0 bg-transparent border-none shadow-none",
+          position: "bottom-right"
+        }
       );
-    }, 1500);
+    }, 2000);
   }, []);
 
   useEffect(() => {
@@ -269,10 +282,10 @@ export default function DashboardLayout() {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <div className="text-center">
-          <div className="text-4xl animate-float mb-4">⚡</div>
-          <p className="font-heading text-muted-foreground">Carregando portal...</p>
+      <div className="flex h-screen items-center justify-center bg-black">
+        <div className="relative">
+          <div className="w-24 h-24 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+          <div className="absolute inset-0 flex items-center justify-center text-2xl">⚡</div>
         </div>
       </div>
     );
@@ -280,11 +293,10 @@ export default function DashboardLayout() {
 
   if (!user || !profile) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <div className="text-center">
-          <div className="text-4xl animate-pulse mb-4">🔮</div>
-          <p className="font-heading text-muted-foreground text-lg">Despertando sua magia...</p>
-          <p className="text-xs text-muted-foreground/50 mt-2">Se esta tela persistir por muito tempo, verifique sua conexão.</p>
+      <div className="flex h-screen items-center justify-center bg-black">
+        <div className="text-center space-y-4">
+          <div className="text-6xl animate-float">🔮</div>
+          <p className="font-heading text-white/40 text-sm tracking-[0.3em] uppercase">Despertando Magia</p>
         </div>
       </div>
     );
@@ -303,10 +315,10 @@ export default function DashboardLayout() {
   // Se ainda está verificando personagens, aguarda
   if (hasCharacters === null) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <div className="text-center">
-          <div className="text-4xl animate-float mb-4">⚡</div>
-          <p className="font-heading text-muted-foreground">Carregando personagens...</p>
+      <div className="flex h-screen items-center justify-center bg-black">
+        <div className="text-center space-y-4">
+          <div className="text-4xl animate-spin-slow">⏳</div>
+          <p className="font-heading text-white/20 text-[10px] tracking-widest uppercase">Sincronizando Almas</p>
         </div>
       </div>
     );
@@ -338,24 +350,32 @@ export default function DashboardLayout() {
   const items = isAdmin ? [...NAV_ITEMS, ...ADMIN_ITEMS] : NAV_ITEMS;
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden relative">
+    <div className="flex h-screen bg-[#050505] overflow-hidden relative">
+      {/* Global Background Effects */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(20,20,20,1)_0%,rgba(0,0,0,1)_100%)] z-0" />
+      <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
 
       <InterstitialAd />
       {sidebarOpen && (
-        <div className="fixed inset-0 bg-background/80 z-30 md:hidden" onClick={() => setSidebarOpen(false)} />
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 md:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
-      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-64 bg-card border-r border-border flex flex-col transition-transform md:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
-        <div className="p-4 border-b border-border">
-          <Link to="/dashboard" className="flex items-center gap-3">
-            <div className="bg-primary/20 p-2 rounded-lg text-primary">
-              <Castle size={24} />
+      {/* ── MONSTER SIDEBAR ── */}
+      <aside className={`fixed md:static inset-y-0 left-0 z-[60] w-72 bg-black/40 backdrop-blur-3xl border-r border-white/5 flex flex-col transition-all duration-500 ease-in-out md:translate-x-0 ${sidebarOpen ? "translate-x-0 shadow-[20px_0_100px_rgba(0,0,0,0.9)]" : "-translate-x-full"}`}>
+        <div className="p-8 border-b border-white/5 relative group">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          <Link to="/dashboard" className="relative z-10 flex items-center gap-4">
+            <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 shadow-inner group-hover:scale-110 transition-transform duration-500">
+               <Castle size={24} className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]" />
             </div>
-            <span className="font-heading text-lg text-gold-gradient leading-tight">Hogwarts<br/>House</span>
+            <div className="space-y-0.5">
+              <span className="font-heading text-xl text-white tracking-tighter leading-none block">HOGWARTS</span>
+              <span className="font-heading text-xs text-primary tracking-[0.3em] leading-none block opacity-80">PORTAL</span>
+            </div>
           </Link>
         </div>
 
-        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto custom-scrollbar">
           {items.map((item) => {
             const isActive = location.pathname === item.path;
               return item.isMap ? (
@@ -366,10 +386,12 @@ export default function DashboardLayout() {
                     setMapOpen(true);
                     setSidebarOpen(false);
                   }}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
+                  className="w-full flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 group text-white/40 hover:bg-white/5 hover:text-white"
                 >
-                  <span className="text-muted-foreground group-hover:text-primary transition-colors">{item.icon}</span>
-                  <span className="font-heading text-sm">{item.label}</span>
+                  <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center border border-white/5 group-hover:border-primary/30 transition-colors">
+                     {item.icon}
+                  </div>
+                  <span className="font-heading text-[10px] tracking-widest uppercase">{item.label}</span>
                 </button>
               ) : (
                 <Link
@@ -379,17 +401,22 @@ export default function DashboardLayout() {
                     playMagicSound();
                     setSidebarOpen(false);
                   }}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group ${
-                    isActive ? "bg-primary/10 text-primary font-bold border border-primary/20" : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
+                  className={`flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-500 group relative overflow-hidden ${
+                    isActive ? "bg-white/5 text-white border border-white/10 shadow-xl" : "text-white/40 hover:text-white hover:bg-white/[0.02]"
                   }`}
                 >
-                  <span className="text-muted-foreground group-hover:text-primary transition-colors">{item.icon}</span>
-                  <span className="font-heading text-sm">{item.label}</span>
+                  {isActive && (
+                     <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-transparent opacity-50" />
+                  )}
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${isActive ? "bg-primary text-white shadow-lg shadow-primary/20 scale-110" : "bg-white/5 group-hover:bg-white/10"}`}>
+                     {item.icon}
+                  </div>
+                  <span className="font-heading text-[10px] tracking-widest uppercase relative z-10">{item.label}</span>
                   {item.label === "Guia do Maroto" && (
-                    <span className="ml-auto w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                    <span className="ml-auto w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.8)]"></span>
                   )}
                   {item.label === "Mensagens" && dmUnread > 0 && (
-                    <span className="ml-auto min-w-[18px] h-[18px] px-1 bg-primary text-primary-foreground rounded-full text-[10px] flex items-center justify-center font-bold">
+                    <span className="ml-auto px-2 py-0.5 bg-primary text-white rounded-full text-[8px] font-heading shadow-lg">
                       {dmUnread > 9 ? "9+" : dmUnread}
                     </span>
                   )}
@@ -398,74 +425,44 @@ export default function DashboardLayout() {
           })}
         </nav>
 
-        <div className="p-3 border-t border-border bg-card/80 backdrop-blur-sm relative z-50">
-          {/* Saldo de Galeões */}
-          <Link to="/dashboard/store" className="flex items-center justify-between px-4 py-3 mb-2 rounded-2xl border border-yellow-500/40 bg-gradient-to-br from-amber-600/20 via-yellow-900/40 to-black hover:border-yellow-300 transition-all group shadow-[0_0_15px_rgba(251,191,36,0.1)] hover:shadow-[0_0_25px_rgba(251,191,36,0.2)]">
-            <div className="flex items-center gap-2">
-              <span className="text-lg">🪙</span>
-              <span className="text-[11px] text-yellow-400/90 font-heading group-hover:text-yellow-300 uppercase tracking-wider">Galeões</span>
+        <div className="p-6 border-t border-white/5 bg-black/40 backdrop-blur-3xl space-y-6">
+          {/* Gringotts Balance - Monster Quality */}
+          <Link to="/dashboard/store" className="relative group block overflow-hidden rounded-2xl bg-gradient-to-br from-yellow-600/10 to-transparent border border-yellow-500/20 p-4 transition-all hover:border-yellow-500/50 hover:-translate-y-1">
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.05] pointer-events-none" />
+            <div className="flex items-center justify-between relative z-10">
+               <div className="space-y-0.5">
+                  <p className="text-[9px] font-heading text-yellow-500/60 uppercase tracking-widest">Saldo no Cofre</p>
+                  <p className="font-heading text-xl text-white tracking-tighter drop-shadow-lg">🪙 {((profile as any).galeons || 0).toLocaleString("pt-BR")}</p>
+               </div>
+               <div className="w-10 h-10 rounded-xl bg-yellow-500/10 flex items-center justify-center border border-yellow-500/20 group-hover:rotate-12 transition-transform">
+                  <Coins size={20} className="text-yellow-500" />
+               </div>
             </div>
-            <span className="font-heading text-lg text-yellow-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]">{((profile as any).galeons || 0).toLocaleString("pt-BR")}</span>
           </Link>
-          {/* VIP upgrade CTA — só para não-VIPs */}
-          {!(profile as any).vip_plan && (
-            <Link to="/dashboard/store"
-              className="flex items-center gap-2 px-3 py-2 mb-2 rounded-xl border border-purple-500/40 bg-gradient-to-r from-purple-900/30 to-violet-900/20 hover:border-purple-400/60 hover:from-purple-900/50 transition-all group animate-pulse-glow">
-              <span className="text-base">👑</span>
-              <span className="text-[11px] text-purple-300 font-heading group-hover:text-purple-200 flex-1">Ativar VIP</span>
-              <span className="text-[9px] bg-purple-500/30 text-purple-300 px-1.5 py-0.5 rounded-full font-heading">R$9,90</span>
-            </Link>
-          )}
-          {/* Badge VIP ativo */}
-          {(profile as any).vip_plan && (
-            <div className="flex items-center gap-2 px-3 py-2 mb-2 rounded-xl border border-yellow-500/40 bg-gradient-to-r from-yellow-900/20 to-amber-900/10">
-              <span className="text-base">✨</span>
-              <span className="text-[11px] text-yellow-400 font-heading capitalize">{(profile as any).vip_plan} Ativo</span>
-            </div>
-          )}
-          <div className="flex items-center justify-between gap-1 w-full flex-wrap">
-            <Link to="/dashboard/profile" className="flex items-center gap-2 max-w-[120px] hover:bg-secondary/50 p-1.5 rounded-lg transition-colors cursor-pointer group">
-              <div className="relative shrink-0">
-                <HouseCrest house={profile.house} size="sm" />
-                <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-card ${isUserOnline(profile) ? "bg-green-500" : "bg-muted-foreground"}`} title={isUserOnline(profile) ? "Online" : "Offline"} />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-[13px] leading-tight font-heading truncate text-foreground group-hover:text-primary transition-colors" title={profile.full_name}>{profile.full_name}</p>
-                <p className="text-[10px] leading-tight text-muted-foreground truncate">{house.name}</p>
-              </div>
-            </Link>
-            
-            <div className="flex items-center gap-1 shrink-0">
-              <button 
-                onClick={async () => {
-                  await supabase.from("profiles").update({ active_character_id: null } as never).eq("user_id", user.id);
-                  useAuth.setState((state) => ({ profile: state.profile ? { ...state.profile, active_character_id: null } : null }));
-                  window.location.reload();
-                }} 
-                className="p-1.5 text-muted-foreground hover:bg-secondary/80 hover:text-primary rounded-md transition-colors" 
-                title="Trocar Personagem"
-              >
-                <RefreshCw size={14} />
-              </button>
-              <button
-                onClick={handleToggleSound}
-                className="p-1.5 text-muted-foreground hover:bg-secondary/80 hover:text-primary rounded-md transition-colors"
-                title={soundOn ? "Desativar Som" : "Ativar Som"}
-              >
-                {soundOn ? <Volume2 size={14} /> : <VolumeX size={14} />}
-              </button>
-              <div className="scale-90 origin-center"><Notifications /></div>
-              <button 
-                onClick={async () => { await logout(); navigate("/"); }} 
-                className="p-1.5 text-muted-foreground hover:bg-destructive/20 hover:text-destructive rounded-md transition-colors"
-                title="Sair"
-              >
-                <LogOut size={14} />
-              </button>
-            </div>
-          </div>
-          <div className="mt-3 text-center opacity-40">
-            <p className="text-[9px] text-muted-foreground/60 text-center px-2 font-mono uppercase tracking-widest">Mundo Yasmin</p>
+
+          {/* User Profile Area */}
+          <div className="flex items-center justify-between gap-3">
+             <Link to="/dashboard/profile" className="flex items-center gap-3 group">
+                <div className="relative">
+                   <div className="absolute inset-0 bg-primary/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                   <HouseCrest house={profile.house} size="sm" className="relative z-10" />
+                   <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-black ${isUserOnline(profile) ? "bg-green-500" : "bg-white/10"}`} />
+                </div>
+                <div className="min-w-0">
+                   <p className="text-[11px] font-heading text-white truncate uppercase tracking-wider group-hover:text-primary transition-colors">{profile.full_name?.split(' ')[0]}</p>
+                   <p className="text-[9px] text-white/30 truncate uppercase font-medium">{house.name}</p>
+                </div>
+             </Link>
+
+             <div className="flex items-center gap-1">
+                <button onClick={handleToggleSound} className="p-2 text-white/20 hover:text-white transition-colors">
+                   {soundOn ? <Volume2 size={14} /> : <VolumeX size={14} />}
+                </button>
+                <div className="scale-90 opacity-60 hover:opacity-100 transition-opacity"><Notifications /></div>
+                <button onClick={async () => { await logout(); navigate("/"); }} className="p-2 text-white/20 hover:text-red-500 transition-colors">
+                   <LogOut size={14} />
+                </button>
+             </div>
           </div>
         </div>
       </aside>
@@ -479,87 +476,104 @@ export default function DashboardLayout() {
           <span className="font-heading text-sm text-gold-gradient">Hogwarts House</span>
         </div>
         
-        {/* House Cup Widget - Monster Quality 3D Glass Design */}
-        <div className="px-4 md:px-8 mt-6 mb-4 relative">
+        {/* House Cup Widget - MONSTER QUALITY 3D GLASS DESIGN */}
+        <div className="px-4 md:px-12 mt-8 mb-6 relative">
           {!showHouseCup ? (
             <button 
               onClick={toggleHouseCup}
-              className="flex items-center gap-2 px-4 py-2 bg-black/60 backdrop-blur-xl border border-primary/30 rounded-xl text-[10px] font-heading text-primary hover:scale-105 transition-all shadow-lg animate-in slide-in-from-left-5"
+              className="flex items-center gap-3 px-6 py-3 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-2xl text-[10px] font-heading text-white/60 hover:text-white hover:bg-white/10 hover:scale-105 transition-all shadow-2xl animate-in slide-in-from-left-5 group"
             >
-              <Trophy size={14} className="animate-pulse" />
-              <span>MOSTRAR TORNEIO DAS CASAS</span>
-            </button>
+              <Trophy size={16} className="text-yellow-500 group-hover:animate-bounce" />
+              <span className="tracking-[0.2em] uppercase">Visualizar Torneio das Casas</span>
+            <div className="px-6 py-10">
+              <button 
+                onClick={toggleHouseCup}
+                className="flex items-center gap-3 px-6 py-3 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-2xl text-[10px] font-heading text-white/60 hover:text-white hover:bg-white/10 hover:scale-105 transition-all shadow-2xl animate-in slide-in-from-left-5 group"
+              >
+                <Trophy size={16} className="text-yellow-500 group-hover:animate-bounce" />
+                <span className="tracking-[0.2em] uppercase">Visualizar Torneio das Casas</span>
+              </button>
+            </div>
           ) : (
-            <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-gradient-to-b from-white/5 to-black/60 backdrop-blur-2xl p-6 md:p-8 shadow-[0_25px_60px_rgba(0,0,0,0.8)] group animate-in zoom-in-95 duration-500">
-              {/* Ambient Magic Glows */}
-              <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[120px] -z-10 animate-pulse" />
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-500/10 rounded-full blur-[100px] -z-10" />
-              
-              <div className="relative z-10 flex flex-col gap-6">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <div className="relative w-14 h-14 flex items-center justify-center">
-                      <div className="absolute inset-0 bg-yellow-500/20 blur-xl rounded-full animate-pulse" />
-                      <Trophy size={32} className="text-yellow-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)] relative z-10" />
+            <div className="px-6 py-10 md:px-12 animate-in slide-in-from-top-10 duration-1000">
+              <div className="bg-black/60 backdrop-blur-3xl rounded-[4rem] border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.9)] p-10 md:p-14 relative overflow-hidden group/cup">
+                {/* Background Magic Dust */}
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/papyros.png')] opacity-[0.02] pointer-events-none" />
+                
+                <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12 mb-16">
+                  <div className="flex items-center gap-10">
+                    {/* Trophy Monument */}
+                    <div className="relative shrink-0">
+                      <div className="absolute -inset-8 bg-yellow-400/20 blur-[60px] opacity-0 group-hover/cup:opacity-100 transition-opacity duration-1000" />
+                      <div className="w-28 h-28 bg-white/5 rounded-[3rem] border border-white/10 flex items-center justify-center shadow-2xl relative z-10 animate-float group-hover:scale-110 transition-transform duration-700">
+                        <Trophy size={56} className="text-yellow-400 drop-shadow-[0_0_25px_rgba(251,191,36,0.9)]" />
+                      </div>
+                      <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-20 h-6 bg-black/40 blur-xl rounded-full" />
                     </div>
-                    <div>
-                      <h2 className="text-2xl md:text-3xl font-heading text-gold-gradient tracking-tight">Torneio das Casas</h2>
-                      <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-[0.2em] font-heading opacity-60">A glória eterna aguarda os vencedores</p>
+                    <div className="space-y-2">
+                      <h2 className="text-5xl md:text-6xl font-heading text-white tracking-tighter italic leading-none drop-shadow-2xl">Torneio de Hogwarts</h2>
+                      <p className="text-[11px] font-heading text-primary uppercase tracking-[0.6em] animate-pulse">A Glória Eterna Aguarda a Sua Casa</p>
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-3 px-6 py-2 bg-black/40 rounded-2xl border border-white/5 shadow-inner">
-                      <div className="flex -space-x-2">
-                        {['🐍', '🦁', '🦅', '🦡'].map((emoji, i) => (
-                          <div key={i} className="w-8 h-8 rounded-full bg-secondary/80 border border-white/10 flex items-center justify-center text-sm shadow-lg">
+                  <div className="flex items-center gap-8">
+                    <div className="hidden lg:flex items-center gap-6 px-10 py-5 bg-white/[0.03] rounded-[2.5rem] border border-white/10 shadow-inner backdrop-blur-3xl">
+                      <div className="flex -space-x-4">
+                        {['🦁', '🐍', '🦅', '🦡'].map((emoji, i) => (
+                          <div key={i} className="w-12 h-12 rounded-[1rem] bg-black/80 border border-white/10 flex items-center justify-center text-xl shadow-2xl hover:-translate-y-2 hover:rotate-6 transition-all cursor-pointer">
                             {emoji}
                           </div>
                         ))}
                       </div>
-                      <div className="h-8 w-px bg-white/10 mx-2" />
-                      <div className="text-right">
-                        <p className="text-[9px] text-muted-foreground uppercase font-heading">Liderando</p>
-                        <p className="text-xs font-heading text-green-400">SONSERINA</p>
+                      <div className="h-12 w-px bg-white/10 mx-2" />
+                      <div className="text-right space-y-1">
+                        <p className="text-[9px] text-white/20 uppercase font-heading tracking-[0.4em]">Casa em Destaque</p>
+                        <p className="text-sm font-heading text-green-400 tracking-tighter uppercase italic">Sonserina Imbatível</p>
                       </div>
                     </div>
 
                     <button 
                       onClick={toggleHouseCup}
-                      className="p-2 hover:bg-white/5 rounded-full text-white/20 hover:text-white/60 transition-all"
-                      title="Ocultar"
+                      className="w-14 h-14 bg-white/5 hover:bg-white/10 rounded-3xl flex items-center justify-center text-white/20 hover:text-white transition-all group shadow-xl"
+                      title="Ocultar Painel"
                     >
-                      <LogOut size={16} className="rotate-90" />
+                      <LogOut size={24} className="rotate-90 group-hover:translate-x-2 transition-transform" />
                     </button>
                   </div>
                 </div>
 
-                {/* 3D Magic Progress Bars */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-2">
+                {/* 3D Liquid Progress Bars - MONSTER QUALITY */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
                   {[
-                    { name: "Grifinória", color: "from-red-500 via-red-600 to-red-900", accent: "bg-red-400", progress: "65%", icon: "🦁", glow: "shadow-[0_0_15px_rgba(239,68,68,0.4)]" },
-                    { name: "Sonserina", color: "from-green-400 via-green-600 to-green-950", accent: "bg-green-400", progress: "82%", icon: "🐍", glow: "shadow-[0_0_15px_rgba(34,197,94,0.4)]" },
-                    { name: "Corvinal", color: "from-blue-400 via-blue-600 to-blue-950", accent: "bg-blue-400", progress: "45%", icon: "🦅", glow: "shadow-[0_0_15px_rgba(59,130,246,0.4)]" },
-                    { name: "Lufa-Lufa", color: "from-yellow-400 via-amber-600 to-amber-950", accent: "bg-yellow-400", progress: "30%", icon: "🦡", glow: "shadow-[0_0_15px_rgba(245,158,11,0.4)]" }
+                    { name: "Grifinória", color: "from-red-500 via-red-600 to-red-950", accent: "bg-red-500", progress: "65%", icon: "🦁", glow: "shadow-[0_0_40px_rgba(239,68,68,0.4)]" },
+                    { name: "Sonserina", color: "from-green-400 via-green-600 to-green-950", accent: "bg-green-400", progress: "82%", icon: "🐍", glow: "shadow-[0_0_40px_rgba(34,197,94,0.4)]" },
+                    { name: "Corvinal", color: "from-blue-400 via-blue-600 to-blue-950", accent: "bg-blue-400", progress: "45%", icon: "🦅", glow: "shadow-[0_0_40_px_rgba(59,130,246,0.4)]" },
+                    { name: "Lufa-Lufa", color: "from-yellow-400 via-amber-600 to-amber-950", accent: "bg-yellow-400", progress: "30%", icon: "🦡", glow: "shadow-[0_0_40px_rgba(245,158,11,0.4)]" }
                   ].map((house) => (
-                    <div key={house.name} className="relative group/house bg-white/[0.02] rounded-3xl p-4 border border-white/5 hover:bg-white/[0.05] transition-all duration-300">
-                      <div className="flex justify-between items-center mb-3">
-                        <div className="flex items-center gap-2">
-                          <span className="text-lg">{house.icon}</span>
-                          <span className="text-xs font-heading text-white/80 tracking-widest uppercase">{house.name}</span>
+                    <div key={house.name} className="relative group/house bg-white/[0.02] rounded-[3rem] p-8 border border-white/5 hover:bg-white/[0.05] hover:border-white/20 transition-all duration-700 hover:-translate-y-3 overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent opacity-0 group-hover/house:opacity-100 transition-opacity duration-1000" />
+                      
+                      <div className="flex justify-between items-end mb-8 relative z-10">
+                        <div className="space-y-1">
+                          <p className="text-[9px] font-heading text-white/20 uppercase tracking-[0.4em]">{house.name}</p>
+                          <span className="text-3xl drop-shadow-2xl group-hover:scale-125 transition-transform duration-700 block">{house.icon}</span>
                         </div>
-                        <span className="text-xs font-heading text-white/30">{house.progress}</span>
+                        <div className="text-right">
+                           <span className="text-2xl font-heading text-white tracking-tighter drop-shadow-lg">{house.progress}</span>
+                           <p className="text-[8px] font-heading text-primary uppercase tracking-widest">Lealdade</p>
+                        </div>
                       </div>
                       
-                      <div className="h-3 w-full bg-black/40 rounded-full border border-white/5 p-[2px] relative overflow-hidden shadow-inner">
+                      <div className="h-5 w-full bg-black/60 rounded-full border border-white/5 p-1 relative overflow-hidden shadow-2xl backdrop-blur-3xl group-hover:scale-105 transition-transform duration-500">
                         <div 
                           className={`h-full rounded-full bg-gradient-to-r ${house.color} ${house.glow} transition-all duration-1000 ease-out relative overflow-hidden`}
                           style={{ width: house.progress }}
                         >
+                          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20" />
                           <div className="absolute inset-0 bg-gradient-to-b from-white/30 to-transparent opacity-40" />
-                          <div className="absolute top-0 left-0 w-full h-[1px] bg-white/40" />
-                          <div className="absolute bottom-0 left-0 w-full h-[1px] bg-black/20" />
-                          <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_infinite]" />
+                          
+                          {/* Liquid Pulse Effect */}
+                          <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_infinite]" />
                         </div>
                       </div>
                     </div>
@@ -570,9 +584,8 @@ export default function DashboardLayout() {
           )}
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar relative">
-          {/* <MagicalActivityFeed /> */}
-          <div className="mt-4 md:mt-2 pb-20">
+        <div className="flex-1 overflow-y-auto p-6 md:p-16 custom-scrollbar relative z-10">
+          <div className="max-w-7xl mx-auto pb-40">
              {showVipBanner ? (
                <VipUpsellBanner 
                  currentVip={profile?.vip_plan} 
@@ -580,33 +593,38 @@ export default function DashboardLayout() {
                  onClose={toggleVipBanner}
                />
              ) : !profile?.vip_plan && (
-               <button 
-                 onClick={toggleVipBanner}
-                 className="mb-6 flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-900/40 to-indigo-900/40 backdrop-blur-xl border border-purple-500/30 rounded-xl text-[10px] font-heading text-purple-300 hover:scale-105 transition-all shadow-lg group"
-               >
-                 <Crown size={14} className="group-hover:rotate-12 transition-transform" />
-                 <span>VER OFERTAS VIP</span>
-               </button>
+               <div className="mb-12 animate-in fade-in slide-in-from-top-4 duration-1000">
+                 <button 
+                   onClick={toggleVipBanner}
+                   className="relative group flex items-center gap-6 px-10 py-5 bg-black/40 backdrop-blur-3xl border border-purple-500/30 rounded-[2.5rem] shadow-[0_20px_50px_rgba(168,85,247,0.15)] hover:scale-105 active:scale-95 transition-all"
+                 >
+                   <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                   <div className="relative z-10 w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-900 flex items-center justify-center border border-white/20 shadow-2xl">
+                      <Crown size={28} className="text-white group-hover:rotate-12 transition-transform duration-500" />
+                   </div>
+                   <div className="relative z-10 text-left">
+                      <p className="text-[11px] font-heading text-purple-300 uppercase tracking-[0.4em] mb-1">Status de Realeza</p>
+                      <p className="text-sm font-heading text-white tracking-tight">Ascender à Elite de Hogwarts (VIP)</p>
+                   </div>
+                   <div className="relative z-10 ml-10 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/40 group-hover:text-white transition-colors">
+                      →
+                   </div>
+                 </button>
+               </div>
              )}
              <Outlet />
           </div>
+          
           <EngagementBot />
           <FilchWatcher />
           <MagicalEventSystem />
-          {/* Magical Party Overlay – show only when active */}
-          {false && <MagicalPartyOverlay />}
           <GlobalChallengeWatcher />
           <DailyRewardSystem />
           <MagicalCelebration />
-          {/* <TimedMysteryChest /> */}
           <MaraudersMap isOpen={mapOpen} onClose={() => setMapOpen(false)} />
         </div>
       </main>
     </div>
   );
-}
-
-
-
 
 
