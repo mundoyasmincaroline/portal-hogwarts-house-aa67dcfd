@@ -457,47 +457,83 @@ export default function DashboardLayout() {
           <span className="font-heading text-sm text-gold-gradient">Hogwarts House</span>
         </div>
         
-        {/* House Cup Progress Bar - Gamification Engine */}
-        <div className="px-4 md:px-8 mt-4">
-          <div className="glass rounded-2xl p-4 border-primary/20 bg-gradient-to-r from-amber-900/20 via-black/40 to-amber-900/10 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5" />
-            <div className="relative z-10 flex flex-col md:flex-row items-center gap-4">
-              <div className="flex items-center gap-2 shrink-0">
-                <span className="text-2xl animate-float">🏆</span>
-                <span className="font-heading text-sm text-gold-gradient uppercase tracking-tighter">Taça das Casas</span>
+        {/* House Cup Widget - Monster Quality 3D Glass Design */}
+        <div className="px-4 md:px-8 mt-6 mb-4">
+          <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-gradient-to-b from-white/5 to-black/60 backdrop-blur-2xl p-6 md:p-8 shadow-[0_25px_60px_rgba(0,0,0,0.8)] group">
+            {/* Ambient Magic Glows */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[120px] -z-10 animate-pulse" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-500/10 rounded-full blur-[100px] -z-10" />
+            
+            <div className="relative z-10 flex flex-col gap-6">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="relative w-14 h-14 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-yellow-500/20 blur-xl rounded-full animate-pulse" />
+                    <Trophy size={32} className="text-yellow-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)] relative z-10" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl md:text-3xl font-heading text-gold-gradient tracking-tight">Torneio das Casas</h2>
+                    <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-[0.2em] font-heading opacity-60">A glória eterna aguarda os vencedores</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3 px-6 py-2 bg-black/40 rounded-2xl border border-white/5 shadow-inner">
+                  <div className="flex -space-x-2">
+                    {['🐍', '🦁', '🦅', '🦡'].map((emoji, i) => (
+                      <div key={i} className="w-8 h-8 rounded-full bg-secondary/80 border border-white/10 flex items-center justify-center text-sm shadow-lg">
+                        {emoji}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="h-8 w-px bg-white/10 mx-2" />
+                  <div className="text-right">
+                    <p className="text-[9px] text-muted-foreground uppercase font-heading">Liderando</p>
+                    <p className="text-xs font-heading text-green-400">SONSERINA</p>
+                  </div>
+                </div>
               </div>
-              
-              <div className="flex-1 w-full grid grid-cols-4 gap-2 h-3 items-end">
-                 {/* As barras crescem conforme a pontuação real via backend, aqui simulamos a UI premium */}
-                 <div className="group/house relative h-full bg-red-600/30 rounded-full overflow-hidden border border-red-500/20">
-                    <div className="h-full bg-red-600 shadow-[0_0_10px_rgba(220,38,38,0.5)] animate-pulse" style={{ width: '65%' }} />
-                    <span className="absolute -top-5 left-0 text-[8px] font-heading text-red-400 opacity-0 group-hover/house:opacity-100 transition-opacity">Grifinória</span>
-                 </div>
-                 <div className="group/house relative h-full bg-green-600/30 rounded-full overflow-hidden border border-green-500/20">
-                    <div className="h-full bg-green-600 shadow-[0_0_10px_rgba(22,163,74,0.5)]" style={{ width: '82%' }} />
-                    <span className="absolute -top-5 left-0 text-[8px] font-heading text-green-400 opacity-0 group-hover/house:opacity-100 transition-opacity">Sonserina</span>
-                 </div>
-                 <div className="group/house relative h-full bg-blue-600/30 rounded-full overflow-hidden border border-blue-500/20">
-                    <div className="h-full bg-blue-600 shadow-[0_0_10px_rgba(37,99,235,0.5)]" style={{ width: '45%' }} />
-                    <span className="absolute -top-5 left-0 text-[8px] font-heading text-blue-400 opacity-0 group-hover/house:opacity-100 transition-opacity">Corvinal</span>
-                 </div>
-                 <div className="group/house relative h-full bg-yellow-600/30 rounded-full overflow-hidden border border-yellow-500/20">
-                    <div className="h-full bg-yellow-600 shadow-[0_0_10px_rgba(202,138,4,0.5)]" style={{ width: '30%' }} />
-                    <span className="absolute -top-5 left-0 text-[8px] font-heading text-yellow-400 opacity-0 group-hover/house:opacity-100 transition-opacity">Lufa-Lufa</span>
-                 </div>
-              </div>
-              
-              <div className="hidden md:block text-right shrink-0">
-                <span className="text-[10px] text-muted-foreground uppercase block font-heading">Liderança Atual</span>
-                <span className="text-xs font-heading text-green-400 animate-pulse">🐍 Sonserina +120</span>
+
+              {/* 3D Magic Progress Bars */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-2">
+                {[
+                  { name: "Grifinória", color: "from-red-500 via-red-600 to-red-900", accent: "bg-red-400", progress: "65%", icon: "🦁", glow: "shadow-[0_0_15px_rgba(239,68,68,0.4)]" },
+                  { name: "Sonserina", color: "from-green-400 via-green-600 to-green-950", accent: "bg-green-400", progress: "82%", icon: "🐍", glow: "shadow-[0_0_15px_rgba(34,197,94,0.4)]" },
+                  { name: "Corvinal", color: "from-blue-400 via-blue-600 to-blue-950", accent: "bg-blue-400", progress: "45%", icon: "🦅", glow: "shadow-[0_0_15px_rgba(59,130,246,0.4)]" },
+                  { name: "Lufa-Lufa", color: "from-yellow-400 via-amber-600 to-amber-950", accent: "bg-yellow-400", progress: "30%", icon: "🦡", glow: "shadow-[0_0_15px_rgba(245,158,11,0.4)]" }
+                ].map((house) => (
+                  <div key={house.name} className="relative group/house bg-white/[0.02] rounded-3xl p-4 border border-white/5 hover:bg-white/[0.05] transition-all duration-300">
+                    <div className="flex justify-between items-center mb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">{house.icon}</span>
+                        <span className="text-xs font-heading text-white/80 tracking-widest uppercase">{house.name}</span>
+                      </div>
+                      <span className="text-xs font-heading text-white/30">{house.progress}</span>
+                    </div>
+                    
+                    <div className="h-3 w-full bg-black/40 rounded-full border border-white/5 p-[2px] relative overflow-hidden shadow-inner">
+                      {/* 3D Liquid Effect */}
+                      <div 
+                        className={`h-full rounded-full bg-gradient-to-r ${house.color} ${house.glow} transition-all duration-1000 ease-out relative overflow-hidden`}
+                        style={{ width: house.progress }}
+                      >
+                        {/* Shimmer overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-white/30 to-transparent opacity-40" />
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-white/40" />
+                        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-black/20" />
+                        {/* Animated gloss */}
+                        <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_infinite]" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar relative">
           {/* <MagicalActivityFeed /> */}
-          <div className="mt-2 md:mt-0 pb-10">
+          <div className="mt-4 md:mt-2 pb-20">
              <Outlet />
           </div>
           <EngagementBot />
