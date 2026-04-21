@@ -635,55 +635,37 @@ export default function Profile() {
               </div>
           </div>
         </div>
-        {loadingExtras ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[1,2,3,4].map(i => <div key={i} className="glass h-32 rounded-2xl animate-pulse" />)}
-          </div>
-        ) : userChallenges.length === 0 ? (
+
+        {userChallenges.length === 0 ? (
           <div className="glass rounded-[3rem] p-16 text-center border-dashed border-2 border-primary/20 bg-primary/5">
-            <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Trophy size={48} className="text-primary/30" />
-            </div>
-            <h3 className="font-heading text-xl text-foreground mb-2">O Mural está em branco</h3>
-            <p className="text-muted-foreground text-sm max-w-sm mx-auto italic">Explore o mapa e vença desafios!</p>
+            <Trophy size={64} className="mx-auto text-primary/20 mb-6" />
+            <p className="text-muted-foreground font-serif italic text-lg">"Grandes feitos aguardam por você."</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {userChallenges.map(uc => (
-              <div key={uc.id} className="relative group perspective">
-                  <div className="glass rounded-[2rem] p-6 border border-primary/20 bg-gradient-to-br from-indigo-950/20 to-transparent hover:border-primary/50 transition-all duration-500 overflow-hidden">
-                      <div className="absolute top-4 right-4 p-1.5 bg-green-500/20 rounded-full text-green-500"><CheckCircle2 size={14} /></div>
-                      <div className="space-y-4 relative z-10">
-                          <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary border border-primary/10"><Star size={24} /></div>
-                          <div>
-                              <h4 className="font-heading text-lg text-foreground mb-1 line-clamp-1">{uc.challenges?.title || "Desafio Místico"}</h4>
-                              <p className="text-xs text-muted-foreground line-clamp-2 h-8 leading-relaxed italic">"{uc.challenges?.description}"</p>
-                          </div>
-                          <div className="flex items-center justify-between pt-2 border-t border-white/5">
-                              <Badge variant="outline" className="text-[9px] px-2 py-0.5 border-primary/30 text-primary">+{uc.challenges?.xp_reward} XP</Badge>
-                              <span className="text-[10px] text-muted-foreground font-mono">{new Date(uc.completed_at || uc.created_at).toLocaleDateString("pt-BR")}</span>
-                          </div>
-                      </div>
+              <div key={uc.id} className="glass rounded-[2.5rem] p-6 border border-white/10 hover:border-primary/30 transition-all group overflow-hidden relative">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-primary/10 transition-all" />
+                <div className="flex items-start gap-5 relative z-10">
+                  <div className="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center border border-primary/40 shrink-0 group-hover:scale-110 transition-transform">
+                    <span className="text-3xl">🏆</span>
                   </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <h4 className="font-heading text-white text-lg">{uc.challenges?.title}</h4>
+                      <Badge variant="magical" className="text-[8px] tracking-widest">{uc.challenges?.xp_reward} XP</Badge>
+                    </div>
+                    <p className="text-xs text-white/50 leading-relaxed mb-4">{uc.challenges?.description}</p>
+                    <div className="flex items-center gap-2">
+                       <CheckCircle2 size={14} className="text-green-400" />
+                       <span className="text-[10px] text-green-400 font-heading uppercase tracking-widest">Conquista Desbloqueada</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         )}
-        <div className="pt-10">
-          <h3 className="font-heading text-sm text-primary mb-6 flex items-center gap-2 uppercase tracking-widest"><Crown size={16} /> Graus de Prestígio</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <div className="glass rounded-2xl p-5 flex items-center gap-4 border border-yellow-500/20 bg-gradient-to-r from-yellow-500/10 to-transparent">
-              <div className="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center text-2xl">🏅</div>
-              <div><p className="font-heading text-sm text-yellow-400">Veterano de Hogwarts</p><p className="text-[10px] text-muted-foreground">XP Total</p></div>
-            </div>
-            {profile.vip_plan && (
-              <div className="glass rounded-2xl p-5 flex items-center gap-4 border border-purple-500/20 bg-gradient-to-r from-purple-500/10 to-transparent">
-                  <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center text-2xl">✨</div>
-                  <div><p className="font-heading text-sm text-purple-400">Membro Honorário</p><p className="text-[10px] text-muted-foreground">{profile.vip_plan.toUpperCase()}</p></div>
-              </div>
-            )}
-          </div>
-        </div>
       </div>
     );
   } else if (activeTab === "inventory") {
@@ -774,114 +756,88 @@ export default function Profile() {
               <SafeImage src={profile.avatar_url} alt={profile.full_name} className="w-full h-full rounded-full object-cover border-2 border-white/10 shadow-inner" fallbackText={profile.full_name[0]} />
             </div>
             <div className="absolute -bottom-2 -right-2 z-20 scale-125 md:scale-150">
-              <HouseCrest house={profile.house as House} size="sm" />
+               <HouseCrest house={profile.house as House} size="sm" />
             </div>
             {isMe && (
-              <label className="absolute -top-2 -right-2 z-20 w-10 h-10 rounded-full bg-primary text-white shadow-2xl flex items-center justify-center cursor-pointer border border-white/20">
-                <Sparkles size={16} />
-                <input type="file" accept="image/*" className="hidden" onChange={uploadAvatar} disabled={uploading} />
+              <label className="absolute inset-0 z-30 flex items-center justify-center bg-black/60 opacity-0 group-hover/avatar:opacity-100 transition-opacity cursor-pointer rounded-full backdrop-blur-sm">
+                <input type="file" accept="image/*" onChange={uploadAvatar} className="hidden" />
+                <div className="text-center">
+                  <Sparkles size={24} className="text-primary mx-auto mb-1" />
+                  <span className="text-[8px] font-heading text-white uppercase tracking-tighter">{uploading ? "Conjurando..." : "Mudar Foto"}</span>
+                </div>
               </label>
             )}
           </div>
 
-          {!editing ? (
-            <div className="space-y-4">
-              <div className="space-y-1">
-                <h1 className="font-heading text-3xl md:text-5xl text-gold-gradient tracking-tight flex items-center justify-center gap-4 flex-wrap">
-                  {profile.full_name}
-                  <MedalBadge xp={profile.xp} />
-                </h1>
-                <p className="text-primary/60 font-heading text-lg tracking-widest uppercase opacity-80">@{profile.username}</p>
-              </div>
-
-              <div className="flex flex-wrap justify-center gap-3">
-                {profile.vip_plan && (
-                  <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-purple-600 to-purple-400 text-white font-heading text-xs shadow-lg uppercase">
-                    <Crown size={14} /> {profile.vip_plan}
-                  </div>
-                )}
-                <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/60 font-heading text-[10px] tracking-widest">
-                   {isUserOnline(profile) ? "● ONLINE" : "○ OFFLINE"}
-                </div>
-              </div>
-
-              <div className="max-w-lg mx-auto py-4">
-                <p className="text-lg text-white/70 font-serif italic leading-relaxed">{profile.bio || "Este bruxo ainda não escreveu sua lenda..."}</p>
-              </div>
-
-              {isMe && (
-                <div className="inline-flex items-center gap-4 px-8 py-4 rounded-[2rem] bg-gradient-to-b from-yellow-500/10 to-black/60 border border-yellow-500/20 shadow-lg group/galeon">
-                  <div className="text-left">
-                     <p className="text-[9px] text-yellow-500/60 font-heading uppercase tracking-[0.4em]">Cofre em Gringotes</p>
-                     <p className="text-3xl font-heading text-yellow-400 tracking-tighter leading-none mt-1">
-                        {((profile as any).galeons || 0).toLocaleString("pt-BR")}
-                        <span className="text-[10px] ml-2 opacity-60 uppercase tracking-widest font-heading">Galeões</span>
-                     </p>
-                  </div>
-                </div>
-              )}
-              
-              <div className="flex flex-wrap justify-center gap-4 pt-6">
-                {isMe ? (
-                  <>
-                    <button onClick={startEdit} className="px-8 py-3 rounded-2xl bg-primary text-white font-heading text-sm tracking-widest shadow-xl shadow-primary/20 hover:scale-105 transition-all">EDITAR PERFIL</button>
-                    {isAdmin && (
-                      <button onClick={() => setAdminEditModal(true)} className="px-8 py-3 rounded-2xl bg-white/5 border border-primary/40 text-primary font-heading text-sm tracking-widest hover:bg-primary/10 transition-all">EDIÇÃO SUPREMA</button>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <button onClick={() => navigate(`/dashboard/dm/${profile.user_id}`)} className="px-8 py-3 rounded-2xl bg-white/5 border border-white/20 text-white font-heading text-sm tracking-widest hover:bg-white/10 transition-all">ENVIAR CORUJA</button>
-                    {friendship?.status === "accepted" ? (
-                      <div className="flex gap-2">
-                        <div className="px-6 py-3 rounded-2xl bg-green-500/10 border border-green-500/30 text-green-500 font-heading text-sm tracking-widest">AMIGO ✓</div>
-                        <button onClick={handleRemoveFriend} className="p-3 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-500 hover:bg-red-500/20 transition-all"><Users size={20} /></button>
-                      </div>
-                    ) : friendship?.status === "pending" && friendship.friend_id === user?.id ? (
-                      <div className="flex gap-2">
-                        <button onClick={handleAcceptFriend} className="px-6 py-3 rounded-2xl bg-primary text-white font-heading text-sm tracking-widest hover:scale-105 transition-all shadow-lg shadow-primary/20">ACEITAR ✓</button>
-                        <button onClick={handleRejectFriend} className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 text-white/40 hover:text-white transition-all">RECUSAR</button>
-                      </div>
-                    ) : (
-                      <button onClick={handleAddFriend} className="px-8 py-3 rounded-2xl bg-primary text-white font-heading text-sm tracking-widest shadow-xl shadow-primary/20 hover:scale-105 transition-all">ADICIONAR AMIGO +</button>
-                    )}
-                  </>
-                )}
-              </div>
+          <div className="space-y-4 relative z-10">
+            <div className="space-y-1">
+               <div className="flex items-center justify-center gap-2">
+                 <h1 className="text-4xl md:text-5xl font-heading text-white tracking-tighter uppercase drop-shadow-2xl">{profile.full_name}</h1>
+                 {profile.approved && <Badge variant="magical" className="h-6"><CheckCircle2 size={12} className="mr-1" /> Bruxo Oficinal</Badge>}
+               </div>
+               <p className="text-primary font-heading text-xs tracking-[0.4em] uppercase opacity-70">@{profile.username}</p>
             </div>
-          ) : (
-            <div className="space-y-4 w-full max-w-md mx-auto text-left">
-              <div className="grid grid-cols-1 gap-4">
-                <div>
-                  <label className="text-xs font-heading text-muted-foreground block mb-1">Nome completo</label>
-                  <Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} />
-                </div>
-                <div>
-                  <label className="text-xs font-heading text-muted-foreground block mb-1">@Username</label>
-                  <Input value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value.toLowerCase().replace(/\s/g, "") })} />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-xs font-heading text-muted-foreground block mb-1">Aniversário</label>
-                    <Input type="date" value={form.birth_date} onChange={(e) => setForm({ ...form, birth_date: e.target.value })} />
-                  </div>
-                  <div>
-                    <label className="text-xs font-heading text-muted-foreground block mb-1">Idade</label>
-                    <Input type="number" value={form.age} onChange={(e) => setForm({ ...form, age: parseInt(e.target.value) || 11 })} />
-                  </div>
-                </div>
-                <div>
-                  <label className="text-xs font-heading text-muted-foreground block mb-1">Bio</label>
-                  <textarea value={form.bio} maxLength={200} onChange={(e) => setForm({ ...form, bio: e.target.value })} className="w-full bg-secondary/50 rounded-2xl px-4 py-3 text-sm text-foreground focus:outline-none min-h-[100px] border border-white/5" />
-                </div>
-              </div>
-              <div className="flex gap-2 justify-center pt-4">
-                <Button variant="outline" size="sm" onClick={() => setEditing(false)} className="rounded-xl px-8">Cancelar</Button>
-                <Button variant="magical" size="sm" onClick={save} disabled={saving} className="rounded-xl px-8">{saving ? "Salvando..." : "Salvar"}</Button>
-              </div>
+
+            <p className="text-white/60 max-w-md mx-auto italic font-serif leading-relaxed px-4">
+              "{profile.bio || "Este bruxo ainda não escreveu sua história nos anais de Hogwarts..."}"
+            </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
+               {isMe ? (
+                 <>
+                   <Button variant="magical" size="sm" onClick={startEdit} className="rounded-xl px-8 shadow-xl shadow-primary/20">Editar Perfil</Button>
+                   {isAdmin && (
+                      <Button variant="outline" size="sm" onClick={() => setAdminEditModal(true)} className="rounded-xl border-white/10 bg-white/5 hover:bg-white/10">Painel Admin</Button>
+                   )}
+                 </>
+               ) : (
+                 <div className="flex gap-2">
+                   {friendship?.status === "accepted" ? (
+                     <Button variant="outline" size="sm" onClick={handleRemoveFriend} className="rounded-xl border-red-500/30 text-red-400 hover:bg-red-500/10">Desfazer Amizade</Button>
+                   ) : friendship?.status === "pending" ? (
+                     friendship.user_id === user?.id ? (
+                       <Button variant="outline" size="sm" disabled className="rounded-xl opacity-50">Convite Enviado</Button>
+                     ) : (
+                       <div className="flex gap-2">
+                         <Button variant="magical" size="sm" onClick={handleAcceptFriend} className="rounded-xl">Aceitar</Button>
+                         <Button variant="outline" size="sm" onClick={handleRejectFriend} className="rounded-xl border-red-500/30">Recusar</Button>
+                       </div>
+                     )
+                   ) : (
+                     <Button variant="magical" size="sm" onClick={handleAddFriend} className="rounded-xl">Enviar Coruja (Amizade)</Button>
+                   )}
+                 </div>
+               )}
             </div>
-          )}
+          </div>
         </div>
+
+        {editing && isMe && (
+          <div className="mt-12 p-8 bg-black/60 rounded-[2.5rem] border border-white/10 animate-in fade-in zoom-in duration-500">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+              <div className="space-y-4">
+                <div>
+                  <label className="text-[10px] font-heading text-primary uppercase tracking-widest block mb-2">Nome Completo</label>
+                  <Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} className="bg-white/5 border-white/10 rounded-xl" />
+                </div>
+                <div>
+                  <label className="text-[10px] font-heading text-primary uppercase tracking-widest block mb-2">Data de Nascimento</label>
+                  <Input type="date" value={form.birth_date} onChange={(e) => setForm({ ...form, birth_date: e.target.value })} className="bg-white/5 border-white/10 rounded-xl" />
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-[10px] font-heading text-primary uppercase tracking-widest block mb-2">Biografia Mágica</label>
+                  <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} className="w-full h-32 bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white resize-none focus:outline-none focus:border-primary/50 transition-all" />
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-2 justify-center pt-4">
+              <Button variant="outline" size="sm" onClick={() => setEditing(false)} className="rounded-xl px-8">Cancelar</Button>
+              <Button variant="magical" size="sm" onClick={save} disabled={saving} className="rounded-xl px-8">{saving ? "Salvando..." : "Salvar"}</Button>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="animate-in fade-in slide-in-from-bottom-6 duration-1000">
