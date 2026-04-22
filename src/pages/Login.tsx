@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "../lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import MagicalParticles from "@/components/MagicalParticles";
 import { Eye, EyeOff } from "lucide-react";

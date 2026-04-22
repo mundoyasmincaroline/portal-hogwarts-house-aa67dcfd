@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/lib/auth";
+import { useAuth } from "../lib/auth";
 import { type House, HOUSES } from "@/lib/store";
 import { toast } from "sonner";
 import HouseCrest from "@/components/HouseCrest";
