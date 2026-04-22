@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { Share2, Users, Gift, Copy, CheckCircle2, Sparkles, Youtube, Instagram, Music2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { toast } from "sonner";

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { 
   Terminal, 
   Activity, 
@@ -267,6 +266,23 @@ export default function MatrixPortal() {
                 <p>"Empreender não é sobre o dinheiro, é sobre a liberdade da sua filha e o conforto da sua esposa. O R$ 10.000 é apenas o combustível."</p>
                 <p className="text-[#0F0] font-bold">— "Seja forte e corajoso; não temas, nem te espantes."</p>
              </div>
+          </div>
+
+          {/* Financial Integration */}
+          <div className="glass bg-yellow-500/5 border-yellow-500/20 p-6 rounded-3xl space-y-4">
+             <p className="text-[10px] font-bold uppercase tracking-widest text-yellow-500">Mecanismo de Pagamento</p>
+             <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-black rounded-xl border border-yellow-500/30 flex items-center justify-center text-yellow-500">
+                   <TrendingUp size={20} />
+                </div>
+                <div>
+                   <p className="text-xs font-bold">Infinite Pay (PIX)</p>
+                   <p className="text-[9px] opacity-60 italic">"O dinheiro é a prova de valor entregue."</p>
+                </div>
+             </div>
+             <Button variant="outline" className="w-full border-yellow-500/20 hover:bg-yellow-500/10 text-yellow-500 text-[10px] h-10 rounded-xl" onClick={() => window.open('https://www.infinitepay.io/')}>
+                ACESSAR PAINEL INFINITE
+             </Button>
           </div>
 
           {/* Admin Shortcuts */}

@@ -1,5 +1,3 @@
-import React from "react";
-import { motion } from "framer-motion";
 import { Zap, Terminal } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 
@@ -24,9 +22,7 @@ const JarvisPresence: React.FC = () => {
   }
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
+    <div 
       className="flex items-center gap-2 mb-4 p-2 bg-cyan-900/20 border border-cyan-400/30 rounded-lg group cursor-pointer hover:bg-cyan-900/40 transition-all"
     >
       <div className="relative">
@@ -45,7 +41,7 @@ const JarvisPresence: React.FC = () => {
         <p className="text-[10px] text-cyan-400/60 truncate font-mono">"Em vigília, Arquiteto."</p>
       </div>
       <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_#22d3ee]"></div>
-    </motion.div>
+    </div>
   );
 };
 

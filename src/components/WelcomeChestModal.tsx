@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Trophy, Sparkles, Share2, ChevronRight, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -64,12 +63,10 @@ const WelcomeChestModal: React.FC<WelcomeChestModalProps> = ({ onClose }) => {
   };
 
   return (
-    <AnimatePresence>
+  return (
+    <>
       {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+        <div
           className="fixed inset-0 z-[100] flex items-center justify-center px-4 bg-black/90 backdrop-blur-xl"
         >
           {/* Background Effects */}
@@ -78,9 +75,7 @@ const WelcomeChestModal: React.FC<WelcomeChestModalProps> = ({ onClose }) => {
             <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px] animate-pulse delay-700" />
           </div>
 
-          <motion.div
-            initial={{ scale: 0.8, y: 20 }}
-            animate={{ scale: 1, y: 0 }}
+          <div
             className="relative max-w-lg w-full glass rounded-[3.5rem] p-8 md:p-12 border-2 border-white/10 shadow-[0_0_100px_rgba(212,175,55,0.2)] overflow-hidden text-center"
           >
             {!hasOpened ? (
@@ -97,21 +92,10 @@ const WelcomeChestModal: React.FC<WelcomeChestModalProps> = ({ onClose }) => {
 
                 <div className="relative group cursor-pointer" onClick={!isOpening ? handleOpenChest : undefined}>
                   <div className={`absolute inset-0 bg-primary/20 blur-3xl transition-all duration-1000 ${isOpening ? "scale-150 opacity-100" : "scale-100 opacity-50"}`} />
-                  <motion.img
+                  <img
                     src="https://portal-hogwarts.lovable.app/legendary_chest_3d_1776816744823.png"
                     alt="Magic Chest"
-                    animate={isOpening ? {
-                      rotate: [0, -5, 5, -5, 5, 0],
-                      scale: [1, 1.1, 1.1, 1.1, 1.1, 1.2],
-                    } : {
-                      y: [0, -15, 0],
-                    }}
-                    transition={{
-                      duration: isOpening ? 0.5 : 3,
-                      repeat: isOpening ? Infinity : Infinity,
-                      ease: "easeInOut"
-                    }}
-                    className="w-64 h-64 mx-auto object-contain relative z-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
+                    className={`w-64 h-64 mx-auto object-contain relative z-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] ${isOpening ? "animate-bounce" : "animate-float"}`}
                   />
                   {isOpening && (
                     <div className="absolute inset-0 flex items-center justify-center z-20">
@@ -129,9 +113,7 @@ const WelcomeChestModal: React.FC<WelcomeChestModalProps> = ({ onClose }) => {
                 </Button>
               </div>
             ) : (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
+              <div
                 className="space-y-8 py-4"
               >
                 <div className="space-y-2">
@@ -174,7 +156,7 @@ const WelcomeChestModal: React.FC<WelcomeChestModalProps> = ({ onClose }) => {
                 <Button variant="ghost" onClick={onClose} className="text-white/40 hover:text-white text-xs uppercase tracking-widest font-bold">
                    Entrar no Castelo <ChevronRight size={14} className="ml-1" />
                 </Button>
-              </motion.div>
+              </div>
             )}
 
             {/* Close Button (only if opened or for emergencies) */}
@@ -183,10 +165,10 @@ const WelcomeChestModal: React.FC<WelcomeChestModalProps> = ({ onClose }) => {
                 <X size={24} />
               </button>
             )}
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
-    </AnimatePresence>
+    </div>
   );
 };
 
