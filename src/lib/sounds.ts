@@ -1,4 +1,3 @@
-
 export const playSound = (type: 'click' | 'hover' | 'success' | 'chest_open' | 'chest_reward' | 'spell' | 'azkaban_wind') => {
   const sounds: Record<string, string> = {
     click: 'https://www.soundjay.com/buttons/sounds/button-16.mp3',
@@ -18,3 +17,19 @@ export const playSound = (type: 'click' | 'hover' | 'success' | 'chest_open' | '
   });
   return audio;
 };
+
+export const playDoorSound = () => {
+  const audio = new Audio('https://www.soundjay.com/door/sounds/door-open-1.mp3');
+  audio.volume = 0.2;
+  audio.play().catch(() => {});
+};
+
+export const playMagicSound = () => {
+  const audio = new Audio('https://www.soundjay.com/misc/sounds/magic-chime-01.mp3');
+  audio.volume = 0.2;
+  audio.play().catch(() => {});
+};
+
+let soundEnabled = true;
+export const isSoundEnabled = () => soundEnabled;
+export const toggleSound = () => { soundEnabled = !soundEnabled; return soundEnabled; };
