@@ -39,6 +39,7 @@ import {
 } from "recharts";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { useNavigate } from "react-router-dom";
 import { useVoice } from "@/hooks/useVoice";
 import MatrixRain from "@/components/MatrixRain";
 import { Button } from "@/components/ui/button";
@@ -62,6 +63,7 @@ const revenueData = [
 
 export default function MatrixPortal() {
   const { user, profile } = useAuth();
+  const navigate = useNavigate();
   const { isListening, transcript, startListening, speak, setTranscript } = useVoice('jarvis');
   const [stats, setStats] = useState({ online: 0, sales_24h: 0, total_users: 0 });
 
@@ -338,7 +340,7 @@ export default function MatrixPortal() {
           <Button 
             variant="magical" 
             className="h-16 px-8 rounded-xl bg-amber-600 hover:bg-amber-700 border-none shadow-[0_0_20px_rgba(217,119,6,0.3)]"
-            onClick={() => window.location.href = '/dashboard/revolution'}
+            onClick={() => navigate('/dashboard/revolution')}
           >
             <TrendingUp size={20} className="mr-2" /> ACESSAR REVOLUTION
           </Button>
