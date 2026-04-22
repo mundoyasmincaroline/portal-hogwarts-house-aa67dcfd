@@ -4,8 +4,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { useAuth as useAuthStore } from "@/lib/auth";
-import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "./lib/auth";
+import { supabase } from "./integrations/supabase/client";
 import React from "react";
 
 
@@ -58,7 +58,7 @@ import MagicalSyncOverlay from "./components/MagicalSyncOverlay";
 const queryClient = new QueryClient();
 
 function AuthInit({ children }: { children: React.ReactNode }) {
-  const init = useAuthStore((s) => s.init);
+  const init = useAuth((s) => s.init);
   const [isSyncing, setIsSyncing] = React.useState(false);
   
   useEffect(() => { 

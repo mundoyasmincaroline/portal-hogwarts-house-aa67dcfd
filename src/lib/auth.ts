@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "../integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
 
 export type House = "gryffindor" | "slytherin" | "ravenclaw" | "hufflepuff";
