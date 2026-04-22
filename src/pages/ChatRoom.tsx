@@ -47,6 +47,7 @@ export default function ChatRoom() {
   const { user, isAdmin, profile } = useAuth();
   
   const [channel, setChannel] = useState<any>(null);
+  const [pinnedMessage, setPinnedMessage] = useState<Message | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toLocaleDateString('en-CA'));
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -165,6 +166,14 @@ export default function ChatRoom() {
       return;
     }
     setChannel(data);
+    if (data.pinned_message_id) {
+      const { data: pm } = await supabase.from("messages").select("*, characters(full_name, house, avatar_url)").eq("id", data.pinned_message_id).single();
+      if (pm) {
+        // Fetch profile for pinned message too
+        const { data: p } = await supabase.from("profiles").select("user_id, full_name, username, house, avatar_url").eq("user_id", pm.user_id).single();
+        if (p) setPinnedMessage({ ...pm, profiles: p } as unknown as Message);
+      }
+    }
     fetchMessages(data.id, selectedDate);
   };
 
@@ -301,6 +310,24 @@ export default function ChatRoom() {
       toast.error("Erro ao enviar mensagem.");
       setInput(content);
     } else {
+      // Global @todos / @everyone notification
+      if (isAdmin && (content.includes("@todos") || content.includes("@everyone"))) {
+        const { data: allMembers } = await supabase.from("profiles").select("user_id").eq("approved", true);
+        if (allMembers) {
+          const senderName = profile?.full_name || 'Admin';
+          const notifs = allMembers
+            .filter(p => p.user_id !== user.id)
+            .map(p => ({
+              user_id: p.user_id,
+              type: 'system',
+              content: `📣 @TODOS: ${senderName} enviou uma mensagem importante no chat "${channel.name}"`,
+              read: false
+            }));
+          await supabase.from("notifications").insert(notifs);
+          toast.success("📣 Chamado Geral enviado para todos os bruxos!");
+        }
+      }
+
       const xpRes = await addXP(user.id, 5, 'message');
       if (xpRes.success) {
         toast.success("+5 XP! ⚡");
@@ -343,6 +370,30 @@ export default function ChatRoom() {
       toast.success("Mensagem banida para a Seção Reservada! 📚");
     } catch (err: any) {
       toast.error("Erro ao deletar: " + err.message);
+    }
+  };
+
+  const pinMessage = async (msg: Message) => {
+    if (!isAdmin) return;
+    try {
+      const { error } = await supabase.from("channels").update({ pinned_message_id: msg.id } as never).eq("id", roomId);
+      if (error) throw error;
+      setPinnedMessage(msg);
+      toast.success("Mensagem fixada no topo do Salão! 📌");
+    } catch (err: any) {
+      toast.error("Erro ao fixar: " + err.message);
+    }
+  };
+
+  const unpinMessage = async () => {
+    if (!isAdmin) return;
+    try {
+      const { error } = await supabase.from("channels").update({ pinned_message_id: null } as never).eq("id", roomId);
+      if (error) throw error;
+      setPinnedMessage(null);
+      toast.success("Mensagem desafixada.");
+    } catch (err: any) {
+      toast.error("Erro ao desafixar: " + err.message);
     }
   };
 
@@ -398,6 +449,24 @@ export default function ChatRoom() {
           </div>
         </div>
       </div>
+
+      {/* ── PINNED MESSAGE ── */}
+      {pinnedMessage && (
+        <div className="relative z-20 bg-primary/10 border-b border-primary/20 p-3 flex items-center justify-between animate-in slide-in-from-top duration-500">
+          <div className="flex items-center gap-3">
+             <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary">📌</div>
+             <div>
+               <p className="text-[10px] text-primary font-heading uppercase tracking-widest">Fixado por {pinnedMessage.profiles.full_name}</p>
+               <p className="text-xs text-foreground/80 line-clamp-1">{pinnedMessage.content}</p>
+             </div>
+          </div>
+          {isAdmin && (
+            <Button variant="ghost" size="sm" onClick={unpinMessage} className="text-[10px] h-8 rounded-lg hover:bg-red-500/10 text-red-400">
+              Desafixar
+            </Button>
+          )}
+        </div>
+      )}
 
       {/* ── ÁREA DE VÍDEO (CASO EXISTA) ── */}
       {channel.meet_link && (
@@ -494,9 +563,14 @@ export default function ChatRoom() {
                         </span>
                         <span className="text-[9px] text-white/20 font-serif italic">{formatDate(m.created_at)}</span>
                         {isAdmin && !isMe && (
-                          <button onClick={() => deleteMessage(m.id)} className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-400 transition-all text-[10px] font-bold uppercase ml-2">
-                             Banir 🚫
-                          </button>
+                          <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                            <button onClick={() => pinMessage(m)} className="text-primary hover:text-primary/80 text-[10px] font-bold uppercase">
+                               Fixar 📌
+                            </button>
+                            <button onClick={() => deleteMessage(m.id)} className="text-red-500 hover:text-red-400 text-[10px] font-bold uppercase">
+                               Banir 🚫
+                            </button>
+                          </div>
                         )}
                       </div>
 
@@ -581,7 +655,7 @@ export default function ChatRoom() {
               </div>
             </div>
             
-            <Button type="submit" variant="magical" size="icon" className="w-14 h-14 rounded-2xl shadow-xl shadow-primary/10 active:scale-95 transition-transform" disabled={!input.trim() || cooldown > 0}>
+            <Button type="submit" variant="plaque" size="icon" className="w-14 h-14 rounded-2xl shadow-xl shadow-primary/10 active:scale-95 transition-transform" disabled={!input.trim() || cooldown > 0}>
               {cooldown > 0 ? (
                 <span className="text-xs font-bold text-white/40">{cooldown}</span>
               ) : (

@@ -1,9 +1,10 @@
 import React from 'react';
+import MagicalEmoji from './MagicalEmoji';
 
 export function getMedalForXP(xp: number) {
-  if (xp >= 2000) return { type: 'gold', name: 'Lendário', icon: '/medalha_ouro.png', color: 'from-yellow-600/40 via-yellow-500/20 to-black', glow: 'shadow-[0_0_15px_rgba(255,215,0,0.4)]', filter: '' };
-  if (xp >= 1000) return { type: 'silver', name: 'Elite', icon: '/medalha_ouro.png', color: 'from-gray-600/40 via-gray-500/20 to-black', glow: 'shadow-[0_0_10px_rgba(192,192,192,0.3)]', filter: 'grayscale brightness-125' };
-  if (xp >= 500) return { type: 'bronze', name: 'Mestre', icon: '/medalha_ouro.png', color: 'from-amber-800/40 via-amber-700/20 to-black', glow: 'shadow-[0_0_10px_rgba(205,127,50,0.3)]', filter: 'sepia brightness-75 contrast-125' };
+  if (xp >= 2000) return { type: 'gold', name: 'Lendário', emoji: '🥇', glow: 'rgba(234, 179, 8, 0.4)' };
+  if (xp >= 1000) return { type: 'silver', name: 'Elite', emoji: '🥈', glow: 'rgba(148, 163, 184, 0.3)' };
+  if (xp >= 500) return { type: 'bronze', name: 'Mestre', emoji: '🥉', glow: 'rgba(180, 83, 9, 0.3)' };
   return null;
 }
 
@@ -12,9 +13,18 @@ export default function MedalBadge({ xp, showName = false }: { xp: number, showN
   if (!medal) return null;
 
   return (
-    <div className={`inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-xl bg-gradient-to-br ${medal.color} text-white ${medal.glow} animate-pulse-glow text-[10px] font-heading border border-white/20`} title={medal.name}>
-      <img src={medal.icon} alt={medal.name} className={`w-4 h-4 object-contain ${medal.filter}`} />
-      {showName && <span className="drop-shadow-md">{medal.name}</span>}
+    <div className="inline-flex items-center gap-2 group transition-all duration-300 hover:scale-105" title={medal.name}>
+      <MagicalEmoji 
+        emoji={medal.emoji} 
+        size="xs" 
+        glowColor={medal.glow} 
+        className="shadow-xl" 
+      />
+      {showName && (
+        <span className="text-[10px] font-heading font-bold uppercase tracking-widest text-white/80 drop-shadow-md">
+          {medal.name}
+        </span>
+      )}
     </div>
   );
 }

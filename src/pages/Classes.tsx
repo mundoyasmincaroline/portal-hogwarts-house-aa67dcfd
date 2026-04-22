@@ -151,24 +151,53 @@ export default function Classes() {
   if (loading) return <div className="text-center py-10">Consultando pergaminhos...</div>;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div className="glass rounded-2xl p-6 text-center">
-        <h1 className="font-heading text-3xl text-gold-gradient mb-2">Horário de Aulas</h1>
-        <p className="text-muted-foreground text-sm max-w-xl mx-auto mb-4">
-          Você é um aluno do <strong>{studentYear}º Ano</strong>. Estamos na <strong>Semana {currentRotation}</strong> do rodízio.
-          Participe das aulas no horário exato para ganhar XP.
-        </p>
-        <div className="flex items-center justify-center gap-2 text-primary">
-          <Clock className="w-4 h-4" />
-          <span className="font-bold">{currentDay}</span>
+    <div className="max-w-4xl mx-auto space-y-10 pb-20">
+      {/* ── CINEMATIC HEADER (THE SCROLL) ── */}
+      <div className="relative glass rounded-[3rem] p-10 md:p-16 text-center overflow-hidden border border-primary/20 shadow-2xl group">
+        <div className="absolute inset-0 bg-gradient-to-br from-black via-zinc-900 to-amber-900/20 opacity-80" />
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/pinstriped-suit.png')] opacity-20 pointer-events-none" />
+        
+        <div className="relative z-10 space-y-4">
+          <div className="inline-flex items-center gap-3 bg-primary/20 backdrop-blur-xl border border-primary/30 rounded-full px-6 py-2">
+            <GraduationCap className="w-4 h-4 text-primary animate-float" />
+            <span className="text-[10px] font-heading text-primary uppercase tracking-widest font-bold">Ministério da Magia</span>
+          </div>
+          <h1 className="text-4xl md:text-6xl font-heading text-gold-gradient drop-shadow-2xl">Horário de Aulas</h1>
+          
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6 pt-4">
+            <div className="glass px-6 py-3 rounded-2xl border border-white/10 flex items-center gap-3">
+              <Star className="text-yellow-500 w-4 h-4" />
+              <p className="text-xs font-serif italic text-white/80">
+                Aluno do <span className="text-white font-bold">{studentYear}º Ano</span>
+              </p>
+            </div>
+            <div className="glass px-6 py-3 rounded-2xl border border-white/10 flex items-center gap-3">
+              <Clock className="text-primary w-4 h-4" />
+              <p className="text-xs font-serif italic text-white/80">
+                Semana <span className="text-white font-bold">{currentRotation}</span> do Rodízio
+              </p>
+            </div>
+          </div>
+          
+          <div className="pt-4 flex items-center justify-center gap-2">
+            <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-primary/50" />
+            <span className="font-heading text-primary uppercase tracking-[0.3em] text-[10px] font-bold">{currentDay}</span>
+            <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-primary/50" />
+          </div>
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
+      {/* ── CLASSES GRID ── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {classes.length === 0 ? (
-          <div className="col-span-full glass rounded-xl p-8 text-center border-border">
-            <BookOpen className="w-12 h-12 mx-auto text-muted-foreground/30 mb-3" />
-            <p className="text-muted-foreground">Você não tem aulas programadas para hoje.</p>
+          <div className="col-span-full relative glass rounded-[3rem] p-24 text-center border border-white/5 shadow-2xl overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent" />
+            <div className="relative z-10">
+              <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/10 group-hover:scale-110 transition-transform">
+                 <BookOpen size={40} className="text-white/20" />
+              </div>
+              <p className="text-muted-foreground font-serif italic text-lg italic">"Não há aulas programadas para hoje em seus pergaminhos."</p>
+            </div>
           </div>
         ) : (
           classes.map(cls => {
@@ -176,39 +205,65 @@ export default function Classes() {
             const attended = attendedMap[cls.id];
             
             return (
-              <div key={cls.id} className={`glass rounded-xl p-5 border-l-4 transition-all ${active ? 'border-primary shadow-[0_0_15px_rgba(255,215,0,0.1)]' : 'border-border/50 opacity-80'}`}>
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <h3 className="font-heading text-lg text-foreground flex items-center gap-2">
-                      {cls.title}
-                      {cls.is_optional && <span className="text-[10px] px-2 py-0.5 rounded-full bg-secondary text-muted-foreground uppercase font-sans">Opcional</span>}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">{cls.professor}</p>
-                  </div>
-                  <div className="bg-background/80 px-2 py-1 rounded text-xs font-mono text-primary border border-border">
-                    {cls.time_slot}
-                  </div>
-                </div>
+              <div key={cls.id} className="relative group/card">
+                {/* Active Aura */}
+                {active && !attended && (
+                  <div className="absolute inset-0 bg-primary/10 blur-[80px] rounded-[2.5rem] animate-pulse pointer-events-none" />
+                )}
 
-                <div className="flex items-center justify-between mt-4">
-                  <div className="flex items-center gap-1 text-sm text-yellow-500 font-bold">
-                    <Star className="w-4 h-4" />
-                    +{cls.xp_reward} XP
+                <div className={`relative glass rounded-[2.5rem] p-8 border transition-all duration-500 overflow-hidden flex flex-col h-full ${
+                  active && !attended
+                    ? "border-primary/50 bg-gradient-to-br from-primary/10 via-black to-black shadow-[0_20px_50px_rgba(212,175,55,0.2)]" 
+                    : "border-white/10 bg-black/40 hover:border-white/30"
+                }`}>
+                  <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none" />
+                  
+                  <div className="relative z-10 flex justify-between items-start mb-6">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-3">
+                         <h3 className={`font-heading text-xl transition-colors ${active ? "text-primary shadow-primary" : "text-white"}`}>
+                           {cls.title}
+                         </h3>
+                         {cls.is_optional && (
+                           <span className="bg-white/5 border border-white/10 text-white/40 text-[8px] px-2 py-0.5 rounded-full uppercase tracking-widest">Opcional</span>
+                         )}
+                      </div>
+                      <p className="text-sm font-serif italic text-muted-foreground">Professor(a) {cls.professor}</p>
+                    </div>
+                    <div className={`px-4 py-2 rounded-xl text-[10px] font-mono tracking-widest border transition-all ${
+                      active ? "bg-primary/20 border-primary/40 text-primary animate-pulse" : "bg-white/5 border-white/10 text-white/40"
+                    }`}>
+                      {cls.time_slot}
+                    </div>
                   </div>
 
-                  {attended ? (
-                    <Button variant="secondary" size="sm" disabled className="text-green-500">
-                      Presença Confirmada
-                    </Button>
-                  ) : (
-                    <Button 
-                      variant={active ? "magical" : "secondary"} 
-                      size="sm"
-                      onClick={() => attendClass(cls)}
-                    >
-                      {active ? "Participar da Aula" : "Fora do Horário"}
-                    </Button>
-                  )}
+                  <div className="relative z-10 mt-auto flex items-center justify-between pt-8 border-t border-white/5">
+                    <div className="flex items-center gap-2 group/xp">
+                      <div className="w-8 h-8 bg-yellow-500/10 rounded-full flex items-center justify-center border border-yellow-500/20 group-hover/xp:scale-110 transition-transform">
+                        <Star className="w-4 h-4 text-yellow-500" />
+                      </div>
+                      <div className="text-left">
+                         <p className="text-sm font-heading text-yellow-500 leading-none">+{cls.xp_reward}</p>
+                         <p className="text-[8px] uppercase font-bold tracking-widest text-muted-foreground mt-0.5">Pontos XP</p>
+                      </div>
+                    </div>
+
+                    {attended ? (
+                      <div className="flex items-center gap-2 px-6 py-2 bg-green-500/10 border border-green-500/30 rounded-2xl">
+                         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                         <span className="text-[9px] font-heading text-green-400 uppercase tracking-widest">Presença Confirmada</span>
+                      </div>
+                    ) : (
+                      <Button 
+                        variant={active ? "magical" : "secondary"} 
+                        size="sm"
+                        onClick={() => attendClass(cls)}
+                        className={`px-8 rounded-2xl h-12 shadow-2xl transition-all duration-500 ${active ? "scale-105" : "opacity-50"}`}
+                      >
+                        {active ? "Participar Agora ✨" : "Porta Trancada"}
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             );
@@ -216,11 +271,20 @@ export default function Classes() {
         )}
       </div>
 
-      <div className="glass rounded-xl p-4 bg-primary/5 border-primary/20 flex gap-3">
-        <AlertCircle className="w-5 h-5 text-primary shrink-0" />
-        <p className="text-sm text-muted-foreground">
-          <strong>Aviso:</strong> A porta da sala só se abre durante o horário marcado. Se você tentar entrar antes ou depois, o zelador Filch não vai deixar!
-        </p>
+      {/* ── FOOTER ADVISORY ── */}
+      <div className="relative glass rounded-[2rem] p-8 border border-red-900/20 bg-red-950/5 group">
+        <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 to-transparent pointer-events-none" />
+        <div className="relative z-10 flex gap-6 items-center">
+          <div className="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center border border-red-500/20 shadow-inner group-hover:rotate-12 transition-transform">
+            <AlertCircle className="w-8 h-8 text-red-500" />
+          </div>
+          <div className="space-y-1">
+            <h4 className="font-heading text-red-500/80 uppercase tracking-widest text-xs font-bold">Protocolo de Disciplina</h4>
+            <p className="text-sm font-serif italic text-muted-foreground leading-relaxed">
+              "A porta da sala só se abre durante o horário marcado. Se você tentar entrar antes ou depois, o zelador <span className="text-red-400 font-bold not-italic">Argus Filch</span> não terá piedade em barrar sua entrada!"
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

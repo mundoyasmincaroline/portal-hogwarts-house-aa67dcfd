@@ -380,8 +380,16 @@ export default function Profile() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
+      {/* ── HOUSE THEMED BACKGROUND OVERLAY ── */}
+      <div className={`fixed inset-0 pointer-events-none z-0 transition-opacity duration-1000 opacity-30 ${
+        profile.house === 'gryffindor' ? 'bg-[radial-gradient(circle_at_center,_rgba(220,38,38,0.15),transparent_70%)]' :
+        profile.house === 'slytherin' ? 'bg-[radial-gradient(circle_at_center,_rgba(16,185,129,0.15),transparent_70%)]' :
+        profile.house === 'ravenclaw' ? 'bg-[radial-gradient(circle_at_center,_rgba(37,99,235,0.15),transparent_70%)]' :
+        'bg-[radial-gradient(circle_at_center,_rgba(217,119,6,0.15),transparent_70%)]'
+      }`} />
+      
       {/* Abas */}
-      <div className="flex gap-4 border-b border-border mb-6 overflow-x-auto pb-1 scrollbar-hide whitespace-nowrap">
+      <div className="flex gap-4 border-b border-border mb-6 overflow-x-auto pb-1 scrollbar-hide whitespace-nowrap relative z-10">
         <button 
           onClick={() => { setActiveTab("about"); setEditing(false); }} 
           className={`pb-2 font-heading text-sm transition-colors ${activeTab === "about" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
@@ -442,8 +450,15 @@ export default function Profile() {
         )}
       </div>
 
-      <div className="glass rounded-2xl p-8 text-center">
-        <div className="relative inline-block mb-4">
+      <div className="glass rounded-[3rem] p-10 md:p-16 text-center relative overflow-hidden border-2 border-primary/20 shadow-[0_30px_100px_rgba(0,0,0,0.5)]">
+        {/* Floating Magic Dust */}
+        <div className="absolute inset-0 pointer-events-none opacity-20">
+           <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white rounded-full animate-float-slow blur-[1px]" />
+           <div className="absolute top-1/2 right-1/4 w-1.5 h-1.5 bg-primary rounded-full animate-float-slow delay-700 blur-[1px]" />
+           <div className="absolute bottom-1/4 left-1/3 w-3 h-3 bg-white/50 rounded-full animate-float-slow delay-1000 blur-[2px]" />
+        </div>
+
+        <div className="relative inline-block mb-8">
           <div className="w-24 h-24 shrink-0 mx-auto">
             <SafeImage
               src={profile.avatar_url}
@@ -484,7 +499,9 @@ export default function Profile() {
             {/* Saldo de Galeões — visível apenas no próprio perfil */}
             {isMe && (
               <div className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-yellow-500/30 bg-yellow-900/10 text-yellow-400 text-sm font-heading">
-                🪙 {((profile as any).galeons || 0).toLocaleString("pt-BR")} Galeões
+              <span className="flex items-center gap-2">
+                <MagicalGaleon size="xs" /> {((profile as any).galeons || 0).toLocaleString("pt-BR")} Galeões
+              </span>
               </div>
             )}
             

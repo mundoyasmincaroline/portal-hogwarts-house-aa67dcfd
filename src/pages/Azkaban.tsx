@@ -56,22 +56,28 @@ export default function Azkaban() {
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
       {/* HD Background with flare effect */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1509248961158-e54f6934749c?q=80&w=2048"
+          src="https://portal-hogwarts.lovable.app/monster_quality_azkaban_prison_cinematic_1776816635211.png"
           alt="Azkaban"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover scale-110 animate-subtle-zoom"
         />
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/70" />
-        {/* Flare effect top-left */}
-        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-radial from-blue-500/20 via-transparent to-transparent rounded-full blur-3xl" />
-        {/* Flare effect top-right */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-radial from-cyan-400/15 via-transparent to-transparent rounded-full blur-2xl" />
-        {/* Blue mist at bottom */}
-        <div className="absolute bottom-0 inset-x-0 h-48 bg-gradient-to-t from-blue-950/60 to-transparent" />
-        {/* Lightning flare pulse */}
-        <div className="absolute inset-0 animate-pulse-slow opacity-20 bg-gradient-to-br from-blue-900/30 via-transparent to-slate-900/30" />
+        {/* Dark cinematic overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-blue-900/20" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_rgba(0,0,0,0.8)_100%)]" />
+        
+        {/* Dynamic Lightning Bolts */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-[1px] h-full bg-blue-400 opacity-0 animate-lightning-strike" />
+          <div className="absolute top-0 right-1/3 w-[1px] h-full bg-cyan-300 opacity-0 animate-lightning-strike delay-700" />
+          <div className="absolute top-0 left-1/2 w-[2px] h-full bg-white opacity-0 animate-lightning-strike delay-2000" />
+        </div>
+
+        {/* Swirling Mist / Dementor Wisps */}
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-40 animate-pulse-slow" />
+        
+        {/* Lightning Flare Pulse */}
+        <div className="absolute inset-0 bg-blue-500/5 opacity-0 animate-lightning-flare" />
       </div>
 
       <div className="relative z-10 max-w-2xl w-full mx-auto px-4 py-16 space-y-8">
@@ -114,7 +120,7 @@ export default function Azkaban() {
             <p className="text-muted-foreground text-sm">
               Você não está em Azkaban. Continue participando do portal para evitar punições!
             </p>
-            <Button variant="magical" onClick={() => navigate("/dashboard")} className="h-12 px-8 rounded-xl shadow-2xl">
+            <Button variant="plaque" onClick={() => navigate("/dashboard")} className="h-12 px-8 rounded-xl">
               Voltar ao Castelo <MagicalEmoji emoji="🏰" size="xs" className="ml-2 inline-flex" />
             </Button>
           </div>
@@ -190,18 +196,35 @@ export default function Azkaban() {
 
         {!isInAzkaban && (
           <div className="text-center">
-            <Button variant="outline" onClick={() => navigate("/dashboard")} className="border-blue-500/30 text-blue-300 hover:bg-blue-900/20">
+            <Button variant="plaque" onClick={() => navigate("/dashboard")} className="border-blue-500/30 text-blue-300">
               ← Voltar ao Castelo
             </Button>
           </div>
         )}
       </div>
 
-      {/* CSS flare animation */}
       <style>{`
-        @keyframes pulse-slow { 0%, 100% { opacity: 0.1; } 50% { opacity: 0.3; } }
-        .animate-pulse-slow { animation: pulse-slow 4s ease-in-out infinite; }
-        .bg-gradient-radial { background-image: radial-gradient(var(--tw-gradient-stops)); }
+        @keyframes subtle-zoom {
+          0% { transform: scale(1); }
+          100% { transform: scale(1.1); }
+        }
+        @keyframes lightning-strike {
+          0%, 95%, 100% { opacity: 0; transform: translateX(0) skewX(0deg); }
+          96% { opacity: 0.8; transform: translateX(10px) skewX(20deg); }
+          97% { opacity: 0; }
+          98% { opacity: 0.4; transform: translateX(-5px) skewX(-10deg); }
+        }
+        @keyframes lightning-flare {
+          0%, 95%, 100% { opacity: 0; }
+          96% { opacity: 0.4; }
+          97% { opacity: 0.1; }
+          98% { opacity: 0.3; }
+        }
+        .animate-subtle-zoom { animation: subtle-zoom 30s ease-in-out infinite alternate; }
+        .animate-lightning-strike { animation: lightning-strike 5s linear infinite; }
+        .animate-lightning-flare { animation: lightning-flare 5s linear infinite; }
+        .animate-pulse-slow { animation: pulse-slow 8s ease-in-out infinite; }
+        @keyframes pulse-slow { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.5; } }
       `}</style>
     </div>
   );

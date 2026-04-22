@@ -171,15 +171,15 @@ export default function StickerAlbum() {
           </p>
 
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-6">
-            <div className="inline-flex items-center gap-4 bg-yellow-500/10 backdrop-blur-xl px-8 py-4 rounded-2xl border border-yellow-500/30 shadow-xl group/xp">
+            <div className="inline-flex items-center gap-4 bg-zinc-900/60 backdrop-blur-xl px-8 py-4 rounded-2xl border border-yellow-500/30 shadow-[0_10px_30px_rgba(0,0,0,0.5)] group/xp">
               <MagicalEmoji emoji="⚡" size="sm" glowColor="rgba(234, 179, 8, 0.6)" className="group-hover/xp:rotate-12" />
               <div className="text-left">
                 <p className="text-[10px] text-yellow-500/60 uppercase font-bold tracking-widest">Saldo de Magia</p>
-                <p className="font-heading text-3xl text-yellow-400">{profile?.xp || 0} XP</p>
+                <p className="font-heading text-3xl text-yellow-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.3)]">{profile?.xp || 0} XP</p>
               </div>
             </div>
             
-            <Button variant="magical" size="lg" className="h-16 px-10 rounded-2xl shadow-2xl hover:scale-105 transition-transform" onClick={openSurprisePack} disabled={openingPack || (profile?.xp ?? 0) < 80}>
+            <Button variant="plaque" size="lg" className="h-20 px-12 rounded-2xl shadow-[0_15px_35px_-10px_rgba(234,179,8,0.4)]" onClick={openSurprisePack} disabled={openingPack || (profile?.xp ?? 0) < 80}>
                Abrir Pacote Místico (80 XP) <Gift className="ml-2" />
             </Button>
           </div>
@@ -253,7 +253,7 @@ export default function StickerAlbum() {
                     <h2 className="font-heading text-4xl text-white drop-shadow-lg">¡Nova Figurinha!</h2>
                     <p className="text-muted-foreground font-serif italic text-lg">"Uma adição magnífica ao seu álbum."</p>
                 </div>
-                <Button variant="magical" size="lg" className="w-full h-16 text-xl rounded-2xl shadow-2xl" onClick={closePack}>
+                <Button variant="plaque" size="lg" className="w-full h-16 text-xl rounded-2xl shadow-2xl" onClick={closePack}>
                     Adicionar à Coleção
                 </Button>
               </div>
@@ -305,13 +305,13 @@ export default function StickerAlbum() {
         </div>
 
         <div className="glass rounded-[2.5rem] p-10 flex flex-col items-center justify-center text-center gap-8 border border-white/5 bg-gradient-to-t from-black/40 to-white/5 relative group">
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?q=80&w=2000')] bg-cover opacity-5 group-hover:scale-110 transition-transform duration-1000" />
-            <MagicalEmoji emoji="🔄" size="md" glowColor="rgba(255, 255, 255, 0.2)" className="group-hover:rotate-180 transition-transform duration-1000" />
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-20 group-hover:scale-110 transition-transform duration-1000" />
+            <MagicalEmoji icon={RefreshCw} size="md" glowColor="rgba(255, 255, 255, 0.2)" className="group-hover:rotate-180 transition-transform duration-1000" />
             <div className="space-y-3 relative z-10">
                 <h3 className="font-heading text-2xl text-foreground">Mercado de Trocas</h3>
                 <p className="text-sm text-muted-foreground font-serif italic">"Um Galeão por uma história, uma carta por um amigo."</p>
             </div>
-            <Button variant="outline" className="w-full h-14 rounded-2xl border-white/10 hover:bg-white/5 font-heading uppercase tracking-widest text-xs" onClick={() => navigate("/dashboard/trades")}>
+            <Button variant="plaque" className="w-full h-14 rounded-2xl border-white/10" onClick={() => navigate("/dashboard/trades")}>
                 Acessar Mercado 🏪
             </Button>
             <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Trocas seguras auditadas por Gringotts</p>
@@ -416,7 +416,7 @@ export default function StickerAlbum() {
                   </div>
 
                   {!unlocked && (
-                    <Button variant="magical" className="w-full h-11 text-[10px] font-heading uppercase tracking-widest rounded-xl shadow-xl transition-all active:scale-95"
+                    <Button variant="plaque" className="w-full h-12 text-[10px] font-heading uppercase tracking-widest rounded-xl shadow-xl transition-all active:scale-95"
                       disabled={!levelOk || !xpOk || buyingId === s.id} onClick={() => buySticker(s)}>
                       {buyingId === s.id ? "..." : !levelOk ? `Bloqueado` : !xpOk ? `Faltam XP` : `Comprar ${cost} XP`}
                     </Button>

@@ -5,6 +5,7 @@ import { isUserOnline } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";
 import MedalBadge from "@/components/MedalBadge";
 import SafeImage from "@/components/SafeImage";
+import MagicalGaleon from "@/components/MagicalGaleon";
 import { useNavigate } from "react-router-dom";
 import { Trophy, Zap, Crown } from "lucide-react";
 
@@ -129,13 +130,11 @@ export default function Ranking() {
                       isGold ? `ring-2 ring-yellow-400/60 border-yellow-400/40 shadow-[0_0_30px_rgba(251,191,36,0.2)]` : `border-border/40`
                     }`}>
                     <div className={`flex flex-col items-center p-4 gap-2 ${heights[idx]}`}>
-                      <div className="relative w-12 h-12 mb-1">
-                        <img 
-                          src="/medalha_ouro.png" 
-                          alt="medalha" 
-                          className={`w-full h-full object-contain ${
-                            idx === 1 ? "" : idx === 0 ? "grayscale brightness-125" : "sepia brightness-75 contrast-125"
-                          }`} 
+                      <div className="relative w-12 h-12 mb-1 flex items-center justify-center">
+                        <MagicalEmoji 
+                          emoji={idx === 1 ? "🥇" : idx === 0 ? "🥈" : "🥉"} 
+                          size="sm" 
+                          glowColor={idx === 1 ? "rgba(234, 179, 8, 0.4)" : idx === 0 ? "rgba(148, 163, 184, 0.3)" : "rgba(180, 83, 9, 0.3)"} 
                         />
                       </div>
                       <div className="relative">
@@ -220,7 +219,9 @@ export default function Ranking() {
                   <div className="text-right shrink-0">
                     <p className={`font-heading text-sm ${colors.text}`}>{m.xp.toLocaleString("pt-BR")} XP</p>
                     {(m.galeons || 0) > 0 && (
-                      <p className="text-[10px] text-yellow-500/80">🪙 {m.galeons}</p>
+                      <p className="text-[10px] text-yellow-500/80 flex items-center gap-1 justify-end">
+                        <MagicalGaleon size="xs" className="scale-75" /> {m.galeons}
+                      </p>
                     )}
                   </div>
                 </div>

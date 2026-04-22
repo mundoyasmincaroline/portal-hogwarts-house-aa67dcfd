@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import EnigmaModal from "@/components/EnigmaModal";
+import MagicalEmoji from "@/components/MagicalEmoji";
 
 interface Challenge {
   id: string;
@@ -135,7 +136,7 @@ export default function Challenges() {
           <h3 className="font-heading text-foreground">{c.title}</h3>
           <div className="flex flex-col items-end gap-1">
             <span className="text-[10px] font-heading bg-primary/20 text-primary px-3 py-1 rounded-full border border-primary/30 shadow-[0_0_10px_rgba(212,175,55,0.2)] flex items-center gap-1.5">
-              <img src="/medalha_ouro.png" className="w-3 h-3 object-contain" alt="xp" />
+              <MagicalEmoji emoji="⚡" size="xs" className="scale-75" />
               {c.xp_reward} XP
             </span>
           </div>

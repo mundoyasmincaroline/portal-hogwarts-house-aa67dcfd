@@ -5,7 +5,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { House } from "@/lib/store";
 import MagicAdBanner from "@/components/MagicAdBanner";
-import { Lock, Zap } from "lucide-react";
+import { 
+  Lock, Zap, Coffee, Newspaper, MessageSquare, 
+  Castle, Train, Sparkles, GraduationCap, Flame,
+  Trophy, Shield, Ghost, LucideIcon
+} from "lucide-react";
+import MagicalEmoji from "@/components/MagicalEmoji";
 
 interface RoomDefinition {
   name: string;
@@ -13,28 +18,28 @@ interface RoomDefinition {
   category: string;
   allowed_houses: string[] | null;
   is_admin_only: boolean;
-  icon: string;
+  icon: LucideIcon;
 }
 
 const ROOMS: RoomDefinition[] = [
-  { name: "Chat Off", description: "Bate-papo fora do personagem.", category: "Geral", allowed_houses: null, is_admin_only: false, icon: "☕" },
-  { name: "Eventos", description: "Avisos e cobertura de eventos do portal.", category: "Geral", allowed_houses: null, is_admin_only: false, icon: "🎉" },
-  { name: "Profeta Diário", description: "Notícias do mundo bruxo.", category: "Geral", allowed_houses: null, is_admin_only: false, icon: "📰" },
+  { name: "Chat Off", description: "Bate-papo fora do personagem.", category: "Geral", allowed_houses: null, is_admin_only: false, icon: Coffee },
+  { name: "Eventos", description: "Avisos e cobertura de eventos do portal.", category: "Geral", allowed_houses: null, is_admin_only: false, icon: Sparkles },
+  { name: "Profeta Diário", description: "Notícias do mundo bruxo.", category: "Geral", allowed_houses: null, is_admin_only: false, icon: Newspaper },
   
-  { name: "Chat ON", description: "Conversas gerais dentro do RPG.", category: "RPG", allowed_houses: null, is_admin_only: false, icon: "🎭" },
-  { name: "Castelo RPG", description: "Exploração e interação pelo castelo de Hogwarts.", category: "RPG", allowed_houses: null, is_admin_only: false, icon: "🏰" },
-  { name: "RPF Fora de Hogwarts", description: "Roleplay em Hogsmeade, Beco Diagonal, etc.", category: "RPG", allowed_houses: null, is_admin_only: false, icon: "🚂" },
-  { name: "Hogwarts Meet", description: "Encontros em vídeo mágicos! Reúna-se com outros bruxos em tempo real.", category: "RPG", allowed_houses: null, is_admin_only: false, icon: "🎥" },
+  { name: "Chat ON", description: "Conversas gerais dentro do RPG.", category: "RPG", allowed_houses: null, is_admin_only: false, icon: MessageSquare },
+  { name: "Castelo RPG", description: "Exploração e interação pelo castelo de Hogwarts.", category: "RPG", allowed_houses: null, is_admin_only: false, icon: Castle },
+  { name: "RPF Fora de Hogwarts", description: "Roleplay em Hogsmeade, Beco Diagonal, etc.", category: "RPG", allowed_houses: null, is_admin_only: false, icon: Train },
+  { name: "Hogwarts Meet", description: "Encontros em vídeo mágicos! Reúna-se com outros bruxos em tempo real.", category: "RPG", allowed_houses: null, is_admin_only: false, icon: Zap },
 
-  { name: "𝐅𝐢𝐜𝐡𝐚𝐬 𝐏𝐞𝐬𝐬𝐨𝐚𝐢𝐬 ₊ ෆ ˚", description: "Envie sua ficha pessoal aqui para o portal conhecer você!", category: "Fichas", allowed_houses: null, is_admin_only: false, icon: "✨" },
-  { name: "𝐅𝐢𝐜𝐡𝐚𝐬 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐧𝐬 ₊ ෆ ˚", description: "Envie a ficha do seu personagem do RPG aqui.", category: "Fichas", allowed_houses: null, is_admin_only: false, icon: "⚡" },
+  { name: "𝐅𝐢𝐜𝐡𝐚𝐬 𝐏𝐞𝐬𝐬𝐨𝐚𝐢𝐬 ₊ ෆ ˚", description: "Envie sua ficha pessoal aqui para o portal conhecer você!", category: "Fichas", allowed_houses: null, is_admin_only: false, icon: Sparkles },
+  { name: "𝐅𝐢𝐜𝐡𝐚𝐬 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐧𝐬 ₊ ෆ ˚", description: "Envie a ficha do seu personagem do RPG aqui.", category: "Fichas", allowed_houses: null, is_admin_only: false, icon: Zap },
 
-  { name: "Comunal da Grifinória", description: "Acesso exclusivo aos corajosos da Grifinória.", category: "Comunais", allowed_houses: ["gryffindor"], is_admin_only: false, icon: "🦁" },
-  { name: "Comunal da Sonserina", description: "Acesso exclusivo aos astutos da Sonserina.", category: "Comunais", allowed_houses: ["slytherin"], is_admin_only: false, icon: "🐍" },
-  { name: "Comunal da Corvinal", description: "Acesso exclusivo aos sábios da Corvinal.", category: "Comunais", allowed_houses: ["ravenclaw"], is_admin_only: false, icon: "🦅" },
-  { name: "Comunal da Lufa-Lufa", description: "Acesso exclusivo aos leais da Lufa-Lufa.", category: "Comunais", allowed_houses: ["hufflepuff"], is_admin_only: false, icon: "🦡" },
+  { name: "Comunal da Grifinória", description: "Acesso exclusivo aos corajosos da Grifinória.", category: "Comunais", allowed_houses: ["gryffindor"], is_admin_only: false, icon: Shield },
+  { name: "Comunal da Sonserina", description: "Acesso exclusivo aos astutos da Sonserina.", category: "Comunais", allowed_houses: ["slytherin"], is_admin_only: false, icon: Shield },
+  { name: "Comunal da Corvinal", description: "Acesso exclusivo aos sábios da Corvinal.", category: "Comunais", allowed_houses: ["ravenclaw"], is_admin_only: false, icon: Shield },
+  { name: "Comunal da Lufa-Lufa", description: "Acesso exclusivo aos leais da Lufa-Lufa.", category: "Comunais", allowed_houses: ["hufflepuff"], is_admin_only: false, icon: Shield },
 
-  { name: "Ordem da Fênix", description: "Reuniões da moderação e administração.", category: "Admin", allowed_houses: null, is_admin_only: true, icon: "🔥" },
+  { name: "Ordem da Fênix", description: "Reuniões da moderação e administração.", category: "Admin", allowed_houses: null, is_admin_only: true, icon: Flame },
 ];
 
 export default function Chats() {
@@ -169,11 +174,14 @@ export default function Chats() {
                         <Zap size={10} /> Novo!
                       </div>
                     )}
-                    <div className="flex justify-between items-start mb-3">
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl group-hover:scale-110 transition-transform ${room.is_premium ? 'bg-primary/20 ring-2 ring-primary/50 text-primary' : 'bg-secondary/50'}`}>
-                        {room.icon}
-                      </div>
-                      {isLocked && <div className="text-xl text-muted-foreground" title="Acesso Negado">🔒</div>}
+                    <div className="flex justify-between items-start mb-6">
+                      <MagicalEmoji 
+                        icon={room.icon} 
+                        size="sm" 
+                        glowColor={room.is_premium ? "rgba(234, 179, 8, 0.4)" : "rgba(255, 255, 255, 0.1)"}
+                        className={isLocked ? "opacity-40" : ""}
+                      />
+                      {isLocked && <div className="text-xl text-muted-foreground bg-black/40 p-2 rounded-full border border-white/5" title="Acesso Negado">🔒</div>}
                     </div>
                     
                     <h3 className={`font-heading text-lg mb-1 transition-colors ${room.is_premium ? 'text-primary drop-shadow-md' : 'text-foreground group-hover:text-primary'}`}>

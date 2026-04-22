@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import StoreItemVisual from "@/components/StoreItemVisual";
 import SafeImage from "@/components/SafeImage";
+import MagicalGaleon from "@/components/MagicalGaleon";
 
 // ─── Config ────────────────────────────────────────────────────────────
 // Tudo via supabase.rpc() — sem CORS, server-side via pg_net
@@ -22,11 +23,51 @@ interface StoreItem {
 
 // ─── Pacotes de Galeões ────────────────────────────────────
 const GALEON_PACKAGES = [
-  { id: "bolsinha",  name: "Bolsinha de Galeões",     galeons: 100,  price_brl: 4.90,  icon: "💰", image_url: "https://images.unsplash.com/photo-1610484826917-0f101a7bf7f4?q=80&w=600&auto=format&fit=crop", color: "from-amber-800/40 to-amber-900/40", border: "border-amber-600/40", glow: "group-hover:shadow-[0_0_20px_rgba(217,119,6,0.3)]" },
-  { id: "saco",      name: "Saco de Galeões",          galeons: 300,  price_brl: 12.90, icon: "🪙", image_url: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?q=80&w=600&auto=format&fit=crop", color: "from-amber-700/50 to-yellow-800/40", border: "border-yellow-500/50", glow: "group-hover:shadow-[0_0_25px_rgba(234,179,8,0.4)]", badge: "Mais Popular" },
-  { id: "bau",       name: "Baú de Galeões",           galeons: 700,  price_brl: 24.90, icon: "💎", image_url: "https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?q=80&w=600&auto=format&fit=crop", color: "from-yellow-600/50 to-amber-700/50", border: "border-amber-400/60", glow: "group-hover:shadow-[0_0_30px_rgba(251,191,36,0.5)]" },
-  { id: "tesouro",   name: "Tesouro de Gringotts",     galeons: 1500, price_brl: 44.90, icon: "👑", image_url: "https://images.unsplash.com/photo-1599839619722-39751411ea63?q=80&w=600&auto=format&fit=crop", color: "from-yellow-500/60 to-amber-600/50", border: "border-yellow-400/70", glow: "group-hover:shadow-[0_0_35px_rgba(250,204,21,0.6)]", badge: "Melhor Valor" },
-  { id: "cofre",     name: "Cofre Lendário",           galeons: 4000, price_brl: 99.90, icon: "🏆", image_url: "https://images.unsplash.com/photo-1565373677928-90e963765eac?q=80&w=600&auto=format&fit=crop", color: "from-yellow-400/70 to-amber-500/60", border: "border-yellow-300/80", glow: "group-hover:shadow-[0_0_45px_rgba(253,224,71,0.7)]", badge: "Lendário" },
+  { id: "bolsinha",  name: "Bolsinha de Galeões",     galeons: 100,  price_brl: 4.90,  icon: "💰", image_url: "https://portal-hogwarts.lovable.app/monster_quality_galeon_coin_3d_1776816757264.png", color: "from-amber-800/40 to-amber-900/40", border: "border-amber-600/40", glow: "group-hover:shadow-[0_0_20px_rgba(217,119,6,0.3)]" },
+  { id: "saco",      name: "Saco de Galeões",          galeons: 300,  price_brl: 12.90, icon: "🪙", image_url: "https://portal-hogwarts.lovable.app/monster_quality_galeon_coin_3d_1776816757264.png", color: "from-amber-700/50 to-yellow-800/40", border: "border-yellow-500/50", glow: "group-hover:shadow-[0_0_25px_rgba(234,179,8,0.4)]", badge: "Mais Popular" },
+  { id: "bau",       name: "Baú de Galeões",           galeons: 700,  price_brl: 24.90, icon: "💎", image_url: "https://portal-hogwarts.lovable.app/monster_quality_galeon_coin_3d_1776816757264.png", color: "from-yellow-600/50 to-amber-700/50", border: "border-amber-400/60", glow: "group-hover:shadow-[0_0_30px_rgba(251,191,36,0.5)]" },
+  { id: "tesouro",   name: "Tesouro de Gringotts",     galeons: 1500, price_brl: 44.90, icon: "👑", image_url: "https://portal-hogwarts.lovable.app/monster_quality_galeon_coin_3d_1776816757264.png", color: "from-yellow-500/60 to-amber-600/50", border: "border-yellow-400/70", glow: "group-hover:shadow-[0_0_35px_rgba(250,204,21,0.6)]", badge: "Melhor Valor" },
+  { id: "cofre",     name: "Cofre Lendário",           galeons: 4000, price_brl: 99.90, icon: "🏆", image_url: "https://portal-hogwarts.lovable.app/monster_quality_galeon_coin_3d_1776816757264.png", color: "from-yellow-400/70 to-amber-500/60", border: "border-yellow-300/80", glow: "group-hover:shadow-[0_0_45px_rgba(253,224,71,0.7)]", badge: "Lendário" },
+];
+
+const MONSTER_QUALITY_ITEMS: StoreItem[] = [
+  // WANDS
+  { id: "mq_wand_elder", name: "Varinha das Varinhas", category: "wand", price_galeons: 5000, image_url: "https://portal-hogwarts.lovable.app/legendary_elder_wand_cinematic_1776814022237.png", rarity: "legendary", is_featured: true, description: "A varinha mais poderosa já fabricada, feita de sabugueiro e núcleo de pelo de testrálio." },
+  { id: "mq_wand_ebony", name: "Varinha de Ébano", category: "wand", price_galeons: 2500, image_url: "https://portal-hogwarts.lovable.app/monster_quality_wand_ebony_1776815361581.png", rarity: "rare", is_featured: false, description: "Ébano é uma madeira preta e impressionante, com um brilho quase metálico." },
+  { id: "mq_wand_holly", name: "Varinha de Azevinho", category: "wand", price_galeons: 1200, image_url: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=600", rarity: "uncommon", is_featured: false, description: "Uma das madeiras de varinha mais raras e protetoras." },
+  
+  // CLOTHING
+  { id: "mq_cloth_founder", name: "Robe Azul-Safira", category: "clothing", price_galeons: 3500, image_url: "https://portal-hogwarts.lovable.app/royal_hogwarts_robe_sapphire_1776814034473.png", rarity: "legendary", is_featured: true, description: "Robe cerimonial usado pelos antigos fundadores, com bordados de ouro puro." },
+  { id: "mq_cloth_crimson", name: "Manto Carmesim", category: "clothing", price_galeons: 2800, image_url: "https://portal-hogwarts.lovable.app/monster_quality_robe_crimson_1776815376496.png", rarity: "legendary", is_featured: true, description: "Um manto imponente que emana uma aura de autoridade e coragem." },
+  { id: "mq_cloth_stealth", name: "Capa de Invisibilidade", category: "clothing", price_galeons: 10000, image_url: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?q=80&w=600", rarity: "legendary", is_featured: true, description: "Tecida com fios de seminviso, esta capa torna o usuário indetectável." },
+
+  // POTIONS
+  { id: "mq_potion_dragon", name: "Sangue de Dragão", category: "potion", price_galeons: 1500, image_url: "https://portal-hogwarts.lovable.app/mystical_dragon_blood_potion_1776814048076.png", rarity: "rare", is_featured: false, description: "Uma poção poderosa que amplifica a força vital e resistência mágica." },
+  { id: "mq_potion_luck", name: "Felix Felicis", category: "potion", price_galeons: 4000, image_url: "https://portal-hogwarts.lovable.app/monster_quality_potion_mystical_1776815391813.png", rarity: "legendary", is_featured: true, description: "A Sorte Líquida. Por um tempo limitado, todas as suas ações serão bem-sucedidas." },
+  { id: "mq_potion_truth", name: "Veritaserum", category: "potion", price_galeons: 2000, image_url: "https://images.unsplash.com/photo-1589483232748-515c025575ec?q=80&w=600", rarity: "rare", is_featured: false, description: "O mais poderoso soro da verdade conhecido no mundo bruxo." },
+
+  // ACCESSORIES
+  { id: "mq_accessory_crown", name: "Coroa de Ravenclaw", category: "accessory", price_galeons: 4500, image_url: "https://portal-hogwarts.lovable.app/monster_quality_crown_legendary_1776815405819.png", rarity: "legendary", is_featured: true, description: "O diadema perdido de Rowena Ravenclaw. Dizem que concede sabedoria inigualável." },
+  { id: "mq_item_snitch", name: "Pomo de Ouro de Vidro", category: "accessory", price_galeons: 3000, image_url: "https://portal-hogwarts.lovable.app/monster_quality_golden_snitch_orb_1776816956118.png", rarity: "rare", is_featured: true, description: "Um artefato de luxo que captura a essência do voo e da vitória." },
+  { id: "mq_item_ring", name: "Anel de Gaunt", category: "accessory", price_galeons: 6000, image_url: "https://images.unsplash.com/photo-1599839619722-39751411ea63?q=80&w=600", rarity: "legendary", is_featured: false, description: "Um anel antigo com uma pedra misteriosa encravada." },
+
+  // HORCRUXES (OSTENTAÇÃO)
+  { id: "mq_horcrux_diary", name: "Diário de Tom Riddle", category: "accessory", price_galeons: 15000, image_url: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=600", rarity: "legendary", is_featured: true, description: "Uma das relíquias mais sombrias. Somente para bruxos que buscam o controle absoluto." },
+  { id: "mq_horcrux_locket", name: "Medalhão de Slytherin", category: "accessory", price_galeons: 12000, image_url: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=600", rarity: "legendary", is_featured: true, description: "Um artefato que emana uma aura de superioridade e poder antigo." },
+
+  // WAND POWER (UPGRADES)
+  { id: "mq_upgrade_core", name: "Núcleo de Fibra de Coração de Dragão", category: "upgrade", price_galeons: 2500, image_url: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=600", rarity: "rare", is_featured: false, description: "Aumenta o dano dos feitiços e a precisão da varinha." },
+  { id: "mq_upgrade_phoenix", name: "Pena de Fênix Real", category: "upgrade", price_galeons: 3500, image_url: "https://images.unsplash.com/photo-1509248961158-e54f6934749c?q=80&w=600", rarity: "rare", is_featured: true, description: "Concede maior versatilidade e regeneração mágica." },
+
+  // SPECIAL SPELLS
+  { id: "mq_spell_patronus", name: "Expecto Patronum", category: "spell", price_galeons: 8000, image_url: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=600", rarity: "legendary", is_featured: true, description: "A defesa suprema contra Dementores. O brilho da sua alma manifestado." },
+  { id: "mq_spell_avada", name: "Avada Kedavra", category: "spell", price_galeons: 25000, image_url: "https://images.unsplash.com/photo-1502134249126-9f3755a50d78?q=80&w=600", rarity: "legendary", is_featured: true, description: "O feitiço proibido. Dano instantâneo e poder absoluto sobre a vida." },
+
+  // INGREDIENTS
+  { id: "mq_ing_mandrake", name: "Raiz de Mandrágora", category: "potion", price_galeons: 800, image_url: "https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=600", rarity: "uncommon", is_featured: false, description: "Essencial para poções de cura severas." },
+  { id: "mq_ing_lacewing", name: "Hemeróbios Secos", category: "potion", price_galeons: 500, image_url: "https://images.unsplash.com/photo-1533234407053-ada8c9579737?q=80&w=600", rarity: "common", is_featured: false, description: "Base para a Poção Polissuco." },
+  { id: "mq_ing_unicorn", name: "Sangue de Unicórnio", category: "potion", price_galeons: 3500, image_url: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=600", rarity: "legendary", is_featured: true, description: "Uma vida amaldiçoada para quem o bebe. Mas mantém você vivo mesmo no limiar da morte." },
+  { id: "mq_item_sword", name: "Espada de Gryffindor", category: "accessory", price_galeons: 20000, image_url: "https://images.unsplash.com/photo-1599707367072-cd6ada2bc375?q=80&w=600", rarity: "legendary", is_featured: true, description: "Feita de prata pura por duendes. Absorve o que a fortalece." },
 ];
 
 // ─── Planos VIP ────────────────────────────────────────────
@@ -85,7 +126,14 @@ export default function GringottsStore() {
   const loadStore = async () => {
     const { data } = await supabase.from("store_items").select("*").eq("is_active", true).order("price_galeons");
     
-    setItems(data || []);
+    // Mesclar itens do banco com os itens Monster Quality hardcoded
+    const dbItems = data || [];
+    const allItems = [...MONSTER_QUALITY_ITEMS, ...dbItems];
+    
+    // Remover duplicatas por ID caso existam no banco
+    const uniqueItems = allItems.filter((v, i, a) => a.findIndex(t => t.id === v.id) === i);
+    
+    setItems(uniqueItems);
     if (user) {
       const { data: myItems } = await supabase.from("user_items").select("item_id").eq("user_id", user.id);
       setOwned((myItems || []).map(i => i.item_id));
@@ -162,7 +210,7 @@ export default function GringottsStore() {
         user_id: user.id, package_id: pkg.id, amount_brl: pkg.price_brl, galeons: pkg.galeons, status: "pending",
       } as never).select("id").single();
       if (error) throw error;
-      const description = `${pkg.name} — ${pkg.galeons}🪙 Galeões`;
+      const description = `${pkg.name} — ${pkg.galeons} Galeões`;
       toast.info("⏳ Gerando link de pagamento...");
       const payUrl = await createInfinitePayLink(order.id, pkg.price_brl, description, user.email ?? "", profile.full_name);
       if (!payUrl) throw new Error("Não foi possível gerar link de pagamento.");
@@ -176,7 +224,7 @@ export default function GringottsStore() {
   const buyItem = async (item: StoreItem) => {
     if (!user || !profile) return toast.error("Você precisa estar logado.");
     const bal = profile?.galeons ?? 0;
-    if (bal < item.price_galeons) return toast.error(`Galeões insuficientes! Você tem ${bal}🪙.`);
+    if (bal < item.price_galeons) return toast.error(`Galeões insuficientes! Você tem ${bal} Galeões.`);
     setBuying(item.id);
     try {
       // Bypass FK para itens 3D injetados localmente
@@ -228,7 +276,7 @@ export default function GringottsStore() {
   const galeons = profile?.galeons ?? 0;
   const currentVip = profile?.vip_plan;
   const filteredItems = items.filter(i => i.category === tab);
-  const featuredItems = items.filter(i => i.is_featured || i.rarity === 'legendary').slice(0, 8);
+  const featuredItems = items.filter(i => i.is_featured || i.rarity === 'legendary').slice(0, 12);
 
   return (
     <div className="max-w-7xl mx-auto space-y-12 pb-24 px-4 sm:px-6">
@@ -287,7 +335,7 @@ export default function GringottsStore() {
             
             <p className="text-sm text-yellow-100/50 mb-10 font-serif uppercase tracking-widest">Galeões Disponíveis</p>
             <Button variant="outline" className="w-full h-14 border-yellow-500/40 text-yellow-400 hover:bg-yellow-500/10 rounded-2xl font-bold tracking-widest text-xs" onClick={() => setTab("galeons")}>
-              RECARREGAR COFRE 🪙
+              RECARREGAR COFRE <MagicalGaleon size="xs" className="ml-2" />
             </Button>
           </div>
         </div>
@@ -387,11 +435,15 @@ export default function GringottsStore() {
                   <div className="text-left">
                     <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">Investimento Mágico</p>
                     <div className="flex items-center gap-3">
-                      <span className="text-2xl text-muted-foreground/40 line-through">🪙 5.000</span>
-                      <span className="text-5xl font-heading text-yellow-400 drop-shadow-[0_0_20px_rgba(251,191,36,0.6)]">🪙 3.500</span>
+                      <span className="text-2xl text-muted-foreground/40 line-through flex items-center gap-1">
+                        <MagicalGaleon size="xs" /> 5.000
+                      </span>
+                      <span className="text-5xl font-heading text-yellow-400 drop-shadow-[0_0_20px_rgba(251,191,36,0.6)] flex items-center gap-2">
+                        <MagicalGaleon size="sm" /> 3.500
+                      </span>
                     </div>
                   </div>
-                  <Button size="lg" variant="magical" className="w-full sm:w-auto h-16 px-12 rounded-2xl text-lg shadow-[0_15px_35px_-10px_rgba(234,179,8,0.4)] hover:scale-105 transition-all group" onClick={() => buyItem({ id: "mq_cloth_founder", name: "Robe Azul-Safira", category: "clothing", price_galeons: 3500, image_url: "/robe_safira.png" })}>
+                  <Button size="lg" variant="plaque" className="w-full sm:w-auto h-16 px-12 rounded-2xl text-lg shadow-[0_15px_35px_-10px_rgba(234,179,8,0.4)]" onClick={() => buyItem({ id: "mq_cloth_founder", name: "Robe Azul-Safira", category: "clothing", price_galeons: 3500, image_url: "https://portal-hogwarts.lovable.app/monster_quality_robe_crimson_1776815376496.png" })}>
                     Adquirir Relíquia <Sparkles className="ml-2 group-hover:rotate-12 transition-transform" />
                   </Button>
                 </div>
@@ -428,11 +480,13 @@ export default function GringottsStore() {
                       <h4 className="font-heading text-lg text-foreground mb-1 line-clamp-1">{item.name}</h4>
                       <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold text-yellow-500/80 mb-2">Item Especial</p>
                       <div className="flex items-center justify-center gap-2">
-                        <span className="text-xl font-heading text-yellow-400">🪙 {item.price_galeons.toLocaleString()}</span>
+                        <span className="text-xl font-heading text-yellow-400 flex items-center gap-1">
+                          <MagicalGaleon size="xs" /> {item.price_galeons.toLocaleString()}
+                        </span>
                       </div>
                     </div>
                     
-                    <Button variant={isOwned ? "outline" : "magical"} size="sm" 
+                    <Button variant={isOwned ? "outline" : "plaque"} size="sm" 
                       className={`w-full rounded-xl h-12 font-bold ${isOwned ? 'border-green-500/30 text-green-400' : ''}`}
                       onClick={() => !isOwned && buyItem(item)} disabled={isOwned || !canAfford}>
                       {isOwned ? "Já é seu" : "Adquirir Agora"}
@@ -465,11 +519,12 @@ export default function GringottsStore() {
                 
                 <div className="flex flex-wrap items-center justify-center md:justify-start gap-8 pt-4">
                   <div className="text-left">
-                    <p className="text-[10px] text-purple-400 uppercase font-heading tracking-widest mb-1">Custo de Tentativa</p>
-                    <p className="text-5xl font-heading text-yellow-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]">🪙 50</p>
+                    <p className="text-5xl font-heading text-yellow-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.5)] flex items-center gap-3">
+                      <MagicalGaleon size="sm" /> 50
+                    </p>
                   </div>
                   <Button 
-                    variant="magical" 
+                    variant="plaque" 
                     className="h-20 px-12 text-2xl rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 hover:from-purple-500 hover:to-indigo-500 border-none shadow-[0_15px_40px_rgba(124,58,237,0.4)] transition-all active:scale-95 group"
                     onClick={() => {
                         if (galeons < 50) return toast.error("Galeões insuficientes!");
@@ -518,7 +573,9 @@ export default function GringottsStore() {
                   </div>
 
                   <h3 className="font-heading text-xl text-white mb-2 group-hover:text-yellow-400 transition-colors">{pkg.name}</h3>
-                  <p className="text-4xl font-heading text-yellow-400 font-bold mb-2 drop-shadow-lg">🪙 {pkg.galeons}</p>
+                  <p className="text-4xl font-heading text-yellow-400 font-bold mb-2 drop-shadow-lg flex items-center gap-2">
+                    <MagicalGaleon size="xs" /> {pkg.galeons}
+                  </p>
                   <p className="text-[10px] text-yellow-500/50 uppercase tracking-[0.2em] mb-10 flex-1 font-bold">
                     Câmbio Premium Gringotts
                   </p>
@@ -581,7 +638,7 @@ export default function GringottsStore() {
                     {plan.galeons_monthly > 0 && (
                       <li className="flex items-center gap-4 text-base font-heading text-yellow-400 mt-8 pt-6 border-t border-white/10 animate-pulse">
                          <div className="w-10 h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(251,191,36,0.3)]">
-                           <Coins size={20} className="text-yellow-400" />
+                           <MagicalGaleon size="sm" />
                         </div>
                         <div className="flex flex-col">
                           <span className="text-[10px] text-yellow-500/50 uppercase tracking-widest">Mesada Real</span>
@@ -592,11 +649,10 @@ export default function GringottsStore() {
                   </ul>
 
                   <Button size="lg" className={`w-full h-16 rounded-2xl font-bold text-lg shadow-2xl transition-all hover:scale-105 active:scale-95 ${
-                      currentVip === plan.id ? "bg-green-600/20 text-green-400 border-2 border-green-500/50" : 
-                      i === 1 ? "bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-800 text-white border-none shadow-[0_15px_30px_-5px_rgba(124,58,237,0.5)]" :
-                      i === 2 ? "bg-gradient-to-r from-yellow-500 via-amber-500 to-yellow-700 text-black border-none shadow-[0_15px_30px_-5px_rgba(234,179,8,0.5)]" :
-                      "bg-white/10 hover:bg-white/20 text-white border border-white/10"
-                    }`} disabled={buying === plan.id || currentVip === plan.id}
+                      currentVip === plan.id ? "bg-green-600/20 text-green-400 border-2 border-green-500/50" : ""
+                    }`} 
+                    variant={currentVip === plan.id ? "outline" : "plaque"}
+                    disabled={buying === plan.id || currentVip === plan.id}
                     onClick={() => buyVip(plan)}>
                     {buying === plan.id ? "✨ Processando..." : currentVip === plan.id ? "Status Ativo ✅" : "Assinar agora"}
                   </Button>
@@ -670,8 +726,9 @@ export default function GringottsStore() {
                       
                       <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
                         <div className="flex flex-col">
-                           <span className="text-[9px] text-muted-foreground uppercase font-bold tracking-tighter">Custo Mágico</span>
-                           <span className="font-heading text-yellow-400 text-base drop-shadow-md">🪙 {item.price_galeons.toLocaleString()}</span>
+                           <span className="font-heading text-yellow-400 text-base drop-shadow-md flex items-center gap-1">
+                             <MagicalGaleon size="xs" /> {item.price_galeons.toLocaleString()}
+                           </span>
                         </div>
                         <Button size="sm" variant={isOwned ? "outline" : "magical"}
                           disabled={isOwned || buying === item.id || (!canAfford && !isOwned)}
@@ -683,8 +740,8 @@ export default function GringottsStore() {
                       
                       {!isOwned && !canAfford && (
                         <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-red-950 via-red-900/90 to-transparent translate-y-full group-hover:translate-y-0 transition-transform flex flex-col items-center justify-end z-30 backdrop-blur-md border-t border-red-500/30">
-                          <p className="text-[10px] text-red-100 font-bold text-center tracking-widest uppercase">
-                            Faltam 🪙 {(item.price_galeons - galeons).toLocaleString()}
+                          <p className="text-[10px] text-red-100 font-bold text-center tracking-widest uppercase flex items-center gap-1 justify-center">
+                            Faltam <MagicalGaleon size="xs" /> {(item.price_galeons - galeons).toLocaleString()}
                           </p>
                           <button onClick={() => setTab("galeons")} className="text-[9px] text-yellow-400 hover:underline mt-1 font-bold uppercase tracking-widest">Recarregar agora</button>
                         </div>

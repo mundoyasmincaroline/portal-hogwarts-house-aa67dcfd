@@ -259,7 +259,7 @@ export default function MagicalEventSystem() {
 
       {/* ── Convite do Evento ── */}
       {showInvite && activeEvent && (
-        <div className="fixed bottom-20 left-4 right-4 md:left-auto md:right-8 md:w-96 z-[100] glass p-6 border-2 border-primary/40 shadow-[0_0_50px_hsl(var(--primary)/0.3)] rounded-[2rem] overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-500">
+        <div className="fixed bottom-24 right-4 md:right-8 w-[calc(100%-2rem)] md:w-80 z-[100] glass p-4 md:p-5 border-2 border-primary/40 shadow-[0_0_50px_hsl(var(--primary)/0.3)] rounded-3xl overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-500">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
             <div className="relative z-10">
               <div className="flex justify-between items-start mb-4">
@@ -271,26 +271,26 @@ export default function MagicalEventSystem() {
                 </button>
               </div>
               
-              <h3 className="text-xl font-heading text-white mb-1">{activeEvent.name}</h3>
-              <p className="text-[10px] font-heading text-primary uppercase tracking-widest mb-3">
-                {activeEvent.audience === "all" ? "👥 Todos os Bruxos" : activeEvent.audience === "canons" ? "📜 Apenas Canons" : "🎭 Apenas Personagens OCs"}
+              <h3 className="text-lg font-heading text-white mb-0.5">{activeEvent.name}</h3>
+              <p className="text-[9px] font-heading text-primary uppercase tracking-widest mb-2">
+                {activeEvent.audience === "all" ? "👥 Todos" : activeEvent.audience === "canons" ? "📜 Canons" : "🎭 OCs"}
               </p>
               
-              <p className="text-sm text-muted-foreground mb-6">{activeEvent.description}</p>
+              <p className="text-xs text-muted-foreground mb-4 line-clamp-2">{activeEvent.description}</p>
               
-              <div className="flex gap-3 mb-6">
-                <div className="flex-1 bg-secondary/50 p-2 rounded-xl text-center border border-primary/10">
-                  <p className="text-[10px] text-muted-foreground uppercase">XP</p>
-                  <p className="text-lg font-heading text-primary">+{activeEvent.xp}</p>
+              <div className="flex gap-2 mb-4">
+                <div className="flex-1 bg-black/40 p-2 rounded-xl text-center border border-white/5">
+                  <p className="text-[8px] text-muted-foreground uppercase font-bold">XP</p>
+                  <p className="text-sm font-heading text-primary">+{activeEvent.xp}</p>
                 </div>
-                <div className="flex-1 bg-secondary/50 p-2 rounded-xl text-center border border-primary/10">
-                  <p className="text-[10px] text-muted-foreground uppercase">Galeões</p>
-                  <p className="text-lg font-heading text-yellow-500">+{activeEvent.galeons}</p>
+                <div className="flex-1 bg-black/40 p-2 rounded-xl text-center border border-white/5">
+                  <p className="text-[8px] text-muted-foreground uppercase font-bold">🪙</p>
+                  <p className="text-sm font-heading text-yellow-500">+{activeEvent.galeons}</p>
                 </div>
               </div>
 
-              <Button variant="magical" className="w-full py-6 rounded-2xl group" onClick={handleStart}>
-                Registrar e Participar <ChevronRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+              <Button variant="magical" className="w-full py-5 rounded-xl text-xs group" onClick={handleStart}>
+                Registrar e Participar <ChevronRight className="ml-2 group-hover:translate-x-1 transition-transform" size={14} />
               </Button>
               
               {profile.vip_plan === null && (

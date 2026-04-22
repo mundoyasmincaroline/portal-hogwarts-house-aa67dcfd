@@ -1,62 +1,159 @@
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Scroll, ShieldAlert, Zap, Sparkles, Feather } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import MagicalEmoji from "@/components/MagicalEmoji";
+
 export default function Rules() {
+  const [revealed, setRevealed] = useState(false);
+  const [sworn, setSworn] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSwear = () => {
+    setSworn(true);
+    setTimeout(() => setRevealed(true), 800);
+    toast.success("Mischief Managed... A honra é sua, bruxo.");
+  };
+
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div className="glass rounded-2xl p-6 md:p-8 space-y-6">
-        <div className="text-center space-y-4">
-          <div className="text-5xl animate-bounce">⚡</div>
-          <h1 className="font-heading text-2xl md:text-3xl text-gold-gradient">𝐒𝐞𝐣𝐚 𝐛𝐞𝐦-𝐯𝐢𝐧𝐝𝐨(𝐚) 𝐚 𝐜𝐨𝐦𝐮𝐧𝐢𝐝𝐚𝐝𝐞 𝐇𝐨𝐠𝐰𝐚𝐫𝐭𝐬 𝐇𝐨𝐮𝐬𝐞 !!</h1>
-          <p className="text-muted-foreground text-sm">𝐔𝐦𝐚 𝐜𝐨𝐦𝐮𝐧𝐢𝐝𝐚𝐝𝐞 𝐦á𝐠𝐢𝐜𝐚 𝐜𝐨𝐦 𝐠𝐫𝐮𝐩𝐨𝐬 𝐩𝐫𝐚 𝐜𝐨𝐧𝐯𝐞𝐫𝐬𝐚𝐬 𝐞 𝐭𝐮𝐫𝐧𝐨𝐬.</p>
-        </div>
-
-        <div className="bg-card/50 rounded-xl p-6 text-sm text-foreground space-y-4 border border-border">
-          <p>
-            𝐀𝐪𝐮𝐢 𝐟𝐚𝐳𝐞𝐦𝐨𝐬 𝐑𝐏𝐆'𝐬 𝐞𝐦 𝐇𝐨𝐠𝐰𝐚𝐫𝐭𝐬 𝐞 𝐟𝐨𝐫𝐚 𝐝𝐞𝐥𝐚, 𝐜𝐫𝐢𝐚𝐦𝐨𝐬 𝐟𝐚𝐧𝐟𝐢𝐜𝐬, 𝐩𝐚𝐫𝐭𝐢𝐜𝐢𝐩𝐚𝐦𝐨𝐬 𝐝𝐞 𝐚𝐮𝐥𝐚𝐬 𝐞𝐦 𝐇𝐨𝐠𝐰𝐚𝐫𝐭𝐬, 𝐝𝐢𝐬𝐩𝐮𝐭𝐚𝐦𝐨𝐬 𝐚 𝐓𝐚ç𝐚 𝐝𝐚𝐬 𝐂𝐚𝐬𝐚𝐬 🏆 𝐞 𝐯𝐢𝐯𝐞𝐦𝐨𝐬 𝐚𝐯𝐞𝐧𝐭𝐮𝐫𝐚𝐬 𝐢𝐧𝐜𝐫í𝐯𝐞𝐢𝐬 𝐧𝐨 𝐮𝐧𝐢𝐯𝐞𝐫𝐬𝐨 𝐝𝐞 𝐇𝐏.
-          </p>
-          <p>𝐓𝐚𝐦𝐛é𝐦 𝐭𝐞𝐦𝐨𝐬:</p>
-          <ul className="space-y-1 list-none ml-4">
-            <li>🎂 𝐀𝐧𝐢𝐯𝐞𝐫𝐬á𝐫𝐢𝐨𝐬 𝐞𝐬𝐩𝐞𝐜𝐢𝐚𝐢𝐬</li>
-            <li>🎬 𝐒𝐞𝐬𝐬õ𝐞𝐬 𝐝𝐞 𝐟𝐢𝐥𝐦𝐞𝐬</li>
-            <li>🧩 𝐄𝐧𝐢𝐠𝐦𝐚𝐬 𝐞 𝐝𝐞𝐬𝐚𝐟𝐢𝐨𝐬</li>
-            <li>🏖️ 𝐂𝐨𝐥ô𝐧𝐢𝐚𝐬 𝐝𝐞 𝐟é𝐫𝐢𝐚𝐬</li>
-            <li>📚 𝐀𝐮𝐥𝐚𝐬 𝐦á𝐠𝐢𝐜𝐚𝐬</li>
-            <li>📊 𝐄𝐧𝐪𝐮𝐞𝐭𝐞𝐬 𝐞 𝐢𝐧𝐭𝐞𝐫𝐚çõ𝐞𝐬</li>
-            <li>📞 𝐂𝐚𝐥𝐥𝐬 𝐧𝐨 𝐌𝐞𝐞𝐭</li>
-          </ul>
-          <p className="font-bold text-primary mt-4">𝐕𝐢𝐯𝐚 𝐭𝐮𝐝𝐨 𝐢𝐬𝐬𝐨 𝐜𝐨𝐧𝐨𝐬𝐜𝐨 𝐜𝐨𝐦𝐨 𝐬𝐞 𝐫𝐞𝐚𝐥𝐦𝐞𝐧𝐭𝐞 𝐟𝐨𝐬𝐬𝐞 𝐮𝐦 𝐛𝐫𝐮𝐱𝐨 𝐝𝐞 𝐇𝐨𝐠𝐰𝐚𝐫𝐭𝐬, 𝐬𝐞 𝐝𝐢𝐯𝐢𝐫𝐭𝐚! ✨</p>
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 bg-black/40">
+      <div className={`relative max-w-4xl w-full transition-all duration-1000 transform ${revealed ? 'scale-100' : 'scale-95 opacity-90'}`}>
+        
+        {/* Parchment Container */}
+        <div className="relative bg-[#d4b996] rounded-sm shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-[12px] border-[#8b7355] p-1 overflow-hidden min-h-[80vh]">
+          {/* Paper Texture Overlay */}
+          <div className="absolute inset-0 opacity-40 mix-blend-multiply pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/parchment.png')]" />
+          <div className="absolute inset-0 opacity-20 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
           
-          <hr className="border-border my-6" />
+          {/* Ink Borders */}
+          <div className="absolute inset-4 border border-[#5d4037]/30 rounded-sm pointer-events-none" />
+          <div className="absolute inset-6 border-2 border-[#5d4037]/10 rounded-sm pointer-events-none" />
 
-          <h2 className="font-heading text-lg text-primary text-center">𝐋𝐞𝐢𝐚 𝐜𝐨𝐦 𝐚𝐭𝐞𝐧çã𝐨 𝐚𝐬 𝐫𝐞𝐠𝐫𝐚𝐬 𝐚𝐛𝐚𝐢𝐱𝐨:</h2>
-          <h3 className="font-heading text-md text-foreground mt-4">𝐑𝐄𝐆𝐑𝐀𝐒 𝐃𝐀 𝐇𝐎𝐔𝐒𝐄:</h3>
-          
-          <div className="space-y-6 mt-4 text-muted-foreground">
-            <div className="bg-secondary/30 p-4 rounded-lg">
-              <p className="text-foreground font-bold text-lg mb-1">🧙‍♀️ 𝟏. 𝐑𝐞𝐬𝐩𝐞𝐢𝐭𝐨 𝐚𝐜𝐢𝐦𝐚 𝐝𝐞 𝐭𝐮𝐝𝐨</p>
-              <p>𝐍𝐚𝐝𝐚 𝐝𝐞 𝐨𝐟𝐞𝐧𝐬𝐚𝐬, 𝐱𝐢𝐧𝐠𝐚𝐦𝐞𝐧𝐭𝐨𝐬, 𝐩𝐫𝐞𝐜𝐨𝐧𝐜𝐞𝐢𝐭𝐨 𝐨𝐮 𝐝𝐞𝐬𝐫𝐞𝐬𝐩𝐞𝐢𝐭𝐨. 𝐀𝐪𝐮𝐢 𝐭𝐨𝐝𝐨 𝐦𝐮𝐧𝐝𝐨 𝐬𝐞 𝐫𝐞𝐬𝐩𝐞𝐢𝐭𝐚! 🤍</p>
-            </div>
-            <div className="bg-secondary/30 p-4 rounded-lg">
-              <p className="text-foreground font-bold text-lg mb-1">📞 𝟐. 𝐀𝐬 𝐜𝐚𝐥𝐥𝐬 𝐬ã𝐨 𝐬𝐨𝐦𝐞𝐧𝐭𝐞 𝐩𝐞𝐥𝐨 𝐌𝐞𝐞𝐭</p>
-              <p>𝐄𝐧𝐭ã𝐨 𝐩𝐨𝐫 𝐟𝐚𝐯𝐨𝐫, 𝐧ã𝐨 𝐟𝐚ç𝐚𝐦 𝐥𝐢𝐠𝐚çõ𝐞𝐬 𝐩𝐞𝐥𝐨 𝐖𝐡𝐚𝐭𝐬𝐀𝐩𝐩 𝐩𝐚𝐫𝐚 𝐧ã𝐨 𝐚𝐭𝐫𝐚𝐩𝐚𝐥𝐡𝐚𝐫 𝐪𝐮𝐞𝐦 𝐧ã𝐨 𝐩𝐮𝐝𝐞𝐫 𝐞𝐧𝐭𝐫𝐚𝐫.</p>
-            </div>
-            <div className="bg-destructive/10 border border-destructive/20 p-4 rounded-lg">
-              <p className="text-foreground font-bold text-destructive text-lg mb-1">🚫 𝟑. É 𝐩𝐫𝐨𝐢𝐛𝐢𝐝𝐨 𝐟𝐚𝐥𝐚𝐫 𝐩𝐚𝐥𝐚𝐯𝐫õ𝐞𝐬 𝐞 𝐜𝐨𝐧𝐭𝐞ú𝐝𝐨𝐬 +𝟏𝟖</p>
-              <p>𝐍ã𝐨 é 𝐩𝐞𝐫𝐦𝐢𝐭𝐢𝐝𝐨 𝐧𝐚𝐝𝐚 𝐢𝐦𝐩𝐫ó𝐩𝐫𝐢𝐨 𝐨𝐮 𝐩𝐞𝐬𝐚𝐝𝐨.</p>
-            </div>
-            <div className="bg-secondary/30 p-4 rounded-lg">
-              <p className="text-foreground font-bold text-lg mb-1">📜 𝟒. 𝐎𝐫𝐠𝐚𝐧𝐢𝐳𝐚çã𝐨 𝐝𝐨𝐬 𝐠𝐫𝐮𝐩𝐨𝐬</p>
-              <p>𝐔𝐭𝐢𝐥𝐢𝐳𝐞𝐦 𝐭𝐨𝐝𝐨𝐬 𝐨𝐬 𝐠𝐫𝐮𝐩𝐨𝐬 𝐝𝐞 𝐟𝐨𝐫𝐦𝐚 𝐜𝐨𝐫𝐫𝐞𝐭𝐚, 𝐩𝐚𝐫𝐚 𝐧ã𝐨 𝐚𝐭𝐫𝐚𝐩𝐚𝐥𝐡𝐚𝐫 𝐚 𝐝𝐢𝐧â𝐦𝐢𝐜𝐚 𝐝𝐚 𝐡𝐨𝐮𝐬𝐞.</p>
-            </div>
-            <div className="bg-destructive/10 border border-destructive/20 p-4 rounded-lg">
-              <p className="text-foreground font-bold text-destructive text-lg mb-1">🚨 𝟓. 𝐏𝐫𝐨𝐢𝐛𝐢𝐝𝐨 𝐬𝐩𝐚𝐦!</p>
-              <p>𝐄𝐯𝐢𝐭𝐞 𝐞𝐧𝐯𝐢𝐚𝐫 𝐦𝐮𝐢𝐭𝐚𝐬 𝐦𝐞𝐧𝐬𝐚𝐠𝐞𝐧𝐬 𝐫𝐞𝐩𝐞𝐭𝐢𝐝𝐚𝐬 𝐞 𝐟𝐢𝐠𝐮𝐫𝐢𝐧𝐡𝐚𝐬 𝐞𝐦 𝐞𝐱𝐜𝐞𝐬𝐬𝐨, 𝐩𝐨𝐢𝐬 𝐢𝐬𝐬𝐨 𝐜𝐚𝐮𝐬𝐚 𝐬𝐩𝐚𝐦.</p>
-            </div>
-            <div className="bg-yellow-500/10 border border-yellow-500/20 p-4 rounded-lg">
-              <p className="text-foreground font-bold text-yellow-500 text-lg mb-1">⚠️ 𝟔. 𝐐𝐮𝐞𝐛𝐫𝐚 𝐝𝐞 𝐫𝐞𝐠𝐫𝐚𝐬</p>
-              <p>𝐐𝐮𝐞𝐦 𝐝𝐞𝐬𝐜𝐮𝐦𝐩𝐫𝐢𝐫 𝐚𝐬 𝐫𝐞𝐠𝐫𝐚𝐬 𝐩𝐨𝐝𝐞𝐫á 𝐫𝐞𝐜𝐞𝐛𝐞𝐫 𝐮𝐦 𝐚𝐯𝐢𝐬𝐨 𝐞, 𝐜𝐚𝐬𝐨 𝐜𝐨𝐧𝐭𝐢𝐧𝐮𝐞 𝐜𝐨𝐦𝐞𝐭𝐞𝐧𝐝𝐨 𝐨 𝐞𝐫𝐫𝐨, 𝐬𝐞𝐫á 𝐫𝐞𝐦𝐨𝐯𝐢𝐝𝐨 𝐝𝐚 𝐡𝐨𝐮𝐬𝐞. 𝐄𝐧𝐭ã𝐨, 𝐭𝐨𝐦𝐞𝐦 𝐜𝐮𝐢𝐝𝐚𝐝𝐨, 𝐞 𝐬𝐢𝐠𝐚𝐦 𝐚𝐬 𝐧𝐨𝐬𝐬𝐚𝐬 𝐫𝐞𝐠𝐫𝐚𝐬! ⚡️</p>
-            </div>
+          <div className="relative z-10 p-8 md:p-12 h-full flex flex-col">
+            
+            {!revealed ? (
+              <div className="flex-1 flex flex-col items-center justify-center text-center space-y-12 py-20">
+                <div className="space-y-4">
+                  <MagicalEmoji emoji="📜" size="lg" className="mx-auto grayscale opacity-80" />
+                  <h1 className="font-heading text-4xl text-[#5d4037] drop-shadow-sm">O Juramento do Bruxo</h1>
+                  <p className="text-[#5d4037]/70 font-serif italic max-w-md mx-auto text-lg">
+                    "Para entrar neste mundo, é preciso mais que uma varinha. É preciso honra."
+                  </p>
+                </div>
+
+                <div className="space-y-6 w-full max-w-sm">
+                  <Button 
+                    variant="plaque" 
+                    onClick={handleSwear}
+                    className={`w-full h-20 text-xl bg-[#5d4037] hover:bg-[#3e2723] border-[#3e2723] transition-all duration-700 ${sworn ? 'opacity-0 scale-110' : 'opacity-100'}`}
+                  >
+                    Eu juro solenemente não fazer nada de bom
+                  </Button>
+                  <p className="text-[10px] uppercase tracking-[0.3em] text-[#5d4037]/50 font-bold">Toque para revelar os segredos</p>
+                </div>
+              </div>
+            ) : (
+              <div className="animate-in fade-in zoom-in duration-1000 space-y-10">
+                {/* Header */}
+                <div className="text-center space-y-4">
+                  <div className="flex justify-center gap-4 text-[#5d4037]/40 mb-4">
+                    <Feather className="animate-bounce" />
+                    <Scroll />
+                    <Sparkles className="animate-pulse" />
+                  </div>
+                  <h1 className="font-heading text-3xl md:text-5xl text-[#3e2723] tracking-tighter">
+                    𝐎𝐬 𝐃𝐞𝐜𝐫𝐞𝐭𝐨𝐬 𝐝𝐞 𝐇𝐨𝐠𝐰𝐚𝐫𝐭𝐬 𝐇𝐨𝐮𝐬𝐞
+                  </h1>
+                  <div className="h-1 w-32 bg-gradient-to-r from-transparent via-[#5d4037]/40 to-transparent mx-auto" />
+                  <p className="text-[#5d4037] font-serif italic text-lg mt-4 max-w-2xl mx-auto leading-relaxed">
+                    "Não é brincadeira, é um privilégio. Você foi escolhido para trilhar os corredores desta castelo. Honre seu nome, sua casa e seus companheiros."
+                  </p>
+                </div>
+
+                {/* Rules Content - Ink style */}
+                <div className="grid md:grid-cols-2 gap-8 text-[#3e2723]">
+                  <div className="space-y-8">
+                    <div className="space-y-2 border-l-2 border-[#5d4037]/20 pl-6">
+                      <h3 className="font-heading text-xl flex items-center gap-2">
+                        <span className="text-2xl opacity-60">I.</span> A Lei do Respeito
+                      </h3>
+                      <p className="text-sm font-serif italic leading-relaxed opacity-80">
+                        Bruxos e bruxas de todas as origens são bem-vindos. Ofensas, preconceitos ou desrespeito resultarão em banimento imediato para Azkaban. Aqui, a amizade é a magia mais forte.
+                      </p>
+                    </div>
+
+                    <div className="space-y-2 border-l-2 border-[#5d4037]/20 pl-6">
+                      <h3 className="font-heading text-xl flex items-center gap-2">
+                        <span className="text-2xl opacity-60">II.</span> O Código de Etiqueta
+                      </h3>
+                      <p className="text-sm font-serif italic leading-relaxed opacity-80">
+                        Calls são sagradas e realizadas apenas via Meet. Não interrompa o fluxo de magia com ligações de WhatsApp. A organização dos grupos é a ordem do castelo.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-8">
+                    <div className="space-y-2 border-l-2 border-[#5d4037]/20 pl-6">
+                      <h3 className="font-heading text-xl flex items-center gap-2 text-red-900">
+                        <span className="text-2xl opacity-60">III.</span> Seção Proibida (+18)
+                      </h3>
+                      <p className="text-sm font-serif italic leading-relaxed opacity-80">
+                        Conteúdos impróprios, palavras de baixo calão e temas adultos são estritamente proibidos. Mantenha a pureza do ambiente escolar.
+                      </p>
+                    </div>
+
+                    <div className="space-y-2 border-l-2 border-[#5d4037]/20 pl-6">
+                      <h3 className="font-heading text-xl flex items-center gap-2">
+                        <span className="text-2xl opacity-60">IV.</span> A Maldição do Spam
+                      </h3>
+                      <p className="text-sm font-serif italic leading-relaxed opacity-80">
+                        Evite o uso excessivo de mensagens repetidas e figurinhas. A clareza da comunicação é vital para nossos RPGs e aulas.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer Warning */}
+                <div className="mt-12 p-8 border-2 border-dashed border-[#5d4037]/30 bg-black/5 rounded-sm text-center space-y-6">
+                  <ShieldAlert className="mx-auto text-red-900 w-12 h-12 opacity-80" />
+                  <div className="space-y-2">
+                    <h4 className="font-heading text-xl text-red-900 uppercase tracking-widest">Aviso do Ministério</h4>
+                    <p className="text-sm font-serif italic text-[#3e2723] max-w-lg mx-auto">
+                      "A quebra destes decretos resultará em remoção imediata. O Filch está sempre vigiando. Honre sua presença aqui."
+                    </p>
+                  </div>
+                  
+                  <div className="pt-6">
+                    <Button 
+                      variant="plaque" 
+                      onClick={() => navigate("/dashboard")}
+                      className="h-16 px-12 bg-[#3e2723] text-white border-none shadow-xl hover:scale-105 transition-all"
+                    >
+                      Eu aceito os termos e entro no Castelo
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
+
+        {/* Decorative Map Corners */}
+        <div className="absolute -top-4 -left-4 w-16 h-16 border-t-4 border-l-4 border-[#8b7355] rounded-tl-xl pointer-events-none" />
+        <div className="absolute -top-4 -right-4 w-16 h-16 border-t-4 border-r-4 border-[#8b7355] rounded-tr-xl pointer-events-none" />
+        <div className="absolute -bottom-4 -left-4 w-16 h-16 border-b-4 border-l-4 border-[#8b7355] rounded-bl-xl pointer-events-none" />
+        <div className="absolute -bottom-4 -right-4 w-16 h-16 border-b-4 border-r-4 border-[#8b7355] rounded-br-xl pointer-events-none" />
       </div>
+
+      <style>{`
+        @font-face {
+          font-family: 'ParchmentFont';
+          src: url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap');
+        }
+        .font-parchment { font-family: 'UnifrakturMaguntia', cursive; }
+      `}</style>
     </div>
   );
 }

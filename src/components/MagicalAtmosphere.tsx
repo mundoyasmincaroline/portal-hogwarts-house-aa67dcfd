@@ -58,10 +58,10 @@ export default function MagicalAtmosphere() {
       else if (currentRoom === 'library') color = 'rgba(147, 197, 253, 0.3)';
       else {
         // House based colors if in general rooms
-        if (userHouse === 'gryffindor') color = 'rgba(239, 68, 68, 0.3)';
-        else if (userHouse === 'slytherin') color = 'rgba(16, 185, 129, 0.3)';
-        else if (userHouse === 'ravenclaw') color = 'rgba(59, 130, 246, 0.3)';
-        else if (userHouse === 'hufflepuff') color = 'rgba(245, 158, 11, 0.3)';
+        if (userHouse === 'gryffindor') color = 'rgba(239, 68, 68, 0.4)'; // Fiery Red
+        else if (userHouse === 'slytherin') color = 'rgba(34, 197, 94, 0.3)'; // Emerald Mist
+        else if (userHouse === 'ravenclaw') color = 'rgba(59, 130, 246, 0.4)'; // Sapphire Spark
+        else if (userHouse === 'hufflepuff') color = 'rgba(234, 179, 8, 0.4)'; // Golden Dust
       }
 
       return {
@@ -86,16 +86,37 @@ export default function MagicalAtmosphere() {
   };
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      {/* Time-based Color Filter */}
-      <div className={`absolute inset-0 transition-colors duration-[5000ms] ${timeOverlay[time]}`} />
-      
-      {/* Background Texture based on Room */}
-      <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay" style={{
-        backgroundImage: `url('https://www.transparenttextures.com/patterns/carbon-fibre.png')`
-      }} />
+    <div className={`fixed inset-0 pointer-events-none z-0 overflow-hidden select-none transition-all duration-1000 ${timeOverlay[time]}`}>
+      {/* ── MAGICAL FLARES ── */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 blur-[150px] animate-pulse-glow rounded-full opacity-40" />
+        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-blue-500/10 blur-[180px] animate-pulse-glow rounded-full opacity-30 delay-1000" />
+      </div>
 
-      {/* Dynamic Particles / Floating Elements */}
+      {/* ── HOUSE AURAS (STRONGER) ── */}
+      <div className={`absolute inset-0 opacity-60 mix-blend-screen transition-opacity duration-1000 ${
+        userHouse === 'gryffindor' ? 'bg-[radial-gradient(circle_at_bottom_right,_rgba(220,38,38,0.2),transparent_70%)]' :
+        userHouse === 'slytherin' ? 'bg-[radial-gradient(circle_at_bottom_left,_rgba(16,185,129,0.2),transparent_70%)]' :
+        userHouse === 'ravenclaw' ? 'bg-[radial-gradient(circle_at_top_right,_rgba(37,99,235,0.2),transparent_70%)]' :
+        'bg-[radial-gradient(circle_at_top_left,_rgba(217,119,6,0.2),transparent_70%)]'
+      }`} />
+
+      {/* ── SPECIAL EFFECTS BY ROOM ── */}
+      {currentRoom === 'vault' && (
+        <div className="absolute inset-0">
+           <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_70%_30%,_rgba(234,179,8,0.1)_0%,_transparent_50%)]" />
+           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 mix-blend-overlay" />
+        </div>
+      )}
+
+      {currentRoom === 'dungeon' && (
+        <div className="absolute inset-0 bg-black/40">
+           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_70%,_rgba(16,185,129,0.1)_0%,_transparent_60%)]" />
+           <div className="absolute inset-0 animate-lightning-flare opacity-20" />
+        </div>
+      )}
+
+      {/* ── PARTICLES ── */}
       {particles.map((p) => (
         <div
           key={p.id}
@@ -106,58 +127,13 @@ export default function MagicalAtmosphere() {
             width: `${p.size}px`,
             height: `${p.size}px`,
             backgroundColor: p.color,
-            boxShadow: `0 0 ${p.size * 2}px ${p.color}`,
+            boxShadow: `0 0 ${p.size * 3}px ${p.color}`,
             animationDuration: `${p.duration}s`,
             animationDelay: `${p.delay}s`,
           }}
         />
       ))}
-
-      {/* House Specific Visual Filters */}
-      {userHouse === 'slytherin' && (
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_rgba(5,150,105,0.05)_0%,_transparent_50%)]" />
-      )}
-      {userHouse === 'gryffindor' && (
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,_rgba(220,38,38,0.05)_0%,_transparent_50%)]" />
-      )}
-      {userHouse === 'ravenclaw' && (
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(37,99,235,0.05)_0%,_transparent_50%)]" />
-      )}
-      {userHouse === 'hufflepuff' && (
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(217,119,6,0.05)_0%,_transparent_50%)]" />
-      )}
-
-      {/* Special Effects for Rooms */}
-      {currentRoom === 'greathall' && (
-        <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-b from-yellow-500/5 to-transparent opacity-50" />
-      )}
-      
-      {currentRoom === 'dungeon' && (
-        <div className="absolute inset-x-0 bottom-0 h-96 bg-gradient-to-t from-emerald-950/20 to-transparent blur-3xl animate-pulse" />
-      )}
-
-      {currentRoom === 'vault' && (
-        <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_80%_20%,_rgba(234,179,8,0.05)_0%,_transparent_50%)]" />
-      )}
-
-      {/* Night Sky Stars */}
-      {time === 'night' && (
-        <div className="absolute inset-0 opacity-20">
-          {[...Array(50)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute bg-white rounded-full animate-pulse"
-              style={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                width: '1px',
-                height: '1px',
-                animationDelay: `${Math.random() * 5}s`
-              }}
-            />
-          ))}
-        </div>
-      )}
+      </div>
     </div>
   );
 }

@@ -16,6 +16,7 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         magical: "bg-gradient-to-r from-primary/90 to-primary text-primary-foreground hover:shadow-[0_0_20px_hsl(43_65%_54%/0.4)] transition-shadow duration-300",
+        plaque: "relative overflow-hidden bg-gradient-to-br from-zinc-900/60 via-zinc-800/40 to-black/80 border border-white/10 text-white font-heading uppercase tracking-widest shadow-[0_10px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl transition-all duration-500 hover:scale-[1.02] hover:border-white/20 active:scale-95 after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-white/5 after:to-transparent after:-translate-x-full hover:after:translate-x-full after:transition-transform after:duration-1000",
         gryffindor: "bg-gryffindor text-foreground hover:bg-gryffindor/80",
         slytherin: "bg-slytherin text-foreground hover:bg-slytherin/80",
         ravenclaw: "bg-ravenclaw text-foreground hover:bg-ravenclaw/80",

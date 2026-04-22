@@ -1,7 +1,8 @@
-import React from "react";
+import { LucideIcon } from "lucide-react";
 
 interface MagicalEmojiProps {
-  emoji: string;
+  emoji?: string;
+  icon?: LucideIcon;
   size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
   className?: string;
   glowColor?: string;
@@ -9,6 +10,7 @@ interface MagicalEmojiProps {
 
 export default function MagicalEmoji({ 
   emoji, 
+  icon: Icon,
   size = "md", 
   className = "", 
   glowColor = "rgba(234, 179, 8, 0.3)" 
@@ -34,10 +36,10 @@ export default function MagicalEmoji({
       {/* Impactful Border Glow */}
       <div className="absolute inset-0 rounded-inherit border border-white/5 group-hover:border-white/20 transition-colors" />
       
-      {/* The Emoji with "Monster" effects */}
-      <span className="relative z-10 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] group-hover:drop-shadow-[0_0_15px_white] transition-all duration-500 animate-float-subtle">
-        {emoji}
-      </span>
+      {/* The Emoji or Icon with "Monster" effects */}
+      <div className="relative z-10 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] group-hover:drop-shadow-[0_0_15px_white] transition-all duration-500 animate-float-subtle flex items-center justify-center">
+        {Icon ? <Icon size={size === "xs" ? 14 : size === "sm" ? 20 : size === "md" ? 32 : size === "lg" ? 48 : 64} className="text-white" /> : emoji}
+      </div>
 
       {/* Plate Shine Effect */}
       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />

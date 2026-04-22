@@ -4,7 +4,8 @@ import {
   Castle, BookOpen, User, MessageCircle, Camera, Film, Trophy,
   Shield, Swords, BookMarked, Library, ShoppingBag, ScrollText,
   Settings, LogOut, Volume2, VolumeX, RefreshCw, Menu, Users,
-  Coins, Lock, Wallet, Map as MapIcon, Sparkles
+  Coins, Lock, Wallet, Map as MapIcon, Sparkles, Zap, Image as ImageIcon,
+  MessageSquare, Crown, Newspaper, Coffee, GraduationCap, Train
 } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";
@@ -37,30 +38,34 @@ import MaraudersMap from "@/components/MaraudersMap";
 // import TimedMysteryChest from "@/components/TimedMysteryChest";
 import HouseCupWidget from "@/components/HouseCupWidget";
 import MagicalAtmosphere from "@/components/MagicalAtmosphere";
+import DailyProphetTicker from "@/components/DailyProphetTicker";
+import Corujoteca from "@/components/Corujoteca";
+import MagicalEncounters from "@/components/MagicalEncounters";
+import FilchShadow from "@/components/FilchShadow";
 
 
 const NAV_ITEMS = [
-  { icon: <MagicalEmoji emoji="🏰" size="xs" />, label: "O Castelo", path: "/dashboard" },
-  { icon: <MagicalEmoji emoji="📜" size="xs" />, label: "Mapa do Maroto", isMap: true },
-  { icon: <MagicalEmoji emoji="📖" size="xs" />, label: "Guia do Maroto", path: "/dashboard/guide" },
-  { icon: <MagicalEmoji emoji="🧙‍♂️" size="xs" />, label: "Meu Perfil", path: "/dashboard/profile" },
-  { icon: <MagicalEmoji emoji="✉️" size="xs" />, label: "Mensagens", path: "/dashboard/dm" },
-  { icon: <MagicalEmoji emoji="🤝" size="xs" />, label: "Amigos", path: "/dashboard/friends" },
-  { icon: <MagicalEmoji emoji="👥" size="xs" />, label: "Membros", path: "/dashboard/members" },
-  { icon: <MagicalEmoji emoji="💬" size="xs" />, label: "Chats RPG", path: "/dashboard/chats" },
-  { icon: <MagicalEmoji emoji="📸" size="xs" />, label: "InstaHogwarts", path: "/dashboard/instahogwarts" },
-  { icon: <MagicalEmoji emoji="🎬" size="xs" />, label: "Hogwarts Cine", path: "/dashboard/cinema" },
-  { icon: <MagicalEmoji emoji="🏆" size="xs" />, label: "Ranking", path: "/dashboard/ranking" },
-  { icon: <MagicalEmoji emoji="🛡️" size="xs" />, label: "Casas", path: "/dashboard/houses" },
-  { icon: <MagicalEmoji emoji="⚔️" size="xs" />, label: "Desafios", path: "/dashboard/challenges" },
-  { icon: <MagicalEmoji emoji="✨" size="xs" />, label: "Eventos Mágicos", path: "/dashboard/events" },
-  { icon: <MagicalEmoji emoji="🎓" size="xs" />, label: "Aulas", path: "/dashboard/classes" },
-  { icon: <MagicalEmoji emoji="🖼️" size="xs" />, label: "Álbum", path: "/dashboard/album" },
-  { icon: <MagicalEmoji emoji="🛍️" size="xs" />, label: "Loja", path: "/dashboard/shop" },
-  { icon: <MagicalEmoji emoji="🪙" size="xs" />, label: "Gringotts", path: "/dashboard/store" },
-  { icon: <MagicalEmoji emoji="💳" size="xs" />, label: "Carteira", path: "/dashboard/wallet" },
-  { icon: <MagicalEmoji emoji="📜" size="xs" />, label: "Regras", path: "/dashboard/rules" },
-  { icon: <MagicalEmoji emoji="⛓️" size="xs" />, label: "Azkaban", path: "/dashboard/azkaban" },
+  { icon: <MagicalEmoji icon={Castle} size="xs" />, label: "O Castelo", path: "/dashboard" },
+  { icon: <MagicalEmoji icon={MapIcon} size="xs" />, label: "Mapa do Maroto", isMap: true },
+  { icon: <MagicalEmoji icon={BookOpen} size="xs" />, label: "Guia do Maroto", path: "/dashboard/guide" },
+  { icon: <MagicalEmoji icon={User} size="xs" />, label: "Meu Perfil", path: "/dashboard/profile" },
+  { icon: <MagicalEmoji icon={MessageCircle} size="xs" />, label: "Mensagens", path: "/dashboard/dm" },
+  { icon: <MagicalEmoji icon={Users} size="xs" />, label: "Amigos", path: "/dashboard/friends" },
+  { icon: <MagicalEmoji icon={Library} size="xs" />, label: "Membros", path: "/dashboard/members" },
+  { icon: <MagicalEmoji icon={Swords} size="xs" />, label: "Chats RPG", path: "/dashboard/chats" },
+  { icon: <MagicalEmoji icon={Camera} size="xs" />, label: "InstaHogwarts", path: "/dashboard/instahogwarts" },
+  { icon: <MagicalEmoji icon={Film} size="xs" />, label: "Hogwarts Cine", path: "/dashboard/cinema" },
+  { icon: <MagicalEmoji icon={Trophy} size="xs" />, label: "Ranking", path: "/dashboard/ranking" },
+  { icon: <MagicalEmoji icon={Shield} size="xs" />, label: "Casas", path: "/dashboard/houses" },
+  { icon: <MagicalEmoji icon={Zap} size="xs" />, label: "Desafios", path: "/dashboard/challenges" },
+  { icon: <MagicalEmoji icon={Sparkles} size="xs" />, label: "Eventos Mágicos", path: "/dashboard/events" },
+  { icon: <MagicalEmoji icon={GraduationCap} size="xs" />, label: "Aulas", path: "/dashboard/classes" },
+  { icon: <MagicalEmoji icon={ImageIcon} size="xs" />, label: "Álbum", path: "/dashboard/album" },
+  { icon: <MagicalEmoji icon={ShoppingBag} size="xs" />, label: "Loja", path: "/dashboard/shop" },
+  { icon: <MagicalGaleon size="xs" />, label: "Gringotts", path: "/dashboard/store" },
+  { icon: <MagicalEmoji icon={Wallet} size="xs" />, label: "Carteira", path: "/dashboard/wallet" },
+  { icon: <MagicalEmoji icon={ScrollText} size="xs" />, label: "Regras", path: "/dashboard/rules" },
+  { icon: <MagicalEmoji icon={Lock} size="xs" />, label: "Azkaban", path: "/dashboard/azkaban" },
 ];
 
 
@@ -384,7 +389,7 @@ export default function DashboardLayout() {
           {/* Saldo de Galeões */}
           <Link to="/dashboard/store" className="flex items-center justify-between px-4 py-3 mb-2 rounded-2xl border border-yellow-500/40 bg-gradient-to-br from-amber-600/20 via-yellow-900/40 to-black hover:border-yellow-300 transition-all group shadow-[0_0_15px_rgba(251,191,36,0.1)] hover:shadow-[0_0_25px_rgba(251,191,36,0.2)]">
             <div className="flex items-center gap-2">
-              <span className="text-lg">🪙</span>
+              <MagicalGaleon size="xs" />
               <span className="text-[11px] text-yellow-400/90 font-heading group-hover:text-yellow-300 uppercase tracking-wider">Galeões</span>
             </div>
             <span className="font-heading text-lg text-yellow-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]">{((profile as any).galeons || 0).toLocaleString("pt-BR")}</span>
@@ -461,12 +466,15 @@ export default function DashboardLayout() {
           <span className="font-heading text-sm text-gold-gradient">Hogwarts House</span>
         </div>
         
-        {/* House Cup Progress Bar - Monster Quality Engine */}
-        <div className="px-4 md:px-8 mt-4">
-          <HouseCupWidget />
-        </div>
 
-        <div className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto custom-scrollbar relative">
+          <DailyProphetTicker />
+          
+          <div className="p-4 md:p-8">
+            {/* House Cup Progress Bar - Monster Quality Engine */}
+            <div className="mb-6">
+              <HouseCupWidget />
+            </div>
           {/* <MagicalActivityFeed /> */}
           <div className="mt-2 md:mt-0 pb-10">
              <Outlet />
@@ -481,6 +489,9 @@ export default function DashboardLayout() {
           <MagicalCelebration />
           {/* <TimedMysteryChest /> */}
           <MaraudersMap isOpen={mapOpen} onClose={() => setMapOpen(false)} />
+          <Corujoteca />
+          <MagicalEncounters />
+          <FilchShadow />
         </div>
       </main>
     </div>

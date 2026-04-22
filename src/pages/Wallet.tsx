@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { Coins, Crown, ShoppingBag, Zap, Star, Trophy, Calendar, ChevronRight, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import MagicalEmoji from "@/components/MagicalEmoji";
+import MagicalGaleon from "@/components/MagicalGaleon";
 
 interface Order {
   id: string;
@@ -22,12 +24,12 @@ const VIP_CONFIG: Record<string, { name: string; color: string; icon: string; ga
 };
 
 const FREE_WAYS = [
-  { icon: "☀️", label: "Login diário",          reward: "+5🪙",   tip: "Entre todo dia e ganhe Galeões" },
-  { icon: "📝", label: "Publicar no Feed",       reward: "+2🪙",   tip: "Cada post publica Galeões" },
-  { icon: "⚔️", label: "Completar desafios",     reward: "+10🪙",  tip: "Desafios diários e semanais" },
-  { icon: "🤝", label: "Convidar um amigo",      reward: "+20🪙",  tip: "Referral aprovado no nível 2" },
-  { icon: "💬", label: "Comentar no Feed",       reward: "+1🪙",   tip: "Interaja com a comunidade" },
-  { icon: "🏆", label: "Subir de nível",         reward: "+15🪙",  tip: "A cada novo nível alcançado" },
+  { icon: "☀️", label: "Login diário",          reward: "+5",   tip: "Entre todo dia e ganhe Galeões" },
+  { icon: "📝", label: "Publicar no Feed",       reward: "+2",   tip: "Cada post publica Galeões" },
+  { icon: "⚔️", label: "Completar desafios",     reward: "+10",  tip: "Desafios diários e semanais" },
+  { icon: "🤝", label: "Convidar um amigo",      reward: "+20",  tip: "Referral aprovado no nível 2" },
+  { icon: "💬", label: "Comentar no Feed",       reward: "+1",   tip: "Interaja com a comunidade" },
+  { icon: "🏆", label: "Subir de nível",         reward: "+15",  tip: "A cada novo nível alcançado" },
 ];
 
 const PACKAGES = [
@@ -88,9 +90,11 @@ export default function Wallet() {
               <p className="font-heading text-5xl text-yellow-400">{galeons.toLocaleString("pt-BR")}</p>
               <p className="text-xs text-muted-foreground mt-1">🪙 Galeões</p>
               <Link to="/dashboard/store">
-                <Button variant="magical" size="sm" className="mt-3 text-xs font-heading">
+              <Link to="/dashboard/store">
+                <Button variant="plaque" size="sm" className="mt-3 text-[10px]">
                   <ShoppingBag size={12} className="mr-1" /> Usar na Loja
                 </Button>
+              </Link>
               </Link>
             </div>
 
@@ -139,7 +143,7 @@ export default function Wallet() {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {[
               "🏅 Badge VIP exclusivo no perfil e posts",
-              `🪙 +${vipConf.galeons} Galeões mensais automáticos`,
+              `+${vipConf.galeons} Galeões mensais automáticos`,
               "⚡ XP bônus em todas as atividades",
               "✨ Acesso a itens e skins exclusivos",
               "🔮 Acesso antecipado a novidades",
@@ -152,7 +156,7 @@ export default function Wallet() {
           </div>
           {vipConf.galeons > 0 && (
             <div className="mt-4 p-3 rounded-xl bg-yellow-900/20 border border-yellow-500/30 flex items-center justify-between">
-              <span className="text-sm text-yellow-400 font-heading">🪙 Galeões mensais incluídos</span>
+              <span className="text-sm text-yellow-400 font-heading flex items-center gap-2"><MagicalGaleon size="xs" /> Galeões mensais incluídos</span>
               <span className="text-lg font-heading text-yellow-400">+{vipConf.galeons}/mês</span>
             </div>
           )}
@@ -170,7 +174,7 @@ export default function Wallet() {
             <div key={i} className="bg-secondary/30 rounded-xl p-3 border border-border/30 hover:border-green-500/30 transition-colors">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xl">{w.icon}</span>
-                <span className="text-xs font-heading text-green-400">{w.reward}</span>
+                <span className="text-xs font-heading text-green-400 flex items-center gap-1"><MagicalGaleon size="xs" /> {w.reward}</span>
               </div>
               <p className="text-xs font-heading text-foreground">{w.label}</p>
               <p className="text-[10px] text-muted-foreground mt-0.5">{w.tip}</p>
@@ -180,7 +184,7 @@ export default function Wallet() {
         <div className="mt-4 p-3 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-between">
           <span className="text-sm text-foreground">Quer mais Galeões mais rápido?</span>
           <Link to="/dashboard/store">
-            <Button variant="magical" size="sm" className="text-xs font-heading">
+            <Button variant="plaque" size="sm" className="text-[10px]">
               Comprar Galeões <ChevronRight size={12} />
             </Button>
           </Link>
@@ -197,7 +201,7 @@ export default function Wallet() {
             {pendingOrders.map(o => (
               <div key={o.id} className="flex items-center justify-between text-sm bg-yellow-900/20 rounded-lg px-4 py-2 border border-yellow-500/20">
                 <div>
-                  <p className="text-foreground text-xs font-heading">{o.galeons > 0 ? `🪙 ${o.galeons} Galeões` : `👑 Plano VIP`}</p>
+                  <p className="text-foreground text-xs font-heading flex items-center gap-1">{o.galeons > 0 ? <><MagicalGaleon size="xs" /> {o.galeons} Galeões</> : `👑 Plano VIP`}</p>
                   <p className="text-[10px] text-muted-foreground">{new Date(o.created_at).toLocaleDateString("pt-BR")}</p>
                 </div>
                 <div className="text-right">
