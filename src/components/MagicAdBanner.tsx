@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
-import { Sparkles, ExternalLink, Play, Volume2 } from "lucide-react";
+import { Sparkles, ExternalLink, Play, Volume2, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
 export default function MagicAdBanner() {
+  const { profile } = useAuth();
   const [ads, setAds] = useState<any[]>([]);
   const [currentAdIndex, setCurrentAdIndex] = useState(0);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
+  const [isHiddenByVip, setIsHiddenByVip] = useState(false);
+
+  const isVip = !!profile?.vip_plan;
 
   useEffect(() => {
     const fetchAds = async () => {
@@ -41,13 +45,24 @@ export default function MagicAdBanner() {
     toast.info(`🪄 Transportando para o Beco Diagonal: ${ad.title}`);
   };
 
-  if (ads.length === 0) return null;
+  if (ads.length === 0 || isHiddenByVip) return null;
 
   const ad = ads[currentAdIndex];
   const isVideo = ad.image_url?.includes(".mp4") || ad.image_url?.includes("tiktok.com");
 
   return (
     <div className="relative group overflow-hidden rounded-[2.5rem] border-2 border-yellow-500/20 bg-black/60 backdrop-blur-3xl transition-all duration-700 hover:border-yellow-500/50 hover:shadow-[0_20px_60px_rgba(234,179,8,0.3)] mb-8">
+      {/* VIP Hidden Toggle */}
+      {isVip && (
+        <button 
+          onClick={() => setIsHiddenByVip(true)}
+          className="absolute top-2 left-2 z-30 p-2 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/60 text-white/40 hover:text-white"
+          title="Ocultar (Poder VIP)"
+        >
+          <EyeOff size={14} />
+        </button>
+      )}
+
       {/* Background Media */}
       <div className="absolute inset-0 z-0">
         {isVideo ? (
@@ -138,3 +153,4 @@ export default function MagicAdBanner() {
     </div>
   );
 }
+
