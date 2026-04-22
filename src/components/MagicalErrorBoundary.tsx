@@ -41,37 +41,48 @@ export class MagicalErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div style={{
-          height: "100vh", width: "100vw", background: "#050505", 
-          display: "flex", alignItems: "center", justifyContent: "center", 
-          flexDirection: "column", color: "#34d399", fontFamily: "monospace",
-          textAlign: "center", padding: "40px"
-        }}>
-          <div style={{ 
-            border: "1px solid #065f46", background: "rgba(6, 95, 70, 0.05)", 
-            padding: "40px", borderRadius: "30px", maxWidth: "600px",
-            boxShadow: "0 0 50px rgba(52, 211, 153, 0.1)"
-          }}>
-            <h1 style={{ fontSize: "1.2rem", letterSpacing: "0.5em", color: "#10b981", marginBottom: "20px" }}>
-              ZION SYSTEM FAILURE
-            </h1>
-            <div style={{ textAlign: "left", background: "#000", padding: "20px", borderRadius: "10px", border: "1px solid #065f46" }}>
-              <p style={{ color: "#059669", fontSize: "12px", marginBottom: "10px" }}>[DIAGNÓSTICO TÉCNICO]</p>
-              <p style={{ color: "#34d399", fontSize: "10px", lineHeight: "1.6" }}>{this.state.error?.message}</p>
+        <div className="min-h-screen bg-[#050505] flex items-center justify-center p-6 relative overflow-hidden font-sans">
+          {/* Background Magic Effects */}
+          <div className="absolute inset-0 z-0">
+            <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#d4af371a] rounded-full blur-[120px] animate-pulse" />
+            <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[120px] animate-pulse delay-1000" />
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-20" />
+          </div>
+
+          <div className="relative z-10 max-w-lg w-full bg-[#121212a6] backdrop-blur-3xl rounded-[3rem] p-10 md:p-16 border-2 border-white/10 shadow-[0_0_100px_rgba(212,175,55,0.1)] text-center space-y-8">
+            <div className="w-24 h-24 bg-[#d4af371a] rounded-3xl flex items-center justify-center mx-auto mb-6 relative">
+              <div className="text-[#d4af37] text-5xl animate-pulse">⚠️</div>
+              <div className="absolute inset-0 bg-[#d4af3733] blur-2xl rounded-full -z-10" />
             </div>
-            <p style={{ fontSize: "10px", color: "#065f46", marginTop: "20px", fontStyle: "italic" }}>
-              "O erro foi reportado ao Arquiteto. A realidade está sendo recalibrada."
+
+            <div className="space-y-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight font-serif">
+                Instabilidade na <span className="text-[#d4af37] italic">Trama Mágica</span>
+              </h2>
+              <p className="text-[#94a3b8] font-serif italic text-sm md:text-base leading-relaxed">
+                "Parece que um feitiço saiu pela culatra. Não se preocupe, Zion está recalibrando a realidade e a magia será restaurada em instantes."
+              </p>
+            </div>
+
+            <div className="p-4 bg-black/40 rounded-2xl border border-white/5 text-left">
+               <p className="text-[10px] text-[#94a3b8] uppercase tracking-widest font-bold mb-1">Diagnóstico de Zion</p>
+               <p className="text-[11px] font-mono text-[#d4af37]/70 break-all leading-tight">
+                 {this.state.error?.message || "Erro Místico Desconhecido"}
+               </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <button 
+                className="flex-1 h-12 rounded-xl text-xs font-bold uppercase tracking-widest bg-[#d4af37] text-black hover:bg-[#b8962d] transition-all shadow-lg shadow-[#d4af3733]"
+                onClick={() => window.location.reload()}
+              >
+                Restaurar Portal
+              </button>
+            </div>
+
+            <p className="text-[10px] text-[#94a3b8] pt-4">
+              ✨ Protocolo Jarvis de Recuperação Ativo
             </p>
-            <button 
-              onClick={() => window.location.reload()}
-              style={{
-                marginTop: "30px", background: "#10b981", color: "#000", 
-                border: "none", padding: "12px 30px", borderRadius: "50px", 
-                cursor: "pointer", fontWeight: "bold", fontSize: "10px", letterSpacing: "2px"
-              }}
-            >
-              RESTAURAR PORTAL
-            </button>
           </div>
         </div>
       );

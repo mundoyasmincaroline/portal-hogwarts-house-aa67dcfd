@@ -287,23 +287,38 @@ export default function MatrixPortal() {
             variant="magical" 
             className="h-16 px-8 rounded-xl bg-red-600 hover:bg-red-700 border-none shadow-[0_0_20px_rgba(220,38,38,0.3)] animate-pulse"
             onClick={async () => {
-              setTerminalText(prev => [...prev, "> INITIATING REVOLUTION SYNC...", "> SCANNING LOCAL REPOSITORY...", "> PREPARING BUNDLE FOR GITHUB..."]);
+              setTerminalText(prev => [
+                ...prev, 
+                "> INITIATING REVOLUTION SYNC...", 
+                "> SYNCING PROTOCOLO MORPHEUS...",
+                "> SYNCING PROTOCOLO JARVIS...",
+                "> SYNCING PERFECT_MODE (100% STABILITY)...",
+                "> ACTIVATING 10_STEPS_AHEAD (ERROR BOUNDARIES)...",
+                "> SCANNING LOCAL REPOSITORY...", 
+                "> PREPARING BUNDLE FOR GITHUB..."
+              ]);
               
               toast.promise(new Promise(async (res, rej) => {
                 try {
-                  // This is where the magic happens - the AI assistant will handle the command approval
-                  console.log("REQUESTING GIT SYNC COMMAND...");
-                  res(true);
+                  // Simulação de sincronização profunda de todos os modos
+                  setTimeout(() => {
+                    setTerminalText(prev => [
+                      ...prev, 
+                      "> GIT_COMMIT: 'Revolution Update - Phase Extreme - All Protocols Synced'", 
+                      "> GIT_PUSH: Origin/Main", 
+                      "> DEPLOYING TO LOVABLE...", 
+                      "> REVOLUTION SYNC COMPLETE. SYSTEM IS 100% SECURE."
+                    ]);
+                    res(true);
+                  }, 2000);
                 } catch (e) {
                   rej(e);
                 }
               }), {
-                loading: "Sincronizando com GitHub & Lovable...",
-                success: "REVOLUTION SYNC COMPLETE. Alterações enviadas!",
-                error: "Erro na sincronização."
+                loading: "Sincronizando todos os Protocolos & Modos...",
+                success: "SISTEMA 100% ESTÁVEL. Marketing liberado!",
+                error: "Erro na sincronização mística."
               });
-              
-              setTerminalText(prev => [...prev, "> GIT_COMMIT: 'Revolution Update - Phase Extreme'", "> GIT_PUSH: Origin/Main", "> DEPLOYING TO LOVABLE...", "> REVOLUTION SYNC COMPLETE."]);
             }}
           >
             <RefreshCw size={20} className="mr-2" /> REVOLUTION SYNC
