@@ -68,8 +68,6 @@ class ErrorBoundary extends React.Component {
               100% { transform: translateX(100%); }
             }
           `}</style>
-        </div>
-          
           {/* Secret tag for admins */}
           <div style={{ position: "fixed", bottom: 10, right: 10, fontSize: "8px", opacity: 0.3, color: "#444" }}>
             ERR_MAGICAL_INTERFERENCE
