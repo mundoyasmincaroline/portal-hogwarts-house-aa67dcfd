@@ -13,7 +13,7 @@ import HouseCrest from "@/components/HouseCrest";
 import MagicalIcon from "@/components/MagicalIcon";
 import { HOUSES, type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
-import { playMagicSound, isSoundEnabled, toggleSound, playAmbientMusic } from "@/lib/sounds";
+import { playMagicSound, isSoundEnabled, toggleSound } from "@/lib/sounds";
 import { toast } from "sonner";
 
 import Notifications from "@/components/Notifications";
@@ -63,7 +63,6 @@ export default function DashboardLayout() {
   useEffect(() => {
     if (user) {
       countUnread();
-      playAmbientMusic(); // REVOLUTION: Inicia a imersão sonora
       const ch = supabase.channel(`dm_unread_badge_${Date.now()}`)
         .on("postgres_changes", { event: "*", schema: "public", table: "dm_messages" }, countUnread)
         .subscribe();

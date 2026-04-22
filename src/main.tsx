@@ -5,7 +5,7 @@ import "./index.css";
 
 // Protocolo 10 Passos à Frente: Version Sentinel
 // Incrementando a versão para forçar limpeza de cache e migração global
-const PORTAL_VERSION = "8.1.0-REVOLUTION-SYNC"; 
+const PORTAL_VERSION = "8.1.1-REVOLUTION-STABLE"; 
 const storedVersion = localStorage.getItem("portal_version");
 
 if (storedVersion !== PORTAL_VERSION) {
