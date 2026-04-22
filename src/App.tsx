@@ -5,6 +5,9 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
+import React from "react";
+
 
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
@@ -48,10 +51,11 @@ import BFFWorld from "./pages/BFFWorld";
 import FamilyDecisions from "./pages/FamilyDecisions";
 import ZionVault from "./pages/ZionVault";
 import GodDashboard from "./pages/GodDashboard";
-// import MagicalTournaments from "./components/MagicalTournaments";
-
-
+import MagicalMeta from "./components/MagicalMeta";
+import MagicalErrorBoundary from "./components/MagicalErrorBoundary";
 import MagicalSyncOverlay from "./components/MagicalSyncOverlay";
+
+const queryClient = new QueryClient();
 
 function AuthInit({ children }: { children: React.ReactNode }) {
   const init = useAuth((s) => s.init);
