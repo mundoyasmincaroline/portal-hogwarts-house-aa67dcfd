@@ -50,7 +50,7 @@ export default function AuthInit({ children }: AuthInitProps) {
     
     // Realtime listener para atualizações forçadas pelo Arquiteto
     const channel = supabase
-      .channel('portal_updates')
+      .channel(`portal_updates_${Date.now()}`)
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'site_settings' }, payload => {
         if (payload.new.setting_key === 'portal_version') {
           const newVer = payload.new.setting_value?.version;

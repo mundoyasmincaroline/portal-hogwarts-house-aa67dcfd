@@ -34,7 +34,7 @@ export default function Notifications() {
     fetchNotifs();
 
     const sub = supabase
-      .channel(`notifications:${user.id}`)
+      .channel(`notifications:${user.id}:${Date.now()}`)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` }, (payload) => {
         setNotifications((prev) => [payload.new as Notification, ...prev]);
       })

@@ -63,7 +63,7 @@ export default function DashboardLayout() {
   useEffect(() => {
     if (user) {
       countUnread();
-      const ch = supabase.channel("dm_unread_badge")
+      const ch = supabase.channel(`dm_unread_badge_${Date.now()}`)
         .on("postgres_changes", { event: "*", schema: "public", table: "dm_messages" }, countUnread)
         .subscribe();
       
@@ -71,7 +71,7 @@ export default function DashboardLayout() {
       let jarvisChannel: any = null;
       if (profile?.username === 'morpheus') {
         jarvisChannel = supabase
-          .channel('jarvis-monitor')
+          .channel(`jarvis-monitor_${Date.now()}`)
           .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'profiles' }, payload => {
             toast.info("NOVO MEMBRO DETECTADO", {
               description: `Um novo bruxo (${payload.new.full_name}) acaba de cruzar os portões de Hogwarts.`,
