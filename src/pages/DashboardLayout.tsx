@@ -493,10 +493,13 @@ export default function DashboardLayout() {
           <MagicalEncounters />
           <FilchShadow />
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
+  </div>
   );
-}function AmbientSoundController({ currentPath }: { currentPath: string }) {
+}
+
+function AmbientSoundController({ currentPath }: { currentPath: string }) {
   const [audio] = useState(new Audio());
   
   useEffect(() => {
