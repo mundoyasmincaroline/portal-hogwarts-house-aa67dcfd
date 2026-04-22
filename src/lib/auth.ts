@@ -204,10 +204,22 @@ export const useAuth = create<AuthState>((set, get) => ({
     if (!userId) return;
 
     let sessionId = localStorage.getItem("hogwarts_session_id");
+    let justInitialized = false;
+
     if (!sessionId) {
       sessionId = Math.random().toString(36).substring(2, 15);
       localStorage.setItem("hogwarts_session_id", sessionId);
       await supabase.from("profiles").update({ current_session_id: sessionId } as never).eq("user_id", userId);
+      justInitialized = true;
+    }
+
+    // Se acabamos de inicializar, não precisamos checar contra o DB imediatamente para evitar race conditions
+    if (justInitialized) {
+        await supabase
+          .from("profiles")
+          .update({ online: true, last_seen: new Date().toISOString() } as never)
+          .eq("user_id", userId);
+        return;
     }
 
     const { data: prof } = await supabase.from("profiles").select("current_session_id").eq("user_id", userId).single();
