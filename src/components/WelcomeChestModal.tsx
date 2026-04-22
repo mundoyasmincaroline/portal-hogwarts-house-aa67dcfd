@@ -63,7 +63,6 @@ const WelcomeChestModal: React.FC<WelcomeChestModalProps> = ({ onClose }) => {
   };
 
   return (
-  return (
     <>
       {isOpen && (
         <div
@@ -99,17 +98,13 @@ const WelcomeChestModal: React.FC<WelcomeChestModalProps> = ({ onClose }) => {
                   />
                   {isOpening && (
                     <div className="absolute inset-0 flex items-center justify-center z-20">
-                       <Sparkles size={60} className="text-primary animate-spin" />
+                      <Sparkles className="text-primary animate-spin" size={48} />
                     </div>
                   )}
                 </div>
 
-                <Button
-                  onClick={handleOpenChest}
-                  disabled={isOpening}
-                  className="w-full h-16 rounded-2xl bg-gradient-to-r from-primary via-amber-400 to-primary text-black font-bold text-xl shadow-[0_10px_30px_rgba(212,175,55,0.4)] hover:scale-105 active:scale-95 transition-all"
-                >
-                  {isOpening ? "DESBLOQUEANDO..." : "ABRIR MEU BAÚ ✨"}
+                <Button variant="magical" onClick={handleOpenChest} disabled={isOpening} className="w-full h-14 rounded-2xl text-base font-bold uppercase tracking-widest">
+                  {isOpening ? "Abrindo..." : "Abrir Agora 🪄"}
                 </Button>
               </div>
             ) : (
@@ -117,35 +112,28 @@ const WelcomeChestModal: React.FC<WelcomeChestModalProps> = ({ onClose }) => {
                 className="space-y-8 py-4"
               >
                 <div className="space-y-2">
-                  <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-500/30">
-                    <Sparkles size={40} className="text-green-400" />
+                  <div className="w-20 h-20 bg-primary/20 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                    <Sparkles className="text-primary animate-pulse" size={40} />
                   </div>
-                  <h2 className="text-4xl font-heading text-white">RECOMPENSA ÉPICA!</h2>
-                  <p className="text-muted-foreground text-sm font-serif">Sua jornada em Hogwarts começou com o pé direito.</p>
+                  <h2 className="text-3xl font-heading text-white tracking-tight">Tesouros <span className="text-primary italic">Encontrados!</span></h2>
+                  <p className="text-muted-foreground text-sm">Suas recompensas de iniciante foram creditadas.</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="glass bg-white/5 p-6 rounded-3xl border border-white/10 flex flex-col items-center gap-2">
-                    <MagicalGaleon size="md" />
-                    <p className="text-3xl font-heading text-yellow-400">+500</p>
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Galeões</p>
+                  <div className="glass bg-white/5 border-white/10 p-6 rounded-3xl space-y-2">
+                    <div className="flex justify-center mb-2"><MagicalGaleon size="lg" /></div>
+                    <p className="text-2xl font-bold text-white">500</p>
+                    <p className="text-[10px] uppercase tracking-widest opacity-40">Galeões</p>
                   </div>
-                  <div className="glass bg-white/5 p-6 rounded-3xl border border-white/10 flex flex-col items-center gap-2">
-                    <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary border border-primary/30">
-                      <Trophy size={20} />
-                    </div>
-                    <p className="text-3xl font-heading text-primary">+100</p>
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Pontos XP</p>
+                  <div className="glass bg-white/5 border-white/10 p-6 rounded-3xl space-y-2">
+                    <div className="flex justify-center mb-2 text-primary"><Trophy size={32} /></div>
+                    <p className="text-2xl font-bold text-white">+100</p>
+                    <p className="text-[10px] uppercase tracking-widest opacity-40">XP Mágico</p>
                   </div>
                 </div>
 
-                <div className="glass p-6 rounded-[2rem] border border-primary/30 bg-primary/5 space-y-4">
-                  <p className="text-xs text-primary font-bold uppercase tracking-widest flex items-center justify-center gap-2">
-                    <Share2 size={14} /> Quer ganhar mais?
-                  </p>
-                  <p className="text-sm text-white/80 font-serif leading-relaxed">
-                    Recrute novos bruxos para o castelo e ganhe <span className="text-yellow-400 font-bold">50 Galeões</span> por cada indicação completada!
-                  </p>
+                <div className="p-6 glass bg-primary/5 border-primary/20 rounded-3xl space-y-4">
+                  <p className="text-xs text-white/80 font-serif italic">"Um grande bruxo sempre traz novos amigos para o castelo."</p>
                   <div className="flex gap-2">
                     <Button variant="magical" onClick={copyReferralLink} className="flex-1 h-12 rounded-xl text-xs font-bold uppercase tracking-widest">
                        Copiar Link Viral 🔗
@@ -168,7 +156,7 @@ const WelcomeChestModal: React.FC<WelcomeChestModalProps> = ({ onClose }) => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

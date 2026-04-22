@@ -52,10 +52,9 @@ export default function MatrixPortal() {
       const { count: onlineCount } = await supabase.from("profiles").select("*", { count: "exact", head: true }).eq("online", true);
       const { count: userCount } = await supabase.from("profiles").select("*", { count: "exact", head: true });
       
-      // Real sales would come from a transactions table, using mock for aesthetic
       setStats({
         online: onlineCount || 0,
-        sales_24h: 1250, // R$ 1.250 nas últimas 24h
+        sales_24h: 1250,
         total_users: userCount || 0
       });
     };
@@ -63,7 +62,6 @@ export default function MatrixPortal() {
     fetchStats();
     const interval = setInterval(fetchStats, 10000);
 
-    // Jarvis Greeting
     setTerminalText([
       "> JARVIS_OS v4.2.0 INITIALIZED",
       "> WELCOME, MORPHEUS.",
@@ -101,7 +99,6 @@ export default function MatrixPortal() {
     <div className="min-h-screen bg-black text-[#0F0] font-mono selection:bg-[#0F0] selection:text-black p-4 md:p-8 relative overflow-hidden">
       <MatrixRain />
       
-      {/* Matrix Header */}
       <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12 border-b border-[#0F0]/20 pb-6">
         <div>
           <h1 className="text-4xl font-bold tracking-tighter flex items-center gap-3">
@@ -130,9 +127,7 @@ export default function MatrixPortal() {
       </div>
 
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Stats Column */}
         <div className="lg:col-span-2 space-y-8">
-          {/* Quick Metrics */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
               { icon: <Users size={20} />, label: "Bruxos Online", value: stats.online, color: "text-[#0F0]" },
@@ -147,7 +142,6 @@ export default function MatrixPortal() {
             ))}
           </div>
 
-          {/* Real-time Sales Chart */}
           <div className="glass bg-black/60 border-[#0F0]/20 p-8 rounded-3xl h-[400px]">
             <div className="flex justify-between items-center mb-8">
               <h3 className="text-xl font-bold flex items-center gap-2">
@@ -183,7 +177,6 @@ export default function MatrixPortal() {
             </ResponsiveContainer>
           </div>
 
-        {/* SYSTEM PULSE: LIVE ACTIVITY (HACKER VIEW) */}
           <div className="glass bg-black border-[#0F0]/30 p-8 rounded-3xl space-y-6 relative overflow-hidden">
              <div className="absolute top-0 right-0 p-4">
                 <div className="flex gap-1">
@@ -207,9 +200,7 @@ export default function MatrixPortal() {
           </div>
         </div>
 
-        {/* Jarvis Side Column */}
         <div className="space-y-8">
-          {/* Jarvis Terminal */}
           <div className="glass bg-black/80 border-[#0F0]/20 rounded-3xl flex flex-col h-[500px] overflow-hidden">
             <div className="bg-[#0F0]/10 p-4 border-b border-[#0F0]/20 flex justify-between items-center">
               <p className="text-xs font-bold flex items-center gap-2">
@@ -234,7 +225,6 @@ export default function MatrixPortal() {
             </form>
           </div>
 
-          {/* Mentor's Voice */}
           <div className="glass bg-black border-[#0F0]/20 p-6 rounded-3xl space-y-4">
              <p className="text-[10px] font-bold uppercase tracking-widest text-yellow-500">Voz do Mentor (Jarvis/Oracle)</p>
              <div className="text-[11px] italic opacity-80 space-y-4">
@@ -244,7 +234,6 @@ export default function MatrixPortal() {
              </div>
           </div>
 
-          {/* Financial Integration */}
           <div className="glass bg-yellow-500/5 border-yellow-500/20 p-6 rounded-3xl space-y-4">
              <p className="text-[10px] font-bold uppercase tracking-widest text-yellow-500">Mecanismo de Pagamento</p>
              <div className="flex items-center gap-3">
@@ -261,7 +250,6 @@ export default function MatrixPortal() {
              </Button>
           </div>
 
-          {/* Admin Shortcuts */}
           <div className="glass bg-[#0F0]/5 border-[#0F0]/20 p-6 rounded-3xl space-y-4">
              <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Comandos de Operação</p>
              <div className="grid grid-cols-1 gap-3">
@@ -292,7 +280,6 @@ export default function MatrixPortal() {
         </div>
       </div>
 
-      {/* Floating HUD Effect */}
       <div className="fixed bottom-8 right-8 z-50 pointer-events-none">
         <div className="w-48 h-48 border-2 border-[#0F0]/10 rounded-full animate-spin-slow opacity-20" />
         <div className="absolute inset-0 flex items-center justify-center">
