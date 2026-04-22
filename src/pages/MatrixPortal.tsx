@@ -288,23 +288,38 @@ export default function MatrixPortal() {
           </div>
 
           <div className="glass bg-purple-500/5 border-purple-500/20 p-6 rounded-3xl space-y-6">
-             <p className="text-[10px] font-bold uppercase tracking-widest text-purple-400">Laboratório de Criação Viral</p>
+             <p className="text-[10px] font-bold uppercase tracking-widest text-purple-400">Estúdio Jarvis (God Mode)</p>
              <div className="space-y-4">
-                <div className="bg-black/60 p-4 rounded-xl border border-purple-500/20">
-                   <p className="text-xs font-bold text-white mb-2">PROMPT DE OURO (TikTok/Reels):</p>
-                   <p className="text-[10px] opacity-70 italic text-purple-300">
-                     "Gere um vídeo cinematográfico de um bruxo abrindo um Baú Lendário em Hogwarts, luzes douradas saindo de dentro, efeito Monster Quality 4K, estilo Harry Potter moderno."
+                <div className="bg-black/60 p-4 rounded-2xl border border-primary/30 relative overflow-hidden group">
+                   <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                   <p className="text-[10px] font-bold text-primary mb-2 flex items-center gap-2">
+                      <Sparkles size={12} className="animate-pulse" /> JARVIS ENGINE V4 (RENDER)
                    </p>
-                   <Button 
-                     variant="ghost" 
-                     className="mt-3 text-[9px] h-6 border border-purple-500/30 hover:bg-purple-500/20"
-                     onClick={() => {
-                        navigator.clipboard.writeText("Gere um vídeo cinematográfico de um bruxo abrindo um Baú Lendário em Hogwarts, luzes douradas saindo de dentro, efeito Monster Quality 4K, estilo Harry Potter moderno.");
-                        toast.success("Prompt Copiado! Use no Luma/Runway 🚀");
-                     }}
-                   >
-                     COPIAR PROMPT
-                   </Button>
+                   <textarea 
+                     className="w-full bg-black/40 border border-white/10 rounded-lg p-2 text-[10px] text-white/80 focus:border-primary/50 outline-none h-20 resize-none font-mono"
+                     placeholder="Descreva a cena cinematográfica aqui..."
+                     defaultValue="Um bruxo de elite em frente ao castelo de Hogwarts ao entardecer, estilo Monster Quality 4K, iluminação volumétrica, ultra-realista."
+                   />
+                   <div className="grid grid-cols-2 gap-2 mt-3">
+                      <Button 
+                        variant="magical" 
+                        className="h-9 text-[9px] uppercase tracking-tighter shadow-[0_0_15px_rgba(212,175,55,0.3)]"
+                        onClick={() => {
+                           toast.info("Processando solicitação de imagem... Me peça aqui no chat para renderizar o asset final!");
+                        }}
+                      >
+                        GERAR IMAGEM IA
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="h-9 text-[9px] uppercase tracking-tighter border-purple-500/30 hover:bg-purple-500/10 text-purple-400"
+                        onClick={() => {
+                           toast.success("Roteiro Cinematográfico Preparado! Use o prompt no Luma/Kling.");
+                        }}
+                      >
+                        GERAR VÍDEO (PROMPT)
+                      </Button>
+                   </div>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-3">
