@@ -88,8 +88,12 @@ export default function PWAInstallPrompt() {
             )}
             
             <button 
-              onClick={() => setIsVisible(false)}
-              className="text-[10px] text-muted-foreground uppercase tracking-widest hover:text-white mt-2 sm:mt-0"
+              onClick={() => {
+                setIsVisible(false);
+                // Armazenar preferência para não mostrar novamente nesta sessão
+                sessionStorage.setItem("pwa_prompt_dismissed", "true");
+              }}
+              className="text-[10px] text-muted-foreground uppercase tracking-widest hover:text-white mt-2 sm:mt-0 transition-colors"
             >
               Agora não
             </button>
