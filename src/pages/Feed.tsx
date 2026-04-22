@@ -12,7 +12,7 @@ import BirthdayBanner from "@/components/BirthdayBanner";
 import MagicAdBanner from "@/components/MagicAdBanner";
 import StoriesBar from "@/components/StoriesBar";
 import DynamicGreeting from "@/components/DynamicGreeting";
-import VipUpsellBanner from "@/components/VipUpsellBanner";
+import FoundersCampaign from "@/components/FoundersCampaign";
 import SafeImage from "@/components/SafeImage";
 import MagicalIcon from "@/components/MagicalIcon";
 import MagicalEmoji from "@/components/MagicalEmoji";
@@ -257,9 +257,8 @@ export default function Feed() {
       )}
 
       <BirthdayBanner />
-      <VipUpsellBanner
+      <FoundersCampaign
         currentVip={(profile as any)?.vip_plan}
-        galeons={(profile as any)?.galeons ?? 0}
         username={profile?.full_name}
       />
       <DailyHighlight />
