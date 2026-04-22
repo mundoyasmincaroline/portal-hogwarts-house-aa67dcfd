@@ -6,9 +6,24 @@ import { useAuth } from "@/lib/auth";
 import MagicalEmoji from "./MagicalEmoji";
 
 export default function RecruitmentWidget() {
-  const { profile } = useAuth();
+  const { profile, user } = useAuth();
   const [copied, setCopied] = useState(false);
+  const [referralCount, setReferralCount] = useState(0);
+  const [isSprintActive, setIsSprintActive] = useState(false);
+  
   const referralLink = `${window.location.origin}/register?ref=${profile?.username || 'hogwarts'}`;
+
+  React.useEffect(() => {
+     if (!user) return;
+     const fetchRefStats = async () => {
+        const { count } = await supabase.from("referrals").select("*", { count: "exact", head: true }).eq("inviter_id", user.id).eq("status", "completed");
+        setReferralCount(count || 0);
+        
+        const { data: sprint } = await supabase.from("site_settings").select("setting_value").eq("setting_key", "is_sprint_active").maybeSingle();
+        if (sprint) setIsSprintActive((sprint.setting_value as any)?.active || false);
+     };
+     fetchRefStats();
+  }, [user]);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(referralLink);
@@ -18,7 +33,9 @@ export default function RecruitmentWidget() {
   };
 
   const shareViralText = () => {
-    const text = `✨ Acabei de entrar no Portal Hogwarts e ganhei 500 Galeões e um Baú Lendário! 🏰 Vem viver essa magia comigo: ${referralLink}`;
+    const text = isSprintActive 
+      ? `🚨 EVENTO RARO: Acabei de entrar no Portal Hogwarts e ganhei BÔNUS DUPLO de Galeões! 🏰 Vem viver essa magia comigo: ${referralLink}`
+      : `✨ Acabei de entrar no Portal Hogwarts e ganhei 500 Galeões e um Baú Lendário! 🏰 Vem viver essa magia comigo: ${referralLink}`;
     navigator.clipboard.writeText(text);
     toast.success("Texto viral copiado para seu TikTok/Insta! 🚀");
   };
@@ -43,6 +60,20 @@ export default function RecruitmentWidget() {
               <p className="text-sm text-muted-foreground font-serif italic max-w-sm leading-relaxed">
                 "Convide novos bruxos e receba <span className="text-primary font-bold">100 Galeões</span> e <span className="text-primary font-bold">50 XP</span> por cada aluno aprovado. Ajude Hogwarts a crescer!"
               </p>
+              
+              {/* Progress Bar */}
+              <div className="mt-4 space-y-2">
+                 <div className="flex justify-between items-center text-[10px] font-bold">
+                    <span className="text-white/40 uppercase tracking-widest">Seu Impacto Viral</span>
+                    <span className="text-primary">{referralCount} recrutas</span>
+                 </div>
+                 <div className="h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                    <div className="h-full bg-gradient-to-r from-primary/40 to-primary shadow-[0_0_10px_rgba(212,175,55,0.4)] transition-all duration-1000" style={{ width: `${Math.min((referralCount / 5) * 100, 100)}%` }} />
+                 </div>
+                 <p className="text-[9px] text-white/30 italic">
+                    {referralCount < 5 ? `Faltam ${5 - referralCount} recrutas para o Baú da Fênix!` : "Meta batida! Baú Lendário desbloqueado."}
+                 </p>
+              </div>
            </div>
 
            <div className="w-full md:w-auto space-y-4">

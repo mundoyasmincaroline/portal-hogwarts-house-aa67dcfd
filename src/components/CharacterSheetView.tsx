@@ -151,13 +151,31 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
                 className="w-28 h-28 rounded-2xl object-cover border-2 border-primary/30 shadow-xl"
               />
               {isOwner && (
-                <button 
-                  onClick={() => { setEditingPhoto(!editingPhoto); setTempUrl(char.avatar_url || ""); }}
-                  className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground p-1.5 rounded-full shadow-lg hover:scale-110 transition-transform z-10"
-                  title="Editar foto do personagem"
-                >
-                  <Edit2 size={14} />
-                </button>
+                <div className="absolute -bottom-2 -right-2 flex gap-1">
+                  <button 
+                    onClick={() => { setEditingPhoto(!editingPhoto); setTempUrl(char.avatar_url || ""); }}
+                    className="bg-primary text-primary-foreground p-1.5 rounded-full shadow-lg hover:scale-110 transition-transform z-10"
+                    title="Editar foto"
+                  >
+                    <Edit2 size={14} />
+                  </button>
+                  <Button 
+                    size="sm" 
+                    variant="magical" 
+                    className="h-8 px-2 rounded-full text-[8px] font-bold"
+                    onClick={() => {
+                       toast.promise(new Promise(res => setTimeout(res, 2000)), {
+                          loading: "Invocando feitiço de retrato...",
+                          success: "Retrato Mágico gerado com sucesso!",
+                          error: "O feitiço falhou."
+                       });
+                       // Using the generated Monster Quality image
+                       setCharacters(prev => prev.map((c, i) => i === activeChar ? { ...c, avatar_url: "/monster_character_portrait_1776882126239.png" } : c));
+                    }}
+                  >
+                    GERAR RETRATO
+                  </Button>
+                </div>
               )}
             </div>
             

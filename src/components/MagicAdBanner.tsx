@@ -10,8 +10,8 @@ export default function MagicAdBanner() {
   const [ads, setAds] = useState<any[]>([]);
   const [currentAdIndex, setCurrentAdIndex] = useState(0);
   const [isHiddenByVip, setIsHiddenByVip] = useState(false);
-
   const isVip = !!profile?.vip_plan;
+  const [isSprintActive, setIsSprintActive] = useState(false);
 
   useEffect(() => {
     const fetchAds = async () => {
@@ -20,7 +20,14 @@ export default function MagicAdBanner() {
         setAds(data);
       }
     };
+
+    const fetchSprint = async () => {
+      const { data } = await supabase.from("site_settings").select("setting_value").eq("setting_key", "is_sprint_active").maybeSingle();
+      if (data) setIsSprintActive((data.setting_value as any)?.active || false);
+    };
+
     fetchAds();
+    fetchSprint();
   }, []);
 
   useEffect(() => {
@@ -96,6 +103,12 @@ export default function MagicAdBanner() {
           }} />
         ))}
       </div>
+      
+      {isSprintActive && (
+        <div className="absolute top-0 left-0 bg-yellow-500 text-black text-[8px] font-bold px-3 py-1 rounded-br-2xl z-20 animate-pulse shadow-lg">
+           REVOLUTION SPRINT: RECOMPENSAS 2X ATIVAS
+        </div>
+      )}
       
       <div className="absolute top-0 right-0 bg-gradient-to-l from-yellow-600/20 to-transparent backdrop-blur-md text-yellow-400 text-[10px] uppercase font-bold px-6 py-2.5 rounded-bl-[2rem] border-l border-b border-yellow-500/20 z-10 tracking-[0.2em] flex items-center gap-3">
         <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full animate-ping" />

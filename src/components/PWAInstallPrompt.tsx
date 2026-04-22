@@ -7,6 +7,7 @@ export default function PWAInstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [notifPermission, setNotifPermission] = useState<NotificationPermission>("default");
+  const [isStandalone, setIsStandalone] = useState(true);
 
   useEffect(() => {
     // Escutar o evento de instalação do PWA
@@ -20,6 +21,16 @@ export default function PWAInstallPrompt() {
     if ("Notification" in window) {
       setNotifPermission(Notification.permission);
     }
+
+    // Check if running in standalone mode
+    const checkStandalone = () => {
+      const isStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true;
+      setIsStandalone(isStandaloneMode);
+      if (!isStandaloneMode) {
+        setTimeout(() => setIsVisible(true), 3000);
+      }
+    };
+    checkStandalone();
   }, []);
 
   const handleInstall = async () => {
@@ -67,17 +78,19 @@ export default function PWAInstallPrompt() {
           
           <div className="flex-1 text-center md:text-left">
             <h3 className="font-heading text-xl text-white flex items-center justify-center md:justify-start gap-2">
-              Instalar App Hogwarts <Sparkles size={16} className="text-yellow-400" />
+              {!isStandalone ? "Ativar Modo Imersivo 🪄" : "Ativar Corujas Reais 🦉"}
             </h3>
             <p className="text-sm text-muted-foreground font-serif italic">
-              "Para receber nossas corujas em tempo real e não perder nenhum evento, instale o portal no seu celular."
+              {!isStandalone 
+                ? "Para viver a experiência completa em tela cheia (Monster Quality), instale o portal no seu celular."
+                : "Não perca eventos, duelos e convocações do Ministério. Ative as notificações push."}
             </p>
           </div>
           
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-            {isVisible && deferredPrompt && (
-              <Button variant="magical" onClick={handleInstall} className="rounded-xl h-12 px-6">
-                Instalar App 📱
+            {(!isStandalone && deferredPrompt) && (
+              <Button variant="magical" onClick={handleInstall} className="rounded-xl h-12 px-6 shadow-[0_0_20px_rgba(234,179,8,0.3)]">
+                INSTALAR AGORA 📱
               </Button>
             )}
             

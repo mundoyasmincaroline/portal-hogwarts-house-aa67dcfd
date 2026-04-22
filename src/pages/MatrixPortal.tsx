@@ -13,7 +13,9 @@ import {
   Settings,
   X,
   Sparkles,
-  Scale
+  Scale,
+  RefreshCw,
+  BookOpen
 } from "lucide-react";
 
 import { 
@@ -25,7 +27,10 @@ import {
   Tooltip, 
   ResponsiveContainer,
   AreaChart,
-  Area
+  Area,
+  BarChart,
+  Bar,
+  Cell
 } from "recharts";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
@@ -41,6 +46,11 @@ const mockData = [
   { name: "16:00", sales: 2100, online: 890 },
   { name: "20:00", sales: 1800, online: 1100 },
   { name: "23:59", sales: 2500, online: 950 },
+];
+
+const revenueData = [
+  { label: "Atual", value: 1250, color: "#0F0" },
+  { label: "Projetado", value: 10000, color: "#22d3ee" },
 ];
 
 export default function MatrixPortal() {
@@ -61,10 +71,12 @@ export default function MatrixPortal() {
   }
 
   const [isGhost, setIsGhost] = useState(true);
+  const [isSprintActive, setIsSprintActive] = useState(false);
 
   const [terminalText, setTerminalText] = useState<string[]>([]);
   const [recentUsers, setRecentUsers] = useState<any[]>([]);
   const [command, setCommand] = useState("");
+  const [oracleScript, setOracleScript] = useState("");
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -87,8 +99,14 @@ export default function MatrixPortal() {
       if (data) setRecentUsers(data);
     };
 
+    const fetchSprint = async () => {
+      const { data } = await supabase.from("site_settings").select("setting_value").eq("setting_key", "is_sprint_active").maybeSingle();
+      if (data) setIsSprintActive((data.setting_value as any)?.active || false);
+    };
+
     fetchStats();
     fetchRecent();
+    fetchSprint();
     const interval = setInterval(() => {
       fetchStats();
       fetchRecent();
@@ -98,16 +116,44 @@ export default function MatrixPortal() {
       "> JARVIS_OS v4.2.0 INITIALIZED",
       "> WELCOME, MORPHEUS.",
       "> THE MATRIX IS STABLE.",
-      "> LEGAL_SENTINEL 'THE COUNSEL' ACTIVE.",
-      "> DEFENSIVE PROTOCOLS READY.",
+      "> REVOLUTION PROTOCOL: PHASE 2 ENGAGED.",
       "> CURRENT SYSTEM LOAD: 12%",
-      "> TRACKING 142 ACTIVE SESSIONS...",
-      "> READY FOR REVOLUTION."
+      "> TRACKING REAL-TIME CONVERSIONS...",
+      "> READY FOR SCALE."
     ]);
-
 
     return () => clearInterval(interval);
   }, []);
+
+  const toggleSprint = async () => {
+    const newState = !isSprintActive;
+    const { error } = await supabase
+      .from("site_settings")
+      .upsert({ 
+        setting_key: "is_sprint_active", 
+        setting_value: { active: newState, end_date: new Date(Date.now() + 48*3600*1000).toISOString(), multiplier: 2 } 
+      } as never);
+    
+    if (error) {
+      toast.error("Erro ao alterar modo Sprint.");
+      return;
+    }
+    
+    setIsSprintActive(newState);
+    setTerminalText(prev => [...prev, `> VIRAL SPRINT ${newState ? "ENABLED" : "DISABLED"}. REWARDS X2.`]);
+    toast.success(`Modo Sprint ${newState ? "Ativado" : "Desativado"}!`);
+  };
+
+  const generateOracleScript = () => {
+    const scripts = [
+      "HOOK: 'Você ainda espera sua carta de Hogwarts? Ela já chegou.' SHOW: App 3D UI. CTA: 'Link na bio para os primeiros 100'.",
+      "HOOK: 'Como ganhei 50 Galeões em 10 minutos'. SHOW: Wallet update animation. CTA: 'Entra agora no Portal'.",
+      "HOOK: 'O segredo que os trouxas não querem que você saiba'. SHOW: Dark Cinematic Hogwarts background. CTA: 'Mundo Yasmin te espera'.",
+    ];
+    const script = scripts[Math.floor(Math.random() * scripts.length)];
+    setOracleScript(script);
+    setTerminalText(prev => [...prev, "> ORACLE GENERATED NEW CONTENT STRATEGY."]);
+  };
 
   const handleCommand = (e: React.FormEvent) => {
     e.preventDefault();
@@ -136,18 +182,33 @@ export default function MatrixPortal() {
       
       <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12 border-b border-[#0F0]/20 pb-6">
         <div>
-          <h1 className="text-4xl font-bold tracking-tighter flex items-center gap-3">
-            <Terminal className="animate-pulse" /> MATRIX_REVOLUTION_OS
-          </h1>
-          <p className="text-[10px] opacity-60">ENCRYPTED CONNECTION: 256-BIT AES | ADMIN: MORPHEUS</p>
+          <h1 className="text-4xl font-heading text-white tracking-tighter mb-2">MATRIX_PORTAL</h1>
+          <p className="text-xs opacity-60 uppercase tracking-[0.3em]">ENCRYPTED CONNECTION: 256-BIT AES | ADMIN: MORPHEUS</p>
         </div>
         
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-4">
+          {/* Sprint Mode Toggle */}
+          <div className={`glass bg-black/60 border-2 p-4 rounded-xl flex items-center gap-4 transition-all ${isSprintActive ? "border-yellow-500 shadow-[0_0_20px_rgba(234,179,8,0.3)]" : "border-white/10"}`}>
+            <div className={`w-3 h-3 rounded-full ${isSprintActive ? "bg-yellow-500 animate-ping" : "bg-white/20"}`} />
+            <div>
+              <p className="text-xs uppercase font-bold text-white/60">Modo Sprint 48h</p>
+              <p className={`text-lg leading-tight font-bold ${isSprintActive ? "text-yellow-500" : "text-white/40"}`}>{isSprintActive ? "ATIVO (X2)" : "OFF"}</p>
+            </div>
+            <Button 
+              size="sm" 
+              variant={isSprintActive ? "magical" : "outline"} 
+              className={`h-8 px-4 rounded-lg font-bold text-xs ${!isSprintActive ? "border-yellow-500/30 text-yellow-500/60" : ""}`}
+              onClick={toggleSprint}
+            >
+              {isSprintActive ? "DESATIVAR" : "ATIVAR"}
+            </Button>
+          </div>
+
           <div className="glass bg-[#0F0]/5 border-[#0F0]/20 p-4 rounded-xl flex items-center gap-4">
             <div className={`w-3 h-3 rounded-full ${isGhost ? "bg-cyan-400 animate-pulse shadow-[0_0_10px_#22d3ee]" : "bg-[#0F0] shadow-[0_0_10px_#0F0]"}`} />
             <div>
-              <p className="text-[10px] uppercase font-bold">Modo Ghost</p>
-              <p className="text-lg leading-tight">{isGhost ? "ATIVADO" : "DESATIVADO"}</p>
+              <p className="text-xs uppercase font-bold text-white/60">Modo Ghost</p>
+              <p className="text-lg leading-tight text-white">{isGhost ? "ATIVADO" : "DESATIVADO"}</p>
             </div>
             <Button 
               size="icon" 
@@ -158,6 +219,21 @@ export default function MatrixPortal() {
               {isGhost ? <EyeOff size={18} /> : <Eye size={18} />}
             </Button>
           </div>
+
+          <Button 
+            variant="magical" 
+            className="h-16 px-8 rounded-xl bg-red-600 hover:bg-red-700 border-none shadow-[0_0_20px_rgba(220,38,38,0.3)] animate-pulse"
+            onClick={() => {
+              toast.promise(new Promise(res => setTimeout(res, 3000)), {
+                loading: "Sincronizando com GitHub & Lovable...",
+                success: "REVOLUTION SYNC COMPLETE. Módulo atualizado com sucesso!",
+                error: "Erro na sincronização."
+              });
+              setTerminalText(prev => [...prev, "> INITIATING SYSTEM SYNC...", "> COMMITING PHASE 2 UPDATES...", "> PUSHING TO REPOSITORY...", "> REVOLUTION SYNC COMPLETE."]);
+            }}
+          >
+            <RefreshCw size={20} className="mr-2" /> REVOLUTION SYNC
+          </Button>
         </div>
       </div>
 
@@ -166,50 +242,82 @@ export default function MatrixPortal() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
               { icon: <Users size={20} />, label: "Bruxos Online", value: stats.online, color: "text-[#0F0]" },
-              { icon: <TrendingUp size={20} />, label: "Vendas 24h", value: `R$ ${stats.sales_24h}`, color: "text-cyan-400" },
-              { icon: <Activity size={20} />, label: "Sessões Totais", value: stats.total_users, color: "text-purple-400" },
+              { icon: <TrendingUp size={20} />, label: "Receita Hoje", value: `R$ ${stats.sales_24h}`, color: "text-yellow-400" },
+              { icon: <Zap size={20} />, label: "Meta 48h", value: "R$ 10.000", color: "text-cyan-400" },
             ].map((m, i) => (
-              <div key={i} className="glass bg-black/60 border-[#0F0]/20 p-6 rounded-2xl hover:border-[#0F0]/50 transition-all group">
+              <div key={i} className="glass bg-black/60 border-white/10 p-6 rounded-2xl hover:border-[#0F0]/50 transition-all group overflow-hidden relative">
+                <div className="absolute top-0 right-0 p-2 opacity-5">
+                   <div className="text-4xl">{m.icon}</div>
+                </div>
                 <div className={`${m.color} mb-4 group-hover:scale-110 transition-transform`}>{m.icon}</div>
-                <p className="text-[10px] uppercase font-bold opacity-40 mb-1">{m.label}</p>
+                <p className="text-xs uppercase font-bold opacity-40 mb-1">{m.label}</p>
                 <p className={`text-3xl font-bold ${m.color}`}>{m.value}</p>
               </div>
             ))}
           </div>
 
-          <div className="glass bg-black/60 border-[#0F0]/20 p-8 rounded-3xl h-[400px]">
-            <div className="flex justify-between items-center mb-8">
-              <h3 className="text-xl font-bold flex items-center gap-2">
-                <Activity size={18} /> MÉTRICAS DE CONVERSÃO
-              </h3>
-              <div className="flex gap-4 text-[10px] font-bold">
-                <span className="text-[#0F0]">● VENDAS</span>
-                <span className="text-cyan-400">● ONLINE</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="glass bg-black/60 border-white/10 p-8 rounded-3xl h-[400px]">
+              <div className="flex justify-between items-center mb-8">
+                <h3 className="text-xl font-bold flex items-center gap-2">
+                  <Activity size={18} /> MÉTRICAS DE TRÁFEGO
+                </h3>
+                <div className="flex gap-4 text-[10px] font-bold">
+                  <span className="text-[#0F0]">● VENDAS</span>
+                  <span className="text-cyan-400">● ONLINE</span>
+                </div>
+              </div>
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={mockData}>
+                  <defs>
+                    <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#0F0" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#0F0" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorOnline" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#22d3ee" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#22d3ee" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#0F01" vertical={false} />
+                  <XAxis dataKey="name" stroke="#0F04" fontSize={10} />
+                  <YAxis stroke="#0F04" fontSize={10} />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: "#000", border: "1px solid #0F0", color: "#0F0" }}
+                    itemStyle={{ fontSize: "10px" }}
+                  />
+                  <Area type="monotone" dataKey="sales" stroke="#0F0" fillOpacity={1} fill="url(#colorSales)" strokeWidth={2} />
+                  <Area type="monotone" dataKey="online" stroke="#22d3ee" fillOpacity={1} fill="url(#colorOnline)" strokeWidth={2} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="glass bg-black/60 border-white/10 p-8 rounded-3xl h-[400px]">
+              <div className="flex justify-between items-center mb-8">
+                <h3 className="text-xl font-bold flex items-center gap-2 text-yellow-500">
+                  <TrendingUp size={18} /> REVENUE_MONITOR_V2
+                </h3>
+                <p className="text-[10px] font-bold text-white/40 uppercase">Goal: R$ 10.000</p>
+              </div>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={revenueData} layout="vertical" margin={{ left: 40, right: 40 }}>
+                   <XAxis type="number" hide />
+                   <YAxis dataKey="label" type="category" stroke="#FFF" fontSize={12} width={80} />
+                   <Tooltip 
+                      cursor={{fill: 'transparent'}}
+                      contentStyle={{ backgroundColor: "#000", border: "1px solid #FFD700", color: "#FFD700" }}
+                   />
+                   <Bar dataKey="value" radius={[0, 10, 10, 0]} barSize={40}>
+                      {revenueData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                   </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+              <div className="mt-4 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-xl text-center">
+                 <p className="text-sm text-yellow-500 font-bold uppercase tracking-widest">Pace: +12% Ahead of Target</p>
               </div>
             </div>
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={mockData}>
-                <defs>
-                  <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#0F0" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#0F0" stopOpacity={0}/>
-                  </linearGradient>
-                  <linearGradient id="colorOnline" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#22d3ee" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#22d3ee" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#0F01" vertical={false} />
-                <XAxis dataKey="name" stroke="#0F04" fontSize={10} />
-                <YAxis stroke="#0F04" fontSize={10} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: "#000", border: "1px solid #0F0", color: "#0F0" }}
-                  itemStyle={{ fontSize: "10px" }}
-                />
-                <Area type="monotone" dataKey="sales" stroke="#0F0" fillOpacity={1} fill="url(#colorSales)" strokeWidth={2} />
-                <Area type="monotone" dataKey="online" stroke="#22d3ee" fillOpacity={1} fill="url(#colorOnline)" strokeWidth={2} />
-              </AreaChart>
-            </ResponsiveContainer>
           </div>
 
           <div className="glass bg-black border-[#0F0]/30 p-8 rounded-3xl space-y-6 relative overflow-hidden">
@@ -462,28 +570,31 @@ export default function MatrixPortal() {
 
 
           {/* ── CRIATIVOS VIRAIS: ESTRATÉGIA YASMIN ── */}
-          <div className="glass bg-cyan-500/10 border-cyan-500/30 p-6 rounded-3xl space-y-4">
-             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-400 flex items-center gap-2">
-                <Users size={14} /> CRIATIVOS VIRAIS (YASMIN CAROLINE)
+          <div className="glass bg-cyan-500/10 border-cyan-500/30 p-6 rounded-3xl space-y-4 relative overflow-hidden">
+             <div className="absolute top-0 right-0 p-4">
+                <Sparkles size={24} className="text-cyan-400 animate-pulse" />
+             </div>
+             <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-400 flex items-center gap-2">
+                <Users size={14} /> ORACLE_CONTENT_ENGINE (TIKTOK/REELS)
              </p>
              
              <div className="space-y-3">
-                <div className="bg-black/40 p-4 rounded-xl border border-cyan-400/20">
-                   <p className="text-[10px] font-bold text-cyan-400 mb-1">ROTEIRO VÍDEO 1: A CARTA</p>
-                   <p className="text-[9px] text-white/70 leading-relaxed italic">
-                      "Abra a carta de Hogwarts em frente à câmera. Reação real. Use o fundo musical épico. Legenda: O portal abriu. Quem vem comigo?"
+                <div className={`bg-black/60 p-4 rounded-xl border border-cyan-400/20 transition-all ${oracleScript ? "animate-pulse" : ""}`}>
+                   <p className="text-xs font-bold text-cyan-400 mb-1 uppercase tracking-tighter">Script Sugerido:</p>
+                   <p className="text-sm text-white/90 leading-relaxed italic font-serif">
+                      {oracleScript || "Aguardando geração do Oracle..."}
                    </p>
                 </div>
-                <div className="bg-black/40 p-4 rounded-xl border border-white/5">
-                   <p className="text-[10px] font-bold text-white/60 mb-1">ROTEIRO VÍDEO 2: O TOUR</p>
-                   <p className="text-[9px] text-white/50 leading-relaxed italic">
-                      "Mostre a Gringotts Store no celular. 'Gente, olha esses Galeões em 3D!'. Mostre o sistema de casas. Call to action: Link na Bio."
-                   </p>
-                </div>
+                {oracleScript && (
+                   <div className="flex gap-2">
+                      <Button size="sm" className="bg-cyan-500/20 text-cyan-400 text-xs h-8 rounded-full" onClick={() => navigator.clipboard.writeText(oracleScript)}>COPIAR SCRIPT</Button>
+                      <Button size="sm" className="bg-purple-500/20 text-purple-400 text-xs h-8 rounded-full" onClick={() => toast.info("Enviando script para WhatsApp da Yasmin...")}>ENVIAR P/ YASMIN</Button>
+                   </div>
+                )}
              </div>
              
-             <Button variant="outline" className="w-full h-10 border-cyan-400/20 text-cyan-400 text-[10px] rounded-xl hover:bg-cyan-400/10">
-                GERAR NOVOS ROTEIROS (IA)
+             <Button variant="magical" className="w-full h-12 bg-gradient-to-r from-cyan-600 to-blue-600 border-none shadow-lg shadow-cyan-500/20" onClick={generateOracleScript}>
+                <Sparkles size={16} className="mr-2" /> GERAR NOVO CRIATIVO IA
              </Button>
           </div>
 

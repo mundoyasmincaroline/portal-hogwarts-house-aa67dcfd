@@ -18,12 +18,15 @@ export default function InterstitialAd() {
   const [countdown, setCountdown] = useState(5);
   const location = useLocation();
 
+  const { profile } = useAuth();
+
   useEffect(() => {
     checkAndShowAd();
-  }, [location.pathname]); // Triggered sometimes on navigation
+  }, [location.pathname, profile?.vip_plan]); // Triggered sometimes on navigation or VIP status change
 
   const checkAndShowAd = async () => {
     if (show) return; // already showing
+    if (profile?.vip_plan) return; // VIPs don't see interstitials
 
     // Check settings
     const { data: settingsData } = await supabase.from("site_settings").select("setting_value").eq("setting_key", "interstitial_config").single();

@@ -7,6 +7,7 @@ import MagicalGaleon from "@/components/MagicalGaleon";
 import MagicalIcon from "@/components/MagicalIcon";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
+import { useEffect } from "react";
 
 type GameState = "menu" | "playing" | "result" | "divination";
 type Move = "spell" | "defend" | "curse";
@@ -30,21 +31,146 @@ const DIVINATION_CARDS: CardType[] = [
 
 export default function MagicalGames() {
   const { profile, user } = useAuth();
-  const [gameState, setGameState] = useState<GameState>("menu");
-  const [playerMove, setPlayerMove] = useState<Move | null>(null);
-  const [opponentMove, setOpponentMove] = useState<Move | null>(null);
-  const [result, setResult] = useState<"win" | "lose" | "draw" | null>(null);
-  const [playerHP, setPlayerHP] = useState(100);
-  const [opponentHP, setOpponentHP] = useState(100);
-
-  // Divination State
-  const [selectedCard, setSelectedCard] = useState<CardType | null>(null);
-  const [divinationRevealed, setDivinationRevealed] = useState(false);
-  const [loadingDivination, setLoadingDivination] = useState(false);
+  // Multiplayer State
+  const [session, setSession] = useState<any>(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isMyTurn, setIsMyTurn] = useState(false);
 
   const isFounder = profile?.vip_plan === "founder";
   const isVip = profile?.vip_plan === "vip";
   const canPlayDivination = isFounder || isVip || (profile?.level ?? 0) >= 10;
+
+  // Realtime Session Sync
+  useEffect(() => {
+    if (!session?.id) return;
+
+    const channel = supabase
+      .channel(`game_session_${session.id}`)
+      .on('postgres_changes', { 
+        event: 'UPDATE', 
+        schema: 'public', 
+        table: 'game_sessions', 
+        filter: `id=eq.${session.id}` 
+      }, (payload) => {
+        const updated = payload.new;
+        setSession(updated);
+        
+        // Update local state based on session data
+        setIsMyTurn(updated.current_turn_id === user?.id);
+        
+        if (updated.player1_id === user?.id) {
+          setPlayerHP(updated.state.player1_hp);
+          setOpponentHP(updated.state.player2_hp);
+        } else {
+          setPlayerHP(updated.state.player2_hp);
+          setOpponentHP(updated.state.player1_hp);
+        }
+
+        if (updated.status === 'finished') {
+          setResult(updated.winner_id === user?.id ? "win" : "lose");
+          setGameState("result");
+          if (updated.winner_id === user?.id) playSpellSound("victory");
+        }
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [session?.id, user?.id]);
+
+  const playSpellSound = (type: "attack" | "defend" | "curse" | "victory") => {
+    const sounds: Record<string, string> = {
+      attack: "https://www.soundjay.com/misc/sounds/magic-chime-01.mp3",
+      defend: "https://www.soundjay.com/communication/sounds/bell-ring-01.mp3",
+      curse: "https://www.soundjay.com/buttons/sounds/button-20.mp3",
+      victory: "https://www.soundjay.com/misc/sounds/magic-wand-01.mp3"
+    };
+    const audio = new Audio(sounds[type]);
+    audio.volume = 0.2;
+    audio.play().catch(() => {});
+  };
+
+  const startMatchmaking = async () => {
+    if (!user) return;
+    setIsSearching(true);
+    toast.info("Procurando oponente no Grande Salão...");
+
+    // 1. Tentar encontrar uma sessão esperando
+    const { data: openSession } = await supabase
+      .from("game_sessions")
+      .select("*")
+      .eq("status", "waiting")
+      .neq("player1_id", user.id)
+      .limit(1)
+      .maybeSingle();
+
+    if (openSession) {
+      // Entrar na sessão
+      const { data: updated, error } = await supabase
+        .from("game_sessions")
+        .update({ 
+          player2_id: user.id, 
+          status: "playing",
+          current_turn_id: openSession.player1_id // Player 1 começa
+        } as never)
+        .eq("id", openSession.id)
+        .select()
+        .single();
+      
+      if (!error && updated) {
+        setSession(updated);
+        setGameState("playing");
+        setIsMyTurn(false);
+        setIsSearching(false);
+        toast.success("Oponente encontrado! O duelo começou.");
+      }
+    } else {
+      // Criar nova sessão
+      const { data: newSession, error } = await supabase
+        .from("game_sessions")
+        .insert({ 
+          player1_id: user.id,
+          status: "waiting",
+          game_type: "duel"
+        } as never)
+        .select()
+        .single();
+      
+      if (!error && newSession) {
+        setSession(newSession);
+        // Aguardar oponente (via realtime)
+        const checkOponent = setInterval(async () => {
+           const { data } = await supabase.from("game_sessions").select("status, player2_id").eq("id", newSession.id).single();
+           if (data?.status === 'playing') {
+              setSession(data);
+              setGameState("playing");
+              setIsMyTurn(true);
+              setIsSearching(false);
+              clearInterval(checkOponent);
+              toast.success("Um bruxo aceitou seu desafio!");
+           }
+        }, 3000);
+      }
+    }
+  };
+
+  const handleOnlineMove = async (move: Move) => {
+    if (!isMyTurn || !session) return;
+    
+    setPlayerMove(move);
+    setIsMyTurn(false); // Pre-emptive turn switch
+    playSpellSound(move === "defend" ? "defend" : move === "curse" ? "curse" : "attack");
+    
+    const { error } = await supabase.rpc("process_game_turn", {
+      _session_id: session.id,
+      _player_id: user?.id,
+      _move: move
+    });
+
+    if (error) {
+      toast.error("Erro ao enviar feitiço.");
+      setIsMyTurn(true);
+    }
+  };
 
   const moves: { id: Move; label: string; icon: any; color: string; strength: string }[] = [
     { id: "spell",  label: "Expelliarmus", icon: Zap,    color: "bg-blue-500",   strength: "Vence Maldição" },
@@ -130,12 +256,17 @@ export default function MagicalGames() {
       <div className="text-center space-y-4 animate-in fade-in slide-in-from-top-10 duration-1000">
         <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-full px-4 py-1.5 mb-2">
           <Swords size={16} className="text-primary" />
-          <span className="text-[10px] font-heading text-primary uppercase tracking-[0.2em] font-bold">Arena de Jogos Mágicos</span>
+          <span className="text-xs font-heading text-primary uppercase tracking-[0.2em] font-bold">Arena de Jogos Mágicos</span>
         </div>
         <h1 className="text-5xl md:text-7xl font-heading text-gold-gradient tracking-tighter">O Grande Salão</h1>
         <p className="text-muted-foreground font-serif italic text-lg max-w-2xl mx-auto">
           "Prove sua habilidade em duelos lendários e jogos de inteligência para ganhar galeões e prestígio."
         </p>
+        <div className="flex justify-center">
+           <Button variant="outline" size="sm" className="rounded-full border-primary/20 text-xs text-primary/60 hover:text-primary" onClick={() => toast.info("COMO JOGAR: No Duelo, escolha um feitiço. Expelliarmus vence Maldição, Protego vence Feitiço, e Sectumsempra vence Defesa. No modo Multiplayer, você aguarda o turno do oponente para reagir!", { duration: 8000 })}>
+             <BookOpen size={14} className="mr-2" /> Como Jogar?
+           </Button>
+        </div>
       </div>
 
       {/* ── GAME SELECTION ── */}
@@ -145,7 +276,7 @@ export default function MagicalGames() {
         <Card className={`glass rounded-[3rem] p-1 border-white/10 overflow-hidden group hover:border-primary/40 transition-all duration-500 shadow-2xl hover:shadow-primary/20 ${gameState === 'divination' ? 'opacity-20 pointer-events-none' : ''}`}>
           <div className="relative h-64 bg-[url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800')] bg-cover bg-center">
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-            <div className="absolute top-6 right-6 bg-green-500/20 text-green-400 border border-green-500/30 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest backdrop-blur-md">GRATUITO</div>
+            <div className="absolute top-6 right-6 bg-green-500/20 text-green-400 border border-green-500/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest backdrop-blur-md">GRATUITO</div>
             <div className="absolute bottom-6 left-8">
                <h3 className="text-3xl font-heading text-white">Duelo de Feitiços</h3>
                <p className="text-xs text-white/60 font-serif italic">Teste seus reflexos mágicos</p>
@@ -159,52 +290,69 @@ export default function MagicalGames() {
             </div>
             
             {(gameState === "menu" || gameState === "divination") ? (
-              <Button onClick={() => setGameState("playing")} variant="magical" className="w-full h-14 rounded-2xl text-lg group-hover:scale-105 transition-transform">
-                DESAFIAR OPONENTE <Swords className="ml-2" />
+              <Button 
+                onClick={startMatchmaking} 
+                disabled={isSearching}
+                variant="magical" 
+                className="w-full h-14 rounded-2xl text-lg group-hover:scale-105 transition-transform"
+              >
+                {isSearching ? (
+                  <>PROCURANDO... <Sparkles className="ml-2 animate-spin-slow" /></>
+                ) : (
+                  <>ARENA MULTIPLAYER <Swords className="ml-2" /></>
+                )}
               </Button>
             ) : (
               <div className="space-y-8 animate-in fade-in duration-500">
                 {/* Health Bars */}
                 <div className="flex justify-between items-center gap-4">
                   <div className="flex-1 space-y-1">
-                    <div className="flex justify-between text-[10px] font-bold text-blue-400"><span>VOCÊ</span> <span>{playerHP}%</span></div>
+                    <div className="flex justify-between text-xs font-bold text-blue-400"><span>VOCÊ</span> <span>{playerHP}%</span></div>
                     <div className="h-2 bg-white/10 rounded-full overflow-hidden"><div className="h-full bg-blue-500 transition-all duration-1000 shadow-[0_0_10px_rgba(59,130,246,0.5)]" style={{ width: `${playerHP}%` }} /></div>
                   </div>
                   <div className="text-xl font-heading text-white/20 italic">VS</div>
                   <div className="flex-1 space-y-1">
-                    <div className="flex justify-between text-[10px] font-bold text-red-400"><span>BRUXO DAS SOMBRAS</span> <span>{opponentHP}%</span></div>
+                    <div className="flex justify-between text-xs font-bold text-red-400"><span>OPONENTE</span> <span>{opponentHP}%</span></div>
                     <div className="h-2 bg-white/10 rounded-full overflow-hidden"><div className="h-full bg-red-500 transition-all duration-1000 shadow-[0_0_10px_rgba(239,68,68,0.5)]" style={{ width: `${opponentHP}%` }} /></div>
                   </div>
                 </div>
 
                 {gameState === "playing" ? (
-                  <div className="grid grid-cols-3 gap-3">
-                    {moves.map(m => (
-                      <button 
-                        key={m.id} 
-                        onClick={() => handlePlay(m.id)}
-                        className="glass bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col items-center gap-2 hover:bg-primary/20 hover:border-primary/40 transition-all group/move active:scale-90"
-                      >
-                        <m.icon size={24} className="text-primary group-hover/move:animate-bounce" />
-                        <span className="text-[8px] font-bold uppercase tracking-tight text-white/80">{m.label}</span>
-                        <span className="text-[6px] text-white/30 uppercase">{m.strength}</span>
-                      </button>
-                    ))}
+                  <div className="space-y-4">
+                    <div className={`text-center py-2 rounded-lg border ${isMyTurn ? "border-primary bg-primary/10 animate-pulse" : "border-white/5 opacity-50"}`}>
+                       <p className="text-xs font-bold uppercase tracking-widest">
+                          {isMyTurn ? "SUA VEZ DE ATACAR!" : "AGUARDANDO OPONENTE..."}
+                       </p>
+                    </div>
+
+                    <div className={`grid grid-cols-3 gap-3 ${!isMyTurn ? "pointer-events-none grayscale opacity-50" : ""}`}>
+                      {moves.map(m => (
+                        <button 
+                          key={m.id} 
+                          onClick={() => handleOnlineMove(m.id)}
+                          className="glass bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col items-center gap-2 hover:bg-primary/20 hover:border-primary/40 transition-all group/move active:scale-90"
+                        >
+                          <m.icon size={24} className="text-primary group-hover/move:animate-bounce" />
+                          <span className="text-xs font-bold uppercase tracking-tight text-white/80">{m.label}</span>
+                          <span className="text-[10px] text-white/30 uppercase">{m.strength}</span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 ) : (
                   <div className="text-center space-y-6">
                     <div className="glass bg-white/5 p-6 rounded-3xl border-2 border-primary/30 animate-pulse-glow">
-                      <p className="text-[10px] uppercase font-bold text-muted-foreground mb-2">Turno encerrado</p>
+                      <p className="text-xs uppercase font-bold text-muted-foreground mb-2">Turno encerrado</p>
                       <div className="flex justify-center items-center gap-10">
                         <div className="flex flex-col items-center">
-                          <span className="text-[8px] mb-2 opacity-50">VOCÊ</span>
+                          <span className="text-xs mb-2 opacity-50">VOCÊ</span>
                           {playerMove && <MagicalIcon icon={moves.find(m => m.id === playerMove)!.icon} size="sm" />}
                         </div>
                         <div className="text-2xl font-heading text-primary">
                           {result === "win" ? "VITÓRIA!" : result === "lose" ? "DERROTA" : "EMPATE"}
                         </div>
                         <div className="flex flex-col items-center">
-                          <span className="text-[8px] mb-2 opacity-50">OPONENTE</span>
+                          <span className="text-xs mb-2 opacity-50">OPONENTE</span>
                           {opponentMove && <MagicalIcon icon={moves.find(m => m.id === opponentMove)!.icon} size="sm" />}
                         </div>
                       </div>
@@ -244,7 +392,7 @@ export default function MagicalGames() {
 
           <div className="relative h-64 bg-[url('https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=800')] bg-cover bg-center">
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-            <div className="absolute top-6 right-6 bg-purple-500/20 text-purple-400 border border-purple-500/30 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest backdrop-blur-md">VIP / LEVEL 10</div>
+            <div className="absolute top-6 right-6 bg-purple-500/20 text-purple-400 border border-purple-500/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest backdrop-blur-md">VIP / LEVEL 10</div>
             <div className="absolute bottom-6 left-8">
                <h3 className="text-3xl font-heading text-white">Cartas do Destino</h3>
                <p className="text-xs text-white/60 font-serif italic">Desvende o véu do amanhã</p>
@@ -306,7 +454,7 @@ export default function MagicalGames() {
            </div>
            <div>
               <h3 className="text-2xl font-heading text-white/40 tracking-tight">Copa de Quadribol</h3>
-              <p className="text-[10px] text-white/20 uppercase tracking-widest font-bold">Módulo em Desenvolvimento</p>
+              <p className="text-xs text-white/20 uppercase tracking-widest font-bold">Módulo em Desenvolvimento</p>
            </div>
            <p className="text-xs text-white/30 font-serif italic">
              "O Professor Binns está preparando as questões mais difíceis de Hogwarts."
