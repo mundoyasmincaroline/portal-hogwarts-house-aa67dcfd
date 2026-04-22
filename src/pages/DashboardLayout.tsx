@@ -61,6 +61,7 @@ const NAV_ITEMS = [
   { icon: <MagicalIcon icon={Shield} size="xs" color="#10b981" />, label: "Casas", path: "/dashboard/houses" },
   { icon: <MagicalIcon icon={Zap} size="xs" color="#a855f7" />, label: "Desafios", path: "/dashboard/challenges" },
   { icon: <MagicalIcon icon={Sparkles} size="xs" color="#d4af37" />, label: "Sagas de Hogwarts", path: "/dashboard/sagas" },
+  { icon: <MagicalIcon icon={Swords} size="xs" color="#ef4444" />, label: "Salão de Jogos", path: "/dashboard/games" },
   { icon: <MagicalIcon icon={Sparkles} size="xs" color="#f472b6" />, label: "Eventos Mágicos", path: "/dashboard/events" },
   { icon: <MagicalIcon icon={GraduationCap} size="xs" color="#3b82f6" />, label: "Aulas", path: "/dashboard/classes" },
   { icon: <MagicalIcon icon={ImageIcon} size="xs" color="#94a3b8" />, label: "Álbum", path: "/dashboard/album" },
