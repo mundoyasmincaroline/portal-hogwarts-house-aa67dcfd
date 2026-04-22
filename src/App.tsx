@@ -63,12 +63,14 @@ const App = () => (
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
             <Route path="/dashboard" element={<DashboardLayout />}>
               <Route index element={<Feed />} />
               <Route path="chats" element={<Chats />} />
               <Route path="chat/:roomId" element={<ChatRoom />} />
               <Route path="cinema" element={<CineHogwarts />} />
-              <Route path="instahogwarts" element={<InstaHogwarts />} />
+              <Route path="instahogwarts" element={<Instahogwarts />} />
               <Route path="album" element={<StickerAlbum />} />
               <Route path="classes" element={<Classes />} />
               <Route path="houses" element={<Houses />} />
@@ -90,8 +92,6 @@ const App = () => (
               <Route path="members" element={<Members />} />
               <Route path="store" element={<GringottsStore />} />
               <Route path="wallet" element={<Wallet />} />
-              <Route path="terms" element={<Terms />} />
-              <Route path="privacy" element={<Privacy />} />
               <Route path="sagas" element={<MagicalSagas />} />
               <Route path="games" element={<MagicalGames />} />
               <Route path="matrix" element={<MatrixPortal />} />

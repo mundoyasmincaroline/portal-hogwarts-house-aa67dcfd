@@ -264,6 +264,26 @@ export default function ChatRoom() {
     
     const content = input;
     
+    // ── RPG Command: /dado ──
+    if (content.startsWith('/dado')) {
+      const parts = content.split(' ');
+      const sides = parseInt(parts[1]) || 20;
+      const roll = Math.floor(Math.random() * sides) + 1;
+      const rollContent = `🎲 *Rolou um dado de ${sides} lados e tirou: ${roll}*`;
+      
+      const { error: rollErr } = await supabase.from("messages").insert({
+        channel_id: channel.id,
+        user_id: user.id,
+        character_id: profile?.active_character_id ?? null,
+        content: rollContent
+      });
+      if (!rollErr) {
+        setInput("");
+        return;
+      }
+    }
+
+    
     // Verificações rigorosas de moderação (Filch)
     const lowerContent = content.toLowerCase();
     const hasBannedWord = bannedWords.some(word => lowerContent.includes(word));

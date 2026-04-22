@@ -362,14 +362,13 @@ export default function MatrixPortal() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="glass bg-[#0F0]/5 border-[#0F0]/20 p-6 rounded-3xl space-y-4">
-               <p className="text-[10px] font-bold uppercase tracking-widest text-[#0F0]">Roadmap do Arquiteto (12H)</p>
+               <p className="text-[10px] font-bold uppercase tracking-widest text-[#0F0]">Comando do Arquiteto (Sprint 48h)</p>
                <div className="space-y-3">
                   {[
-                    { label: "POSTAR UNBOXING 3D (TIKTOK)", done: true },
-                    { label: "LINK NA BIO / STATUS WHATSAPP", done: true },
-                    { label: "INTERAÇÃO MASSIVA NO FEED", done: false },
-                    { label: "POST OFICIAL: ORDEM DE MORPHEUS", done: false },
-                    { label: "CONVERTER PRIMEIRO FUNDADOR VIP", done: false }
+                    { label: "AUDITORIA 'MONSTER QUALITY' 3D", done: true },
+                    { label: "ESTABILIZAÇÃO E REFATORAÇÃO MOBILE", done: true },
+                    { label: "LANÇAMENTO: CAMPANHA DE FUNDADORES", done: false },
+                    { label: "MONITORAMENTO DE CONVERSÃO (META R$ 10K)", done: false }
                   ].map((step, i) => (
                     <div key={i} className={`flex items-center gap-3 p-3 rounded-xl border ${step.done ? "border-[#0F0]/40 bg-[#0F0]/10" : "border-white/5 bg-black/40"} transition-all`}>
                       <div className={`w-4 h-4 rounded border flex items-center justify-center ${step.done ? "bg-[#0F0] border-[#0F0]" : "border-white/20"}`}>
@@ -382,14 +381,13 @@ export default function MatrixPortal() {
             </div>
 
             <div className="glass bg-cyan-500/5 border-cyan-500/20 p-6 rounded-3xl space-y-4">
-               <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400">Missão Yasmin Caroline (Jovem)</p>
+               <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400">Missão Yasmin Caroline (Viral)</p>
                <div className="space-y-3">
                   {[
-                    { label: "REVELAR CARTA DE ACEITAÇÃO IA", done: false },
-                    { label: "TREND 'QUAL MINHA CASA' (REELS)", done: false },
-                    { label: "PEDIR TROCA DE FIGURINHAS STORIES", done: false },
-                    { label: "POV: O UNBOXING DO BAÚ LENDÁRIO", done: false },
-                    { label: "TUTORIAL 'HOGWARTS EM 1 MINUTO'", done: false }
+                    { label: "GERAÇÃO DA CARTA DE ACEITAÇÃO HD", done: true },
+                    { label: "POSTAGEM: O CONVITE (VÍDEO 1)", done: false },
+                    { label: "POSTAGEM: A SELEÇÃO (VÍDEO 2)", done: false },
+                    { label: "INTERAÇÃO E ENGAJAMENTO DE LEADS", done: false }
                   ].map((step, i) => (
                     <div key={i} className={`flex items-center gap-3 p-3 rounded-xl border ${step.done ? "border-cyan-400/40 bg-cyan-400/10" : "border-white/5 bg-black/40"} transition-all`}>
                       <div className={`w-4 h-4 rounded border flex items-center justify-center ${step.done ? "bg-cyan-400 border-cyan-400" : "border-white/20"}`}>
@@ -400,6 +398,7 @@ export default function MatrixPortal() {
                   ))}
                </div>
             </div>
+
           </div>
 
 

@@ -32,6 +32,7 @@ import NotificationBanner from "@/components/NotificationBanner";
 import { useAchievements } from "@/lib/useAchievements";
 import FilchWatcher from "@/components/FilchWatcher";
 import MagicalEventSystem from "@/components/MagicalEventSystem";
+import DopamineTriggers, { LevelUpManager } from "@/components/DopamineTriggers";
 import MagicalPartyOverlay from "@/components/MagicalPartyOverlay";
 import GlobalChallengeWatcher from "@/components/GlobalChallengeWatcher";
 import DailyRewardSystem from "@/components/DailyRewardSystem";
@@ -502,6 +503,9 @@ export default function DashboardLayout() {
           <EngagementBot />
           <FilchWatcher />
           <MagicalEventSystem />
+          <DopamineTriggers />
+          <LevelUpManager xp={profile?.xp || 0} level={profile?.level || 1} />
+
           {/* Magical Party Overlay – show only when active */}
           {false && <MagicalPartyOverlay />}
           <GlobalChallengeWatcher />
@@ -534,6 +538,8 @@ function AmbientSoundController({ currentPath }: { currentPath: string }) {
     else if (currentPath.includes("album") || currentPath.includes("guide")) url = "https://www.soundjay.com/misc/sounds/page-flip-01a.mp3";
     else if (currentPath.includes("store") || currentPath.includes("shop")) url = "https://www.soundjay.com/misc/sounds/coins-spilled-1.mp3";
     else if (currentPath.includes("azkaban") || currentPath.includes("challenges")) url = "https://www.soundjay.com/nature/sounds/wind-cave-1.mp3";
+    else if (currentPath.includes("chat")) url = "https://cdn.pixabay.com/download/audio/2021/08/09/audio_845c47098e.mp3?filename=ambient-night-crickets-and-owls-6058.mp3";
+
     
     if (url) {
       audio.src = url;

@@ -19,6 +19,8 @@ import MagicalEmoji from "@/components/MagicalEmoji";
 import MagicalGaleon from "@/components/MagicalGaleon";
 import WelcomeChestModal from "@/components/WelcomeChestModal";
 import JarvisPresence from "@/components/JarvisPresence";
+import MagicalMemories from "@/components/MagicalMemories";
+
 
 const REACTIONS = ["⚡", "❤️", "🔥", "🦁", "🦅", "🐍", "🦡"];
 
@@ -245,8 +247,10 @@ export default function Feed() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
+      <MagicalMemories />
       <StoriesBar />
       <DynamicGreeting />
+
       
       {showWelcomeChest && (
         <WelcomeChestModal onClose={() => setShowWelcomeChest(false)} />
