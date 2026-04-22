@@ -779,46 +779,61 @@ export default function Profile() {
           </div>
 
           {loadingExtras ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[1,2,3,4].map(i => <div key={i} className="glass h-32 rounded-2xl animate-pulse" />)}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1,2,3,4,5,6].map(i => <div key={i} className="glass h-48 rounded-[2rem] animate-pulse" />)}
             </div>
           ) : userChallenges.length === 0 ? (
-            <div className="glass rounded-[3rem] p-16 text-center border-dashed border-2 border-primary/20 bg-primary/5">
-              <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Trophy size={48} className="text-primary/30" />
+            <div className="glass rounded-[3.5rem] p-20 text-center border-dashed border-2 border-primary/20 bg-primary/5 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.05),transparent_70%)]" />
+              <div className="w-28 h-28 bg-black/40 rounded-full flex items-center justify-center mx-auto mb-8 border border-white/10 shadow-2xl group-hover:scale-110 transition-transform duration-700">
+                <Trophy size={56} className="text-primary/20" />
               </div>
-              <h3 className="font-heading text-xl text-foreground mb-2">O Mural está em branco</h3>
-              <p className="text-muted-foreground text-sm max-w-sm mx-auto italic">Explore o mapa, participe de aulas e vença desafios para preencher sua sala de troféus!</p>
+              <h3 className="font-heading text-2xl text-foreground mb-3 tracking-tight italic">O Mural das Glórias está vazio</h3>
+              <p className="text-muted-foreground text-sm max-w-sm mx-auto font-serif leading-relaxed">
+                "As lendas de Hogwarts não nascem, elas são forjadas no fogo dos desafios. Comece sua jornada agora."
+              </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {userChallenges.map(uc => (
-                <div key={uc.id} className="relative group perspective">
-                    <div className="glass rounded-[2rem] p-6 border border-primary/20 bg-gradient-to-br from-indigo-950/20 to-transparent hover:border-primary/50 transition-all duration-500 hover:-rotate-1 hover:scale-[1.02] overflow-hidden">
-                        {/* Status Check */}
-                        <div className="absolute top-4 right-4 p-1.5 bg-green-500/20 rounded-full text-green-500">
-                            <CheckCircle2 size={14} />
+                <div key={uc.id} className="relative group perspective h-full">
+                    <div className="h-full glass rounded-[2.5rem] p-8 border border-white/5 bg-gradient-to-br from-indigo-950/20 to-transparent hover:border-primary/40 transition-all duration-700 hover:-translate-y-2 shadow-xl hover:shadow-primary/10 overflow-hidden relative">
+                        {/* Status Check - Floating Badge */}
+                        <div className="absolute top-6 right-6 px-3 py-1.5 bg-green-500/20 border border-green-500/30 rounded-full text-green-400 text-[8px] font-bold uppercase tracking-widest flex items-center gap-1.5 shadow-2xl backdrop-blur-md z-20">
+                            <CheckCircle2 size={12} /> CONQUISTADO
                         </div>
                         
-                        {/* Glow effect */}
-                        <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all" />
+                        {/* Golden Aura for big rewards */}
+                        {(uc.challenges?.xp_reward || 0) >= 100 && (
+                            <div className="absolute -top-10 -left-10 w-32 h-32 bg-yellow-400/5 rounded-full blur-3xl group-hover:bg-yellow-400/10 transition-all" />
+                        )}
 
-                        <div className="space-y-4 relative z-10">
-                            <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary border border-primary/10">
-                                <Star size={24} />
+                        <div className="space-y-6 relative z-10 flex flex-col h-full">
+                            <div className="w-14 h-14 bg-black/40 rounded-2xl flex items-center justify-center text-primary border border-white/10 shadow-inner group-hover:rotate-12 transition-transform duration-500">
+                                <Star size={28} className="fill-primary/20" />
                             </div>
-                            <div>
-                                <h4 className="font-heading text-lg text-foreground mb-1 line-clamp-1">{uc.challenges?.title || "Desafio Místico"}</h4>
-                                <p className="text-xs text-muted-foreground line-clamp-2 h-8 leading-relaxed italic">
+                            <div className="flex-1">
+                                <h4 className="font-heading text-xl text-foreground mb-2 line-clamp-1 group-hover:text-primary transition-colors">{uc.challenges?.title || "Desafio Místico"}</h4>
+                                <p className="text-xs text-muted-foreground font-serif italic leading-relaxed opacity-60 group-hover:opacity-100 transition-opacity">
                                     "{uc.challenges?.description}"
                                 </p>
                             </div>
-                            <div className="flex items-center justify-between pt-2 border-t border-white/5">
-                                <Badge variant="outline" className="text-[9px] px-2 py-0.5 border-primary/30 text-primary">+{uc.challenges?.xp_reward} XP</Badge>
-                                <span className="text-[10px] text-muted-foreground font-mono">
+                            <div className="flex items-center justify-between pt-5 border-t border-white/5">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                                    <span className="text-[10px] font-heading text-primary uppercase tracking-[0.2em] font-bold">+{uc.challenges?.xp_reward} XP</span>
+                                </div>
+                                <span className="text-[10px] text-white/20 font-mono italic">
                                     {new Date(uc.completed_at || uc.created_at).toLocaleDateString("pt-BR")}
                                 </span>
                             </div>
+                        </div>
+                    </div>
+                </div>
+              ))}
+            </div>
+          )}
+
                         </div>
                     </div>
                 </div>
@@ -855,63 +870,82 @@ export default function Profile() {
       ) : activeTab === "inventory" ? (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="font-heading text-xl text-foreground">🎒 Itens do Inventário</h2>
-            <span className="text-xs text-muted-foreground">{userItems.length} Itens Adquiridos</span>
-          </div>
-
-          {loadingExtras ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[1,2,3,4].map(i => <div key={i} className="glass aspect-square rounded-2xl animate-pulse" />)}
+            <h2 className="font-heading text-xl text-foreground">🎒          {loadingExtras ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {[1,2,3,4,5,6,7,8].map(i => <div key={i} className="glass aspect-[3/4] rounded-[2rem] animate-pulse" />)}
             </div>
           ) : userItems.length === 0 ? (
-            <div className="glass rounded-2xl p-10 text-center border-dashed border-2 border-border/50">
-              <ShoppingBag size={48} className="mx-auto text-muted-foreground opacity-20 mb-4" />
-              <p className="text-muted-foreground text-sm italic">O baú está vazio. Visite Gringotts para adquirir equipamentos!</p>
+            <div className="glass rounded-[3.5rem] p-24 text-center border-dashed border-2 border-white/10 bg-white/5 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02),transparent_70%)]" />
+              <div className="w-28 h-28 bg-black/40 rounded-full flex items-center justify-center mx-auto mb-8 border border-white/10 shadow-2xl group-hover:rotate-6 transition-transform duration-700">
+                <ShoppingBag size={56} className="text-white/10" />
+              </div>
+              <h3 className="font-heading text-2xl text-foreground mb-3 italic">O Baú de Relíquias está Trancado</h3>
+              <p className="text-muted-foreground text-sm max-w-sm mx-auto font-serif leading-relaxed opacity-60">
+                "Equipamentos lendários e artefatos de poder esperam por você em Gringotts. Não ande desarmado pelo castelo."
+              </p>
+              <Button variant="ghost" className="mt-8 text-primary uppercase tracking-[0.2em] font-bold text-[10px] hover:underline" onClick={() => navigate("/dashboard/shop")}>
+                Visitar Gringotts Store →
+              </Button>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
               {userItems.map(ui => {
                 const item = ui.store_items;
                 if (!item) return null;
                 const isEquipped = (ui as any).is_equipped;
                 const stats = (item as any).stats;
+                const rarityColor = item.rarity === 'legendary' ? 'border-yellow-400/50 shadow-yellow-400/20' : 
+                                  item.rarity === 'epic' ? 'border-purple-500/50 shadow-purple-500/20' : 
+                                  'border-white/10 shadow-white/5';
 
                 return (
-                  <div key={ui.id} className={`group glass rounded-2xl overflow-hidden border transition-all hover:-translate-y-1 ${isEquipped ? 'border-primary shadow-[0_0_15px_hsl(var(--primary)/0.3)]' : 'border-border/50 hover:border-primary/40'}`}>
-                    <div className="relative aspect-square">
+                  <div key={ui.id} className={`group glass rounded-[2rem] overflow-hidden border transition-all duration-700 hover:-translate-y-3 flex flex-col h-full ${
+                      isEquipped ? 'border-primary ring-2 ring-primary/20 shadow-2xl' : rarityColor
+                  }`}>
+                    <div className="relative aspect-[4/5] overflow-hidden">
                       <SafeImage 
                         src={item.image_url} 
                         alt={item.name} 
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-1000"
                         fallbackEmoji="📦"
                       />
                       {isEquipped && (
-                          <div className="absolute top-2 right-2 bg-primary text-primary-foreground text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest z-10 animate-pulse">
-                              Equipado
+                          <div className="absolute top-4 left-4 bg-primary text-black text-[8px] font-bold px-3 py-1 rounded-full uppercase tracking-widest z-10 shadow-2xl animate-pulse">
+                              EQUIPADO
                           </div>
                       )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-end p-3 gap-2">
+                      
+                      {/* Rarity Flare */}
+                      {item.rarity === 'legendary' && (
+                          <div className="absolute inset-0 bg-gradient-to-t from-yellow-500/20 to-transparent pointer-events-none" />
+                      )}
+
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col items-center justify-end p-5 gap-4 backdrop-blur-[2px]">
                          {stats && (stats.atk > 0 || stats.def > 0 || stats.mana > 0 || stats.hp > 0) && (
-                             <div className="grid grid-cols-2 gap-1 w-full">
-                                 {stats.atk > 0 && <div className="text-[8px] font-bold text-red-400 bg-red-400/20 px-1.5 py-0.5 rounded border border-red-400/30">⚔️ +{stats.atk}</div>}
-                                 {stats.def > 0 && <div className="text-[8px] font-bold text-blue-400 bg-blue-400/20 px-1.5 py-0.5 rounded border border-blue-400/30">🛡️ +{stats.def}</div>}
-                                 {stats.mana > 0 && <div className="text-[8px] font-bold text-indigo-400 bg-indigo-400/20 px-1.5 py-0.5 rounded border border-indigo-400/30">✨ +{stats.mana}</div>}
-                                 {stats.hp > 0 && <div className="text-[8px] font-bold text-green-400 bg-green-400/20 px-1.5 py-0.5 rounded border border-green-400/30">❤️ +{stats.hp}</div>}
+                             <div className="grid grid-cols-2 gap-2 w-full">
+                                 {stats.atk > 0 && <div className="text-[9px] font-bold text-red-400 bg-black/60 px-2 py-1 rounded-lg border border-red-400/30 text-center">⚔️ +{stats.atk}</div>}
+                                 {stats.def > 0 && <div className="text-[9px] font-bold text-blue-400 bg-black/60 px-2 py-1 rounded-lg border border-blue-400/30 text-center">🛡️ +{stats.def}</div>}
+                                 {stats.mana > 0 && <div className="text-[9px] font-bold text-indigo-400 bg-black/60 px-2 py-1 rounded-lg border border-indigo-400/30 text-center">✨ +{stats.mana}</div>}
+                                 {stats.hp > 0 && <div className="text-[9px] font-bold text-green-400 bg-black/60 px-2 py-1 rounded-lg border border-green-400/30 text-center">❤️ +{stats.hp}</div>}
                              </div>
-                         )}
+                          )}
                          <Button 
                             size="sm" 
                             variant={isEquipped ? "outline" : "magical"} 
-                            className="w-full h-7 text-[10px] rounded-lg"
+                            className="w-full h-10 text-[10px] rounded-xl shadow-2xl font-heading"
                             onClick={() => toggleEquip(ui.id, isEquipped)}
                         >
-                            {isEquipped ? "Desequipar" : "Equipar"}
+                            {isEquipped ? "DESEQUIPAR" : "EQUIPAR ITEM"}
                         </Button>
                       </div>
                     </div>
-                    <div className="p-3 text-center">
-                      <h4 className="font-heading text-xs text-foreground truncate">{item.name}</h4>
-                      <p className="text-[10px] text-primary uppercase tracking-tighter mt-1">{item.category}</p>
+                    <div className="p-5 text-center flex-1 flex flex-col justify-between">
+                      <div>
+                        <h4 className="font-heading text-sm text-white mb-1 group-hover:text-primary transition-colors">{item.name}</h4>
+                        <p className="text-[9px] text-muted-foreground uppercase tracking-widest font-bold opacity-40">{item.category}</p>
+                      </div>
+                      <div className="mt-4 h-1 w-12 bg-white/5 mx-auto rounded-full group-hover:w-20 group-hover:bg-primary/50 transition-all duration-700" />
                     </div>
                   </div>
                 );
