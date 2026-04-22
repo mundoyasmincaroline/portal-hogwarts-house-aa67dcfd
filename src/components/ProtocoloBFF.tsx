@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useAuth } from "@/lib/auth";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Flame, Sparkles } from "lucide-react";
@@ -10,6 +11,7 @@ import { Flame, Sparkles } from "lucide-react";
  */
 export default function ProtocoloBFF() {
   const { user, profile } = useAuth();
+  const navigate = useNavigate();
 
   const isYasmin = (profile?.username?.toLowerCase() || '').includes('yasmin') || profile?.username === 'morpheus';
 

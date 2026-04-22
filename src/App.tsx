@@ -65,14 +65,13 @@ function AuthInit({ children }: { children: React.ReactNode }) {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <AuthInit>
-        <MagicalErrorBoundary>
+      <MagicalErrorBoundary>
+        <AuthInit>
+          <Toaster />
+          <Sonner />
           <BrowserRouter>
             <MagicalMeta />
             <Routes>
-              {/* ... routes ... */}
               <Route path="/" element={<Landing />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
@@ -121,8 +120,8 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
-        </MagicalErrorBoundary>
-      </AuthInit>
+        </AuthInit>
+      </MagicalErrorBoundary>
     </TooltipProvider>
   </QueryClientProvider>
 );
