@@ -70,7 +70,7 @@ class ErrorBoundary extends React.Component {
           `}</style>
           {/* Secret tag for admins */}
           <div style={{ position: "fixed", bottom: 10, right: 10, fontSize: "8px", opacity: 0.3, color: "#444" }}>
-            ERR_MAGICAL_INTERFERENCE
+            ERR_MAGICAL_INTERFERENCE: {(this.state.error as any)?.message || "Unknown"}
           </div>
         </div>
       );

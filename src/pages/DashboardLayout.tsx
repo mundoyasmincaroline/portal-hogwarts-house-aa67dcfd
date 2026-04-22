@@ -169,7 +169,8 @@ export default function DashboardLayout() {
       supabase.rpc("award_galeons", { _user_id: user.id, _amount: galeonsBonus, _reason: "daily_login" }).then(() => {});
       
       const streakMsg = currentStreak > 1 ? ` 🔥 ${currentStreak} dias seguidos!` : "";
-      toast.success(`☀️ Bom dia, ${profile.full_name?.split(" ")[0]}! +${xpBonus} XP pela sua presença diária!${streakMsg}`, { duration: 4000 });
+      const firstName = (profile.full_name || profile.username || "Bruxo(a)").split(" ")[0];
+      toast.success(`☀️ Bom dia, ${firstName}! +${xpBonus} XP pela sua presença diária!${streakMsg}`, { duration: 4000 });
       
       // Check level-up: refetch profile after xp
       setTimeout(async () => {
