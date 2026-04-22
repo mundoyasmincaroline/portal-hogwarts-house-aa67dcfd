@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { X, Search, ChevronLeft } from "lucide-react";
+import { X, Search, ChevronLeft, Sparkles } from "lucide-react";
 import MagicalParticles from "@/components/MagicalParticles";
 
 interface Props { onComplete: () => void; onCancel?: () => void; canCancel?: boolean; }
