@@ -157,3 +157,39 @@
 .cinematic-desaturate {
   filter: grayscale(0.2) contrast(1.1) brightness(0.9);
 }
+
+/* Monster Quality - Global Inputs & Buttons */
+input, textarea, select {
+  @apply bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white transition-all duration-300 backdrop-blur-md outline-none;
+}
+
+input:focus, textarea:focus, select:focus {
+  @apply border-primary/50 bg-black/60 shadow-[0_0_20px_rgba(212,175,55,0.2)];
+  transform: translateY(-1px);
+}
+
+input::placeholder, textarea::placeholder {
+  @apply text-white/20 italic text-xs tracking-widest;
+}
+
+/* Glass Plaque Buttons - Monster Quality */
+.glass-plaque {
+  @apply relative overflow-hidden bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl transition-all duration-500 hover:bg-black/60 hover:border-primary/40 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)];
+}
+
+.glass-plaque::after {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full transition-transform duration-1000;
+}
+
+.glass-plaque:hover::after {
+  @apply translate-x-full;
+}
+
+/* Scrollbar Monster Quality */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { 
+  background: linear-gradient(to bottom, transparent, hsl(43 65% 54% / 0.3), transparent); 
+  border-radius: 10px; 
+}
