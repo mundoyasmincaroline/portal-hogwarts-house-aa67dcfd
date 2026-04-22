@@ -90,10 +90,13 @@ export default function MagicalParticles({ color }: MagicalParticlesProps) {
           ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
           
           if (color) {
-            ctx.fillStyle = color.replace(')', `, ${opacity})`).replace('rgb', 'rgba').replace('hsl', 'hsla');
-            // Se for hexadecimal ou nome, apenas aplica a opacidade global se necessário ou usa direto
-            if (color.startsWith('#')) ctx.fillStyle = color + Math.floor(opacity * 255).toString(16).padStart(2, '0');
-            else ctx.fillStyle = color;
+            let finalColor = color;
+            if (color.includes('(')) {
+              finalColor = color.replace(')', `, ${opacity})`).replace('rgb', 'rgba').replace('hsl', 'hsla');
+            } else if (color.startsWith('#')) {
+              finalColor = color + Math.floor(opacity * 255).toString(16).padStart(2, '0');
+            }
+            ctx.fillStyle = finalColor;
           } else if (theme === "snow") {
             ctx.fillStyle = `hsla(0, 0%, 100%, ${opacity})`;
           } else if (theme === "leaves") {
