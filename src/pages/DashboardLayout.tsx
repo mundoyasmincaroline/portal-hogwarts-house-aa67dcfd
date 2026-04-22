@@ -91,11 +91,11 @@ export default function DashboardLayout() {
       }
 
       return () => { 
-        supabase.removeChannel(ch); 
+        if (ch) supabase.removeChannel(ch); 
         if (jarvisChannel) supabase.removeChannel(jarvisChannel);
       };
     }
-  }, [user, profile]);
+  }, [user?.id]);
 
   async function countUnread() {
     if (!user) return;

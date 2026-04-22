@@ -43,7 +43,7 @@ export default function Notifications() {
     return () => {
       supabase.removeChannel(sub);
     };
-  }, [user]);
+  }, [user?.id]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
