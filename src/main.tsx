@@ -5,7 +5,7 @@ import "./index.css";
 
 // Protocolo 10 Passos à Frente: Version Sentinel
 // Incrementando a versão para forçar limpeza de cache em todos os dispositivos móveis
-const PORTAL_VERSION = "8.0.0-OMNIPOTENCE-ZION"; 
+const PORTAL_VERSION = "8.0.1-ZION-ULTIMATE"; 
 const storedVersion = localStorage.getItem("portal_version");
 
 if (storedVersion !== PORTAL_VERSION) {
