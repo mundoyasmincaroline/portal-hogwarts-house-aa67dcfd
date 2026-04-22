@@ -280,6 +280,17 @@ export default function GringottsStore() {
     if (!user || !profile) return toast.error("Você precisa estar logado.");
     const bal = profile?.galeons ?? 0;
     if (bal < item.price_galeons) return toast.error(`Galeões insuficientes! Você tem ${bal} Galeões.`);
+    
+    const isElite = item.price_galeons >= 1000;
+    const isVerified = (profile as any).is_verified;
+
+    if (isElite && !isVerified) {
+      toast.error("ITEM DE ELITE: Este item requer Verificação de Identidade (Selo Azul) para ser adquirido.", {
+        description: "Vá ao seu perfil para solicitar a verificação."
+      });
+      return;
+    }
+
     setBuying(item.id);
     try {
       // Bypass FK para itens 3D injetados localmente
@@ -674,8 +685,51 @@ export default function GringottsStore() {
             </h2>
             <p className="text-muted-foreground text-lg font-serif italic">"Onde cada moeda conta uma história e cada baú guarda uma fortuna."</p>
           </div>
+          {/* Featured Items - Cinematic Horizontal Scroll */}
+        <div className="mb-12">
+          <div className="flex items-center justify-between mb-6 px-2">
+            <h2 className="text-xl font-heading text-yellow-500 flex items-center gap-2">
+              <Sparkles size={20} className="animate-pulse" /> DESTAQUES DE GRINGOTTS
+            </h2>
+            <div className="h-px flex-1 mx-6 bg-gradient-to-r from-yellow-500/30 to-transparent" />
+          </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
+          <div className="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-hide">
+            {items.filter(i => i.is_featured).map((item) => (
+              <div 
+                key={item.id}
+                className="shrink-0 w-[300px] snap-center glass bg-gradient-to-br from-yellow-900/20 to-black border-yellow-500/30 rounded-3xl p-6 relative group hover:border-yellow-400 transition-all"
+              >
+                <div className="aspect-[4/5] rounded-2xl overflow-hidden mb-4 relative">
+                  <img src={item.image_url} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={item.name} />
+                  <div className="absolute top-3 right-3">
+                    <span className="bg-yellow-500 text-black text-[9px] font-bold px-3 py-1 rounded-full shadow-lg">DESTAQUE</span>
+                  </div>
+                </div>
+                <h3 className="font-heading text-lg text-white mb-1">{item.name}</h3>
+                <p className="text-[10px] text-muted-foreground line-clamp-2 mb-4 italic leading-relaxed h-10">{item.description}</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <MagicalGaleon size="xs" />
+                    <span className="font-heading text-yellow-400 text-lg">{item.price_galeons}</span>
+                  </div>
+                  <Button 
+                    size="sm" 
+                    variant="magical" 
+                    className="h-10 px-6 rounded-xl font-bold shadow-[0_0_20px_rgba(234,179,8,0.2)]"
+                    onClick={() => handleBuyItem(item)}
+                    disabled={owned.includes(item.id)}
+                  >
+                    {owned.includes(item.id) ? "ADQUIRIDO" : "COMPRAR"}
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Categories Section */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4 mb-12">
             {GALEON_PACKAGES.map((pkg, i) => (
               <div key={pkg.id}
                 className={`group glass rounded-[2.5rem] p-1 border-2 ${pkg.border} bg-gradient-to-br ${pkg.color} relative transition-all duration-700 hover:-translate-y-4 ${pkg.glow} flex flex-col shadow-2xl`}>

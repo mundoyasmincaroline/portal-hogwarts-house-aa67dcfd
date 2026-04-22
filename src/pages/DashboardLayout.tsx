@@ -49,6 +49,7 @@ import FilchShadow from "@/components/FilchShadow";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import EmmaPresence from "@/components/EmmaPresence";
 import CarolPresence from "@/components/CarolPresence";
+import ThottyPresence from "@/components/ThottyPresence";
 
 
 const NAV_ITEMS = [
@@ -448,7 +449,10 @@ export default function DashboardLayout() {
                 <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-card ${isUserOnline(profile) ? "bg-green-500" : "bg-muted-foreground"}`} title={isUserOnline(profile) ? "Online" : "Offline"} />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-[13px] leading-tight font-heading truncate text-foreground group-hover:text-primary transition-colors" title={profile.full_name}>{profile.full_name}</p>
+                <div className="flex items-center gap-1">
+                  <p className="text-[13px] leading-tight font-heading truncate text-foreground group-hover:text-primary transition-colors" title={profile.full_name}>{profile.full_name}</p>
+                  {(profile as any).is_verified && <div className="w-3 h-3 bg-blue-500 rounded-full flex items-center justify-center shrink-0 shadow-[0_0_5px_rgba(59,130,246,0.5)]"><Check size={8} className="text-white" strokeWidth={4} /></div>}
+                </div>
                 <p className="text-[10px] leading-tight text-muted-foreground truncate">{house.name}</p>
               </div>
             </Link>
@@ -528,6 +532,8 @@ export default function DashboardLayout() {
           <FilchShadow />
       <PWAInstallPrompt />
       <EmmaPresence />
+      <CarolPresence />
+      <ThottyPresence />
         </div>
       </div>
     </main>

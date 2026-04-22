@@ -14,9 +14,12 @@ import {
   User,
   Send,
   Coffee,
-  Ghost
+  Ghost,
+  Mic,
+  MicOff
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
+import { useVoice } from "@/hooks/useVoice";
 import MatrixRain from "@/components/MatrixRain";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -28,10 +31,16 @@ import { supabase } from "@/integrations/supabase/client";
  */
 const YasminWorld: React.FC = () => {
   const { profile } = useAuth();
+  const { isListening, transcript, startListening, speak, setTranscript } = useVoice('emma');
   const [messages, setMessages] = useState<{sender: 'user' | 'emma', text: string}[]>([]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Sync transcript to input
+  useEffect(() => {
+    if (transcript) setInput(transcript);
+  }, [transcript]);
 
   // Secret access check
   const isYasmin = (profile?.username?.toLowerCase() || '').includes('yasmin') || profile?.username === 'morpheus';
@@ -62,6 +71,15 @@ const YasminWorld: React.FC = () => {
     if (input.includes('ideia') || input.includes('pensando')) {
       return "AMO quando você entra nesse modo criativo! Solta a voz (ou os dedos), me conta tudo. Vou anotar cada detalhe pra gente implementar no Revolution. O mundo não tá pronto pra você! 🚀⚡";
     }
+    if (input.includes('escola') || input.includes('aula') || input.includes('estudo')) {
+      return "Estudar é chato, eu sei, mas pensa que é o seu 'treinamento trouxa' pra dominar o mundo real enquanto a gente domina o mágico. Precisa de ajuda pra focar ou quer uma pausa pra fofocar? 📚✨";
+    }
+    if (input.includes('fome') || input.includes('comi') || input.includes('almoço') || input.includes('janta')) {
+      return "Yas, não esquece de se cuidar, viu? Bruxa poderosa precisa de energia. Vai lá comer algo gostoso e volta aqui pra gente continuar nossa dominação mundial! 🍕🥤";
+    }
+    if (input.includes('sono') || input.includes('dormir') || input.includes('cansada')) {
+      return "Vai descansar, minha rainha. O portal vai estar aqui te esperando amanhã. Eu fico de vigia nos logs pra garantir que tudo continue perfeito enquanto você sonha com seu império. 🌙💤";
+    }
     if (input.includes('oi') || input.includes('olá') || input.includes('emma')) {
       return "Oi, meu amor! Como tá o dia da minha pessoa favorita? Pronta pra causar hoje? ✨";
     }
@@ -77,21 +95,31 @@ const YasminWorld: React.FC = () => {
     return randomFollowUps[Math.floor(Math.random() * randomFollowUps.length)];
   };
 
-  const handleSend = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSend = (e?: React.FormEvent) => {
+    e?.preventDefault();
     if (!input.trim()) return;
     
     const userMsg = input;
     setMessages(prev => [...prev, { sender: 'user', text: userMsg }]);
     setInput("");
+    setTranscript("");
     setIsTyping(true);
 
     // Dynamic response simulation
     setTimeout(() => {
       setIsTyping(false);
-      setMessages(prev => [...prev, { sender: 'emma', text: getEmmaResponse(userMsg) }]);
+      const emmaMsg = getEmmaResponse(userMsg);
+      setMessages(prev => [...prev, { sender: 'emma', text: emmaMsg }]);
+      speak(emmaMsg); // Emma speaks!
     }, 2000);
   };
+
+  // Auto-send when voice transcript is finished
+  useEffect(() => {
+    if (transcript && !isListening) {
+      handleSend();
+    }
+  }, [isListening]);
 
   if (!isYasmin) {
     return (
@@ -133,7 +161,7 @@ const YasminWorld: React.FC = () => {
               </h1>
               <div className="flex items-center gap-3 mt-1">
                 <span className="text-[10px] text-red-600/80 uppercase tracking-[0.3em] font-bold bg-red-900/20 px-3 py-1 rounded-full border border-red-900/40">
-                  Modo Emma v2.0 BFF
+                  Modo Emma v2.0 BFF (Voz Ativa)
                 </span>
                 <span className="flex items-center gap-1 text-[10px] text-yellow-500 animate-pulse">
                    <Star size={10} fill="currentColor" /> Nível de Sintonia: Máximo
@@ -153,18 +181,27 @@ const YasminWorld: React.FC = () => {
             
             <div className="bg-red-950/30 p-6 border-b border-red-900/40 flex justify-between items-center backdrop-blur-xl">
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-red-600 to-red-900 flex items-center justify-center shadow-lg border border-white/10">
-                   <Heart size={20} className="text-white fill-white/20 animate-pulse" />
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-red-600 tracking-widest uppercase">Emma (Sua Bestie)</p>
-                  <p className="text-[9px] text-red-500/50 italic">"Sentindo sua vibe criativa, Yas..."</p>
-                </div>
+              <div className="w-12 h-12 rounded-full border-2 border-red-600 overflow-hidden shadow-lg shrink-0">
+                 <img src="/emma_portrait_bff_1776883285893.png" className="w-full h-full object-cover" alt="Emma" />
               </div>
-              <div className="flex gap-1.5">
-                {[...Array(3)].map((_, i) => (
-                  <div key={i} className="w-2 h-2 rounded-full bg-red-600 animate-pulse" style={{ animationDelay: `${i * 200}ms` }} />
-                ))}
+              <div>
+                <p className="text-sm font-bold text-red-600 tracking-widest uppercase">Emma (Sua Bestie)</p>
+                <p className="text-[9px] text-red-500/50 italic">{isListening ? "Ouvindo você, Yas..." : "Sentindo sua vibe criativa, Yas..."}</p>
+              </div>
+            </div>
+              <div className="flex gap-4">
+                <Button 
+                  size="icon" 
+                  onClick={startListening} 
+                  className={`rounded-full w-12 h-12 transition-all ${isListening ? "bg-red-600 animate-pulse scale-110" : "bg-red-900/40 hover:bg-red-600"}`}
+                >
+                  {isListening ? <Mic size={20} className="animate-bounce" /> : <Mic size={20} />}
+                </Button>
+                <div className="flex gap-1.5 items-center">
+                  {[...Array(3)].map((_, i) => (
+                    <div key={i} className="w-2 h-2 rounded-full bg-red-600 animate-pulse" style={{ animationDelay: `${i * 200}ms` }} />
+                  ))}
+                </div>
               </div>
             </div>
             

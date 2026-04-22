@@ -38,9 +38,11 @@ import {
 } from "recharts";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { useVoice } from "@/hooks/useVoice";
 import MatrixRain from "@/components/MatrixRain";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { Mic, MicOff } from "lucide-react";
 
 const mockData = [
   { name: "00:00", sales: 400, online: 120 },
@@ -59,7 +61,20 @@ const revenueData = [
 
 export default function MatrixPortal() {
   const { user, profile } = useAuth();
+  const { isListening, transcript, startListening, speak, setTranscript } = useVoice('jarvis');
   const [stats, setStats] = useState({ online: 0, sales_24h: 0, total_users: 0 });
+
+  // Sync transcript to command
+  useEffect(() => {
+    if (transcript) setCommand(transcript);
+  }, [transcript]);
+
+  // Handle voice auto-send
+  useEffect(() => {
+    if (transcript && !isListening) {
+      handleCommand({ preventDefault: () => {} } as any);
+    }
+  }, [isListening]);
 
   if (user?.email !== 'paulormorpheus21@gmail.com') {
     return (
@@ -182,15 +197,23 @@ export default function MatrixPortal() {
     setTerminalText(prev => [...prev, `> ${command.toUpperCase()}`]);
     
     if (command.toLowerCase() === "help") {
-      setTerminalText(prev => [...prev, "> AVAILABLE COMMANDS: STATS, GHOST_ON, GHOST_OFF, FLUSH_SESSIONS, REBOOT"]);
-    } else if (command.toLowerCase() === "ghost_on") {
+      const resp = "Comandos disponíveis: status, modo fantasma ativado, modo fantasma desativado, limpar sessões, reiniciar sistema.";
+      setTerminalText(prev => [...prev, `> ${resp.toUpperCase()}`]);
+      speak(resp);
+    } else if (command.toLowerCase().includes("fantasma") && command.toLowerCase().includes("ativado")) {
       setIsGhost(true);
-      setTerminalText(prev => [...prev, "> GHOST MODE: ENABLED. YOU ARE INVISIBLE."]);
-    } else if (command.toLowerCase() === "ghost_off") {
+      const resp = "Modo Fantasma Ativado. Você está invisível no sistema.";
+      setTerminalText(prev => [...prev, `> ${resp.toUpperCase()}`]);
+      speak(resp);
+    } else if (command.toLowerCase().includes("fantasma") && command.toLowerCase().includes("desativado")) {
       setIsGhost(false);
-      setTerminalText(prev => [...prev, "> GHOST MODE: DISABLED. YOU ARE NOW VISIBLE."]);
+      const resp = "Modo Fantasma Desativado. Você agora está visível.";
+      setTerminalText(prev => [...prev, `> ${resp.toUpperCase()}`]);
+      speak(resp);
     } else {
-      setTerminalText(prev => [...prev, `> COMMAND '${command}' EXECUTED SUCCESSFULLY.`]);
+      const resp = `Comando ${command} executado com sucesso.`;
+      setTerminalText(prev => [...prev, `> ${resp.toUpperCase()}`]);
+      speak(resp);
     }
     
     setCommand("");

@@ -521,6 +521,11 @@ export default function Profile() {
           <>
             <h1 className="font-heading text-2xl text-foreground flex items-center justify-center gap-2 flex-wrap">
               {profile.full_name}
+              {(profile as any).is_verified && (
+                <div className={`w-5 h-5 rounded-full flex items-center justify-center shadow-lg ${user?.email === 'paulormorpheus21@gmail.com' ? 'bg-yellow-500 shadow-yellow-500/50' : 'bg-blue-500 shadow-blue-500/50'}`}>
+                  <Check size={12} className="text-white" strokeWidth={4} />
+                </div>
+              )}
               <MedalBadge xp={profile.xp} />
               {/* Badge VIP */}
               {profile.vip_plan === "founder" && (
@@ -537,6 +542,11 @@ export default function Profile() {
                   [ THE_ARCHITECT ]
                 </span>
               )}
+              {user?.email === 'paulormorpheus21@gmail.com' && (
+                <span className="text-[10px] font-heading px-2 py-0.5 rounded-full bg-cyan-950/30 text-cyan-400 border border-cyan-500/40 uppercase tracking-widest animate-pulse">
+                   Monster Elite 🕶️
+                </span>
+              )}
             </h1>
             <p className="text-muted-foreground text-sm">@{profile.username}</p>
             <p className="text-sm text-muted-foreground mt-3 font-serif italic">{profile.bio || "Sem bio ainda..."}</p>
@@ -549,7 +559,7 @@ export default function Profile() {
               </div>
             )}
             
-            <div className="mt-4 flex justify-center gap-2">
+            <div className="mt-4 flex flex-wrap justify-center gap-2">
               {isMe ? (
                 <>
                   <Button variant="magical" size="sm" className="font-heading text-xs" onClick={startEdit}>
@@ -558,6 +568,34 @@ export default function Profile() {
                   {isAdmin && (
                     <Button variant="outline" size="sm" className="font-heading text-xs text-primary border-primary hover:bg-primary/10" onClick={() => setAdminEditModal(true)}>
                       🪄 Edição Suprema (Admin)
+                    </Button>
+                  )}
+                  {!(profile as any).is_verified && (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="font-heading text-xs border-blue-500/40 text-blue-400 hover:bg-blue-500/10"
+                      onClick={async () => {
+                        const currentGaleons = (profile as any).galeons || 0;
+                        if (currentGaleons < 300) {
+                          toast.error("Galeões insuficientes! A verificação custa 300 Galeões.");
+                          return;
+                        }
+                        
+                        const confirm = window.confirm("Deseja verificar sua identidade por 300 Galeões? Isso lhe dará o Selo Azul de Autenticidade.");
+                        if (confirm) {
+                          const { error } = await supabase.rpc('deduct_galeons', { _user_id: user!.id, _amount: 300, _reason: 'identity_verification' });
+                          if (error) {
+                             toast.error("Erro ao processar pagamento.");
+                          } else {
+                             await supabase.from('profiles').update({ is_verified: true } as never).eq('user_id', user!.id);
+                             toast.success("IDENTIDADE VERIFICADA! O Selo Azul foi adicionado ao seu perfil. ✨");
+                             window.location.reload();
+                          }
+                        }
+                      }}
+                    >
+                      🛡️ Verificar Identidade (300 🪙)
                     </Button>
                   )}
                 </>
