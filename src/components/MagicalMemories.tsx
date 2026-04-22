@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Heart, Sparkles } from "lucide-react";
+
 
 const MEMORIES = [
   {
@@ -32,15 +32,11 @@ export default function MagicalMemories() {
 
   return (
     <div className="glass rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-black/80 to-purple-900/20 overflow-hidden relative group shadow-2xl">
-      <AnimatePresence mode="wait">
-        <motion.div 
+        <div 
           key={memory.id}
-          initial={{ opacity: 0, scale: 1.1 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.9 }}
-          transition={{ duration: 2 }}
-          className="relative aspect-[16/9] w-full"
+          className="relative aspect-[16/9] w-full animate-fade-in"
         >
+
           <img src={memory.image} alt={memory.context} className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-[5s]" />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
           
@@ -56,8 +52,7 @@ export default function MagicalMemories() {
                <span className="text-[9px] bg-white/10 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-white/40 uppercase tracking-[0.2em]">Memória Eterna</span>
              </div>
           </div>
-        </motion.div>
-      </AnimatePresence>
+        </div>
       
       {/* Interactive Sparkle Layer */}
       <div className="absolute inset-0 pointer-events-none">

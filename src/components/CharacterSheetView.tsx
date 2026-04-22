@@ -8,8 +8,10 @@ import { Upload, Link as LinkIcon, Edit2, Save, X } from "lucide-react";
 
 interface Props {
   userId: string;
-  isOwner?: boolean; // true = o próprio membro vendo sua ficha
+  isOwner?: boolean;
+  userItems?: any[]; // Passado do Profile.tsx
 }
+
 
 const HOUSE_LABELS: Record<string, string> = {
   gryffindor: "🦁 Gryffindor",
@@ -37,7 +39,8 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-export default function CharacterSheetView({ userId, isOwner }: Props) {
+export default function CharacterSheetView({ userId, isOwner, userItems = [] }: Props) {
+
   const [characters, setCharacters] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeChar, setActiveChar] = useState(0);
@@ -297,8 +300,39 @@ export default function CharacterSheetView({ userId, isOwner }: Props) {
               <Field label="Nome do Pet" value={char.pet_name} />
             </Section>
           )}
+
+          {/* Equipamentos e Vestuário - MONSTER QUALITY */}
+          <div className="space-y-4 pt-4">
+            <h4 className="font-heading text-xs uppercase tracking-widest text-primary border-b border-primary/20 pb-1 flex items-center gap-2">
+              <LinkIcon size={14} /> Vestuário & Equipamentos Mágicos
+            </h4>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {userItems.filter(ui => ui.is_equipped).length === 0 ? (
+                <div className="col-span-full py-6 bg-black/20 rounded-2xl border border-dashed border-white/10 text-center">
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Nenhum item equipado</p>
+                  <p className="text-[8px] text-muted-foreground/50 mt-1 italic">Visite o Beco Diagonal para adquirir roupas e acessórios.</p>
+                </div>
+              ) : (
+                userItems.filter(ui => ui.is_equipped).map(ui => (
+                  <div key={ui.id} className="glass bg-white/5 border-white/10 p-3 rounded-2xl flex flex-col items-center text-center group hover:border-primary/50 transition-all">
+                    <div className="w-12 h-12 mb-2 relative">
+                      <SafeImage 
+                        src={ui.store_items?.image_url} 
+                        alt={ui.store_items?.name} 
+                        className="w-full h-full object-contain group-hover:scale-110 transition-transform"
+                      />
+                      <div className="absolute inset-0 bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity rounded-full" />
+                    </div>
+                    <p className="text-[8px] uppercase font-heading text-primary leading-tight">{ui.store_items?.name}</p>
+                    <p className="text-[7px] text-muted-foreground mt-0.5">{ui.store_items?.category === 'robes' ? 'Vestimenta' : 'Acessório'}</p>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
   );
 }

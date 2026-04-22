@@ -741,7 +741,8 @@ export default function Profile() {
       ) : activeTab === "members" ? (
         <MembersTab currentUserId={user?.id} />
       ) : activeTab === "fichas" ? (
-        <CharacterSheetView userId={profile.user_id} isOwner={isMe} />
+        <CharacterSheetView userId={profile.user_id} isOwner={isMe} userItems={userItems} />
+
       ) : activeTab === "album" ? (
         <ProfileAlbum userId={profile.user_id} />
       ) : activeTab === "referral" && isMe ? (

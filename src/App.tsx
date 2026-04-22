@@ -37,7 +37,9 @@ import GringottsStore from "./pages/GringottsStore";
 import Wallet from "./pages/Wallet";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
+import ParentsGuide from "./pages/ParentsGuide";
 import MagicalSagas from "./pages/MagicalSagas";
+
 import AdminFinance from "./pages/AdminFinance";
 import MagicalGames from "./pages/MagicalGames";
 import MatrixPortal from "./pages/MatrixPortal";
@@ -65,7 +67,9 @@ const App = () => (
             <Route path="/register" element={<Register />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />
+            <Route path="/parents" element={<ParentsGuide />} />
             <Route path="/dashboard" element={<DashboardLayout />}>
+
               <Route index element={<Feed />} />
               <Route path="chats" element={<Chats />} />
               <Route path="chat/:roomId" element={<ChatRoom />} />

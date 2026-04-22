@@ -79,7 +79,7 @@ export default function ChatRoom() {
     }
 
     // Split por formatação RPG + @mentions
-    const parts = processedText.split(/(\*[^*]+\*|\([^)]+\)|"[^"]+"|@[\w.]+)/g);
+    const parts = processedText.split(/(\*[^*]+\*|\([^)]+\)|"[^"]+"|@[\w.]+|\{[^}]+\}|~[^~]+~)/g);
     return parts.map((part, i) => {
       if (part.startsWith('@') && part.length > 1) {
         return (
@@ -89,16 +89,23 @@ export default function ChatRoom() {
         );
       }
       if (part.startsWith('*') && part.endsWith('*')) {
-        return <span key={i} className="italic text-primary/80">{part.slice(1, -1)}</span>;
+        return <span key={i} className="italic text-primary/80 font-serif">{part.slice(1, -1)}</span>;
       }
       if (part.startsWith('(') && part.endsWith(')')) {
-        return <span key={i} className="italic text-muted-foreground">{part}</span>;
+        return <span key={i} className="italic text-muted-foreground/60 text-[13px]">{part}</span>;
+      }
+      if (part.startsWith('{') && part.endsWith('}')) {
+        return <span key={i} className="text-pink-400/70 italic font-serif text-[13px]">[{part.slice(1, -1)}]</span>;
+      }
+      if (part.startsWith('~') && part.endsWith('~')) {
+        return <span key={i} className="text-white/40 italic text-[12px] tracking-widest">{part}</span>;
       }
       if (part.startsWith('"') && part.endsWith('"')) {
-        return <span key={i} className="font-semibold text-foreground/90">{part}</span>;
+        return <span key={i} className="font-semibold text-foreground/90 border-l-2 border-primary/20 pl-2 ml-1">{part}</span>;
       }
       return <span key={i}>{part}</span>;
     });
+
   };
 
   // Handler para mudanças no input — detecta @mention
@@ -284,14 +291,23 @@ export default function ChatRoom() {
     }
 
     
-    // Verificações rigorosas de moderação (Filch)
+    // Verificações rigorosas de moderação (Filch - O VIGIA)
     const lowerContent = content.toLowerCase();
     const hasBannedWord = bannedWords.some(word => lowerContent.includes(word));
-    const isAllCaps = content.length > 15 && content === content.toUpperCase();
-    const hasSpamChars = /(.)\1{5,}/.test(content); // A mesma letra/símbolo 6+ vezes seguidas
     
-    if (hasBannedWord || isAllCaps || hasSpamChars) {
-      let reason = hasBannedWord ? "Palavra proibida" : isAllCaps ? "Gritaria (CAPS LOCK)" : "Spam (letras repetidas)";
+    // Filtro de Segurança Reforçado (Vigia)
+    const dangerousPatterns = [
+      /sexo|pau|buceta|safad|novinh|novinh|whats|tel|contato|safad|pqp|fdp|porra/i,
+      /\d{8,}/, // Bloqueia sequencias de números que pareçam telefone
+      /(.)\1{5,}/ // Bloqueia spam de caracteres repetidos
+    ];
+    const hasDangerousPattern = dangerousPatterns.some(regex => regex.test(content));
+    
+    const isAllCaps = content.length > 20 && content === content.toUpperCase();
+    
+    if (hasBannedWord || hasDangerousPattern || isAllCaps) {
+      let reason = hasBannedWord ? "Palavra proibida" : isAllCaps ? "Gritaria (CAPS LOCK)" : "Conteúdo Inapropriado ou Spam";
+
       toast.error(
         <div className="flex gap-3 items-center">
           <img src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Filch" className="w-10 h-10 rounded-full border border-red-500 object-cover" />
@@ -622,16 +638,36 @@ export default function ChatRoom() {
 
       {/* ── INPUT MONSTER QUALITY ── */}
       <div className="relative z-10 p-5 bg-black/40 backdrop-blur-3xl border-t border-white/5">
-        {isAdmin && (channel?.name?.includes("Fichas") || channel?.name?.includes("𝐅𝐢𝐜𝐡𝐚𝐬")) && (
-          <div className="flex flex-wrap gap-2 mb-4 scrollbar-hide">
-            <Button size="sm" variant="outline" className="text-[9px] h-7 bg-white/5 border-white/10 rounded-xl" onClick={() => setInput("✨ ~ 𝐅𝐢𝐜𝐡𝐚 𝐏𝐞𝐬𝐬𝐨𝐚𝐥 ~ ✨\n\n📸 𝐅𝐨𝐭𝐨:\n👤 𝐍𝐨𝐦𝐞:\n⏳ 𝐈𝐝𝐚𝐝𝐞:\n🏰 𝐂𝐚𝐬𝐚:\n🌀 𝐏𝐚𝐭𝐫𝐨𝐧𝐨:\n💫 𝐅𝐞𝐢𝐭𝐢ç𝐨 𝐅𝐚𝐯𝐨𝐫𝐢𝐭𝐨:")}>
-              📋 Modelo Pessoal
-            </Button>
-            <Button size="sm" variant="outline" className="text-[9px] h-7 bg-white/5 border-white/10 rounded-xl" onClick={() => setInput("𝐅𝐈𝐂𝐇𝐀 𝐀𝐋𝐔𝐍𝐎(𝐀) \n\n⚡ ~ 𝐅𝐢𝐜𝐡𝐚 𝐝𝐨 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐦 ~ ⚡\n\n📜 𝐍𝐨𝐦𝐞:\n⏳ 𝐈𝐝𝐚𝐝𝐞:\n🏰 𝐂𝐚𝐬𝐚:\n📚 𝐇𝐢𝐬𝐭ó𝐫𝐢𝐚:\n✨ 𝐕𝐚𝐫𝐢𝐧𝐡𝐚:\n🩸 𝐒𝐚𝐧𝐠𝐮𝐞:")}>
-              🏰 Ficha Aluno
-            </Button>
-          </div>
-        )}
+        {/* RP TOOLBAR - MONSTER QUALITY */}
+        <div className="flex flex-wrap gap-2 mb-4 scrollbar-hide overflow-x-auto pb-1">
+          <Button size="sm" variant="outline" className="text-[9px] h-7 bg-primary/5 border-primary/20 rounded-xl hover:bg-primary/10" onClick={() => setInput(input + "*ação*")}>
+            ⚔️ Ação
+          </Button>
+          <Button size="sm" variant="outline" className="text-[9px] h-7 bg-blue-500/5 border-blue-500/20 rounded-xl hover:bg-blue-500/10" onClick={() => setInput(input + "(pensamento)")}>
+            🧠 Pensamento
+          </Button>
+          <Button size="sm" variant="outline" className="text-[9px] h-7 bg-pink-500/5 border-pink-500/20 rounded-xl hover:bg-pink-500/10" onClick={() => setInput(input + "{sentimento}")}>
+            ❤️ Sentimento
+          </Button>
+          <Button size="sm" variant="outline" className="text-[9px] h-7 bg-white/5 border-white/10 rounded-xl hover:bg-white/10" onClick={() => setInput(input + "~sussurro~")}>
+            💨 Sussurro
+          </Button>
+          <Button size="sm" variant="outline" className="text-[9px] h-7 bg-white/5 border-white/10 rounded-xl hover:bg-white/10" onClick={() => setInput(input + "\"fala\"")}>
+            💬 Fala
+          </Button>
+          <div className="h-4 w-[1px] bg-white/10 mx-1 self-center" />
+          {isAdmin && (channel?.name?.includes("Fichas") || channel?.name?.includes("𝐅𝐢𝐜𝐡𝐚𝐬")) && (
+            <>
+              <Button size="sm" variant="outline" className="text-[9px] h-7 bg-yellow-500/5 border-yellow-500/20 rounded-xl" onClick={() => setInput("✨ ~ 𝐅𝐢𝐜𝐡𝐚 𝐏𝐞𝐬𝐬𝐨𝐚𝐥 ~ ✨\n\n📸 𝐅𝐨𝐭𝐨:\n👤 𝐍𝐨𝐦𝐞:\n⏳ 𝐈𝐝𝐚𝐝𝐞:\n🏰 𝐂𝐚𝐬𝐚:\n🌀 𝐏𝐚𝐭𝐫𝐨𝐧𝐨:\n💫 𝐅𝐞𝐢𝐭𝐢ç𝐨 𝐅𝐚𝐯𝐨𝐫𝐢𝐭𝐨:")}>
+                📋 Modelo Pessoal
+              </Button>
+              <Button size="sm" variant="outline" className="text-[9px] h-7 bg-yellow-500/5 border-yellow-500/20 rounded-xl" onClick={() => setInput("𝐅𝐈𝐂𝐇𝐀 𝐀𝐋𝐔𝐍𝐎(𝐀) \n\n⚡ ~ 𝐅𝐢𝐜𝐡𝐚 𝐝𝐨 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐦 ~ ⚡\n\n📜 𝐍𝐨𝐦𝐞:\n⏳ 𝐈𝐝𝐚𝐝𝐞:\n🏰 𝐂𝐚𝐬𝐚:\n📚 𝐇𝐢𝐬𝐭ó𝐫𝐢𝐚:\n✨ 𝐕𝐚𝐫𝐢𝐧𝐡𝐚:\n🩸 𝐒𝐚𝐧𝐠𝐮𝐞:")}>
+                🏰 Ficha Aluno
+              </Button>
+            </>
+          )}
+        </div>
+
 
         <div className="relative group">
           {showMentionMenu && mentionSuggestions.length > 0 && (

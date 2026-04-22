@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Zap, ShoppingBag, Trophy, Flame } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { ShoppingBag, Trophy, Zap, Crown, Sparkles, Heart } from "lucide-react";
+
 
 export default function DopamineTriggers() {
   const [lastActivity, setLastActivity] = useState<any>(null);
@@ -40,13 +40,10 @@ export default function DopamineTriggers() {
   }, []);
 
   return (
-    <AnimatePresence>
+    <>
       {lastActivity && (
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          className="fixed top-16 md:top-20 left-1/2 -translate-x-1/2 z-[100] w-[90%] md:w-auto"
+        <div 
+          className="fixed top-16 md:top-20 left-1/2 -translate-x-1/2 z-[100] w-[90%] md:w-auto animate-in fade-in slide-in-from-top-4 duration-500"
         >
 
           <div className="bg-black/80 backdrop-blur-md border border-primary/40 rounded-full px-6 py-2 flex items-center gap-3 shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)]">
@@ -55,9 +52,9 @@ export default function DopamineTriggers() {
               ATIVIDADE GLOBAL: <span className="text-primary">{lastActivity.user}</span> de {lastActivity.house} adquiriu {lastActivity.item}
             </span>
           </div>
-        </motion.div>
+        </div>
       )}
-    </AnimatePresence>
+    </>
   );
 }
 
