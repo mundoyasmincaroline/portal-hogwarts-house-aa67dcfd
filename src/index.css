@@ -207,12 +207,16 @@ img:hover:not(.no-filter) {
 
 /* Luxury Item Cards - Monster Quality */
 .monster-item-card {
-  @apply relative overflow-hidden bg-black/60 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] p-6 transition-all duration-500 hover:border-primary/40 hover:shadow-[0_20px_50px_rgba(0,0,0,0.8)] hover:-translate-y-2 group;
+  @apply relative overflow-hidden bg-black/60 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] p-6 transition-all duration-500 hover:border-primary/40 hover:shadow-[0_20px_50px_rgba(0,0,0,0.8)] hover:-translate-y-2;
 }
 
 .monster-item-card::before {
   content: '';
-  @apply absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700;
+  @apply absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 transition-opacity duration-700;
+}
+
+.monster-item-card:hover::before {
+  @apply opacity-100;
 }
 
 /* Sonner Toast - Monster Quality Overhaul */

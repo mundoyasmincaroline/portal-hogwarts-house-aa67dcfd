@@ -160,7 +160,8 @@ export default function StoreItemVisual({ imageUrl, name, category, isOwned }: P
       <SafeImage 
         src={finalImage} 
         alt={name}
-        className="w-full h-full object-cover group-hover:scale-110 transition-all duration-[3000ms] opacity-90 grayscale-[0.2] contrast-[1.1]"
+        className="w-full h-full object-cover group-hover:scale-110 transition-all opacity-90 grayscale-[0.2] contrast-[1.1]"
+        style={{ transitionDuration: '3000ms' }}
         fallbackEmoji="📦"
       />
       
