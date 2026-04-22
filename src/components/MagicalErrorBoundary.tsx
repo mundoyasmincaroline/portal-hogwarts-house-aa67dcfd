@@ -1,5 +1,6 @@
 import React, { Component, ErrorInfo, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import MagicalSyncOverlay from "./MagicalSyncOverlay";
 
 interface Props {
   children?: ReactNode;
@@ -8,6 +9,7 @@ interface Props {
 interface State {
   hasError: boolean;
   error?: Error;
+  isSyncing: boolean;
 }
 
 /**
@@ -16,11 +18,12 @@ interface State {
  */
 export class MagicalErrorBoundary extends Component<Props, State> {
   public state: State = {
-    hasError: false
+    hasError: false,
+    isSyncing: false
   };
 
   public static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error };
+    return { hasError: true, error, isSyncing: false };
   }
 
   public async componentDidCatch(error: Error, errorInfo: ErrorInfo) {
@@ -38,7 +41,26 @@ export class MagicalErrorBoundary extends Component<Props, State> {
     }
   }
 
+  private handleDeepSync = () => {
+    this.setState({ isSyncing: true });
+    
+    setTimeout(() => {
+      localStorage.clear();
+      sessionStorage.clear();
+      if ('caches' in window) {
+        caches.keys().then((names) => {
+          for (let name of names) caches.delete(name);
+        });
+      }
+      window.location.href = window.location.origin + window.location.pathname + '?force=' + Date.now();
+    }, 3000);
+  };
+
   public render() {
+    if (this.state.isSyncing) {
+      return <MagicalSyncOverlay message="Harmonizando a Trama Mágica" submessage="Zion está recalibrando os fluxos de energia para restaurar seu acesso." />;
+    }
+
     if (this.state.hasError) {
       return (
         <div className="min-h-screen bg-[#050505] flex items-center justify-center p-6 relative overflow-hidden font-sans">
@@ -80,21 +102,11 @@ export class MagicalErrorBoundary extends Component<Props, State> {
               </button>
               <button 
                 className="flex-1 h-12 rounded-xl text-xs font-bold uppercase tracking-widest border border-white/10 text-white/40 hover:text-white hover:border-white/30 transition-all"
-                onClick={() => {
-                  localStorage.clear();
-                  sessionStorage.clear();
-                  if ('caches' in window) {
-                    caches.keys().then((names) => {
-                      for (let name of names) caches.delete(name);
-                    });
-                  }
-                  window.location.href = window.location.origin + window.location.pathname + '?force=' + Date.now();
-                }}
+                onClick={this.handleDeepSync}
               >
                 Sincronização Profunda
               </button>
             </div>
-
 
             <p className="text-[10px] text-[#94a3b8] pt-4">
               ✨ Protocolo Jarvis de Recuperação Ativo

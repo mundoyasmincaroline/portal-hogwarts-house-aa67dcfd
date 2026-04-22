@@ -51,13 +51,11 @@ import GodDashboard from "./pages/GodDashboard";
 // import MagicalTournaments from "./components/MagicalTournaments";
 
 
-import MagicalMeta from "./components/MagicalMeta";
-import MagicalErrorBoundary from "./components/MagicalErrorBoundary";
-
-const queryClient = new QueryClient();
+import MagicalSyncOverlay from "./components/MagicalSyncOverlay";
 
 function AuthInit({ children }: { children: React.ReactNode }) {
   const init = useAuth((s) => s.init);
+  const [isSyncing, setIsSyncing] = React.useState(false);
   
   useEffect(() => { 
     init(); 
@@ -76,13 +74,16 @@ function AuthInit({ children }: { children: React.ReactNode }) {
         
         if (remoteVersion && localVersion && remoteVersion !== localVersion) {
           console.log("REVOLUTION SYNC: Nova versão detectada via nuvem. Reiniciando...");
-          localStorage.setItem("portal_version", remoteVersion);
-          // Limpeza de cache profunda
-          if ('caches' in window) {
-            const names = await caches.keys();
-            for (let name of names) await caches.delete(name);
-          }
-          window.location.reload();
+          setIsSyncing(true);
+          
+          setTimeout(async () => {
+            localStorage.setItem("portal_version", remoteVersion);
+            if ('caches' in window) {
+              const names = await caches.keys();
+              for (let name of names) await caches.delete(name);
+            }
+            window.location.reload();
+          }, 3000); // 3 segundos de imersão cinematográfica
         }
       }
     };
@@ -96,7 +97,8 @@ function AuthInit({ children }: { children: React.ReactNode }) {
         if (payload.new.setting_key === 'portal_version') {
           const newVer = payload.new.setting_value?.version;
           if (newVer && newVer !== localStorage.getItem("portal_version")) {
-            window.location.reload(); // Força recarga imediata para todos online
+            setIsSyncing(true);
+            setTimeout(() => window.location.reload(), 3000);
           }
         }
       })
@@ -105,8 +107,14 @@ function AuthInit({ children }: { children: React.ReactNode }) {
     return () => { supabase.removeChannel(channel); };
   }, [init]);
   
-  return <>{children}</>;
+  return (
+    <>
+      {isSyncing && <MagicalSyncOverlay />}
+      {children}
+    </>
+  );
 }
+
 
 
 const App = () => (
