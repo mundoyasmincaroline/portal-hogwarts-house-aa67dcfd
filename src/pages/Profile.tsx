@@ -451,6 +451,15 @@ export default function Profile() {
             Segurança
           </button>
         )}
+        {isMe && isAdmin && (
+          <button 
+            onClick={() => navigate("/dashboard/matrix")} 
+            className="pb-2 font-heading text-sm transition-colors shrink-0 text-cyan-400 hover:text-cyan-300 flex items-center gap-2 animate-pulse"
+          >
+            <div className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]" />
+            Revolution
+          </button>
+        )}
       </div>
 
       <div className="glass rounded-[3rem] p-10 md:p-16 text-center relative overflow-hidden border-2 border-primary/20 shadow-[0_30px_100px_rgba(0,0,0,0.5)]">
@@ -495,6 +504,11 @@ export default function Profile() {
               )}
               {profile.vip_plan === "premium" && (
                 <span className="text-xs font-heading px-2 py-0.5 rounded-full bg-gradient-to-r from-blue-600 to-blue-400 text-white">✨ Premium</span>
+              )}
+              {profile.username === 'morpheus' && (
+                <span className="text-xs font-heading px-3 py-1 rounded-full bg-black border border-cyan-500 text-cyan-400 shadow-[0_0_10px_#22d3ee] animate-pulse">
+                  [ THE_ARCHITECT ]
+                </span>
               )}
             </h1>
             <p className="text-muted-foreground text-sm">@{profile.username}</p>
