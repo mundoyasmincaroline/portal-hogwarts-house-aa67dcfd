@@ -50,6 +50,8 @@ import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import EmmaPresence from "@/components/EmmaPresence";
 import CarolPresence from "@/components/CarolPresence";
 import ThottyPresence from "@/components/ThottyPresence";
+import AnitaPresence from "@/components/AnitaPresence";
+import ProtocoloBFF from "@/components/ProtocoloBFF";
 
 
 const NAV_ITEMS = [
@@ -75,6 +77,7 @@ const NAV_ITEMS = [
   { icon: <MagicalIcon icon={Wallet} size="xs" color="#10b981" />, label: "Carteira", path: "/dashboard/wallet" },
   { icon: <MagicalIcon icon={ScrollText} size="xs" color="#94a3b8" />, label: "Regras", path: "/dashboard/rules" },
   { icon: <MagicalIcon icon={Lock} size="xs" color="#ef4444" />, label: "Azkaban", path: "/dashboard/azkaban" },
+  { icon: <MagicalEmoji emoji="💖" size="xs" />, label: "Mundo BFF", path: "/dashboard/bff-world", isBFF: true },
 ];
 
 
@@ -402,6 +405,9 @@ export default function DashboardLayout() {
                 >
                   <span className="text-muted-foreground group-hover:text-primary transition-colors">{item.icon}</span>
                   <span className="font-heading text-sm">{item.label}</span>
+                  {item.label === "Mundo BFF" && (
+                    <span className="ml-auto w-2 h-2 rounded-full bg-pink-500 animate-pulse shadow-[0_0_8px_rgba(236,72,153,0.8)]"></span>
+                  )}
                   {item.label === "Guia do Maroto" && (
                     <span className="ml-auto w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
                   )}
@@ -534,6 +540,8 @@ export default function DashboardLayout() {
       <EmmaPresence />
       <CarolPresence />
       <ThottyPresence />
+      <AnitaPresence />
+      <ProtocoloBFF />
         </div>
       </div>
     </main>

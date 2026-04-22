@@ -31,8 +31,6 @@ export default function Azkaban() {
       }
       setLoading(false);
     };
-      setLoading(false);
-    };
     load();
 
     // Azkaban Sound
