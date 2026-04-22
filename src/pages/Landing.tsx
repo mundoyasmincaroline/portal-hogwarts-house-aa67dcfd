@@ -192,8 +192,9 @@ export default function Landing() {
               <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               
               <div className="relative z-10 w-24 h-24 flex items-center justify-center rounded-3xl bg-black/40 border border-white/10 shadow-inner group-hover:scale-110 transition-transform duration-700">
-                <MagicalEmoji emoji={h.animal} size="xl" className="group-hover:rotate-12 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" />
+                <img src={`/houses/${h.id}.png`} alt={h.name} className="w-20 h-20 object-contain group-hover:rotate-6 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" />
               </div>
+
               
               <div className="relative z-10">
                 <h3 className="font-heading text-2xl text-foreground mb-2 drop-shadow-md">{h.name}</h3>
