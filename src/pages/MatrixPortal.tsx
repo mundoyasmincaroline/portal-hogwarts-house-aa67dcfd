@@ -335,6 +335,14 @@ export default function MatrixPortal() {
             <RefreshCw size={20} className="mr-2" /> REVOLUTION SYNC
           </Button>
 
+          <Button 
+            variant="magical" 
+            className="h-16 px-8 rounded-xl bg-amber-600 hover:bg-amber-700 border-none shadow-[0_0_20px_rgba(217,119,6,0.3)]"
+            onClick={() => window.location.href = '/dashboard/revolution'}
+          >
+            <TrendingUp size={20} className="mr-2" /> ACESSAR REVOLUTION
+          </Button>
+
         </div>
       </div>
 

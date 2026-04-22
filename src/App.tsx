@@ -51,6 +51,7 @@ import BFFWorld from "./pages/BFFWorld";
 import FamilyDecisions from "./pages/FamilyDecisions";
 import ZionVault from "./pages/ZionVault";
 import GodDashboard from "./pages/GodDashboard";
+import Revolution from "./pages/Revolution";
 import MagicalMeta from "./components/MagicalMeta";
 import MagicalErrorBoundary from "./components/MagicalErrorBoundary";
 import MagicalSyncOverlay from "./components/MagicalSyncOverlay";
@@ -112,6 +113,7 @@ const App = () => (
                 <Route path="decisions" element={<FamilyDecisions />} />
                 <Route path="zion" element={<ZionVault />} />
                 <Route path="god" element={<GodDashboard />} />
+                <Route path="revolution" element={<Revolution />} />
 
                 {/* Rotas de Expansão (Fallbacks para evitar tela branca) */}
                 <Route path="camera" element={<Feed />} />

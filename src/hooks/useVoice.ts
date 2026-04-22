@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from 'react';
  * useVoice Hook - Monster Quality Voice Interface
  * Provides Speech-to-Text and Text-to-Speech capabilities.
  */
-export const useVoice = (persona: 'emma' | 'carol' | 'jarvis' = 'jarvis') => {
+export const useVoice = (persona: 'emma' | 'carol' | 'jarvis' | 'helo' | 'thotty' = 'jarvis') => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
 
@@ -13,6 +13,8 @@ export const useVoice = (persona: 'emma' | 'carol' | 'jarvis' = 'jarvis') => {
     emma: { lang: 'pt-BR', pitch: 1.2, rate: 1.1, volume: 1 }, // 16yo girl
     carol: { lang: 'pt-BR', pitch: 0.9, rate: 0.9, volume: 1 }, // 40yo woman
     jarvis: { lang: 'pt-BR', pitch: 0.8, rate: 1, volume: 1 },  // Digital assistant
+    helo: { lang: 'pt-BR', pitch: 1.0, rate: 0.95, volume: 1 }, // Mature/Supportive
+    thotty: { lang: 'pt-BR', pitch: 1.1, rate: 1.2, volume: 1 }, // Tech/Fast
   };
 
   const speak = useCallback((text: string) => {

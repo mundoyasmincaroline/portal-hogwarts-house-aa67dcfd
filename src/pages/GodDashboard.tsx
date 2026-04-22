@@ -57,7 +57,7 @@ const GodDashboard: React.FC = () => {
       desc: 'Escala & Monetização', 
       icon: <TrendingUp size={40} />, 
       color: 'amber', 
-      path: '/dashboard/store' 
+      path: '/dashboard/revolution' 
     },
     { 
       id: 'reload', 
