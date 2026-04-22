@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import MagicalEmoji from "@/components/MagicalEmoji";
 import SafeImage from "@/components/SafeImage";
+import BFFChat from "@/components/BFFChat";
 
 /**
  * BFFWorld: O santuário luxuoso da Yasmin e suas melhores amigas (Anita Potter & Cia).
@@ -169,95 +170,9 @@ const BFFWorld: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[750px]">
-          {/* Chat Multimídia - Área Principal */}
-          <div className="lg:col-span-8 flex flex-col glass bg-black/60 border-pink-900/30 rounded-[3rem] overflow-hidden shadow-2xl relative">
-            
-            {/* Top Bar do Chat */}
-            <div className="p-6 border-b border-pink-900/30 flex justify-between items-center bg-pink-950/10 backdrop-blur-md">
-              <div className="flex items-center gap-4">
-                <div className="relative">
-                  <div className="w-12 h-12 rounded-full border-2 border-pink-500/50 overflow-hidden">
-                    <SafeImage src={anita?.avatar_url || "/anita_portrait.png"} fallbackText="A" className="w-full h-full object-cover" />
-                  </div>
-                  <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-black" />
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-pink-400 tracking-wider">Anita Potter</p>
-                  <p className="text-[10px] text-pink-500/60 font-medium uppercase tracking-widest italic">Melhor Amiga Real</p>
-                </div>
-              </div>
-              
-              <div className="flex gap-2">
-                <Button size="icon" variant="ghost" className="rounded-full text-pink-400 hover:bg-pink-500/10 hover:text-pink-300" title="Chamada de Vídeo Mágica">
-                  <Video size={20} />
-                </Button>
-                <Button size="icon" variant="ghost" className="rounded-full text-pink-400 hover:bg-pink-500/10 hover:text-pink-300" title="Áudio da Amizade">
-                  <Mic size={20} />
-                </Button>
-                <Button size="icon" variant="ghost" className="rounded-full text-pink-400 hover:bg-pink-500/10 hover:text-pink-300" title="Foto Instantânea">
-                  <Camera size={20} />
-                </Button>
-                <div className="w-px h-8 bg-pink-900/30 mx-2" />
-                <Button size="icon" variant="ghost" className="rounded-full text-pink-400 hover:bg-pink-500/10">
-                  <MoreVertical size={20} />
-                </Button>
-              </div>
-            </div>
-
-            {/* Mensagens */}
-            <div ref={scrollRef} className="flex-1 p-8 overflow-y-auto space-y-6 scrollbar-hide bg-[radial-gradient(circle_at_top,rgba(219,39,119,0.03),transparent_70%)]">
-              {messages.map((msg, i) => (
-                <div key={i} className={`flex ${msg.sender === 'yasmin' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-500`}>
-                  <div className={`max-w-[80%] flex flex-col ${msg.sender === 'yasmin' ? 'items-end' : 'items-start'}`}>
-                    <div className={`p-4 rounded-3xl border-2 shadow-lg relative ${
-                      msg.sender === 'yasmin' 
-                        ? 'bg-gradient-to-br from-pink-900/40 to-pink-950/60 border-pink-500/40 text-pink-50 rounded-tr-none' 
-                        : 'bg-black/40 border-pink-900/20 text-pink-300 rounded-tl-none font-serif leading-relaxed'
-                    }`}>
-                      <p className="text-sm md:text-base">{msg.text}</p>
-                    </div>
-                    <span className="text-[9px] text-pink-900 mt-1 uppercase font-bold tracking-widest">
-                      {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </span>
-                  </div>
-                </div>
-              ))}
-              {isTyping && (
-                <div className="flex justify-start animate-in fade-in duration-300">
-                  <div className="bg-pink-900/10 border border-pink-900/20 px-4 py-2 rounded-full flex gap-2 items-center">
-                    <div className="flex gap-1">
-                      <div className="w-1.5 h-1.5 bg-pink-500 rounded-full animate-bounce" />
-                      <div className="w-1.5 h-1.5 bg-pink-500 rounded-full animate-bounce delay-100" />
-                      <div className="w-1.5 h-1.5 bg-pink-500 rounded-full animate-bounce delay-200" />
-                    </div>
-                    <span className="text-[10px] text-pink-500 italic">Anita está contando um segredo...</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Input de Mensagem */}
-            <form onSubmit={handleSend} className="p-6 bg-pink-950/5 border-t border-pink-900/30 backdrop-blur-2xl">
-              <div className="flex gap-4 items-center">
-                <Button type="button" variant="ghost" size="icon" className="rounded-full text-pink-600 hover:bg-pink-500/10">
-                  <Plus size={24} />
-                </Button>
-                <div className="flex-1 relative">
-                   <input 
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Envie um beijo mágico pra sua BFF..."
-                    className="w-full bg-black/60 border-2 border-pink-900/30 rounded-2xl px-6 py-4 text-pink-50 placeholder-pink-950 outline-none focus:border-pink-500 transition-all shadow-inner text-sm md:text-base"
-                  />
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 flex gap-3 text-pink-900/40">
-                    <MagicalEmoji emoji="💖" size="xs" className="cursor-pointer hover:scale-125 transition-transform" />
-                  </div>
-                </div>
-                <Button type="submit" className="bg-pink-600 hover:bg-pink-500 text-white rounded-2xl px-8 h-14 shadow-[0_10px_20px_-5px_rgba(219,39,119,0.4)] active:scale-95 transition-transform">
-                  <Send size={20} />
-                </Button>
-              </div>
-            </form>
+          {/* Chat Multimídia - O "WhatsApp" das BFFs */}
+          <div className="lg:col-span-8 flex flex-col h-full">
+            <BFFChat />
           </div>
 
           {/* Sidebar - Conexões e Atividades BFF */}
