@@ -63,6 +63,7 @@ export default function DashboardLayout() {
   useEffect(() => {
     if (user) {
       countUnread();
+      playAmbientMusic(); // REVOLUTION: Inicia a imersão sonora
       const ch = supabase.channel(`dm_unread_badge_${Date.now()}`)
         .on("postgres_changes", { event: "*", schema: "public", table: "dm_messages" }, countUnread)
         .subscribe();
@@ -259,6 +260,21 @@ export default function DashboardLayout() {
                 )}
               </Link>
             ))}
+
+            {/* PAINEL DE ADMINISTRAÇÃO (ZION ACCESS) */}
+            {(profile?.is_admin || profile?.username === 'morpheus') && (
+              <Link
+                to="/dashboard/admin"
+                onClick={() => { setSidebarOpen(false); playMagicSound(); }}
+                className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 group mt-4 border border-yellow-500/40 bg-yellow-500/10 text-yellow-500 shadow-[0_0_15px_rgba(234,179,8,0.2)] hover:scale-[1.02]`}
+              >
+                <div className="transition-transform duration-300 group-hover:rotate-12">
+                  <MagicalIcon icon={Crown} size="xs" color="#eab308" />
+                </div>
+                <span className="font-heading text-sm tracking-wide font-bold">SALA DO DIRETOR</span>
+                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" />
+              </Link>
+            )}
           </nav>
 
           {/* Footer Sidebar */}
@@ -273,8 +289,13 @@ export default function DashboardLayout() {
       </aside>
 
       {/* ── CONTEÚDO PRINCIPAL ── */}
-      <div className="flex-1 flex flex-col min-w-0 bg-[url('https://images.unsplash.com/photo-1547756536-cde3673fa2e5?w=1000')] bg-fixed bg-cover bg-center">
-        <div className="flex-1 bg-background/95 backdrop-blur-sm relative flex flex-col">
+      <div className="flex-1 flex flex-col min-w-0 relative">
+        {/* Monster Quality Cinematic Layers */}
+        <div className="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1547756536-cde3673fa2e5?w=1600')] bg-fixed bg-cover bg-center grayscale opacity-10" />
+        <div className="absolute inset-0 z-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 pointer-events-none" />
+        <div className="absolute inset-0 z-0 bg-gradient-to-br from-black via-black/90 to-blue-950/20" />
+        
+        <div className="flex-1 relative z-10 flex flex-col bg-transparent">
           
           {/* Header Mobile */}
           <header className="md:hidden h-16 flex items-center justify-between px-6 border-b border-border sticky top-0 z-30 bg-background/80 backdrop-blur-md">

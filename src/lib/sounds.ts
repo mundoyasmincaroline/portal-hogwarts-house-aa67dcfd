@@ -33,3 +33,22 @@ export const playMagicSound = () => {
 let soundEnabled = true;
 export const isSoundEnabled = () => soundEnabled;
 export const toggleSound = () => { soundEnabled = !soundEnabled; return soundEnabled; };
+
+let ambientAudio: HTMLAudioElement | null = null;
+export const playAmbientMusic = () => {
+  if (ambientAudio) return;
+  ambientAudio = new Audio('https://www.soundjay.com/nature/sounds/wind-chime-1.mp3'); // Placeholder místico loopable
+  ambientAudio.volume = 0.05;
+  ambientAudio.loop = true;
+  ambientAudio.play().catch(() => {
+    console.warn("Ambient music blocked by browser. Interaction needed.");
+    ambientAudio = null;
+  });
+};
+
+export const stopAmbientMusic = () => {
+  if (ambientAudio) {
+    ambientAudio.pause();
+    ambientAudio = null;
+  }
+};
