@@ -92,6 +92,23 @@ const ArchitectControl: React.FC = () => {
                >
                   <Settings size={14} /> Sync Repository
                </Button>
+               <Button 
+                variant="outline" 
+                className="w-full h-10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/10 gap-2 text-[10px] uppercase font-bold"
+                onClick={() => {
+                   toast.success("JARVIS: TESTE DE VENDA", {
+                     description: "Um novo Baú Lendário foi vendido! +500 Galeões para Gringotts. 💰",
+                     duration: 5000,
+                     icon: '💰'
+                   });
+                   toast.info("JARVIS: TESTE DE SISTEMA", {
+                     description: "Todos os protocolos Zion estão operando em 100%. 🛡️",
+                     duration: 5000,
+                   });
+                }}
+               >
+                  <Zap size={14} /> Test Jarvis Alerts
+               </Button>
             </div>
             
             <p className="text-[8px] text-amber-900 mt-4 text-center italic tracking-widest font-bold">
