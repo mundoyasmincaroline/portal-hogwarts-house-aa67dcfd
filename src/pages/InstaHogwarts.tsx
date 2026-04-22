@@ -442,7 +442,7 @@ export default function InstaHogwarts() {
                        <SafeImage
                         src={post.image_url}
                         alt="Post"
-                        className="w-full h-full object-cover transition-transform duration-[2s] group-hover/img:scale-110 grayscale-[30%] group-hover/img:grayscale-0"
+                        className="w-full h-full object-cover transition-transform [transition-duration:2s] group-hover/img:scale-110 grayscale-[30%] group-hover/img:grayscale-0"
                         fallbackEmoji="📸"
                       />
                     </div>

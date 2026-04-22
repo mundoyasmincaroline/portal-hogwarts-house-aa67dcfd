@@ -156,7 +156,7 @@ export default function StoreItemVisual({ imageUrl, name, category, isOwned }: P
       <SafeImage 
         src={finalImage} 
         alt={name}
-        className="w-full h-full object-cover group-hover:scale-125 group-hover:rotate-2 transition-all duration-[2000ms] opacity-90"
+        className="w-full h-full object-cover group-hover:scale-125 group-hover:rotate-2 transition-all [transition-duration:2000ms] opacity-90"
         fallbackEmoji="📦"
       />
       

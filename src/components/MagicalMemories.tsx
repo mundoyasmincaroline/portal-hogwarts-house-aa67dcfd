@@ -37,7 +37,7 @@ export default function MagicalMemories() {
           className="relative aspect-[16/9] w-full animate-fade-in"
         >
 
-          <img src={memory.image} alt={memory.context} className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-[5s]" />
+          <img src={memory.image} alt={memory.context} className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform [transition-duration:5s]" />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
           
           <div className="absolute bottom-0 inset-x-0 p-8 space-y-3">

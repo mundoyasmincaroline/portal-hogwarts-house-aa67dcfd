@@ -149,7 +149,7 @@ export default function HouseCupWidget({ isLanding = false }: { isLanding?: bool
                   
                   <div className="relative h-6 bg-black/60 rounded-xl overflow-hidden border border-white/5 p-[2px] shadow-2xl backdrop-blur-md">
                     <div 
-                      className={`h-full ${s.color} transition-all duration-[2500ms] ease-out rounded-lg relative group-hover/bar:brightness-125`}
+                      className={`h-full ${s.color} transition-all [transition-duration:2500ms] ease-out rounded-lg relative group-hover/bar:brightness-125`}
                       style={{ 
                         width: `${loading ? 0 : s.percentage}%`,
                         boxShadow: `0 0 20px ${s.color.replace('bg-', 'rgba(').replace('600', '0.2)')}` 

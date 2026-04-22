@@ -61,7 +61,7 @@ export default function Azkaban() {
   const isInAzkaban = azkabanStatus && timeLeft > 0;
 
   return (
-    <div className={`relative min-h-screen flex flex-col items-center justify-center overflow-hidden transition-all duration-[3000ms] ${isInAzkaban ? "grayscale-[0.8] contrast-125 sepia-[0.2]" : ""}`}>
+    <div className={`relative min-h-screen flex flex-col items-center justify-center overflow-hidden transition-all [transition-duration:3000ms] ${isInAzkaban ? "grayscale-[0.8] contrast-125 sepia-[0.2]" : ""}`}>
       {/* HD Background with flare effect */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <img

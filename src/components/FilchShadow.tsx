@@ -28,7 +28,7 @@ export default function FilchShadow() {
 
   return (
     <div 
-      className="fixed z-[300] pointer-events-none transition-all duration-[2000ms] ease-in-out opacity-40 grayscale contrast-150"
+      className="fixed z-[300] pointer-events-none transition-all [transition-duration:2000ms] ease-in-out opacity-40 grayscale contrast-150"
       style={{
         ...position,
         filter: "blur(4px)"

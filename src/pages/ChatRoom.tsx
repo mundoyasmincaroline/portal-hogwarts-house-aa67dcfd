@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import HouseCrest from "@/components/HouseCrest";
 import { House } from "@/lib/store";
 import { addXP } from "@/lib/xpSystem";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
+import MagicalErrorBoundary from "@/components/MagicalErrorBoundary";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink, Zap, Flame, Sparkles, MessageCircle, Users } from "lucide-react";
 import MagicalEmoji from "@/components/MagicalEmoji";
@@ -532,7 +532,7 @@ export default function ChatRoom() {
 
       {/* ── MENSAGENS MONSTER QUALITY ── */}
       <div className="relative z-10 flex-1 overflow-y-auto p-6 md:p-8 space-y-8 scrollbar-hide">
-        <ErrorBoundary fallback={<div className="text-center py-20 text-red-500/50 font-serif">A magia deste salão foi perturbada...</div>}>
+        <MagicalErrorBoundary>
           {messages.length === 0 ? (
             <div className="h-full flex items-center justify-center">
               <div className="text-center space-y-6 max-w-xs animate-in fade-in zoom-in duration-1000">
@@ -633,7 +633,7 @@ export default function ChatRoom() {
             </div>
           )}
           <div ref={messagesEndRef} />
-        </ErrorBoundary>
+        </MagicalErrorBoundary>
       </div>
 
       {/* ── INPUT MONSTER QUALITY ── */}
