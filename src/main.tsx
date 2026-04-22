@@ -12,38 +12,63 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return (
         <div style={{
-          height: "100vh", width: "100vw", background: "#050505", 
+          height: "100vh", width: "100vw", background: "#000", 
           display: "flex", alignItems: "center", justifyContent: "center", 
           flexDirection: "column", color: "#f59e0b", fontFamily: "serif",
-          textAlign: "center", padding: "2rem", position: "relative", overflow: "hidden"
+          textAlign: "center", position: "relative", overflow: "hidden"
         }}>
-          {/* Background Matrix/Magic Effect */}
-          <div style={{ position: "absolute", inset: 0, opacity: 0.1, pointerEvents: "none" }}>
-            <div className="matrix-rain" style={{ fontSize: '10px' }}>⚡ 🪄 🔮 🧙 ⚡</div>
-          </div>
+          {/* Background Image - Hogwarts Loading Style */}
+          <img 
+            src="/monster_quality_hogwarts_maintenance_loading_1776870699373.png" 
+            style={{ 
+              position: "absolute", inset: 0, width: "100%", height: "100%", 
+              objectFit: "cover", opacity: 0.6, filter: "brightness(0.5) blur(2px)" 
+            }} 
+            alt="Hogwarts"
+          />
           
-          <div style={{ position: "relative", zIndex: 10 }}>
-            <div style={{ fontSize: "5rem", marginBottom: "1rem", animation: "float 3s ease-in-out infinite" }}>🔮</div>
-            <h1 style={{ fontSize: "1.5rem", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "2px", marginBottom: "0.5rem" }}>
-              Perturbação na Trama Mágica
+          {/* Content Overlay */}
+          <div style={{ position: "relative", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <div className="animate-pulse" style={{ fontSize: "4rem", marginBottom: "2rem" }}>🔮</div>
+            
+            <h1 style={{ fontSize: "1.2rem", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "4px", marginBottom: "1rem", color: "#fff" }}>
+              Restaurando a Trama Mágica...
             </h1>
-            <p style={{ color: "#94a3b8", fontSize: "0.9rem", maxWidth: "400px", margin: "0 auto 2rem" }}>
-              Parece que Edwiges encontrou uma tempestade no caminho. O castelo está passando por uma manutenção mágica instantânea.
+            
+            {/* Animated Loading Bar */}
+            <div style={{ width: "200px", height: "2px", background: "rgba(255,255,255,0.1)", borderRadius: "1px", marginBottom: "2rem", overflow: "hidden" }}>
+              <div style={{ 
+                width: "100%", height: "100%", background: "linear-gradient(90deg, transparent, #f59e0b, transparent)",
+                animation: "loading-magical 2s infinite linear"
+              }} />
+            </div>
+
+            <p style={{ color: "#94a3b8", fontSize: "0.8rem", maxWidth: "300px", margin: "0 auto 2rem", fontStyle: "italic" }}>
+              "O castelo está se reconfigurando. Aguarde um momento enquanto os elfos domésticos terminam a manutenção."
             </p>
+
             <button 
               onClick={() => window.location.reload()}
               style={{
-                background: "transparent", border: "1px solid #f59e0b", color: "#f59e0b",
-                padding: "0.75rem 2rem", borderRadius: "2rem", fontSize: "0.8rem", 
+                background: "rgba(245,158,11,0.1)", border: "1px solid #f59e0b", color: "#f59e0b",
+                padding: "0.6rem 1.5rem", borderRadius: "0.5rem", fontSize: "0.7rem", 
                 cursor: "pointer", textTransform: "uppercase", fontWeight: "bold",
-                boxShadow: "0 0 15px rgba(245,158,11,0.2)"
+                backdropFilter: "blur(5px)", transition: "all 0.3s"
               }}
-              onMouseOver={(e) => e.currentTarget.style.background = "rgba(245,158,11,0.1)"}
-              onMouseOut={(e) => e.currentTarget.style.background = "transparent"}
+              onMouseOver={(e) => e.currentTarget.style.background = "rgba(245,158,11,0.2)"}
+              onMouseOut={(e) => e.currentTarget.style.background = "rgba(245,158,11,0.1)"}
             >
-              Restaurar Magia 🪄
+              Forçar Restauração 🪄
             </button>
           </div>
+          
+          <style>{`
+            @keyframes loading-magical {
+              0% { transform: translateX(-100%); }
+              100% { transform: translateX(100%); }
+            }
+          `}</style>
+        </div>
           
           {/* Secret tag for admins */}
           <div style={{ position: "fixed", bottom: 10, right: 10, fontSize: "8px", opacity: 0.3, color: "#444" }}>

@@ -308,7 +308,7 @@ export default function Feed() {
                       src={post.author?.avatar_url} 
                       alt={post.author?.full_name || "Bruxo"} 
                       className="w-full h-full object-cover" 
-                      fallbackText={post.author?.full_name}
+                      fallbackText={post.author?.full_name || post.author?.username || "B"}
                     />
                   </div>
                   <div className="flex-1">
@@ -383,7 +383,7 @@ export default function Feed() {
                             src={c.author?.avatar_url} 
                             alt={c.author?.full_name || "Bruxo"} 
                             className="w-full h-full object-cover" 
-                            fallbackText={c.author?.full_name}
+                            fallbackText={c.author?.full_name || c.author?.username || "B"}
                           />
                         </div>
                         <div className="flex-1 bg-secondary/40 rounded-lg px-3 py-2">
@@ -484,7 +484,7 @@ export default function Feed() {
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs text-foreground truncate">{u.full_name.split(' ')[0]}</p>
+                    <p className="text-xs text-foreground truncate">{(u.full_name || u.username || 'Bruxo').split(' ')[0]}</p>
                   </div>
                   <span className={`w-2 h-2 rounded-full ${isUserOnline(u) ? 'bg-green-500' : 'bg-muted'}`} title={isUserOnline(u) ? 'Online' : 'Offline'} />
                 </div>
