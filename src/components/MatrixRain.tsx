@@ -14,7 +14,8 @@ const MatrixRain: React.FC = () => {
     canvas.height = window.innerHeight;
 
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%\"'#&_(),.;:?!\\|{}<>[]^~";
-    const fontSize = 14;
+    const isMobile = window.innerWidth < 768;
+    const fontSize = isMobile ? 20 : 14;
     const columns = canvas.width / fontSize;
     const drops: number[] = [];
 
@@ -22,11 +23,22 @@ const MatrixRain: React.FC = () => {
       drops[i] = Math.random() * -100;
     }
 
-    const draw = () => {
+    let animationId: number;
+    let lastTime = 0;
+    const fps = 24;
+    const interval = 1000 / fps;
+
+    const draw = (timestamp: number) => {
+      animationId = requestAnimationFrame(draw);
+      
+      const delta = timestamp - lastTime;
+      if (delta < interval) return;
+      lastTime = timestamp - (delta % interval);
+
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = "#0F0"; // Matrix Green
+      ctx.fillStyle = "#0F0"; 
       ctx.font = `${fontSize}px monospace`;
 
       for (let i = 0; i < drops.length; i++) {
@@ -41,7 +53,8 @@ const MatrixRain: React.FC = () => {
       }
     };
 
-    const interval = setInterval(draw, 33);
+    animationId = requestAnimationFrame(draw);
+
 
     const handleResize = () => {
       canvas.width = window.innerWidth;
@@ -51,7 +64,7 @@ const MatrixRain: React.FC = () => {
     window.addEventListener("resize", handleResize);
 
     return () => {
-      clearInterval(interval);
+      cancelAnimationFrame(animationId);
       window.removeEventListener("resize", handleResize);
     };
   }, []);

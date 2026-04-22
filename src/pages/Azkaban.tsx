@@ -58,7 +58,7 @@ export default function Azkaban() {
       {/* HD Background with flare effect */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <img
-          src="https://portal-hogwarts.lovable.app/monster_quality_azkaban_prison_cinematic_1776816635211.png"
+          src="/azkaban_v2.png"
           alt="Azkaban"
           className="w-full h-full object-cover scale-110 animate-subtle-zoom"
         />

@@ -23,8 +23,10 @@ export default function MagicalParticles() {
     resize();
     window.addEventListener("resize", resize);
 
-    // Initial setup based on theme
-    const count = theme === "snow" ? 100 : theme === "leaves" ? 30 : 50;
+    const isMobile = window.innerWidth < 768;
+    const count = isMobile 
+      ? (theme === "snow" ? 30 : theme === "leaves" ? 10 : 15) 
+      : (theme === "snow" ? 100 : theme === "leaves" ? 30 : 50);
     
     for (let i = 0; i < count; i++) {
       particles.push({
@@ -38,6 +40,7 @@ export default function MagicalParticles() {
         angle: Math.random() * Math.PI * 2,
       });
     }
+
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);

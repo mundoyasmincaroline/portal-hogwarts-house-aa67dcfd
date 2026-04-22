@@ -92,7 +92,7 @@ const WelcomeChestModal: React.FC<WelcomeChestModalProps> = ({ onClose }) => {
                 <div className="relative group cursor-pointer" onClick={!isOpening ? handleOpenChest : undefined}>
                   <div className={`absolute inset-0 bg-primary/20 blur-3xl transition-all duration-1000 ${isOpening ? "scale-150 opacity-100" : "scale-100 opacity-50"}`} />
                   <img
-                    src="https://portal-hogwarts.lovable.app/legendary_chest_3d_1776816744823.png"
+                    src="/legendary_chest_3d_v2.png"
                     alt="Magic Chest"
                     className={`w-64 h-64 mx-auto object-contain relative z-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] ${isOpening ? "animate-bounce" : "animate-float"}`}
                   />

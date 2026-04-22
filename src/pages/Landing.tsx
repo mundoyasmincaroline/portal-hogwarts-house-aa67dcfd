@@ -84,7 +84,7 @@ export default function Landing() {
           </button>
         </div>
 
-        <div className={`relative z-20 transition-all duration-1000 ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+        <div className={`relative z-20 pt-24 md:pt-0 transition-all duration-1000 ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
 
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/30 rounded-full px-4 py-1.5 mb-6">
@@ -155,15 +155,15 @@ export default function Landing() {
           </div>
 
           {/* CTA */}
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8 px-4">
             <Button variant="magical" size="lg" onClick={() => navigate("/register")}
-              className="font-heading text-base px-10 py-4 h-auto shadow-lg shadow-primary/20 hover:shadow-primary/40">
+              className="w-full sm:w-auto font-heading text-base px-10 py-4 h-auto shadow-lg shadow-primary/20 hover:shadow-primary/40">
               <Sparkles size={16} className="mr-2" />
               Solicitar minha vaga
               <ChevronRight size={16} className="ml-1" />
             </Button>
             <Button variant="outline" size="lg" onClick={() => navigate("/login")}
-              className="font-heading text-base px-8 py-4 h-auto border-border/50 hover:border-primary/40">
+              className="w-full sm:w-auto font-heading text-base px-8 py-4 h-auto border-border/50 hover:border-primary/40">
               Já tenho conta
             </Button>
           </div>
@@ -280,7 +280,7 @@ export default function Landing() {
             
             <div className="shrink-0 relative">
                <div className="absolute inset-0 bg-yellow-500/20 blur-[60px] animate-bounce" />
-               <img src="https://portal-hogwarts.lovable.app/legendary_chest_3d_1776816744823.png" alt="Chest" className="w-64 h-64 md:w-80 md:h-80 object-contain relative z-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] animate-float" />
+               <img src="/legendary_chest_3d_v2.png" alt="Chest" className="w-64 h-64 md:w-80 md:h-80 object-contain relative z-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] animate-float" />
             </div>
           </div>
         </div>
@@ -345,7 +345,7 @@ export default function Landing() {
 
               <div className="pt-4">
                 <Button variant="magical" size="lg" onClick={() => navigate("/register")}
-                  className="font-heading text-xl px-16 py-8 h-auto shadow-2xl shadow-primary/30 hover:shadow-primary/50 hover:scale-105 transition-all rounded-3xl group/btn">
+                  className="w-full sm:w-auto max-w-sm mx-auto font-heading text-xl px-16 py-8 h-auto shadow-2xl shadow-primary/30 hover:shadow-primary/50 hover:scale-105 transition-all rounded-3xl group/btn flex items-center justify-center">
                   <Sparkles size={24} className="mr-3 group-hover/btn:rotate-12 transition-transform" />
                   Solicitar minha vaga agora
                   <ChevronRight size={20} className="ml-2 group-hover/btn:translate-x-1 transition-transform" />
