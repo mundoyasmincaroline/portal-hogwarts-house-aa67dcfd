@@ -35,6 +35,9 @@ import Azkaban from "./pages/Azkaban";
 import Members from "./pages/Members";
 import GringottsStore from "./pages/GringottsStore";
 import Wallet from "./pages/Wallet";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
+import MagicalSagas from "./pages/MagicalSagas";
 // import MagicalTournaments from "./components/MagicalTournaments";
 
 
@@ -83,6 +86,9 @@ const App = () => (
               <Route path="members" element={<Members />} />
               <Route path="store" element={<GringottsStore />} />
               <Route path="wallet" element={<Wallet />} />
+              <Route path="terms" element={<Terms />} />
+              <Route path="privacy" element={<Privacy />} />
+              <Route path="sagas" element={<MagicalSagas />} />
               {/* <Route path="sagas" element={<MagicalTournaments />} /> */}
 
             </Route>

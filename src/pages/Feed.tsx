@@ -12,6 +12,10 @@ import MagicAdBanner from "@/components/MagicAdBanner";
 import StoriesBar from "@/components/StoriesBar";
 import DynamicGreeting from "@/components/DynamicGreeting";
 import VipUpsellBanner from "@/components/VipUpsellBanner";
+import SafeImage from "@/components/SafeImage";
+import MagicalIcon from "@/components/MagicalIcon";
+import MagicalEmoji from "@/components/MagicalEmoji";
+import MagicalGaleon from "@/components/MagicalGaleon";
 
 const REACTIONS = ["⚡", "❤️", "🔥", "🦁", "🦅", "🐍", "🦡"];
 
@@ -281,11 +285,12 @@ export default function Feed() {
               <div className="glass rounded-xl p-4 animate-fade-in-up">
                 <div className="flex items-center gap-3 mb-3">
                   <div className={`w-10 h-10 rounded-full bg-secondary flex items-center justify-center font-heading text-primary overflow-hidden border-2 shrink-0 ${post.author?.house === 'gryffindor' ? 'border-red-500' : post.author?.house === 'slytherin' ? 'border-green-500' : post.author?.house === 'ravenclaw' ? 'border-blue-500' : 'border-yellow-500'}`}>
-                    {post.author?.avatar_url ? (
-                      <img src={post.author.avatar_url} alt={post.author?.full_name} className="w-full h-full object-cover" />
-                    ) : (
-                      post.author?.full_name?.[0] || "?"
-                    )}
+                    <SafeImage 
+                      src={post.author?.avatar_url} 
+                      alt={post.author?.full_name || "Bruxo"} 
+                      className="w-full h-full object-cover" 
+                      fallbackText={post.author?.full_name}
+                    />
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
@@ -355,11 +360,12 @@ export default function Feed() {
                     {post.comments.map((c) => (
                       <div key={c.id} className="flex gap-2 items-start">
                         <div className={`w-6 h-6 rounded-full bg-secondary flex items-center justify-center font-heading text-xs text-primary overflow-hidden shrink-0 border border-primary/30`}>
-                          {c.author?.avatar_url ? (
-                            <img src={c.author.avatar_url} alt={c.author?.full_name} className="w-full h-full object-cover" />
-                          ) : (
-                            c.author?.full_name?.[0] || "?"
-                          )}
+                          <SafeImage 
+                            src={c.author?.avatar_url} 
+                            alt={c.author?.full_name || "Bruxo"} 
+                            className="w-full h-full object-cover" 
+                            fallbackText={c.author?.full_name}
+                          />
                         </div>
                         <div className="flex-1 bg-secondary/40 rounded-lg px-3 py-2">
                           <p className="text-xs font-medium text-foreground">{c.author?.full_name}</p>
@@ -449,7 +455,12 @@ export default function Feed() {
               {onlineUsers.map((u) => (
                 <div key={u.id} className="flex items-center gap-2">
                   <div className={`w-6 h-6 rounded-full overflow-hidden border-2 shrink-0 ${u.house === 'gryffindor' ? 'border-red-500' : u.house === 'slytherin' ? 'border-green-500' : u.house === 'ravenclaw' ? 'border-blue-500' : 'border-yellow-500'}`}>
-                    <img src={u.avatar_url || `https://api.dicebear.com/7.x/adventurer/svg?seed=${u.username}`} alt={u.username} className="w-full h-full object-cover bg-secondary" />
+                    <SafeImage 
+                      src={u.avatar_url} 
+                      alt={u.username} 
+                      className="w-full h-full object-cover" 
+                      fallbackText={u.full_name}
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-xs text-foreground truncate">{u.full_name.split(' ')[0]}</p>
@@ -460,16 +471,30 @@ export default function Feed() {
             </div>
           </div>
 
-          <div className="glass rounded-xl p-4">
-            <h3 className="font-heading text-sm text-primary mb-3">⚔️ Desafios Ativos</h3>
-            <div className="space-y-2">
+          <div className="glass rounded-[2rem] p-6 border-white/5 bg-gradient-to-br from-black/40 to-transparent shadow-2xl">
+            <h3 className="font-heading text-sm text-primary mb-5 flex items-center gap-2">
+              <Sparkles size={16} /> Desafios Ativos
+            </h3>
+            <div className="space-y-4">
               {activeChallenges.length === 0 && (
-                <p className="text-xs text-muted-foreground">Nenhum desafio ativo agora.</p>
+                <p className="text-[10px] text-muted-foreground uppercase text-center py-4 tracking-widest opacity-50">Nenhum desafio ativo agora.</p>
               )}
               {activeChallenges.map((c) => (
-                <div key={c.id} className="p-2 bg-secondary/30 rounded-lg">
-                  <p className="text-xs font-medium text-foreground">{c.title}</p>
-                  <p className="text-xs text-muted-foreground">{c.xp_reward} XP • {c.type === "daily" ? "Diário" : "Semanal"}</p>
+                <div key={c.id} className="group relative glass rounded-2xl p-4 border border-white/5 bg-white/5 hover:bg-white/10 transition-all cursor-pointer overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="flex items-center gap-3 relative z-10">
+                    <MagicalIcon size="sm">
+                       <MagicalEmoji emoji={c.type === 'daily' ? '⚡' : '🔥'} size="sm" />
+                    </MagicalIcon>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">{c.title}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{c.type === "daily" ? "Diário" : "Semanal"}</span>
+                        <div className="w-1 h-1 rounded-full bg-white/20" />
+                        <span className="text-[10px] text-primary font-bold">{c.xp_reward} XP</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>

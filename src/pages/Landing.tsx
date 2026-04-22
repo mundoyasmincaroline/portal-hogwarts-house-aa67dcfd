@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ChevronRight, Star, Zap, Crown, BookOpen, Users, ShoppingBag, Trophy, MessageCircle, Sparkles } from "lucide-react";
 import HouseCupWidget from "@/components/HouseCupWidget";
 import MagicalEmoji from "@/components/MagicalEmoji";
+import MagicalIcon from "@/components/MagicalIcon";
 
 const HOUSES: { id: House; name: string; color: string; animal: string; trait: string }[] = [
   { id: "gryffindor", name: "Grifinória", color: "from-red-900/80 to-yellow-900/60 border-red-500/50", animal: "🦁", trait: "Coragem & Bravura" },
@@ -16,18 +17,21 @@ const HOUSES: { id: House; name: string; color: string; animal: string; trait: s
 ];
 
 const FEATURES = [
-  { icon: <Users size={22} className="text-blue-400" />, title: "Comunidade RPG", desc: "Feed, DMs, amigos e stories. Viva Hogwarts com outros fãs.", color: "border-blue-500/30 bg-blue-900/10" },
-  { icon: <ShoppingBag size={22} className="text-yellow-400" />, title: "Gringotts Store", desc: "Mantos, varinhas, amuletos e itens mágicos com Galeões.", color: "border-yellow-500/30 bg-yellow-900/10" },
-  { icon: <Trophy size={22} className="text-amber-400" />, title: "Álbum de Figurinhas", desc: "Colecione personagens raros e complete seu álbum mágico.", color: "border-amber-500/30 bg-amber-900/10" },
-  { icon: <Zap size={22} className="text-purple-400" />, title: "Gamificação Extrema", desc: "XP, níveis, conquistas, ranking das casas e desafios diários.", color: "border-purple-500/30 bg-purple-900/10" },
-  { icon: <Crown size={22} className="text-rose-400" />, title: "VIP & Recompensas", desc: "Planos VIP com Galeões mensais, skins exclusivas e badges.", color: "border-rose-500/30 bg-rose-900/10" },
-  { icon: <MessageCircle size={22} className="text-green-400" />, title: "Chats & Casas", desc: "Salas de RPG por casa, missões coletivas e eventos ao vivo.", color: "border-green-500/30 bg-green-900/10" },
+  { icon: Users, title: "Comunidade RPG", desc: "Feed, DMs, amigos e stories. Viva Hogwarts com outros fãs.", color: "#60a5fa", cardColor: "border-blue-500/20 bg-blue-900/5" },
+  { icon: ShoppingBag, title: "Gringotts Store", desc: "Mantos, varinhas, amuletos e itens mágicos com Galeões.", color: "#fbbf24", cardColor: "border-yellow-500/20 bg-yellow-900/5" },
+  { icon: Trophy, title: "Álbum de Figurinhas", desc: "Colecione personagens raros e complete seu álbum mágico.", color: "#f59e0b", cardColor: "border-amber-500/20 bg-amber-900/5" },
+  { icon: Zap, title: "Gamificação Extrema", desc: "XP, níveis, conquistas, ranking das casas e desafios diários.", color: "#a855f7", cardColor: "border-purple-500/20 bg-purple-900/5" },
+  { icon: Crown, title: "VIP & Recompensas", desc: "Planos VIP com Galeões mensais, skins exclusivas e badges.", color: "#fb7185", cardColor: "border-rose-500/20 bg-rose-900/5" },
+  { icon: MessageCircle, title: "Chats & Casas", desc: "Salas de RPG por casa, missões coletivas e eventos ao vivo.", color: "#10b981", cardColor: "border-green-500/20 bg-green-900/5" },
 ];
 
 const TESTIMONIALS = [
-  { house: "gryffindor", emoji: "🦁", name: "Ana L.", quote: "Finalmente um portal que parece de verdade! Me sinto dentro de Hogwarts." },
-  { house: "slytherin",  emoji: "🐍", name: "Marcos V.", quote: "As figurinhas são viciantes demais. Já completei metade do álbum!" },
-  { house: "ravenclaw",  emoji: "🦅", name: "Julia R.", quote: "O sistema de Galeões e a loja são incrívels. Quero mais itens!" },
+  { house: "gryffindor", emoji: "🦁", name: "Ana L.", quote: "Finalmente um portal que parece de verdade! Me sinto dentro de Hogwarts a cada clique.", color: "border-red-500/20 bg-red-900/5" },
+  { house: "slytherin",  emoji: "🐍", name: "Marcos V.", quote: "As figurinhas são viciantes demais. O sistema de trocas e o álbum são impecáveis!", color: "border-green-500/20 bg-green-900/5" },
+  { house: "ravenclaw",  emoji: "🦅", name: "Julia R.", quote: "O sistema de Galeões e a loja são incríveis. Itens raros que realmente dão status.", color: "border-blue-500/20 bg-blue-900/5" },
+  { house: "hufflepuff", emoji: "🦡", name: "Pedro S.", quote: "A comunidade é super acolhedora. O RPG no chat é o melhor que já participei.", color: "border-yellow-500/20 bg-yellow-900/5" },
+  { house: "gryffindor", emoji: "⚔️", name: "Lucas M.", quote: "Os duelos e a disputa pela Taça das Casas me fazem querer entrar todo dia!", color: "border-red-500/20 bg-red-900/5" },
+  { house: "ravenclaw",  emoji: "📖", name: "Clara B.", quote: "A imersão é total. As notificações por coruja são um toque de mestre.", color: "border-blue-500/20 bg-blue-900/5" },
 ];
 
 export default function Landing() {
@@ -89,38 +93,50 @@ export default function Landing() {
           </div>
 
           {/* Title */}
-          <h1 className="font-heading text-5xl sm:text-6xl md:text-8xl text-gold-gradient mb-3 tracking-wide drop-shadow-2xl">
+          <h1 className="font-heading text-6xl sm:text-7xl md:text-9xl text-gold-gradient mb-4 tracking-tighter drop-shadow-[0_10px_30px_rgba(212,175,55,0.4)] animate-in fade-in zoom-in duration-1000">
             Hogwarts House
           </h1>
-          <div className="w-32 h-px bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mb-5" />
 
-          <p className="text-base sm:text-lg text-white/90 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] max-w-xl mx-auto mb-8 leading-relaxed font-serif font-medium bg-black/20 p-4 rounded-2xl backdrop-blur-sm border border-white/5">
-            O portal de fãs de Harry Potter com gamificação, RPG, álbum de figurinhas, 
-            loja mágica e uma comunidade que vive e respira magia.
-          </p>
-
-          {/* Stats */}
-          <div className="flex items-center justify-center gap-6 mb-8 flex-wrap">
-            <div className="text-center">
-              <p className="font-heading text-2xl text-primary">
-                {memberCount !== null ? memberCount.toLocaleString("pt-BR") : "..."}
+          {/* Cinematic Description Plaque - MONSTER QUALITY */}
+          <div className="relative max-w-2xl mx-auto mb-10 group animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300">
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20 rounded-[2.5rem] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200" />
+            <div className="relative glass rounded-[2.5rem] p-8 md:p-10 border border-white/10 shadow-2xl backdrop-blur-xl bg-black/20">
+              <p className="text-lg sm:text-xl text-white/90 leading-relaxed font-serif font-medium italic">
+                "O portal definitivo para bruxos e bruxas. Um mundo de <span className="text-primary font-bold">gamificação</span>, <span className="text-primary font-bold">RPG imersivo</span>, 
+                coleções mágicas e uma comunidade de elite que vive e respira a verdadeira magia."
               </p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Bruxos</p>
+              <div className="mt-4 pt-4 border-t border-white/5">
+                <p className="text-[10px] text-white/30 uppercase tracking-[0.4em] font-mono">✦ Mundo Yasmin Caroline ✦</p>
+              </div>
             </div>
-            <div className="w-px h-8 bg-border" />
-            <div className="text-center">
-              <p className="font-heading text-2xl text-primary">4</p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Casas</p>
+          </div>
+
+          {/* Stats - Artifact Style */}
+          <div className="flex items-center justify-center gap-4 sm:gap-10 mb-12 flex-wrap animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-500">
+            <div className="relative group text-center">
+              <p className="font-heading text-3xl sm:text-4xl text-gold-gradient">{memberCount !== null ? memberCount.toLocaleString("pt-BR") : "10"}</p>
+              <p className="text-[10px] text-primary/60 uppercase tracking-[0.3em] font-bold">Bruxos</p>
             </div>
-            <div className="w-px h-8 bg-border" />
-            <div className="text-center">
-              <p className="font-heading text-2xl text-primary">80+</p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Itens na Loja</p>
+            
+            <div className="w-px h-10 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden sm:block" />
+            
+            <div className="relative group text-center">
+              <p className="font-heading text-3xl sm:text-4xl text-gold-gradient">4</p>
+              <p className="text-[10px] text-primary/60 uppercase tracking-[0.3em] font-bold">Casas</p>
             </div>
-            <div className="w-px h-8 bg-border" />
-            <div className="text-center">
-              <p className="font-heading text-2xl text-primary">∞</p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Magia</p>
+
+            <div className="w-px h-10 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden sm:block" />
+
+            <div className="relative group text-center">
+              <p className="font-heading text-3xl sm:text-4xl text-gold-gradient">80+</p>
+              <p className="text-[10px] text-primary/60 uppercase tracking-[0.3em] font-bold">Itens</p>
+            </div>
+
+            <div className="w-px h-10 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden sm:block" />
+
+            <div className="relative group text-center">
+              <p className="font-heading text-3xl sm:text-4xl text-gold-gradient">∞</p>
+              <p className="text-[10px] text-primary/60 uppercase tracking-[0.3em] font-bold">Magia</p>
             </div>
           </div>
 
@@ -167,15 +183,25 @@ export default function Landing() {
             O Chapéu Seletor aguarda. Entre no portal e descubra onde você pertence.
           </p>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {HOUSES.map(h => (
             <div key={h.id} onClick={() => navigate("/register")}
-              className={`glass rounded-[2.5rem] p-8 border bg-gradient-to-br ${h.color} text-center cursor-pointer hover:-translate-y-3 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 group flex flex-col items-center gap-5`}>
-              <MagicalEmoji emoji={h.animal} size="lg" className="group-hover:rotate-12 transition-transform duration-500" />
-              <div>
-                <h3 className="font-heading text-xl text-foreground mb-1">{h.name}</h3>
-                <p className="text-[10px] text-white/50 uppercase tracking-[0.2em] font-bold">{h.trait}</p>
+              className={`relative glass rounded-[3rem] p-10 border-2 bg-gradient-to-br ${h.color} text-center cursor-pointer hover:-translate-y-4 hover:shadow-[0_30px_100px_rgba(0,0,0,0.6)] transition-all duration-700 group flex flex-col items-center gap-6 overflow-hidden`}>
+              
+              {/* Inner Glow Artifact */}
+              <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              
+              <div className="relative z-10 w-24 h-24 flex items-center justify-center rounded-3xl bg-black/40 border border-white/10 shadow-inner group-hover:scale-110 transition-transform duration-700">
+                <MagicalEmoji emoji={h.animal} size="xl" className="group-hover:rotate-12 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" />
               </div>
+              
+              <div className="relative z-10">
+                <h3 className="font-heading text-2xl text-foreground mb-2 drop-shadow-md">{h.name}</h3>
+                <p className="text-[10px] text-white/60 uppercase tracking-[0.3em] font-bold px-3 py-1 bg-black/30 rounded-full border border-white/5">{h.trait}</p>
+              </div>
+              
+              {/* Luxury Accent */}
+              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
             </div>
           ))}
         </div>
@@ -197,12 +223,18 @@ export default function Landing() {
             <p className="text-xs font-heading text-primary uppercase tracking-widest mb-2">Tudo que você precisa</p>
             <h2 className="font-heading text-3xl md:text-4xl text-foreground">O portal mais completo do fandom</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {FEATURES.map((f, i) => (
-              <div key={i} className={`glass rounded-2xl p-5 border ${f.color} hover:-translate-y-1 transition-transform`}>
-                <div className="mb-3">{f.icon}</div>
-                <h3 className="font-heading text-base text-foreground mb-1">{f.title}</h3>
-                <p className="text-[12px] text-muted-foreground leading-relaxed">{f.desc}</p>
+              <div key={i} className={`group/feat glass rounded-[2.5rem] p-8 border ${f.cardColor} hover:-translate-y-2 transition-all duration-500 relative overflow-hidden`}>
+                <div className="absolute inset-0 bg-white/5 opacity-0 group-hover/feat:opacity-100 transition-opacity" />
+                <div className="mb-6">
+                   <MagicalIcon icon={f.icon} color={f.color} size={24} />
+                </div>
+                <h3 className="font-heading text-xl text-foreground mb-2 group-hover/feat:text-primary transition-colors">{f.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed italic">{f.desc}</p>
+                
+                {/* Luxury Bottom Accent */}
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
               </div>
             ))}
           </div>
@@ -235,19 +267,23 @@ export default function Landing() {
                 Entrar e ver a loja <ChevronRight size={14} className="ml-1" />
               </Button>
             </div>
-            <div className="shrink-0 grid grid-cols-2 gap-3 w-full md:w-auto">
+            <div className="shrink-0 grid grid-cols-2 sm:grid-cols-3 gap-4 w-full md:w-auto">
               {[
-                { icon: "👑", label: "Fundador", price: "R$ 39,90/mês", glow: "border-yellow-400/50" },
-                { icon: "💜", label: "VIP",      price: "R$ 19,90/mês", glow: "border-purple-400/50" },
-                { icon: "⭐", label: "Premium",  price: "R$ 9,90/mês",  glow: "border-slate-400/40" },
-                { icon: "🪙", label: "Galeões",  price: "a partir de R$4,90", glow: "border-amber-500/40" },
+                { icon: "👑", label: "Fundador", price: "VIP Elite", color: "#fbbf24" },
+                { icon: "💜", label: "VIP",      price: "Premium", color: "#a855f7" },
+                { icon: "🪙", label: "Galeões",  price: "Câmbio", color: "#f59e0b" },
+                { icon: "⚔️", label: "Gryffindor", price: "Lendário", color: "#ef4444" },
+                { icon: "🐍", label: "Slytherin", price: "Relíquia", color: "#10b981" },
+                { icon: "🦅", label: "Ravenclaw", price: "Sabedoria", color: "#3b82f6" },
               ].map(p => (
-                <div key={p.label} className={`glass rounded-2xl p-4 border ${p.glow} flex flex-col items-center gap-3 hover:scale-110 transition-transform duration-500`}>
-                  <MagicalEmoji emoji={p.icon} size="sm" />
-                  <div className="text-center">
-                    <p className="font-heading text-xs text-foreground uppercase tracking-tighter">{p.label}</p>
-                    <p className="text-[9px] text-white/40 mt-0.5 font-mono">{p.price}</p>
+                <div key={p.label} className="relative group/item glass rounded-2xl p-4 border border-white/10 flex flex-col items-center gap-3 hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+                  <div className="absolute inset-0 bg-white/5 opacity-0 group-hover/item:opacity-100 transition-opacity" />
+                  <MagicalEmoji emoji={p.icon} size="sm" className="group-hover:scale-110 transition-transform" />
+                  <div className="text-center relative z-10">
+                    <p className="font-heading text-[10px] text-foreground uppercase tracking-tight">{p.label}</p>
+                    <p className="text-[8px] text-white/40 mt-0.5 font-mono">{p.price}</p>
                   </div>
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover/item:opacity-100" />
                 </div>
               ))}
             </div>
@@ -261,49 +297,124 @@ export default function Landing() {
           <p className="text-xs font-heading text-primary uppercase tracking-widest mb-2">O que dizem os membros</p>
           <h2 className="font-heading text-2xl text-foreground">Bruxos reais, experiências reais</h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {TESTIMONIALS.map((t, i) => (
-            <div key={i} className="glass rounded-2xl p-5 border border-border/30">
-              <div className="text-2xl mb-3">{t.emoji}</div>
-              <p className="text-sm text-foreground italic mb-3">"{t.quote}"</p>
-              <p className="text-xs text-muted-foreground font-heading">— {t.name}</p>
+            <div key={i} className={`group/test glass rounded-[2rem] p-8 border ${t.color} hover:-translate-y-2 transition-all duration-500 relative overflow-hidden`}>
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover/test:opacity-100 transition-opacity" />
+              <div className="relative z-10 flex flex-col gap-4">
+                <div className="flex items-center justify-between">
+                  <MagicalEmoji emoji={t.emoji} size="sm" />
+                  <div className="w-8 h-px bg-white/10" />
+                </div>
+                <p className="text-sm text-foreground/90 italic leading-relaxed">"{t.quote}"</p>
+                <div className="mt-2 flex items-center gap-2">
+                   <div className="w-6 h-px bg-primary/30" />
+                   <p className="text-[10px] text-primary font-heading uppercase tracking-widest">{t.name}</p>
+                </div>
+              </div>
+              
+              {/* Magic Sparkle Effect */}
+              <div className="absolute -bottom-4 -right-4 w-12 h-12 bg-primary/10 rounded-full blur-xl group-hover:scale-150 transition-transform duration-1000" />
             </div>
           ))}
         </div>
       </div>
 
-      {/* ── CTA FINAL ── */}
-      <div className="relative z-10 px-4 py-20 text-center">
-        <div className="max-w-2xl mx-auto">
-          <div className="text-5xl mb-4">⚡</div>
-          <h2 className="font-heading text-3xl md:text-5xl text-gold-gradient mb-4">
-            Sua carta de Hogwarts chegou.
-          </h2>
-          <p className="text-muted-foreground text-sm mb-8 max-w-md mx-auto leading-relaxed">
-            Não perca mais tempo no mundo dos trouxas. A comunidade está te esperando.
-          </p>
-          <Button variant="magical" size="lg" onClick={() => navigate("/register")}
-            className="font-heading text-lg px-12 py-5 h-auto shadow-2xl shadow-primary/30 hover:shadow-primary/50 hover:scale-105 transition-all">
-            <Sparkles size={18} className="mr-2" />
-            Solicitar minha vaga agora
-          </Button>
-          <p className="text-[11px] text-muted-foreground/50 mt-4">
-            {currentTime.toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" })} · Vagas limitadas
-          </p>
+      {/* ── CTA FINAL - MONSTER QUALITY ── */}
+      <div className="relative z-10 px-4 py-24 text-center overflow-hidden">
+        <div className="max-w-4xl mx-auto relative group">
+          {/* Background Aura */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-primary/20 blur-[120px] opacity-30 animate-pulse pointer-events-none" />
+          
+          <div className="relative glass rounded-[3rem] p-12 md:p-20 border border-white/10 bg-gradient-to-br from-black/80 via-zinc-900/40 to-white/5 shadow-[0_30px_100px_rgba(0,0,0,0.7)] overflow-hidden">
+            {/* Parchment Texture */}
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/pinstriped-suit.png')] opacity-10 pointer-events-none" />
+            
+            <div className="relative z-10 space-y-8">
+              <div className="flex justify-center">
+                 <div className="w-20 h-20 bg-primary/10 rounded-full border border-primary/30 flex items-center justify-center shadow-2xl animate-float-slow">
+                   <Zap size={40} className="text-primary drop-shadow-[0_0_15px_rgba(250,204,21,0.5)]" />
+                 </div>
+              </div>
+
+              <div className="space-y-4">
+                <h2 className="font-heading text-4xl md:text-7xl text-gold-gradient tracking-tighter leading-tight drop-shadow-2xl">
+                  Sua carta de Hogwarts <br className="hidden md:block" /> chegou.
+                </h2>
+                <div className="w-24 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto" />
+                <p className="text-lg text-muted-foreground max-w-lg mx-auto leading-relaxed font-serif italic">
+                  "O mundo dos trouxas é pequeno demais para você. <br className="hidden sm:block" />
+                  A verdadeira magia começa agora."
+                </p>
+              </div>
+
+              <div className="pt-4">
+                <Button variant="magical" size="lg" onClick={() => navigate("/register")}
+                  className="font-heading text-xl px-16 py-8 h-auto shadow-2xl shadow-primary/30 hover:shadow-primary/50 hover:scale-105 transition-all rounded-3xl group/btn">
+                  <Sparkles size={24} className="mr-3 group-hover/btn:rotate-12 transition-transform" />
+                  Solicitar minha vaga agora
+                  <ChevronRight size={20} className="ml-2 group-hover/btn:translate-x-1 transition-transform" />
+                </Button>
+              </div>
+
+              <div className="flex flex-col items-center gap-2 pt-4">
+                <p className="text-[11px] text-primary/40 uppercase tracking-[0.4em] font-bold">Vagas limitadas para o próximo ano letivo</p>
+                <div className="flex gap-2">
+                   {[1,2,3].map(i => <div key={i} className="w-1.5 h-1.5 rounded-full bg-primary/20" />)}
+                </div>
+              </div>
+            </div>
+            
+            {/* Corner Accents */}
+            <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent blur-2xl" />
+            <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-primary/10 to-transparent blur-2xl" />
+          </div>
         </div>
       </div>
 
-      {/* ── FOOTER ── */}
-      <footer className="relative z-10 border-t border-border/30 px-4 py-6 text-center">
-        <p className="text-xs text-muted-foreground/50 font-heading">
-          ✦ Portal Hogwarts House · Mundo Yasmin Caroline · 2026 ✦
-        </p>
-        <p className="text-[10px] text-muted-foreground/30 mt-1">
-          Projeto de fã. Não afiliado à Warner Bros. ou J.K. Rowling.
-        </p>
-        <div className="flex gap-4 justify-center mt-3">
-          <button onClick={() => navigate("/login")} className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground transition-colors">Entrar</button>
-          <button onClick={() => navigate("/register")} className="text-[11px] text-muted-foreground/50 hover:text-muted-foreground transition-colors">Cadastrar</button>
+      {/* ── FOOTER MONSTER QUALITY ── */}
+      <footer className="relative z-10 border-t border-white/5 px-6 py-12 bg-black/40 backdrop-blur-3xl overflow-hidden">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12 text-center md:text-left">
+            {/* Column 1: Brand */}
+            <div className="space-y-4">
+               <span className="font-heading text-xl text-gold-gradient tracking-tight">✦ Hogwarts House</span>
+               <p className="text-[11px] text-muted-foreground/60 leading-relaxed max-w-xs mx-auto md:mx-0">
+                 O portal de elite para a comunidade bruxa. Viva sua própria história em Hogwarts com tecnologia e magia.
+               </p>
+            </div>
+            
+            {/* Column 2: Links */}
+            <div className="space-y-4">
+               <h4 className="text-[10px] font-heading text-primary uppercase tracking-[0.3em] font-bold">Ministério</h4>
+                <div className="flex flex-col gap-2">
+                  <button onClick={() => navigate("/terms")} className="text-xs text-muted-foreground/50 hover:text-primary transition-colors">Termos de Uso</button>
+                  <button onClick={() => navigate("/privacy")} className="text-xs text-muted-foreground/50 hover:text-primary transition-colors">Privacidade</button>
+                  <button onClick={() => navigate("/register")} className="text-xs text-muted-foreground/50 hover:text-primary transition-colors">Solicitar Vaga</button>
+                </div>
+            </div>
+
+            {/* Column 3: Disclaimer */}
+            <div className="space-y-4">
+               <h4 className="text-[10px] font-heading text-primary uppercase tracking-[0.3em] font-bold">Aviso Legal</h4>
+               <p className="text-[10px] text-muted-foreground/40 leading-relaxed italic">
+                 Hogwarts House é um projeto independente de fã para fã. Não possuímos afiliação com a Warner Bros. Entertainment Inc. 
+                 ou J.K. Rowling. Todos os direitos reservados aos seus respectivos detentores mágicos.
+               </p>
+            </div>
+          </div>
+
+          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
+            <p className="text-[9px] text-muted-foreground/30 font-mono tracking-widest uppercase">
+              ✦ Mundo Yasmin Caroline · 2026 · Todos os Direitos Mágicos Reservados ✦
+            </p>
+            <div className="flex items-center gap-6">
+               <div className="flex gap-1">
+                 {[1,2,3].map(i => <div key={i} className="w-1 h-1 rounded-full bg-primary/20" />)}
+               </div>
+               <span className="text-[10px] text-white/20 font-bold uppercase tracking-widest">Monster Quality Build 4.2</span>
+            </div>
+          </div>
         </div>
       </footer>
     </div>

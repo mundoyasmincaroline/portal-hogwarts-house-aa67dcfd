@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { X, Map as MapIcon, Castle, BookOpen, User, ShoppingBag, Trophy, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import MagicalIcon from "./MagicalIcon";
+import MagicalEmoji from "./MagicalEmoji";
+import SafeImage from "./SafeImage";
 
 const MAP_LOCATIONS = [
   { id: "castle", name: "O Castelo", path: "/dashboard", x: "50%", y: "45%", icon: <Castle /> },
@@ -20,14 +23,31 @@ export default function MaraudersMap({ isOpen, onClose }: { isOpen: boolean; onC
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 backdrop-blur-md animate-in fade-in duration-500">
-      <div className="relative w-full max-w-5xl aspect-[16/10] bg-[#f4e4bc] rounded-lg shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden border-[12px] border-[#3d2b1f] p-4">
+      <div className="relative w-full max-w-6xl aspect-[16/10] bg-[#f4e4bc] rounded-[3rem] shadow-[0_0_150px_rgba(0,0,0,0.9)] overflow-hidden border-[16px] border-[#2a1d15] p-0 group">
+        {/* Hogwarts Blueprint Background */}
+        <div className="absolute inset-0 z-0">
+           <img 
+             src="https://images.unsplash.com/photo-1547756536-cde3673fa2e5?auto=format&fit=crop&q=80&w=2000" 
+             className="w-full h-full object-cover opacity-20 grayscale" 
+             alt="Hogwarts Map"
+           />
+           <div className="absolute inset-0 bg-[#f4e4bc]/60 mix-blend-overlay" />
+        </div>
+
         {/* Paper Texture Overlay */}
-        <div className="absolute inset-0 opacity-40 mix-blend-multiply pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/old-map.png')]" />
+        <div className="absolute inset-0 z-10 opacity-60 mix-blend-multiply pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/old-map.png')]" />
         
         {/* Ink Drawings / Decor */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center opacity-20 pointer-events-none">
-            <h1 className="font-heading text-8xl text-[#3d2b1f] rotate-[-5deg]">I solemnly swear</h1>
-            <h2 className="font-heading text-6xl text-[#3d2b1f] rotate-[3deg] mt-[-20px]">that I am up to no good</h2>
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none select-none">
+            <h1 className="font-heading text-8xl text-[#3d2b1f]/10 rotate-[-5deg]">I solemnly swear</h1>
+            <h2 className="font-heading text-6xl text-[#3d2b1f]/10 rotate-[3deg] mt-[-20px]">that I am up to no good</h2>
+            
+            {/* Compass Rose */}
+            <div className="absolute top-10 left-10 w-32 h-32 opacity-20 rotate-45 border-4 border-[#3d2b1f] flex items-center justify-center">
+              <div className="w-full h-px bg-[#3d2b1f]" />
+              <div className="h-full w-px bg-[#3d2b1f] absolute" />
+              <span className="absolute -top-6 font-heading text-lg">N</span>
+            </div>
         </div>
 
         {/* Close Button */}
@@ -39,11 +59,11 @@ export default function MaraudersMap({ isOpen, onClose }: { isOpen: boolean; onC
         </button>
 
         {/* Locations */}
-        <div className="relative w-full h-full">
+        <div className="relative z-20 w-full h-full">
             {MAP_LOCATIONS.map((loc) => (
                 <div 
                     key={loc.id}
-                    className="absolute -translate-x-1/2 -translate-y-1/2 group"
+                    className="absolute -translate-x-1/2 -translate-y-1/2"
                     style={{ left: loc.x, top: loc.y }}
                 >
                     <button
@@ -53,22 +73,27 @@ export default function MaraudersMap({ isOpen, onClose }: { isOpen: boolean; onC
                             navigate(loc.path);
                             onClose();
                         }}
-                        className="relative flex flex-col items-center gap-3 transition-all duration-300 group-hover:scale-125"
+                        className="relative flex flex-col items-center gap-2 transition-all duration-300 hover:scale-110 active:scale-95"
                     >
-                        {/* Pegadinhas Animação */}
-                        {activeLoc === loc.id && (
-                            <div className="absolute -bottom-8 flex gap-4 animate-bounce">
-                                <span className="text-[#3d2b1f] text-xl rotate-12">👣</span>
-                                <span className="text-[#3d2b1f] text-xl -rotate-12 mt-2">👣</span>
-                            </div>
-                        )}
-                        
-                        <div className="w-16 h-16 rounded-full bg-[#3d2b1f]/10 border-2 border-[#3d2b1f]/40 flex items-center justify-center text-[#3d2b1f] group-hover:bg-[#3d2b1f] group-hover:text-[#f4e4bc] shadow-lg">
-                            {loc.icon}
+                        {/* Animated Name Tag */}
+                        <div className={`px-4 py-1 rounded-sm border-2 border-[#3d2b1f] bg-[#f4e4bc] shadow-md transition-all duration-500 ${activeLoc === loc.id ? 'opacity-100 translate-y-0' : 'opacity-80 translate-y-1'}`}>
+                          <span className="font-heading text-[10px] text-[#3d2b1f] uppercase tracking-[0.2em]">{loc.name}</span>
                         </div>
-                        <span className="font-heading text-sm text-[#3d2b1f] bg-[#f4e4bc]/80 px-3 py-1 rounded-full border border-[#3d2b1f]/20">
-                            {loc.name}
-                        </span>
+
+                        {/* The Plaque */}
+                        <div className="relative">
+                          <MagicalIcon size="md" color="#3d2b1f">
+                            <MagicalEmoji icon={loc.icon.type} size="sm" className="bg-transparent border-none shadow-none grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100" />
+                          </MagicalIcon>
+                          
+                          {/* Footprints following the location */}
+                          {activeLoc === loc.id && (
+                              <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex gap-4 animate-footprints-fast">
+                                  <span className="text-[#3d2b1f] text-xl rotate-12">👣</span>
+                                  <span className="text-[#3d2b1f] text-xl -rotate-12 mt-2">👣</span>
+                              </div>
+                          )}
+                        </div>
                     </button>
                 </div>
             ))}

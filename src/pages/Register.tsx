@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import HouseCrest from "@/components/HouseCrest";
 import MagicalParticles from "@/components/MagicalParticles";
 import { supabase } from "@/integrations/supabase/client";
+import AcceptanceLetter from "@/components/AcceptanceLetter";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -108,9 +109,15 @@ export default function Register() {
   const houses = Object.values(HOUSES);
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center px-4 py-12">
+    <div className="relative min-h-screen flex items-center justify-center px-4 py-12 overflow-hidden">
+      {/* ── CINEMATIC BACKGROUND ── */}
+      <div className="absolute inset-0 z-0">
+         <img src="https://images.unsplash.com/photo-1547756536-cde3673fa2e5?auto=format&fit=crop&q=80&w=2000" className="w-full h-full object-cover opacity-20 grayscale scale-110" alt="Background" />
+         <div className="absolute inset-0 bg-gradient-to-br from-black via-black/80 to-blue-950/40" />
+      </div>
+      
       <MagicalParticles />
-      <div className="glass rounded-2xl p-8 w-full max-w-lg z-20 animate-fade-in-up">
+      <div className="glass rounded-[2.5rem] p-10 w-full max-w-xl z-20 animate-fade-in-up border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.8)]">
         <div className="text-center mb-6">
           <h1 className="font-heading text-3xl text-gold-gradient mb-2">Solicitar Vaga</h1>
           <p className="text-muted-foreground text-sm">Preencha sua ficha de matrícula</p>
@@ -245,16 +252,10 @@ export default function Register() {
         )}
 
         {step === 3 && (
-          <div className="text-center space-y-4 py-8">
-            <div className="text-5xl animate-float">⚡</div>
-            <h2 className="font-heading text-2xl text-foreground">Matrícula Enviada!</h2>
-            <p className="text-muted-foreground text-sm">
-              Sua conta foi criada! Faça login para acessar o portal.
-            </p>
-            <Button variant="magical" onClick={() => navigate("/login")} className="font-heading">
-              Ir para o Login
-            </Button>
-          </div>
+          <AcceptanceLetter 
+            fullName={form.fullName} 
+            onContinue={() => navigate("/login")} 
+          />
         )}
 
         <div className="text-center mt-4">

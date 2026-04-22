@@ -583,7 +583,7 @@ export default function ChatRoom() {
                         )}
                         
                         <div className={`text-[14px] leading-relaxed break-words ${
-                           isMorpheus ? 'font-mono text-green-400 drop-shadow-[0_0_5px_rgba(34,197,94,0.4)]'
+                           isMorpheus ? 'font-mono text-green-400 drop-shadow-[0_0_10px_rgba(34,197,94,0.6)] animate-glitch'
                            : isYasmin ? 'text-yellow-50 drop-shadow-[0_0_5px_rgba(250,204,21,0.2)]'
                            : 'text-foreground/90'
                         }`}>

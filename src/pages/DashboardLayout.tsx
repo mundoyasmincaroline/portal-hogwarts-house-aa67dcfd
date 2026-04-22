@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";
+import MagicalIcon from "@/components/MagicalIcon";
 import { HOUSES, type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
 import { playMagicSound, isSoundEnabled, toggleSound } from "@/lib/sounds";
@@ -45,27 +46,27 @@ import FilchShadow from "@/components/FilchShadow";
 
 
 const NAV_ITEMS = [
-  { icon: <MagicalEmoji icon={Castle} size="xs" />, label: "O Castelo", path: "/dashboard" },
-  { icon: <MagicalEmoji icon={MapIcon} size="xs" />, label: "Mapa do Maroto", isMap: true },
-  { icon: <MagicalEmoji icon={BookOpen} size="xs" />, label: "Guia do Maroto", path: "/dashboard/guide" },
-  { icon: <MagicalEmoji icon={User} size="xs" />, label: "Meu Perfil", path: "/dashboard/profile" },
-  { icon: <MagicalEmoji icon={MessageCircle} size="xs" />, label: "Mensagens", path: "/dashboard/dm" },
-  { icon: <MagicalEmoji icon={Users} size="xs" />, label: "Amigos", path: "/dashboard/friends" },
-  { icon: <MagicalEmoji icon={Library} size="xs" />, label: "Membros", path: "/dashboard/members" },
-  { icon: <MagicalEmoji icon={Swords} size="xs" />, label: "Chats RPG", path: "/dashboard/chats" },
-  { icon: <MagicalEmoji icon={Camera} size="xs" />, label: "InstaHogwarts", path: "/dashboard/instahogwarts" },
-  { icon: <MagicalEmoji icon={Film} size="xs" />, label: "Hogwarts Cine", path: "/dashboard/cinema" },
-  { icon: <MagicalEmoji icon={Trophy} size="xs" />, label: "Ranking", path: "/dashboard/ranking" },
-  { icon: <MagicalEmoji icon={Shield} size="xs" />, label: "Casas", path: "/dashboard/houses" },
-  { icon: <MagicalEmoji icon={Zap} size="xs" />, label: "Desafios", path: "/dashboard/challenges" },
-  { icon: <MagicalEmoji icon={Sparkles} size="xs" />, label: "Eventos Mágicos", path: "/dashboard/events" },
-  { icon: <MagicalEmoji icon={GraduationCap} size="xs" />, label: "Aulas", path: "/dashboard/classes" },
-  { icon: <MagicalEmoji icon={ImageIcon} size="xs" />, label: "Álbum", path: "/dashboard/album" },
-  { icon: <MagicalEmoji icon={ShoppingBag} size="xs" />, label: "Loja", path: "/dashboard/shop" },
-  { icon: <MagicalGaleon size="xs" />, label: "Gringotts", path: "/dashboard/store" },
-  { icon: <MagicalEmoji icon={Wallet} size="xs" />, label: "Carteira", path: "/dashboard/wallet" },
-  { icon: <MagicalEmoji icon={ScrollText} size="xs" />, label: "Regras", path: "/dashboard/rules" },
-  { icon: <MagicalEmoji icon={Lock} size="xs" />, label: "Azkaban", path: "/dashboard/azkaban" },
+  { icon: <MagicalIcon icon={Castle} size="xs" color="#60a5fa" />, label: "O Castelo", path: "/dashboard" },
+  { icon: <MagicalIcon icon={MapIcon} size="xs" color="#f59e0b" />, label: "Mapa do Maroto", isMap: true },
+  { icon: <MagicalIcon icon={BookOpen} size="xs" color="#10b981" />, label: "Guia do Maroto", path: "/dashboard/guide" },
+  { icon: <MagicalIcon icon={User} size="xs" color="#a855f7" />, label: "Meu Perfil", path: "/dashboard/profile" },
+  { icon: <MagicalIcon icon={MessageCircle} size="xs" color="#3b82f6" />, label: "Mensagens", path: "/dashboard/dm" },
+  { icon: <MagicalIcon icon={Users} size="xs" color="#ec4899" />, label: "Amigos", path: "/dashboard/friends" },
+  { icon: <MagicalIcon icon={Library} size="xs" color="#94a3b8" />, label: "Membros", path: "/dashboard/members" },
+  { icon: <MagicalIcon icon={Swords} size="xs" color="#ef4444" />, label: "Chats RPG", path: "/dashboard/chats" },
+  { icon: <MagicalIcon icon={Camera} size="xs" color="#f43f5e" />, label: "InstaHogwarts", path: "/dashboard/instahogwarts" },
+  { icon: <MagicalIcon icon={Film} size="xs" color="#fb923c" />, label: "Hogwarts Cine", path: "/dashboard/cinema" },
+  { icon: <MagicalIcon icon={Trophy} size="xs" color="#fbbf24" />, label: "Ranking", path: "/dashboard/ranking" },
+  { icon: <MagicalIcon icon={Shield} size="xs" color="#10b981" />, label: "Casas", path: "/dashboard/houses" },
+  { icon: <MagicalIcon icon={Zap} size="xs" color="#a855f7" />, label: "Desafios", path: "/dashboard/challenges" },
+  { icon: <MagicalIcon icon={Sparkles} size="xs" color="#d4af37" />, label: "Sagas de Hogwarts", path: "/dashboard/sagas" },
+  { icon: <MagicalIcon icon={Sparkles} size="xs" color="#f472b6" />, label: "Eventos Mágicos", path: "/dashboard/events" },
+  { icon: <MagicalIcon icon={GraduationCap} size="xs" color="#3b82f6" />, label: "Aulas", path: "/dashboard/classes" },
+  { icon: <MagicalIcon icon={ImageIcon} size="xs" color="#94a3b8" />, label: "Álbum", path: "/dashboard/album" },
+  { icon: <MagicalIcon icon={ShoppingBag} size="xs" color="#f59e0b" />, label: "Loja", path: "/dashboard/shop" },
+  { icon: <MagicalIcon icon={Wallet} size="xs" color="#10b981" />, label: "Carteira", path: "/dashboard/wallet" },
+  { icon: <MagicalIcon icon={ScrollText} size="xs" color="#94a3b8" />, label: "Regras", path: "/dashboard/rules" },
+  { icon: <MagicalIcon icon={Lock} size="xs" color="#ef4444" />, label: "Azkaban", path: "/dashboard/azkaban" },
 ];
 
 

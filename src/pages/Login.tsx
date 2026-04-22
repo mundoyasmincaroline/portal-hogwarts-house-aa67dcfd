@@ -98,9 +98,15 @@ export default function Login() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center px-4">
+    <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
+      {/* ── CINEMATIC BACKGROUND ── */}
+      <div className="absolute inset-0 z-0">
+         <img src="https://images.unsplash.com/photo-1514894780037-d2ef692277bb?auto=format&fit=crop&q=80&w=2000" className="w-full h-full object-cover opacity-20 grayscale scale-110" alt="Background" />
+         <div className="absolute inset-0 bg-gradient-to-br from-black via-black/90 to-purple-950/30" />
+      </div>
+
       <MagicalParticles />
-      <div className="glass rounded-2xl p-8 w-full max-w-md z-20 animate-fade-in-up">
+      <div className="glass rounded-[2.5rem] p-10 w-full max-w-md z-20 animate-fade-in-up border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.8)]">
         <div className="text-center mb-8">
           <h1 className="font-heading text-3xl text-gold-gradient mb-2">
             {isRecoveryMode ? "Nova Senha" : "Entrar"}

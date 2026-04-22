@@ -16,6 +16,8 @@ import MemberCard from "@/components/MemberCard";
 import AdminMemberModal from "@/components/AdminMemberModal";
 import { Info, Users, Search, Scroll, Book, Lock, Trophy, ShoppingBag, Flame, Sparkles, Star, CheckCircle2, Crown } from "lucide-react";
 import SafeImage from "@/components/SafeImage";
+import RecruitmentWidget from "@/components/RecruitmentWidget";
+import MagicalIcon from "@/components/MagicalIcon";
 
 // ---- Componente embutido: lista de membros para solicitar amizade ----
 function MembersTab({ currentUserId }: { currentUserId?: string }) {
@@ -120,6 +122,7 @@ export default function Profile() {
   const [userBadges, setUserBadges] = useState<any[]>([]);
   const [userChallenges, setUserChallenges] = useState<any[]>([]);
   const [userItems, setUserItems] = useState<any[]>([]);
+  const [referrals, setReferrals] = useState<any[]>([]);
   const [loadingExtras, setLoadingExtras] = useState(false);
   const [activeTab, setActiveTab] = useState<"about" | "fichas" | "friends" | "members" | "security" | "album" | "referral" | "achievements" | "inventory">("about");
 
@@ -621,18 +624,22 @@ export default function Profile() {
 
       {activeTab === "about" ? (
         <>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-4 gap-3">
             <div className="glass rounded-xl p-4 text-center">
-              <p className="text-2xl font-heading text-primary">{profile.xp}</p>
-              <p className="text-xs text-muted-foreground">XP Total</p>
+              <p className="text-xl font-heading text-primary">{profile.xp}</p>
+              <p className="text-[8px] text-muted-foreground uppercase">XP Total</p>
             </div>
             <div className="glass rounded-xl p-4 text-center">
-              <p className="text-2xl font-heading text-foreground">{levelInfo.level}</p>
-              <p className="text-xs text-muted-foreground">Nível</p>
+              <p className="text-xl font-heading text-foreground">{levelInfo.level}</p>
+              <p className="text-[8px] text-muted-foreground uppercase">Nível</p>
+            </div>
+            <div className="glass rounded-xl p-4 text-center border-blue-500/20 bg-blue-500/5">
+              <p className="text-xl font-heading text-blue-400">{Math.floor(profile.xp / 10 + userItems.length * 50)}</p>
+              <p className="text-[8px] text-blue-300/60 uppercase">Força Mágica</p>
             </div>
             <div className="glass rounded-xl p-4 text-center">
-              <p className="text-2xl font-heading text-foreground">{getMedalForXP(profile.xp) ? 1 : 0}</p>
-              <p className="text-xs text-muted-foreground">Badges</p>
+              <p className="text-xl font-heading text-foreground">{userBadges.length}</p>
+              <p className="text-[8px] text-muted-foreground uppercase">Badges</p>
             </div>
           </div>
 
@@ -720,49 +727,41 @@ export default function Profile() {
       ) : activeTab === "album" ? (
         <ProfileAlbum userId={profile.user_id} />
       ) : activeTab === "referral" && isMe ? (
-        <div className="space-y-4">
-          <div className="glass rounded-2xl p-6 text-center border border-primary/20 bg-primary/5">
-            <h2 className="font-heading text-xl text-primary mb-2">Seu Link de Convite Mágico</h2>
-            <p className="text-sm text-muted-foreground mb-4">
-              Convide novos bruxos e ganhe <strong>500 XP</strong> assim que eles chegarem ao Nível 2!
-            </p>
-            <div className="flex items-center gap-2 max-w-sm mx-auto">
-              <Input readOnly value={profile.username} className="text-center font-bold text-lg bg-background" />
-              <Button variant="magical" onClick={() => {
-                navigator.clipboard.writeText(`Entre na Hogwarts House e use meu código de convite: ${profile.username}`);
-                toast.success("Código copiado!");
-              }}>Copiar</Button>
-            </div>
-          </div>
-
-          <h3 className="font-heading text-lg text-foreground mt-8">Bruxos que você recrutou ({referrals.length})</h3>
+        <div className="space-y-8">
+          <RecruitmentWidget />
           
-          {referrals.length === 0 ? (
-            <div className="glass rounded-xl p-6 text-center text-muted-foreground text-sm">
-              Você ainda não recrutou ninguém. Compartilhe seu código!
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {referrals.map(r => (
-                <div key={r.id} className="glass rounded-xl p-3 flex items-center gap-3">
-                  <div className="w-10 h-10 shrink-0">
-                    <SafeImage 
-                      src={r.profile?.avatar_url} 
-                      alt={r.profile?.full_name || "Membro"} 
-                      className="w-full h-full rounded-full object-cover" 
-                      fallbackText={r.profile?.full_name?.[0]}
-                    />
+          <div className="glass rounded-[2.5rem] p-8 border border-white/5">
+            <h3 className="font-heading text-lg text-foreground mb-6 flex items-center gap-2">
+              <Trophy size={18} className="text-yellow-500" /> Bruxos que você recrutou ({referrals.length})
+            </h3>
+            
+            {referrals.length === 0 ? (
+              <div className="text-center py-10 text-muted-foreground text-sm italic">
+                Sua lista de recrutamento está vazia. Comece a espalhar a magia!
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {referrals.map(r => (
+                  <div key={r.id} className="glass rounded-2xl p-4 flex items-center gap-4 border border-white/5 bg-black/20">
+                    <div className="w-12 h-12 shrink-0 rounded-full border-2 border-primary/20 p-0.5">
+                      <SafeImage 
+                        src={r.profile?.avatar_url} 
+                        alt={r.profile?.full_name || "Membro"} 
+                        className="w-full h-full rounded-full object-cover" 
+                        fallbackText={r.profile?.full_name?.[0]}
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-heading text-foreground truncate">{r.profile?.full_name}</p>
+                      <p className="text-[10px] uppercase tracking-wider">
+                        {r.status === 'completed' ? <span className="text-green-500 font-bold">✓ RECUTADO</span> : <span className="text-amber-500/60">⏳ EM TREINAMENTO</span>}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-heading text-foreground truncate">{r.profile?.full_name}</p>
-                    <p className="text-xs text-muted-foreground truncate">
-                      {r.status === 'completed' ? <span className="text-green-500">✅ 500 XP Ganhos</span> : <span className="text-amber-500">⏳ Pendente (Aguardando Nv. 2)</span>}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       ) : activeTab === "achievements" ? (
         <div className="space-y-10">
