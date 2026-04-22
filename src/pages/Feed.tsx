@@ -16,6 +16,7 @@ import SafeImage from "@/components/SafeImage";
 import MagicalIcon from "@/components/MagicalIcon";
 import MagicalEmoji from "@/components/MagicalEmoji";
 import MagicalGaleon from "@/components/MagicalGaleon";
+import WelcomeChestModal from "@/components/WelcomeChestModal";
 
 const REACTIONS = ["⚡", "❤️", "🔥", "🦁", "🦅", "🐍", "🦡"];
 
@@ -53,6 +54,7 @@ export default function Feed() {
   const [activeChallenges, setActiveChallenges] = useState<{ id: string; title: string; xp_reward: number; type: string }[]>([]);
   const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
   const [bannedWords, setBannedWords] = useState<string[]>([]);
+  const [showWelcomeChest, setShowWelcomeChest] = useState(false);
 
   const loadFeed = useCallback(async () => {
     const { data: postsData } = await supabase
@@ -146,6 +148,14 @@ export default function Feed() {
     return () => { supabase.removeChannel(channel); };
   }, [loadFeed, loadSidebar]);
 
+  useEffect(() => {
+    if (profile && profile.has_seen_intro === false) {
+      // Pequeno delay para não abrir instantaneamente no fade-in da página
+      const timer = setTimeout(() => setShowWelcomeChest(true), 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [profile]);
+
   const submitPost = async () => {
     if (!newPost.trim() || !user) return;
     
@@ -235,6 +245,10 @@ export default function Feed() {
     <div className="max-w-4xl mx-auto space-y-6">
       <StoriesBar />
       <DynamicGreeting />
+      
+      {showWelcomeChest && (
+        <WelcomeChestModal onClose={() => setShowWelcomeChest(false)} />
+      )}
 
       <BirthdayBanner />
       <VipUpsellBanner
