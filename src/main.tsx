@@ -10,22 +10,25 @@ const storedVersion = localStorage.getItem("portal_version");
 
 if (storedVersion !== PORTAL_VERSION) {
   console.log("Sincronizando nova versão do portal...");
-  // Limpeza profunda para evitar que estados antigos quebrem o app no celular
-  const theme = localStorage.getItem("theme"); // Preserva apenas o tema
+  // Limpeza Cirúrgica: Remove versões antigas e caches, mas PRESERVA a sessão de login
+  const sessionKey = Object.keys(localStorage).find(key => key.includes('auth-token'));
+  const sessionData = sessionKey ? localStorage.getItem(sessionKey) : null;
+  const theme = localStorage.getItem("theme");
+
   localStorage.clear();
   sessionStorage.clear();
+  
+  if (sessionKey && sessionData) localStorage.setItem(sessionKey, sessionData);
   if (theme) localStorage.setItem("theme", theme);
   localStorage.setItem("portal_version", PORTAL_VERSION);
   
-  // Limpeza de caches de Service Worker
   if ('caches' in window) {
     caches.keys().then((names) => {
       for (let name of names) caches.delete(name);
     });
   }
   
-  // Forçar recarga bypassando cache
-  window.location.href = window.location.origin + window.location.pathname + '?v=' + Date.now();
+  window.location.replace(window.location.origin + window.location.pathname + '?v=' + Date.now());
 }
 
 // Registro do Service Worker para PWA (Hogwarts no Bolso)
