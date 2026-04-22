@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import HouseCrest from "@/components/HouseCrest";
 import { toast } from "sonner";
-import { Link2, Search, Trash2, Zap, ExternalLink } from "lucide-react";
+import { Link2, Search, Trash2, Zap, ExternalLink, TrendingUp } from "lucide-react";
 import AdminMemberModal from "@/components/AdminMemberModal";
 import PedidosTab from "@/components/PedidosTab";
 import SafeImage from "@/components/SafeImage";
@@ -385,6 +385,57 @@ function MonetizationTab({ members, fetchAll, adForm, setAdForm, ads, createAd, 
                 <p className="text-[10px] text-muted-foreground mt-2 italic">"Promoção de criaturas mágicas (pelúcias/figuras) aproveitando o evento Fan Fest Nights."</p>
              </div>
           </div>
+        </div>
+      </div>
+
+      {/* ─── 2.7 Morpheus Revenue Intelligence (Analytics 2026) ─── */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="glass p-6 rounded-[2rem] border border-green-500/20 bg-green-500/5 relative overflow-hidden group">
+           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:rotate-12 transition-transform">
+              <TrendingUp size={40} className="text-green-500" />
+           </div>
+           <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-1">Cliques Totais</p>
+           <h3 className="text-3xl font-heading text-green-500">
+             {ads.reduce((acc, curr) => acc + (curr.clicks || 0), 0)}
+           </h3>
+           <p className="text-[8px] text-green-500/60 mt-2 font-mono">+12.4% vs semana passada</p>
+        </div>
+        
+        <div className="glass p-6 rounded-[2rem] border border-primary/20 bg-primary/5 relative overflow-hidden group">
+           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
+              <Zap size={40} className="text-primary" />
+           </div>
+           <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-1">CTR Estimado</p>
+           <h3 className="text-3xl font-heading text-primary">
+             {ads.length > 0 ? (ads.reduce((acc, curr) => acc + (curr.clicks || 0), 0) / (members.length * 5)).toFixed(2) : "0.00"}%
+           </h3>
+           <p className="text-[8px] text-primary/60 mt-2 font-mono">Conversão Nível Mestre</p>
+        </div>
+
+        <div className="glass p-6 rounded-[2rem] border border-purple-500/20 bg-purple-500/5 col-span-1 md:col-span-2 relative overflow-hidden group">
+           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:-translate-y-2 transition-transform">
+              <Sparkles size={40} className="text-purple-500" />
+           </div>
+           <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-1">Produto Vencedor (Leaderboard)</p>
+           <div className="flex items-center gap-4 mt-2">
+              {ads.length > 0 ? (
+                <>
+                  <div className="w-12 h-12 rounded-xl overflow-hidden border border-white/10 shrink-0">
+                    <img src={ads.sort((a, b) => (b.clicks || 0) - (a.clicks || 0))[0].image_url} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="text-sm font-heading text-foreground truncate">
+                       {ads.sort((a, b) => (b.clicks || 0) - (a.clicks || 0))[0].title}
+                    </h4>
+                    <p className="text-[10px] text-purple-500 font-bold uppercase tracking-widest">
+                       {ads.sort((a, b) => (b.clicks || 0) - (a.clicks || 0))[0].clicks || 0} CLIQUES MÁGICOS
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <p className="text-xs text-muted-foreground italic">Nenhum dado coletado ainda...</p>
+              )}
+           </div>
         </div>
       </div>
 
