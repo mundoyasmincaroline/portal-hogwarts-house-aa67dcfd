@@ -52,6 +52,7 @@ import GodDashboard from "./pages/GodDashboard";
 
 
 import MagicalMeta from "./components/MagicalMeta";
+import MagicalErrorBoundary from "./components/MagicalErrorBoundary";
 
 const queryClient = new QueryClient();
 
@@ -67,58 +68,60 @@ const App = () => (
       <Toaster />
       <Sonner />
       <AuthInit>
-        <BrowserRouter>
-          <MagicalMeta />
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/parents" element={<ParentsGuide />} />
-            <Route path="/dashboard" element={<DashboardLayout />}>
+        <MagicalErrorBoundary>
+          <BrowserRouter>
+            <MagicalMeta />
+            <Routes>
+              {/* ... routes ... */}
+              <Route path="/" element={<Landing />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/parents" element={<ParentsGuide />} />
+              <Route path="/dashboard" element={<DashboardLayout />}>
 
-              <Route index element={<Feed />} />
-              <Route path="chats" element={<Chats />} />
-              <Route path="chat/:roomId" element={<ChatRoom />} />
-              <Route path="cinema" element={<CineHogwarts />} />
-              <Route path="instahogwarts" element={<InstaHogwarts />} />
+                <Route index element={<Feed />} />
+                <Route path="chats" element={<Chats />} />
+                <Route path="chat/:roomId" element={<ChatRoom />} />
+                <Route path="cinema" element={<CineHogwarts />} />
+                <Route path="instahogwarts" element={<InstaHogwarts />} />
 
-              <Route path="album" element={<StickerAlbum />} />
-              <Route path="classes" element={<Classes />} />
-              <Route path="houses" element={<Houses />} />
-              <Route path="ranking" element={<Ranking />} />
-              <Route path="challenges" element={<Challenges />} />
-              <Route path="events" element={<Events />} />
-              <Route path="profile" element={<Profile />} />
-              <Route path="profile/:userId" element={<Profile />} />
-              <Route path="admin" element={<Admin />} />
-              <Route path="admin/finance" element={<AdminFinance />} />
-              <Route path="shop" element={<EmojiShop />} />
-              <Route path="rules" element={<Rules />} />
-              <Route path="guide" element={<MaraudersGuide />} />
-              <Route path="dm" element={<DMInbox />} />
-              <Route path="dm/:userId" element={<DMChat />} />
-              <Route path="friends" element={<Friends />} />
-              <Route path="trades" element={<StickerTrades />} />
-              <Route path="azkaban" element={<Azkaban />} />
-              <Route path="members" element={<Members />} />
-              <Route path="store" element={<GringottsStore />} />
-              <Route path="wallet" element={<Wallet />} />
-              <Route path="sagas" element={<MagicalSagas />} />
-              <Route path="games" element={<MagicalGames />} />
-              <Route path="matrix" element={<MatrixPortal />} />
-              <Route path="yasmin-world" element={<YasminWorld />} />
-              <Route path="bff-world" element={<BFFWorld />} />
-              <Route path="decisions" element={<FamilyDecisions />} />
-              <Route path="zion" element={<ZionVault />} />
-              <Route path="god" element={<GodDashboard />} />
-              {/* <Route path="sagas" element={<MagicalTournaments />} /> */}
+                <Route path="album" element={<StickerAlbum />} />
+                <Route path="classes" element={<Classes />} />
+                <Route path="houses" element={<Houses />} />
+                <Route path="ranking" element={<Ranking />} />
+                <Route path="challenges" element={<Challenges />} />
+                <Route path="events" element={<Events />} />
+                <Route path="profile" element={<Profile />} />
+                <Route path="profile/:userId" element={<Profile />} />
+                <Route path="admin" element={<Admin />} />
+                <Route path="admin/finance" element={<AdminFinance />} />
+                <Route path="shop" element={<EmojiShop />} />
+                <Route path="rules" element={<Rules />} />
+                <Route path="guide" element={<MaraudersGuide />} />
+                <Route path="dm" element={<DMInbox />} />
+                <Route path="dm/:userId" element={<DMChat />} />
+                <Route path="friends" element={<Friends />} />
+                <Route path="trades" element={<StickerTrades />} />
+                <Route path="azkaban" element={<Azkaban />} />
+                <Route path="members" element={<Members />} />
+                <Route path="store" element={<GringottsStore />} />
+                <Route path="wallet" element={<Wallet />} />
+                <Route path="sagas" element={<MagicalSagas />} />
+                <Route path="games" element={<MagicalGames />} />
+                <Route path="matrix" element={<MatrixPortal />} />
+                <Route path="yasmin-world" element={<YasminWorld />} />
+                <Route path="bff-world" element={<BFFWorld />} />
+                <Route path="decisions" element={<FamilyDecisions />} />
+                <Route path="zion" element={<ZionVault />} />
+                <Route path="god" element={<GodDashboard />} />
 
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+              </Route>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </MagicalErrorBoundary>
       </AuthInit>
     </TooltipProvider>
   </QueryClientProvider>
