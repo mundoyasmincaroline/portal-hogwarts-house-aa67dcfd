@@ -45,72 +45,78 @@ export class MagicalErrorBoundary extends Component<Props, State> {
     this.setState({ isSyncing: true });
     
     setTimeout(() => {
-      localStorage.clear();
-      sessionStorage.clear();
+      // Protocolo de Limpeza Inteligente: Remove caches e versões, mas tenta preservar a entrada
+      localStorage.removeItem("portal_version");
       if ('caches' in window) {
         caches.keys().then((names) => {
           for (let name of names) caches.delete(name);
         });
       }
-      window.location.href = window.location.origin + window.location.pathname + '?force=' + Date.now();
+      
+      // Se for erro de sessão, limpa tudo por segurança
+      if (this.state.error?.message?.toLowerCase().includes('auth') || this.state.error?.message?.toLowerCase().includes('token')) {
+        localStorage.clear();
+      }
+      
+      window.location.href = "/";
     }, 3000);
   };
 
   public render() {
     if (this.state.isSyncing) {
-      return <MagicalSyncOverlay message="Harmonizando a Trama Mágica" submessage="Zion está recalibrando os fluxos de energia para restaurar seu acesso." />;
+      return <MagicalSyncOverlay message="Restauração de Zion em Curso" submessage="Tecendo novamente as fibras da realidade mágica..." />;
     }
 
     if (this.state.hasError) {
       return (
         <div className="min-h-screen bg-[#050505] flex items-center justify-center p-6 relative overflow-hidden font-sans">
-          {/* Background Magic Effects */}
+          {/* Fundo Cinematográfico de Zion */}
           <div className="absolute inset-0 z-0">
-            <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#d4af371a] rounded-full blur-[120px] animate-pulse" />
-            <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[120px] animate-pulse delay-1000" />
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-20" />
+            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.08),transparent_70%)]" />
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
           </div>
 
-          <div className="relative z-10 max-w-lg w-full bg-[#121212a6] backdrop-blur-3xl rounded-[3rem] p-10 md:p-16 border-2 border-white/10 shadow-[0_0_100px_rgba(212,175,55,0.1)] text-center space-y-8">
-            <div className="w-24 h-24 bg-[#d4af371a] rounded-3xl flex items-center justify-center mx-auto mb-6 relative">
-              <div className="text-[#d4af37] text-5xl animate-pulse">⚠️</div>
-              <div className="absolute inset-0 bg-[#d4af3733] blur-2xl rounded-full -z-10" />
+          <div className="relative z-10 max-w-lg w-full glass rounded-[3rem] p-10 md:p-16 border border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.8)] text-center space-y-8 animate-in fade-in zoom-in duration-700">
+            <div className="relative w-24 h-24 mx-auto mb-8">
+               <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full animate-pulse" />
+               <div className="relative w-full h-full glass rounded-3xl flex items-center justify-center border border-primary/30 shadow-[0_0_20px_rgba(212,175,55,0.2)]">
+                  <span className="text-4xl animate-float">✨</span>
+               </div>
             </div>
 
             <div className="space-y-4">
-              <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight font-serif">
-                Instabilidade na <span className="text-[#d4af37] italic">Trama Mágica</span>
+              <h2 className="text-3xl md:text-4xl font-heading text-gold-gradient tracking-tight leading-tight">
+                O Castelo está se <br/> <span className="italic">Reconfigurando</span>
               </h2>
-              <p className="text-[#94a3b8] font-serif italic text-sm md:text-base leading-relaxed">
-                "Parece que um feitiço saiu pela culatra. Não se preocupe, Zion está recalibrando a realidade e a magia será restaurada em instantes."
+              <p className="text-muted-foreground font-serif italic text-sm md:text-base leading-relaxed px-4">
+                "Uma oscilação na magia foi detectada. Zion está restaurando os portões para garantir sua segurança no mundo bruxo."
               </p>
             </div>
 
-            <div className="p-4 bg-black/40 rounded-2xl border border-white/5 text-left">
-               <p className="text-[10px] text-[#94a3b8] uppercase tracking-widest font-bold mb-1">Diagnóstico de Zion</p>
-               <p className="text-[11px] font-mono text-[#d4af37]/70 break-all leading-tight">
-                 {this.state.error?.message || "Erro Místico Desconhecido"}
-               </p>
-            </div>
+            {/* Diagnóstico Secreto (Apenas para o Arquiteto) */}
+            {window.location.hostname === 'localhost' && (
+              <div className="p-3 bg-black/40 rounded-xl border border-white/5 text-left opacity-30 hover:opacity-100 transition-opacity">
+                <p className="text-[9px] font-mono text-primary/70 break-all leading-tight">
+                  {this.state.error?.message || "Mystical Anomaly"}
+                </p>
+              </div>
+            )}
 
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <div className="flex flex-col gap-3 pt-4">
               <button 
-                className="flex-1 h-12 rounded-xl text-xs font-bold uppercase tracking-widest bg-[#d4af37] text-black hover:bg-[#b8962d] transition-all shadow-lg shadow-[#d4af3733]"
+                className="glass-plaque h-14 w-full text-xs font-heading font-bold uppercase tracking-[0.2em] text-primary"
                 onClick={() => window.location.reload()}
               >
-                Restaurar Portal
+                Retornar ao Castelo
               </button>
               <button 
-                className="flex-1 h-12 rounded-xl text-xs font-bold uppercase tracking-widest border border-white/10 text-white/40 hover:text-white hover:border-white/30 transition-all"
+                className="text-[10px] text-white/20 hover:text-white/40 transition-colors uppercase tracking-[0.3em] font-bold"
                 onClick={this.handleDeepSync}
               >
-                Sincronização Profunda
+                Restauração de Zion
               </button>
             </div>
-
-            <p className="text-[10px] text-[#94a3b8] pt-4">
-              ✨ Protocolo Jarvis de Recuperação Ativo
-            </p>
           </div>
         </div>
       );
