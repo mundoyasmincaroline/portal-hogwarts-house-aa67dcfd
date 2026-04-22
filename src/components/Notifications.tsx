@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Link } from "react-router-dom";
 import MagicalEmoji from "./MagicalEmoji";
+import { X, Bell, Trash2, CheckCircle2 } from "lucide-react";
 
 interface Notification {
   id: string;

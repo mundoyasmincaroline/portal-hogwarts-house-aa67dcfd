@@ -1,4 +1,6 @@
 import SafeImage from "@/components/SafeImage";
+import { Check, Sparkles } from "lucide-react";
+import MagicalEmoji from "./MagicalEmoji";
 
 /**
  * StoreItemVisual — arte digital para itens da loja Gringotts
@@ -144,8 +146,7 @@ function getEpicPlaceholder(category: string, name: string): string {
 }
 
 
-import { Check, Sparkles } from "lucide-react";
-import MagicalEmoji from "./MagicalEmoji";
+
 
 export default function StoreItemVisual({ imageUrl, name, category, isOwned }: Props) {
   const finalImage = (imageUrl && !imageUrl.includes("placeholder")) 

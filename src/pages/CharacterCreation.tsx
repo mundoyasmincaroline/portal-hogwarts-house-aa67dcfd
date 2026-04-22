@@ -154,14 +154,14 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
           user_id: user.id,
           item_id: "mq_wand_oak", // Basic Oak Wand
           is_equipped: true
-        } as never);
+        } as any);
 
         // Grant Basic Robe
         await supabase.from("user_items").insert({
           user_id: user.id,
           item_id: "mq_cloth_student_new", // Student Robe
           is_equipped: true
-        } as never);
+        } as any);
 
         toast.success("📦 Você recebeu um Kit de Iniciante: Varinha, Manto e 100 Galeons!");
       }
