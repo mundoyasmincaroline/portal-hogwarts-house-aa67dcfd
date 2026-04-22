@@ -126,6 +126,16 @@ export default function DashboardLayout() {
     navigate("/");
   };
 
+  useEffect(() => {
+    // Migração de URL: Detecta se o usuário está no endereço antigo da Lovable
+    if (window.location.hostname.includes('lovable.app')) {
+      toast.info("NOVA VERSÃO DISPONÍVEL", {
+        description: "Você está acessando via link temporário. Por favor, utilize o domínio oficial para garantir que todas as funções (como PWA e Pagamentos) funcionem corretamente.",
+        duration: 20000,
+      });
+    }
+  }, []);
+
   if (!user) return null;
 
   const currentHouse = (Object.values(HOUSES) as any[]).find((h) => h.id === profile?.house) || Object.values(HOUSES)[0];

@@ -2,31 +2,24 @@ import React, { useState, useEffect, useRef } from "react";
 import { 
   TrendingUp, 
   Zap, 
-  Target, 
   Users, 
   MessageSquare, 
   ArrowRight, 
   Sparkles, 
   ExternalLink, 
-  Globe,
-  Rocket,
-  ShieldCheck,
-  Terminal,
-  Mic,
-  MicOff,
-  ShoppingBag,
-  Heart,
-  Crown,
+  Mic, 
+  MicOff, 
+  ShoppingBag, 
+  Heart, 
   Dog,
-  Star,
-  ChevronRight
+  ShieldCheck,
+  Rocket
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useVoice } from "@/hooks/useVoice";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import MatrixRain from "@/components/MatrixRain";
-import SafeImage from "@/components/SafeImage";
 import { useNavigate } from "react-router-dom";
 
 /**
@@ -335,7 +328,7 @@ const Revolution: React.FC = () => {
         </div>
       </div>
 
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         .glass-dark {
           background: rgba(10, 10, 5, 0.8);
           backdrop-filter: blur(20px);
@@ -345,7 +338,7 @@ const Revolution: React.FC = () => {
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-      `}</style>
+      `}} />
     </div>
   );
 };

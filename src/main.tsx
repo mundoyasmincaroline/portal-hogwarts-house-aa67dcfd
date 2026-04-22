@@ -4,8 +4,8 @@ import App from "./App.tsx";
 import "./index.css";
 
 // Protocolo 10 Passos à Frente: Version Sentinel
-// Incrementando a versão para forçar limpeza de cache em todos os dispositivos móveis
-const PORTAL_VERSION = "8.0.1-ZION-ULTIMATE"; 
+// Incrementando a versão para forçar limpeza de cache e migração global
+const PORTAL_VERSION = "8.1.0-REVOLUTION-SYNC"; 
 const storedVersion = localStorage.getItem("portal_version");
 
 if (storedVersion !== PORTAL_VERSION) {
