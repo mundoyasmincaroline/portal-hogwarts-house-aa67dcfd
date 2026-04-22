@@ -863,7 +863,9 @@ export default function Profile() {
       ) : activeTab === "inventory" ? (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="font-heading text-xl text-foreground">🎒          {loadingExtras ? (
+            <h2 className="font-heading text-xl text-foreground">🎒 Mochila de Relíquias</h2>
+          </div>
+          {loadingExtras ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {[1,2,3,4,5,6,7,8].map(i => <div key={i} className="glass aspect-[3/4] rounded-[2rem] animate-pulse" />)}
             </div>
