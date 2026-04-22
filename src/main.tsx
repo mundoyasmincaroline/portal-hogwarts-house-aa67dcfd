@@ -1,9 +1,5 @@
 // Hogwarts Portal - Version 1.0.1 (Absolute Stable)
 const _V = "1.0.1";
-if (localStorage.getItem("magical_version") !== _V) {
-  localStorage.setItem("magical_version", _V);
-  window.location.reload();
-}
 import { createRoot } from "react-dom/client";
 import React from "react";
 import App from "./App.tsx";
