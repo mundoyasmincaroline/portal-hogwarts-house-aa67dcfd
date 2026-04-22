@@ -77,7 +77,7 @@ export default function MatrixPortal() {
     if (transcript && !isListening) {
       handleCommand({ preventDefault: () => {} } as any);
     }
-  }, [isListening]);
+  }, [isListening, transcript, handleCommand]);
 
   if (user?.email !== 'paulormorpheus21@gmail.com') {
     return (
@@ -203,7 +203,7 @@ export default function MatrixPortal() {
     setTerminalText(prev => [...prev, "> ORACLE GENERATED NEW CONTENT STRATEGY."]);
   };
 
-  const handleCommand = (e: React.FormEvent) => {
+  const handleCommand = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     if (!command) return;
     
@@ -230,7 +230,7 @@ export default function MatrixPortal() {
     }
     
     setCommand("");
-  };
+  }, [command, speak]);
 
   return (
     <div className="min-h-screen bg-black text-[#0F0] font-mono selection:bg-[#0F0] selection:text-black p-4 md:p-8 relative overflow-hidden">

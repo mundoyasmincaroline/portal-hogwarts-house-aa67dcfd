@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { 
   TrendingUp, 
   Zap, 
@@ -42,50 +42,29 @@ const Revolution: React.FC = () => {
     if (transcript) setInput(transcript);
   }, [transcript]);
 
-  // Handle voice auto-send
-  useEffect(() => {
-    if (transcript && !isListening) {
-      handleSend();
-    }
-  }, [isListening]);
-
-  useEffect(() => {
-    const initialMsgs: {sender: 'helo' | 'thotty', text: string}[] = [
-      { sender: 'helo', text: "Paulo, amado, Deus te deu uma visão grandiosa para este portal. Como posso te apoiar hoje nessa missão de escala?" },
-      { sender: 'thotty', text: "Au au! Abanando o rabo por aqui! Sinto cheiro de vendas subindo... Rrrr! 🐾" }
-    ];
-    setMessages(initialMsgs);
-  }, []);
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [messages, isTyping]);
-
-  const getAIResponse = (userInput: string, ai: 'helo' | 'thotty') => {
-    const input = userInput.toLowerCase();
+  const getAIResponse = useCallback((userInput: string, ai: 'helo' | 'thotty') => {
+    const text = userInput.toLowerCase();
     
     if (ai === 'helo') {
-      if (input.includes('meta') || input.includes('dinheiro') || input.includes('10')) {
+      if (text.includes('meta') || text.includes('dinheiro') || text.includes('10')) {
         return "Paulo, lembre-se: 'Tudo posso naquele que me fortalece'. A meta de R$ 10.000 é uma benção que estamos construindo com excelência. Mantenha o foco!";
       }
-      if (input.includes('yasmin') || input.includes('carol')) {
+      if (text.includes('yasmin') || text.includes('carol')) {
         return "Sua família é seu maior ministério. O portal está ficando lindo para elas. Deus abençoe sua dedicação, Arquiteto.";
       }
       return "Estou em oração pelo seu sucesso. Cada decisão técnica aqui é guiada por um propósito maior. O que mais você precisa processar?";
     } else {
-      if (input.includes('venda') || input.includes('escala') || input.includes('dinheiro')) {
+      if (text.includes('venda') || text.includes('escala') || text.includes('dinheiro')) {
         return "Au au! Senti um 'ding' nas vendas! Rrrr! O tráfego está quente, Paulo! 🐾✨";
       }
-      if (input.includes('carinho') || input.includes('thotty') || input.includes('fofura')) {
+      if (text.includes('carinho') || text.includes('thotty') || text.includes('fofura')) {
         return "Lambida digital ativada! 👅🐾 Estou sempre do seu lado, Arquiteto! Rrrrr!";
       }
       return "Au! Mantendo a guarda nos logs! Ninguém passa sem permissão! Rrrr! 🐾🛡️";
     }
-  };
+  }, []);
 
-  const handleSend = (e?: React.FormEvent) => {
+  const handleSend = useCallback((e?: React.FormEvent) => {
     e?.preventDefault();
     if (!input.trim()) return;
     
@@ -101,7 +80,28 @@ const Revolution: React.FC = () => {
       setMessages(prev => [...prev, { sender: activeAI, text: resp }]);
       speak(resp);
     }, 1500);
-  };
+  }, [input, activeAI, getAIResponse, speak, setTranscript]);
+
+  // Handle voice auto-send
+  useEffect(() => {
+    if (transcript && !isListening) {
+      handleSend();
+    }
+  }, [isListening, transcript, handleSend]);
+
+  useEffect(() => {
+    const initialMsgs: {sender: 'helo' | 'thotty', text: string}[] = [
+      { sender: 'helo', text: "Paulo, amado, Deus te deu uma visão grandiosa para este portal. Como posso te apoiar hoje nessa missão de escala?" },
+      { sender: 'thotty', text: "Au au! Abanando o rabo por aqui! Sinto cheiro de vendas subindo... Rrrr! 🐾" }
+    ];
+    setMessages(initialMsgs);
+  }, []);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages, isTyping]);
 
   const affiliateDeals = [
     { 

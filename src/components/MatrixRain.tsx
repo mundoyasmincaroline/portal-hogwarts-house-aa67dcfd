@@ -71,7 +71,7 @@ const MatrixRain: React.FC<MatrixRainProps> = ({ color = "#0F0" }) => {
       cancelAnimationFrame(animationId);
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [color]);
 
   return (
     <canvas
