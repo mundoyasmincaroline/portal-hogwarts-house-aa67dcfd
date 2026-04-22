@@ -46,6 +46,8 @@ import MatrixPortal from "./pages/MatrixPortal";
 import YasminWorld from "./pages/YasminWorld";
 import BFFWorld from "./pages/BFFWorld";
 import FamilyDecisions from "./pages/FamilyDecisions";
+import ZionVault from "./pages/ZionVault";
+import GodDashboard from "./pages/GodDashboard";
 // import MagicalTournaments from "./components/MagicalTournaments";
 
 
@@ -109,6 +111,8 @@ const App = () => (
               <Route path="yasmin-world" element={<YasminWorld />} />
               <Route path="bff-world" element={<BFFWorld />} />
               <Route path="decisions" element={<FamilyDecisions />} />
+              <Route path="zion" element={<ZionVault />} />
+              <Route path="god" element={<GodDashboard />} />
               {/* <Route path="sagas" element={<MagicalTournaments />} /> */}
 
             </Route>

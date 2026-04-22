@@ -81,6 +81,7 @@ const NAV_ITEMS = [
   { icon: <MagicalIcon icon={Lock} size="xs" color="#ef4444" />, label: "Azkaban", path: "/dashboard/azkaban" },
   { icon: <MagicalEmoji emoji="💖" size="xs" />, label: "Mundo BFF", path: "/dashboard/bff-world", isBFF: true },
   { icon: <MagicalEmoji emoji="🏆" size="xs" />, label: "Cálice das Decisões", path: "/dashboard/decisions", isFamily: true },
+  { icon: <MagicalEmoji emoji="🛡️" size="xs" />, label: "Cofre de Zion", path: "/dashboard/zion", isZion: true },
 ];
 
 
@@ -413,6 +414,9 @@ export default function DashboardLayout() {
                   )}
                   {item.label === "Cálice das Decisões" && (
                     <span className="ml-auto w-2 h-2 rounded-full bg-amber-500 animate-bounce shadow-[0_0_8px_rgba(245,158,11,0.8)]"></span>
+                  )}
+                  {item.label === "Cofre de Zion" && (
+                    <span className="ml-auto w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
                   )}
                   {item.label === "Guia do Maroto" && (
                     <span className="ml-auto w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>

@@ -74,6 +74,7 @@ const ArchitectControl: React.FC = () => {
                <ControlBtn icon={<Ghost size={16} />} label="Fantasmas" onClick={() => triggerGlobalEffect("Aparições", "👻")} />
                <ControlBtn icon={<Sun size={16} />} label="Dia" onClick={() => triggerGlobalEffect("Luz do Sol", "☀️")} />
                <ControlBtn icon={<Zap size={16} />} label="Tempestade" onClick={() => triggerGlobalEffect("Raios", "⚡")} />
+               <ControlBtn icon={<ShieldAlert size={16} />} label="ZION BUNKER" onClick={() => triggerGlobalEffect("Bunker de Zion Ativado. Portal Selado.", "🛡️")} />
             </div>
 
             <div className="space-y-2 border-t border-amber-900/30 pt-4">
