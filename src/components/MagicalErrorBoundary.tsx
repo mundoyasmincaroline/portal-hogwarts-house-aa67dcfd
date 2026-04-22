@@ -1,6 +1,7 @@
 import React, { Component, ErrorInfo, ReactNode } from "react";
 import { supabase } from "../integrations/supabase/client";
 import MagicalSyncOverlay from "./MagicalSyncOverlay";
+import { Sparkles } from "lucide-react";
 
 interface Props {
   children?: ReactNode;
@@ -81,7 +82,7 @@ export class MagicalErrorBoundary extends Component<Props, State> {
             <div className="relative w-24 h-24 mx-auto mb-8">
                <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full animate-pulse" />
                <div className="relative w-full h-full glass rounded-3xl flex items-center justify-center border border-primary/30 shadow-[0_0_20px_rgba(212,175,55,0.2)]">
-                  <span className="text-4xl animate-float">✨</span>
+                  <Sparkles className="text-primary animate-pulse" size={40} />
                </div>
             </div>
 

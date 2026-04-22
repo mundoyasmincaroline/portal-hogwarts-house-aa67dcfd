@@ -219,17 +219,18 @@ export default function StoriesBar() {
             <button
               key={userId}
               onClick={() => openStory(userId)}
-              className="flex flex-col items-center gap-2 shrink-0 group"
+              className="flex flex-col items-center gap-2 shrink-0 group relative"
             >
-              <div className={`w-16 h-16 rounded-full p-0.5 group-hover:scale-105 transition-transform ${isMe ? "border-2 border-dashed border-primary/70" : "border-2 border-primary"}`}>
-                <div className="w-full h-full rounded-full bg-secondary overflow-hidden relative">
+              <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full p-1 transition-all duration-500 group-hover:scale-110 active:scale-95 relative`}>
+                <div className={`absolute inset-0 rounded-full animate-pulse blur-[6px] opacity-40 bg-primary/40`} />
+                <div className="w-full h-full rounded-full bg-secondary border-2 border-primary/30 overflow-hidden relative shadow-[0_0_20px_rgba(212,175,55,0.1)]">
                   <SafeImage
                     src={prof?.avatar_url}
                     alt={prof?.full_name || ""}
                     fallbackText={prof?.full_name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700"
                   />
-                  <div className="absolute bottom-0 right-0 w-4 h-4 bg-background rounded-full flex items-center justify-center">
+                  <div className="absolute bottom-0 right-0 w-5 h-5 bg-black rounded-full flex items-center justify-center border border-white/10">
                     <HouseCrest house={prof?.house} size="sm" />
                   </div>
                   {getStreak(userId) > 0 && (
@@ -239,7 +240,7 @@ export default function StoriesBar() {
                   )}
                 </div>
               </div>
-              <span className="text-xs font-heading text-foreground truncate w-16 text-center">
+              <span className="text-[10px] font-heading text-foreground/80 truncate w-16 text-center uppercase tracking-widest">
                 {isMe ? "Você" : (prof?.full_name?.split(" ")[0] || "?")}
               </span>
             </button>

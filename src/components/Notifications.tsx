@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Link } from "react-router-dom";
+import MagicalEmoji from "./MagicalEmoji";
 
 interface Notification {
   id: string;
@@ -103,7 +104,9 @@ export default function Notifications() {
                   onClick={() => { if (!n.read) markAsRead(n.id); }}
                 >
                   <div className="flex gap-3">
-                    <div className="text-xl mt-0.5">🦉</div>
+                    <div className="shrink-0">
+                      <MagicalEmoji emoji="🦉" size="sm" />
+                    </div>
                     <div>
                       <h4 className={`text-sm ${!n.read ? "font-bold text-foreground" : "font-medium text-foreground/80"}`}>
                         {n.title}

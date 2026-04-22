@@ -28,14 +28,19 @@ const MagicalSyncOverlay: React.FC<MagicalSyncOverlayProps> = ({
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           <h2 className="text-3xl md:text-5xl font-heading text-gold-gradient tracking-tighter drop-shadow-2xl">
             {message}
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto" />
-          <p className="text-muted-foreground font-serif italic text-sm md:text-base max-w-sm mx-auto leading-relaxed">
-            "{submessage}"
-          </p>
+          <div className="space-y-2 max-w-xs mx-auto">
+            <p className="text-muted-foreground font-serif italic text-sm md:text-base leading-relaxed">
+              "{submessage}"
+            </p>
+            <div className="pt-4 font-mono text-[10px] text-primary/60 animate-pulse uppercase tracking-[0.2em]">
+               {["Invocando Patronos de Cache...", "Purificando as Corujas de Zion...", "Tecendo a Trama Mágica..."][Math.floor(Date.now()/2000)%3]}
+            </div>
+          </div>
         </div>
 
         <div className="flex flex-col items-center gap-4">

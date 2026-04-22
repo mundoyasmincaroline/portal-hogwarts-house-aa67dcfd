@@ -96,10 +96,20 @@ const ZionVault: React.FC = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto space-y-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-emerald-900/50 pb-8">
-           <div className="space-y-2">
-              <h1 className="text-4xl font-bold tracking-tighter flex items-center gap-4">
-                <ShieldCheck size={40} /> PROTOCOLO ZION
-              </h1>
+           <div className="space-y-6">
+          <h2 className="text-3xl md:text-5xl font-heading text-emerald-500 tracking-tighter drop-shadow-2xl">
+            PROTOCOLO ZION
+          </h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent mx-auto" />
+          <div className="space-y-2 max-w-xs mx-auto">
+            <p className="text-emerald-700 font-serif italic text-sm md:text-base leading-relaxed">
+              "A Trama Mágica sustenta o bunker."
+            </p>
+            <div className="pt-4 font-mono text-[10px] text-emerald-500/60 animate-pulse uppercase tracking-[0.2em]">
+               {["Invocando Patronos de Cache...", "Purificando as Corujas de Zion...", "Tecendo a Trama Mágica..."][Math.floor(Date.now()/2000)%3]}
+            </div>
+          </div>
+        </div>
               <div className="flex items-center gap-6 text-[10px] font-bold tracking-[0.2em] uppercase text-emerald-900">
                  <span className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" /> STATUS: {systemStatus}
@@ -109,11 +119,19 @@ const ZionVault: React.FC = () => {
               </div>
            </div>
            <div className="flex gap-4">
-              <Button variant="outline" className="border-emerald-500/20 text-emerald-500 hover:bg-emerald-500/10 rounded-none h-12 px-8 uppercase text-xs tracking-widest">
-                 <Activity size={16} className="mr-2" /> Monitor de Carga
+              <Button 
+                variant="outline" 
+                className="border-primary/40 text-primary hover:bg-primary/10 rounded-xl h-12 px-8 uppercase text-[10px] tracking-widest font-bold glass-plaque"
+                onClick={() => {
+                  localStorage.clear();
+                  sessionStorage.clear();
+                  window.location.reload();
+                }}
+              >
+                 <Zap size={16} className="mr-2" /> Zion Override (Purify)
               </Button>
-              <Button variant="outline" className="border-red-500/20 text-red-500 hover:bg-red-500/10 rounded-none h-12 px-8 uppercase text-xs tracking-widest">
-                 <Lock size={16} className="mr-2" /> Seal Bunker
+              <Button variant="outline" className="border-red-500/20 text-red-500 hover:bg-red-500/10 rounded-xl h-12 px-8 uppercase text-[10px] tracking-widest font-bold">
+                 <Lock size={16} className="mr-2" /> Lockdown Mode
               </Button>
            </div>
         </div>

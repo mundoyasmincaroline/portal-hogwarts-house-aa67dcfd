@@ -182,8 +182,9 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
   if (step === "select") {
     return (
       <div className="relative min-h-screen flex flex-col items-center justify-center p-6">
-        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-0" />
-        <MagicalParticles />
+        <div className="absolute inset-0 bg-background/90 backdrop-blur-md z-0" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.1),transparent_70%)] animate-pulse pointer-events-none" />
+        <MagicalParticles color={form.house === 'gryffindor' ? '#ef4444' : form.house === 'slytherin' ? '#10b981' : form.house === 'ravenclaw' ? '#3b82f6' : '#f59e0b'} />
         <div className="relative z-10 max-w-3xl w-full">
           <div className="text-center mb-10">
             <h1 className="font-heading text-4xl text-gold-gradient mb-3">Criar Ficha de Personagem</h1>
