@@ -13,7 +13,7 @@ import HouseCrest from "@/components/HouseCrest";
 import MagicalIcon from "@/components/MagicalIcon";
 import { HOUSES, type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
-import { playMagicSound, isSoundEnabled, toggleSound } from "@/lib/sounds";
+import { playMagicSound, isSoundEnabled, toggleSound, playAmbientMusic } from "@/lib/sounds";
 import { toast } from "sonner";
 
 import Notifications from "@/components/Notifications";
