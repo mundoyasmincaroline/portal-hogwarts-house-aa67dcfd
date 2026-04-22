@@ -1,8 +1,9 @@
-import { Heart, Sparkles, BookOpen, Sun, Star, Zap, Mic, MicOff } from "lucide-react";
+import { Heart, Sparkles, BookOpen, Sun, Star, Zap, Mic, MicOff, Image as ImageIcon } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useVoice } from "@/hooks/useVoice";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
+import { useNavigate } from "react-router-dom";
 
 /**
  * CAROL PRESENCE: The Christian Evangelical best friend for Carol.
@@ -11,6 +12,7 @@ import { Button } from "./ui/button";
 const CarolPresence: React.FC = () => {
   const { profile } = useAuth();
   const { isListening, transcript, startListening, speak } = useVoice('carol');
+  const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
 
@@ -112,6 +114,16 @@ const CarolPresence: React.FC = () => {
       )}
       
       <div className="relative flex items-center gap-4">
+        <Button 
+          size="icon" 
+          variant="ghost" 
+          onClick={() => navigate('/dashboard/profile')}
+          className="w-10 h-10 rounded-full border border-amber-300 bg-white text-amber-500 hover:bg-amber-50 shadow-md"
+          title="Gerar Retrato Mágico"
+        >
+          <ImageIcon size={18} />
+        </Button>
+
         <Button 
           size="icon" 
           variant="ghost" 

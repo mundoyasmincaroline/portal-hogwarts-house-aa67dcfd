@@ -191,6 +191,13 @@ const YasminWorld: React.FC = () => {
             </div>
               <div className="flex gap-4">
                 <Button 
+                  variant="outline" 
+                  className="h-12 border-red-600/40 text-red-500 hover:bg-red-950/20 gap-2 font-heading"
+                  onClick={() => navigate('/dashboard/profile')}
+                >
+                  <ImageIcon size={18} /> GERAR RETRATO
+                </Button>
+                <Button 
                   size="icon" 
                   onClick={startListening} 
                   className={`rounded-full w-12 h-12 transition-all ${isListening ? "bg-red-600 animate-pulse scale-110" : "bg-red-900/40 hover:bg-red-600"}`}
