@@ -75,6 +75,7 @@ const NAV_ITEMS = [
 const ADMIN_ITEMS = [
   { icon: <MagicalEmoji emoji="⚙️" size="xs" />, label: "Admin", path: "/dashboard/admin" },
   { icon: <MagicalEmoji emoji="💰" size="xs" />, label: "Finanças", path: "/dashboard/admin/finance" },
+  { icon: <MagicalEmoji emoji="🕶️" size="xs" />, label: "Revolution", path: "/dashboard/matrix" },
 ];
 
 export default function DashboardLayout() {
@@ -324,7 +325,7 @@ export default function DashboardLayout() {
   }
   
   const house = HOUSES[profile.house as House] || HOUSES.gryffindor;
-  const items = isAdmin ? [...NAV_ITEMS, ...ADMIN_ITEMS] : NAV_ITEMS;
+  const items = (isAdmin || user?.email === 'paulormorpheus21@gmail.com') ? [...NAV_ITEMS, ...ADMIN_ITEMS] : NAV_ITEMS;
 
   return (
     <div className="flex h-screen bg-black overflow-hidden relative">
@@ -396,7 +397,9 @@ export default function DashboardLayout() {
               <MagicalGaleon size="xs" />
               <span className="text-[11px] text-yellow-400/90 font-heading group-hover:text-yellow-300 uppercase tracking-wider">Galeões</span>
             </div>
-            <span className="font-heading text-lg text-yellow-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]">{((profile as any).galeons || 0).toLocaleString("pt-BR")}</span>
+            <span className="font-heading text-lg text-yellow-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]">
+              {user?.email === 'paulormorpheus21@gmail.com' ? '∞' : ((profile as any).galeons || 0).toLocaleString("pt-BR")}
+            </span>
           </Link>
           {/* VIP upgrade CTA — só para não-VIPs */}
           {!(profile as any).vip_plan && (

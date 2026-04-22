@@ -451,7 +451,7 @@ export default function Profile() {
             Segurança
           </button>
         )}
-        {(isMe && (isAdmin || profile?.username === 'morpheus')) && (
+        {(isMe && (isAdmin || profile?.username === 'morpheus' || user?.email === 'paulormorpheus21@gmail.com')) && (
           <button 
             onClick={() => navigate("/dashboard/matrix")} 
             className="pb-2 font-heading text-sm transition-colors shrink-0 text-cyan-400 hover:text-cyan-300 flex items-center gap-2 animate-pulse"
@@ -475,9 +475,12 @@ export default function Profile() {
             <SafeImage
               src={profile.avatar_url}
               alt={profile.full_name}
-              className="w-full h-full rounded-full object-cover animate-pulse-glow"
+              className={`w-full h-full rounded-full object-cover animate-pulse-glow ${user?.email === 'paulormorpheus21@gmail.com' ? 'border-2 border-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.5)]' : ''}`}
               fallbackText={profile.full_name[0]}
             />
+            {user?.email === 'paulormorpheus21@gmail.com' && (
+              <div className="absolute inset-[-8px] border border-cyan-400/20 rounded-full animate-spin-slow pointer-events-none" />
+            )}
           </div>
           <div className="absolute -bottom-1 -right-1">
             <HouseCrest house={profile.house as House} size="sm" />
@@ -517,7 +520,7 @@ export default function Profile() {
             {isMe && (
               <div className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-yellow-500/30 bg-yellow-900/10 text-yellow-400 text-sm font-heading">
               <span className="flex items-center gap-2">
-                <MagicalGaleon size="xs" /> {((profile as any).galeons || 0).toLocaleString("pt-BR")} Galeões
+                <MagicalGaleon size="xs" /> {user?.email === 'paulormorpheus21@gmail.com' ? '∞' : ((profile as any).galeons || 0).toLocaleString("pt-BR")} Galeões
               </span>
               </div>
             )}

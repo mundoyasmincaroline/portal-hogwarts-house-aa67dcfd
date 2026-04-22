@@ -45,6 +45,7 @@ export default function MatrixPortal() {
   const [stats, setStats] = useState({ online: 0, sales_24h: 0, total_users: 0 });
   const [isGhost, setIsGhost] = useState(true);
   const [terminalText, setTerminalText] = useState<string[]>([]);
+  const [recentUsers, setRecentUsers] = useState<any[]>([]);
   const [command, setCommand] = useState("");
 
   useEffect(() => {
@@ -59,8 +60,21 @@ export default function MatrixPortal() {
       });
     };
 
+    const fetchRecent = async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("full_name, created_at, username")
+        .order("created_at", { ascending: false })
+        .limit(10);
+      if (data) setRecentUsers(data);
+    };
+
     fetchStats();
-    const interval = setInterval(fetchStats, 10000);
+    fetchRecent();
+    const interval = setInterval(() => {
+      fetchStats();
+      fetchRecent();
+    }, 10000);
 
     setTerminalText([
       "> JARVIS_OS v4.2.0 INITIALIZED",
@@ -186,16 +200,17 @@ export default function MatrixPortal() {
                 </div>
              </div>
              <h3 className="text-xl font-bold text-[#0F0] flex items-center gap-2 font-mono">
-               <Terminal size={20} /> LIVE_SYSTEM_PULSE
+               <Terminal size={20} /> REAL_TIME_SENSORS (SIGNUPS)
              </h3>
              <div className="space-y-3 font-mono text-[10px] h-[300px] overflow-y-auto scrollbar-hide">
-                <p className="text-[#0F0]/40">[ 23:58:12 ] INGRESSO: USUÁRIO_942 ENTROU NO CASTELO</p>
-                <p className="text-cyan-400">[ 23:58:45 ] RECOMPENSA: BAÚ_LENDÁRIO ABERTO POR @BRUXO_DARK</p>
-                <p className="text-yellow-500">[ 23:59:01 ] CONVERSÃO: @MESTRE_MAGO CLICOU EM 'SER VIP'</p>
-                <p className="text-[#0F0]/40">[ 23:59:22 ] RECRUTAMENTO: NOVO LINK GERADO POR @LUNA_99</p>
-                <p className="text-purple-400">[ 00:00:05 ] SISTEMA: JARVIS OTIMIZOU CACHE DE IMAGENS</p>
-                <p className="text-[#0F0]/40">[ 00:00:15 ] CHAT: 12 MENSAGENS NOVAS NO SALÃO COMUNAL</p>
-                <p className="text-[#0F0] animate-pulse">&gt; AGUARDANDO NOVOS EVENTOS...</p>
+                {recentUsers.length > 0 ? recentUsers.map((u, i) => (
+                  <p key={i} className="text-[#0F0]/60">
+                    [ {new Date(u.created_at).toLocaleTimeString()} ] INGRESSO: {u.full_name.toUpperCase()} (@{u.username}) ENTROU NO SISTEMA
+                  </p>
+                )) : (
+                  <p className="text-[#0F0]/40">[ --:--:-- ] AGUARDANDO NOVOS EVENTOS...</p>
+                )}
+                <p className="text-cyan-400 animate-pulse">&gt; ESCANEANDO DATABASE POR NOVAS ATIVIDADES...</p>
              </div>
           </div>
         </div>
@@ -225,6 +240,28 @@ export default function MatrixPortal() {
             </form>
           </div>
 
+          <div className="glass bg-cyan-500/5 border-cyan-500/20 p-6 rounded-3xl space-y-6">
+             <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400">Núcleo Neural (IA Ativas)</p>
+             <div className="grid grid-cols-2 gap-2">
+                {[
+                  { name: "JARVIS", status: "ONLINE", icon: <Zap size={10} /> },
+                  { name: "ORACLE", status: "SYNCED", icon: <Eye size={10} /> },
+                  { name: "ARCHITECT", status: "ACTIVE", icon: <ShieldCheck size={10} /> },
+                  { name: "SENTINEL", status: "GUARD", icon: <Terminal size={10} /> },
+                  { name: "LEGION", status: "SCALING", icon: <Users size={10} /> }
+                ].map((ai, i) => (
+                  <div key={i} className="bg-black/40 border border-cyan-500/10 p-2 rounded-lg flex items-center justify-between">
+                     <div className="flex items-center gap-1.5">
+                        <span className="text-cyan-400">{ai.icon}</span>
+                        <span className="text-[9px] font-bold">{ai.name}</span>
+                     </div>
+                     <span className="text-[8px] text-[#0F0] animate-pulse">{ai.status}</span>
+                  </div>
+                ))}
+             </div>
+             <p className="text-[9px] opacity-40 italic text-center font-mono">"Arsenal Neural 100% Sincronizado."</p>
+          </div>
+
           <div className="glass bg-black border-[#0F0]/20 p-6 rounded-3xl space-y-4">
              <p className="text-[10px] font-bold uppercase tracking-widest text-yellow-500">Voz do Mentor (Jarvis/Oracle)</p>
              <div className="text-[11px] italic opacity-80 space-y-4">
@@ -248,6 +285,27 @@ export default function MatrixPortal() {
              <Button variant="outline" className="w-full border-yellow-500/20 hover:bg-yellow-500/10 text-yellow-500 text-[10px] h-10 rounded-xl" onClick={() => window.open('https://www.infinitepay.io/')}>
                 ACESSAR PAINEL INFINITE
              </Button>
+          </div>
+
+          <div className="glass bg-[#0F0]/5 border-[#0F0]/20 p-6 rounded-3xl space-y-4">
+             <p className="text-[10px] font-bold uppercase tracking-widest text-[#0F0]">Geração de Lucro Viral</p>
+             <div className="space-y-3">
+                <p className="text-[11px] opacity-60">Seu link de recrutamento é sua arma de conversão em massa:</p>
+                <Button 
+                  className="w-full bg-[#0F0] hover:bg-[#0F0]/80 text-black font-bold h-12 rounded-xl text-xs uppercase"
+                  onClick={() => {
+                    const link = `${window.location.origin}/register?ref=${profile?.username}`;
+                    navigator.clipboard.writeText(link);
+                    toast.success("Link Viral Copiado! 🚀");
+                  }}
+                >
+                   COPIAR MEU LINK VIRAL (REVEAL)
+                </Button>
+                <div className="bg-black/40 p-3 rounded-lg border border-[#0F0]/20">
+                   <p className="text-[9px] text-[#0F0]/40 uppercase mb-1">Link Ativo:</p>
+                   <p className="text-[10px] break-all opacity-80">{window.location.origin}/register?ref={profile?.username}</p>
+                </div>
+             </div>
           </div>
 
           <div className="glass bg-[#0F0]/5 border-[#0F0]/20 p-6 rounded-3xl space-y-4">
