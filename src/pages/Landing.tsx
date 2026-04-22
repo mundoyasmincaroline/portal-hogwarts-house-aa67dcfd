@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import MagicalParticles from "@/components/MagicalParticles";
 import { type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronRight, Star, Zap, Crown, BookOpen, Users, ShoppingBag, Trophy, MessageCircle, Sparkles } from "lucide-react";
+import { ChevronRight, Star, Zap, Crown, BookOpen, Users, ShoppingBag, Trophy, MessageCircle, Sparkles, Flame } from "lucide-react";
 import HouseCupWidget from "@/components/HouseCupWidget";
 import MagicalEmoji from "@/components/MagicalEmoji";
 import MagicalIcon from "@/components/MagicalIcon";

@@ -39,6 +39,7 @@ import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import MagicalSagas from "./pages/MagicalSagas";
 import AdminFinance from "./pages/AdminFinance";
+import MagicalGames from "./pages/MagicalGames";
 // import MagicalTournaments from "./components/MagicalTournaments";
 
 
@@ -91,6 +92,7 @@ const App = () => (
               <Route path="terms" element={<Terms />} />
               <Route path="privacy" element={<Privacy />} />
               <Route path="sagas" element={<MagicalSagas />} />
+              <Route path="games" element={<MagicalGames />} />
               {/* <Route path="sagas" element={<MagicalTournaments />} /> */}
 
             </Route>
