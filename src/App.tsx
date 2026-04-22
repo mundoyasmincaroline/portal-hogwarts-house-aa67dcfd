@@ -47,6 +47,8 @@ import YasminWorld from "./pages/YasminWorld";
 // import MagicalTournaments from "./components/MagicalTournaments";
 
 
+import MagicalMeta from "./components/MagicalMeta";
+
 const queryClient = new QueryClient();
 
 function AuthInit({ children }: { children: React.ReactNode }) {
@@ -62,6 +64,7 @@ const App = () => (
       <Sonner />
       <AuthInit>
         <BrowserRouter>
+          <MagicalMeta />
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
