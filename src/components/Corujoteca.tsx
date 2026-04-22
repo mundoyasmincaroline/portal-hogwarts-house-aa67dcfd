@@ -67,7 +67,7 @@ export default function Corujoteca() {
       {/* ── BOTÃO CORUJOTECA (EDWIGES) ── */}
       <button
         onClick={toggleOpen}
-        className={`fixed bottom-24 left-6 z-[60] group transition-all duration-500 ${isOpen ? 'scale-0' : 'scale-100'}`}
+        className={`fixed bottom-36 right-6 z-[60] group transition-all duration-500 ${isOpen ? 'scale-0' : 'scale-100'}`}
       >
         <div className="relative">
           {hasNew && (
@@ -85,9 +85,9 @@ export default function Corujoteca() {
             <Mail className={`w-7 h-7 relative z-10 ${hasNew ? 'text-primary animate-bounce' : 'text-muted-foreground group-hover:text-primary'}`} />
           </div>
 
-          <div className="absolute left-full ml-6 top-1/2 -translate-y-1/2 bg-black/90 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-primary/20 opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0 pointer-events-none whitespace-nowrap shadow-2xl">
-            <p className="text-[10px] font-heading text-primary uppercase tracking-widest font-bold flex items-center gap-2">
-              <Sparkles size={10} className="animate-pulse" /> Corujoteca
+          <div className="absolute right-full mr-6 top-1/2 -translate-y-1/2 bg-black/90 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-primary/20 opacity-0 group-hover:opacity-100 transition-all translate-x-[10px] group-hover:translate-x-0 pointer-events-none whitespace-nowrap shadow-2xl text-right">
+            <p className="text-[10px] font-heading text-primary uppercase tracking-widest font-bold flex items-center gap-2 justify-end">
+              Corujoteca <Sparkles size={10} className="animate-pulse" />
             </p>
             <p className="text-[9px] text-muted-foreground uppercase font-bold tracking-tighter">
               {messages.length > 0 ? `${messages.length} Pergaminhos Pendentes` : "Nenhum correio novo"}
@@ -98,7 +98,7 @@ export default function Corujoteca() {
 
       {/* ── PAINEL DE MENSAGENS (O PERGAMINHO) ── */}
       {isOpen && (
-        <div className="fixed inset-0 lg:inset-auto lg:bottom-24 lg:left-24 lg:w-96 lg:h-[600px] z-[100] animate-in fade-in slide-in-from-left-5 duration-500">
+        <div className="fixed inset-0 lg:inset-auto lg:bottom-24 lg:right-24 lg:w-96 lg:h-[600px] z-[100] animate-in fade-in slide-in-from-right-5 duration-500">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm lg:hidden" onClick={() => setIsOpen(false)} />
 
           <div className="relative h-full flex flex-col glass rounded-[2.5rem] border-2 border-primary/30 shadow-[0_30px_100px_rgba(0,0,0,0.8)] overflow-hidden">
