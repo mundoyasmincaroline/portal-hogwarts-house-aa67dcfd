@@ -44,7 +44,22 @@ const mockData = [
 export default function MatrixPortal() {
   const { user, profile } = useAuth();
   const [stats, setStats] = useState({ online: 0, sales_24h: 0, total_users: 0 });
+
+  if (user?.email !== 'paulormorpheus21@gmail.com') {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center p-6 text-center">
+        <div className="glass p-10 rounded-[2rem] border-2 border-red-500/30 max-w-md animate-pulse">
+          <h1 className="font-heading text-3xl text-red-500 mb-4">ACCESS DENIED</h1>
+          <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs">
+            Este terminal é restrito ao Arquiteto do Sistema. Sua tentativa de intrusão foi registrada.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   const [isGhost, setIsGhost] = useState(true);
+
   const [terminalText, setTerminalText] = useState<string[]>([]);
   const [recentUsers, setRecentUsers] = useState<any[]>([]);
   const [command, setCommand] = useState("");

@@ -76,8 +76,10 @@ const NAV_ITEMS = [
 const ADMIN_ITEMS = [
   { icon: <MagicalEmoji emoji="⚙️" size="xs" />, label: "Admin", path: "/dashboard/admin" },
   { icon: <MagicalEmoji emoji="💰" size="xs" />, label: "Finanças", path: "/dashboard/admin/finance" },
-  { icon: <MagicalEmoji emoji="🕶️" size="xs" />, label: "Revolution", path: "/dashboard/matrix" },
 ];
+
+const REVOLUTION_ITEM = { icon: <MagicalEmoji emoji="🕶️" size="xs" />, label: "Revolution", path: "/dashboard/matrix" };
+
 
 export default function DashboardLayout() {
   const { user, profile, isAdmin, isLoading, logout, pingPresence } = useAuth();
@@ -326,7 +328,19 @@ export default function DashboardLayout() {
   }
   
   const house = HOUSES[profile.house as House] || HOUSES.gryffindor;
-  const items = (isAdmin || user?.email === 'paulormorpheus21@gmail.com') ? [...NAV_ITEMS, ...ADMIN_ITEMS] : NAV_ITEMS;
+  
+  const isPaulo = user?.email === 'paulormorpheus21@gmail.com';
+  let items = isAdmin ? [...NAV_ITEMS, ...ADMIN_ITEMS] : [...NAV_ITEMS];
+  
+  // A guia Revolution é EXCLUSIVA do Paulo (The Architect)
+  if (isPaulo) {
+    // Se o Paulo não for admin no banco por algum motivo, garante que ele veja as abas admin também
+    if (!isAdmin) {
+      items = [...NAV_ITEMS, ...ADMIN_ITEMS];
+    }
+    items.push(REVOLUTION_ITEM);
+  }
+
 
   return (
     <div className="flex h-screen bg-black overflow-hidden relative">
