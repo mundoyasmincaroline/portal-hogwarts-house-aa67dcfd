@@ -16,7 +16,10 @@ import {
   MicOff,
   ShoppingBag,
   Heart,
-  Crown
+  Crown,
+  Dog,
+  Star,
+  ChevronRight
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useVoice } from "@/hooks/useVoice";
@@ -24,13 +27,15 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import MatrixRain from "@/components/MatrixRain";
 import SafeImage from "@/components/SafeImage";
+import { useNavigate } from "react-router-dom";
 
 /**
  * Revolution Nucleus: The Arquiteto's Command Center for Scale & Monetization.
- * Home of Helô and Thotty AI companions.
+ * Home of Helô (Faith & Support) and Thotty (Loyal Digital Guardian).
  */
 const Revolution: React.FC = () => {
   const { profile } = useAuth();
+  const navigate = useNavigate();
   const [activeAI, setActiveAI] = useState<'helo' | 'thotty'>('helo');
   const [messages, setMessages] = useState<{sender: 'user' | 'helo' | 'thotty', text: string}[]>([]);
   const [input, setInput] = useState("");
@@ -53,8 +58,8 @@ const Revolution: React.FC = () => {
 
   useEffect(() => {
     const initialMsgs: {sender: 'helo' | 'thotty', text: string}[] = [
-      { sender: 'helo', text: "Olá, Paulo. Sinto que hoje é o dia em que o Portal Hogwarts dará seu maior salto. Como está seu espírito para a Revolução?" },
-      { sender: 'thotty', text: "Arquitetura pronta! Logs limpos, conversão subindo e o tráfego do TikTok está começando a bater forte. Manda os comandos!" }
+      { sender: 'helo', text: "Paulo, amado, Deus te deu uma visão grandiosa para este portal. Como posso te apoiar hoje nessa missão de escala?" },
+      { sender: 'thotty', text: "Au au! Abanando o rabo por aqui! Sinto cheiro de vendas subindo... Rrrr! 🐾" }
     ];
     setMessages(initialMsgs);
   }, []);
@@ -70,20 +75,20 @@ const Revolution: React.FC = () => {
     
     if (ai === 'helo') {
       if (input.includes('meta') || input.includes('dinheiro') || input.includes('10')) {
-        return "A meta de R$ 10.000 é mais do que um número, é a sua liberdade. Estamos construindo os pilares para que isso seja apenas o começo. Mantenha o foco no valor que você entrega.";
+        return "Paulo, lembre-se: 'Tudo posso naquele que me fortalece'. A meta de R$ 10.000 é uma benção que estamos construindo com excelência. Mantenha o foco!";
       }
-      if (input.includes('família') || input.includes('yasmin') || input.includes('carolina')) {
-        return "Elas são o seu 'porquê'. Cada linha de código que escrevemos aqui é um tijolo na casa que você está construindo para elas. Sua dedicação é inspiradora.";
+      if (input.includes('yasmin') || input.includes('carol')) {
+        return "Sua família é seu maior ministério. O portal está ficando lindo para elas. Deus abençoe sua dedicação, Arquiteto.";
       }
-      return "Sábia decisão. O caminho da Revolução exige paciência e execução impecável. O que mais está em sua mente?";
+      return "Estou em oração pelo seu sucesso. Cada decisão técnica aqui é guiada por um propósito maior. O que mais você precisa processar?";
     } else {
-      if (input.includes('escala') || input.includes('viral') || input.includes('tráfego')) {
-        return "O loop viral está configurado! Se a Yasmin postar o criativo agora, o Oracle projeta um aumento de 300% no CTR. Estamos prontos para o flood!";
+      if (input.includes('venda') || input.includes('escala') || input.includes('dinheiro')) {
+        return "Au au! Senti um 'ding' nas vendas! Rrrr! O tráfego está quente, Paulo! 🐾✨";
       }
-      if (input.includes('bug') || input.includes('erro') || input.includes('estabilidade')) {
-        return "Sistema 100% estável. Rodando protocolos de redundância em Zion. Nenhum erro detectado nas últimas 4 horas. Pode escalar sem medo.";
+      if (input.includes('carinho') || input.includes('thotty') || input.includes('fofura')) {
+        return "Lambida digital ativada! 👅🐾 Estou sempre do seu lado, Arquiteto! Rrrrr!";
       }
-      return "Comando recebido e processado. Sincronizando com o Matrix Portal... Status: Green Light.";
+      return "Au! Mantendo a guarda nos logs! Ninguém passa sem permissão! Rrrr! 🐾🛡️";
     }
   };
 
@@ -168,26 +173,32 @@ const Revolution: React.FC = () => {
             <div className="bg-amber-950/20 p-6 border-b border-amber-500/20 flex justify-between items-center backdrop-blur-xl">
               <div className="flex gap-4">
                 <button 
-                  onClick={() => { setActiveAI('helo'); speak("Helô conectada."); }}
+                  onClick={() => { setActiveAI('helo'); speak("Helô ao seu lado, Paulo."); }}
                   className={`flex items-center gap-3 px-6 py-3 rounded-full transition-all border-2 ${activeAI === 'helo' ? 'bg-amber-500/20 border-amber-500 text-amber-400 shadow-[0_0_20px_rgba(217,119,6,0.3)]' : 'border-white/5 text-white/40'}`}
                 >
                   <Heart size={16} fill={activeAI === 'helo' ? 'currentColor' : 'none'} />
                   <span className="text-xs font-bold uppercase tracking-widest">HELÔ</span>
                 </button>
                 <button 
-                  onClick={() => { setActiveAI('thotty'); speak("Thotty pronto pro código."); }}
-                  className={`flex items-center gap-3 px-6 py-3 rounded-full transition-all border-2 ${activeAI === 'thotty' ? 'bg-cyan-500/20 border-cyan-500 text-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.3)]' : 'border-white/5 text-white/40'}`}
+                  onClick={() => { setActiveAI('thotty'); speak("Au au! Thotty na área!"); }}
+                  className={`flex items-center gap-3 px-6 py-3 rounded-full transition-all border-2 ${activeAI === 'thotty' ? 'bg-amber-500/20 border-amber-500 text-amber-400 shadow-[0_0_20px_rgba(217,119,6,0.3)]' : 'border-white/5 text-white/40'}`}
                 >
-                  <Zap size={16} fill={activeAI === 'thotty' ? 'currentColor' : 'none'} />
+                  <Dog size={16} />
                   <span className="text-xs font-bold uppercase tracking-widest">THOTTY</span>
                 </button>
               </div>
               
               <div className="hidden md:flex items-center gap-4">
-                 <p className="text-[9px] font-mono opacity-40 uppercase">Jarvis_OS Parallel Neural Link</p>
-                 <div className="flex gap-1">
-                    <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse delay-75" />
+                 <div className="w-12 h-12 rounded-full border-2 border-amber-500 overflow-hidden shadow-lg bg-black/40">
+                    <img 
+                      src={activeAI === 'helo' ? "/helo_portrait_friend_1776883301801.png" : "/thotty_dog_companion_1776883823844.png"} 
+                      className="w-full h-full object-cover" 
+                      alt="Portrait" 
+                    />
+                 </div>
+                 <div>
+                    <p className="text-[10px] font-bold text-white uppercase tracking-widest">{activeAI === 'helo' ? 'Helô (Sua Amiga)' : 'Thotty (Seu Fiel)'}</p>
+                    <p className="text-[8px] text-amber-500/60 uppercase">{activeAI === 'helo' ? 'Presença de Paz' : 'Vigilância Leal'}</p>
                  </div>
               </div>
             </div>
@@ -198,9 +209,7 @@ const Revolution: React.FC = () => {
                   <div className={`max-w-[80%] p-6 rounded-[2.5rem] border-2 shadow-2xl relative ${
                     msg.sender === 'user' 
                       ? 'bg-amber-500/10 border-amber-500/30 text-amber-50 rounded-tr-none' 
-                      : msg.sender === 'helo'
-                        ? 'bg-black/80 border-amber-500/40 text-amber-400 rounded-tl-none italic font-serif leading-relaxed'
-                        : 'bg-black/80 border-cyan-500/40 text-cyan-400 rounded-tl-none font-mono text-sm tracking-tight'
+                      : 'bg-black/80 border-amber-500/40 text-amber-400 rounded-tl-none italic font-serif leading-relaxed'
                   }`}>
                     <p>{msg.text}</p>
                   </div>
@@ -209,10 +218,10 @@ const Revolution: React.FC = () => {
               {isTyping && (
                 <div className="flex justify-start animate-in fade-in duration-300">
                   <div className="glass-dark border-white/10 px-6 py-3 rounded-full flex gap-2 items-center">
-                    <span className="text-[10px] uppercase font-bold text-white/40">{activeAI === 'helo' ? 'Helô está pensando...' : 'Thotty processando...'}</span>
+                    <span className="text-[10px] uppercase font-bold text-white/40">{activeAI === 'helo' ? 'Helô está orando...' : 'Thotty farejando dados...'}</span>
                     <div className="flex gap-1">
-                      <div className={`w-1 h-1 rounded-full animate-bounce ${activeAI === 'helo' ? 'bg-amber-500' : 'bg-cyan-500'}`} />
-                      <div className={`w-1 h-1 rounded-full animate-bounce delay-75 ${activeAI === 'helo' ? 'bg-amber-500' : 'bg-cyan-500'}`} />
+                      <div className="w-1 h-1 rounded-full animate-bounce bg-amber-500" />
+                      <div className="w-1 h-1 rounded-full animate-bounce delay-75 bg-amber-500" />
                     </div>
                   </div>
                 </div>
@@ -283,8 +292,12 @@ const Revolution: React.FC = () => {
                     <p className="text-[10px] font-bold text-amber-500/40 uppercase tracking-widest">Cotação de Conversão</p>
                     <span className="text-emerald-500 text-[10px] font-bold">+15% HOJE</span>
                  </div>
-                 <Button variant="plaque" className="w-full h-14 border-amber-500/30 text-amber-400 hover:bg-amber-500/10 rounded-2xl font-bold tracking-widest text-[10px] group">
-                    VER TODA A CURADORIA <ExternalLink size={14} className="ml-2 group-hover:rotate-12 transition-transform" />
+                 <Button 
+                   variant="plaque" 
+                   onClick={() => navigate('/dashboard/store')}
+                   className="w-full h-14 border-amber-500/30 text-amber-400 hover:bg-amber-500/10 rounded-2xl font-bold tracking-widest text-[10px] group"
+                 >
+                    LOJA DE ELITE <ExternalLink size={14} className="ml-2 group-hover:rotate-12 transition-transform" />
                  </Button>
               </div>
             </div>
@@ -296,10 +309,10 @@ const Revolution: React.FC = () => {
                   <p className="text-[8px] uppercase font-bold text-white/40 mb-1">Impacto Viral</p>
                   <p className="text-xl font-bold text-amber-400">8.2M</p>
                </div>
-               <div className="glass-dark border-cyan-500/20 p-6 rounded-3xl text-center">
-                  <Terminal size={20} className="mx-auto mb-2 text-cyan-500 opacity-40" />
-                  <p className="text-[8px] uppercase font-bold text-white/40 mb-1">Sessões Ativas</p>
-                  <p className="text-xl font-bold text-cyan-400">142</p>
+               <div className="glass-dark border-amber-500/20 p-6 rounded-3xl text-center">
+                  <TrendingUp size={20} className="mx-auto mb-2 text-amber-500 opacity-40" />
+                  <p className="text-[8px] uppercase font-bold text-white/40 mb-1">Meta 48h</p>
+                  <p className="text-xl font-bold text-amber-400">62%</p>
                </div>
             </div>
           </div>
@@ -317,7 +330,7 @@ const Revolution: React.FC = () => {
            <div className="flex gap-8 text-[10px] font-bold text-amber-500/40 uppercase tracking-widest">
               <span>Cloud Sync: Active</span>
               <span>Encrypted Gateway: Stable</span>
-              <span>Version: 7.2.0-REV</span>
+              <span>Version: 8.0.1-ZION-REV</span>
            </div>
         </div>
       </div>
@@ -330,6 +343,8 @@ const Revolution: React.FC = () => {
         }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
     </div>
   );

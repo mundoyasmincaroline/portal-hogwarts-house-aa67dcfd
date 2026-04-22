@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { Heart, Sparkles, BookOpen, Sun, Star, Zap, Mic, MicOff, Image as ImageIcon } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useVoice } from "@/hooks/useVoice";
