@@ -134,6 +134,5 @@ export default function MagicalAtmosphere() {
         />
       ))}
       </div>
-    </div>
   );
 }
