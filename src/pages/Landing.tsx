@@ -241,51 +241,46 @@ export default function Landing() {
         </div>
       </div>
 
-      {/* ── MONETIZAÇÃO PREVIEW ── */}
-      <div className="relative z-10 px-4 py-16 max-w-4xl mx-auto">
-        <div className="glass rounded-3xl p-8 md:p-10 border border-yellow-500/30 bg-gradient-to-br from-yellow-900/20 to-amber-900/10 relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-yellow-400/60 to-transparent" />
-          <div className="absolute -top-20 -right-20 w-64 h-64 bg-yellow-500/5 rounded-full blur-3xl" />
-          <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
-            <div className="flex-1 text-center md:text-left">
-              <div className="inline-flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/30 rounded-full px-3 py-1 mb-4">
-                <Crown size={12} className="text-yellow-400" />
-                <span className="text-[10px] font-heading text-yellow-400 uppercase tracking-widest">Gringotts · VIP</span>
+      {/* ── MONETIZAÇÃO FLASH SALE (URGÊNCIA MÁXIMA) ── */}
+      <div className="relative z-10 px-4 py-16 max-w-5xl mx-auto">
+        <div className="glass rounded-[3rem] p-10 md:p-16 border-2 border-red-500/40 bg-gradient-to-br from-red-950/60 via-black to-amber-950/40 relative overflow-hidden shadow-[0_0_80px_rgba(220,38,38,0.3)] group">
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-400/80 to-transparent animate-shimmer" />
+          <div className="absolute -top-20 -right-20 w-96 h-96 bg-red-500/10 rounded-full blur-[100px] animate-pulse" />
+          
+          <div className="relative z-10 flex flex-col md:flex-row items-center gap-12">
+            <div className="flex-1 text-center md:text-left space-y-6">
+              <div className="inline-flex items-center gap-3 bg-red-500/20 border border-red-500/40 rounded-full px-5 py-1.5 mb-2">
+                <Flame size={14} className="text-red-500 animate-pulse" />
+                <span className="text-xs font-heading text-red-100 uppercase tracking-[0.2em] font-bold">OFERTA DE LANÇAMENTO · LIMITADA</span>
               </div>
-              <h2 className="font-heading text-2xl md:text-3xl text-foreground mb-3">
-                Galeões, itens e status de bruxo premium
+              
+              <h2 className="font-heading text-4xl md:text-6xl text-white tracking-tighter leading-none">
+                ESTA SEMANA É <br/><span className="text-red-500">GRÁTIS?</span> QUASE ISSO.
               </h2>
-              <p className="text-sm text-muted-foreground mb-5 leading-relaxed">
-                Compre Galeões para adquirir itens exclusivos na loja. Assine o VIP e receba Galeões todo mês, badge exclusivo, XP bônus e acesso a conteúdos secretos.
+              
+              <p className="text-lg text-red-100/70 font-serif italic max-w-xl">
+                "Itens lendários por 1 Galeão e pacotes VIP com 50% de desconto. O Ministério da Magia enlouqueceu por apenas 72 horas."
               </p>
-              <div className="flex flex-wrap gap-2 justify-center md:justify-start mb-5">
-                {["👑 VIP a partir de R$9,90/mês", "🪙 Galeões a partir de R$4,90", "✨ Cancele quando quiser"].map(b => (
-                  <span key={b} className="text-[11px] bg-yellow-900/30 border border-yellow-500/20 text-yellow-300 px-3 py-1 rounded-full">{b}</span>
-                ))}
+
+              <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto md:mx-0">
+                <div className="glass bg-white/5 border border-white/10 p-4 rounded-2xl text-center">
+                  <p className="text-[10px] text-muted-foreground uppercase mb-1">Itens a partir de</p>
+                  <p className="text-3xl font-heading text-yellow-400">R$ 1,90</p>
+                </div>
+                <div className="glass bg-white/5 border border-white/10 p-4 rounded-2xl text-center">
+                  <p className="text-[10px] text-muted-foreground uppercase mb-1">VIP Founders</p>
+                  <p className="text-3xl font-heading text-purple-400">-50%</p>
+                </div>
               </div>
-              <Button variant="magical" onClick={() => navigate("/register")} className="font-heading">
-                Entrar e ver a loja <ChevronRight size={14} className="ml-1" />
+              
+              <Button size="lg" variant="magical" onClick={() => navigate("/register")} className="h-20 px-12 rounded-2xl bg-gradient-to-r from-red-600 via-orange-600 to-red-600 border-none font-bold text-2xl shadow-[0_15px_40px_rgba(220,38,38,0.4)] hover:scale-105 active:scale-95 transition-all w-full sm:w-auto">
+                ENTRAR E PEGAR AGORA <ChevronRight size={24} className="ml-2" />
               </Button>
             </div>
-            <div className="shrink-0 grid grid-cols-2 sm:grid-cols-3 gap-4 w-full md:w-auto">
-              {[
-                { icon: "👑", label: "Fundador", price: "VIP Elite", color: "#fbbf24" },
-                { icon: "💜", label: "VIP",      price: "Premium", color: "#a855f7" },
-                { icon: "🪙", label: "Galeões",  price: "Câmbio", color: "#f59e0b" },
-                { icon: "⚔️", label: "Gryffindor", price: "Lendário", color: "#ef4444" },
-                { icon: "🐍", label: "Slytherin", price: "Relíquia", color: "#10b981" },
-                { icon: "🦅", label: "Ravenclaw", price: "Sabedoria", color: "#3b82f6" },
-              ].map(p => (
-                <div key={p.label} className="relative group/item glass rounded-2xl p-4 border border-white/10 flex flex-col items-center gap-3 hover:-translate-y-2 transition-all duration-500 overflow-hidden">
-                  <div className="absolute inset-0 bg-white/5 opacity-0 group-hover/item:opacity-100 transition-opacity" />
-                  <MagicalEmoji emoji={p.icon} size="sm" className="group-hover:scale-110 transition-transform" />
-                  <div className="text-center relative z-10">
-                    <p className="font-heading text-[10px] text-foreground uppercase tracking-tight">{p.label}</p>
-                    <p className="text-[8px] text-white/40 mt-0.5 font-mono">{p.price}</p>
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover/item:opacity-100" />
-                </div>
-              ))}
+            
+            <div className="shrink-0 relative">
+               <div className="absolute inset-0 bg-yellow-500/20 blur-[60px] animate-bounce" />
+               <img src="https://portal-hogwarts.lovable.app/legendary_chest_3d_1776816744823.png" alt="Chest" className="w-64 h-64 md:w-80 md:h-80 object-contain relative z-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] animate-float" />
             </div>
           </div>
         </div>
