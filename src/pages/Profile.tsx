@@ -451,7 +451,7 @@ export default function Profile() {
             Segurança
           </button>
         )}
-        {isMe && isAdmin && (
+        {(isMe && (isAdmin || profile?.username === 'morpheus')) && (
           <button 
             onClick={() => navigate("/dashboard/matrix")} 
             className="pb-2 font-heading text-sm transition-colors shrink-0 text-cyan-400 hover:text-cyan-300 flex items-center gap-2 animate-pulse"

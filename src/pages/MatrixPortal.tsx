@@ -183,51 +183,30 @@ export default function MatrixPortal() {
             </ResponsiveContainer>
           </div>
 
-          {/* ROADMAP: A JORNADA DO ARQUITETO */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
-            <div className="glass bg-[#0F0]/5 border-[#0F0]/20 p-8 rounded-3xl space-y-6">
-               <h3 className="text-xl font-bold text-cyan-400 flex items-center gap-2">
-                 <Zap size={20} /> O CERCO DE 48 HORAS (META: R$ 10.000)
-               </h3>
-               <div className="space-y-4 text-xs">
-                 <div className="flex gap-3 border-l-2 border-cyan-400 pl-4 py-1">
-                   <span className="text-cyan-400 font-bold">PASSO 01:</span>
-                   <p className="opacity-70">Lançar vídeo viral do "Baú Welcome" no TikTok/Reels com o gancho: "Recebi Galeões Reais!"</p>
-                 </div>
-                 <div className="flex gap-3 border-l-2 border-cyan-400 pl-4 py-1">
-                   <span className="text-cyan-400 font-bold">PASSO 02:</span>
-                   <p className="opacity-70">Ativar sistema de Recrutamento (MGM). Cada novo membro ganha recompensa, cada indicação gera Galeões.</p>
-                 </div>
-                 <div className="flex gap-3 border-l-2 border-cyan-400 pl-4 py-1">
-                   <span className="text-cyan-400 font-bold">PASSO 03:</span>
-                   <p className="opacity-70">Converter via Infinite Pay (PIX). Oferecer o cargo "FUNDADOR VIP" por tempo limitado.</p>
-                 </div>
-               </div>
             </div>
+          </div>
 
-            <div className="glass bg-purple-500/5 border-purple-500/20 p-8 rounded-3xl space-y-6">
-               <h3 className="text-xl font-bold text-purple-400 flex items-center gap-2">
-                 <TrendingUp size={20} /> PROJEÇÃO: O MÊS DA FÊNIX
-               </h3>
-               <div className="space-y-4 text-xs">
-                 <div className="flex items-center justify-between border-b border-white/5 pb-2">
-                   <span className="opacity-50 uppercase">Semana 1: Escala Viral</span>
-                   <span className="text-purple-400">R$ 15.000</span>
-                 </div>
-                 <div className="flex items-center justify-between border-b border-white/5 pb-2">
-                   <span className="opacity-50 uppercase">Semana 2: Torneios Mágicos</span>
-                   <span className="text-purple-400">R$ 25.000</span>
-                 </div>
-                 <div className="flex items-center justify-between border-b border-white/5 pb-2">
-                   <span className="opacity-50 uppercase">Semana 3: Mercado de Figurinhas</span>
-                   <span className="text-purple-400">R$ 35.000</span>
-                 </div>
-                 <div className="flex items-center justify-between pb-2">
-                   <span className="opacity-50 uppercase">Semana 4: Assinaturas VIP</span>
-                   <span className="text-purple-400">R$ 50.000</span>
-                 </div>
-               </div>
-            </div>
+          {/* SYSTEM PULSE: LIVE ACTIVITY (HACKER VIEW) */}
+          <div className="glass bg-black border-[#0F0]/30 p-8 rounded-3xl space-y-6 relative overflow-hidden">
+             <div className="absolute top-0 right-0 p-4">
+                <div className="flex gap-1">
+                   <div className="w-1 h-1 bg-[#0F0] animate-ping"></div>
+                   <div className="w-1 h-1 bg-[#0F0] animate-ping delay-100"></div>
+                   <div className="w-1 h-1 bg-[#0F0] animate-ping delay-200"></div>
+                </div>
+             </div>
+             <h3 className="text-xl font-bold text-[#0F0] flex items-center gap-2 font-mono">
+               <Terminal size={20} /> LIVE_SYSTEM_PULSE
+             </h3>
+             <div className="space-y-3 font-mono text-[10px] h-[300px] overflow-y-auto scrollbar-hide">
+                <p className="text-[#0F0]/40">[ 23:58:12 ] INGRESSO: USUÁRIO_942 ENTROU NO CASTELO</p>
+                <p className="text-cyan-400">[ 23:58:45 ] RECOMPENSA: BAÚ_LENDÁRIO ABERTO POR @BRUXO_DARK</p>
+                <p className="text-yellow-500">[ 23:59:01 ] CONVERSÃO: @MESTRE_MAGO CLICOU EM 'SER VIP'</p>
+                <p className="text-[#0F0]/40">[ 23:59:22 ] RECRUTAMENTO: NOVO LINK GERADO POR @LUNA_99</p>
+                <p className="text-purple-400">[ 00:00:05 ] SISTEMA: JARVIS OTIMIZOU CACHE DE IMAGENS</p>
+                <p className="text-[#0F0]/40">[ 00:00:15 ] CHAT: 12 MENSAGENS NOVAS NO SALÃO COMUNAL</p>
+                <p className="text-[#0F0] animate-pulse">&gt; AGUARDANDO NOVOS EVENTOS...</p>
+             </div>
           </div>
         </div>
 
@@ -289,6 +268,13 @@ export default function MatrixPortal() {
           <div className="glass bg-[#0F0]/5 border-[#0F0]/20 p-6 rounded-3xl space-y-4">
              <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Comandos de Operação</p>
              <div className="grid grid-cols-1 gap-3">
+                <Button 
+                  variant="outline" 
+                  className="border-red-500/50 bg-red-500/10 hover:bg-red-500/20 text-red-500 text-xs h-12 rounded-xl font-bold mb-2"
+                  onClick={() => window.open('https://lovable.dev/projects/portal-hogwarts-house/artifacts/PLANO_DE_GUERRA_12H.md')}
+                >
+                   EXECUTAR PLANO DE GUERRA (12H)
+                </Button>
                 <Button 
                   variant="outline" 
                   className="border-cyan-400/50 bg-cyan-400/10 hover:bg-cyan-400/20 text-cyan-400 text-xs h-12 rounded-xl font-bold animate-pulse"
