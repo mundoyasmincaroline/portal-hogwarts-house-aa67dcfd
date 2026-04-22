@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Sparkles, Swords, Trophy, Zap, Shield, Flame, Ghost, Lock, Coins } from "lucide-react";
+import { Sparkles, Swords, Trophy, Zap, Shield, Flame, Ghost, Lock, Coins, Crown } from "lucide-react";
 import { toast } from "sonner";
 import MagicalGaleon from "@/components/MagicalGaleon";
 import MagicalIcon from "@/components/MagicalIcon";
