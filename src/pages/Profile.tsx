@@ -834,13 +834,6 @@ export default function Profile() {
             </div>
           )}
 
-                        </div>
-                    </div>
-                </div>
-              ))}
-            </div>
-          )}
-
           {/* Seção de Medalhas de Nível */}
           <div className="pt-10">
             <h3 className="font-heading text-sm text-primary mb-6 flex items-center gap-2 uppercase tracking-widest">
