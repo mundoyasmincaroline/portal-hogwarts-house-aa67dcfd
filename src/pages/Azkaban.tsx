@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Shield, AlertTriangle, Clock, Zap } from "lucide-react";
+import { Shield, AlertTriangle, Clock, Zap, Snowflake } from "lucide-react";
 import MagicalEmoji from "@/components/MagicalEmoji";
+import { playSound } from "@/lib/sounds";
 
 export default function Azkaban() {
   const { user, profile } = useAuth();
@@ -30,7 +31,15 @@ export default function Azkaban() {
       }
       setLoading(false);
     };
+      setLoading(false);
+    };
     load();
+
+    // Azkaban Sound
+    const wind = playSound('azkaban_wind');
+    return () => {
+      wind.pause();
+    };
   }, [user]);
 
   // Countdown timer
@@ -54,7 +63,7 @@ export default function Azkaban() {
   const isInAzkaban = azkabanStatus && timeLeft > 0;
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+    <div className={`relative min-h-screen flex flex-col items-center justify-center overflow-hidden transition-all duration-[3000ms] ${isInAzkaban ? "grayscale-[0.8] contrast-125 sepia-[0.2]" : ""}`}>
       {/* HD Background with flare effect */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <img
@@ -78,6 +87,9 @@ export default function Azkaban() {
         
         {/* Lightning Flare Pulse */}
         <div className="absolute inset-0 bg-blue-500/5 opacity-0 animate-lightning-flare" />
+
+        {/* Cold Vignette */}
+        <div className="absolute inset-0 shadow-[inset_0_0_200px_rgba(0,0,0,0.9)] pointer-events-none" />
       </div>
 
       <div className="relative z-10 max-w-2xl w-full mx-auto px-4 py-16 space-y-8">

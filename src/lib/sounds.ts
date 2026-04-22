@@ -1,34 +1,20 @@
-export const isSoundEnabled = () => localStorage.getItem("sound_enabled") !== "false";
 
-export const toggleSound = () => {
-  const current = isSoundEnabled();
-  localStorage.setItem("sound_enabled", (!current).toString());
-  return !current;
-};
+export const playSound = (type: 'click' | 'hover' | 'success' | 'chest_open' | 'chest_reward' | 'spell' | 'azkaban_wind') => {
+  const sounds: Record<string, string> = {
+    click: 'https://www.soundjay.com/buttons/sounds/button-16.mp3',
+    hover: 'https://www.soundjay.com/buttons/sounds/button-21.mp3',
+    success: 'https://www.soundjay.com/misc/sounds/magic-chime-01.mp3',
+    chest_open: 'https://www.soundjay.com/misc/sounds/magic-wand-01.mp3',
+    chest_reward: 'https://www.soundjay.com/misc/sounds/bell-ring-01.mp3',
+    spell: 'https://www.soundjay.com/misc/sounds/magic-chime-02.mp3',
+    azkaban_wind: 'https://www.soundjay.com/misc/sounds/wind-chime-1.mp3'
+  };
 
-export const playMagicSound = () => {
-  if (!isSoundEnabled()) return;
-  try {
-    const audio = new Audio("https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3?filename=magic-wand-6214.mp3");
-    audio.volume = 0.5;
-    audio.play().catch(e => console.log("Audio play prevented", e));
-  } catch (e) {}
-};
-
-export const playDoorSound = () => {
-  if (!isSoundEnabled()) return;
-  try {
-    const audio = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_b8c9103bc6.mp3?filename=door-opening-and-closing-113856.mp3");
-    audio.volume = 0.5;
-    audio.play().catch(e => console.log("Audio play prevented", e));
-  } catch (e) {}
-};
-
-export const playGlitchSound = () => {
-  if (!isSoundEnabled()) return;
-  try {
-    const audio = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_24e3ec2d5e.mp3?filename=glitch-interference-104886.mp3");
-    audio.volume = 0.6;
-    audio.play().catch(e => console.log("Audio play prevented", e));
-  } catch (e) {}
+  const audio = new Audio(sounds[type]);
+  audio.volume = type === 'azkaban_wind' ? 0.1 : 0.2;
+  if (type === 'azkaban_wind') audio.loop = true;
+  audio.play().catch(() => {
+    console.warn("Audio interaction requires user gesture.");
+  });
+  return audio;
 };

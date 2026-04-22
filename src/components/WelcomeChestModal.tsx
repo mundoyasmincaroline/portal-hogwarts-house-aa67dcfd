@@ -6,6 +6,7 @@ import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import MagicalGaleon from "./MagicalGaleon";
 import MagicalEmoji from "./MagicalEmoji";
+import { playSound } from "@/lib/sounds";
 
 interface WelcomeChestModalProps {
   onClose: () => void;
@@ -25,6 +26,7 @@ const WelcomeChestModal: React.FC<WelcomeChestModalProps> = ({ onClose }) => {
   const handleOpenChest = async () => {
     if (!user) return;
     setIsOpening(true);
+    playSound('chest_open');
 
     // Simulated delay for animation
     setTimeout(async () => {
@@ -47,6 +49,7 @@ const WelcomeChestModal: React.FC<WelcomeChestModalProps> = ({ onClose }) => {
 
         setHasOpened(true);
         setIsOpening(false);
+        playSound('chest_reward');
         toast.success("✨ Baú de Boas-Vindas aberto com sucesso!");
       } catch (err) {
         console.error("Erro ao abrir baú:", err);
@@ -94,7 +97,7 @@ const WelcomeChestModal: React.FC<WelcomeChestModalProps> = ({ onClose }) => {
                   <img
                     src="/legendary_chest_3d_v2.png"
                     alt="Magic Chest"
-                    className={`w-64 h-64 mx-auto object-contain relative z-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] ${isOpening ? "animate-bounce" : "animate-float"}`}
+                    className={`w-64 h-64 mx-auto object-contain relative z-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-all duration-700 ${isOpening ? "animate-bounce scale-110 rotate-12" : "animate-float group-hover:scale-105"}`}
                   />
                   {isOpening && (
                     <div className="absolute inset-0 flex items-center justify-center z-20">

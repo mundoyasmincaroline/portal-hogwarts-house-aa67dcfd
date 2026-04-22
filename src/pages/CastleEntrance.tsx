@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
+import { playSound } from "@/lib/sounds";
 
 export default function CastleEntrance() {
   const [step, setStep] = useState(0);
@@ -89,8 +90,11 @@ export default function CastleEntrance() {
                 key={i} 
                 variant="magical" 
                 size="lg" 
-                className="w-full text-md font-heading animate-in fade-in duration-500 delay-500"
-                onClick={() => opt.next === -1 ? handleFinish() : setStep(opt.next)}
+                className="w-full text-md font-heading animate-in fade-in duration-500 delay-500 shadow-[0_0_20px_rgba(234,179,8,0.2)] hover:shadow-[0_0_40px_rgba(234,179,8,0.4)] transition-all"
+                onClick={() => {
+                  playSound('spell');
+                  opt.next === -1 ? handleFinish() : setStep(opt.next);
+                }}
                 disabled={opt.next === -1 ? loading : false}
               >
                 {opt.next === -1 && loading ? "Iniciando..." : opt.text}

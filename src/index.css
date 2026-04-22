@@ -117,3 +117,43 @@
   backdrop-filter: blur(12px);
   border: 1px solid hsl(43 65% 54% / 0.1);
 }
+
+/* 3D World Perspective */
+.perspective-container {
+  perspective: 1000px;
+}
+
+.perspective-3d {
+  transform: rotateX(2deg) rotateY(-2deg) translateZ(10px);
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease-out;
+}
+
+.perspective-3d:hover {
+  transform: rotateX(0deg) rotateY(0deg) translateZ(30px);
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.4); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes torch-flicker {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); filter: brightness(1.2); }
+}
+
+/* Cinematic Desaturation */
+.cinematic-desaturate {
+  filter: grayscale(0.2) contrast(1.1) brightness(0.9);
+}
