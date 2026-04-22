@@ -63,17 +63,26 @@ export default function Terms() {
 
             <section className="space-y-4">
               <h2 className="text-xl font-heading text-foreground flex items-center gap-2">
-                <span className="text-primary">04.</span> Gringotts e Transações
+                <span className="text-primary">04.</span> Transações e Segurança Financeira
               </h2>
               <p>
-                As transações de Galeões e VIP são destinadas exclusivamente à manutenção e evolução do portal. Uma vez consumidos, 
-                os itens mágicos não são reembolsáveis, exceto por falhas técnicas comprovadas pelo Ministério (Suporte).
+                As contribuições e compras de itens virtuais são processadas por intermediadores de pagamento seguros e destinam-se à manutenção técnica do portal. Ao realizar uma transação, o usuário ou seu responsável legal declara estar ciente de que se trata de produtos digitais intangíveis. O Portal Hogwarts House não armazena dados sensíveis de pagamento em seus servidores, garantindo a máxima segurança contra vazamentos.
+              </p>
+            </section>
+
+            <section className="space-y-4">
+              <h2 className="text-xl font-heading text-foreground flex items-center gap-2">
+                <span className="text-primary">05.</span> Menores de Idade e Responsabilidade
+              </h2>
+              <p>
+                O portal é um ambiente familiar. Recomendamos que o uso por menores de 14 anos seja supervisionado por pais ou responsáveis. Ao permitir o uso, o responsável concorda com as políticas de moderação ativa (Vigia) e assume a responsabilidade pelas interações do menor na plataforma.
               </p>
             </section>
 
             <div className="pt-10 border-t border-white/5 text-center">
               <p className="text-[10px] uppercase tracking-[0.4em] font-bold text-white/20">Última atualização: {new Date().toLocaleDateString('pt-BR')}</p>
             </div>
+
           </div>
         </div>
       </div>

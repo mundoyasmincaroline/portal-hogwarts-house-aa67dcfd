@@ -74,7 +74,8 @@ const App = () => (
               <Route path="chats" element={<Chats />} />
               <Route path="chat/:roomId" element={<ChatRoom />} />
               <Route path="cinema" element={<CineHogwarts />} />
-              <Route path="instahogwarts" element={<Instahogwarts />} />
+              <Route path="instahogwarts" element={<InstaHogwarts />} />
+
               <Route path="album" element={<StickerAlbum />} />
               <Route path="classes" element={<Classes />} />
               <Route path="houses" element={<Houses />} />

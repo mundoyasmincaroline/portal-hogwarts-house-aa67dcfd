@@ -386,7 +386,9 @@ export default function Landing() {
                 <div className="flex flex-col gap-2">
                   <button onClick={() => navigate("/terms")} className="text-xs text-muted-foreground/50 hover:text-primary transition-colors">Termos de Uso</button>
                   <button onClick={() => navigate("/privacy")} className="text-xs text-muted-foreground/50 hover:text-primary transition-colors">Privacidade</button>
+                  <button onClick={() => navigate("/parents")} className="text-xs text-primary/60 hover:text-primary transition-colors font-bold">Para os Pais 🛡️</button>
                   <button onClick={() => navigate("/register")} className="text-xs text-muted-foreground/50 hover:text-primary transition-colors">Solicitar Vaga</button>
+
                 </div>
             </div>
 
