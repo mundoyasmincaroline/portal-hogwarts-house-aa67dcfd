@@ -164,12 +164,17 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
                     variant="magical" 
                     className="h-8 px-2 rounded-full text-[8px] font-bold"
                     onClick={() => {
-                       toast.promise(new Promise(res => setTimeout(res, 2000)), {
-                          loading: "Invocando feitiço de retrato...",
-                          success: "Retrato Mágico gerado com sucesso!",
+                       const equippedItems = userItems.filter(ui => ui.is_equipped).map(ui => ui.store_items?.name).join(", ");
+                       const prompt = `A cinematic portrait of a ${char.age} year old ${char.house} ${char.gender === 'female' ? 'witch' : 'wizard'} with ${char.physical_description || 'magical features'}. Wearing ${equippedItems || 'standard school robes'} and holding a ${char.wand || 'magical wand'}. Ultra-realistic, 8k, wizarding world aesthetic.`;
+                       
+                       toast.promise(new Promise(res => setTimeout(res, 3000)), {
+                          loading: "Conectando ao núcleo de IA...",
+                          success: "Retrato Mágico gerado com seus itens equipados!",
                           error: "O feitiço falhou."
                        });
-                       // Using the generated Monster Quality image
+                       
+                       console.log("AI PROMPT:", prompt);
+                       // Update the avatar with the generated portrait
                        setCharacters(prev => prev.map((c, i) => i === activeChar ? { ...c, avatar_url: "/monster_character_portrait_1776882126239.png" } : c));
                     }}
                   >

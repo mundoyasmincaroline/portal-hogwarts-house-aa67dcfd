@@ -62,7 +62,7 @@ interface AuthState {
   updateProfile: (updates: Partial<Profile>) => Promise<{ success: boolean; error?: string }>;
   updatePassword: (password: string) => Promise<{ success: boolean; error?: string }>;
   resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
-  pingPresence: () => Promise<void>;
+  pingPresence: (path?: string) => Promise<void>;
 }
 
 export const useAuth = create<AuthState>((set, get) => ({
@@ -199,9 +199,16 @@ export const useAuth = create<AuthState>((set, get) => ({
     return { success: true };
   },
 
-  pingPresence: async () => {
+  pingPresence: async (path?: string) => {
     const userId = get().user?.id;
     if (!userId) return;
+
+    const isPWA = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true;
+    const deviceInfo = {
+      browser: navigator.userAgent.split(') ')[1]?.split(' ')[0] || 'Unknown',
+      os: navigator.userAgent.match(/\(([^)]+)\)/)?.[1] || 'Unknown',
+      isPWA
+    };
 
     let sessionId = localStorage.getItem("hogwarts_session_id");
     let justInitialized = false;
@@ -235,7 +242,29 @@ export const useAuth = create<AuthState>((set, get) => ({
 
     await supabase
       .from("profiles")
-      .update({ online: true, last_seen: new Date().toISOString() } as never)
+      .update({ 
+        online: true, 
+        last_seen: new Date().toISOString(),
+        // Usamos bio temporariamente para metadata se o campo device_info não existir
+        // Mas o ideal é ter o campo. Vou tentar atualizar bio com JSON se o usuário for admin monitorado
+        // Para o God Mode Realtime, vamos usar o metadata do Supabase Presence depois
+      } as any)
       .eq("user_id", userId);
+
+    // Broadcast Realtime Telemetry
+    const channel = supabase.channel('telemetry');
+    channel.send({
+      type: 'broadcast',
+      event: 'heartbeat',
+      payload: {
+        userId,
+        username: get().profile?.username,
+        fullName: get().profile?.full_name,
+        level: get().profile?.level,
+        path: path || window.location.pathname,
+        device: deviceInfo,
+        timestamp: new Date().toISOString()
+      }
+    });
   },
 }));

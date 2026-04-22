@@ -144,6 +144,28 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
 
       if (error) throw error;
 
+      // --- STARTER KIT LOGIC ---
+      if ((count ?? 0) === 0) {
+        // Grant 100 Galeons
+        await supabase.rpc('increment_galeons', { _user_id: user.id, _amount: 100 });
+        
+        // Grant Basic Wand
+        await supabase.from("user_items").insert({
+          user_id: user.id,
+          item_id: "mq_wand_oak", // Basic Oak Wand
+          is_equipped: true
+        } as never);
+
+        // Grant Basic Robe
+        await supabase.from("user_items").insert({
+          user_id: user.id,
+          item_id: "mq_cloth_student_new", // Student Robe
+          is_equipped: true
+        } as never);
+
+        toast.success("📦 Você recebeu um Kit de Iniciante: Varinha, Manto e 100 Galeons!");
+      }
+
       if (type === "canon") {
         await supabase.from("canon_claims").insert({ canon_name: form.full_name, user_id: user.id } as never).select();
       }

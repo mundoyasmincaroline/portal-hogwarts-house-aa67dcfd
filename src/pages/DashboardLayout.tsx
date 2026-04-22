@@ -48,6 +48,7 @@ import MagicalEncounters from "@/components/MagicalEncounters";
 import FilchShadow from "@/components/FilchShadow";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import EmmaPresence from "@/components/EmmaPresence";
+import CarolPresence from "@/components/CarolPresence";
 
 
 const NAV_ITEMS = [
@@ -221,8 +222,8 @@ export default function DashboardLayout() {
   // Heartbeat de presença + offline ao sair
   useEffect(() => {
     if (!user) return;
-    pingPresence();
-    const interval = setInterval(pingPresence, 30000);
+    pingPresence(location.pathname);
+    const interval = setInterval(() => pingPresence(location.pathname), 30000);
     const handleBeforeUnload = () => {
       navigator.sendBeacon &&
         supabase.from("profiles").update({ online: false } as never).eq("user_id", user.id);

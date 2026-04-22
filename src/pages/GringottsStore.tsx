@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
+import { useSound } from "@/hooks/useSound";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ShoppingBag, Coins, Crown, Wand2, Shirt, Gem, Sparkles, Star, ExternalLink, Check, Flame, Gift, Zap } from "lucide-react";
@@ -25,7 +26,7 @@ interface StoreItem {
 const GALEON_PACKAGES = [
   { id: "bolsinha",  name: "Bolsinha de Galeões",     galeons: 100,  price_brl: 4.90,  icon: "💰", image_url: "https://portal-hogwarts.lovable.app/monster_quality_galeon_coin_3d_1776816757264.png", color: "from-amber-800/40 to-amber-900/40", border: "border-amber-600/40", glow: "group-hover:shadow-[0_0_20px_rgba(217,119,6,0.3)]" },
   { id: "saco",      name: "Saco de Galeões",          galeons: 300,  price_brl: 12.90, icon: "🪙", image_url: "https://portal-hogwarts.lovable.app/monster_quality_galeon_coin_3d_1776816757264.png", color: "from-amber-700/50 to-yellow-800/40", border: "border-yellow-500/50", glow: "group-hover:shadow-[0_0_25px_rgba(234,179,8,0.4)]", badge: "Mais Popular" },
-  { id: "bau",       name: "Baú de Galeões",           galeons: 700,  price_brl: 24.90, icon: "💎", image_url: "https://portal-hogwarts.lovable.app/monster_quality_galeon_coin_3d_1776816757264.png", color: "from-yellow-600/50 to-amber-700/50", border: "border-amber-400/60", glow: "group-hover:shadow-[0_0_30px_rgba(251,191,36,0.5)]" },
+  { id: "bau",       name: "Baú de Galeões",           galeons: 700,  price_brl: 24.90, icon: "💎", image_url: "https://portal-hogwarts.lovable.app/monster_quality_galeon_coin_3d_1776816757264.png", color: "from-yellow-600/50 to-amber-700/50", border: "border-amber-400/60", glow: "group-hover:shadow-[0_0_30px_rgba(251,191,36,0.5)]", badge: "Melhor Valor" },
   { id: "tesouro",   name: "Tesouro de Gringotts",     galeons: 1500, price_brl: 44.90, icon: "👑", image_url: "https://portal-hogwarts.lovable.app/monster_quality_galeon_coin_3d_1776816757264.png", color: "from-yellow-500/60 to-amber-600/50", border: "border-yellow-400/70", glow: "group-hover:shadow-[0_0_35px_rgba(250,204,21,0.6)]", badge: "Melhor Valor" },
   { id: "cofre",     name: "Cofre Lendário",           galeons: 4000, price_brl: 99.90, icon: "🏆", image_url: "https://portal-hogwarts.lovable.app/monster_quality_galeon_coin_3d_1776816757264.png", color: "from-yellow-400/70 to-amber-500/60", border: "border-yellow-300/80", glow: "group-hover:shadow-[0_0_45px_rgba(253,224,71,0.7)]", badge: "Lendário" },
 ];
@@ -72,6 +73,55 @@ const MONSTER_QUALITY_ITEMS: StoreItem[] = [
   { id: "mq_item_snitch", name: "Pomo de Ouro Místico", category: "accessory", price_galeons: 15000, image_url: "https://portal-hogwarts.lovable.app/monster_quality_golden_snitch_cinematic_1776816692257.png", rarity: "legendary", is_featured: true, description: "Brilha com um ouro eterno. Abre ao toque de quem o capturou." },
   { id: "mq_item_founder", name: "Emblema dos Fundadores", category: "accessory", price_galeons: 10000, image_url: "https://portal-hogwarts.lovable.app/hogwarts_founder_emblem_3d_1776816719117.png", rarity: "legendary", is_featured: true, description: "O símbolo máximo de autoridade e tradição mágica." },
   { id: "mq_item_chest_epic", name: "Baú de Relíquias Épicas", category: "upgrade", price_galeons: 1500, image_url: "https://portal-hogwarts.lovable.app/legendary_chest_3d_1776816744823.png", rarity: "legendary", is_featured: true, description: "Contém um item aleatório de raridade Rara ou Lendária. Sorte pura." },
+  
+  // -- NEW 50 ITEMS START --
+  // WANDS (Extra)
+  { id: "mq_wand_oak", name: "Varinha de Carvalho", category: "wand", price_galeons: 800, image_url: "https://images.unsplash.com/photo-1590595906931-81f04f0ccebb?q=80&w=600", rarity: "common", is_featured: false, description: "Uma varinha para tempos bons e ruins, amiga de bruxos com força e coragem." },
+  { id: "mq_wand_vine", name: "Varinha de Videira", category: "wand", price_galeons: 950, image_url: "https://images.unsplash.com/photo-1590595906931-81f04f0ccebb?q=80&w=600", rarity: "common", is_featured: false, description: "Atraída por personalidades que buscam um propósito maior." },
+  { id: "mq_wand_cedar", name: "Varinha de Cedro", category: "wand", price_galeons: 1100, image_url: "https://images.unsplash.com/photo-1590595906931-81f04f0ccebb?q=80&w=600", rarity: "uncommon", is_featured: false, description: "O onde quer que haja uma varinha de cedro, há um bruxo perspicaz." },
+  { id: "mq_wand_maple", name: "Varinha de Bordo", category: "wand", price_galeons: 1300, image_url: "https://images.unsplash.com/photo-1590595906931-81f04f0ccebb?q=80&w=600", rarity: "uncommon", is_featured: false, description: "Frequentemente escolhida por viajantes e exploradores natos." },
+  { id: "mq_wand_walnut", name: "Varinha de Nogueira", category: "wand", price_galeons: 2200, image_url: "https://images.unsplash.com/photo-1590595906931-81f04f0ccebb?q=80&w=600", rarity: "rare", is_featured: false, description: "Bruxos altamente inteligentes devem ser testados pela nogueira primeiro." },
+  
+  // CLOTHING (Extra)
+  { id: "mq_cloth_student_new", name: "Uniforme de Gala", category: "clothing", price_galeons: 1200, image_url: "https://images.unsplash.com/photo-1515542641795-06ed223c38d8?q=80&w=600", rarity: "uncommon", is_featured: false, description: "Para os bailes e cerimônias oficiais do castelo." },
+  { id: "mq_cloth_quidditch", name: "Roupas de Quadribol", category: "clothing", price_galeons: 1800, image_url: "https://images.unsplash.com/photo-1515542641795-06ed223c38d8?q=80&w=600", rarity: "rare", is_featured: false, description: "Aerodinâmica e proteção reforçada para buscadores de elite." },
+  { id: "mq_cloth_night", name: "Manto da Noite Eterna", category: "clothing", price_galeons: 4500, image_url: "https://images.unsplash.com/photo-1515542641795-06ed223c38d8?q=80&w=600", rarity: "legendary", is_featured: true, description: "Dizem que foi costurado com as sombras de uma noite sem lua." },
+  { id: "mq_cloth_dragon_hide", name: "Colete de Couro de Dragão", category: "clothing", price_galeons: 6000, image_url: "https://images.unsplash.com/photo-1515542641795-06ed223c38d8?q=80&w=600", rarity: "legendary", is_featured: true, description: "Resistência mágica suprema contra feitiços de fogo e impacto." },
+  
+  // POTIONS (Extra)
+  { id: "mq_potion_polyjuice", name: "Poção Polissuco", category: "potion", price_galeons: 2000, image_url: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=600", rarity: "rare", is_featured: false, description: "Permite que o usuário assuma a forma física de outra pessoa." },
+  { id: "mq_potion_amortentia", name: "Amortentia", category: "potion", price_galeons: 3000, image_url: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=600", rarity: "rare", is_featured: false, description: "A poção do amor mais poderosa do mundo. Cuidado com o que deseja." },
+  { id: "mq_potion_draught", name: "Poção do Morto-Vivo", category: "potion", price_galeons: 2500, image_url: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=600", rarity: "rare", is_featured: false, description: "Um sono tão profundo que se assemelha à morte." },
+  
+  // ACCESSORIES (Extra)
+  { id: "mq_acc_spectres", name: "Espectrografas", category: "accessory", price_galeons: 750, image_url: "https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=600", rarity: "uncommon", is_featured: false, description: "Para ver Zonzóbulos que flutuam pelos seus ouvidos." },
+  { id: "mq_acc_remembrall", name: "Lembrol", category: "accessory", price_galeons: 600, image_url: "https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=600", rarity: "common", is_featured: false, description: "A fumaça fica vermelha se você esqueceu algo. Pena que não diz o quê." },
+  { id: "mq_acc_glasses", name: "Óculos de Meia-Lua", category: "accessory", price_galeons: 1500, image_url: "https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=600", rarity: "rare", is_featured: false, description: "Dão um ar de sabedoria professoral ao portador." },
+  { id: "mq_acc_time_turner", name: "Vira-Tempo", category: "accessory", price_galeons: 20000, image_url: "https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=600", rarity: "legendary", is_featured: true, description: "Controle as horas. Use com extrema cautela." },
+  { id: "mq_acc_map", name: "Mapa do Maroto", category: "accessory", price_galeons: 15000, image_url: "https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=600", rarity: "legendary", is_featured: true, description: "Eu juro solenemente não fazer nada de bom." },
+  
+  // MORE... (To reach 50+)
+  { id: "mq_item_deluminator", name: "Desiluminador", category: "accessory", price_galeons: 8000, image_url: "https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=600", rarity: "legendary", is_featured: false, description: "Apague as luzes ou encontre o caminho de volta para quem você ama." },
+  { id: "mq_item_pensieve", name: "Penseira de Pedra", category: "upgrade", price_galeons: 12000, image_url: "https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=600", rarity: "legendary", is_featured: true, description: "Reviva memórias com detalhes perfeitos." },
+  { id: "mq_item_goblet", name: "Cálice de Fogo (Réplica)", category: "accessory", price_galeons: 5000, image_url: "https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=600", rarity: "rare", is_featured: false, description: "Um item de decoração imponente para o seu dormitório." },
+  { id: "mq_item_broom_stick", name: "Nimbus 2000", category: "accessory", price_galeons: 10000, image_url: "https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=600", rarity: "rare", is_featured: false, description: "Um clássico da velocidade e elegância." },
+  { id: "mq_item_broom_nimbus2001", name: "Nimbus 2001", category: "accessory", price_galeons: 25000, image_url: "https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=600", rarity: "legendary", is_featured: false, description: "Superior em cada detalhe, a escolha dos Slytherins competitivos." },
+  { id: "mq_spell_sectum", name: "Sectumsempra", category: "spell", price_galeons: 15000, image_url: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=600", rarity: "legendary", is_featured: false, description: "Para inimigos. Um feitiço que corta profundamente." },
+  { id: "mq_spell_crucio", name: "Cruciatus", category: "spell", price_galeons: 20000, image_url: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=600", rarity: "legendary", is_featured: false, description: "Dor insuportável. Uma das Maldições Imperdoáveis." },
+  { id: "mq_spell_imperio", name: "Imperius", category: "spell", price_galeons: 20000, image_url: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=600", rarity: "legendary", is_featured: false, description: "Controle total sobre a vontade do outro." },
+  { id: "mq_potion_wit", name: "Poção para Aguçar a Inteligência", category: "potion", price_galeons: 1200, image_url: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=600", rarity: "uncommon", is_featured: false, description: "Para aqueles momentos de estudo intenso na biblioteca." },
+  { id: "mq_potion_shrink", name: "Poção para Encolher", category: "potion", price_galeons: 1000, image_url: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=600", rarity: "uncommon", is_featured: false, description: "Faz as coisas ficarem pequenas. Útil em situações criativas." },
+  { id: "mq_acc_ear_plugs", name: "Protetores de Ouvido de Mandrágora", category: "accessory", price_galeons: 400, image_url: "https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=600", rarity: "common", is_featured: false, description: "Evita que você desmaie com o grito das mandrágoras." },
+  { id: "mq_acc_telescope", name: "Telescópio de Latão", category: "accessory", price_galeons: 2000, image_url: "https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=600", rarity: "rare", is_featured: false, description: "Para observar as estrelas da Torre de Astronomia." },
+  { id: "mq_item_snuffbox", name: "Caixa de Rapé de Prata", category: "accessory", price_galeons: 1500, image_url: "https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=600", rarity: "rare", is_featured: false, description: "Um item de colecionador com gravuras mágicas." },
+  { id: "mq_item_mirror", name: "Espelho de Ojesed (Miniatura)", category: "accessory", price_galeons: 4000, image_url: "https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=600", rarity: "rare", is_featured: false, description: "Mostra não sua face, mas o desejo mais profundo do seu coração." },
+  { id: "mq_upgrade_potion_kit", name: "Kit de Poções Avançado", category: "upgrade", price_galeons: 5000, image_url: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=600", rarity: "rare", is_featured: false, description: "Melhora o sucesso na criação de poções complexas." },
+  { id: "mq_upgrade_book_spells", name: "Livro Padrão de Feitiços (Ano 7)", category: "upgrade", price_galeons: 3000, image_url: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=600", rarity: "rare", is_featured: false, description: "Aumenta o repertório de feitiços de defesa." },
+  { id: "mq_cloth_cloak_winter", name: "Manto de Inverno Forrado", category: "clothing", price_galeons: 1000, image_url: "https://images.unsplash.com/photo-1515542641795-06ed223c38d8?q=80&w=600", rarity: "uncommon", is_featured: false, description: "Para as visitas a Hogsmeade em dias de neve." },
+  { id: "mq_cloth_boots", name: "Botas de Dragão (Resistentes)", category: "clothing", price_galeons: 2500, image_url: "https://images.unsplash.com/photo-1515542641795-06ed223c38d8?q=80&w=600", rarity: "rare", is_featured: false, description: "Indestrutíveis e extremamente confortáveis para longas caminhadas." },
+  { id: "mq_acc_gloves", name: "Luvas de Pele de Dragão", category: "accessory", price_galeons: 1200, image_url: "https://images.unsplash.com/photo-1515542641795-06ed223c38d8?q=80&w=600", rarity: "uncommon", is_featured: false, description: "Proteção essencial para Herbologia e Trato das Criaturas Mágicas." },
+  { id: "mq_acc_scarf", name: "Cachecol da Casa (Seda Mística)", category: "accessory", price_galeons: 500, image_url: "https://images.unsplash.com/photo-1515542641795-06ed223c38d8?q=80&w=600", rarity: "common", is_featured: false, description: "Aquece automaticamente quando a temperatura cai." },
+  { id: "mq_item_golden_egg", name: "Ovo de Ouro do Torneio", category: "accessory", price_galeons: 10000, image_url: "https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=600", rarity: "legendary", is_featured: false, description: "Grita quando aberto fora d'água. Esconde um segredo." },
 ];
 
 // ─── Planos VIP ────────────────────────────────────────────
@@ -117,7 +167,8 @@ const TABS = [
 ];
 
 export default function GringottsStore() {
-  const { user, profile } = useAuth();
+  const { profile, user, fetchProfile } = useAuth();
+  const { playSound } = useSound();
   const [tab, setTab] = useState("featured");
   const [items, setItems] = useState<StoreItem[]>([]);
   const [owned, setOwned] = useState<string[]>([]);
@@ -386,6 +437,40 @@ export default function GringottsStore() {
           <Button variant="magical" size="lg" className="px-8 rounded-xl" onClick={() => verifyAndCreditPayment(pendingOrderId, "", "")}>
             🔍 Verificar Agora
           </Button>
+        </div>
+      )}
+
+      {/* ── MEUS ITENS: HORIZONTAL SCROLL ── */}
+      {owned.length > 0 && (
+        <div className="space-y-6 animate-in fade-in slide-in-from-left-8 duration-700">
+          <div className="flex items-center justify-between px-4">
+            <h3 className="font-heading text-2xl text-foreground flex items-center gap-3">
+              <ShoppingBag size={24} className="text-primary" /> Meu Baú de Relíquias
+            </h3>
+            <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">{owned.length} ITENS ADQUIRIDOS</span>
+          </div>
+          
+          <div className="relative group">
+            <div className="flex overflow-x-auto gap-6 pb-8 pt-2 px-4 no-scrollbar scroll-smooth">
+              {items.filter(i => owned.includes(i.id)).map(item => (
+                <div key={`owned-${item.id}`} className="shrink-0 w-48 glass bg-white/5 border border-white/10 rounded-[2rem] p-4 group/item hover:border-primary/50 transition-all cursor-pointer">
+                  <div className="aspect-square rounded-2xl overflow-hidden bg-black/40 mb-4 relative">
+                    <img src={item.image_url} alt={item.name} className="w-full h-full object-contain group-hover/item:scale-110 transition-transform" />
+                    <div className="absolute top-2 right-2">
+                      <div className="bg-green-500/20 text-green-400 p-1.5 rounded-full border border-green-500/30">
+                        <Check size={10} />
+                      </div>
+                    </div>
+                  </div>
+                  <h4 className="text-xs font-bold text-white text-center truncate mb-1">{item.name}</h4>
+                  <p className="text-[8px] text-muted-foreground text-center uppercase tracking-widest">{item.category}</p>
+                </div>
+              ))}
+            </div>
+            {/* Scroll indicators */}
+            <div className="absolute left-0 top-0 bottom-8 w-12 bg-gradient-to-r from-background to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute right-0 top-0 bottom-8 w-12 bg-gradient-to-l from-background to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
+          </div>
         </div>
       )}
 

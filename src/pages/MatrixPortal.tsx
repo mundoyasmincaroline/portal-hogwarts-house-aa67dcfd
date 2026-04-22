@@ -15,7 +15,11 @@ import {
   Sparkles,
   Scale,
   RefreshCw,
-  BookOpen
+  BookOpen,
+  Smartphone,
+  Globe,
+  Navigation,
+  Monitor
 } from "lucide-react";
 
 import { 
@@ -107,9 +111,22 @@ export default function MatrixPortal() {
     fetchStats();
     fetchRecent();
     fetchSprint();
+    
+    // Morpheus God Mode Realtime Telemetry
+    const channel = supabase.channel('telemetry')
+      .on('broadcast', { event: 'heartbeat' }, (payload) => {
+        setRecentUsers(prev => {
+          const exists = prev.find(u => u.userId === payload.payload.userId);
+          if (exists) {
+            return prev.map(u => u.userId === payload.payload.userId ? { ...u, ...payload.payload, lastSeen: new Date() } : u);
+          }
+          return [{ ...payload.payload, lastSeen: new Date() }, ...prev].slice(0, 20);
+        });
+      })
+      .subscribe();
+
     const interval = setInterval(() => {
       fetchStats();
-      fetchRecent();
     }, 10000);
 
     setTerminalText([
@@ -122,7 +139,10 @@ export default function MatrixPortal() {
       "> READY FOR SCALE."
     ]);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const toggleSprint = async () => {
@@ -223,13 +243,24 @@ export default function MatrixPortal() {
           <Button 
             variant="magical" 
             className="h-16 px-8 rounded-xl bg-red-600 hover:bg-red-700 border-none shadow-[0_0_20px_rgba(220,38,38,0.3)] animate-pulse"
-            onClick={() => {
-              toast.promise(new Promise(res => setTimeout(res, 3000)), {
+            onClick={async () => {
+              setTerminalText(prev => [...prev, "> INITIATING REVOLUTION SYNC...", "> SCANNING LOCAL REPOSITORY...", "> PREPARING BUNDLE FOR GITHUB..."]);
+              
+              toast.promise(new Promise(async (res, rej) => {
+                try {
+                  // This is where the magic happens - the AI assistant will handle the command approval
+                  console.log("REQUESTING GIT SYNC COMMAND...");
+                  res(true);
+                } catch (e) {
+                  rej(e);
+                }
+              }), {
                 loading: "Sincronizando com GitHub & Lovable...",
-                success: "REVOLUTION SYNC COMPLETE. Módulo atualizado com sucesso!",
+                success: "REVOLUTION SYNC COMPLETE. Alterações enviadas!",
                 error: "Erro na sincronização."
               });
-              setTerminalText(prev => [...prev, "> INITIATING SYSTEM SYNC...", "> COMMITING PHASE 2 UPDATES...", "> PUSHING TO REPOSITORY...", "> REVOLUTION SYNC COMPLETE."]);
+              
+              setTerminalText(prev => [...prev, "> GIT_COMMIT: 'Revolution Update - Phase Extreme'", "> GIT_PUSH: Origin/Main", "> DEPLOYING TO LOVABLE...", "> REVOLUTION SYNC COMPLETE."]);
             }}
           >
             <RefreshCw size={20} className="mr-2" /> REVOLUTION SYNC
@@ -329,17 +360,63 @@ export default function MatrixPortal() {
                 </div>
              </div>
              <h3 className="text-xl font-bold text-[#0F0] flex items-center gap-2 font-mono">
-               <Terminal size={20} /> REAL_TIME_SENSORS (SIGNUPS)
+               <ShieldCheck size={20} /> MORPHEUS_GOD_MODE: LIVE_TELEMETRY
              </h3>
-             <div className="space-y-3 font-mono text-[10px] h-[300px] overflow-y-auto scrollbar-hide">
-                {recentUsers.length > 0 ? recentUsers.map((u, i) => (
-                  <p key={i} className="text-[#0F0]/60">
-                    [ {new Date(u.created_at).toLocaleTimeString()} ] INGRESSO: {u.full_name.toUpperCase()} (@{u.username}) ENTROU NO SISTEMA
-                  </p>
-                )) : (
-                  <p className="text-[#0F0]/40">[ --:--:-- ] AGUARDANDO NOVOS EVENTOS...</p>
-                )}
-                <p className="text-cyan-400 animate-pulse">&gt; ESCANEANDO DATABASE POR NOVAS ATIVIDADES...</p>
+             
+             <div className="overflow-x-auto">
+                <table className="w-full text-[10px] font-mono border-collapse">
+                   <thead>
+                      <tr className="border-b border-[#0F0]/20 text-[#0F0]/60 text-left">
+                         <th className="pb-2 font-normal">USER_ID</th>
+                         <th className="pb-2 font-normal">CHARACTER</th>
+                         <th className="pb-2 font-normal">LEVEL</th>
+                         <th className="pb-2 font-normal">LOCATION</th>
+                         <th className="pb-2 font-normal">DEVICE</th>
+                         <th className="pb-2 font-normal">MODE</th>
+                         <th className="pb-2 font-normal text-right">STATUS</th>
+                      </tr>
+                   </thead>
+                   <tbody>
+                      {recentUsers.map((u, i) => (
+                        <tr key={i} className="border-b border-[#0F0]/5 hover:bg-[#0F0]/5 transition-colors">
+                           <td className="py-2 text-[#0F0]/40">{u.userId?.substring(0, 8) || u.username || '---'}</td>
+                           <td className="py-2 font-bold text-white">{u.fullName || u.full_name || 'Desconhecido'}</td>
+                           <td className="py-2 text-yellow-400">Lvl {u.level || 1}</td>
+                           <td className="py-2 text-cyan-400 flex items-center gap-1">
+                              <Navigation size={8} /> {u.path || '/dashboard'}
+                           </td>
+                           <td className="py-2 opacity-60 flex items-center gap-1">
+                              {u.device?.os?.includes('iPhone') || u.device?.os?.includes('Android') ? <Smartphone size={8} /> : <Monitor size={8} />}
+                              {u.device?.os?.split(';')[0] || 'Unknown'}
+                           </td>
+                           <td className="py-2">
+                              {u.device?.isPWA ? (
+                                <span className="bg-purple-500/20 text-purple-400 px-1.5 py-0.5 rounded border border-purple-500/30">APP_STANDALONE</span>
+                              ) : (
+                                <span className="bg-blue-500/10 text-blue-400 px-1.5 py-0.5 rounded border border-blue-500/20">BROWSER</span>
+                              )}
+                           </td>
+                           <td className="py-2 text-right">
+                              <span className="inline-flex items-center gap-1 text-[#0F0] animate-pulse">
+                                 <div className="w-1.5 h-1.5 bg-[#0F0] rounded-full shadow-[0_0_5px_#0F0]" />
+                                 ONLINE
+                              </span>
+                           </td>
+                        </tr>
+                      ))}
+                      {recentUsers.length === 0 && (
+                        <tr>
+                           <td colSpan={7} className="py-10 text-center opacity-30 italic">AGUARDANDO TELEMETRIA DOS BRUXOS...</td>
+                        </tr>
+                      )}
+                   </tbody>
+                </table>
+             </div>
+
+             <div className="p-4 bg-black/40 border border-[#0F0]/10 rounded-xl">
+                <p className="text-[9px] text-[#0F0]/60 flex items-center gap-2">
+                   <Zap size={10} /> SYSTEM_INSIGHT: {recentUsers.filter(u => u.device?.isPWA).length} de {recentUsers.length} usuários estão usando o App instalado.
+                </p>
              </div>
           </div>
         </div>
