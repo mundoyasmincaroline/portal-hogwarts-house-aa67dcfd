@@ -343,6 +343,37 @@ export default function GringottsStore() {
         </div>
       </div>
 
+      {/* ── FLASH SALE COUNTDOWN ── */}
+      <div className="glass rounded-[2rem] p-8 border-2 border-red-500/30 bg-gradient-to-r from-red-950/40 via-black to-red-950/40 flex flex-col md:flex-row items-center justify-between gap-8 animate-in fade-in zoom-in duration-700 shadow-[0_0_50px_rgba(220,38,38,0.2)]">
+        <div className="flex items-center gap-5">
+          <div className="w-16 h-16 bg-red-500/20 rounded-2xl flex items-center justify-center border border-red-500/30 shadow-inner animate-pulse">
+            <Flame size={32} className="text-red-500" />
+          </div>
+          <div>
+            <h3 className="font-heading text-2xl text-red-100 tracking-tight">OFERTA DE LANÇAMENTO</h3>
+            <p className="text-sm text-red-200/60 font-serif italic">Descontos de até 70% em itens selecionados. A oferta expira em breve!</p>
+          </div>
+        </div>
+        
+        <div className="flex gap-4">
+          {[
+            { val: "02", label: "DIAS" },
+            { val: "14", label: "HORAS" },
+            { val: "45", label: "MIN" },
+            { val: "30", label: "SEG" }
+          ].map((t, i) => (
+            <div key={i} className="glass bg-black/60 border border-red-500/30 w-20 h-24 rounded-2xl flex flex-col items-center justify-center backdrop-blur-xl">
+              <span className="text-3xl font-heading text-red-500">{t.val}</span>
+              <span className="text-[8px] text-red-200/40 font-bold uppercase tracking-widest">{t.label}</span>
+            </div>
+          ))}
+        </div>
+        
+        <Button variant="plaque" className="h-16 px-10 rounded-xl bg-gradient-to-r from-red-600 to-orange-600 border-none shadow-xl hover:scale-105 active:scale-95 transition-all">
+          PEGAR OFERTA AGORA!
+        </Button>
+      </div>
+
       {pendingOrderId && (
         <div className="glass rounded-[2rem] p-6 border-2 border-yellow-400/50 bg-gradient-to-r from-yellow-900/40 to-black/60 flex flex-col sm:flex-row items-center gap-6 animate-pulse-glow shadow-2xl">
           <div className="w-16 h-16 bg-yellow-500/20 rounded-full flex items-center justify-center text-4xl shadow-inner">⏳</div>
