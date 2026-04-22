@@ -360,26 +360,49 @@ export default function MatrixPortal() {
              </Button>
           </div>
 
-          <div className="glass bg-[#0F0]/5 border-[#0F0]/20 p-6 rounded-3xl space-y-4">
-             <p className="text-[10px] font-bold uppercase tracking-widest text-[#0F0]">Geração de Lucro Viral</p>
-             <div className="space-y-3">
-                <p className="text-[11px] opacity-60">Seu link de recrutamento é sua arma de conversão em massa:</p>
-                <Button 
-                  className="w-full bg-[#0F0] hover:bg-[#0F0]/80 text-black font-bold h-12 rounded-xl text-xs uppercase"
-                  onClick={() => {
-                    const link = `${window.location.origin}/register?ref=${profile?.username}`;
-                    navigator.clipboard.writeText(link);
-                    toast.success("Link Viral Copiado! 🚀");
-                  }}
-                >
-                   COPIAR MEU LINK VIRAL (REVEAL)
-                </Button>
-                <div className="bg-black/40 p-3 rounded-lg border border-[#0F0]/20">
-                   <p className="text-[9px] text-[#0F0]/40 uppercase mb-1">Link Ativo:</p>
-                   <p className="text-[10px] break-all opacity-80">{window.location.origin}/register?ref={profile?.username}</p>
-                </div>
-             </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="glass bg-[#0F0]/5 border-[#0F0]/20 p-6 rounded-3xl space-y-4">
+               <p className="text-[10px] font-bold uppercase tracking-widest text-[#0F0]">Roadmap do Arquiteto (12H)</p>
+               <div className="space-y-3">
+                  {[
+                    { label: "POSTAR UNBOXING 3D (TIKTOK)", done: true },
+                    { label: "LINK NA BIO / STATUS WHATSAPP", done: true },
+                    { label: "INTERAÇÃO MASSIVA NO FEED", done: false },
+                    { label: "POST OFICIAL: ORDEM DE MORPHEUS", done: false },
+                    { label: "CONVERTER PRIMEIRO FUNDADOR VIP", done: false }
+                  ].map((step, i) => (
+                    <div key={i} className={`flex items-center gap-3 p-3 rounded-xl border ${step.done ? "border-[#0F0]/40 bg-[#0F0]/10" : "border-white/5 bg-black/40"} transition-all`}>
+                      <div className={`w-4 h-4 rounded border flex items-center justify-center ${step.done ? "bg-[#0F0] border-[#0F0]" : "border-white/20"}`}>
+                        {step.done && <ShieldCheck size={10} className="text-black" />}
+                      </div>
+                      <span className={`text-[9px] font-bold ${step.done ? "text-[#0F0] line-through opacity-50" : "text-white"}`}>{step.label}</span>
+                    </div>
+                  ))}
+               </div>
+            </div>
+
+            <div className="glass bg-cyan-500/5 border-cyan-500/20 p-6 rounded-3xl space-y-4">
+               <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400">Missão Yasmin Caroline (Jovem)</p>
+               <div className="space-y-3">
+                  {[
+                    { label: "REVELAR CARTA DE ACEITAÇÃO IA", done: false },
+                    { label: "TREND 'QUAL MINHA CASA' (REELS)", done: false },
+                    { label: "PEDIR TROCA DE FIGURINHAS STORIES", done: false },
+                    { label: "POV: O UNBOXING DO BAÚ LENDÁRIO", done: false },
+                    { label: "TUTORIAL 'HOGWARTS EM 1 MINUTO'", done: false }
+                  ].map((step, i) => (
+                    <div key={i} className={`flex items-center gap-3 p-3 rounded-xl border ${step.done ? "border-cyan-400/40 bg-cyan-400/10" : "border-white/5 bg-black/40"} transition-all`}>
+                      <div className={`w-4 h-4 rounded border flex items-center justify-center ${step.done ? "bg-cyan-400 border-cyan-400" : "border-white/20"}`}>
+                        {step.done && <ShieldCheck size={10} className="text-black" />}
+                      </div>
+                      <span className={`text-[9px] font-bold ${step.done ? "text-cyan-400 line-through opacity-50" : "text-white"}`}>{step.label}</span>
+                    </div>
+                  ))}
+               </div>
+            </div>
           </div>
+
+
 
           <div className="glass bg-[#0F0]/5 border-[#0F0]/20 p-6 rounded-3xl space-y-4">
              <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Comandos de Operação</p>
