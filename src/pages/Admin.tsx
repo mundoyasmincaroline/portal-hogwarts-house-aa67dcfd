@@ -352,6 +352,42 @@ function MonetizationTab({ members, fetchAll, adForm, setAdForm, ads, createAd, 
         )}
       </div>
 
+      {/* ─── 2.5 Tendências do Beco Diagonal (Scout 2026) ─── */}
+      <div className="glass rounded-[2rem] p-8 border border-primary/20 bg-primary/5 mb-6 relative overflow-hidden">
+        <div className="absolute -right-10 -top-10 opacity-10">
+           <Sparkles size={150} className="text-primary rotate-12" />
+        </div>
+        <div className="relative z-10 space-y-4">
+          <div className="flex items-center gap-3">
+             <div className="p-2 bg-primary/20 rounded-lg text-primary">
+                <Search size={20} />
+             </div>
+             <div>
+                <h3 className="font-heading text-lg text-primary">Tendências do Beco Diagonal (Abril 2026)</h3>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Sugestões de Postagens Semanais</p>
+             </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+             <div className="glass bg-black/40 p-4 rounded-2xl border border-white/5 hover:border-primary/30 transition-all cursor-pointer group">
+                <span className="text-[9px] text-primary/60 font-bold uppercase block mb-1">🔥 Hype Máximo</span>
+                <h4 className="text-sm font-heading text-foreground group-hover:text-primary transition-colors">Série HBO: O Trio Escolhido</h4>
+                <p className="text-[10px] text-muted-foreground mt-2 italic">"O hype sobre Dominic, Alastair e Arabella está explodindo. Poste sobre as varinhas dos novos atores!"</p>
+             </div>
+             <div className="glass bg-black/40 p-4 rounded-2xl border border-white/5 hover:border-primary/30 transition-all cursor-pointer group">
+                <span className="text-[9px] text-amber-500/60 font-bold uppercase block mb-1">🍺 Sazonal</span>
+                <h4 className="text-sm font-heading text-foreground group-hover:text-amber-500 transition-colors">Butterbeer Season (Até 31/05)</h4>
+                <p className="text-[10px] text-muted-foreground mt-2 italic">"A temporada oficial da Cerveja Amanteigada. Venda canecas térmicas e kits de culinária bruxa."</p>
+             </div>
+             <div className="glass bg-black/40 p-4 rounded-2xl border border-white/5 hover:border-primary/30 transition-all cursor-pointer group">
+                <span className="text-[9px] text-purple-500/60 font-bold uppercase block mb-1">🌲 Evento Universal</span>
+                <h4 className="text-sm font-heading text-foreground group-hover:text-purple-500 transition-colors">Busca pelo Hipogrifo</h4>
+                <p className="text-[10px] text-muted-foreground mt-2 italic">"Promoção de criaturas mágicas (pelúcias/figuras) aproveitando o evento Fan Fest Nights."</p>
+             </div>
+          </div>
+        </div>
+      </div>
+
       {/* ─── 3. Sistema Morpheus de Rendimentos (Afiliados) ─── */}
       <div className="glass rounded-[2rem] p-10 border-2 border-primary/30 bg-gradient-to-br from-primary/10 via-black to-purple-900/10 relative overflow-hidden group shadow-2xl">
         <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:scale-110 transition-transform duration-700">
