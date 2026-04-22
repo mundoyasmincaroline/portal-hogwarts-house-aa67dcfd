@@ -11,7 +11,8 @@ import {
   LayoutDashboard,
   MessageSquare,
   Settings,
-  X
+  X,
+  Sparkles
 } from "lucide-react";
 import { 
   LineChart, 

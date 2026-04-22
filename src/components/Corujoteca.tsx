@@ -21,7 +21,7 @@ export default function Corujoteca() {
 
   useEffect(() => {
     if (!user) return;
-    
+
     // Simular verificação de inatividade e mensagens do Filch/Hogwarts
     const checkStatus = () => {
       const msgs: OwlMessage[] = [];
@@ -65,7 +65,7 @@ export default function Corujoteca() {
   return (
     <>
       {/* ── BOTÃO CORUJOTECA (EDWIGES) ── */}
-      <button 
+      <button
         onClick={toggleOpen}
         className={`fixed bottom-24 left-6 z-[60] group transition-all duration-500 ${isOpen ? 'scale-0' : 'scale-100'}`}
       >
@@ -79,13 +79,12 @@ export default function Corujoteca() {
               </div>
             </>
           )}
-          <div className={`p-5 rounded-3xl glass border-2 transition-all duration-700 shadow-2xl relative overflow-hidden ${
-            hasNew ? 'border-primary animate-pulse shadow-[0_0_40px_rgba(212,175,55,0.3)] bg-primary/5' : 'border-white/10 hover:border-primary/50'
-          }`}>
-             <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-             <Mail className={`w-7 h-7 relative z-10 ${hasNew ? 'text-primary animate-bounce' : 'text-muted-foreground group-hover:text-primary'}`} />
+          <div className={`p-5 rounded-3xl glass border-2 transition-all duration-700 shadow-2xl relative overflow-hidden ${hasNew ? 'border-primary animate-pulse shadow-[0_0_40px_rgba(212,175,55,0.3)] bg-primary/5' : 'border-white/10 hover:border-primary/50'
+            }`}>
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <Mail className={`w-7 h-7 relative z-10 ${hasNew ? 'text-primary animate-bounce' : 'text-muted-foreground group-hover:text-primary'}`} />
           </div>
-          
+
           <div className="absolute left-full ml-6 top-1/2 -translate-y-1/2 bg-black/90 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-primary/20 opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0 pointer-events-none whitespace-nowrap shadow-2xl">
             <p className="text-[10px] font-heading text-primary uppercase tracking-widest font-bold flex items-center gap-2">
               <Sparkles size={10} className="animate-pulse" /> Corujoteca
@@ -101,10 +100,10 @@ export default function Corujoteca() {
       {isOpen && (
         <div className="fixed inset-0 lg:inset-auto lg:bottom-24 lg:left-24 lg:w-96 lg:h-[600px] z-[100] animate-in fade-in slide-in-from-left-5 duration-500">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm lg:hidden" onClick={() => setIsOpen(false)} />
-          
+
           <div className="relative h-full flex flex-col glass rounded-[2.5rem] border-2 border-primary/30 shadow-[0_30px_100px_rgba(0,0,0,0.8)] overflow-hidden">
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/parchment.png')] opacity-10 pointer-events-none" />
-            
+
             <div className="p-8 border-b border-white/10 flex justify-between items-center relative z-10">
               <div>
                 <h3 className="font-heading text-2xl text-gold-gradient">Corujoteca</h3>
@@ -118,18 +117,17 @@ export default function Corujoteca() {
             <div className="flex-1 overflow-y-auto p-6 space-y-4 relative z-10 custom-scrollbar">
               {messages.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center opacity-30">
-                   <Mail size={48} className="mb-4" />
-                   <p className="font-serif italic italic italic italic">"Nenhuma coruja sobrevoando o castelo no momento..."</p>
+                  <Mail size={48} className="mb-4" />
+                  <p className="font-serif italic italic italic italic">"Nenhuma coruja sobrevoando o castelo no momento..."</p>
                 </div>
               ) : (
                 messages.map(msg => (
                   <div key={msg.id} className="glass bg-white/5 border border-white/10 p-5 rounded-3xl relative group hover:border-primary/30 transition-all">
                     <div className="flex items-start gap-4">
-                      <div className={`p-3 rounded-2xl shrink-0 ${
-                        msg.type === 'alert' ? 'bg-red-500/10 text-red-400' :
-                        msg.type === 'reward' ? 'bg-green-500/10 text-green-400' :
-                        'bg-primary/10 text-primary'
-                      }`}>
+                      <div className={`p-3 rounded-2xl shrink-0 ${msg.type === 'alert' ? 'bg-red-500/10 text-red-400' :
+                          msg.type === 'reward' ? 'bg-green-500/10 text-green-400' :
+                            'bg-primary/10 text-primary'
+                        }`}>
                         {msg.type === 'alert' ? <ShieldAlert size={20} /> : <Zap size={20} />}
                       </div>
                       <div className="space-y-1">
@@ -144,9 +142,9 @@ export default function Corujoteca() {
             </div>
 
             <div className="p-6 border-t border-white/10 relative z-10">
-               <Button variant="outline" className="w-full rounded-2xl h-12 text-xs border-primary/20 text-primary hover:bg-primary/10" onClick={() => setIsOpen(false)}>
-                  Fechar Pergaminhos
-               </Button>
+              <Button variant="outline" className="w-full rounded-2xl h-12 text-xs border-primary/20 text-primary hover:bg-primary/10" onClick={() => setIsOpen(false)}>
+                Fechar Pergaminhos
+              </Button>
             </div>
           </div>
         </div>
