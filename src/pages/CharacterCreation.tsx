@@ -31,7 +31,8 @@ const SECTION = ({ title, icon, children }: any) => (
 const EMPTY = { full_name:"", avatar_url:"", age:"", blood_status:"", gender:"male", house:"gryffindor",
   actor_faceclaim:"", wand:"", patronus:"", pet:"", favorite_class:"", favorite_spell:"",
   personality:"", strength:"", weakness:"", fears:"", dreams:"", quote:"", instagram:"",
-  background:"", physical_description:"", canon_era:"", canon_portrayed_by:"", canon_notes:"" };
+  background:"", physical_description:"", canon_era:"", canon_portrayed_by:"", canon_notes:"",
+  family_name:"", family_allow_siblings:true, family_allow_extended:true };
 
 export default function CharacterCreation({ onComplete, onCancel, canCancel }: Props) {
   const { user } = useAuth();
@@ -136,7 +137,10 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
         canon_portrayed_by: type === "canon" ? form.canon_portrayed_by : null,
         pair_character_id: pairId,
         relationship_status: pairId ? "paired" : "single",
-      } as never).select("id").single();
+        family_name: form.family_name,
+        family_allow_siblings: form.family_allow_siblings,
+        family_allow_extended: form.family_allow_extended,
+      } as any).select("id").single();
 
       if (error) throw error;
 
@@ -349,6 +353,43 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
               placeholder="Uma frase que representa este personagem..." />
             <FIELD label="Instagram do Personagem (@ opcional)" name="instagram" value={form.instagram} onChange={handleChange}
               placeholder="@nome_do_personagem" />
+          </SECTION>
+
+          {/* FAMÍLIA E GENEALOGIA */}
+          <SECTION title="Família e Genealogia" icon="🌳">
+            <FIELD label="Sobrenome de Família (ou Clã)" name="family_name" value={form.family_name} onChange={handleChange} 
+              placeholder="Ex: Black, Potter, Malfoy, Weasley..." />
+            
+            <div className="space-y-4 pt-2">
+              <div className="flex items-center justify-between p-3 bg-secondary/30 rounded-xl border border-border">
+                <div>
+                  <p className="text-xs font-heading">Permitir Irmãos(ãs)?</p>
+                  <p className="text-[10px] text-muted-foreground">Outros membros podem entrar na família como seus irmãos.</p>
+                </div>
+                <button type="button" 
+                  onClick={() => setForm(f => ({ ...f, family_allow_siblings: !f.family_allow_siblings }))}
+                  className={`w-12 h-6 rounded-full transition-colors relative ${form.family_allow_siblings ? 'bg-primary' : 'bg-muted'}`}>
+                  <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${form.family_allow_siblings ? 'left-7' : 'left-1'}`} />
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between p-3 bg-secondary/30 rounded-xl border border-border">
+                <div>
+                  <p className="text-xs font-heading">Permitir Parentes Estendidos?</p>
+                  <p className="text-[10px] text-muted-foreground">Tios, primos e outros podem entrar na sua linhagem.</p>
+                </div>
+                <button type="button" 
+                  onClick={() => setForm(f => ({ ...f, family_allow_extended: !f.family_allow_extended }))}
+                  className={`w-12 h-6 rounded-full transition-colors relative ${form.family_allow_extended ? 'bg-primary' : 'bg-muted'}`}>
+                  <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${form.family_allow_extended ? 'left-7' : 'left-1'}`} />
+                </button>
+              </div>
+            </div>
+            
+            <p className="text-[10px] text-muted-foreground italic bg-primary/5 p-3 rounded-lg border border-primary/10">
+              <Sparkles size={10} className="inline mr-1 text-primary" />
+              <strong>Nota do Sistema:</strong> As decisões da sua ficha são respeitadas automaticamente. Se você não permitir irmãos, ninguém poderá entrar no portal como seu parente direto nesta família.
+            </p>
           </SECTION>
 
           {/* PAR ROMÂNTICO */}

@@ -283,15 +283,22 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
             </Section>
           )}
 
-          {/* Família */}
-          {(char.family_mother || char.family_father || char.family_siblings || char.family_relatives) && (
-            <Section title="👨‍👩‍👧 Família">
-              <Field label="Mãe" value={char.family_mother} />
-              <Field label="Pai" value={char.family_father} />
-              <Field label="Irmãos" value={char.family_siblings} />
-              <Field label="Outros Parentes" value={char.family_relatives} />
-            </Section>
-          )}
+          {/* Família e Genealogia */}
+          <Section title="👨‍👩‍👧 Família e Genealogia">
+            <Field label="Família / Clã" value={char.family_name} />
+            <Field label="Pai" value={char.family_father} />
+            <Field label="Mãe" value={char.family_mother} />
+            <Field label="Irmãos" value={char.family_siblings} />
+            <div className="col-span-1 sm:col-span-2 grid grid-cols-2 gap-2 mt-1">
+               <div className={`p-2 rounded-lg border text-[10px] font-heading flex flex-col items-center justify-center gap-1 ${char.family_allow_siblings ? 'bg-primary/5 border-primary/20 text-primary' : 'bg-muted/10 border-border text-muted-foreground opacity-50'}`}>
+                  <span>{char.family_allow_siblings ? '✅ PERMITE IRMÃOS' : '❌ NÃO PERMITE IRMÃOS'}</span>
+               </div>
+               <div className={`p-2 rounded-lg border text-[10px] font-heading flex flex-col items-center justify-center gap-1 ${char.family_allow_extended ? 'bg-primary/5 border-primary/20 text-primary' : 'bg-muted/10 border-border text-muted-foreground opacity-50'}`}>
+                  <span>{char.family_allow_extended ? '✅ PERMITE PARENTES' : '❌ NÃO PERMITE PARENTES'}</span>
+               </div>
+            </div>
+            {char.family_relatives && <div className="col-span-1 sm:col-span-2"><Field label="Outros Parentes" value={char.family_relatives} /></div>}
+          </Section>
 
           {/* Pet */}
           {(char.pet || char.pet_name) && (

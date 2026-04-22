@@ -46,6 +46,7 @@ import Corujoteca from "@/components/Corujoteca";
 import MagicalEncounters from "@/components/MagicalEncounters";
 import FilchShadow from "@/components/FilchShadow";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
+import EmmaPresence from "@/components/EmmaPresence";
 
 
 const NAV_ITEMS = [
@@ -517,6 +518,7 @@ export default function DashboardLayout() {
           <MagicalEncounters />
           <FilchShadow />
       <PWAInstallPrompt />
+      <EmmaPresence />
         </div>
       </div>
     </main>
