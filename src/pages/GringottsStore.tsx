@@ -68,6 +68,8 @@ const MONSTER_QUALITY_ITEMS: StoreItem[] = [
   { id: "mq_ing_lacewing", name: "Hemeróbios Secos", category: "potion", price_galeons: 500, image_url: "https://images.unsplash.com/photo-1533234407053-ada8c9579737?q=80&w=600", rarity: "common", is_featured: false, description: "Base para a Poção Polissuco." },
   { id: "mq_ing_unicorn", name: "Sangue de Unicórnio", category: "potion", price_galeons: 3500, image_url: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=600", rarity: "legendary", is_featured: true, description: "Uma vida amaldiçoada para quem o bebe. Mas mantém você vivo mesmo no limiar da morte." },
   { id: "mq_item_sword", name: "Espada de Gryffindor", category: "accessory", price_galeons: 20000, image_url: "https://images.unsplash.com/photo-1599707367072-cd6ada2bc375?q=80&w=600", rarity: "legendary", is_featured: true, description: "Feita de prata pura por duendes. Absorve o que a fortalece." },
+  { id: "mq_item_firebolt", name: "Vassoura Firebolt", category: "accessory", price_galeons: 50000, image_url: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=600", rarity: "legendary", is_featured: true, description: "A vassoura de corrida mais rápida do mundo. Aerodinâmica perfeita e cabo de freixo polido." },
+  { id: "mq_item_chest_epic", name: "Baú de Relíquias Épicas", category: "upgrade", price_galeons: 1500, image_url: "https://portal-hogwarts.lovable.app/legendary_chest_3d_1776816744823.png", rarity: "legendary", is_featured: true, description: "Contém um item aleatório de raridade Rara ou Lendária. Sorte pura." },
 ];
 
 // ─── Planos VIP ────────────────────────────────────────────

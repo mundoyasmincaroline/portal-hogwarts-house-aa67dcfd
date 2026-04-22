@@ -43,6 +43,7 @@ import DailyProphetTicker from "@/components/DailyProphetTicker";
 import Corujoteca from "@/components/Corujoteca";
 import MagicalEncounters from "@/components/MagicalEncounters";
 import FilchShadow from "@/components/FilchShadow";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 
 
 const NAV_ITEMS = [
@@ -493,6 +494,7 @@ export default function DashboardLayout() {
           <Corujoteca />
           <MagicalEncounters />
           <FilchShadow />
+      <PWAInstallPrompt />
         </div>
       </div>
     </main>
