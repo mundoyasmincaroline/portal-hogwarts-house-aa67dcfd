@@ -10,8 +10,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import HouseCrest from "@/components/HouseCrest";
 import SafeImage from "@/components/SafeImage";
-import { MessageCircle, UserPlus, UserCheck, Clock } from "lucide-react";
-import { House } from "@/lib/storinterface Props {
+import { MessageCircle, UserPlus, UserCheck, Clock, MessageSquare } from "lucide-react";
+import { House } from "@/lib/store";
+
+interface Props {
   member: {
     user_id: string;
     full_name: string;
@@ -228,7 +230,5 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
         </div>
       )}
     </div>
-  );
- </div>
   );
 }
