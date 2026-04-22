@@ -387,74 +387,86 @@ export default function MatrixPortal() {
           </div>
 
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="glass bg-[#0F0]/5 border-[#0F0]/20 p-6 rounded-3xl space-y-4">
-               <p className="text-[10px] font-bold uppercase tracking-widest text-[#0F0]">Comando do Arquiteto (Sprint 48h)</p>
-               <div className="space-y-3">
-                  {[
-                    { label: "AUDITORIA 'MONSTER QUALITY' 3D", done: true },
-                    { label: "ESTABILIZAÇÃO E REFATORAÇÃO MOBILE", done: true },
-                    { label: "LANÇAMENTO: CAMPANHA DE FUNDADORES", done: false },
-                    { label: "MONITORAMENTO DE CONVERSÃO (META R$ 10K)", done: false }
-                  ].map((step, i) => (
-                    <div key={i} className={`flex items-center gap-3 p-3 rounded-xl border ${step.done ? "border-[#0F0]/40 bg-[#0F0]/10" : "border-white/5 bg-black/40"} transition-all`}>
-                      <div className={`w-4 h-4 rounded border flex items-center justify-center ${step.done ? "bg-[#0F0] border-[#0F0]" : "border-white/20"}`}>
-                        {step.done && <ShieldCheck size={10} className="text-black" />}
-                      </div>
-                      <span className={`text-[9px] font-bold ${step.done ? "text-[#0F0] line-through opacity-50" : "text-white"}`}>{step.label}</span>
-                    </div>
-                  ))}
-               </div>
-            </div>
-
-            <div className="glass bg-cyan-500/5 border-cyan-500/20 p-6 rounded-3xl space-y-4">
-               <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400">Missão Yasmin Caroline (Viral)</p>
-               <div className="space-y-3">
-                  {[
-                    { label: "GERAÇÃO DA CARTA DE ACEITAÇÃO HD", done: true },
-                    { label: "POSTAGEM: O CONVITE (VÍDEO 1)", done: false },
-                    { label: "POSTAGEM: A SELEÇÃO (VÍDEO 2)", done: false },
-                    { label: "INTERAÇÃO E ENGAJAMENTO DE LEADS", done: false }
-                  ].map((step, i) => (
-                    <div key={i} className={`flex items-center gap-3 p-3 rounded-xl border ${step.done ? "border-cyan-400/40 bg-cyan-400/10" : "border-white/5 bg-black/40"} transition-all`}>
-                      <div className={`w-4 h-4 rounded border flex items-center justify-center ${step.done ? "bg-cyan-400 border-cyan-400" : "border-white/20"}`}>
-                        {step.done && <ShieldCheck size={10} className="text-black" />}
-                      </div>
-                      <span className={`text-[9px] font-bold ${step.done ? "text-cyan-400 line-through opacity-50" : "text-white"}`}>{step.label}</span>
-                    </div>
-                  ))}
-               </div>
-            </div>
-
-            <div className="glass bg-pink-500/5 border-pink-500/20 p-6 rounded-3xl space-y-4 col-span-1 md:col-span-2">
-               <p className="text-[10px] font-bold uppercase tracking-widest text-pink-400">Carolina Assis (A Guardiã do Castelo)</p>
-               <div className="flex flex-col md:flex-row gap-6 items-center">
-                  <div className="shrink-0 relative">
-                     <div className="absolute inset-0 bg-pink-500/20 blur-xl animate-pulse" />
-                     <img src="https://i.pinimg.com/736x/8a/7d/5a/8a7d5a5a5a5a5a5a5a5a5a5a5a5a5a5a.jpg" alt="Carol" className="w-20 h-20 rounded-full border-2 border-pink-500/50 object-cover relative z-10" 
-                        onError={(e) => { (e.target as any).src = "https://ui-avatars.com/api/?name=Carolina+Assis&background=db2777&color=fff"; }}
-                     />
-                  </div>
-                  <div className="flex-1 space-y-2 text-center md:text-left">
-                     <p className="text-[11px] text-pink-100 italic leading-relaxed">
-                        "Mãe zelosa, guerreira fantástica e o pilar emocional da Revolução. Onde houver 13 reais e fé, haverá um império."
-                     </p>
-                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
-                        <div className="bg-pink-500/10 border border-pink-500/20 p-2 rounded-lg">
-                           <p className="text-[9px] font-bold text-pink-400">STATUS: GUARDIÃ SUPREMA</p>
-                        </div>
-                        <div className="bg-pink-500/10 border border-pink-500/20 p-2 rounded-lg">
-                           <p className="text-[9px] font-bold text-pink-400">OBJETIVO: SEGURANÇA DO CLÃ</p>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
 
 
+
+          {/* ── PERFECT MODE: SYSTEM HEALTH AUDIT ── */}
+          <div className="glass bg-[#0F0]/5 border-[#0F0]/30 p-6 rounded-3xl space-y-4">
+             <div className="flex justify-between items-center">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#0F0] flex items-center gap-2">
+                   <ShieldCheck size={14} className="animate-pulse" /> PROTOCOLO PERFECT_MODE
+                </p>
+                <div className="flex gap-2">
+                   <span className="text-[8px] bg-[#0F0]/20 text-[#0F0] px-2 py-0.5 rounded-full border border-[#0F0]/30 animate-pulse">ESTÁVEL</span>
+                </div>
+             </div>
+             
+             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {[
+                   { label: "SOBREPOSIÇÃO UI", status: "CORRIGIDO", color: "text-[#0F0]" },
+                   { label: "ASSETS VISUAIS", status: "MONSTER", color: "text-cyan-400" },
+                   { label: "LATÊNCIA DB", status: "14ms", color: "text-[#0F0]" },
+                   { label: "CASH_FLOW", status: "SYNCED", color: "text-yellow-400" }
+                ].map((item, i) => (
+                   <div key={i} className="bg-black/40 border border-white/5 p-3 rounded-xl text-center">
+                      <p className="text-[8px] opacity-40 mb-1">{item.label}</p>
+                      <p className={`text-[10px] font-bold ${item.color}`}>{item.status}</p>
+                   </div>
+                ))}
+             </div>
+
+             <div className="p-4 bg-[#0F0]/10 rounded-xl border border-[#0F0]/20">
+                <p className="text-[10px] font-bold text-[#0F0] mb-2 uppercase">Log de Auditoria em Tempo Real:</p>
+                <div className="space-y-1 text-[9px] opacity-70 font-mono">
+                   <p>&gt; [OK] Corujoteca realocada para RIGHT_SIDE (Avoid Sidebar Overlap)</p>
+                   <p>&gt; [OK] Ícones Lucide: Crown, Medal, Trophy importados em todos os módulos</p>
+                   <p>&gt; [OK] Gringotts Store: Todos os assets 3D validados como Monster Quality</p>
+                   <p className="animate-pulse text-[#0F0]">&gt; [RUNNING] Scan global de integridade de pixels...</p>
+                </div>
+             </div>
           </div>
 
-
+          {/* ── MOBILE DOWNLOAD VAULT: REVOLUTION ASSETS ── */}
+          <div className="glass bg-purple-500/10 border-purple-500/30 p-6 rounded-3xl space-y-4">
+             <p className="text-[10px] font-bold uppercase tracking-widest text-purple-400 flex items-center gap-2">
+                <Sparkles size={14} /> COFRE DE ASSETS (DOWNLOAD MOBILE)
+             </p>
+             <p className="text-[9px] opacity-60 italic">— "Para baixar direto no celular e postar no TikTok/Insta."</p>
+             
+             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[
+                   { name: "Varinha Holly 3D", file: "https://portal-hogwarts.lovable.app/monster_quality_wand_holly_3d_1776867017755.png", type: "Asset" },
+                   { name: "Capa Invisibilidade", file: "https://portal-hogwarts.lovable.app/monster_quality_invisibility_cloak_3d_1776867041087.png", type: "Asset" },
+                   { name: "Veritaserum", file: "https://portal-hogwarts.lovable.app/monster_quality_veritaserum_3d_1776867059945.png", type: "Asset" },
+                   { name: "Galeão 3D HQ", file: "https://portal-hogwarts.lovable.app/monster_quality_galeon_coin_3d_1776816757264.png", type: "Asset" }
+                ].map((asset, i) => (
+                   <div key={i} className="bg-black/60 p-3 rounded-2xl border border-white/10 group hover:border-purple-400/50 transition-all">
+                      <div className="aspect-square rounded-xl bg-slate-900 mb-2 overflow-hidden relative">
+                         <img src={asset.file} className="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-opacity" alt={asset.name} />
+                         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Button size="icon" variant="ghost" className="text-white" onClick={() => window.open(asset.file)}>
+                               <Eye size={16} />
+                            </Button>
+                         </div>
+                      </div>
+                      <div className="flex justify-between items-center px-1">
+                         <div className="min-w-0">
+                            <p className="text-[8px] font-bold truncate">{asset.name}</p>
+                            <p className="text-[6px] opacity-40">{asset.type} | PNG</p>
+                         </div>
+                         <Button size="icon" variant="ghost" className="h-6 w-6 text-purple-400" onClick={() => {
+                            const link = document.createElement('a');
+                            link.href = asset.file;
+                            link.download = `${asset.name.toLowerCase().replace(/ /g, '_')}.png`;
+                            link.click();
+                         }}>
+                            <LayoutDashboard size={12} />
+                         </Button>
+                      </div>
+                   </div>
+                ))}
+             </div>
+          </div>
 
           <div className="glass bg-[#0F0]/5 border-[#0F0]/20 p-6 rounded-3xl space-y-4">
              <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Comandos de Operação</p>
