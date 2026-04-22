@@ -16,7 +16,7 @@ export default function MagicalGaleon({ size = "md", className = "" }: MagicalGa
   return (
     <div className={`relative inline-flex items-center justify-center ${sizeMap[size]} ${className}`}>
       <img
-        src="https://portal-hogwarts.lovable.app/monster_quality_galeon_coin_3d_1776816757264.png"
+        src="/monster_quality_galeon.png"
         alt="Galeon"
         className="w-full h-full object-contain drop-shadow-[0_0_8px_rgba(234,179,8,0.5)] animate-float-subtle group-hover:drop-shadow-[0_0_15px_rgba(234,179,8,0.8)] transition-all"
       />
