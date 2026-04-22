@@ -18,6 +18,7 @@ import { Info, Users, Search, Scroll, Book, Lock, Trophy, ShoppingBag, Flame, Sp
 import SafeImage from "@/components/SafeImage";
 import RecruitmentWidget from "@/components/RecruitmentWidget";
 import MagicalIcon from "@/components/MagicalIcon";
+import MagicalGaleon from "@/components/MagicalGaleon";
 
 // ---- Componente embutido: lista de membros para solicitar amizade ----
 function MembersTab({ currentUserId }: { currentUserId?: string }) {

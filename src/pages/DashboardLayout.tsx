@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import Notifications from "@/components/Notifications";
 import InterstitialAd from "@/components/InterstitialAd";
 import MagicalEmoji from "@/components/MagicalEmoji";
+import MagicalGaleon from "@/components/MagicalGaleon";
 
 import CastleEntrance from "@/pages/CastleEntrance";
 import EngagementBot from "@/components/EngagementBot";

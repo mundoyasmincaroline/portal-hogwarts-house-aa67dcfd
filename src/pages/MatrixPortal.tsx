@@ -271,6 +271,48 @@ export default function MatrixPortal() {
              </div>
           </div>
 
+          <div className="glass bg-purple-500/5 border-purple-500/20 p-6 rounded-3xl space-y-6">
+             <p className="text-[10px] font-bold uppercase tracking-widest text-purple-400">Laboratório de Criação Viral</p>
+             <div className="space-y-4">
+                <div className="bg-black/60 p-4 rounded-xl border border-purple-500/20">
+                   <p className="text-xs font-bold text-white mb-2">PROMPT DE OURO (TikTok/Reels):</p>
+                   <p className="text-[10px] opacity-70 italic text-purple-300">
+                     "Gere um vídeo cinematográfico de um bruxo abrindo um Baú Lendário em Hogwarts, luzes douradas saindo de dentro, efeito Monster Quality 4K, estilo Harry Potter moderno."
+                   </p>
+                   <Button 
+                     variant="ghost" 
+                     className="mt-3 text-[9px] h-6 border border-purple-500/30 hover:bg-purple-500/20"
+                     onClick={() => {
+                        navigator.clipboard.writeText("Gere um vídeo cinematográfico de um bruxo abrindo um Baú Lendário em Hogwarts, luzes douradas saindo de dentro, efeito Monster Quality 4K, estilo Harry Potter moderno.");
+                        toast.success("Prompt Copiado! Use no Luma/Runway 🚀");
+                     }}
+                   >
+                     COPIAR PROMPT
+                   </Button>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-3">
+                   <div className="bg-black/40 p-3 rounded-lg border border-white/5 text-center">
+                      <p className="text-[9px] uppercase opacity-40">Imagens IA</p>
+                      <p className="text-[10px] font-bold text-cyan-400">FLUX / MIDJOURNEY</p>
+                   </div>
+                   <div className="bg-black/40 p-3 rounded-lg border border-white/5 text-center">
+                      <p className="text-[9px] uppercase opacity-40">Vídeos IA</p>
+                      <p className="text-[10px] font-bold text-purple-400">LUMA / KLING</p>
+                   </div>
+                </div>
+
+                <div className="p-4 bg-primary/10 rounded-xl border border-primary/20">
+                   <p className="text-[10px] font-bold text-primary flex items-center gap-2">
+                      <Sparkles size={12} /> DICA DO JARVIS:
+                   </p>
+                   <p className="text-[10px] opacity-80 mt-1">
+                      "Peça para eu gerar a imagem aqui no chat e eu farei o upload direto para o seu servidor. Use o comando /GERE_IMAGEM."
+                   </p>
+                </div>
+             </div>
+          </div>
+
           <div className="glass bg-yellow-500/5 border-yellow-500/20 p-6 rounded-3xl space-y-4">
              <p className="text-[10px] font-bold uppercase tracking-widest text-yellow-500">Mecanismo de Pagamento</p>
              <div className="flex items-center gap-3">
