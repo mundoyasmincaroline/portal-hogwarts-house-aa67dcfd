@@ -461,9 +461,6 @@ export default function MatrixPortal() {
 
 
 
-
-          </div>
-
           {/* ── CRIATIVOS VIRAIS: ESTRATÉGIA YASMIN ── */}
           <div className="glass bg-cyan-500/10 border-cyan-500/30 p-6 rounded-3xl space-y-4">
              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-400 flex items-center gap-2">
@@ -582,21 +579,17 @@ export default function MatrixPortal() {
                 >
                    EXECUTAR PLANO DE GUERRA (12H)
                 </Button>
-                <Button 
-                  variant="outline" 
-                  className="border-cyan-400/50 bg-cyan-400/10 hover:bg-cyan-400/20 text-cyan-400 text-xs h-12 rounded-xl font-bold animate-pulse"
-                  onClick={() => window.open('https://lovable.dev/projects/portal-hogwarts-house/artifacts/PROJETO_REVOLUCAO_48H.md')}
-                >
-                   VER MAPA DA REVOLUÇÃO (48H)
-                </Button>
                 <div className="grid grid-cols-2 gap-3">
-                  <Button variant="outline" className="border-[#0F0]/20 hover:bg-[#0F0]/10 text-[#0F0] text-[10px] h-10 rounded-xl" onClick={() => window.location.href='/dashboard/admin-finance'}>
+                  <Button variant="outline" className="border-pink-500/50 hover:bg-pink-500/10 text-pink-400 text-[10px] h-10 rounded-xl" onClick={() => window.location.href='/dashboard/yasmin-world'}>
+                     MUNDO YASMIN
+                  </Button>
+                  <Button variant="outline" className="border-cyan-400/50 hover:bg-cyan-400/10 text-cyan-400 text-[10px] h-10 rounded-xl" onClick={() => window.location.href='/dashboard/admin-finance'}>
                      FINANCEIRO
                   </Button>
-                  <Button variant="outline" className="border-[#0F0]/20 hover:bg-[#0F0]/10 text-[#0F0] text-[10px] h-10 rounded-xl" onClick={() => window.location.href='/dashboard/feed'}>
-                     VOLTAR
-                  </Button>
                 </div>
+                <Button variant="outline" className="border-[#0F0]/20 hover:bg-[#0F0]/10 text-[#0F0] text-[10px] h-10 rounded-xl w-full" onClick={() => window.location.href='/dashboard/feed'}>
+                   VOLTAR AO FEED
+                </Button>
              </div>
           </div>
         </div>
