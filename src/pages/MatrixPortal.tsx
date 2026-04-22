@@ -287,27 +287,38 @@ export default function MatrixPortal() {
             variant="magical" 
             className="h-16 px-8 rounded-xl bg-red-600 hover:bg-red-700 border-none shadow-[0_0_20px_rgba(220,38,38,0.3)] animate-pulse"
             onClick={async () => {
+              const newVersion = `7.2.1-REV-${Date.now()}`;
+              
               setTerminalText(prev => [
                 ...prev, 
-                "> INITIATING REVOLUTION SYNC...", 
+                "> INITIATING GLOBAL REVOLUTION SYNC...", 
+                `> NEW VERSION KEY: ${newVersion}`,
                 "> SYNCING PROTOCOLO MORPHEUS...",
                 "> SYNCING PROTOCOLO JARVIS...",
                 "> SYNCING PERFECT_MODE (100% STABILITY)...",
                 "> ACTIVATING 10_STEPS_AHEAD (ERROR BOUNDARIES)...",
-                "> SCANNING LOCAL REPOSITORY...", 
-                "> PREPARING BUNDLE FOR GITHUB..."
+                "> UPDATING CLOUD_VERSION_SENTINEL...", 
+                "> BROADCASTING RELOAD SIGNAL TO ALL USERS..."
               ]);
               
               toast.promise(new Promise(async (res, rej) => {
                 try {
-                  // Simulação de sincronização profunda de todos os modos
+                  // Persistir nova versão no banco para forçar reload de todos os usuários
+                  const { error } = await supabase
+                    .from("site_settings")
+                    .upsert({ 
+                      setting_key: "portal_version", 
+                      setting_value: { version: newVersion, updated_at: new Date().toISOString(), architect: 'morpheus' } 
+                    } as never);
+                  
+                  if (error) throw error;
+
                   setTimeout(() => {
                     setTerminalText(prev => [
                       ...prev, 
-                      "> GIT_COMMIT: 'Revolution Update - Phase Extreme - All Protocols Synced'", 
-                      "> GIT_PUSH: Origin/Main", 
-                      "> DEPLOYING TO LOVABLE...", 
-                      "> REVOLUTION SYNC COMPLETE. SYSTEM IS 100% SECURE."
+                      "> GIT_PUSH_STUB: Origin/Main", 
+                      "> REVOLUTION SYNC COMPLETE.",
+                      "> ALL MOBILE DEVICES ARE NOW BEING RESET."
                     ]);
                     res(true);
                   }, 2000);
@@ -315,14 +326,15 @@ export default function MatrixPortal() {
                   rej(e);
                 }
               }), {
-                loading: "Sincronizando todos os Protocolos & Modos...",
-                success: "SISTEMA 100% ESTÁVEL. Marketing liberado!",
-                error: "Erro na sincronização mística."
+                loading: "Disparando Atualização Global...",
+                success: "SISTEMA RESETADO GLOBALMENTE. Todos os usuários agora estão na versão mais recente!",
+                error: "Falha ao propagar magia de atualização."
               });
             }}
           >
             <RefreshCw size={20} className="mr-2" /> REVOLUTION SYNC
           </Button>
+
         </div>
       </div>
 

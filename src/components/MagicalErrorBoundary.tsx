@@ -78,7 +78,23 @@ export class MagicalErrorBoundary extends Component<Props, State> {
               >
                 Restaurar Portal
               </button>
+              <button 
+                className="flex-1 h-12 rounded-xl text-xs font-bold uppercase tracking-widest border border-white/10 text-white/40 hover:text-white hover:border-white/30 transition-all"
+                onClick={() => {
+                  localStorage.clear();
+                  sessionStorage.clear();
+                  if ('caches' in window) {
+                    caches.keys().then((names) => {
+                      for (let name of names) caches.delete(name);
+                    });
+                  }
+                  window.location.href = window.location.origin + window.location.pathname + '?force=' + Date.now();
+                }}
+              >
+                Sincronização Profunda
+              </button>
             </div>
+
 
             <p className="text-[10px] text-[#94a3b8] pt-4">
               ✨ Protocolo Jarvis de Recuperação Ativo

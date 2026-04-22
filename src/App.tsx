@@ -58,9 +58,56 @@ const queryClient = new QueryClient();
 
 function AuthInit({ children }: { children: React.ReactNode }) {
   const init = useAuth((s) => s.init);
-  useEffect(() => { init(); }, [init]);
+  
+  useEffect(() => { 
+    init(); 
+    
+    // Protocolo 10 Passos à Frente: Auto-Update Monitor
+    const checkVersion = async () => {
+      const { data } = await supabase
+        .from("site_settings")
+        .select("setting_value")
+        .eq("setting_key", "portal_version")
+        .maybeSingle();
+      
+      if (data) {
+        const remoteVersion = (data.setting_value as any)?.version;
+        const localVersion = localStorage.getItem("portal_version");
+        
+        if (remoteVersion && localVersion && remoteVersion !== localVersion) {
+          console.log("REVOLUTION SYNC: Nova versão detectada via nuvem. Reiniciando...");
+          localStorage.setItem("portal_version", remoteVersion);
+          // Limpeza de cache profunda
+          if ('caches' in window) {
+            const names = await caches.keys();
+            for (let name of names) await caches.delete(name);
+          }
+          window.location.reload();
+        }
+      }
+    };
+
+    checkVersion();
+    
+    // Realtime listener para atualizações forçadas pelo Arquiteto
+    const channel = supabase
+      .channel('portal_updates')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'site_settings' }, payload => {
+        if (payload.new.setting_key === 'portal_version') {
+          const newVer = payload.new.setting_value?.version;
+          if (newVer && newVer !== localStorage.getItem("portal_version")) {
+            window.location.reload(); // Força recarga imediata para todos online
+          }
+        }
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [init]);
+  
   return <>{children}</>;
 }
+
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
