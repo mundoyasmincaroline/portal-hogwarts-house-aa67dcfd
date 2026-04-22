@@ -116,6 +116,13 @@ const App = () => (
                 <Route path="zion" element={<ZionVault />} />
                 <Route path="god" element={<GodDashboard />} />
 
+                {/* Rotas de Expansão (Fallbacks para evitar tela branca) */}
+                <Route path="camera" element={<Feed />} />
+                <Route path="tournament" element={<Ranking />} />
+                <Route path="hall" element={<Feed />} />
+                <Route path="duel" element={<Challenges />} />
+                <Route path="library" element={<Classes />} />
+
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>

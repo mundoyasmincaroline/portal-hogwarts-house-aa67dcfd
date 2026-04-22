@@ -1,6 +1,5 @@
 import React, { Component, ErrorInfo, ReactNode } from "react";
-import { ShieldAlert, RefreshCw, Terminal } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Props {
   children?: ReactNode;
@@ -12,10 +11,10 @@ interface State {
 }
 
 /**
- * MagicalErrorBoundary: A rede de segurança de Zion.
- * Impede a tela branca e oferece recuperação rápida.
+ * MagicalErrorBoundary: A rede de segurança suprema de Zion.
+ * Reporta falhas diretamente para a 'Caixa Preta' (system_logs).
  */
-class MagicalErrorBoundary extends Component<Props, State> {
+export class MagicalErrorBoundary extends Component<Props, State> {
   public state: State = {
     hasError: false
   };
@@ -24,47 +23,61 @@ class MagicalErrorBoundary extends Component<Props, State> {
     return { hasError: true, error };
   }
 
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  public async componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error("ZION_CRITICAL_ERROR:", error, errorInfo);
+    
+    try {
+      // Reportar erro para a Caixa Preta de Zion
+      await supabase.from("system_logs").insert({
+        level: 'CRITICAL',
+        message: error.message,
+        stack: errorInfo.componentStack
+      });
+    } catch (e) {
+      console.error("Falha ao reportar para Zion:", e);
+    }
   }
 
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-[#050505] flex items-center justify-center p-6 font-mono text-emerald-500">
-          <div className="max-w-2xl w-full glass-dark p-12 rounded-[3rem] border border-red-500/30 text-center space-y-8 shadow-[0_0_100px_rgba(153,27,27,0.1)]">
-            <ShieldAlert size={80} className="text-red-500 mx-auto animate-pulse" />
-            <div className="space-y-4">
-              <h1 className="text-3xl font-bold tracking-[0.3em] uppercase text-red-500">Falha de Renderização</h1>
-              <p className="text-xs text-red-900 leading-relaxed max-w-md mx-auto italic">
-                "Um feitiço de bloqueio foi detectado na estrutura. O Protocolo de Emergência Zion foi ativado para proteger os dados."
-              </p>
+        <div style={{
+          height: "100vh", width: "100vw", background: "#050505", 
+          display: "flex", alignItems: "center", justifyContent: "center", 
+          flexDirection: "column", color: "#34d399", fontFamily: "monospace",
+          textAlign: "center", padding: "40px"
+        }}>
+          <div style={{ 
+            border: "1px solid #065f46", background: "rgba(6, 95, 70, 0.05)", 
+            padding: "40px", borderRadius: "30px", maxWidth: "600px",
+            boxShadow: "0 0 50px rgba(52, 211, 153, 0.1)"
+          }}>
+            <h1 style={{ fontSize: "1.2rem", letterSpacing: "0.5em", color: "#10b981", marginBottom: "20px" }}>
+              ZION SYSTEM FAILURE
+            </h1>
+            <div style={{ textAlign: "left", background: "#000", padding: "20px", borderRadius: "10px", border: "1px solid #065f46" }}>
+              <p style={{ color: "#059669", fontSize: "12px", marginBottom: "10px" }}>[DIAGNÓSTICO TÉCNICO]</p>
+              <p style={{ color: "#34d399", fontSize: "10px", lineHeight: "1.6" }}>{this.state.error?.message}</p>
             </div>
-            
-            <div className="bg-black/60 p-4 rounded-xl border border-red-900/20 text-left">
-               <div className="flex items-center gap-2 text-[10px] text-red-900 mb-2 uppercase font-bold">
-                  <Terminal size={12} /> Diagnóstico Técnico
-               </div>
-               <p className="text-[10px] text-red-500/70 font-mono break-all line-clamp-3">
-                  {this.state.error?.message}
-               </p>
-            </div>
-
-            <Button 
+            <p style={{ fontSize: "10px", color: "#065f46", marginTop: "20px", fontStyle: "italic" }}>
+              "O erro foi reportado ao Arquiteto. A realidade está sendo recalibrada."
+            </p>
+            <button 
               onClick={() => window.location.reload()}
-              className="bg-red-600 hover:bg-red-500 text-white rounded-full px-10 h-14 gap-3 uppercase font-bold tracking-widest shadow-lg shadow-red-600/20"
+              style={{
+                marginTop: "30px", background: "#10b981", color: "#000", 
+                border: "none", padding: "12px 30px", borderRadius: "50px", 
+                cursor: "pointer", fontWeight: "bold", fontSize: "10px", letterSpacing: "2px"
+              }}
             >
-              <RefreshCw size={20} /> Reiniciar Realidade
-            </Button>
+              RESTAURAR PORTAL
+            </button>
           </div>
-          <style>{`
-            .glass-dark { background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(20px); }
-          `}</style>
         </div>
       );
     }
 
-    return this.children;
+    return this.props.children;
   }
 }
 
