@@ -268,3 +268,7 @@ export const useAuth = create<AuthState>((set, get) => ({
     });
   },
 }));
+// Garantia Global de Zion: Se o módulo carregar, o useAuth existirá no window.
+if (typeof window !== "undefined") {
+  (window as any).useAuth = useAuth;
+}
