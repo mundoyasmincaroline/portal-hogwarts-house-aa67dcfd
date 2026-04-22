@@ -98,7 +98,7 @@ export default function Corujoteca() {
 
       {/* ── PAINEL DE MENSAGENS (O PERGAMINHO) ── */}
       {isOpen && (
-        <div className="fixed inset-0 lg:inset-auto lg:bottom-24 lg:right-24 lg:w-96 lg:h-[600px] z-[100] animate-in fade-in slide-in-from-right-5 duration-500">
+        <div className="fixed inset-0 lg:inset-auto lg:bottom-36 lg:right-24 lg:w-96 lg:h-[600px] z-[100] animate-in fade-in slide-in-from-right-5 duration-500">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm lg:hidden" onClick={() => setIsOpen(false)} />
 
           <div className="relative h-full flex flex-col glass rounded-[2.5rem] border-2 border-primary/30 shadow-[0_30px_100px_rgba(0,0,0,0.8)] overflow-hidden">
