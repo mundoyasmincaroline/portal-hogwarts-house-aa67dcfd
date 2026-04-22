@@ -45,6 +45,7 @@ import MagicalGames from "./pages/MagicalGames";
 import MatrixPortal from "./pages/MatrixPortal";
 import YasminWorld from "./pages/YasminWorld";
 import BFFWorld from "./pages/BFFWorld";
+import FamilyDecisions from "./pages/FamilyDecisions";
 // import MagicalTournaments from "./components/MagicalTournaments";
 
 
@@ -107,6 +108,7 @@ const App = () => (
               <Route path="matrix" element={<MatrixPortal />} />
               <Route path="yasmin-world" element={<YasminWorld />} />
               <Route path="bff-world" element={<BFFWorld />} />
+              <Route path="decisions" element={<FamilyDecisions />} />
               {/* <Route path="sagas" element={<MagicalTournaments />} /> */}
 
             </Route>

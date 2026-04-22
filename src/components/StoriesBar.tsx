@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import HouseCrest from "./HouseCrest";
 import { Input } from "./ui/input";
 import SafeImage from "./SafeImage";
-import { Eye } from "lucide-react";
+import { Eye, Flame } from "lucide-react";
 
 export default function StoriesBar() {
   const { user } = useAuth();
@@ -108,6 +108,19 @@ export default function StoriesBar() {
       setStories([]);
       setGroupedStories({});
     }
+  };
+
+  const [friendships, setFriendships] = useState<any[]>([]);
+  useEffect(() => {
+    if (user) {
+      supabase.from("friendships").select("*").or(`user_id.eq.${user.id},friend_id.eq.${user.id}`)
+        .then(({ data }) => { if (data) setFriendships(data); });
+    }
+  }, [user]);
+
+  const getStreak = (userId: string) => {
+    const f = friendships?.find(f => (f.user_id === userId && f.friend_id === user?.id) || (f.user_id === user?.id && f.friend_id === userId));
+    return f?.streak_count || 0;
   };
 
   const handleAddStory = async () => {
@@ -219,6 +232,11 @@ export default function StoriesBar() {
                   <div className="absolute bottom-0 right-0 w-4 h-4 bg-background rounded-full flex items-center justify-center">
                     <HouseCrest house={prof?.house} size="sm" />
                   </div>
+                  {getStreak(userId) > 0 && (
+                    <div className="absolute -top-1 -right-1 bg-black rounded-full p-1 border border-orange-500 shadow-xl z-20 animate-bounce">
+                      <Flame size={10} className="text-orange-500" fill="currentColor" />
+                    </div>
+                  )}
                 </div>
               </div>
               <span className="text-xs font-heading text-foreground truncate w-16 text-center">

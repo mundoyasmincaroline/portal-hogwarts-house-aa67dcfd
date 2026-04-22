@@ -156,10 +156,33 @@ const CarolPresence: React.FC = () => {
         </div>
       </div>
 
-      <div className="mr-1 bg-white/80 backdrop-blur-md px-3 py-1 rounded-full border border-amber-200 shadow-sm">
+      <div className="mr-1 bg-white/80 backdrop-blur-md px-3 py-1 rounded-full border border-amber-200 shadow-sm flex flex-col gap-2">
         <p className="text-[9px] uppercase font-bold tracking-[0.2em] text-amber-700 flex items-center gap-1">
           <Star size={8} fill="currentColor" /> Amiga Helô
         </p>
+        
+        {isCarol && (
+          <div className="flex gap-2 pb-1">
+            <button 
+              onClick={() => toast.info("Hoje o cronograma capilar sugere: Hidratação Profunda! ✨")}
+              className="text-[8px] bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 px-2 py-0.5 rounded-md border border-amber-500/20 transition-colors"
+            >
+              Cabelo
+            </button>
+            <button 
+              onClick={() => toast.info("Dica da Helô: Que tal uma massa com molho branco hoje? O Arquiteto ama! 🍝")}
+              className="text-[8px] bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 px-2 py-0.5 rounded-md border border-amber-500/20 transition-colors"
+            >
+              Cardápio
+            </button>
+            <button 
+              onClick={() => toast.info("O Thotty está dormindo agora, mas sonhando com você! 🐾")}
+              className="text-[8px] bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 px-2 py-0.5 rounded-md border border-amber-500/20 transition-colors"
+            >
+              Thotty
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
