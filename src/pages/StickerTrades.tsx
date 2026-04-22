@@ -146,16 +146,26 @@ export default function StickerTrades() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-10">
-      {/* Header */}
-      <div className="glass rounded-3xl p-8 text-center border border-border relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-background opacity-80" />
-        <div className="relative z-10">
-          <h1 className="font-heading text-4xl text-foreground mb-2">🏪 Mercado de Trocas</h1>
-          <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-            Ofereça figurinhas duplicadas e encontre quem tem o que você precisa para completar o álbum!
+      {/* ── HEADER MONSTER QUALITY ── */}
+      <div className="relative glass rounded-[3rem] p-10 md:p-16 text-center overflow-hidden border border-yellow-500/20 shadow-2xl group animate-in fade-in slide-in-from-top-10 duration-1000">
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/40 via-black to-purple-900/40 opacity-60 z-0" />
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=2070')] bg-cover bg-center opacity-10 group-hover:scale-105 transition-transform duration-1000" />
+        
+        <div className="relative z-10 space-y-6">
+          <div className="inline-flex items-center gap-4 bg-black/40 backdrop-blur-md border border-yellow-500/30 rounded-full px-6 py-2 shadow-2xl">
+            <MagicalEmoji emoji="🏪" size="xs" glowColor="rgba(234, 179, 8, 0.5)" />
+            <span className="text-[10px] font-heading text-yellow-500 uppercase tracking-[0.3em] font-bold">Mercado de Relíquias</span>
+          </div>
+          
+          <h1 className="font-heading text-5xl md:text-7xl text-gold-gradient mb-3 drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
+            Trocas de Figurinhas
+          </h1>
+          <p className="text-yellow-100/70 text-lg max-w-2xl mx-auto font-serif italic">
+            "No Beco Diagonal dos Colecionadores, cada troca é um pacto de honra. Encontre o que falta em seu destino."
           </p>
-          <Button variant="ghost" size="sm" className="mt-3 text-xs" onClick={() => navigate("/dashboard/album")}>
-            ← Voltar ao Álbum
+
+          <Button variant="ghost" size="sm" className="mt-4 text-xs uppercase tracking-widest text-white/40 hover:text-white" onClick={() => navigate("/dashboard/album")}>
+            ← Retornar ao Álbum Encantado
           </Button>
         </div>
       </div>
@@ -173,45 +183,59 @@ export default function StickerTrades() {
         ))}
       </div>
 
-      {/* Criar oferta */}
-      <div className="glass rounded-2xl p-6 border border-primary/20 space-y-4">
-        <h3 className="font-heading text-lg text-foreground">✨ Criar Nova Oferta</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="text-xs text-muted-foreground uppercase tracking-widest mb-1 block">Eu ofereço:</label>
-            <select
-              value={offerStickerId}
-              onChange={e => setOfferStickerId(e.target.value)}
-              className="w-full bg-secondary/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
-            >
-              <option value="">Selecionar figurinha...</option>
-              {myStickers.map(s => (
-                <option key={s.id} value={s.id}>
-                  {RARITY_EMOJI[s.rarity]} {s.character_name} ({s.rarity})
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="text-xs text-muted-foreground uppercase tracking-widest mb-1 block">Eu quero (opcional):</label>
-            <select
-              value={wantStickerId}
-              onChange={e => setWantStickerId(e.target.value)}
-              className="w-full bg-secondary/50 border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
-            >
-              <option value="">Qualquer figurinha</option>
-              {allStickers
-                .filter(s => !myStickers.find(ms => ms.id === s.id))
-                .map(s => (
-                  <option key={s.id} value={s.id}>
+      {/* ── CRIAR OFERTA MONSTER ── */}
+      <div className="glass rounded-[2.5rem] p-8 border border-white/10 bg-gradient-to-br from-white/5 to-transparent shadow-2xl space-y-8 animate-in zoom-in-95 duration-700">
+        <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center border border-primary/30 shadow-inner">
+                <MagicalEmoji emoji="✨" size="xs" />
+            </div>
+            <h3 className="font-heading text-2xl text-foreground tracking-tight">Publicar Oferta de Troca</h3>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-3">
+            <label className="text-[10px] text-primary uppercase tracking-[0.3em] font-bold mb-1 block">Minha Relíquia:</label>
+            <div className="relative group">
+                <select
+                value={offerStickerId}
+                onChange={e => setOfferStickerId(e.target.value)}
+                className="w-full bg-black/40 border-2 border-white/10 rounded-2xl px-5 py-4 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-all appearance-none cursor-pointer"
+                >
+                <option value="">Selecionar minha figurinha...</option>
+                {myStickers.map(s => (
+                    <option key={s.id} value={s.id} className="bg-zinc-900">
                     {RARITY_EMOJI[s.rarity]} {s.character_name} ({s.rarity})
-                  </option>
+                    </option>
                 ))}
-            </select>
+                </select>
+                <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">↓</div>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <label className="text-[10px] text-primary uppercase tracking-[0.3em] font-bold mb-1 block">Desejo de Troca (Opcional):</label>
+            <div className="relative group">
+                <select
+                value={wantStickerId}
+                onChange={e => setWantStickerId(e.target.value)}
+                className="w-full bg-black/40 border-2 border-white/10 rounded-2xl px-5 py-4 text-sm text-foreground focus:outline-none focus:border-primary/50 transition-all appearance-none cursor-pointer"
+                >
+                <option value="">Qualquer figurinha</option>
+                {allStickers
+                    .filter(s => !myStickers.find(ms => ms.id === s.id))
+                    .map(s => (
+                    <option key={s.id} value={s.id} className="bg-zinc-900">
+                        {RARITY_EMOJI[s.rarity]} {s.character_name} ({s.rarity})
+                    </option>
+                    ))}
+                </select>
+                <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">↓</div>
+            </div>
           </div>
         </div>
-        <Button variant="magical" onClick={createTrade} disabled={creating || !offerStickerId} className="font-heading">
-          {creating ? "Publicando..." : "📮 Publicar Oferta"}
+
+        <Button variant="plaque" onClick={createTrade} disabled={creating || !offerStickerId} className="w-full h-16 rounded-2xl text-lg shadow-[0_15px_30px_-10px_rgba(234,179,8,0.3)]">
+          {creating ? "Invocando o Mercado..." : "📮 PUBLICAR OFERTA NO BECCO DIAGONAL"}
         </Button>
       </div>
 
@@ -235,33 +259,34 @@ export default function StickerTrades() {
           )}
 
           {(tab === "mercado" ? otherTrades : myTrades).map(trade => (
-            <div key={trade.id} className="glass rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center gap-5 border border-border hover:border-primary/30 transition-all">
+            <div key={trade.id} className="glass rounded-[2.5rem] p-8 flex flex-col md:flex-row items-start md:items-center gap-10 border border-white/5 hover:border-primary/20 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 group animate-in slide-in-from-left-4 duration-700">
               {/* Figurinha oferecida */}
-              <div className="flex items-center gap-4 flex-1">
-                <div className={`w-16 h-20 rounded-xl overflow-hidden border-2 flex-shrink-0 ${RARITY_COLOR[trade.offered_sticker?.rarity || "bronze"]}`}>
+              <div className="flex items-center gap-6 flex-1">
+                <div className={`w-20 h-28 rounded-2xl overflow-hidden border-2 flex-shrink-0 transition-transform group-hover:scale-105 duration-500 ${RARITY_COLOR[trade.offered_sticker?.rarity || "bronze"]}`}>
                   <SafeImage
                     src={trade.offered_sticker?.image_url}
                     alt={trade.offered_sticker?.character_name || "?"}
                     className="w-full h-full object-cover object-top"
                     fallbackText={trade.offered_sticker?.character_name}
                   />
+                  {trade.offered_sticker?.rarity === 'gold' && <div className="absolute inset-0 bg-yellow-400/10 animate-pulse pointer-events-none" />}
                 </div>
                 <div>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Oferece</p>
-                  <p className="font-heading text-sm text-foreground">{trade.offered_sticker?.character_name}</p>
-                  <p className={`text-xs font-bold ${RARITY_COLOR[trade.offered_sticker?.rarity || "bronze"].split(" ")[1]}`}>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-[0.3em] font-bold mb-1">Oferta</p>
+                  <p className="font-heading text-xl text-foreground mb-1">{trade.offered_sticker?.character_name}</p>
+                  <div className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] font-bold ${RARITY_COLOR[trade.offered_sticker?.rarity || "bronze"]}`}>
                     {RARITY_EMOJI[trade.offered_sticker?.rarity]} {trade.offered_sticker?.rarity}
-                  </p>
+                  </div>
                 </div>
               </div>
 
-              <div className="text-2xl self-center">⇄</div>
+              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white/5 border border-white/10 text-2xl self-center animate-pulse">⇄</div>
 
               {/* Figurinha desejada */}
-              <div className="flex items-center gap-4 flex-1">
+              <div className="flex items-center gap-6 flex-1">
                 {trade.wanted_sticker ? (
                   <>
-                    <div className={`w-16 h-20 rounded-xl overflow-hidden border-2 flex-shrink-0 ${RARITY_COLOR[trade.wanted_sticker.rarity]}`}>
+                    <div className={`w-20 h-28 rounded-2xl overflow-hidden border-2 flex-shrink-0 transition-transform group-hover:scale-105 duration-500 ${RARITY_COLOR[trade.wanted_sticker.rarity]}`}>
                       <SafeImage
                         src={trade.wanted_sticker.image_url}
                         alt={trade.wanted_sticker.character_name}
@@ -270,30 +295,34 @@ export default function StickerTrades() {
                       />
                     </div>
                     <div>
-                      <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Quer</p>
-                      <p className="font-heading text-sm text-foreground">{trade.wanted_sticker.character_name}</p>
-                      <p className={`text-xs font-bold ${RARITY_COLOR[trade.wanted_sticker.rarity].split(" ")[1]}`}>
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-[0.3em] font-bold mb-1">Desejo</p>
+                      <p className="font-heading text-xl text-foreground mb-1">{trade.wanted_sticker.character_name}</p>
+                      <div className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] font-bold ${RARITY_COLOR[trade.wanted_sticker.rarity]}`}>
                         {RARITY_EMOJI[trade.wanted_sticker.rarity]} {trade.wanted_sticker.rarity}
-                      </p>
+                      </div>
                     </div>
                   </>
                 ) : (
-                  <div className="flex items-center gap-3">
-                    <div className="w-16 h-20 rounded-xl border-2 border-dashed border-border flex items-center justify-center text-2xl text-muted-foreground flex-shrink-0">
+                  <div className="flex items-center gap-5">
+                    <div className="w-20 h-28 rounded-2xl border-2 border-dashed border-white/10 flex items-center justify-center text-4xl text-white/10 flex-shrink-0 bg-white/5">
                       🎲
                     </div>
                     <div>
-                      <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Quer</p>
-                      <p className="text-sm text-muted-foreground italic">Qualquer figurinha</p>
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-[0.3em] font-bold mb-1">Desejo</p>
+                      <p className="font-heading text-sm text-muted-foreground italic">Qualquer Relíquia</p>
                     </div>
                   </div>
                 )}
               </div>
 
               {/* Ofertante + ação */}
-              <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full overflow-hidden border border-border">
+              <div className="flex flex-col items-end gap-4 flex-shrink-0 w-full md:w-auto pt-4 md:pt-0 border-t md:border-none border-white/5">
+                <div className="flex items-center gap-3">
+                  <div className="text-right">
+                    <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">Ofertante</p>
+                    <p className="text-sm font-heading text-white">@{trade.offerer_profile?.username}</p>
+                  </div>
+                  <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white/10 shadow-xl">
                     <SafeImage
                       src={trade.offerer_profile?.avatar_url}
                       alt={trade.offerer_profile?.full_name}
@@ -301,25 +330,24 @@ export default function StickerTrades() {
                       fallbackText={trade.offerer_profile?.full_name}
                     />
                   </div>
-                  <p className="text-xs text-muted-foreground">@{trade.offerer_profile?.username}</p>
                 </div>
                 {tab === "mercado" ? (
                   <Button
-                    variant="magical"
-                    size="sm"
-                    className="text-xs font-heading"
+                    variant="plaque"
+                    size="lg"
+                    className="w-full md:w-auto h-12 px-8 text-xs font-heading shadow-xl"
                     onClick={() => acceptTrade(trade)}
                   >
-                    Aceitar Troca ✨
+                    ACEITAR TROCA ✨
                   </Button>
                 ) : (
                   <Button
                     variant="outline"
-                    size="sm"
-                    className="text-xs text-destructive border-destructive/40 hover:bg-destructive/10"
+                    size="lg"
+                    className="w-full md:w-auto h-12 px-8 text-xs text-red-400 border-red-500/30 hover:bg-red-500/10 rounded-xl"
                     onClick={() => cancelTrade(trade.id)}
                   >
-                    Cancelar ✕
+                    CANCELAR ✕
                   </Button>
                 )}
               </div>
