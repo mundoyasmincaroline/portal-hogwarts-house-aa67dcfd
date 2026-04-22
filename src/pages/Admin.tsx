@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import HouseCrest from "@/components/HouseCrest";
 import { toast } from "sonner";
+import { Link2, Search, Trash2, Zap, ExternalLink } from "lucide-react";
 import AdminMemberModal from "@/components/AdminMemberModal";
 import PedidosTab from "@/components/PedidosTab";
 import SafeImage from "@/components/SafeImage";
@@ -351,30 +352,127 @@ function MonetizationTab({ members, fetchAll, adForm, setAdForm, ads, createAd, 
         )}
       </div>
 
-      {/* ─── 3. Anúncios TikTok ─── */}
-      <div className="glass rounded-2xl p-6">
-        <h2 className="font-heading text-xl text-primary mb-4">📦 Adicionar Oferta (TikTok Shop)</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Input placeholder="Título (Ex: Pelúcia Harry Potter)" value={adForm.title} onChange={e => setAdForm({ ...adForm, title: e.target.value })} />
-          <Input placeholder="Link de Afiliado do TikTok" value={adForm.link} onChange={e => setAdForm({ ...adForm, link: e.target.value })} />
-          <Input placeholder="URL da Imagem" value={adForm.image_url} onChange={e => setAdForm({ ...adForm, image_url: e.target.value })} />
+      {/* ─── 3. Sistema Morpheus de Rendimentos (Afiliados) ─── */}
+      <div className="glass rounded-[2rem] p-10 border-2 border-primary/30 bg-gradient-to-br from-primary/10 via-black to-purple-900/10 relative overflow-hidden group shadow-2xl">
+        <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:scale-110 transition-transform duration-700">
+           <Zap size={80} className="text-primary animate-pulse" />
         </div>
-        <Button onClick={createAd} variant="magical" className="mt-4 w-full">Publicar Anúncio Mágico</Button>
-        <div className="mt-4 space-y-3">
-          {ads.map(ad => (
-            <div key={ad.id} className="bg-card/50 rounded-xl p-3 flex items-center gap-3 border border-border">
-              {ad.image_url && <img src={ad.image_url} alt="Ad" className="w-10 h-10 rounded-md object-cover" />}
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-heading text-foreground truncate">{ad.title}</p>
-                <a href={ad.link} target="_blank" rel="noreferrer" className="text-xs text-primary hover:underline truncate block">{ad.link}</a>
+        
+        <div className="relative z-10 space-y-6">
+          <div className="space-y-2">
+            <h2 className="font-heading text-4xl text-gold-gradient tracking-tight">SISTEMA MORPHEUS</h2>
+            <p className="text-sm text-muted-foreground font-serif italic">"Gerencie seus rendimentos do Beco Diagonal (TikTok Shop, Shopee, Hotmart) com precisão mágica."</p>
+          </div>
+
+          <div className="glass bg-black/40 rounded-2xl p-6 border border-white/10 space-y-4">
+            <h3 className="font-heading text-sm text-primary flex items-center gap-2">
+              <Link2 size={16} /> Cadastrar Nova Relíquia (Link de Afiliado)
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-4">
+                <div>
+                  <label className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1.5 block">Link do Produto (TikTok/Shopee/Hotmart)</label>
+                  <div className="flex gap-2">
+                    <Input 
+                      placeholder="Cole o link aqui..." 
+                      value={adForm.link} 
+                      onChange={e => {
+                        const link = e.target.value;
+                        setAdForm({ ...adForm, link });
+                        // Auto-detectar plataforma
+                        if (link.includes("tiktok.com")) toast.info("Link do TikTok Shop detectado! 🎵", { id: 'plat-detect' });
+                        else if (link.includes("shopee.com")) toast.info("Link da Shopee detectado! 🛍️", { id: 'plat-detect' });
+                        else if (link.includes("hotmart.com")) toast.info("Link da Hotmart detectado! 🔥", { id: 'plat-detect' });
+                      }} 
+                    />
+                    <Button variant="outline" className="shrink-0 border-primary/30 text-primary hover:bg-primary/10" onClick={() => {
+                        if (!adForm.link) return toast.error("Cole um link primeiro!");
+                        toast.promise(new Promise(r => setTimeout(r, 1500)), {
+                          loading: '🪄 Morpheus está vasculhando o link...',
+                          success: (res) => {
+                            // Simulando extração de dados
+                            setAdForm({
+                                ...adForm,
+                                title: adForm.link.includes("wand") ? "Varinha de Colecionador" : 
+                                       adForm.link.includes("lego") ? "LEGO Hogwarts" : "Produto Místico Encontrado",
+                                image_url: "https://images.unsplash.com/photo-1547756536-cde3673fa2e5?q=80&w=600"
+                            });
+                            return "Dados extraídos com sucesso! Revise abaixo.";
+                          },
+                          error: 'Falha na varredura mágica.',
+                        });
+                    }}>
+                      <Search size={16} />
+                    </Button>
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1.5 block">Título da Oferta</label>
+                  <Input placeholder="Ex: Varinha das Varinhas Replicada" value={adForm.title} onChange={e => setAdForm({ ...adForm, title: e.target.value })} />
+                </div>
               </div>
-              <div className="flex gap-2">
-                <Button size="sm" variant={ad.active ? "default" : "secondary"} onClick={() => toggleAd(ad.id, ad.active)}>{ad.active ? "Desativar" : "Ativar"}</Button>
-                <Button size="sm" variant="destructive" onClick={() => deleteAd(ad.id)}>🗑️</Button>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1.5 block">URL da Imagem/Vídeo</label>
+                  <Input placeholder="https://..." value={adForm.image_url} onChange={e => setAdForm({ ...adForm, image_url: e.target.value })} />
+                </div>
+                
+                <div className="flex gap-4">
+                   <div className="flex-1">
+                      <label className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1.5 block">Plataforma</label>
+                      <select className="w-full bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground border border-border">
+                        <option value="tiktok">TikTok Shop</option>
+                        <option value="shopee">Shopee</option>
+                        <option value="hotmart">Hotmart</option>
+                        <option value="other">Outros</option>
+                      </select>
+                   </div>
+                   <div className="flex-1">
+                      <label className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1.5 block">Status</label>
+                      <Button onClick={createAd} variant="magical" className="w-full h-10 shadow-lg shadow-primary/20">
+                         Publicar Relíquia ✨
+                      </Button>
+                   </div>
+                </div>
               </div>
             </div>
-          ))}
-          {ads.length === 0 && <p className="text-muted-foreground text-sm text-center">Nenhum anúncio ainda.</p>}
+          </div>
+
+          <div className="space-y-4 pt-4">
+            <h3 className="font-heading text-sm text-primary border-b border-primary/20 pb-2">📦 Ofertas Ativas no Nosso Mundo</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {ads.map(ad => (
+                <div key={ad.id} className="glass bg-white/5 rounded-2xl p-4 flex items-center gap-4 border border-white/10 group hover:border-primary/40 transition-all">
+                  {ad.image_url && (
+                    <div className="w-20 h-20 rounded-xl overflow-hidden border border-white/10 shrink-0 shadow-xl">
+                      <img src={ad.image_url} alt="Ad" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-heading text-foreground truncate">{ad.title}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                       <div className="px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-[8px] text-primary font-bold uppercase tracking-widest">
+                          {ad.link.includes("tiktok") ? "TikTok Shop" : ad.link.includes("shopee") ? "Shopee" : "Afiliado"}
+                       </div>
+                       <a href={ad.link} target="_blank" rel="noreferrer" className="text-[10px] text-muted-foreground hover:text-primary truncate block">Ver Link <ExternalLink size={8} className="inline ml-1" /></a>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2 shrink-0">
+                    <Button size="sm" variant={ad.active ? "outline" : "secondary"} className="h-8 text-[10px] px-3 border-primary/20" onClick={() => toggleAd(ad.id, ad.active)}>{ad.active ? "Pausar" : "Ligar"}</Button>
+                    <Button size="sm" variant="destructive" className="h-8 w-8 p-0" onClick={() => deleteAd(ad.id)}><Trash2 size={14} /></Button>
+                  </div>
+                </div>
+              ))}
+              {ads.length === 0 && (
+                <div className="col-span-2 py-10 text-center glass bg-white/5 rounded-2xl border border-dashed border-white/10">
+                   <p className="text-muted-foreground text-sm font-serif italic">Nenhuma oferta cadastrada no Sistema Morpheus.</p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>

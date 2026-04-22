@@ -28,6 +28,7 @@ import PendingApproval from "@/pages/PendingApproval";
 import RulesAgreement from "@/pages/RulesAgreement";
 import CharacterSelection from "@/pages/CharacterSelection";
 import DailyEncounter from "@/components/DailyEncounter";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import NotificationBanner from "@/components/NotificationBanner";
 import { useAchievements } from "@/lib/useAchievements";
 import FilchWatcher from "@/components/FilchWatcher";
@@ -274,13 +275,19 @@ export default function DashboardLayout() {
     );
   }
 
-  if (!user || !profile) {
+  if (!user) {
+    navigate("/login");
+    return null;
+  }
+
+  if (!profile) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <div className="text-center">
           <div className="text-4xl animate-pulse mb-4">🔮</div>
           <p className="font-heading text-muted-foreground text-lg">Despertando sua magia...</p>
           <p className="text-xs text-muted-foreground/50 mt-2">Se esta tela persistir por muito tempo, verifique sua conexão.</p>
+          <Button variant="outline" className="mt-4" onClick={() => window.location.reload()}>Tentar Novamente 🪄</Button>
         </div>
       </div>
     );
