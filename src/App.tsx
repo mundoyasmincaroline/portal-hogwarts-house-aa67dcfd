@@ -38,6 +38,7 @@ import Wallet from "./pages/Wallet";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import MagicalSagas from "./pages/MagicalSagas";
+import AdminFinance from "./pages/AdminFinance";
 // import MagicalTournaments from "./components/MagicalTournaments";
 
 
@@ -75,6 +76,7 @@ const App = () => (
               <Route path="profile" element={<Profile />} />
               <Route path="profile/:userId" element={<Profile />} />
               <Route path="admin" element={<Admin />} />
+              <Route path="admin/finance" element={<AdminFinance />} />
               <Route path="shop" element={<EmojiShop />} />
               <Route path="rules" element={<Rules />} />
               <Route path="guide" element={<MaraudersGuide />} />

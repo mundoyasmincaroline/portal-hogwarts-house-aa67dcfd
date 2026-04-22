@@ -73,6 +73,7 @@ const NAV_ITEMS = [
 
 const ADMIN_ITEMS = [
   { icon: <MagicalEmoji emoji="⚙️" size="xs" />, label: "Admin", path: "/dashboard/admin" },
+  { icon: <MagicalEmoji emoji="💰" size="xs" />, label: "Finanças", path: "/dashboard/admin/finance" },
 ];
 
 export default function DashboardLayout() {
