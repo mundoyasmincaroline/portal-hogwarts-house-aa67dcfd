@@ -183,10 +183,7 @@ export default function MatrixPortal() {
             </ResponsiveContainer>
           </div>
 
-            </div>
-          </div>
-
-          {/* SYSTEM PULSE: LIVE ACTIVITY (HACKER VIEW) */}
+        {/* SYSTEM PULSE: LIVE ACTIVITY (HACKER VIEW) */}
           <div className="glass bg-black border-[#0F0]/30 p-8 rounded-3xl space-y-6 relative overflow-hidden">
              <div className="absolute top-0 right-0 p-4">
                 <div className="flex gap-1">
