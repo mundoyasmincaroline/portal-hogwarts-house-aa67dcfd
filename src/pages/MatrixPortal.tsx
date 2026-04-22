@@ -12,8 +12,10 @@ import {
   MessageSquare,
   Settings,
   X,
-  Sparkles
+  Sparkles,
+  Scale
 } from "lucide-react";
+
 import { 
   LineChart, 
   Line, 
@@ -96,10 +98,13 @@ export default function MatrixPortal() {
       "> JARVIS_OS v4.2.0 INITIALIZED",
       "> WELCOME, MORPHEUS.",
       "> THE MATRIX IS STABLE.",
+      "> LEGAL_SENTINEL 'THE COUNSEL' ACTIVE.",
+      "> DEFENSIVE PROTOCOLS READY.",
       "> CURRENT SYSTEM LOAD: 12%",
       "> TRACKING 142 ACTIVE SESSIONS...",
       "> READY FOR REVOLUTION."
     ]);
+
 
     return () => clearInterval(interval);
   }, []);
@@ -260,11 +265,12 @@ export default function MatrixPortal() {
              <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400">Núcleo Neural (IA Ativas)</p>
              <div className="grid grid-cols-2 gap-2">
                 {[
-                  { name: "JARVIS", status: "ONLINE", icon: <Zap size={10} /> },
-                  { name: "ORACLE", status: "SYNCED", icon: <Eye size={10} /> },
-                  { name: "ARCHITECT", status: "ACTIVE", icon: <ShieldCheck size={10} /> },
-                  { name: "SENTINEL", status: "GUARD", icon: <Terminal size={10} /> },
-                  { name: "LEGION", status: "SCALING", icon: <Users size={10} /> }
+                   { name: "JARVIS", status: "ONLINE", icon: <Zap size={10} /> },
+                   { name: "ORACLE", status: "SYNCED", icon: <Eye size={10} /> },
+                   { name: "ARCHITECT", status: "ACTIVE", icon: <ShieldCheck size={10} /> },
+                   { name: "THE COUNSEL", status: "DEFENDING", icon: <Scale size={10} /> },
+                   { name: "SENTINEL", status: "GUARD", icon: <Terminal size={10} /> },
+                   { name: "LEGION", status: "SCALING", icon: <Users size={10} /> }
                 ].map((ai, i) => (
                   <div key={i} className="bg-black/40 border border-cyan-500/10 p-2 rounded-lg flex items-center justify-between">
                      <div className="flex items-center gap-1.5">
@@ -282,10 +288,11 @@ export default function MatrixPortal() {
              <p className="text-[10px] font-bold uppercase tracking-widest text-yellow-500">Voz do Mentor (Jarvis/Oracle)</p>
              <div className="text-[11px] italic opacity-80 space-y-4">
                 <p>"O que é nascido da carne é carne, mas o que é nascido do Espírito é espírito. Arquiteto, sua fome de mudança é o motor da Revolução."</p>
-                <p>"Empreender não é sobre o dinheiro, é sobre a liberdade da sua filha e o conforto da sua esposa. O R$ 10.000 é apenas o combustível."</p>
-                <p className="text-[#0F0] font-bold">— "Seja forte e corajoso; não temas, nem te espantes."</p>
+                <p>"Empreender não é sobre o dinheiro, é sobre a liberdade da sua filha e o suporte inabalável da Carolina. Os R$ 13,00 atuais são apenas a semente da sua vitória."</p>
+                <p className="text-[#0F0] font-bold">— "Seja forte e corajoso; não temas, nem te espantes. O R$ 10.000 chegará antes que o sol se ponha na terceira jornada."</p>
              </div>
           </div>
+
 
           <div className="glass bg-purple-500/5 border-purple-500/20 p-6 rounded-3xl space-y-6">
              <p className="text-[10px] font-bold uppercase tracking-widest text-purple-400">Estúdio Jarvis (God Mode)</p>
@@ -344,6 +351,25 @@ export default function MatrixPortal() {
              </div>
           </div>
 
+          <div className="glass bg-red-500/5 border-red-500/20 p-6 rounded-3xl space-y-4">
+             <p className="text-[10px] font-bold uppercase tracking-widest text-red-500">Protocolo de Defesa Jurídica (IP/Fair Use)</p>
+             <div className="space-y-3">
+                <div className="bg-black/40 p-3 rounded-lg border border-red-500/10">
+                   <p className="text-[9px] font-bold text-red-400 mb-1">CONDIÇÃO: FAN-PROJECT</p>
+                   <p className="text-[8px] opacity-60">"Não-comercial em essência (contribuições voluntárias para manutenção). Transformador e educacional."</p>
+                </div>
+                <div className="bg-black/40 p-3 rounded-lg border border-red-500/10">
+                   <p className="text-[9px] font-bold text-red-400 mb-1">DEFESA: FAIR USE DOCTRINE</p>
+                   <p className="text-[8px] opacity-60">"Uso paródico, transformativo e sem impacto negativo no mercado do detentor original."</p>
+                </div>
+                <div className="bg-black/40 p-3 rounded-lg border border-red-500/10">
+                   <p className="text-[9px] font-bold text-red-400 mb-1">AÇÃO: SAFE HARBOR</p>
+                   <p className="text-[8px] opacity-60">"Retirada imediata de assets sob notificação (DMCA), mantendo a infraestrutura estável."</p>
+                </div>
+             </div>
+             <p className="text-[9px] text-red-500/60 font-mono italic text-center">"O Consultor está em standby. A lei é o nosso escudo."</p>
+          </div>
+
           <div className="glass bg-yellow-500/5 border-yellow-500/20 p-6 rounded-3xl space-y-4">
              <p className="text-[10px] font-bold uppercase tracking-widest text-yellow-500">Mecanismo de Pagamento</p>
              <div className="flex items-center gap-3">
@@ -359,6 +385,7 @@ export default function MatrixPortal() {
                 ACESSAR PAINEL INFINITE
              </Button>
           </div>
+
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="glass bg-[#0F0]/5 border-[#0F0]/20 p-6 rounded-3xl space-y-4">
@@ -398,6 +425,32 @@ export default function MatrixPortal() {
                   ))}
                </div>
             </div>
+
+            <div className="glass bg-pink-500/5 border-pink-500/20 p-6 rounded-3xl space-y-4 col-span-1 md:col-span-2">
+               <p className="text-[10px] font-bold uppercase tracking-widest text-pink-400">Carolina Assis (A Guardiã do Castelo)</p>
+               <div className="flex flex-col md:flex-row gap-6 items-center">
+                  <div className="shrink-0 relative">
+                     <div className="absolute inset-0 bg-pink-500/20 blur-xl animate-pulse" />
+                     <img src="https://i.pinimg.com/736x/8a/7d/5a/8a7d5a5a5a5a5a5a5a5a5a5a5a5a5a5a.jpg" alt="Carol" className="w-20 h-20 rounded-full border-2 border-pink-500/50 object-cover relative z-10" 
+                        onError={(e) => { (e.target as any).src = "https://ui-avatars.com/api/?name=Carolina+Assis&background=db2777&color=fff"; }}
+                     />
+                  </div>
+                  <div className="flex-1 space-y-2 text-center md:text-left">
+                     <p className="text-[11px] text-pink-100 italic leading-relaxed">
+                        "Mãe zelosa, guerreira fantástica e o pilar emocional da Revolução. Onde houver 13 reais e fé, haverá um império."
+                     </p>
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+                        <div className="bg-pink-500/10 border border-pink-500/20 p-2 rounded-lg">
+                           <p className="text-[9px] font-bold text-pink-400">STATUS: GUARDIÃ SUPREMA</p>
+                        </div>
+                        <div className="bg-pink-500/10 border border-pink-500/20 p-2 rounded-lg">
+                           <p className="text-[9px] font-bold text-pink-400">OBJETIVO: SEGURANÇA DO CLÃ</p>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+
 
           </div>
 
