@@ -474,7 +474,7 @@ export default function DashboardLayout() {
             </div>
           </div>
           <div className="mt-3 text-center opacity-40">
-            <p className="text-[9px] text-muted-foreground/60 text-center px-2 font-mono uppercase tracking-widest">Mundo Yasmin</p>
+            <p className="text-[9px] text-muted-foreground text-center px-2 font-mono uppercase tracking-widest opacity-60">Mundo Yasmin</p>
           </div>
         </div>
       </aside>

@@ -475,7 +475,7 @@ export default function Profile() {
             Revolution
           </button>
         )}
-        {(isMe && (profile?.username?.toLowerCase().includes('yasmin') || profile?.username === 'morpheus' || isAdmin)) && (
+        {(isMe && ((profile?.username?.toLowerCase() || '').includes('yasmin') || profile?.username === 'morpheus' || isAdmin)) && (
           <button 
             onClick={() => navigate("/dashboard/yasmin-world")} 
             className="pb-2 font-heading text-sm transition-colors shrink-0 text-red-500 hover:text-red-400 flex items-center gap-2"

@@ -25,7 +25,7 @@ const YasminWorld: React.FC = () => {
   const [input, setInput] = useState("");
 
   // Secret access check
-  const isYasmin = profile?.username?.toLowerCase().includes('yasmin') || profile?.username === 'morpheus';
+  const isYasmin = (profile?.username?.toLowerCase() || '').includes('yasmin') || profile?.username === 'morpheus';
 
   useEffect(() => {
     setMessages([
