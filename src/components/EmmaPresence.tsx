@@ -10,7 +10,7 @@ const EmmaPresence: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
 
-  const isYasmin = profile?.username?.toLowerCase().includes('yasmin') || profile?.username === 'morpheus';
+  const isYasmin = (profile?.username?.toLowerCase() || '').includes('yasmin') || profile?.username === 'morpheus';
 
   useEffect(() => {
     if (isYasmin) {
