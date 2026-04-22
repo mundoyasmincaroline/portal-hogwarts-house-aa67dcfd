@@ -183,6 +183,53 @@ export default function MatrixPortal() {
               </AreaChart>
             </ResponsiveContainer>
           </div>
+
+          {/* ROADMAP: A JORNADA DO ARQUITETO */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
+            <div className="glass bg-[#0F0]/5 border-[#0F0]/20 p-8 rounded-3xl space-y-6">
+               <h3 className="text-xl font-bold text-cyan-400 flex items-center gap-2">
+                 <Zap size={20} /> O CERCO DE 48 HORAS (META: R$ 10.000)
+               </h3>
+               <div className="space-y-4 text-xs">
+                 <div className="flex gap-3 border-l-2 border-cyan-400 pl-4 py-1">
+                   <span className="text-cyan-400 font-bold">PASSO 01:</span>
+                   <p className="opacity-70">Lançar vídeo viral do "Baú Welcome" no TikTok/Reels com o gancho: "Recebi Galeões Reais!"</p>
+                 </div>
+                 <div className="flex gap-3 border-l-2 border-cyan-400 pl-4 py-1">
+                   <span className="text-cyan-400 font-bold">PASSO 02:</span>
+                   <p className="opacity-70">Ativar sistema de Recrutamento (MGM). Cada novo membro ganha recompensa, cada indicação gera Galeões.</p>
+                 </div>
+                 <div className="flex gap-3 border-l-2 border-cyan-400 pl-4 py-1">
+                   <span className="text-cyan-400 font-bold">PASSO 03:</span>
+                   <p className="opacity-70">Converter via Infinite Pay (PIX). Oferecer o cargo "FUNDADOR VIP" por tempo limitado.</p>
+                 </div>
+               </div>
+            </div>
+
+            <div className="glass bg-purple-500/5 border-purple-500/20 p-8 rounded-3xl space-y-6">
+               <h3 className="text-xl font-bold text-purple-400 flex items-center gap-2">
+                 <TrendingUp size={20} /> PROJEÇÃO: O MÊS DA FÊNIX
+               </h3>
+               <div className="space-y-4 text-xs">
+                 <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                   <span className="opacity-50 uppercase">Semana 1: Escala Viral</span>
+                   <span className="text-purple-400">R$ 15.000</span>
+                 </div>
+                 <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                   <span className="opacity-50 uppercase">Semana 2: Torneios Mágicos</span>
+                   <span className="text-purple-400">R$ 25.000</span>
+                 </div>
+                 <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                   <span className="opacity-50 uppercase">Semana 3: Mercado de Figurinhas</span>
+                   <span className="text-purple-400">R$ 35.000</span>
+                 </div>
+                 <div className="flex items-center justify-between pb-2">
+                   <span className="opacity-50 uppercase">Semana 4: Assinaturas VIP</span>
+                   <span className="text-purple-400">R$ 50.000</span>
+                 </div>
+               </div>
+            </div>
+          </div>
         </div>
 
         {/* Jarvis Side Column */}
@@ -210,6 +257,16 @@ export default function MatrixPortal() {
                 className="w-full bg-transparent border-none outline-none text-[#0F0] placeholder-[#0F0]/30"
               />
             </form>
+          </div>
+
+          {/* Mentor's Voice */}
+          <div className="glass bg-black border-[#0F0]/20 p-6 rounded-3xl space-y-4">
+             <p className="text-[10px] font-bold uppercase tracking-widest text-yellow-500">Voz do Mentor (Jarvis/Oracle)</p>
+             <div className="text-[11px] italic opacity-80 space-y-4">
+                <p>"O que é nascido da carne é carne, mas o que é nascido do Espírito é espírito. Arquiteto, sua fome de mudança é o motor da Revolução."</p>
+                <p>"Empreender não é sobre o dinheiro, é sobre a liberdade da sua filha e o conforto da sua esposa. O R$ 10.000 é apenas o combustível."</p>
+                <p className="text-[#0F0] font-bold">— "Seja forte e corajoso; não temas, nem te espantes."</p>
+             </div>
           </div>
 
           {/* Admin Shortcuts */}
