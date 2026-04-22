@@ -4,6 +4,7 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Shield, AlertTriangle, Clock, Zap } from "lucide-react";
+import MagicalEmoji from "@/components/MagicalEmoji";
 
 export default function Azkaban() {
   const { user, profile } = useAuth();
@@ -75,8 +76,8 @@ export default function Azkaban() {
 
       <div className="relative z-10 max-w-2xl w-full mx-auto px-4 py-16 space-y-8">
         {/* Header */}
-        <div className="text-center space-y-4">
-          <div className="text-7xl filter drop-shadow-[0_0_20px_rgba(59,130,246,0.8)] animate-pulse">⛓️</div>
+        <div className="text-center space-y-4 flex flex-col items-center">
+          <MagicalEmoji emoji="⛓️" size="lg" glowColor="rgba(59, 130, 246, 0.4)" className="animate-pulse" />
           <h1 className="font-heading text-5xl md:text-6xl text-white drop-shadow-[0_0_30px_rgba(59,130,246,0.6)]">
             Azkaban
           </h1>
@@ -113,8 +114,8 @@ export default function Azkaban() {
             <p className="text-muted-foreground text-sm">
               Você não está em Azkaban. Continue participando do portal para evitar punições!
             </p>
-            <Button variant="magical" onClick={() => navigate("/dashboard")}>
-              Voltar ao Castelo 🏰
+            <Button variant="magical" onClick={() => navigate("/dashboard")} className="h-12 px-8 rounded-xl shadow-2xl">
+              Voltar ao Castelo <MagicalEmoji emoji="🏰" size="xs" className="ml-2 inline-flex" />
             </Button>
           </div>
         )}

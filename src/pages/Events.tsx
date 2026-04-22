@@ -5,6 +5,7 @@ import { Sparkles, Timer, CheckCircle2, Lock, Clock, Trophy, ChevronRight, Zap }
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import MagicalEmoji from "@/components/MagicalEmoji";
 
 // ─── Reusando Configurações dos Eventos ───────────────────────────────────────────
 import { getEventsForToday, type MagicalEvent } from "@/lib/MagicalEventEngine";
@@ -135,9 +136,7 @@ export default function Events() {
                 <div>
                   <h3 className="text-2xl font-heading text-white mb-2">{event.name}</h3>
                   <div className="flex items-center gap-2 mb-4">
-                    <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary/80 border border-border/50 text-[10px] text-muted-foreground uppercase">
-                      {event.audience === "all" ? "👥 Todos" : event.audience === "canons" ? "📜 Canons" : "🎭 OCs"}
-                    </div>
+                    <MagicalEmoji emoji={event.audience === "all" ? "👥" : event.audience === "canons" ? "📜" : "🎭"} size="xs" />
                     {isActive && (
                         <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/20 border border-primary/40 text-[10px] text-primary uppercase font-bold animate-pulse">
                             <Zap size={10} /> Ativo Agora

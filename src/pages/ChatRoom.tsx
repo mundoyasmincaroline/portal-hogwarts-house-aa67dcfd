@@ -9,6 +9,9 @@ import HouseCrest from "@/components/HouseCrest";
 import { House } from "@/lib/store";
 import { addXP } from "@/lib/xpSystem";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { Badge } from "@/components/ui/badge";
+import { ExternalLink, Zap, Flame, Sparkles, MessageCircle, Users } from "lucide-react";
+import MagicalEmoji from "@/components/MagicalEmoji";
 
 interface MemberSuggestion {
   user_id: string;
@@ -411,7 +414,7 @@ export default function ChatRoom() {
           />
           {channel.meet_link.includes('meet.google') && (
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8 bg-gradient-to-t from-black via-transparent to-black/40">
-              <div className="w-20 h-20 bg-yellow-500/10 rounded-full flex items-center justify-center text-5xl mb-6 shadow-inner animate-pulse">🎥</div>
+              <MagicalEmoji emoji="🎥" size="lg" glowColor="rgba(234, 179, 8, 0.4)" className="mb-6 animate-pulse" />
               <h3 className="font-heading text-2xl text-white mb-2">Transmissão em Andamento</h3>
               <p className="text-sm text-white/50 max-w-sm mb-8 font-serif italic">"O Google Meet protege a privacidade de seus alunos. Clique abaixo para conjurar sua presença na sala."</p>
               <Button variant="magical" size="lg" className="rounded-2xl h-14 px-10 shadow-2xl" onClick={() => window.open(channel.meet_link, "_blank")}>
@@ -428,7 +431,7 @@ export default function ChatRoom() {
           {messages.length === 0 ? (
             <div className="h-full flex items-center justify-center">
               <div className="text-center space-y-6 max-w-xs animate-in fade-in zoom-in duration-1000">
-                <div className="text-7xl opacity-20 grayscale filter drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">🕯️</div>
+                <MagicalEmoji emoji="🕯️" size="lg" glowColor="rgba(255, 255, 255, 0.1)" className="mx-auto grayscale opacity-40" />
                 <div className="space-y-2">
                   <p className="text-white/40 text-lg font-serif italic">"O silêncio é a primeira página de um grande livro."</p>
                   <p className="text-[10px] text-white/20 uppercase tracking-[0.3em] font-bold">Seja o primeiro a escrever</p>

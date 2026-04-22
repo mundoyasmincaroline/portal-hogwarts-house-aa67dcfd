@@ -36,6 +36,7 @@ import MaraudersMap from "@/components/MaraudersMap";
 // import MagicalActivityFeed from "@/components/MagicalActivityFeed";
 // import TimedMysteryChest from "@/components/TimedMysteryChest";
 import HouseCupWidget from "@/components/HouseCupWidget";
+import MagicalAtmosphere from "@/components/MagicalAtmosphere";
 
 
 const NAV_ITEMS = [
@@ -317,7 +318,9 @@ export default function DashboardLayout() {
   const items = isAdmin ? [...NAV_ITEMS, ...ADMIN_ITEMS] : NAV_ITEMS;
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden relative">
+    <div className="flex h-screen bg-black overflow-hidden relative">
+      <MagicalAtmosphere />
+      <AmbientSoundController currentPath={location.pathname} />
 
       <InterstitialAd />
       {sidebarOpen && (
@@ -482,9 +485,35 @@ export default function DashboardLayout() {
       </main>
     </div>
   );
+}function AmbientSoundController({ currentPath }: { currentPath: string }) {
+  const [audio] = useState(new Audio());
+  
+  useEffect(() => {
+    if (!isSoundEnabled()) {
+      audio.pause();
+      return;
+    }
+
+    let url = "";
+    if (currentPath === "/dashboard") url = "https://cdn.pixabay.com/download/audio/2022/01/18/audio_2d8f6d6d4a.mp3?filename=fireplace-6818.mp3";
+    else if (currentPath.includes("album") || currentPath.includes("guide")) url = "https://www.soundjay.com/misc/sounds/page-flip-01a.mp3";
+    else if (currentPath.includes("store") || currentPath.includes("shop")) url = "https://www.soundjay.com/misc/sounds/coins-spilled-1.mp3";
+    else if (currentPath.includes("azkaban") || currentPath.includes("challenges")) url = "https://www.soundjay.com/nature/sounds/wind-cave-1.mp3";
+    
+    if (url) {
+      audio.src = url;
+      audio.loop = true;
+      audio.volume = 0.15;
+      audio.play().catch(() => {});
+    } else {
+      audio.pause();
+    }
+
+    return () => {
+      audio.pause();
+    };
+  }, [currentPath, isSoundEnabled()]);
+
+  return null;
 }
-
-
-
-
 
