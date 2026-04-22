@@ -330,16 +330,14 @@ export default function DashboardLayout() {
   const house = HOUSES[profile.house as House] || HOUSES.gryffindor;
   
   const isPaulo = user?.email === 'paulormorpheus21@gmail.com';
-  let items = isAdmin ? [...NAV_ITEMS, ...ADMIN_ITEMS] : [...NAV_ITEMS];
   
-  // A guia Revolution é EXCLUSIVA do Paulo (The Architect)
+  // Apenas o Paulo (The Architect) vê as abas de Admin e Revolution
+  // Se ele não for admin no banco, garantimos que ele veja as abas admin também
+  let items = [...NAV_ITEMS];
   if (isPaulo) {
-    // Se o Paulo não for admin no banco por algum motivo, garante que ele veja as abas admin também
-    if (!isAdmin) {
-      items = [...NAV_ITEMS, ...ADMIN_ITEMS];
-    }
-    items.push(REVOLUTION_ITEM);
+    items = [...NAV_ITEMS, ...ADMIN_ITEMS, REVOLUTION_ITEM];
   }
+
 
 
   return (
