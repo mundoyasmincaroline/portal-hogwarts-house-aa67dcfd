@@ -19,7 +19,8 @@ import {
   Smartphone,
   Globe,
   Navigation,
-  Monitor
+  Monitor,
+  ShieldAlert
 } from "lucide-react";
 
 import { 
@@ -91,11 +92,21 @@ export default function MatrixPortal() {
 
   const [isGhost, setIsGhost] = useState(true);
   const [isSprintActive, setIsSprintActive] = useState(false);
-
   const [terminalText, setTerminalText] = useState<string[]>([]);
   const [recentUsers, setRecentUsers] = useState<any[]>([]);
   const [command, setCommand] = useState("");
   const [oracleScript, setOracleScript] = useState("");
+  const [systemErrors, setSystemErrors] = useState<{msg: string, time: string}[]>([]);
+
+  // Capturar erros globais para o Arquiteto
+  useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      setSystemErrors(prev => [{msg: event.message, time: new Date().toLocaleTimeString()}, ...prev].slice(0, 5));
+      setTerminalText(prev => [...prev, `!! ERROR DETECTED: ${event.message.toUpperCase()}`]);
+    };
+    window.addEventListener('error', handleError);
+    return () => window.removeEventListener('error', handleError);
+  }, []);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -224,9 +235,18 @@ export default function MatrixPortal() {
       <MatrixRain />
       
       <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12 border-b border-[#0F0]/20 pb-6">
-        <div>
-          <h1 className="text-4xl font-heading text-white tracking-tighter mb-2">MATRIX_PORTAL</h1>
-          <p className="text-xs opacity-60 uppercase tracking-[0.3em]">ENCRYPTED CONNECTION: 256-BIT AES | ADMIN: MORPHEUS</p>
+        <div className="flex flex-col md:flex-row items-center gap-4">
+          <div className="text-right md:text-left">
+            <h1 className="text-4xl font-heading text-white tracking-tighter mb-2 animate-pulse-glow">MATRIX_PORTAL</h1>
+            <p className="text-xs opacity-60 uppercase tracking-[0.3em]">ENCRYPTED CONNECTION: 256-BIT AES | ADMIN: MORPHEUS</p>
+          </div>
+          {systemErrors.length > 0 && (
+            <div className="bg-red-500/20 border border-red-500/40 px-4 py-2 rounded-xl animate-bounce">
+              <p className="text-[10px] text-red-500 font-bold uppercase tracking-widest flex items-center gap-2">
+                <ShieldAlert size={12} /> {systemErrors.length} FALHAS DETECTADAS
+              </p>
+            </div>
+          )}
         </div>
         
         <div className="flex flex-wrap gap-4">
@@ -436,11 +456,15 @@ export default function MatrixPortal() {
                 </table>
              </div>
 
-             <div className="p-4 bg-black/40 border border-[#0F0]/10 rounded-xl">
+              <div className="p-4 bg-black/40 border border-[#0F0]/10 rounded-xl flex justify-between items-center">
                 <p className="text-[9px] text-[#0F0]/60 flex items-center gap-2">
                    <Zap size={10} /> SYSTEM_INSIGHT: {recentUsers.filter(u => u.device?.isPWA).length} de {recentUsers.length} usuários estão usando o App instalado.
                 </p>
-             </div>
+                <div className="flex gap-2">
+                   <div className="w-1.5 h-1.5 bg-[#0F0] rounded-full animate-ping" />
+                   <span className="text-[8px] text-[#0F0]/40 font-mono">PULSE_SYNC: ACTIVE</span>
+                </div>
+              </div>
           </div>
         </div>
 

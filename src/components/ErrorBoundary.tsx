@@ -1,8 +1,9 @@
-import { Component, ErrorInfo, ReactNode } from "react";
+import React, { Component, ErrorInfo, ReactNode } from "react";
+import { Sparkles, ShieldAlert, RefreshCw, Home } from "lucide-react";
+import { Button } from "./ui/button";
 
 interface Props {
   children?: ReactNode;
-  fallback?: ReactNode;
 }
 
 interface State {
@@ -10,10 +11,10 @@ interface State {
   error: Error | null;
 }
 
-export class ErrorBoundary extends Component<Props, State> {
+class ErrorBoundary extends Component<Props, State> {
   public state: State = {
     hasError: false,
-    error: null
+    error: null,
   };
 
   public static getDerivedStateFromError(error: Error): State {
@@ -22,33 +23,69 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error("Uncaught error:", error, errorInfo);
+    // Aqui poderíamos enviar para um serviço de logs no futuro
   }
 
   public render() {
     if (this.state.hasError) {
-      if (this.props.fallback) {
-        return this.props.fallback;
-      }
       return (
-        <div className="min-h-[300px] flex flex-col items-center justify-center p-8 glass rounded-[2.5rem] border-2 border-red-500/30 bg-gradient-to-br from-red-950/40 via-black to-black text-center space-y-6 m-4 shadow-2xl relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(220,38,38,0.1),_transparent_70%)]" />
-          <div className="text-6xl animate-pulse filter drop-shadow-[0_0_20px_rgba(220,38,38,0.5)]">🔮</div>
-          <div className="relative z-10 space-y-2">
-            <h2 className="font-heading text-3xl text-red-500 uppercase tracking-tighter">Perturbação na Trama Mágica</h2>
-            <p className="text-muted-foreground text-sm font-serif italic max-w-md mx-auto leading-relaxed">
-              "Parece que um feitiço de confusão atingiu esta parte do castelo. Os elfos domésticos já foram notificados para restaurar a ordem."
+        <div className="min-h-screen bg-[#050505] flex items-center justify-center p-6 relative overflow-hidden">
+          {/* Background Magic Effects */}
+          <div className="absolute inset-0 z-0">
+            <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] animate-pulse" />
+            <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[120px] animate-pulse delay-1000" />
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-20" />
+          </div>
+
+          <div className="relative z-10 max-w-lg w-full glass rounded-[3rem] p-10 md:p-16 border-2 border-white/10 shadow-[0_0_100px_rgba(var(--primary),0.1)] text-center space-y-8 animate-fade-in">
+            <div className="w-24 h-24 bg-primary/10 rounded-3xl flex items-center justify-center mx-auto mb-6 relative">
+              <ShieldAlert className="text-primary animate-pulse" size={48} />
+              <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full -z-10" />
+            </div>
+
+            <div className="space-y-4">
+              <h2 className="text-3xl md:text-4xl font-heading text-white tracking-tight leading-tight">
+                Instabilidade na <span className="text-primary italic">Trama Mágica</span>
+              </h2>
+              <p className="text-muted-foreground font-serif italic text-sm md:text-base leading-relaxed">
+                "Parece que um feitiço saiu pela culatra. Não se preocupe, os Arquitetos já foram notificados por nossas corujas e a magia está sendo restaurada."
+              </p>
+            </div>
+
+            <div className="p-4 bg-black/40 rounded-2xl border border-white/5 text-left">
+               <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-1">Código de Erro</p>
+               <p className="text-[11px] font-mono text-primary/70 break-all leading-tight">
+                 {this.state.error?.message || "Erro Místico Desconhecido"}
+               </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <Button 
+                variant="magical" 
+                className="flex-1 h-12 rounded-xl text-xs font-bold uppercase tracking-widest"
+                onClick={() => window.location.reload()}
+              >
+                <RefreshCw size={14} className="mr-2" /> Restaurar Magia
+              </Button>
+              <Button 
+                variant="ghost" 
+                className="flex-1 h-12 rounded-xl text-xs font-bold uppercase tracking-widest text-white/40 hover:text-white"
+                onClick={() => window.location.href = "/"}
+              >
+                <Home size={14} className="mr-2" /> Voltar ao Início
+              </Button>
+            </div>
+
+            <p className="text-[10px] text-muted-foreground pt-4">
+              <Sparkles size={10} className="inline mr-1" /> Protocolo Jarvis de Recuperação Ativo
             </p>
           </div>
-          <button 
-            onClick={() => window.location.reload()}
-            className="px-8 py-3 bg-red-500/20 hover:bg-red-500/40 border border-red-500/50 rounded-full text-xs font-heading font-bold uppercase tracking-widest text-red-400 transition-all hover:scale-105 active:scale-95"
-          >
-            Conjurar Restauração ⚡
-          </button>
         </div>
       );
     }
 
-    return this.props.children;
+    return this.children;
   }
 }
+
+export default ErrorBoundary;

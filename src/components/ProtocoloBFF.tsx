@@ -3,7 +3,7 @@ import { useAuth } from "@/lib/auth";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Flame, Sparkles } from "lucide-react";
+import { Flame, Sparkles, Heart } from "lucide-react";
 
 /**
  * ProtocoloBFF: Lógica de gamificação e notificações para o vínculo de amizade.

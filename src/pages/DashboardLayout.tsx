@@ -127,7 +127,7 @@ export default function DashboardLayout() {
 
   if (!user) return null;
 
-  const currentHouse = HOUSES.find((h) => h.id === profile?.house) || HOUSES[0];
+  const currentHouse = (Object.values(HOUSES) as any[]).find((h) => h.id === profile?.house) || Object.values(HOUSES)[0];
 
   return (
     <main className="min-h-screen bg-background relative overflow-hidden flex flex-col md:flex-row">
@@ -137,17 +137,22 @@ export default function DashboardLayout() {
       {/* ── SIDEBAR (Escritório do Arquiteto) ── */}
       <aside className={`
         fixed md:relative inset-y-0 left-0 z-40
-        w-72 bg-card/80 backdrop-blur-xl border-r border-border
-        transition-transform duration-500 ease-in-out
+        w-72 bg-card/60 backdrop-blur-3xl border-r border-white/5
+        transition-all duration-700 ease-in-out shadow-[20px_0_50px_rgba(0,0,0,0.5)]
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
       `}>
-        <div className="flex flex-col h-full">
+        {/* Glow de fundo da Sidebar */}
+        <div className={`absolute inset-0 opacity-10 pointer-events-none bg-gradient-to-b from-primary/20 via-transparent to-transparent`} />
+        
+        <div className="flex flex-col h-full relative z-10">
           {/* Perfil e Casa */}
-          <div className="p-8 border-b border-border bg-gradient-to-br from-primary/5 to-transparent">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="relative group">
-                <div className={`absolute inset-0 bg-gradient-to-br ${currentHouse.color} blur-lg opacity-20 group-hover:opacity-40 transition-opacity`} />
-                <div className="w-16 h-16 rounded-2xl overflow-hidden relative border-2 border-primary/20 shadow-2xl">
+          <div className="p-8 border-b border-white/5 bg-gradient-to-br from-primary/10 via-transparent to-transparent relative overflow-hidden group">
+            <div className={`absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all duration-700`} />
+            
+            <div className="flex items-center gap-4 mb-6 relative z-10">
+              <div className="relative group/avatar">
+                <div className={`absolute inset-0 bg-gradient-to-br ${currentHouse?.color || 'from-primary/20'} blur-lg opacity-20 group-hover/avatar:opacity-60 transition-opacity duration-500`} />
+                <div className="w-16 h-16 rounded-2xl overflow-hidden relative border-2 border-white/10 shadow-2xl transition-transform duration-500 group-hover/avatar:scale-105">
                   <img 
                     src={profile?.avatar_url || "https://images.unsplash.com/photo-1514894780037-d2ef692277bb?w=400"} 
                     alt="Perfil" 
@@ -156,29 +161,29 @@ export default function DashboardLayout() {
                 </div>
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-heading text-lg text-foreground truncate">{profile?.full_name || "Bruxo"}</h3>
+                <h3 className="font-heading text-lg text-white truncate drop-shadow-md">{profile?.full_name || "Bruxo"}</h3>
                 <div className="flex items-center gap-2">
-                   <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                   <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Online em {currentHouse.name}</p>
+                   <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                   <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Online em {currentHouse?.name || "Hogwarts"}</p>
                 </div>
               </div>
             </div>
 
-            {/* Status do Bruxo */}
-            <div className="grid grid-cols-2 gap-3 mb-6">
-              <div className="glass-light p-3 rounded-xl border-primary/10">
+            {/* Status do Bruxo - Monster Plaques */}
+            <div className="grid grid-cols-2 gap-3 mb-6 relative z-10">
+              <div className="glass-light p-3 rounded-2xl border-white/5 bg-white/5 hover:bg-white/10 transition-colors">
                 <div className="flex items-center gap-2 mb-1">
                   <MagicalGaleon size="xs" />
-                  <span className="text-[10px] font-heading text-muted-foreground uppercase">Galeões</span>
+                  <span className="text-[10px] font-heading text-white/40 uppercase tracking-tighter">Galeões</span>
                 </div>
-                <p className="text-sm font-bold text-foreground">{profile?.currency || 0}</p>
+                <p className="text-sm font-bold text-white">{(profile?.currency || profile?.galeons || 0).toLocaleString("pt-BR")}</p>
               </div>
-              <div className="glass-light p-3 rounded-xl border-primary/10">
+              <div className="glass-light p-3 rounded-2xl border-white/5 bg-white/5 hover:bg-white/10 transition-colors">
                 <div className="flex items-center gap-2 mb-1">
-                  <Sparkles size={12} className="text-amber-500" />
-                  <span className="text-[10px] font-heading text-muted-foreground uppercase">Nível</span>
+                  <Sparkles size={12} className="text-primary animate-pulse" />
+                  <span className="text-[10px] font-heading text-white/40 uppercase tracking-tighter">Nível</span>
                 </div>
-                <p className="text-sm font-bold text-foreground">{(profile?.xp || 0) / 100 >> 0}</p>
+                <p className="text-sm font-bold text-white">{(profile?.xp || 0) / 100 >> 0 || 1}</p>
               </div>
             </div>
             
