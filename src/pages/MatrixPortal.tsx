@@ -271,14 +271,23 @@ export default function MatrixPortal() {
 
           {/* Admin Shortcuts */}
           <div className="glass bg-[#0F0]/5 border-[#0F0]/20 p-6 rounded-3xl space-y-4">
-             <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Atalhos de Sistema</p>
-             <div className="grid grid-cols-2 gap-3">
-                <Button variant="outline" className="border-[#0F0]/20 hover:bg-[#0F0]/10 text-[#0F0] text-[10px] h-12 rounded-xl" onClick={() => window.location.href='/dashboard/admin-finance'}>
-                   FINANCEIRO
+             <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Comandos de Operação</p>
+             <div className="grid grid-cols-1 gap-3">
+                <Button 
+                  variant="outline" 
+                  className="border-cyan-400/50 bg-cyan-400/10 hover:bg-cyan-400/20 text-cyan-400 text-xs h-12 rounded-xl font-bold animate-pulse"
+                  onClick={() => window.open('https://lovable.dev/projects/portal-hogwarts-house/artifacts/PROJETO_REVOLUCAO_48H.md')}
+                >
+                   VER MAPA DA REVOLUÇÃO (48H)
                 </Button>
-                <Button variant="outline" className="border-[#0F0]/20 hover:bg-[#0F0]/10 text-[#0F0] text-[10px] h-12 rounded-xl" onClick={() => window.location.href='/dashboard/feed'}>
-                   VOLTAR AO PORTAL
-                </Button>
+                <div className="grid grid-cols-2 gap-3">
+                  <Button variant="outline" className="border-[#0F0]/20 hover:bg-[#0F0]/10 text-[#0F0] text-[10px] h-10 rounded-xl" onClick={() => window.location.href='/dashboard/admin-finance'}>
+                     FINANCEIRO
+                  </Button>
+                  <Button variant="outline" className="border-[#0F0]/20 hover:bg-[#0F0]/10 text-[#0F0] text-[10px] h-10 rounded-xl" onClick={() => window.location.href='/dashboard/feed'}>
+                     VOLTAR
+                  </Button>
+                </div>
              </div>
           </div>
         </div>
