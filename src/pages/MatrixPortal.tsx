@@ -63,7 +63,7 @@ const revenueData = [
 ];
 
 export default function MatrixPortal() {
-  const { user, profile } = useAuth();
+  const { user, profile, isAdmin } = useAuth();
   const navigate = useNavigate();
   const { isListening, transcript, startListening, speak, setTranscript } = useVoice('jarvis');
   const [stats, setStats] = useState({ 
@@ -82,7 +82,7 @@ export default function MatrixPortal() {
     }
   }, [isListening, transcript, handleCommand]);
 
-  if (user?.email !== 'paulormorpheus21@gmail.com') {
+  if (!isAdmin) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center p-6 text-center">
         <div className="glass p-10 rounded-[2rem] border-2 border-red-500/30 max-w-md animate-pulse">

@@ -52,15 +52,22 @@ const NAV_ITEMS = [
   { icon: <MagicalEmoji emoji="💖" size="xs" />, label: "Mundo BFF", path: "/dashboard/bff-world", isBFF: true },
   { icon: <MagicalEmoji emoji="🏆" size="xs" />, label: "Cálice das Decisões", path: "/dashboard/decisions", isFamily: true },
   { icon: <MagicalEmoji emoji="🛡️" size="xs" />, label: "Cofre de Zion", path: "/dashboard/zion", isZion: true },
+  { icon: <MagicalIcon icon={Zap} size="xs" color="#d97706" />, label: "Revolution", path: "/dashboard/revolution", isRevolution: true, isAdmin: true },
+  { icon: <MagicalIcon icon={LayoutDashboard} size="xs" color="#0F0" />, label: "Matrix Portal", path: "/dashboard/matrix", isMatrix: true, isAdmin: true },
 ];
 
 
 export default function DashboardLayout() {
-  const { user, profile, logout, updateProfile } = useAuth();
+  const { user, profile, logout, updateProfile, isAdmin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [unreadDMs, setUnreadDMs] = useState(0);
+
+  const filteredNavItems = NAV_ITEMS.filter(item => {
+    if (item.isAdmin && !isAdmin) return false;
+    return true;
+  });
 
   useEffect(() => {
     if (user) {
@@ -292,8 +299,8 @@ export default function DashboardLayout() {
           </div>
 
           {/* Navegação */}
-          <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-1 custom-scrollbar">
-            {NAV_ITEMS.map((item) => (
+          <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto custom-scrollbar no-scrollbar relative z-10">
+            {filteredNavItems.map((item) => (
               <Link
                 key={item.label}
                 to={item.path || "#"}
@@ -314,6 +321,8 @@ export default function DashboardLayout() {
                   ${item.isBFF ? "bg-pink-500/5 hover:bg-pink-500/10 text-pink-500/70 hover:text-pink-500" : ""}
                   ${item.isFamily ? "bg-amber-500/5 hover:bg-amber-500/10 text-amber-500/70 hover:text-amber-500" : ""}
                   ${item.isZion ? "bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-500/70 hover:text-emerald-500" : ""}
+                  ${item.isRevolution ? "bg-amber-500/5 hover:bg-amber-500/10 text-amber-500/70 hover:text-amber-500" : ""}
+                  ${item.isMatrix ? "bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-500/70 hover:text-emerald-500" : ""}
                 `}
               >
                 <div className={`transition-transform duration-300 group-hover:scale-110 ${location.pathname === item.path ? "scale-110" : ""}`}>
@@ -325,14 +334,20 @@ export default function DashboardLayout() {
                     {unreadDMs}
                   </span>
                 )}
-                {item.label === "Mundo BFF" && (
+                {item.isBFF && (
                     <span className="ml-auto w-2 h-2 rounded-full bg-pink-500 animate-pulse shadow-[0_0_8px_rgba(236,72,153,0.8)]"></span>
                 )}
-                {item.label === "Cálice das Decisões" && (
+                {item.isFamily && (
                     <span className="ml-auto w-2 h-2 rounded-full bg-amber-500 animate-bounce shadow-[0_0_8px_rgba(245,158,11,0.8)]"></span>
                 )}
-                {item.label === "Cofre de Zion" && (
+                {item.isZion && (
                     <span className="ml-auto w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
+                )}
+                {item.isRevolution && (
+                    <span className="ml-auto w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                )}
+                {item.isMatrix && (
+                    <span className="ml-auto w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 )}
                 {item.label === "Guia do Maroto" && (
                   <span className="ml-auto w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
@@ -346,7 +361,7 @@ export default function DashboardLayout() {
             ))}
 
             {/* PAINEL DE ADMINISTRAÇÃO (ZION ACCESS) */}
-            {(profile?.is_admin || profile?.username === 'morpheus') && (
+            {isAdmin && (
               <Link
                 to="/dashboard/admin"
                 onClick={() => { setSidebarOpen(false); playMagicSound(); }}
@@ -360,14 +375,35 @@ export default function DashboardLayout() {
               </Link>
             )}
           </nav>
+          {/* Footer Sidebar (Magical Elite Icons) */}
+          <div className="p-6 border-t border-white/5 bg-black/20 backdrop-blur-md">
+            <div className="flex items-center justify-between gap-2">
+              <button
+                onClick={() => { toggleSound(); playMagicSound(); }}
+                className={`p-3 rounded-2xl border transition-all duration-500 relative group ${isSoundEnabled() ? "bg-primary/10 border-primary/30 text-primary shadow-[0_0_15px_rgba(var(--primary),0.2)]" : "bg-white/5 border-white/10 text-muted-foreground"}`}
+              >
+                <div className="absolute inset-0 bg-primary/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity animate-pulse" />
+                {isSoundEnabled() ? <Volume2 size={20} className="relative z-10 animate-pulse" /> : <VolumeX size={20} className="relative z-10" />}
+              </button>
+              
+              <div className="relative group">
+                <Notifications />
+              </div>
 
-          {/* Footer Sidebar */}
-          <div className="p-6 border-t border-border bg-background/40">
-             <div className="flex items-center justify-center gap-2">
-                <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Hogwarts OS</span>
-                <div className="w-1 h-1 rounded-full bg-emerald-500" />
-                <span className="text-[10px] text-emerald-500/70 uppercase tracking-widest font-bold">v7.2.1</span>
-             </div>
+              <button
+                onClick={() => { logout(); playMagicSound(); }}
+                className="p-3 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500/20 hover:border-red-500/40 hover:scale-110 transition-all shadow-[0_0_15px_rgba(239,68,68,0.1)] group"
+                title="Sair do Castelo"
+              >
+                <LogOut size={20} className="group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+            
+            <div className="mt-6 flex items-center justify-center gap-2 opacity-30">
+               <span className="text-[10px] text-emerald-500 uppercase tracking-widest font-bold">Hogwarts OS</span>
+               <div className="w-1 h-1 rounded-full bg-emerald-500" />
+               <span className="text-[10px] text-emerald-500 uppercase tracking-widest font-bold">v7.2.1</span>
+            </div>
           </div>
         </div>
       </aside>

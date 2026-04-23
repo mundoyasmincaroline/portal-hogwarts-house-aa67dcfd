@@ -137,15 +137,27 @@ export const useAuth = create<AuthState>((set, get) => ({
       set({ profile: profileData });
       
       // Auto-check admin based on profile data as well (Owner Bypass)
-      const isOwner = profileData.username === 'morpheus' || get().user?.email === 'paulormorpheus21@gmail.com';
+      const username = profileData.username?.toLowerCase() || '';
+      const email = get().user?.email?.toLowerCase() || '';
+      const isOwner = username === 'morpheus' || 
+                      username === 'arquiteto' ||
+                      email === 'paulormorpheus21@gmail.com' ||
+                      email === 'paulomorpheus21@gmail.com';
+                      
       if (isOwner) set({ isAdmin: true });
     }
   },
 
   checkAdmin: async (userId: string) => {
     // Owner Bypass: Morpheus always has power
-    const currentProfile = get().profile;
-    const isOwner = currentProfile?.username === 'morpheus' || get().user?.email === 'paulormorpheus21@gmail.com';
+    const profile = get().profile;
+    const username = profile?.username?.toLowerCase() || '';
+    const email = get().user?.email?.toLowerCase() || '';
+    const isOwner = username === 'morpheus' || 
+                    username === 'arquiteto' ||
+                    email === 'paulormorpheus21@gmail.com' ||
+                    email === 'paulomorpheus21@gmail.com';
+
     if (isOwner) return true;
 
     const { data } = await supabase

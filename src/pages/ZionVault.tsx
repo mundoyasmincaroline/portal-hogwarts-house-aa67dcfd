@@ -30,7 +30,8 @@ const ZionVault: React.FC = () => {
   // Acesso exclusivo Zion (Família Nuclear)
   const isFamily = (profile?.username?.toLowerCase() || '').includes('yasmin') || 
                    (profile?.username?.toLowerCase() || '').includes('carol') || 
-                   profile?.username === 'morpheus';
+                   profile?.username?.toLowerCase() === 'morpheus' ||
+                   (profile?.full_name?.toLowerCase() || '').includes('paulo');
 
   const verifyPasscode = () => {
     if (passcode === "ZION2026" || profile?.username === 'morpheus') {

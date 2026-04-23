@@ -120,42 +120,45 @@ export default function MagicAdBanner() {
         target="_blank" 
         rel="noopener noreferrer"
         onClick={() => handleAdClick(ad)}
-        className="flex flex-col md:flex-row items-center gap-8 p-8 relative z-10"
+        className="flex flex-col md:flex-row items-center gap-6 md:gap-10 p-6 md:p-10 relative z-10"
       >
-        <div className="relative shrink-0 w-full md:w-40 h-40 group-hover:rotate-2 transition-transform duration-500">
+        <div className="relative shrink-0 w-full md:w-48 h-48 md:h-48 group-hover:rotate-2 transition-transform duration-500">
           <div className="absolute inset-0 bg-yellow-400/20 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity animate-pulse" />
-          <div className="relative z-10 w-full h-full rounded-[2rem] overflow-hidden border-4 border-yellow-500/30 shadow-[0_15px_35px_rgba(0,0,0,0.5)]">
+          <div className="relative z-10 w-full h-full rounded-[2.5rem] overflow-hidden border-4 border-yellow-500/30 shadow-[0_20px_45px_rgba(0,0,0,0.6)]">
             {isVideo ? (
                <div className="w-full h-full bg-black flex items-center justify-center">
-                 <Play size={40} className="text-yellow-500/50" />
+                 <Play size={48} className="text-yellow-500/50" />
                </div>
             ) : (
                <img src={ad.image_url} alt={ad.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
             {isVideo && (
-               <div className="absolute bottom-3 right-3 p-1.5 bg-black/60 rounded-full border border-white/10">
-                 <Volume2 size={12} className="text-white/60" />
+               <div className="absolute bottom-4 right-4 p-2 bg-black/60 rounded-full border border-white/10">
+                 <Volume2 size={14} className="text-white/60" />
                </div>
             )}
           </div>
         </div>
         
-        <div className="flex-1 min-w-0 text-center md:text-left space-y-4">
-          <div className="space-y-2">
-            <h4 className="font-heading text-3xl md:text-4xl text-gold-gradient drop-shadow-lg leading-none">{ad.title}</h4>
-            <p className="text-sm md:text-base text-yellow-100/60 font-serif italic leading-relaxed line-clamp-2">
+        <div className="flex-1 min-w-0 text-center md:text-left space-y-6">
+          <div className="space-y-3">
+            <h4 className="font-heading text-3xl md:text-5xl text-gold-gradient drop-shadow-lg leading-tight">{ad.title}</h4>
+            <p className="text-sm md:text-lg text-yellow-100/70 font-serif italic leading-relaxed line-clamp-3">
               "{ad.description || "Uma oportunidade única revelada pelas estrelas. Adquira este artefato antes que o feitiço expire."}"
             </p>
           </div>
           
-          <div className="flex flex-col sm:flex-row items-center gap-6">
-            <Button variant="plaque" className="w-full sm:w-auto h-14 px-10 rounded-2xl text-lg bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-600 border-none shadow-[0_10px_30px_rgba(234,179,8,0.4)] hover:scale-105 active:scale-95 transition-all">
-              INVOCAR OFERTA <ExternalLink size={18} className="ml-2 animate-pulse" />
-            </Button>
-            <div className="flex flex-col items-center sm:items-start">
-               <span className="text-[10px] text-yellow-500/40 uppercase tracking-[0.3em] font-bold">Verificado pelo</span>
-               <span className="text-xs text-yellow-500/60 font-heading tracking-widest">MINISTÉRIO DA MAGIA</span>
+          <div className="flex flex-col sm:flex-row items-center gap-8">
+            <div className="w-full sm:w-auto relative group/btn">
+              <div className="absolute inset-0 bg-yellow-500/20 blur-xl rounded-2xl opacity-0 group-hover/btn:opacity-100 transition-opacity" />
+              <Button variant="plaque" className="relative w-full sm:w-auto h-16 px-12 rounded-2xl text-xl bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-600 border-none shadow-[0_15px_35px_rgba(234,179,8,0.4)] hover:scale-105 active:scale-95 transition-all">
+                INVOCAR OFERTA <ExternalLink size={20} className="ml-3 animate-pulse" />
+              </Button>
+            </div>
+            <div className="flex flex-col items-center sm:items-start opacity-60">
+               <span className="text-[10px] text-yellow-500 uppercase tracking-[0.4em] font-bold">Verificado pelo</span>
+               <span className="text-sm text-yellow-500 font-heading tracking-[0.2em]">MINISTÉRIO DA MAGIA</span>
             </div>
           </div>
         </div>

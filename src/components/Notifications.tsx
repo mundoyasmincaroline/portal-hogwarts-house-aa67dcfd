@@ -72,12 +72,12 @@ export default function Notifications() {
   return (
     <div className="relative" ref={ref}>
       <button 
-        onClick={() => setOpen(!open)}
-        className="relative p-2 text-muted-foreground hover:text-primary transition-colors rounded-full hover:bg-secondary"
+        onClick={() => { setOpen(!open); playMagicSound(); }}
+        className={`relative p-3 transition-all duration-300 rounded-2xl active:scale-90 group ${open ? "bg-primary/20 scale-110" : "hover:bg-primary/10"}`}
       >
-        🔔
+        <MagicalEmoji emoji="🔔" size="sm" />
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center font-bold">
+          <span className="absolute -top-1 -right-1 min-w-[20px] h-5 bg-red-600 rounded-full text-[10px] text-white flex items-center justify-center font-bold border-2 border-zinc-950 shadow-[0_0_10px_#dc2626] animate-bounce px-1">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}

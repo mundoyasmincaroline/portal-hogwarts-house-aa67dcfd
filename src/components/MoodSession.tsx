@@ -1,16 +1,18 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { addXP } from "@/lib/xpSystem";
+import MagicalEmoji from "./MagicalEmoji";
+import { playMagicSound } from "@/lib/sounds";
 
 const MOODS = [
   { emoji: "⚡", label: "Animado(a)" },
   { emoji: "📖", label: "Estudioso(a)" },
-  { emoji: "😴", label: "Cansado(a)" },
-  { emoji: "🧙‍♂️", label: "Mágico(a)" },
+  { emoji: "🔮", label: "Místico(a)" },
+  { emoji: "✨", label: "Radiante" },
   { emoji: "🐍", label: "Astuto(a)" },
+  { emoji: "🔥", label: "Poderoso(a)" },
 ];
 
 export default function MoodSession() {
@@ -35,26 +37,26 @@ export default function MoodSession() {
 
   if (hasShared) {
     return (
-      <div className="glass rounded-xl p-4 text-center my-4">
-        <p className="text-sm text-muted-foreground">Você está se sentindo <span className="text-lg mx-1">{selectedMood}</span> hoje!</p>
+      <div className="glass rounded-[2rem] p-6 text-center my-6 border-white/5 bg-gradient-to-br from-primary/5 to-transparent">
+        <p className="text-sm text-muted-foreground">Você está se sentindo <span className="text-2xl mx-2 align-middle inline-block animate-bounce"><MagicalEmoji emoji={selectedMood || "✨"} size="sm" /></span> hoje!</p>
       </div>
     );
   }
 
   return (
-    <div className="glass rounded-xl p-4 my-4">
-      <p className="text-sm font-heading text-center text-foreground mb-3">Como está seu humor mágico hoje?</p>
-      <div className="flex justify-center gap-2 flex-wrap">
+    <div className="glass rounded-[2rem] p-6 my-6 border-white/5 bg-gradient-to-br from-white/5 to-transparent relative overflow-hidden group">
+      <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+      <p className="text-[10px] font-heading text-center text-primary uppercase tracking-[0.3em] mb-5 font-bold">Estado de Espírito Místico</p>
+      <div className="flex justify-center gap-3 flex-wrap relative z-10">
         {MOODS.map((m) => (
-          <Button
+          <button
             key={m.label}
-            variant="outline"
-            className="text-xl hover:bg-primary/20 hover:scale-110 transition-transform p-2 h-auto"
-            onClick={() => handleShareMood(m.emoji)}
+            className="hover:scale-125 transition-all duration-300 active:scale-95"
+            onClick={() => { handleShareMood(m.emoji); playMagicSound(); }}
             title={m.label}
           >
-            {m.emoji}
-          </Button>
+            <MagicalEmoji emoji={m.emoji} size="md" />
+          </button>
         ))}
       </div>
     </div>
