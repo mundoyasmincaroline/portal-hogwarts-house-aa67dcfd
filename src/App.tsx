@@ -60,8 +60,25 @@ import AuthInit from "./components/AuthInit";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
+// Protocolo 10 Passos à Frente: Migração Silenciosa de Domínio
+const CURRENT_OFFICIAL_DOMAIN = "portal-hogwarts-house-60feca43.vercel.app";
+
+const App = () => {
+  useEffect(() => {
+    const hostname = window.location.hostname;
+    if (hostname.includes("lovable.app") && hostname !== CURRENT_OFFICIAL_DOMAIN) {
+      console.log("REVOLUTION: Redirecionando para o núcleo estável...");
+      const newUrl = `https://${CURRENT_OFFICIAL_DOMAIN}${window.location.pathname}${window.location.search}`;
+      
+      // Pequeno delay para o usuário ver que algo está acontecendo (transição suave)
+      setTimeout(() => {
+        window.location.replace(newUrl);
+      }, 1000);
+    }
+  }, []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <MagicalErrorBoundary>
         <AuthInit>
@@ -130,6 +147,7 @@ const App = () => (
       </MagicalErrorBoundary>
     </TooltipProvider>
   </QueryClientProvider>
-);
+  );
+};
 
 export default App;

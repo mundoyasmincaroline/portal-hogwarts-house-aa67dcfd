@@ -804,14 +804,14 @@ export default function MatrixPortal() {
              
              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                   { name: "Varinha Holly 3D", file: "https://portal-hogwarts.lovable.app/monster_quality_wand_holly_3d_1776867017755.png", type: "Asset" },
-                   { name: "Capa Invisibilidade", file: "https://portal-hogwarts.lovable.app/monster_quality_invisibility_cloak_3d_1776867041087.png", type: "Asset" },
-                   { name: "Veritaserum HQ", file: "https://portal-hogwarts.lovable.app/monster_quality_veritaserum_3d_1776867059945.png", type: "Asset" },
-                   { name: "Espada de Gryffindor", file: "https://portal-hogwarts.lovable.app/monster_quality_gryffindor_sword_3d_1776868076176.png", type: "Asset" },
-                   { name: "Chapéu Seletor", file: "https://portal-hogwarts.lovable.app/monster_quality_sorting_hat_3d_1776868101477.png", type: "Asset" },
-                   { name: "Vassoura Firebolt", file: "https://portal-hogwarts.lovable.app/monster_quality_firebolt_3d_1776868127934.png", type: "Asset" },
-                   { name: "Galeão 3D Gold", file: "https://portal-hogwarts.lovable.app/monster_quality_galeon_coin_3d_1776816757264.png", type: "Asset" },
-                   { name: "Pomo de Ouro", file: "https://portal-hogwarts.lovable.app/monster_quality_golden_snitch_cinematic_1776816692257.png", type: "Asset" }
+                   { name: "Varinha Holly 3D", file: "/items/monster_quality_wand_elder.png", type: "Asset" },
+                   { name: "Capa Invisibilidade", file: "/items/monster_quality_invisibility_cloak.png", type: "Asset" },
+                   { name: "Veritaserum HQ", file: "/items/monster_quality_potion_luck.png", type: "Asset" },
+                   { name: "Espada de Gryffindor", file: "/items/monster_quality_gryffindor_sword.png", type: "Asset" },
+                   { name: "Chapéu Seletor", file: "/items/monster_quality_sorting_hat.png", type: "Asset" },
+                   { name: "Vassoura Firebolt", file: "/items/monster_quality_firebolt.png", type: "Asset" },
+                   { name: "Galeão 3D Gold", file: "/monster_quality_galeon.png", type: "Asset" },
+                   { name: "Pomo de Ouro", file: "/items/monster_quality_golden_snitch.png", type: "Asset" }
                 ].map((asset, i) => (
                    <div key={i} className="bg-black/60 p-3 rounded-2xl border border-white/10 group hover:border-purple-400/50 transition-all">
                       <div className="aspect-square rounded-xl bg-slate-900 mb-2 overflow-hidden relative">

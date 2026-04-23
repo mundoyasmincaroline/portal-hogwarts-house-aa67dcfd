@@ -164,7 +164,7 @@ export default function DashboardLayout() {
                 <div className={`absolute inset-0 bg-gradient-to-br ${currentHouse?.color || 'from-primary/20'} blur-lg opacity-20 group-hover/avatar:opacity-60 transition-opacity duration-500`} />
                 <div className="w-16 h-16 rounded-2xl overflow-hidden relative border-2 border-white/10 shadow-2xl transition-transform duration-500 group-hover/avatar:scale-105">
                   <img 
-                    src={profile?.avatar_url || "https://images.unsplash.com/photo-1514894780037-d2ef692277bb?w=400"} 
+                    src={profile?.avatar_url || "/default_avatar.png"} 
                     alt="Perfil" 
                     className="w-full h-full object-cover"
                   />
@@ -300,7 +300,7 @@ export default function DashboardLayout() {
       {/* ── CONTEÚDO PRINCIPAL ── */}
       <div className="flex-1 flex flex-col min-w-0 relative">
         {/* Monster Quality Cinematic Layers */}
-        <div className="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1547756536-cde3673fa2e5?w=1600')] bg-fixed bg-cover bg-center grayscale opacity-10" />
+        <div className="absolute inset-0 z-0 bg-[url('/hogwarts_bg.png')] bg-fixed bg-cover bg-center grayscale opacity-10" />
         <div className="absolute inset-0 z-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 pointer-events-none" />
         <div className="absolute inset-0 z-0 bg-gradient-to-br from-black via-black/90 to-blue-950/20" />
         

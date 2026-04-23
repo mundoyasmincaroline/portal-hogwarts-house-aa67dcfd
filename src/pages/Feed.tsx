@@ -173,7 +173,7 @@ export default function Feed() {
       let reason = hasBannedWord ? "Palavra proibida" : isAllCaps ? "Gritaria (CAPS LOCK)" : "Spam (letras repetidas)";
       toast.error(
         <div className="flex gap-3 items-center">
-          <img src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Filch" className="w-10 h-10 rounded-full border border-red-500 object-cover" />
+          <img src="/default_avatar.png" alt="Filch" className="w-10 h-10 rounded-full border border-red-500 object-cover" />
           <div>
             <p className="font-bold text-red-500">Argus Filch</p>
             <p className="text-sm">Publicação bloqueada: {reason}</p>
@@ -435,7 +435,7 @@ export default function Feed() {
             <div className="flex items-center gap-2 mb-2 p-2 bg-yellow-500/10 border border-yellow-400/50 rounded-lg group shadow-[0_0_15px_rgba(250,204,21,0.3)] hover:scale-105 transition-transform cursor-default">
               <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border-2 border-yellow-400 relative">
                 <div className="absolute inset-0 bg-yellow-400/30 mix-blend-overlay z-10 animate-pulse"></div>
-                <img src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Yasmin Caroline" className="w-full h-full object-cover" />
+                <img src="/default_avatar.png" alt="Yasmin Caroline" className="w-full h-full object-cover" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-yellow-400 font-bold truncate">✨ Yasmin Caroline</p>
@@ -448,7 +448,7 @@ export default function Feed() {
             <div className="flex items-center gap-2 mb-2 p-2 bg-blue-500/10 border border-blue-400/50 rounded-lg group shadow-[0_0_10px_rgba(96,165,250,0.2)]">
               <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-blue-400 relative">
                 <div className="absolute inset-0 bg-blue-400/20 mix-blend-overlay z-10 animate-pulse"></div>
-                <img src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Carolina Assis" className="w-full h-full object-cover" />
+                <img src="/default_avatar.png" alt="Carolina Assis" className="w-full h-full object-cover" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-blue-400 font-bold truncate">🛡️ Carolina Assis</p>
@@ -460,7 +460,7 @@ export default function Feed() {
             {/* Argus Filch - Sempre Online */}
             <div className="flex items-center gap-2 mb-4 p-2 bg-red-950/30 border border-red-900/50 rounded-lg group">
               <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-red-500/50">
-                <img src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Argus Filch" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
+                <img src="/default_avatar.png" alt="Argus Filch" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-red-500 font-bold truncate">Argus Filch</p>

@@ -101,7 +101,7 @@ export default function Login() {
     <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
       {/* ── CINEMATIC BACKGROUND ── */}
       <div className="absolute inset-0 z-0">
-         <img src="https://images.unsplash.com/photo-1514894780037-d2ef692277bb?auto=format&fit=crop&q=80&w=2000" className="w-full h-full object-cover opacity-20 grayscale scale-110" alt="Background" />
+         <img src="/hogwarts_bg.png" className="w-full h-full object-cover opacity-20 grayscale scale-110" alt="Background" />
          <div className="absolute inset-0 bg-gradient-to-br from-black via-black/90 to-purple-950/30" />
       </div>
 
