@@ -134,11 +134,12 @@ export default function MagicAdBanner() {
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
             {isVideo && (
-               <div className="absolute bottom-6 right-6 p-3 bg-black/60 rounded-full border border-white/10">
-                 <Volume2 size={18} className="text-white/60" />
-               <img src={ad.image_url} alt={ad.title} className="w-full h-full object-cover" />
+              <div className="absolute bottom-6 right-6 p-3 bg-black/60 rounded-full border border-white/10">
+                <Volume2 size={18} className="text-white/60" />
+              </div>
             )}
             <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(234,179,8,0.5)]" />
+          </div>
         </div>
         
         <div className="flex-1 min-w-0 text-center md:text-left space-y-4">
