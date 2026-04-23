@@ -46,7 +46,7 @@ export default function MagicalIcon({ icon: Icon, color = "#d4af37", size = "md"
           <div className="relative z-10 transition-transform group-hover/micon:rotate-6">
             {children}
           </div>
-        ) : (Icon && typeof Icon === 'function') ? (
+        ) : Icon ? (
           <Icon 
             size={actualIconSize} 
             style={{ color: color }} 

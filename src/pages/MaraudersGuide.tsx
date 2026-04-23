@@ -192,20 +192,14 @@ export default function MaraudersGuide() {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto space-y-10">
-      <div className="glass rounded-[3rem] p-12 text-center relative overflow-hidden border border-primary/40 shadow-[0_30px_100px_rgba(0,0,0,0.8)]">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/old-map.png')] opacity-20 mix-blend-multiply"></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-900/10 via-transparent to-transparent" />
-        <div className="relative z-10 space-y-4">
-          <div className="relative w-24 h-24 mx-auto mb-6 group">
-             <div className="absolute inset-0 bg-primary/20 rounded-full blur-2xl animate-pulse" />
-             <span className="relative z-10 text-7xl drop-shadow-[0_0_20px_rgba(var(--primary),0.8)] block animate-float">📜</span>
-          </div>
-          <h1 className="font-heading text-6xl text-gold-gradient mb-2 tracking-tighter drop-shadow-2xl uppercase">O Guia do Maroto</h1>
-          <p className="text-primary text-xs font-bold uppercase tracking-[0.8em] opacity-60">Juro solenemente não fazer nada de bom</p>
-          <div className="pt-6">
-             <span className="glass-badge border-primary/20 text-primary px-6 py-2">MODO 10 PASSOS ZION ATIVADO</span>
-          </div>
+    <div className="max-w-3xl mx-auto space-y-6">
+      <div className="glass rounded-2xl p-8 text-center relative overflow-hidden border border-primary/30">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/old-mathematics.png')] opacity-10"></div>
+        <div className="relative z-10">
+          <span className="text-5xl drop-shadow-md">📜</span>
+          <h1 className="font-heading text-3xl text-gold-gradient mt-4 mb-2">O Guia do Maroto</h1>
+          <p className="text-muted-foreground text-sm">Juro solenemente não fazer nada de bom.</p>
+          <p className="text-xs text-foreground/80 mt-1">Conheça as novas atualizações do castelo.</p>
         </div>
       </div>
 

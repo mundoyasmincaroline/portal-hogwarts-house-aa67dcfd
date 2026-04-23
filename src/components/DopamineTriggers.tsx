@@ -20,9 +20,9 @@ export default function DopamineTriggers() {
         
         if (prof) {
           const activity = {
-            user: (prof.full_name || prof.username || 'Bruxo').split(' ')[0],
-            house: prof.house || 'Hogwarts',
-            item: (payload.new.item_id || 'item').replace('mq_', '').replace('3d_', '').replace(/_/g, ' '),
+            user: prof.full_name.split(' ')[0],
+            house: prof.house,
+            item: payload.new.item_id.replace('mq_', '').replace('3d_', '').replace(/_/g, ' '),
             type: 'purchase'
           };
           setLastActivity(activity);

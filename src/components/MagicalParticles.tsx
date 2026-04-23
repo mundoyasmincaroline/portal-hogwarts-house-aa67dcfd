@@ -1,9 +1,7 @@
 import { useEffect, useRef } from "react";
 import { getSeasonalEvent } from "@/lib/seasonal";
 
-interface MagicalParticlesProps { color?: string; }
-
-export default function MagicalParticles({ color }: MagicalParticlesProps) {
+export default function MagicalParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -89,15 +87,7 @@ export default function MagicalParticles({ color }: MagicalParticlesProps) {
         } else {
           ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
           
-          if (color) {
-            let finalColor = color;
-            if (color.includes('(')) {
-              finalColor = color.replace(')', `, ${opacity})`).replace('rgb', 'rgba').replace('hsl', 'hsla');
-            } else if (color.startsWith('#')) {
-              finalColor = color + Math.floor(opacity * 255).toString(16).padStart(2, '0');
-            }
-            ctx.fillStyle = finalColor;
-          } else if (theme === "snow") {
+          if (theme === "snow") {
             ctx.fillStyle = `hsla(0, 0%, 100%, ${opacity})`;
           } else if (theme === "leaves") {
             ctx.fillStyle = `hsla(30, 80%, 40%, ${opacity})`;

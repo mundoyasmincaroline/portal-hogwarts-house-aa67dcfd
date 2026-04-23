@@ -1,88 +1,86 @@
+// Hogwarts Portal - Sync Test
 import { createRoot } from "react-dom/client";
 import React from "react";
 import App from "./App.tsx";
 import "./index.css";
 
-// Protocolo 10 Passos à Frente: Version Sentinel
-// Esta versão deve ser alterada APENAS para resets globais de cache.
-const PORTAL_VERSION = "8.2.5-ZION-REVOLUTION"; 
-const storedVersion = localStorage.getItem("portal_version");
+class ErrorBoundary extends React.Component {
+  state = { hasError: false, error: null };
+  static getDerivedStateFromError(error) { return { hasError: true, error }; }
+  componentDidCatch(error, errorInfo) { console.error("Magical Error Detected:", error, errorInfo); }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{
+          height: "100vh", width: "100vw", background: "#000", 
+          display: "flex", alignItems: "center", justifyContent: "center", 
+          flexDirection: "column", color: "#f59e0b", fontFamily: "serif",
+          textAlign: "center", position: "relative", overflow: "hidden"
+        }}>
+          {/* Background Image - Hogwarts Loading Style */}
+          <img 
+            src="/monster_quality_hogwarts_maintenance_loading_1776870699373.png" 
+            style={{ 
+              position: "absolute", inset: 0, width: "100%", height: "100%", 
+              objectFit: "cover", opacity: 0.6, filter: "brightness(0.5) blur(2px)" 
+            }} 
+            alt="Hogwarts"
+          />
+          
+          {/* Content Overlay */}
+          <div style={{ position: "relative", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <div className="animate-pulse" style={{ fontSize: "4rem", marginBottom: "2rem" }}>🔮</div>
+            
+            <h1 style={{ fontSize: "1.2rem", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "4px", marginBottom: "1rem", color: "#fff" }}>
+              Restaurando a Trama Mágica...
+            </h1>
+            
+            {/* Animated Loading Bar */}
+            <div style={{ width: "200px", height: "2px", background: "rgba(255,255,255,0.1)", borderRadius: "1px", marginBottom: "2rem", overflow: "hidden" }}>
+              <div style={{ 
+                width: "100%", height: "100%", background: "linear-gradient(90deg, transparent, #f59e0b, transparent)",
+                animation: "loading-magical 2s infinite linear"
+              }} />
+            </div>
 
-if (storedVersion && storedVersion !== PORTAL_VERSION && !storedVersion.includes('FORCE')) {
-  console.log("REVOLUTION SYNC: Sincronizando nova versão base do portal: " + PORTAL_VERSION);
-  
-  // Proteção contra loop infinito
-  const syncAttempts = parseInt(localStorage.getItem("sync_attempts") || "0");
-  const lastSync = parseInt(localStorage.getItem("last_sync_time") || "0");
-  const now = Date.now();
+            <p style={{ color: "#94a3b8", fontSize: "0.8rem", maxWidth: "300px", margin: "0 auto 2rem", fontStyle: "italic" }}>
+              "O castelo está se reconfigurando. Aguarde um momento enquanto os elfos domésticos terminam a manutenção."
+            </p>
 
-  if (syncAttempts > 3 && (now - lastSync) < 60000) {
-    console.error("ZION_CRITICAL: Falha persistente na sincronização. Abortando para evitar loop.");
-    localStorage.setItem("portal_version", PORTAL_VERSION);
-  } else {
-    localStorage.setItem("sync_attempts", (syncAttempts + 1).toString());
-    localStorage.setItem("last_sync_time", now.toString());
-    
-    // Limpeza Cirúrgica: Preserva a sessão
-    const authKeys = Object.keys(localStorage).filter(k => k.includes('auth-token') || k.includes('supabase.auth.token'));
-    const savedData: Record<string, string> = {};
-    authKeys.forEach(k => {
-      const val = localStorage.getItem(k);
-      if (val) savedData[k] = val;
-    });
-
-    localStorage.clear();
-    sessionStorage.clear();
-    
-    Object.entries(savedData).forEach(([k, v]) => localStorage.setItem(k, v));
-    localStorage.setItem("portal_version", PORTAL_VERSION);
-    
-    if ('caches' in window) {
-      caches.keys().then((names) => {
-        for (let name of names) caches.delete(name);
-      });
-    }
-    
-    // Reload limpo com flag de versão
-    window.location.replace(window.location.origin + window.location.pathname + '?v=' + PORTAL_VERSION);
-  }
-} else if (!storedVersion) {
-  // Inicialização primária
-  localStorage.setItem("portal_version", PORTAL_VERSION);
-  localStorage.setItem("sync_attempts", "0");
-} else {
-  // Reset attempts if successful
-  localStorage.setItem("sync_attempts", "0");
-}
-
-// Registro do Service Worker para PWA (Hogwarts no Bolso)
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').then(reg => {
-      // Verifica atualizações silenciosamente
-      reg.update();
-      
-      // Se houver um novo worker esperando, avisa o sistema
-      reg.onupdatefound = () => {
-        const newWorker = reg.installing;
-        if (newWorker) {
-          newWorker.onstatechange = () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              console.log("Nova versão detectada. Preparando auto-update...");
+            <button 
+              onClick={() => window.location.reload()}
+              style={{
+                background: "rgba(245,158,11,0.1)", border: "1px solid #f59e0b", color: "#f59e0b",
+                padding: "0.6rem 1.5rem", borderRadius: "0.5rem", fontSize: "0.7rem", 
+                cursor: "pointer", textTransform: "uppercase", fontWeight: "bold",
+                backdropFilter: "blur(5px)", transition: "all 0.3s"
+              }}
+              onMouseOver={(e) => e.currentTarget.style.background = "rgba(245,158,11,0.2)"}
+              onMouseOut={(e) => e.currentTarget.style.background = "rgba(245,158,11,0.1)"}
+            >
+              Forçar Restauração 🪄
+            </button>
+          </div>
+          
+          <style>{`
+            @keyframes loading-magical {
+              0% { transform: translateX(-100%); }
+              100% { transform: translateX(100%); }
             }
-          };
-        }
-      };
-    }).catch(err => console.log('SW registration failed:', err));
-  });
+          `}</style>
+          {/* Secret tag for admins */}
+          <div style={{ position: "fixed", bottom: 10, right: 10, fontSize: "8px", opacity: 0.3, color: "#444" }}>
+            ERR_MAGICAL_INTERFERENCE
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
 }
 
-
-const rootElement = document.getElementById("root");
-if (!rootElement) throw new Error("Falha ao encontrar o elemento raiz do portal.");
-
-createRoot(rootElement).render(
-  <React.StrictMode>
+createRoot(document.getElementById("root")!).render(
+  <ErrorBoundary>
     <App />
-  </React.StrictMode>
+  </ErrorBoundary>
 );

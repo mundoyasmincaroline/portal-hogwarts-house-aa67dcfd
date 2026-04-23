@@ -1,23 +1,16 @@
 {
   "name": "Portal Hogwarts House",
   "short_name": "Hogwarts",
-  "description": "O portal definitivo de RPG e comunidade para bruxos de elite.",
+  "description": "Seja bem vindo a um lugar de diversão, RPG e muita mágica.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#050505",
-  "theme_color": "#d4af37",
+  "background_color": "#0a0a0a",
+  "theme_color": "#7c3aed",
   "icons": [
     {
-      "src": "/pwa-icon.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/pwa-icon.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "src": "https://mundoyasmincaroline.github.io/portal-hogwarts-house/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
     }
   ]
 }

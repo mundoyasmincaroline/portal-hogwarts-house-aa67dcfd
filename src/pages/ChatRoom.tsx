@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import HouseCrest from "@/components/HouseCrest";
 import { House } from "@/lib/store";
 import { addXP } from "@/lib/xpSystem";
-import MagicalErrorBoundary from "@/components/MagicalErrorBoundary";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink, Zap, Flame, Sparkles, MessageCircle, Users } from "lucide-react";
 import MagicalEmoji from "@/components/MagicalEmoji";
@@ -240,9 +240,8 @@ export default function ChatRoom() {
   useEffect(() => {
     if (!channel?.id) return;
     
-    const chatChannelName = `chat:${channel.id}:${Math.random().toString(36).substring(7)}`;
     const subscription = supabase
-      .channel(chatChannelName)
+      .channel(`messages:${channel.id}`)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `channel_id=eq.${channel.id}` }, async (payload) => {
         // Só adiciona ao vivo se a data selecionada for hoje
         const todayStr = new Date().toLocaleDateString('en-CA');
@@ -255,14 +254,9 @@ export default function ChatRoom() {
           setMessages(prev => [...prev, { ...payload.new, profiles: userData, characters: charData, user_role: roleData?.role } as unknown as Message]);
         }
       })
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') {
-          console.log("CHAT: Conectado ao Salão", channel.id);
-        }
-      });
+      .subscribe();
 
     return () => {
-      console.log("CHAT: Encerrando conexão", chatChannelName);
       supabase.removeChannel(subscription);
     };
   }, [channel?.id]);
@@ -538,7 +532,7 @@ export default function ChatRoom() {
 
       {/* ── MENSAGENS MONSTER QUALITY ── */}
       <div className="relative z-10 flex-1 overflow-y-auto p-6 md:p-8 space-y-8 scrollbar-hide">
-        <MagicalErrorBoundary>
+        <ErrorBoundary fallback={<div className="text-center py-20 text-red-500/50 font-serif">A magia deste salão foi perturbada...</div>}>
           {messages.length === 0 ? (
             <div className="h-full flex items-center justify-center">
               <div className="text-center space-y-6 max-w-xs animate-in fade-in zoom-in duration-1000">
@@ -639,7 +633,7 @@ export default function ChatRoom() {
             </div>
           )}
           <div ref={messagesEndRef} />
-        </MagicalErrorBoundary>
+        </ErrorBoundary>
       </div>
 
       {/* ── INPUT MONSTER QUALITY ── */}

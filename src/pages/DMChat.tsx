@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Send, Flame } from "lucide-react";
+import { ArrowLeft, Send } from "lucide-react";
 import SafeImage from "@/components/SafeImage";
 import { toast } from "sonner";
 
@@ -24,7 +24,6 @@ export default function DMChat() {
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [friendship, setFriendship] = useState<any>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   // Load partner profile
@@ -32,16 +31,7 @@ export default function DMChat() {
     if (!partnerId) return;
     supabase.from("profiles").select("*").eq("user_id", partnerId).single()
       .then(({ data }) => { if (data) setPartner(data); });
-    
-    // Load friendship streak
-    if (user && partnerId) {
-      supabase.from("friendships")
-        .select("*")
-        .or(`and(user_id.eq.${user.id},friend_id.eq.${partnerId}),and(user_id.eq.${partnerId},friend_id.eq.${user.id})`)
-        .maybeSingle()
-        .then(({ data }) => { if (data) setFriendship(data); });
-    }
-  }, [partnerId, user]);
+  }, [partnerId]);
 
   // Load messages
   const loadMessages = useCallback(async () => {
@@ -110,33 +100,6 @@ export default function DMChat() {
     setSending(false);
     if (error) { toast.error("Erro ao enviar mensagem"); return; }
     setText("");
-
-    // Update streak logic
-    if (friendship) {
-      const lastAt = friendship.last_interaction_at ? new Date(friendship.last_interaction_at) : null;
-      const now = new Date();
-      const isNewDay = !lastAt || lastAt.toDateString() !== now.toDateString();
-      
-      if (isNewDay) {
-        const { data: updated } = await supabase
-          .from("friendships")
-          .update({ 
-            streak_count: (friendship.streak_count || 0) + 1,
-            last_interaction_at: now.toISOString()
-          } as never)
-          .eq("id", friendship.id)
-          .select()
-          .single();
-        if (updated) {
-          setFriendship(updated);
-          if (updated.streak_count === 1) {
-            toast.success("🔥 Vínculo de Fogo iniciado!");
-          } else {
-            toast.success(`🔥 Streak de ${updated.streak_count} dias!`);
-          }
-        }
-      }
-    }
   };
 
   const handleKey = (e: React.KeyboardEvent) => {
@@ -165,16 +128,8 @@ export default function DMChat() {
               fallbackText={partner.full_name}
               className="w-10 h-10 rounded-full object-cover"
             />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <p className="font-heading text-sm text-foreground truncate">{partner.full_name}</p>
-                {friendship?.streak_count > 0 && (
-                  <div className="flex items-center gap-0.5 text-orange-500 animate-pulse">
-                    <Flame size={12} fill="currentColor" />
-                    <span className="text-[10px] font-bold">{friendship.streak_count}</span>
-                  </div>
-                )}
-              </div>
+            <div>
+              <p className="font-heading text-sm text-foreground">{partner.full_name}</p>
               <p className="text-xs text-muted-foreground">@{partner.username}</p>
             </div>
           </>

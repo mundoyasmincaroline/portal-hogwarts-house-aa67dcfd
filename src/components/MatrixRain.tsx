@@ -1,10 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-interface MatrixRainProps {
-  color?: string;
-}
-
-const MatrixRain: React.FC<MatrixRainProps> = ({ color = "#0F0" }) => {
+const MatrixRain: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -42,7 +38,7 @@ const MatrixRain: React.FC<MatrixRainProps> = ({ color = "#0F0" }) => {
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = color; 
+      ctx.fillStyle = "#0F0"; 
       ctx.font = `${fontSize}px monospace`;
 
       for (let i = 0; i < drops.length; i++) {
@@ -71,7 +67,7 @@ const MatrixRain: React.FC<MatrixRainProps> = ({ color = "#0F0" }) => {
       cancelAnimationFrame(animationId);
       window.removeEventListener("resize", handleResize);
     };
-  }, [color]);
+  }, []);
 
   return (
     <canvas

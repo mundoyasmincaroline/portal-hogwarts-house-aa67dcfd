@@ -60,20 +60,6 @@ export default function Landing() {
   if (timeOfDay === "morning") bgUrl = new URL('../assets/hogwarts_morning.png', import.meta.url).href;
   else if (timeOfDay === "afternoon") bgUrl = new URL('../assets/hogwarts_afternoon.png', import.meta.url).href;
 
-  const [timeLeft, setTimeLeft] = useState({ h: 47, m: 59, s: 59 });
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev.s > 0) return { ...prev, s: prev.s - 1 };
-        if (prev.m > 0) return { ...prev, m: prev.m - 1, s: 59 };
-        if (prev.h > 0) return { h: prev.h - 1, m: 59, s: 59 };
-        return prev;
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-background">
       <MagicalParticles />
@@ -107,7 +93,7 @@ export default function Landing() {
           </div>
 
           {/* Title */}
-          <h1 className="font-heading text-6xl sm:text-7xl md:text-9xl text-gold-gradient mb-4 tracking-tighter drop-shadow-[0_10px_40px_rgba(212,175,55,0.6)] animate-in fade-in zoom-in duration-1000">
+          <h1 className="font-heading text-6xl sm:text-7xl md:text-9xl text-gold-gradient mb-4 tracking-tighter drop-shadow-[0_10px_30px_rgba(212,175,55,0.4)] animate-in fade-in zoom-in duration-1000">
             Hogwarts House
           </h1>
 
@@ -155,12 +141,11 @@ export default function Landing() {
           </div>
 
           {/* Dynamic time-of-day card */}
-          <div className="glass rounded-2xl px-6 py-4 mb-6 max-w-md mx-auto border border-primary/20 text-center relative overflow-hidden group">
-             <div className="absolute inset-0 bg-primary/5 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+          <div className="glass rounded-2xl px-6 py-4 mb-6 max-w-md mx-auto border border-primary/20 text-center">
             <p className="text-primary font-heading text-xs tracking-widest uppercase mb-1">
               {timeOfDay === "morning" ? "Amanhecer Mágico" : timeOfDay === "afternoon" ? "Tarde em Hogwarts" : "Magia Noturna"}
             </p>
-            <p className="text-muted-foreground text-sm font-serif leading-relaxed relative z-10">
+            <p className="text-muted-foreground text-sm font-serif leading-relaxed">
               {timeOfDay === "morning"
                 ? "Os primeiros raios de sol iluminam as portas de carvalho do castelo. O Grande Salão desperta com o voo das corujas."
                 : timeOfDay === "afternoon"
@@ -172,13 +157,13 @@ export default function Landing() {
           {/* CTA */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8 px-4">
             <Button variant="magical" size="lg" onClick={() => navigate("/register")}
-              className="w-full sm:w-auto font-heading text-base px-10 py-6 h-auto shadow-[0_20px_50px_rgba(212,175,55,0.4)] hover:shadow-primary/60 transition-all duration-500 hover:-translate-y-1">
-              <Sparkles size={20} className="mr-2" />
-              SOLICITAR MINHA VAGA AGORA
-              <ChevronRight size={18} className="ml-1" />
+              className="w-full sm:w-auto font-heading text-base px-10 py-4 h-auto shadow-lg shadow-primary/20 hover:shadow-primary/40">
+              <Sparkles size={16} className="mr-2" />
+              Solicitar minha vaga
+              <ChevronRight size={16} className="ml-1" />
             </Button>
             <Button variant="outline" size="lg" onClick={() => navigate("/login")}
-              className="w-full sm:w-auto font-heading text-base px-8 py-6 h-auto border-border/50 hover:border-primary/40 bg-black/20 backdrop-blur-md">
+              className="w-full sm:w-auto font-heading text-base px-8 py-4 h-auto border-border/50 hover:border-primary/40">
               Já tenho conta
             </Button>
           </div>
@@ -267,23 +252,7 @@ export default function Landing() {
             <div className="flex-1 text-center md:text-left space-y-6">
               <div className="inline-flex items-center gap-3 bg-red-500/20 border border-red-500/40 rounded-full px-5 py-1.5 mb-2">
                 <Flame size={14} className="text-red-500 animate-pulse" />
-                <span className="text-xs font-heading text-red-100 uppercase tracking-[0.2em] font-bold">OFERTA DE LANÇAMENTO · TERMINA EM:</span>
-              </div>
-
-              {/* LIVE COUNTDOWN TIMER */}
-              <div className="flex justify-center md:justify-start gap-4 mb-4">
-                 {[
-                   { val: timeLeft.h, label: 'HORAS' },
-                   { val: timeLeft.m, label: 'MIN' },
-                   { val: timeLeft.s, label: 'SEG' }
-                 ].map((t, i) => (
-                   <div key={i} className="flex flex-col items-center">
-                     <div className="w-16 h-16 md:w-20 md:h-20 glass bg-red-500/20 border-red-500/30 rounded-2xl flex items-center justify-center shadow-xl">
-                        <span className="text-3xl md:text-4xl font-heading text-white">{t.val.toString().padStart(2, '0')}</span>
-                     </div>
-                     <span className="text-[10px] font-bold text-red-400 mt-2 tracking-widest">{t.label}</span>
-                   </div>
-                 ))}
+                <span className="text-xs font-heading text-red-100 uppercase tracking-[0.2em] font-bold">OFERTA DE LANÇAMENTO · LIMITADA</span>
               </div>
               
               <h2 className="font-heading text-4xl md:text-6xl text-white tracking-tighter leading-none">
@@ -305,8 +274,8 @@ export default function Landing() {
                 </div>
               </div>
               
-              <Button size="lg" variant="magical" onClick={() => navigate("/register")} className="h-24 px-12 rounded-2xl bg-gradient-to-r from-red-600 via-orange-600 to-red-600 border-none font-bold text-2xl shadow-[0_20px_60px_rgba(220,38,38,0.5)] hover:scale-105 active:scale-95 transition-all w-full sm:w-auto group">
-                ENTRAR E PEGAR AGORA <ChevronRight size={28} className="ml-2 group-hover:translate-x-2 transition-transform" />
+              <Button size="lg" variant="magical" onClick={() => navigate("/register")} className="h-20 px-12 rounded-2xl bg-gradient-to-r from-red-600 via-orange-600 to-red-600 border-none font-bold text-2xl shadow-[0_15px_40px_rgba(220,38,38,0.4)] hover:scale-105 active:scale-95 transition-all w-full sm:w-auto">
+                ENTRAR E PEGAR AGORA <ChevronRight size={24} className="ml-2" />
               </Button>
             </div>
             

@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "../lib/auth";
+import { useAuth } from "@/lib/auth";
 import { type House, HOUSES } from "@/lib/store";
 import { toast } from "sonner";
 import HouseCrest from "@/components/HouseCrest";
@@ -112,21 +112,21 @@ export default function Register() {
     <div className="relative min-h-screen flex items-center justify-center px-4 py-12 overflow-hidden">
       {/* ── CINEMATIC BACKGROUND ── */}
       <div className="absolute inset-0 z-0">
-         <img src="/hogwarts_entrance.png" className="w-full h-full object-cover opacity-40 scale-105" alt="Hogwarts Entrance" />
-         <div className="absolute inset-0 bg-gradient-to-br from-black via-black/80 to-blue-950/60" />
+         <img src="https://images.unsplash.com/photo-1547756536-cde3673fa2e5?auto=format&fit=crop&q=80&w=2000" className="w-full h-full object-cover opacity-20 grayscale scale-110" alt="Background" />
+         <div className="absolute inset-0 bg-gradient-to-br from-black via-black/80 to-blue-950/40" />
       </div>
       
       <MagicalParticles />
-      <div className="relative glass-dark rounded-[2.8rem] p-10 md:p-12 border border-white/5 space-y-10">
-          <div className="text-center mb-8">
-            <h1 className="font-heading text-5xl text-gold-gradient mb-3 drop-shadow-2xl tracking-tighter uppercase">Ficha de Matrícula</h1>
-            <p className="text-primary/60 text-xs font-bold uppercase tracking-[0.4em]">O Ministério da Magia exige sua identificação</p>
-            <div className="flex justify-center gap-4 mt-10">
-              {[1, 2, 3].map((s) => (
-                <div key={s} className={`h-2 rounded-full transition-all duration-700 ${step === s ? "w-16 bg-primary shadow-[0_0_20px_rgba(212,175,55,0.8)]" : step > s ? "w-8 bg-primary/40" : "w-8 bg-white/5"}`} />
-              ))}
-            </div>
+      <div className="glass rounded-[2.5rem] p-10 w-full max-w-xl z-20 animate-fade-in-up border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.8)]">
+        <div className="text-center mb-6">
+          <h1 className="font-heading text-3xl text-gold-gradient mb-2">Solicitar Vaga</h1>
+          <p className="text-muted-foreground text-sm">Preencha sua ficha de matrícula</p>
+          <div className="flex justify-center gap-2 mt-4">
+            {[1, 2, 3].map((s) => (
+              <div key={s} className={`w-8 h-1 rounded-full ${step >= s ? "bg-primary" : "bg-secondary"}`} />
+            ))}
           </div>
+        </div>
 
         {step === 1 && (
           <div className="space-y-4">
@@ -218,34 +218,34 @@ export default function Register() {
               {errors.captcha && <p className="text-destructive text-xs mt-1 font-bold">{errors.captcha}</p>}
             </div>
             {errors.general && <p className="text-destructive text-sm">{errors.general}</p>}
-            <Button variant="plaque" className="w-full h-20 rounded-[2rem] font-heading text-lg bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-600 border-none shadow-[0_20px_50px_rgba(234,179,8,0.4)] text-black" onClick={handleNext}>
-              PRÓXIMO → ESCOLHER CASA
+            <Button variant="magical" className="w-full font-heading" onClick={handleNext}>
+              Próximo → Escolher Casa
             </Button>
           </div>
         )}
 
         {step === 2 && (
-          <div className="space-y-6">
-            <p className="text-center text-primary/60 text-xs font-bold uppercase tracking-[0.3em] mb-4">Escolha sua linhagem de sangue</p>
-            <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-4">
+            <p className="text-center text-muted-foreground text-sm mb-4">Escolha a casa que mais combina com você</p>
+            <div className="grid grid-cols-2 gap-3">
               {houses.map((h) => (
                 <button
                   key={h.id}
                   onClick={() => setForm({ ...form, house: h.id })}
-                  className={`glass rounded-[2rem] p-6 text-center transition-all hover:scale-[1.05] ${form.house === h.id ? "ring-4 ring-primary animate-pulse-glow bg-primary/10 shadow-[0_0_30px_rgba(212,175,55,0.4)]" : "border-white/5"}`}
+                  className={`glass rounded-xl p-4 text-center transition-all hover:scale-[1.02] ${form.house === h.id ? "ring-2 ring-primary animate-pulse-glow" : ""}`}
                 >
                   <HouseCrest house={h.id} size="md" />
-                  <p className="font-heading text-lg mt-3 text-gold-gradient">{h.name}</p>
-                  <p className="text-[10px] text-muted-foreground mt-1 uppercase tracking-widest">{h.motto}</p>
+                  <p className="font-heading text-sm mt-2 text-foreground">{h.name}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{h.motto}</p>
                 </button>
               ))}
             </div>
-            {errors.house && <p className="text-destructive text-xs text-center font-bold">{errors.house}</p>}
-            {errors.general && <p className="text-destructive text-sm text-center font-bold bg-destructive/10 p-4 rounded-2xl border border-destructive/20">{errors.general}</p>}
-            <div className="flex gap-4 pt-4">
-              <Button variant="outline" className="flex-1 h-20 rounded-[2rem] font-heading border-white/10 hover:bg-white/5" onClick={() => setStep(1)}>← VOLTAR</Button>
-              <Button variant="plaque" className="flex-1 h-20 rounded-[2rem] font-heading text-lg bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-600 border-none shadow-[0_20px_50px_rgba(234,179,8,0.4)] text-black" onClick={handleSubmit} disabled={loading}>
-                {loading ? "ENVIANDO..." : "ENVIAR MATRÍCULA"}
+            {errors.house && <p className="text-destructive text-xs text-center">{errors.house}</p>}
+            {errors.general && <p className="text-destructive text-sm text-center font-bold bg-destructive/10 p-2 rounded-lg border border-destructive/20">{errors.general}</p>}
+            <div className="flex gap-3">
+              <Button variant="outline" className="flex-1 font-heading" onClick={() => setStep(1)}>← Voltar</Button>
+              <Button variant="magical" className="flex-1 font-heading" onClick={handleSubmit} disabled={loading}>
+                {loading ? "Enviando..." : "Enviar Matrícula"}
               </Button>
             </div>
           </div>

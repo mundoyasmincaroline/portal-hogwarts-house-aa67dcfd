@@ -109,49 +109,6 @@ function MembersTab({ currentUserId }: { currentUserId?: string }) {
     </div>
   );
 }
-// ---- Componente embutido: lista de membros da staff ----
-function StaffTab() {
-  const [staff, setStaff] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const load = async () => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("user_id, full_name, username, avatar_url, house, level, xp, last_seen, role, vip_plan")
-        .in("role", ["admin", "moderator"])
-        .order("role", { ascending: true });
-      setStaff((data || []).map(m => ({ ...m, online: isUserOnline(m) })));
-      setLoading(false);
-    };
-    load();
-  }, []);
-
-  return (
-    <div className="space-y-6">
-      <div className="text-center mb-8">
-         <h2 className="font-heading text-2xl text-gold-gradient">Equipe Elite de Hogwarts</h2>
-         <p className="text-sm text-muted-foreground">Bruxos responsáveis pela ordem, magia e estabilidade do portal.</p>
-      </div>
-
-      {loading ? (
-        <p className="text-center text-muted-foreground py-8 animate-pulse">Convocando o Conselho de Bruxos...</p>
-      ) : staff.length === 0 ? (
-        <p className="text-center text-muted-foreground py-8">Nenhum membro da equipe encontrado.</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {staff.map(m => (
-            <MemberCard
-              key={m.user_id}
-              member={m}
-              compact={false}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
 // -----------------------------------------------------------------------
 
 export default function Profile() {
@@ -168,7 +125,7 @@ export default function Profile() {
   const [userItems, setUserItems] = useState<any[]>([]);
   const [referrals, setReferrals] = useState<any[]>([]);
   const [loadingExtras, setLoadingExtras] = useState(false);
-  const [activeTab, setActiveTab] = useState<"about" | "fichas" | "friends" | "members" | "security" | "album" | "referral" | "achievements" | "inventory" | "staff">("about");
+  const [activeTab, setActiveTab] = useState<"about" | "fichas" | "friends" | "members" | "security" | "album" | "referral" | "achievements" | "inventory">("about");
 
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -503,14 +460,6 @@ export default function Profile() {
         )}
         {isMe && (
           <button 
-            onClick={() => setActiveTab("staff")} 
-            className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "staff" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-          >
-            Equipe 🛡️
-          </button>
-        )}
-        {isMe && (
-          <button 
             onClick={() => { setActiveTab("security"); setEditing(false); }} 
             className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "security" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
           >
@@ -537,7 +486,7 @@ export default function Profile() {
         )}
       </div>
 
-      <div className="glass rounded-[4rem] p-10 md:p-20 text-center relative overflow-hidden border-2 border-primary/20 shadow-[0_40px_120px_rgba(0,0,0,0.6)]">
+      <div className="glass rounded-[3rem] p-10 md:p-16 text-center relative overflow-hidden border-2 border-primary/20 shadow-[0_30px_100px_rgba(0,0,0,0.5)]">
         {/* Floating Magic Dust */}
         <div className="absolute inset-0 pointer-events-none opacity-20">
            <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white rounded-full animate-float-slow blur-[1px]" />
@@ -550,7 +499,7 @@ export default function Profile() {
             <SafeImage
               src={profile.avatar_url}
               alt={profile.full_name}
-              className={`w-full h-full rounded-[3.5rem] object-cover animate-pulse-glow ${user?.email === 'paulormorpheus21@gmail.com' ? 'border-4 border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.5)]' : 'border-4 border-white/10'}`}
+              className={`w-full h-full rounded-full object-cover animate-pulse-glow ${user?.email === 'paulormorpheus21@gmail.com' ? 'border-2 border-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.5)]' : ''}`}
               fallbackText={profile.full_name[0]}
             />
             {user?.email === 'paulormorpheus21@gmail.com' && (
@@ -572,11 +521,6 @@ export default function Profile() {
           <>
             <h1 className="font-heading text-2xl text-foreground flex items-center justify-center gap-2 flex-wrap">
               {profile.full_name}
-              {(profile as any).is_verified && (
-                <div className={`w-5 h-5 rounded-full flex items-center justify-center shadow-lg ${user?.email === 'paulormorpheus21@gmail.com' ? 'bg-yellow-500 shadow-yellow-500/50' : 'bg-blue-500 shadow-blue-500/50'}`}>
-                  <Check size={12} className="text-white" strokeWidth={4} />
-                </div>
-              )}
               <MedalBadge xp={profile.xp} />
               {/* Badge VIP */}
               {profile.vip_plan === "founder" && (
@@ -593,40 +537,19 @@ export default function Profile() {
                   [ THE_ARCHITECT ]
                 </span>
               )}
-              {user?.email === 'paulormorpheus21@gmail.com' && (
-                <span className="text-[10px] font-heading px-2 py-0.5 rounded-full bg-cyan-950/30 text-cyan-400 border border-cyan-500/40 uppercase tracking-widest animate-pulse">
-                   Monster Elite 🕶️
-                </span>
-              )}
             </h1>
             <p className="text-muted-foreground text-sm">@{profile.username}</p>
             <p className="text-sm text-muted-foreground mt-3 font-serif italic">{profile.bio || "Sem bio ainda..."}</p>
             {/* Saldo de Galeões — visível apenas no próprio perfil */}
             {isMe && (
-              <div className="mt-3 flex flex-wrap justify-center gap-2">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-yellow-500/30 bg-yellow-900/10 text-yellow-400 text-sm font-heading">
-                  <span className="flex items-center gap-2">
-                    <MagicalGaleon size="xs" /> {user?.email === 'paulormorpheus21@gmail.com' ? '∞' : ((profile as any).galeons || 0).toLocaleString("pt-BR")} Galeões
-                  </span>
-                </div>
-                
-                {profile.mood && (
-                  <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border transition-all animate-pulse ${
-                    profile.mood === 'Euforia' ? 'border-yellow-400 bg-yellow-400/10 text-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.3)]' :
-                    profile.mood === 'Ódio' ? 'border-red-600 bg-red-600/10 text-red-500 shadow-[0_0_10px_rgba(220,38,38,0.3)]' :
-                    profile.mood === 'Tristeza' ? 'border-blue-400 bg-blue-400/10 text-blue-400 shadow-[0_0_10px_rgba(96,165,250,0.3)]' :
-                    profile.mood === 'Paz' ? 'border-emerald-400 bg-emerald-400/10 text-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.3)]' :
-                    'border-primary/30 bg-primary/10 text-primary'
-                  }`}>
-                    <span className="text-[10px] font-heading uppercase tracking-widest flex items-center gap-1.5">
-                      <Sparkles size={10} /> {profile.mood}
-                    </span>
-                  </div>
-                )}
+              <div className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-yellow-500/30 bg-yellow-900/10 text-yellow-400 text-sm font-heading">
+              <span className="flex items-center gap-2">
+                <MagicalGaleon size="xs" /> {user?.email === 'paulormorpheus21@gmail.com' ? '∞' : ((profile as any).galeons || 0).toLocaleString("pt-BR")} Galeões
+              </span>
               </div>
             )}
             
-            <div className="mt-4 flex flex-wrap justify-center gap-2">
+            <div className="mt-4 flex justify-center gap-2">
               {isMe ? (
                 <>
                   <Button variant="magical" size="sm" className="font-heading text-xs" onClick={startEdit}>
@@ -635,34 +558,6 @@ export default function Profile() {
                   {isAdmin && (
                     <Button variant="outline" size="sm" className="font-heading text-xs text-primary border-primary hover:bg-primary/10" onClick={() => setAdminEditModal(true)}>
                       🪄 Edição Suprema (Admin)
-                    </Button>
-                  )}
-                  {!(profile as any).is_verified && (
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="font-heading text-xs border-blue-500/40 text-blue-400 hover:bg-blue-500/10"
-                      onClick={async () => {
-                        const currentGaleons = (profile as any).galeons || 0;
-                        if (currentGaleons < 300) {
-                          toast.error("Galeões insuficientes! A verificação custa 300 Galeões.");
-                          return;
-                        }
-                        
-                        const confirm = window.confirm("Deseja verificar sua identidade por 300 Galeões? Isso lhe dará o Selo Azul de Autenticidade.");
-                        if (confirm) {
-                          const { error } = await supabase.rpc('deduct_galeons', { _user_id: user!.id, _amount: 300, _reason: 'identity_verification' });
-                          if (error) {
-                             toast.error("Erro ao processar pagamento.");
-                          } else {
-                             await supabase.from('profiles').update({ is_verified: true } as never).eq('user_id', user!.id);
-                             toast.success("IDENTIDADE VERIFICADA! O Selo Azul foi adicionado ao seu perfil. ✨");
-                             window.location.reload();
-                          }
-                        }
-                      }}
-                    >
-                      🛡️ Verificar Identidade (300 🪙)
                     </Button>
                   )}
                 </>
@@ -771,74 +666,69 @@ export default function Profile() {
       {activeTab === "about" ? (
         <>
           <div className="grid grid-cols-4 gap-3">
-            <div className="glass rounded-[2rem] p-6 text-center border-white/5 hover:bg-white/5 transition-colors">
+            <div className="glass rounded-xl p-4 text-center">
               <p className="text-xl font-heading text-primary">{profile.xp}</p>
               <p className="text-[8px] text-muted-foreground uppercase">XP Total</p>
             </div>
-            <div className="glass rounded-[2rem] p-6 text-center border-white/5">
+            <div className="glass rounded-xl p-4 text-center">
               <p className="text-xl font-heading text-foreground">{levelInfo.level}</p>
               <p className="text-[8px] text-muted-foreground uppercase">Nível</p>
             </div>
-            <div className="glass rounded-[2rem] p-6 text-center border-blue-500/20 bg-blue-500/5">
+            <div className="glass rounded-xl p-4 text-center border-blue-500/20 bg-blue-500/5">
               <p className="text-xl font-heading text-blue-400">{Math.floor(profile.xp / 10 + userItems.length * 50)}</p>
               <p className="text-[8px] text-blue-300/60 uppercase">Força Mágica</p>
             </div>
-            <div className="glass rounded-[2rem] p-6 text-center border-white/5">
+            <div className="glass rounded-xl p-4 text-center">
               <p className="text-xl font-heading text-foreground">{userBadges.length}</p>
               <p className="text-[8px] text-muted-foreground uppercase">Badges</p>
             </div>
           </div>
 
-          <div className="glass rounded-[2.5rem] p-8 border border-white/5 bg-gradient-to-br from-primary/5 to-transparent shadow-xl">
-            <h3 className="font-heading text-sm text-primary mb-5 flex items-center gap-2"><Trophy size={16} /> Progresso Mágico</h3>
+          <div className="glass rounded-xl p-4">
+            <h3 className="font-heading text-sm text-primary mb-3">Progresso</h3>
             <XPBar xp={profile.xp} />
-            <p className="text-[10px] text-muted-foreground mt-4 text-center uppercase tracking-widest font-bold">
-              {levelInfo.name} · Faltam {levelInfo.next - profile.xp} XP para o Nível {levelInfo.level + 1}
+            <p className="text-xs text-muted-foreground mt-2 text-center">
+              {levelInfo.name} → Faltam {levelInfo.next - profile.xp} XP para o próximo nível
             </p>
           </div>
 
-          <div className="glass rounded-[2.5rem] p-8 border border-white/5 hover:border-primary/20 transition-all group">
-            <div className="flex items-center gap-4">
-              <div className="group-hover:rotate-12 transition-transform duration-700">
-                <HouseCrest house={profile.house} size="md" />
-              </div>
+          <div className="glass rounded-xl p-4">
+            <div className="flex items-center gap-3">
+              <HouseCrest house={profile.house} size="md" />
               <div>
-                <h3 className="font-heading text-xl text-foreground">{house.name}</h3>
+                <h3 className="font-heading text-foreground">{house.name}</h3>
                 <p className="text-xs text-muted-foreground italic font-serif">"{house.motto}"</p>
               </div>
             </div>
           </div>
 
-          <div className="glass rounded-[2.5rem] p-8 border border-white/5">
-            <h3 className="font-heading text-sm text-primary mb-5 flex items-center gap-2"><Info size={16} /> Registros Oficiais</h3>
-            <div className="space-y-4 text-sm">
-              <div className="flex justify-between items-center border-b border-white/5 pb-2">
-                <span className="text-muted-foreground uppercase text-[10px] font-bold tracking-widest">Idade</span>
-                <span className="text-foreground font-heading">{profile.age} ANOS</span>
+          <div className="glass rounded-xl p-4">
+            <h3 className="font-heading text-sm text-primary mb-3">Informações</h3>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Idade</span>
+                <span className="text-foreground">{profile.age} anos</span>
               </div>
-              <div className="flex justify-between items-center border-b border-white/5 pb-2">
-                <span className="text-muted-foreground uppercase text-[10px] font-bold tracking-widest">Matrícula</span>
-                <span className="text-foreground font-heading">{new Date(profile.created_at).toLocaleDateString("pt-BR")}</span>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Membro desde</span>
+                <span className="text-foreground">{new Date(profile.created_at).toLocaleDateString("pt-BR")}</span>
               </div>
-              <div className="flex justify-between items-center text-sm py-2">
-                <span className="text-muted-foreground uppercase text-[10px] font-bold tracking-widest">Status de Conexão</span>
-                <span className="text-foreground font-bold flex items-center gap-2">
-                   <div className={`w-2 h-2 rounded-full ${isUserOnline(profile) ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]' : 'bg-zinc-600'}`} />
-                   {isUserOnline(profile) ? "ONLINE" : "OFFLINE"}
-                </span>
+              <div className="flex justify-between items-center text-sm py-2 border-b border-border">
+                <span className="text-muted-foreground">Status</span>
+                <span className="text-foreground">{isUserOnline(profile) ? "🟢 Online" : "⚫ Offline"}</span>
               </div>
             </div>
           </div>
 
-          <div className="glass rounded-[2.5rem] p-8 border border-white/5">
-            <h3 className="font-heading text-sm text-primary mb-5 flex items-center gap-2"><ShoppingBag size={16} /> Coleção Borgin & Burkes</h3>
+          <div className="glass rounded-xl p-4">
+            <h3 className="font-heading text-sm text-primary mb-3">Coleção Borgin & Burkes</h3>
             {userBadges.length === 0 ? (
-              <p className="text-xs text-muted-foreground text-center italic py-4 opacity-50">"O Cofre está vazio. Busque glória no castelo."</p>
+              <p className="text-xs text-muted-foreground text-center italic py-2">Nenhuma insígnia adquirida ainda.</p>
             ) : (
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-3">
                 {userBadges.map(badge => (
-                  <div key={badge.id} className="bg-white/5 rounded-2xl p-4 flex items-center justify-center gap-2 border border-white/10 hover:border-primary/40 transition-all shadow-inner group/badge" title={badge.name}>
-                    <span className="text-3xl drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] group-hover/badge:scale-125 transition-transform">{badge.icon}</span>
+                  <div key={badge.id} className="bg-secondary/50 rounded-lg p-2 flex items-center justify-center gap-2 border border-border" title={badge.name}>
+                    <span className="text-2xl drop-shadow-md">{badge.icon}</span>
                   </div>
                 ))}
               </div>
@@ -1100,8 +990,6 @@ export default function Profile() {
             </div>
           )}
         </div>
-      ) : activeTab === "staff" && isMe ? (
-        <StaffTab />
       ) : activeTab === "security" && isMe ? (
         <div className="glass rounded-2xl p-6">
           <h2 className="font-heading text-xl text-foreground mb-1">🔐 Segurança e Acesso</h2>

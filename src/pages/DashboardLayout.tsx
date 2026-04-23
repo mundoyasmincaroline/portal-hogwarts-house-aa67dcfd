@@ -5,11 +5,8 @@ import {
   Shield, Swords, BookMarked, Library, ShoppingBag, ScrollText,
   Settings, LogOut, Volume2, VolumeX, RefreshCw, Menu, Users,
   Coins, Lock, Wallet, Map as MapIcon, Sparkles, Zap, Image as ImageIcon,
-  MessageSquare, Crown, Newspaper, Coffee, GraduationCap, Train,
-  LayoutDashboard, Heart, Gift, Smartphone
+  MessageSquare, Crown, Newspaper, Coffee, GraduationCap, Train
 } from "lucide-react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";
 import MagicalIcon from "@/components/MagicalIcon";
@@ -26,13 +23,30 @@ import MagicalGaleon from "@/components/MagicalGaleon";
 import CastleEntrance from "@/pages/CastleEntrance";
 import EngagementBot from "@/components/EngagementBot";
 import MagicalCelebration from "@/components/MagicalCelebration";
-import AnitaPresence from "@/components/AnitaPresence";
-import EmmaPresence from "@/components/EmmaPresence";
-import HeloPresence from "@/components/HeloPresence";
-import ThottyPresence from "@/components/ThottyPresence";
+
+import PendingApproval from "@/pages/PendingApproval";
+import RulesAgreement from "@/pages/RulesAgreement";
+import CharacterSelection from "@/pages/CharacterSelection";
+import DailyEncounter from "@/components/DailyEncounter";
+import NotificationBanner from "@/components/NotificationBanner";
+import { useAchievements } from "@/lib/useAchievements";
+import FilchWatcher from "@/components/FilchWatcher";
+import MagicalEventSystem from "@/components/MagicalEventSystem";
+import DopamineTriggers, { LevelUpManager } from "@/components/DopamineTriggers";
+import MagicalPartyOverlay from "@/components/MagicalPartyOverlay";
+import GlobalChallengeWatcher from "@/components/GlobalChallengeWatcher";
+import DailyRewardSystem from "@/components/DailyRewardSystem";
+import MaraudersMap from "@/components/MaraudersMap";
+// import MagicalActivityFeed from "@/components/MagicalActivityFeed";
+// import TimedMysteryChest from "@/components/TimedMysteryChest";
+import HouseCupWidget from "@/components/HouseCupWidget";
+import MagicalAtmosphere from "@/components/MagicalAtmosphere";
+import DailyProphetTicker from "@/components/DailyProphetTicker";
+import Corujoteca from "@/components/Corujoteca";
+import MagicalEncounters from "@/components/MagicalEncounters";
+import FilchShadow from "@/components/FilchShadow";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
-import MagicAdBanner from "@/components/MagicAdBanner";
-import ProtocoloBFF from "@/components/ProtocoloBFF";
+import EmmaPresence from "@/components/EmmaPresence";
 
 
 const NAV_ITEMS = [
@@ -42,562 +56,507 @@ const NAV_ITEMS = [
   { icon: <MagicalIcon icon={User} size="xs" color="#a855f7" />, label: "Meu Perfil", path: "/dashboard/profile" },
   { icon: <MagicalIcon icon={MessageCircle} size="xs" color="#3b82f6" />, label: "Mensagens", path: "/dashboard/dm" },
   { icon: <MagicalIcon icon={Users} size="xs" color="#ec4899" />, label: "Amigos", path: "/dashboard/friends" },
-  { icon: <MagicalIcon icon={Camera} size="xs" color="#f97316" />, label: "Câmera", path: "/dashboard/camera" },
-  { icon: <MagicalIcon icon={Film} size="xs" color="#ef4444" />, label: "Cinema", path: "/dashboard/cinema" },
-  { icon: <MagicalIcon icon={Trophy} size="xs" color="#eab308" />, label: "Torneio", path: "/dashboard/tournament" },
-  { icon: <MagicalIcon icon={Shield} size="xs" color="#6366f1" />, label: "Salão", path: "/dashboard/hall" },
-  { icon: <MagicalIcon icon={Swords} size="xs" color="#ef4444" />, label: "Duelo", path: "/dashboard/duel" },
-  { icon: <MagicalIcon icon={BookMarked} size="xs" color="#10b981" />, label: "Aulas", path: "/dashboard/classes" },
-  { icon: <MagicalIcon icon={Library} size="xs" color="#f59e0b" />, label: "Biblioteca", path: "/dashboard/library" },
-  { icon: <MagicalIcon icon={ShoppingBag} size="xs" color="#a855f7" />, label: "Beco Diagonal", path: "/dashboard/store" },
-  { icon: <MagicalIcon icon={ImageIcon} size="xs" color="#f97316" />, label: "Álbum Real", path: "/dashboard/album" },
+  { icon: <MagicalIcon icon={Library} size="xs" color="#94a3b8" />, label: "Membros", path: "/dashboard/members" },
+  { icon: <MagicalIcon icon={Swords} size="xs" color="#ef4444" />, label: "Chats RPG", path: "/dashboard/chats" },
+  { icon: <MagicalIcon icon={Camera} size="xs" color="#f43f5e" />, label: "InstaHogwarts", path: "/dashboard/instahogwarts" },
+  { icon: <MagicalIcon icon={Film} size="xs" color="#fb923c" />, label: "Hogwarts Cine", path: "/dashboard/cinema" },
+  { icon: <MagicalIcon icon={Trophy} size="xs" color="#fbbf24" />, label: "Ranking", path: "/dashboard/ranking" },
+  { icon: <MagicalIcon icon={Shield} size="xs" color="#10b981" />, label: "Casas", path: "/dashboard/houses" },
+  { icon: <MagicalIcon icon={Zap} size="xs" color="#a855f7" />, label: "Desafios", path: "/dashboard/challenges" },
+  { icon: <MagicalIcon icon={Sparkles} size="xs" color="#d4af37" />, label: "Sagas de Hogwarts", path: "/dashboard/sagas" },
+  { icon: <MagicalIcon icon={Swords} size="xs" color="#ef4444" />, label: "Salão de Jogos", path: "/dashboard/games" },
+  { icon: <MagicalIcon icon={Sparkles} size="xs" color="#f472b6" />, label: "Eventos Mágicos", path: "/dashboard/events" },
+  { icon: <MagicalIcon icon={GraduationCap} size="xs" color="#3b82f6" />, label: "Aulas", path: "/dashboard/classes" },
+  { icon: <MagicalIcon icon={ImageIcon} size="xs" color="#94a3b8" />, label: "Álbum", path: "/dashboard/album" },
+  { icon: <MagicalIcon icon={ShoppingBag} size="xs" color="#f59e0b" />, label: "Loja", path: "/dashboard/shop" },
+  { icon: <MagicalIcon icon={Wallet} size="xs" color="#10b981" />, label: "Carteira", path: "/dashboard/wallet" },
   { icon: <MagicalIcon icon={ScrollText} size="xs" color="#94a3b8" />, label: "Regras", path: "/dashboard/rules" },
   { icon: <MagicalIcon icon={Lock} size="xs" color="#ef4444" />, label: "Azkaban", path: "/dashboard/azkaban" },
-  { icon: <MagicalEmoji emoji="💖" size="xs" />, label: "Mundo BFF", path: "/dashboard/bff-world", isBFF: true },
-  { icon: <MagicalEmoji emoji="🏆" size="xs" />, label: "Cálice das Decisões", path: "/dashboard/decisions", isFamily: true },
-  { icon: <MagicalEmoji emoji="🛡️" size="xs" />, label: "Cofre de Zion", path: "/dashboard/zion", isZion: true },
-  { icon: <MagicalIcon icon={Zap} size="xs" color="#d97706" />, label: "Revolution", path: "/dashboard/revolution", isRevolution: true, isAdmin: true },
-  { icon: <MagicalIcon icon={LayoutDashboard} size="xs" color="#0F0" />, label: "Matrix Portal", path: "/dashboard/matrix", isMatrix: true, isAdmin: true },
 ];
 
 
+const ADMIN_ITEMS = [
+  { icon: <MagicalEmoji emoji="⚙️" size="xs" />, label: "Admin", path: "/dashboard/admin" },
+  { icon: <MagicalEmoji emoji="💰" size="xs" />, label: "Finanças", path: "/dashboard/admin/finance" },
+];
+
+const REVOLUTION_ITEM = { icon: <MagicalEmoji emoji="🕶️" size="xs" />, label: "Revolution", path: "/dashboard/matrix" };
+
+
 export default function DashboardLayout() {
-  const { user, profile, logout, updateProfile, isAdmin } = useAuth();
-  const navigate = useNavigate();
+  const { user, profile, isAdmin, isLoading, logout, pingPresence } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [unreadDMs, setUnreadDMs] = useState(0);
+  const [mapOpen, setMapOpen] = useState(false);
+  const [encounterDone, setEncounterDone] = useState(false);
+  const [soundOn, setSoundOn] = useState(isSoundEnabled());
+  const [dmUnread, setDmUnread] = useState(0);
+  const [hasCharacters, setHasCharacters] = useState<boolean | null>(null); // null = still loading
 
-  const username = profile?.username?.toLowerCase() || '';
-  const email = user?.email?.toLowerCase() || '';
-  
-  const isArchitect = username === 'morpheus' || 
-                      username === 'arquiteto' ||
-                      email.includes('paulomorpheus') ||
-                      email.includes('paulormorpheus') ||
-                      email === 'yasmin.caroline.m@gmail.com';
+  // Auto-conquistas baseadas em XP e nível
+  useAchievements(user?.id, profile?.xp ?? 0, profile?.level ?? 1);
 
-  const isYasmin = username.includes('yasmin') || email === 'yasmin.caroline.m@gmail.com';
-  const isCarol = username.includes('carol') || email.includes('carol');
-  const isFamily = isArchitect || isYasmin || isCarol;
-
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true;
-
-  const filteredNavItems = NAV_ITEMS.filter(item => {
-    if (item.isAdmin && !isAdmin) return false;
-    return true;
-  });
-
+  // Verificar se usuário tem personagens (pega membros antigos sem ficha)
   useEffect(() => {
-    if (user) {
-      countUnread();
-      const dmChannelName = `dm_unread_badge_${Math.random().toString(36).substring(7)}`;
-      const ch = supabase.channel(dmChannelName)
-        .on("postgres_changes", { event: "*", schema: "public", table: "dm_messages" }, countUnread)
-        .subscribe();
-      
-      // PROTOCOLO JARVIS: Monitoramento Global Realtime para o Arquiteto
-      let jarvisChannel: any = null;
-      if (profile?.username === 'morpheus') {
-        const jarvisChannelName = `jarvis-monitor_${Math.random().toString(36).substring(7)}`;
-        jarvisChannel = supabase
-          .channel(jarvisChannelName)
-          .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'profiles' }, payload => {
-            toast.info("NOVO MEMBRO DETECTADO", {
-              description: `Um novo bruxo (${payload.new.full_name}) acaba de cruzar os portões de Hogwarts.`,
-              duration: 10000,
-            });
-          })
-          .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications' }, payload => {
-            if (payload.new.title?.includes('Venda') || payload.new.title?.includes('Galeões')) {
-              toast.success("TRANSAÇÃO CONCLUÍDA", {
-                description: payload.new.message,
-                duration: 15000,
-                icon: '💰'
-              });
-            }
-          })
-          .subscribe();
+    if (!user) return;
+    const checkChars = async () => {
+      try {
+        const { count, error } = await supabase
+          .from("characters")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", user.id);
+        
+        if (error) throw error;
+        setHasCharacters((count ?? 0) > 0);
+      } catch (err) {
+        console.error("Erro ao verificar personagens:", err);
+        // Em caso de erro, assume que não tem para não travar a tela
+        setHasCharacters(false);
       }
-
-      return () => { 
-        console.log("DASHBOARD_LAYOUT: Limpando canais realtime");
-        if (ch) supabase.removeChannel(ch); 
-        if (jarvisChannel) supabase.removeChannel(jarvisChannel);
-      };
-    }
+    };
+    checkChars();
   }, [user?.id]);
 
-  async function countUnread() {
-    if (!user) return;
-    const { count } = await supabase.from("dm_messages")
-      .select("*", { count: "exact", head: true })
-      .eq("receiver_id", user.id)
-      .eq("read", false);
-    setUnreadDMs(count || 0);
-  }
-
-  // Daily login streak — concede XP uma vez por dia e Processa Indicações Pendentes
+  // DM unread badge
   useEffect(() => {
     if (!user) return;
-    const lastLogin = localStorage.getItem(`last_login_${user.id}`);
-    const today = new Date().toISOString().split("T")[0];
+    const countUnread = async () => {
+      const { count } = await supabase
+        .from("dm_messages")
+        .select("*", { count: "exact", head: true })
+        .eq("receiver_id", user.id)
+        .eq("read", false);
+      setDmUnread(count || 0);
+    };
+    countUnread();
+    const ch = supabase.channel("dm_unread_badge")
+      .on("postgres_changes", { event: "*", schema: "public", table: "dm_messages" }, countUnread)
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [user]);
 
-    if (lastLogin !== today) {
-      localStorage.setItem(`last_login_${user.id}`, today);
-      supabase.rpc("increment_xp", { amount: 10, user_id: user.id }).then(() => {
-        toast.success("Bônus diário!", { description: "Você ganhou +10 XP por visitar Hogwarts hoje! ✨" });
-      });
-    }
+  // Daily login streak — concede XP uma vez por dia
+  useEffect(() => {
+    if (!user || !profile) return;
+    const key = `daily_login_${user.id}`;
+    const today = new Date().toDateString();
+    const lastLogin = localStorage.getItem(key);
+    if (lastLogin === today) return; // já ganhou hoje
 
-    // Processamento de Indicação (Protocolo Viral)
+    const awardStreak = async () => {
+      const streakKey = `streak_${user.id}`;
+      const lastDate = localStorage.getItem(streakKey);
+      const yesterday = new Date(Date.now() - 86400000).toDateString();
+      
+      // Calcular streak atual
+      const currentStreak = (() => {
+        const saved = localStorage.getItem(`streak_count_${user.id}`);
+        if (lastDate === yesterday) return (parseInt(saved || "0") + 1);
+        return 1;
+      })();
+      
+      localStorage.setItem(streakKey, today);
+      localStorage.setItem(`streak_count_${user.id}`, String(currentStreak));
+      localStorage.setItem(key, today);
+      
+      // XP escalona com o streak (máx 7 dias = 75 XP)
+      const xpBonus = Math.min(25 + (currentStreak - 1) * 5, 75);
+      await supabase.rpc("award_xp_action", { _action: "daily_login", _user_id: user.id, _xp: xpBonus });
+
+      // 🪙 Galeões pelo login (5 base + 2 por dia de streak, máx 15)
+      const galeonsBonus = Math.min(5 + (currentStreak - 1) * 2, 15);
+      supabase.rpc("award_galeons", { _user_id: user.id, _amount: galeonsBonus, _reason: "daily_login" }).then(() => {});
+      
+      const streakMsg = currentStreak > 1 ? ` 🔥 ${currentStreak} dias seguidos!` : "";
+      toast.success(`☀️ Bom dia, ${profile.full_name?.split(" ")[0]}! +${xpBonus} XP pela sua presença diária!${streakMsg}`, { duration: 4000 });
+      
+      // Check level-up: refetch profile after xp
+      setTimeout(async () => {
+        const { data: fresh } = await supabase.from("profiles").select("level, xp").eq("user_id", user.id).single();
+        if (fresh && fresh.level > (profile.level || 1)) {
+          toast(
+            <div className="text-center">
+              <div className="text-3xl mb-1">⚡</div>
+              <p className="font-heading text-primary font-bold">NÍVEL {fresh.level}!</p>
+              <p className="text-xs text-muted-foreground">Você subiu de nível, bruxo(a)!</p>
+            </div>,
+            { duration: 6000 }
+          );
+        }
+      }, 2000);
+    };
+    awardStreak();
+  }, [user, profile]);
+
+  const handleToggleSound = () => {
+    setSoundOn(toggleSound());
+  };
+
+  useEffect(() => {
+    playMagicSound();
+    
+    // Morpheus Security Protocol Alert
+    setTimeout(() => {
+      toast(
+        <div className="font-mono text-green-500 bg-black p-1 w-full">
+          <p className="font-bold border-b border-green-500/50 mb-1 flex justify-between">
+            <span>&gt; MORPHEUS_PROTOCOL</span>
+            <span className="text-red-500">ACTIVE</span>
+          </p>
+          <p className="text-xs">&gt; System Secured & Encrypted.</p>
+          <p className="text-xs">&gt; Tracking all unauthorized access...</p>
+        </div>,
+        { duration: 5000, className: "bg-black border border-green-500 rounded-none p-0" }
+      );
+    }, 1500);
+  }, []);
+
+  useEffect(() => {
+    if (!isLoading && !user) navigate("/login");
+  }, [isLoading, user, navigate]);
+
+  // Heartbeat de presença + offline ao sair
+  useEffect(() => {
+    if (!user) return;
+    pingPresence();
+    const interval = setInterval(pingPresence, 30000);
+    const handleBeforeUnload = () => {
+      navigator.sendBeacon &&
+        supabase.from("profiles").update({ online: false } as never).eq("user_id", user.id);
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      supabase.from("profiles").update({ online: false } as never).eq("user_id", user.id);
+    };
+  }, [user, pingPresence]);
+
+  // Sistema de Recrutamento (Referral)
+  useEffect(() => {
     const processReferral = async () => {
+      if (!user || !profile) return;
+      
+      // 1. Registra o convite se o usuário acabou de se cadastrar com um código
       const pendingRef = localStorage.getItem("pending_referral");
-      if (pendingRef && user) {
-        try {
-          console.log("REVOLUTION REFERRAL: Processando convite de:", pendingRef);
-          
-          // 1. Vincular o usuário ao inviter via RPC
-          const { data, error } = await supabase.rpc("complete_referral_action", { 
-            _invited_id: user.id 
-          });
+      if (pendingRef) {
+        const { data: inviter } = await supabase.from("profiles").select("user_id").eq("username", pendingRef).single();
+        if (inviter) {
+          await supabase.from("referrals").insert({
+            inviter_id: inviter.user_id,
+            invited_id: user.id
+          } as never);
+        }
+        localStorage.removeItem("pending_referral");
+      }
 
-          if (error) {
-            console.warn("Referral already processed or error:", error.message);
-          } else {
-            toast.success("MAGIA DE RECRUTAMENTO!", {
-              description: `Você entrou via convite de @${pendingRef}! Recompensas creditadas para ambos.`,
-              icon: "🤝"
-            });
-          }
-          
-          // Limpar para não processar de novo
-          localStorage.removeItem("pending_referral");
-        } catch (err) {
-          console.error("Erro ao processar indicação:", err);
+      // 2. Anti-Burla: Se chegou no Nível 2, conclui o convite
+      if (profile.level >= 2) {
+        const { data: ref } = await supabase.from("referrals").select("status").eq("invited_id", user.id).maybeSingle();
+        if (ref && ref.status === 'pending') {
+          await supabase.rpc("complete_referral_action", { _invited_id: user.id });
         }
       }
     };
-
     processReferral();
-  }, [user]);
+  }, [user, profile]);
 
-  const [showWelcome, setShowWelcome] = useState(false);
-
-  useEffect(() => {
-    if (profile && profile.has_seen_intro === false) {
-      setShowWelcome(true);
-    }
-  }, [profile]);
-
-  const claimWelcomeGift = async () => {
-    if (!user || !profile) return;
-    
-    try {
-      // 1. Dar 500 Galeões (246500 Nuques)
-      const currentGaleons = profile.galeons || 0;
-      const newTotal = currentGaleons + 246500;
-      
-      const { error: gErr } = await supabase
-        .from("profiles")
-        .update({ galeons: newTotal } as any)
-        .eq("user_id", user.id);
-      
-      if (gErr) throw gErr;
-
-      // 2. Dar o Baú Épico
-      await supabase.from("user_items").insert({ 
-        user_id: user.id, 
-        item_id: "mq_item_chest_epic" 
-      } as any);
-
-      // 3. Marcar como visto para não repetir
-      await updateProfile({ has_seen_intro: true });
-      
-      setShowWelcome(false);
-      toast.success("BÔNUS DE BOAS-VINDAS RESGATADO!", {
-        description: "500 Galeões e 1 Baú Épico foram adicionados ao seu cofre! 🏰✨",
-        duration: 8000
-      });
-    } catch (err: any) {
-      toast.error("Erro ao resgatar presente: " + err.message);
-    }
-  };
-
-  const handleLogout = async () => {
-    await logout();
-    navigate("/");
-  };
-
-  useEffect(() => {
-    // Migração de URL: Detecta se o usuário está no endereço antigo da Lovable
-    if (window.location.hostname.includes('lovable.app')) {
-      toast.info("NOVA VERSÃO DISPONÍVEL", {
-        description: "Você está acessando via link temporário. Por favor, utilize o domínio oficial para garantir que todas as funções (como PWA e Pagamentos) funcionem corretamente.",
-        duration: 20000,
-      });
-    }
-  }, []);
-
-  if (!user) {
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1547756536-cde3673fa2e5?q=80&w=2000')] opacity-10 grayscale" />
-        <div className="relative z-10 flex flex-col items-center gap-6">
-           <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
-           <p className="text-primary font-heading tracking-widest animate-pulse">SINCRONIZANDO COM ZION...</p>
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="text-4xl animate-float mb-4">⚡</div>
+          <p className="font-heading text-muted-foreground">Carregando portal...</p>
         </div>
       </div>
     );
   }
 
-  const currentHouse = (Object.values(HOUSES) as any[]).find((h) => h.id === profile?.house) || Object.values(HOUSES)[0];
+  if (!user || !profile) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="text-4xl animate-pulse mb-4">🔮</div>
+          <p className="font-heading text-muted-foreground text-lg">Despertando sua magia...</p>
+          <p className="text-xs text-muted-foreground/50 mt-2">Se esta tela persistir por muito tempo, verifique sua conexão.</p>
+        </div>
+      </div>
+    );
+  }
+  
+
+  if (!profile.approved && !isAdmin) return <PendingApproval />;
+  
+  if (!isAdmin) {
+    if (!profile.has_accepted_rules) return <RulesAgreement />;
+  }
+
+  // Admin also goes through character selection, but can skip (canCancel)
+  const adminSkipped = isAdmin && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
+
+  // Se ainda está verificando personagens, aguarda
+  if (hasCharacters === null) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="text-4xl animate-float mb-4">⚡</div>
+          <p className="font-heading text-muted-foreground">Carregando personagens...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Redireciona para seleção de personagem se:
+  // 1. Não tem active_character_id, OU
+  // 2. Não tem personagens reais na tabela (membros antigos sem ficha)
+  if ((!profile.active_character_id || !hasCharacters) && !adminSkipped) {
+    return <CharacterSelection adminMode={isAdmin} />;
+  }
+  const today = new Date().toISOString().split('T')[0];
+  const lastSeenIntro = localStorage.getItem(`intro_last_seen_${user.id}`);
+  const shouldShowIntro = lastSeenIntro !== today;
+
+  if (shouldShowIntro) return <CastleEntrance />;
+  
+  const lastSeenEncounter = localStorage.getItem(`encounter_last_seen_${user.id}`);
+  const shouldShowEncounter = lastSeenEncounter !== today && !encounterDone;
+
+  if (shouldShowEncounter) {
+    return <DailyEncounter onComplete={() => {
+      localStorage.setItem(`encounter_last_seen_${user.id}`, today);
+      setEncounterDone(true);
+    }} />;
+  }
+  
+  const house = HOUSES[profile.house as House] || HOUSES.gryffindor;
+  
+  const isPaulo = user?.email === 'paulormorpheus21@gmail.com';
+  
+  // Apenas o Paulo (The Architect) vê as abas de Admin e Revolution
+  // Se ele não for admin no banco, garantimos que ele veja as abas admin também
+  let items = [...NAV_ITEMS];
+  if (isPaulo) {
+    items = [...NAV_ITEMS, ...ADMIN_ITEMS, REVOLUTION_ITEM];
+  }
+
+
 
   return (
-    <main className="h-[100dvh] min-h-[100dvh] bg-background relative overflow-hidden flex flex-col md:flex-row">
+    <div className="flex h-screen bg-black overflow-hidden relative">
+      <MagicalAtmosphere />
+      <AmbientSoundController currentPath={location.pathname} />
+
       <InterstitialAd />
-      <MagicalCelebration />
-      
-      {/* ── SIDEBAR (Escritório do Arquiteto) ── */}
-      <aside className={`
-        fixed md:relative inset-y-0 left-0 z-40
-        w-72 bg-card/60 backdrop-blur-3xl border-r border-white/5
-        transition-all duration-700 ease-in-out shadow-[20px_0_50px_rgba(0,0,0,0.5)]
-        overflow-hidden
-        ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
-      `}>
-        {/* Glow de fundo da Sidebar */}
-        <div className={`absolute inset-0 opacity-10 pointer-events-none bg-gradient-to-b from-primary/20 via-transparent to-transparent`} />
-        
-        <div className="flex flex-col h-full relative z-10">
-          {/* Perfil e Casa */}
-          <div className="p-8 border-b border-white/5 bg-gradient-to-br from-primary/10 via-transparent to-transparent relative overflow-hidden group">
-            <div className={`absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all duration-700`} />
+      {sidebarOpen && (
+        <div className="fixed inset-0 bg-background/80 z-30 md:hidden" onClick={() => setSidebarOpen(false)} />
+      )}
+
+      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-64 bg-card border-r border-border flex flex-col transition-transform md:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        <div className="p-4 border-b border-border">
+          <Link to="/dashboard" className="flex items-center gap-3">
+            <div className="bg-primary/20 p-2 rounded-lg text-primary">
+              <Castle size={24} />
+            </div>
+            <span className="font-heading text-lg text-gold-gradient leading-tight">Hogwarts<br/>House</span>
+          </Link>
+        </div>
+
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+          {items.map((item) => {
+            const isActive = location.pathname === item.path;
+              return item.isMap ? (
+                <button
+                  key={item.label}
+                  onClick={() => {
+                    playMagicSound();
+                    setMapOpen(true);
+                    setSidebarOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
+                >
+                  <span className="text-muted-foreground group-hover:text-primary transition-colors">{item.icon}</span>
+                  <span className="font-heading text-sm">{item.label}</span>
+                </button>
+              ) : (
+                <Link
+                  key={item.path}
+                  to={item.path!}
+                  onClick={() => {
+                    playMagicSound();
+                    setSidebarOpen(false);
+                  }}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group ${
+                    isActive ? "bg-primary/10 text-primary font-bold border border-primary/20" : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
+                  }`}
+                >
+                  <span className="text-muted-foreground group-hover:text-primary transition-colors">{item.icon}</span>
+                  <span className="font-heading text-sm">{item.label}</span>
+                  {item.label === "Guia do Maroto" && (
+                    <span className="ml-auto w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                  )}
+                  {item.label === "Mensagens" && dmUnread > 0 && (
+                    <span className="ml-auto min-w-[18px] h-[18px] px-1 bg-primary text-primary-foreground rounded-full text-[10px] flex items-center justify-center font-bold">
+                      {dmUnread > 9 ? "9+" : dmUnread}
+                    </span>
+                  )}
+                </Link>
+              );
+          })}
+        </nav>
+
+        <div className="p-3 border-t border-border bg-card/80 backdrop-blur-sm relative z-50">
+          {/* Saldo de Galeões */}
+          <Link to="/dashboard/store" className="flex items-center justify-between px-4 py-3 mb-2 rounded-2xl border border-yellow-500/40 bg-gradient-to-br from-amber-600/20 via-yellow-900/40 to-black hover:border-yellow-300 transition-all group shadow-[0_0_15px_rgba(251,191,36,0.1)] hover:shadow-[0_0_25px_rgba(251,191,36,0.2)]">
+            <div className="flex items-center gap-2">
+              <MagicalGaleon size="xs" />
+              <span className="text-[11px] text-yellow-400/90 font-heading group-hover:text-yellow-300 uppercase tracking-wider">Galeões</span>
+            </div>
+            <span className="font-heading text-lg text-yellow-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]">
+              {user?.email === 'paulormorpheus21@gmail.com' ? '∞' : ((profile as any).galeons || 0).toLocaleString("pt-BR")}
+            </span>
+          </Link>
+          {/* VIP upgrade CTA — só para não-VIPs */}
+          {!(profile as any).vip_plan && (
+            <Link to="/dashboard/store"
+              className="flex items-center gap-2 px-3 py-2 mb-2 rounded-xl border border-purple-500/40 bg-gradient-to-r from-purple-900/30 to-violet-900/20 hover:border-purple-400/60 hover:from-purple-900/50 transition-all group animate-pulse-glow">
+              <span className="text-base">👑</span>
+              <span className="text-[11px] text-purple-300 font-heading group-hover:text-purple-200 flex-1">Ativar VIP</span>
+              <span className="text-[9px] bg-purple-500/30 text-purple-300 px-1.5 py-0.5 rounded-full font-heading">R$9,90</span>
+            </Link>
+          )}
+          {/* Badge VIP ativo */}
+          {(profile as any).vip_plan && (
+            <div className="flex items-center gap-2 px-3 py-2 mb-2 rounded-xl border border-yellow-500/40 bg-gradient-to-r from-yellow-900/20 to-amber-900/10">
+              <span className="text-base">✨</span>
+              <span className="text-[11px] text-yellow-400 font-heading capitalize">{(profile as any).vip_plan} Ativo</span>
+            </div>
+          )}
+          <div className="flex items-center justify-between gap-1 w-full flex-wrap">
+            <Link to="/dashboard/profile" className="flex items-center gap-2 max-w-[120px] hover:bg-secondary/50 p-1.5 rounded-lg transition-colors cursor-pointer group">
+              <div className="relative shrink-0">
+                <HouseCrest house={profile.house} size="sm" />
+                <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-card ${isUserOnline(profile) ? "bg-green-500" : "bg-muted-foreground"}`} title={isUserOnline(profile) ? "Online" : "Offline"} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[13px] leading-tight font-heading truncate text-foreground group-hover:text-primary transition-colors" title={profile.full_name}>{profile.full_name}</p>
+                <p className="text-[10px] leading-tight text-muted-foreground truncate">{house.name}</p>
+              </div>
+            </Link>
             
-            <div className="flex items-center gap-4 mb-6 relative z-10">
-              <div className="relative group/avatar">
-                {/* Supreme God Aura */}
-                <div className="absolute -inset-4 bg-gradient-to-r from-yellow-400 via-amber-200 to-yellow-600 rounded-full blur-2xl opacity-40 animate-pulse scale-150" />
-                <div className="absolute -inset-1 bg-gradient-to-r from-yellow-500 via-white to-amber-500 rounded-[2.2rem] blur opacity-30 group-hover/avatar:opacity-100 transition-all duration-1000 animate-spin-slow" />
-                
-                <div className="w-20 h-20 rounded-[2rem] overflow-hidden relative border-4 border-yellow-400/60 shadow-[0_0_30px_rgba(251,191,36,0.5)] transition-all duration-700 group-hover/avatar:scale-110">
-                  <img 
-                    src={profile?.avatar_url || "/default_avatar.png"} 
-                    alt="Perfil" 
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                   <h3 className="font-heading text-lg text-white truncate drop-shadow-md">{profile?.full_name || "Bruxo"}</h3>
-                   <Crown size={14} className="text-yellow-400 animate-bounce" />
-                </div>
-                <div className="flex flex-col gap-1">
-                   <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
-                      <p className="text-[10px] uppercase tracking-widest text-emerald-400 font-bold">GOD SUPREMO</p>
-                   </div>
-                   <p className="text-[8px] text-white/30 font-mono tracking-tighter">[ MATRIX_SINC: 100% ]</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Status do Bruxo - Monster Plaques */}
-            <div className="grid grid-cols-2 gap-3 mb-4 relative z-10">
-              <div className="glass-light p-4 rounded-[1.5rem] border-white/5 bg-white/5 hover:bg-white/10 transition-colors shadow-inner">
-                <div className="flex items-center gap-2 mb-1">
-                  <MagicalGaleon size="xs" />
-                  <span className="text-[10px] font-heading text-white/40 uppercase tracking-tighter">Galeões</span>
-                </div>
-                <p className="text-sm font-bold text-white">{(profile?.currency || profile?.galeons || 0).toLocaleString("pt-BR")}</p>
-              </div>
-              <div className="glass-light p-4 rounded-[1.5rem] border-white/5 bg-white/5 hover:bg-white/10 transition-colors shadow-inner">
-                <div className="flex items-center gap-2 mb-1">
-                  <Sparkles size={12} className="text-primary animate-pulse" />
-                  <span className="text-[10px] font-heading text-white/40 uppercase tracking-tighter">Nível</span>
-                </div>
-                <p className="text-sm font-bold text-white">{(profile?.xp || 0) / 100 >> 0 || 1}</p>
-              </div>
-            </div>
-
-            {/* RPG HUD: Saúde, Mana e Estamina (Soberania) */}
-            <div className="space-y-3 mb-6 px-2 relative z-10">
-               {/* Saúde */}
-               <div className="space-y-1">
-                 <div className="flex justify-between text-[8px] font-bold text-red-500 uppercase tracking-widest">
-                   <span>Saúde Vital</span>
-                   <span>100%</span>
-                 </div>
-                 <div className="h-1.5 w-full bg-red-950/30 rounded-full overflow-hidden border border-red-500/10">
-                   <div className="h-full bg-gradient-to-r from-red-600 to-red-400 shadow-[0_0_10px_rgba(239,68,68,0.5)]" style={{ width: '100%' }} />
-                 </div>
-               </div>
-               
-               {/* Mana */}
-               <div className="space-y-1">
-                 <div className="flex justify-between text-[8px] font-bold text-blue-500 uppercase tracking-widest">
-                   <span>Energia Mágica (MP)</span>
-                   <span>85%</span>
-                 </div>
-                 <div className="h-1.5 w-full bg-blue-950/30 rounded-full overflow-hidden border border-blue-500/10">
-                   <div className="h-full bg-gradient-to-r from-blue-600 to-cyan-400 shadow-[0_0_10px_rgba(37,99,235,0.5)]" style={{ width: '85%' }} />
-                 </div>
-               </div>
-
-               {/* Sentimento / Mood */}
-               <div className="pt-2">
-                 <div className="glass-light p-3 rounded-2xl border-white/5 bg-gradient-to-r from-white/5 to-transparent flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                       <div className="text-xl animate-bounce">✨</div>
-                       <div>
-                          <p className="text-[8px] text-white/40 uppercase font-bold tracking-widest">Estado Emocional</p>
-                          <p className="text-xs font-heading text-yellow-400 uppercase">ALEGRE / RADIANTE</p>
-                       </div>
-                    </div>
-                    <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse shadow-[0_0_10px_rgba(250,204,21,0.8)]" />
-                 </div>
-               </div>
-            </div>
-            
-            <div className="flex items-center justify-between gap-4 px-2">
+            <div className="flex items-center gap-1 shrink-0">
               <button 
-                onClick={toggleSound}
-                className="p-2 rounded-lg hover:bg-primary/10 transition-colors text-muted-foreground"
-                title="Sons mágicos"
+                onClick={async () => {
+                  await supabase.from("profiles").update({ active_character_id: null } as never).eq("user_id", user.id);
+                  useAuth.setState((state) => ({ profile: state.profile ? { ...state.profile, active_character_id: null } : null }));
+                  window.location.reload();
+                }} 
+                className="p-1.5 text-muted-foreground hover:bg-secondary/80 hover:text-primary rounded-md transition-colors" 
+                title="Trocar Personagem"
               >
-                {isSoundEnabled() ? <Volume2 size={18} /> : <VolumeX size={18} />}
+                <RefreshCw size={14} />
               </button>
-              <Notifications />
-              <button 
-                onClick={handleLogout}
-                className="p-2 rounded-lg hover:bg-destructive/10 transition-colors text-destructive"
-                title="Sair de Hogwarts"
+              <button
+                onClick={handleToggleSound}
+                className="p-1.5 text-muted-foreground hover:bg-secondary/80 hover:text-primary rounded-md transition-colors"
+                title={soundOn ? "Desativar Som" : "Ativar Som"}
               >
-                <LogOut size={18} />
+                {soundOn ? <Volume2 size={14} /> : <VolumeX size={14} />}
+              </button>
+              <div className="scale-90 origin-center"><Notifications /></div>
+              <button 
+                onClick={async () => { await logout(); navigate("/"); }} 
+                className="p-1.5 text-muted-foreground hover:bg-destructive/20 hover:text-destructive rounded-md transition-colors"
+                title="Sair"
+              >
+                <LogOut size={14} />
               </button>
             </div>
           </div>
-
-          {/* Navegação */}
-          <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto custom-scrollbar no-scrollbar relative z-10">
-            {filteredNavItems.map((item) => (
-              <Link
-                key={item.label}
-                to={item.path || "#"}
-                onClick={() => {
-                  if (item.isMap) {
-                    toast.info("O Mapa do Maroto requer uma senha mágica...", {
-                      description: "Tente dizer: 'Eu juro solenemente não fazer nada de bom'",
-                    });
-                  }
-                  setSidebarOpen(false);
-                  playMagicSound();
-                }}
-                className={`
-                  flex items-center gap-4 px-4 py-3 rounded-[1.2rem] transition-all duration-300 group relative
-                  ${location.pathname === item.path 
-                    ? "bg-primary/10 text-primary border border-primary/20 shadow-[0_0_20px_rgba(var(--primary),0.15)]" 
-                    : "hover:bg-primary/5 text-muted-foreground hover:text-foreground border border-transparent"}
-                  ${item.isBFF ? "bg-pink-500/5 hover:bg-pink-500/10 text-pink-500/70 hover:text-pink-500" : ""}
-                  ${item.isFamily ? "bg-amber-500/5 hover:bg-amber-500/10 text-amber-500/70 hover:text-amber-500" : ""}
-                  ${item.isZion ? "bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-500/70 hover:text-emerald-500" : ""}
-                  ${item.isRevolution ? "bg-amber-500/5 hover:bg-amber-500/10 text-amber-500/70 hover:text-amber-500" : ""}
-                  ${item.isMatrix ? "bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-500/70 hover:text-emerald-500" : ""}
-                `}
-              >
-                <div className={`transition-transform duration-300 group-hover:scale-110 ${location.pathname === item.path ? "scale-110" : ""}`}>
-                  {item.icon}
-                </div>
-                <span className="font-heading text-sm tracking-wide">{item.label}</span>
-                {item.label === "Mensagens" && unreadDMs > 0 && (
-                  <span className="ml-auto bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full animate-bounce shadow-lg">
-                    {unreadDMs}
-                  </span>
-                )}
-                {item.isBFF && (
-                    <span className="ml-auto w-2 h-2 rounded-full bg-pink-500 animate-pulse shadow-[0_0_8px_rgba(236,72,153,0.8)]"></span>
-                )}
-                {item.isFamily && (
-                    <span className="ml-auto w-2 h-2 rounded-full bg-amber-500 animate-bounce shadow-[0_0_8px_rgba(245,158,11,0.8)]"></span>
-                )}
-                {item.isZion && (
-                    <span className="ml-auto w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
-                )}
-                {item.isRevolution && (
-                    <span className="ml-auto w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-                )}
-                {item.isMatrix && (
-                    <span className="ml-auto w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                )}
-                {item.label === "Guia do Maroto" && (
-                  <span className="ml-auto w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                )}
-                
-                {/* Indicador Ativo */}
-                {location.pathname === item.path && (
-                  <div className="absolute left-0 w-1 h-6 bg-primary rounded-r-full" />
-                )}
-              </Link>
-            ))}
-
-            {/* PAINEL DE ADMINISTRAÇÃO (ZION ACCESS) */}
-            {isAdmin && (
-              <Link
-                to="/dashboard/admin"
-                onClick={() => { setSidebarOpen(false); playMagicSound(); }}
-                className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 group mt-4 border border-yellow-500/40 bg-yellow-500/10 text-yellow-500 shadow-[0_0_15px_rgba(234,179,8,0.2)] hover:scale-[1.02]`}
-              >
-                <div className="transition-transform duration-300 group-hover:rotate-12">
-                  <MagicalIcon icon={Crown} size="xs" color="#eab308" />
-                </div>
-                <span className="font-heading text-sm tracking-wide font-bold">SALA DO DIRETOR</span>
-                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" />
-              </Link>
-            )}
-
-            {!isStandalone && (
-              <div className="mt-8 px-2">
-                <Button 
-                  variant="outline" 
-                  className="w-full h-12 rounded-xl border-primary/30 text-primary hover:bg-primary/10 text-[10px] font-heading uppercase tracking-widest gap-2"
-                  onClick={() => {
-                    toast.info("Para baixar o app:", {
-                      description: "No iPhone: Compartilhar > Adicionar à Tela de Início. No Android: Clique no banner que aparecerá abaixo!"
-                    });
-                  }}
-                >
-                  <Smartphone size={14} /> Baixar App Hogwarts
-                </Button>
-              </div>
-            )}
-          </nav>
-          {/* Footer Sidebar (Magical Elite Icons) */}
-          <div className="p-6 border-t border-white/5 bg-black/20 backdrop-blur-md">
-            <div className="flex items-center justify-between gap-2">
-              <button
-                onClick={() => { toggleSound(); playMagicSound(); }}
-                className={`p-3 rounded-2xl border transition-all duration-500 relative group ${isSoundEnabled() ? "bg-primary/10 border-primary/30 text-primary shadow-[0_0_15px_rgba(var(--primary),0.2)]" : "bg-white/5 border-white/10 text-muted-foreground"}`}
-              >
-                <div className="absolute inset-0 bg-primary/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity animate-pulse" />
-                {isSoundEnabled() ? <Volume2 size={20} className="relative z-10 animate-pulse" /> : <VolumeX size={20} className="relative z-10" />}
-              </button>
-              
-              <div className="relative group">
-                <Notifications />
-              </div>
-
-              <button
-                onClick={() => { logout(); playMagicSound(); }}
-                className="p-3 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500/20 hover:border-red-500/40 hover:scale-110 transition-all shadow-[0_0_15px_rgba(239,68,68,0.1)] group"
-                title="Sair do Castelo"
-              >
-                <LogOut size={20} className="group-hover:translate-x-1 transition-transform" />
-              </button>
-            </div>
-            
-            <div className="mt-6 flex items-center justify-center gap-2 opacity-30">
-               <span className="text-[10px] text-emerald-500 uppercase tracking-widest font-bold">Hogwarts OS</span>
-               <div className="w-1 h-1 rounded-full bg-emerald-500" />
-               <span className="text-[10px] text-emerald-500 uppercase tracking-widest font-bold">v8.2.5-REVOLUTION</span>
-            </div>
+          <div className="mt-3 text-center opacity-40">
+            <p className="text-[9px] text-muted-foreground text-center px-2 font-mono uppercase tracking-widest opacity-60">Mundo Yasmin</p>
           </div>
         </div>
       </aside>
 
-      {/* ── CONTEÚDO PRINCIPAL ── */}
-      <div className="flex-1 flex flex-col min-w-0 relative">
-        {/* Monster Quality Cinematic Layers */}
-        <div className="absolute inset-0 z-0 bg-[url('/hogwarts_bg.png')] bg-fixed bg-cover bg-center grayscale opacity-10" />
-        <div className="absolute inset-0 z-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 pointer-events-none" />
-        <div className="absolute inset-0 z-0 bg-gradient-to-br from-black via-black/90 to-blue-950/20" />
+      <main className="flex-1 flex flex-col min-w-0">
+        <NotificationBanner />
+        <div className="md:hidden flex items-center gap-3 p-3 border-b border-border bg-card">
+          <button onClick={() => setSidebarOpen(true)} className="p-2 -ml-2 text-muted-foreground hover:text-foreground">
+            <Menu size={20} />
+          </button>
+          <span className="font-heading text-sm text-gold-gradient">Hogwarts House</span>
+        </div>
         
-        <div className="flex-1 relative z-10 flex flex-col bg-transparent">
+
+        <div className="flex-1 overflow-y-auto custom-scrollbar relative">
+          <DailyProphetTicker />
           
-          {/* Header Mobile */}
-          <header className="md:hidden h-20 flex items-center justify-between px-6 border-b border-white/5 sticky top-0 z-30 bg-background/80 backdrop-blur-xl">
-            <button onClick={() => setSidebarOpen(true)} className="p-2 -ml-2">
-              <Menu size={24} />
-            </button>
-            <div className="flex items-center gap-2">
-               <HouseCrest house={profile?.house} size="sm" />
-               <span className="font-heading text-sm text-gold-gradient tracking-widest">HOGWARTS</span>
+          <div className="p-4 md:p-8">
+            {/* House Cup Progress Bar - Monster Quality Engine */}
+            <div className="mb-6">
+              <HouseCupWidget />
             </div>
-            <Notifications />
-          </header>
-
-          {/* Renderização das Páginas */}
-          <div className="flex-1 overflow-y-auto custom-scrollbar relative flex flex-col">
-             <div className="p-4 md:p-8 max-w-7xl mx-auto w-full flex-1 flex flex-col">
-                <Outlet />
-             </div>
+          {/* <MagicalActivityFeed /> */}
+          <div className="mt-2 md:mt-0 pb-10">
+             <Outlet />
           </div>
-
           <EngagementBot />
-          {isYasmin && <AnitaPresence />}
-          {isYasmin && <EmmaPresence />}
-          {isCarol && <HeloPresence />}
-          {isFamily && <ThottyPresence />}
-          
-          <PWAInstallPrompt />
-          <ProtocoloBFF />
+          <FilchWatcher />
+          <MagicalEventSystem />
+          <DopamineTriggers />
+          <LevelUpManager xp={profile?.xp || 0} level={profile?.level || 1} />
+
+          {/* Magical Party Overlay – show only when active */}
+          {false && <MagicalPartyOverlay />}
+          <GlobalChallengeWatcher />
+          <DailyRewardSystem />
+          <MagicalCelebration />
+          {/* <TimedMysteryChest /> */}
+          <MaraudersMap isOpen={mapOpen} onClose={() => setMapOpen(false)} />
+          <Corujoteca />
+          <MagicalEncounters />
+          <FilchShadow />
+      <PWAInstallPrompt />
+      <EmmaPresence />
         </div>
       </div>
-
-       {/* ── WELCOME GIFT MODAL (CINEMATIC) ── */}
-      <Dialog open={showWelcome} onOpenChange={setShowWelcome}>
-        <DialogContent className="max-w-md bg-gradient-to-br from-amber-950 via-black to-blue-950 border-yellow-500/30 text-white rounded-[3.5rem] p-0 overflow-hidden shadow-[0_0_100px_rgba(0,0,0,1)] border-none">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1547756536-cde3673fa2e5?q=80&w=1000')] opacity-10 mix-blend-overlay pointer-events-none" />
-          
-          <div className="relative p-12 space-y-10 text-center">
-             <div className="relative group mx-auto w-fit">
-                <div className="absolute -inset-16 bg-yellow-400/20 rounded-full blur-[80px] animate-pulse" />
-                <div className="absolute -inset-1 bg-gradient-to-r from-yellow-500 via-amber-200 to-yellow-500 rounded-[4rem] blur opacity-30 group-hover:opacity-60 transition-opacity" />
-                
-                <div className="w-56 h-56 bg-black/40 rounded-[4rem] border-4 border-yellow-500/40 flex items-center justify-center shadow-[0_0_50px_rgba(234,179,8,0.3)] relative z-10 overflow-hidden transform group-hover:scale-110 transition-transform duration-1000">
-                   <img 
-                     src="https://images.unsplash.com/photo-1547756536-cde3673fa2e5?q=80&w=1000" 
-                     className="w-full h-full object-cover mix-blend-screen opacity-90 rounded-[3.8rem]"
-                     alt="Relíquia"
-                   />
-                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
-                   <div className="absolute inset-0 border-[12px] border-black/40 rounded-[3.8rem] pointer-events-none" />
-                   <Gift size={80} className="absolute text-yellow-500 drop-shadow-[0_0_30px_rgba(251,191,36,1)] animate-float" />
-                </div>
-             </div>
-             
-             <div className="space-y-6">
-                <h2 className="text-5xl md:text-6xl font-heading text-gold-gradient tracking-tighter drop-shadow-2xl uppercase leading-[0.9]">BEM-VINDO A HOGWARTS</h2>
-                <p className="text-xl text-yellow-100/70 font-serif italic leading-relaxed">"O Ministério da Magia preparou um kit de elite para sua ascensão imediata."</p>
-             </div>
-
-             <div className="grid grid-cols-2 gap-6 py-6">
-                <div className="glass bg-white/5 border border-white/10 p-6 rounded-[2rem] flex flex-col items-center gap-3 hover:bg-white/10 transition-colors">
-                   <MagicalGaleon size="md" />
-                   <p className="text-2xl font-heading text-gold-gradient">500 Galeões</p>
-                   <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-bold">Unidade Base</p>
-                </div>
-                <div className="glass bg-white/5 border border-white/10 p-6 rounded-[2rem] flex flex-col items-center gap-3 hover:bg-white/10 transition-colors">
-                   <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center border border-purple-500/40">
-                      <ShoppingBag size={24} className="text-purple-400 animate-pulse" />
-                   </div>
-                   <p className="text-2xl font-heading text-purple-400">Baú Épico</p>
-                   <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-bold">Relíquia Surpresa</p>
-                </div>
-             </div>
-
-             <Button 
-               variant="plaque" 
-               className="w-full h-20 rounded-[2rem] text-xl shadow-[0_20px_50px_rgba(234,179,8,0.4)] animate-pulse-glow"
-               onClick={claimWelcomeGift}
-             >
-               RESGATAR MINHA HERANÇA ✨
-             </Button>
-             
-             <p className="text-[10px] text-white/20 uppercase tracking-[0.5em] font-bold">Protocolo de Onboarding Ativo</p>
-          </div>
-        </DialogContent>
-      </Dialog>
     </main>
+  </div>
   );
 }
+
+function AmbientSoundController({ currentPath }: { currentPath: string }) {
+  const [audio] = useState(new Audio());
+  
+  useEffect(() => {
+    if (!isSoundEnabled()) {
+      audio.pause();
+      return;
+    }
+
+    let url = "";
+    if (currentPath === "/dashboard") url = "https://cdn.pixabay.com/download/audio/2022/01/18/audio_2d8f6d6d4a.mp3?filename=fireplace-6818.mp3";
+    else if (currentPath.includes("album") || currentPath.includes("guide")) url = "https://www.soundjay.com/misc/sounds/page-flip-01a.mp3";
+    else if (currentPath.includes("store") || currentPath.includes("shop")) url = "https://www.soundjay.com/misc/sounds/coins-spilled-1.mp3";
+    else if (currentPath.includes("azkaban") || currentPath.includes("challenges")) url = "https://www.soundjay.com/nature/sounds/wind-cave-1.mp3";
+    else if (currentPath.includes("chat")) url = "https://cdn.pixabay.com/download/audio/2021/08/09/audio_845c47098e.mp3?filename=ambient-night-crickets-and-owls-6058.mp3";
+
+    
+    if (url) {
+      audio.src = url;
+      audio.loop = true;
+      audio.volume = 0.15;
+      audio.play().catch(() => {});
+    } else {
+      audio.pause();
+    }
+
+    return () => {
+      audio.pause();
+    };
+  }, [currentPath, isSoundEnabled()]);
+
+  return null;
+}
+

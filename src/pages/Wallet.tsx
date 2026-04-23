@@ -6,9 +6,6 @@ import { Coins, Crown, ShoppingBag, Zap, Star, Trophy, Calendar, ChevronRight, G
 import { Button } from "@/components/ui/button";
 import MagicalEmoji from "@/components/MagicalEmoji";
 import MagicalGaleon from "@/components/MagicalGaleon";
-import MagicalSicle from "@/components/MagicalSicle";
-import MagicalKnut from "@/components/MagicalKnut";
-import { getCurrencyBreakdown } from "@/lib/auth";
 
 interface Order {
   id: string;
@@ -87,56 +84,18 @@ export default function Wallet() {
           <p className="text-sm text-muted-foreground mb-6">Seu saldo, histórico e benefícios em um só lugar.</p>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {/* Saldo Multi-Moeda */}
-            <div className="md:col-span-2 glass rounded-2xl p-6 border border-yellow-400/30 bg-gradient-to-br from-yellow-900/20 to-transparent relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/5 blur-3xl -z-10 group-hover:bg-yellow-500/10 transition-colors" />
-              
-              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
-                <div>
-                  <p className="text-[10px] text-yellow-400/70 font-heading uppercase tracking-[0.3em] mb-4">Tesouro Acumulado</p>
-                  <div className="flex items-center gap-6">
-                    {/* Galeões */}
-                    <div className="flex flex-col items-center group/coin">
-                      <div className="relative mb-2">
-                         <MagicalGaleon size="md" />
-                         <div className="absolute inset-0 bg-yellow-400/20 blur-xl opacity-0 group-hover/coin:opacity-100 transition-opacity" />
-                      </div>
-                      <span className="font-heading text-3xl text-yellow-400 drop-shadow-lg">{getCurrencyBreakdown(profile?.galeons || 0).galeons}</span>
-                      <span className="text-[9px] text-yellow-500/50 font-bold uppercase tracking-widest">Galeões</span>
-                    </div>
-
-                    <div className="h-12 w-px bg-white/10 self-center" />
-
-                    {/* Sicles */}
-                    <div className="flex flex-col items-center group/coin">
-                      <div className="relative mb-2">
-                         <MagicalSicle size="md" />
-                         <div className="absolute inset-0 bg-slate-400/20 blur-xl opacity-0 group-hover/coin:opacity-100 transition-opacity" />
-                      </div>
-                      <span className="font-heading text-3xl text-slate-300 drop-shadow-lg">{getCurrencyBreakdown(profile?.galeons || 0).sicles}</span>
-                      <span className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Sicles</span>
-                    </div>
-
-                    <div className="h-12 w-px bg-white/10 self-center" />
-
-                    {/* Nuques */}
-                    <div className="flex flex-col items-center group/coin">
-                      <div className="relative mb-2">
-                         <MagicalKnut size="md" />
-                         <div className="absolute inset-0 bg-orange-900/20 blur-xl opacity-0 group-hover/coin:opacity-100 transition-opacity" />
-                      </div>
-                      <span className="font-heading text-3xl text-orange-600 drop-shadow-lg">{getCurrencyBreakdown(profile?.galeons || 0).knuts}</span>
-                      <span className="text-[9px] text-orange-800 font-bold uppercase tracking-widest">Nuques</span>
-                    </div>
-                  </div>
-                </div>
-
-                <Link to="/dashboard/store">
-                  <Button variant="plaque" size="lg" className="h-14 px-8 rounded-2xl bg-gradient-to-r from-yellow-500/20 to-amber-600/20 border-yellow-500/40 text-yellow-500 hover:scale-105 transition-all group">
-                    <ShoppingBag size={18} className="mr-2 group-hover:rotate-12 transition-transform" /> IR PARA A LOJA
-                  </Button>
-                </Link>
-              </div>
+            {/* Saldo */}
+            <div className="md:col-span-2 glass rounded-2xl p-5 border border-yellow-400/30 bg-gradient-to-br from-yellow-900/20 to-transparent">
+              <p className="text-xs text-yellow-400/70 font-heading uppercase tracking-widest mb-1">Saldo Atual</p>
+              <p className="font-heading text-5xl text-yellow-400">{galeons.toLocaleString("pt-BR")}</p>
+              <p className="text-xs text-muted-foreground mt-1">🪙 Galeões</p>
+              <Link to="/dashboard/store">
+              <Link to="/dashboard/store">
+                <Button variant="plaque" size="sm" className="mt-3 text-[10px]">
+                  <ShoppingBag size={12} className="mr-1" /> Usar na Loja
+                </Button>
+              </Link>
+              </Link>
             </div>
 
             {/* Status VIP */}

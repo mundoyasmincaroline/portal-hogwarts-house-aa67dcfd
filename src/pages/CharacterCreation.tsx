@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { X, Search, ChevronLeft, Sparkles } from "lucide-react";
+import { X, Search, ChevronLeft } from "lucide-react";
 import MagicalParticles from "@/components/MagicalParticles";
 
 interface Props { onComplete: () => void; onCancel?: () => void; canCancel?: boolean; }
@@ -144,28 +144,6 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
 
       if (error) throw error;
 
-      // --- STARTER KIT LOGIC ---
-      if ((count ?? 0) === 0) {
-        // Grant 100 Galeons
-        await supabase.rpc('increment_galeons', { _user_id: user.id, _amount: 100 });
-        
-        // Grant Basic Wand
-        await supabase.from("user_items").insert({
-          user_id: user.id,
-          item_id: "mq_wand_oak", // Basic Oak Wand
-          is_equipped: true
-        } as any);
-
-        // Grant Basic Robe
-        await supabase.from("user_items").insert({
-          user_id: user.id,
-          item_id: "mq_cloth_student_new", // Student Robe
-          is_equipped: true
-        } as any);
-
-        toast.success("📦 Você recebeu um Kit de Iniciante: Varinha, Manto e 100 Galeons!");
-      }
-
       if (type === "canon") {
         await supabase.from("canon_claims").insert({ canon_name: form.full_name, user_id: user.id } as never).select();
       }
@@ -182,9 +160,8 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
   if (step === "select") {
     return (
       <div className="relative min-h-screen flex flex-col items-center justify-center p-6">
-        <div className="absolute inset-0 bg-background/90 backdrop-blur-md z-0" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.1),transparent_70%)] animate-pulse pointer-events-none" />
-        <MagicalParticles color={form.house === 'gryffindor' ? '#ef4444' : form.house === 'slytherin' ? '#10b981' : form.house === 'ravenclaw' ? '#3b82f6' : '#f59e0b'} />
+        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-0" />
+        <MagicalParticles />
         <div className="relative z-10 max-w-3xl w-full">
           <div className="text-center mb-10">
             <h1 className="font-heading text-4xl text-gold-gradient mb-3">Criar Ficha de Personagem</h1>

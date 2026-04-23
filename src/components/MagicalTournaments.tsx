@@ -79,7 +79,7 @@ export default function MagicalTournaments() {
         <div className="space-y-6">
             <Button variant="outline" onClick={() => setShowDuel(false)}>← Voltar para a Saga</Button>
             <MagicalDuel 
-                opponent={{ name: "Draco Malfoy (Elite)", avatar_url: "/draco_malfoy.png" }} 
+                opponent={{ name: "Draco Malfoy (Elite)", avatar_url: "https://i.pinimg.com/originals/94/d6/3b/94d63b05423f1011867c293675e4683c.jpg" }} 
                 playerStats={playerStats}
                 onFinish={(won) => {
                     setShowDuel(false);

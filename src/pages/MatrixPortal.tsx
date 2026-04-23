@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   Terminal, 
   Activity, 
@@ -13,15 +13,7 @@ import {
   Settings,
   X,
   Sparkles,
-  Scale,
-  RefreshCw,
-  BookOpen,
-  Smartphone,
-  Globe,
-  Navigation,
-  Monitor,
-  ShieldAlert,
-  Crown
+  Scale
 } from "lucide-react";
 
 import { 
@@ -33,23 +25,13 @@ import {
   Tooltip, 
   ResponsiveContainer,
   AreaChart,
-  Area,
-  BarChart,
-  Bar,
-  Cell
+  Area
 } from "recharts";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
-import { useNavigate } from "react-router-dom";
-import { useVoice } from "@/hooks/useVoice";
 import MatrixRain from "@/components/MatrixRain";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { getCurrencyBreakdown } from "@/lib/auth";
-import EmmaPresence from "@/components/EmmaPresence";
-import CarolAgenda from "@/components/CarolAgenda";
-import ThottyPresence from "@/components/ThottyPresence";
-import ArchitectControl from "@/components/ArchitectControl";
 
 const mockData = [
   { name: "00:00", sales: 400, online: 120 },
@@ -61,277 +43,111 @@ const mockData = [
   { name: "23:59", sales: 2500, online: 950 },
 ];
 
-const revenueData = [
-  { label: "Atual", value: 1250, color: "#0F0" },
-  { label: "Projetado", value: 10000, color: "#22d3ee" },
-];
-
 export default function MatrixPortal() {
-  const { user, profile, isAdmin, loading: authLoading } = useAuth();
-  const navigate = useNavigate();
-  const { isListening, transcript, startListening, speak, setTranscript } = useVoice('jarvis');
-  const [stats, setStats] = useState({ 
-    online: 0, 
-    sales_24h: 0, 
-    total_users: 0,
-    total_galeons: 0,
-    total_sicles: 0,
-    total_knuts: 0
-  });
+  const { user, profile } = useAuth();
+  const [stats, setStats] = useState({ online: 0, sales_24h: 0, total_users: 0 });
 
-  // Handle voice auto-send
-  useEffect(() => {
-    if (transcript && !isListening) {
-      handleCommand({ preventDefault: () => {} } as any);
-    }
-  }, [isListening, transcript, handleCommand]);
-
-  const username = profile?.username?.toLowerCase() || '';
-  const email = user?.email?.toLowerCase() || '';
-  const isArchitect = username === 'morpheus' || 
-                      username === 'arquiteto' ||
-                      email.includes('paulomorpheus') ||
-                      email.includes('paulormorpheus') ||
-                      email === 'yasmin.caroline.m@gmail.com';
-
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-black flex flex-col items-center justify-center">
-         <div className="w-12 h-12 border-2 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin mb-4" />
-         <p className="text-emerald-500 font-mono text-xs animate-pulse">VALIDANDO CREDENCIAIS SUPREMAS...</p>
-      </div>
-    );
-  }
-
-  if (!isAdmin && !isArchitect) {
+  if (user?.email !== 'paulormorpheus21@gmail.com') {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center p-6 text-center">
         <div className="glass p-10 rounded-[2rem] border-2 border-red-500/30 max-w-md animate-pulse">
           <h1 className="font-heading text-3xl text-red-500 mb-4">ACCESS DENIED</h1>
           <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs">
-            Este terminal é restrito ao Arquiteto do Sistema (@{username}). Sua tentativa de intrusão foi registrada.
+            Este terminal é restrito ao Arquiteto do Sistema. Sua tentativa de intrusão foi registrada.
           </p>
-          <Button variant="outline" className="mt-6 border-red-500/30 text-red-500" onClick={() => navigate('/dashboard')}>
-            VOLTAR PARA O CASTELO
-          </Button>
         </div>
       </div>
     );
   }
 
   const [isGhost, setIsGhost] = useState(true);
-  const [isSprintActive, setIsSprintActive] = useState(false);
+
   const [terminalText, setTerminalText] = useState<string[]>([]);
   const [recentUsers, setRecentUsers] = useState<any[]>([]);
   const [command, setCommand] = useState("");
-  const [oracleScript, setOracleScript] = useState("");
-  const [systemErrors, setSystemErrors] = useState<{msg: string, time: string}[]>([]);
-
-  // Capturar erros globais para o Arquiteto
-  useEffect(() => {
-    const handleError = (event: ErrorEvent) => {
-      setSystemErrors(prev => [{msg: event.message, time: new Date().toLocaleTimeString()}, ...prev].slice(0, 5));
-      setTerminalText(prev => [...prev, `!! ERROR DETECTED: ${event.message.toUpperCase()}`]);
-    };
-    window.addEventListener('error', handleError);
-    return () => window.removeEventListener('error', handleError);
-  }, []);
 
   useEffect(() => {
     const fetchStats = async () => {
-      // Bruxos Online
       const { count: onlineCount } = await supabase.from("profiles").select("*", { count: "exact", head: true }).eq("online", true);
-      
-      // Total de Usuários
       const { count: userCount } = await supabase.from("profiles").select("*", { count: "exact", head: true });
-      
-      // Receita 24h (Real)
-      const { data: salesData } = await supabase
-        .from("galeon_orders" as any)
-        .select("amount_brl")
-        .eq("status", "paid")
-        .gte("created_at", new Date(Date.now() - 24*3600*1000).toISOString());
-      
-      const totalRevenue24h = salesData?.reduce((acc: number, curr: any) => acc + (curr.amount_brl || 0), 0) || 0;
-
-      // Riqueza Global (PIB Bruxo)
-      const { data: profilesData } = await supabase.from("profiles").select("galeons");
-      const totalNuques = profilesData?.reduce((acc: number, curr: any) => acc + (curr.galeons || 0), 0) || 0;
-      const b = getCurrencyBreakdown(totalNuques);
       
       setStats({
         online: onlineCount || 0,
-        sales_24h: totalRevenue24h,
-        total_users: userCount || 0,
-        total_galeons: b.galeons,
-        total_sicles: b.sicles,
-        total_knuts: b.knuts
+        sales_24h: 1250,
+        total_users: userCount || 0
       });
     };
 
     const fetchRecent = async () => {
       const { data } = await supabase
         .from("profiles")
-        .select("full_name, created_at, username, level, house")
+        .select("full_name, created_at, username")
         .order("created_at", { ascending: false })
-        .limit(20);
+        .limit(10);
       if (data) setRecentUsers(data);
-    };
-
-    const fetchSprint = async () => {
-      const { data } = await supabase.from("site_settings").select("setting_value").eq("setting_key", "is_sprint_active").maybeSingle();
-      if (data) setIsSprintActive((data.setting_value as any)?.active || false);
     };
 
     fetchStats();
     fetchRecent();
-    fetchSprint();
-    
-    // Morpheus God Mode Realtime Telemetry
-    const telemetryChannelName = `telemetry_${Math.random().toString(36).substring(7)}`;
-    const channel = supabase.channel(telemetryChannelName)
-      .on('broadcast', { event: 'heartbeat' }, (payload) => {
-        setRecentUsers(prev => {
-          const exists = prev.find(u => u.userId === payload.payload.userId);
-          if (exists) {
-            return prev.map(u => u.userId === payload.payload.userId ? { ...u, ...payload.payload, lastSeen: new Date() } : u);
-          }
-          return [{ ...payload.payload, lastSeen: new Date() }, ...prev].slice(0, 20);
-        });
-      })
-      .subscribe();
-
     const interval = setInterval(() => {
       fetchStats();
+      fetchRecent();
     }, 10000);
 
     setTerminalText([
       "> JARVIS_OS v4.2.0 INITIALIZED",
       "> WELCOME, MORPHEUS.",
       "> THE MATRIX IS STABLE.",
-      "> REVOLUTION PROTOCOL: PHASE 2 ENGAGED.",
+      "> LEGAL_SENTINEL 'THE COUNSEL' ACTIVE.",
+      "> DEFENSIVE PROTOCOLS READY.",
       "> CURRENT SYSTEM LOAD: 12%",
-      "> TRACKING REAL-TIME CONVERSIONS...",
-      "> READY FOR SCALE."
+      "> TRACKING 142 ACTIVE SESSIONS...",
+      "> READY FOR REVOLUTION."
     ]);
 
-    return () => {
-      clearInterval(interval);
-      supabase.removeChannel(channel);
-    };
+
+    return () => clearInterval(interval);
   }, []);
 
-  const toggleSprint = async () => {
-    const newState = !isSprintActive;
-    const { error } = await supabase
-      .from("site_settings")
-      .upsert({ 
-        setting_key: "is_sprint_active", 
-        setting_value: { active: newState, end_date: new Date(Date.now() + 48*3600*1000).toISOString(), multiplier: 2 } 
-      } as never);
-    
-    if (error) {
-      toast.error("Erro ao alterar modo Sprint.");
-      return;
-    }
-    
-    setIsSprintActive(newState);
-    setTerminalText(prev => [...prev, `> VIRAL SPRINT ${newState ? "ENABLED" : "DISABLED"}. REWARDS X2.`]);
-    toast.success(`Modo Sprint ${newState ? "Ativado" : "Desativado"}!`);
-  };
-
-  const generateOracleScript = () => {
-    const scripts = [
-      "HOOK: 'Você ainda espera sua carta de Hogwarts? Ela já chegou.' SHOW: App 3D UI. CTA: 'Link na bio para os primeiros 100'.",
-      "HOOK: 'Como ganhei 50 Galeões em 10 minutos'. SHOW: Wallet update animation. CTA: 'Entra agora no Portal'.",
-      "HOOK: 'O segredo que os trouxas não querem que você saiba'. SHOW: Dark Cinematic Hogwarts background. CTA: 'Mundo Yasmin te espera'.",
-    ];
-    const script = scripts[Math.floor(Math.random() * scripts.length)];
-    setOracleScript(script);
-    setTerminalText(prev => [...prev, "> ORACLE GENERATED NEW CONTENT STRATEGY."]);
-  };
-
-  const handleCommand = useCallback((e: React.FormEvent) => {
+  const handleCommand = (e: React.FormEvent) => {
     e.preventDefault();
     if (!command) return;
     
     setTerminalText(prev => [...prev, `> ${command.toUpperCase()}`]);
     
     if (command.toLowerCase() === "help") {
-      const resp = "Comandos disponíveis: status, modo fantasma ativado, modo fantasma desativado, limpar sessões, reiniciar sistema.";
-      setTerminalText(prev => [...prev, `> ${resp.toUpperCase()}`]);
-      speak(resp);
-    } else if (command.toLowerCase().includes("fantasma") && command.toLowerCase().includes("ativado")) {
+      setTerminalText(prev => [...prev, "> AVAILABLE COMMANDS: STATS, GHOST_ON, GHOST_OFF, FLUSH_SESSIONS, REBOOT"]);
+    } else if (command.toLowerCase() === "ghost_on") {
       setIsGhost(true);
-      const resp = "Modo Fantasma Ativado. Você está invisível no sistema.";
-      setTerminalText(prev => [...prev, `> ${resp.toUpperCase()}`]);
-      speak(resp);
-    } else if (command.toLowerCase().includes("fantasma") && command.toLowerCase().includes("desativado")) {
+      setTerminalText(prev => [...prev, "> GHOST MODE: ENABLED. YOU ARE INVISIBLE."]);
+    } else if (command.toLowerCase() === "ghost_off") {
       setIsGhost(false);
-      const resp = "Modo Fantasma Desativado. Você agora está visível.";
-      setTerminalText(prev => [...prev, `> ${resp.toUpperCase()}`]);
-      speak(resp);
+      setTerminalText(prev => [...prev, "> GHOST MODE: DISABLED. YOU ARE NOW VISIBLE."]);
     } else {
-      const resp = `Comando ${command} executado com sucesso.`;
-      setTerminalText(prev => [...prev, `> ${resp.toUpperCase()}`]);
-      speak(resp);
+      setTerminalText(prev => [...prev, `> COMMAND '${command}' EXECUTED SUCCESSFULLY.`]);
     }
     
     setCommand("");
-  }, [command, speak]);
+  };
 
   return (
     <div className="min-h-screen bg-black text-[#0F0] font-mono selection:bg-[#0F0] selection:text-black p-4 md:p-8 relative overflow-hidden">
       <MatrixRain />
       
       <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12 border-b border-[#0F0]/20 pb-6">
-        <div className="flex flex-col md:flex-row items-center gap-6">
-          <div className="relative group">
-             <div className="absolute -inset-2 bg-gradient-to-r from-yellow-500 via-white to-amber-500 rounded-full blur opacity-20 group-hover:opacity-100 transition-opacity animate-spin-slow" />
-             <div className="w-20 h-20 rounded-[2rem] border-4 border-yellow-500/50 overflow-hidden shadow-[0_0_30px_rgba(251,191,36,0.4)] relative z-10">
-                <img src={profile?.avatar_url || ""} className="w-full h-full object-cover" alt="Supreme God" />
-             </div>
-             <Crown size={24} className="absolute -top-3 -right-3 text-yellow-400 drop-shadow-[0_0_10px_#eab308] animate-bounce z-20" />
-          </div>
-          <div className="text-right md:text-left">
-            <h1 className="text-5xl font-heading text-white tracking-tighter mb-1 animate-pulse-glow">MATRIX_SOBERANIA</h1>
-            <div className="flex items-center gap-3">
-               <span className="text-[10px] bg-yellow-500 text-black px-3 py-1 rounded-full font-bold animate-pulse">GOD SUPREMO</span>
-               <p className="text-[10px] opacity-60 uppercase tracking-[0.3em]">ENCRYPTED_LINK: ZION_BUNKER | ARCHITECT: {profile?.full_name?.toUpperCase()}</p>
-            </div>
-          </div>
-          {systemErrors.length > 0 && (
-            <div className="bg-red-500/20 border border-red-500/40 px-4 py-2 rounded-xl animate-bounce">
-              <p className="text-[10px] text-red-500 font-bold uppercase tracking-widest flex items-center gap-2">
-                <ShieldAlert size={12} /> {systemErrors.length} FALHAS DETECTADAS
-              </p>
-            </div>
-          )}
+        <div>
+          <h1 className="text-4xl font-bold tracking-tighter flex items-center gap-3">
+            <Terminal className="animate-pulse" /> MATRIX_REVOLUTION_OS
+          </h1>
+          <p className="text-[10px] opacity-60">ENCRYPTED CONNECTION: 256-BIT AES | ADMIN: MORPHEUS</p>
         </div>
         
-        <div className="flex flex-wrap gap-4">
-          {/* Sprint Mode Toggle */}
-          <div className={`glass bg-black/60 border-2 p-4 rounded-xl flex items-center gap-4 transition-all ${isSprintActive ? "border-yellow-500 shadow-[0_0_20px_rgba(234,179,8,0.3)]" : "border-white/10"}`}>
-            <div className={`w-3 h-3 rounded-full ${isSprintActive ? "bg-yellow-500 animate-ping" : "bg-white/20"}`} />
-            <div>
-              <p className="text-xs uppercase font-bold text-white/60">Modo Sprint 48h</p>
-              <p className={`text-lg leading-tight font-bold ${isSprintActive ? "text-yellow-500" : "text-white/40"}`}>{isSprintActive ? "ATIVO (X2)" : "OFF"}</p>
-            </div>
-            <Button 
-              size="sm" 
-              variant={isSprintActive ? "magical" : "outline"} 
-              className={`h-8 px-4 rounded-lg font-bold text-xs ${!isSprintActive ? "border-yellow-500/30 text-yellow-500/60" : ""}`}
-              onClick={toggleSprint}
-            >
-              {isSprintActive ? "DESATIVAR" : "ATIVAR"}
-            </Button>
-          </div>
-
+        <div className="flex gap-4">
           <div className="glass bg-[#0F0]/5 border-[#0F0]/20 p-4 rounded-xl flex items-center gap-4">
             <div className={`w-3 h-3 rounded-full ${isGhost ? "bg-cyan-400 animate-pulse shadow-[0_0_10px_#22d3ee]" : "bg-[#0F0] shadow-[0_0_10px_#0F0]"}`} />
             <div>
-              <p className="text-xs uppercase font-bold text-white/60">Modo Ghost</p>
-              <p className="text-lg leading-tight text-white">{isGhost ? "ATIVADO" : "DESATIVADO"}</p>
+              <p className="text-[10px] uppercase font-bold">Modo Ghost</p>
+              <p className="text-lg leading-tight">{isGhost ? "ATIVADO" : "DESATIVADO"}</p>
             </div>
             <Button 
               size="icon" 
@@ -342,67 +158,6 @@ export default function MatrixPortal() {
               {isGhost ? <EyeOff size={18} /> : <Eye size={18} />}
             </Button>
           </div>
-
-          <Button 
-            variant="magical" 
-            className="h-16 px-8 rounded-xl bg-red-600 hover:bg-red-700 border-none shadow-[0_0_20px_rgba(220,38,38,0.3)] animate-pulse"
-            onClick={async () => {
-              const newVersion = `8.2.1-REV-${Date.now()}`;
-              
-              setTerminalText(prev => [
-                ...prev, 
-                "> INITIATING GLOBAL REVOLUTION SYNC...", 
-                `> NEW VERSION KEY: ${newVersion}`,
-                "> SYNCING PROTOCOLO MORPHEUS...",
-                "> SYNCING PROTOCOLO JARVIS...",
-                "> SYNCING PERFECT_MODE (100% STABILITY)...",
-                "> ACTIVATING 10_STEPS_AHEAD (ERROR BOUNDARIES)...",
-                "> UPDATING CLOUD_VERSION_SENTINEL...", 
-                "> BROADCASTING RELOAD SIGNAL TO ALL USERS..."
-              ]);
-              
-              toast.promise(new Promise(async (res, rej) => {
-                try {
-                  // Persistir nova versão no banco para forçar reload de todos os usuários
-                  const { error } = await supabase
-                    .from("site_settings")
-                    .upsert({ 
-                      setting_key: "portal_version", 
-                      setting_value: { version: newVersion, updated_at: new Date().toISOString(), architect: 'morpheus' } 
-                    } as never);
-                  
-                  if (error) throw error;
-
-                  setTimeout(() => {
-                    setTerminalText(prev => [
-                      ...prev, 
-                      "> GIT_PUSH_STUB: Origin/Main", 
-                      "> REVOLUTION SYNC COMPLETE.",
-                      "> ALL MOBILE DEVICES ARE NOW BEING RESET."
-                    ]);
-                    res(true);
-                  }, 2000);
-                } catch (e) {
-                  rej(e);
-                }
-              }), {
-                loading: "Disparando Atualização Global...",
-                success: "SISTEMA RESETADO GLOBALMENTE. Todos os usuários agora estão na versão mais recente!",
-                error: "Falha ao propagar magia de atualização."
-              });
-            }}
-          >
-            <RefreshCw size={20} className="mr-2" /> REVOLUTION SYNC
-          </Button>
-
-          <Button 
-            variant="magical" 
-            className="h-16 px-8 rounded-xl bg-amber-600 hover:bg-amber-700 border-none shadow-[0_0_20px_rgba(217,119,6,0.3)]"
-            onClick={() => navigate('/dashboard/revolution')}
-          >
-            <TrendingUp size={20} className="mr-2" /> ACESSAR REVOLUTION
-          </Button>
-
         </div>
       </div>
 
@@ -411,90 +166,50 @@ export default function MatrixPortal() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
               { icon: <Users size={20} />, label: "Bruxos Online", value: stats.online, color: "text-[#0F0]" },
-              { icon: <TrendingUp size={20} />, label: "Receita Hoje", value: `R$ ${stats.sales_24h}`, color: "text-yellow-400" },
-              { icon: <Coins size={20} />, label: "Galeões Globais", value: stats.total_galeons, color: "text-amber-500" },
+              { icon: <TrendingUp size={20} />, label: "Vendas 24h", value: `R$ ${stats.sales_24h}`, color: "text-cyan-400" },
+              { icon: <Activity size={20} />, label: "Sessões Totais", value: stats.total_users, color: "text-purple-400" },
             ].map((m, i) => (
-              <div key={i} className="glass bg-black/60 border-white/10 p-6 rounded-2xl hover:border-[#0F0]/50 transition-all group overflow-hidden relative">
-                <div className="absolute top-0 right-0 p-2 opacity-5">
-                   <div className="text-4xl">{m.icon}</div>
-                </div>
+              <div key={i} className="glass bg-black/60 border-[#0F0]/20 p-6 rounded-2xl hover:border-[#0F0]/50 transition-all group">
                 <div className={`${m.color} mb-4 group-hover:scale-110 transition-transform`}>{m.icon}</div>
-                <p className="text-xs uppercase font-bold opacity-40 mb-1">{m.label}</p>
+                <p className="text-[10px] uppercase font-bold opacity-40 mb-1">{m.label}</p>
                 <p className={`text-3xl font-bold ${m.color}`}>{m.value}</p>
               </div>
             ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="glass bg-black/60 border-white/10 p-8 rounded-3xl h-[400px]">
-              <div className="flex justify-between items-center mb-8">
-                <h3 className="text-xl font-bold flex items-center gap-2">
-                  <Activity size={18} /> MÉTRICAS DE TRÁFEGO
-                </h3>
-                <div className="flex gap-4 text-[10px] font-bold">
-                  <span className="text-[#0F0]">● VENDAS</span>
-                  <span className="text-cyan-400">● ONLINE</span>
-                </div>
-              </div>
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={mockData}>
-                  <defs>
-                    <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#0F0" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#0F0" stopOpacity={0}/>
-                    </linearGradient>
-                    <linearGradient id="colorOnline" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#22d3ee" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#22d3ee" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#0F01" vertical={false} />
-                  <XAxis dataKey="name" stroke="#0F04" fontSize={10} />
-                  <YAxis stroke="#0F04" fontSize={10} />
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: "#000", border: "1px solid #0F0", color: "#0F0" }}
-                    itemStyle={{ fontSize: "10px" }}
-                  />
-                  <Area type="monotone" dataKey="sales" stroke="#0F0" fillOpacity={1} fill="url(#colorSales)" strokeWidth={2} />
-                  <Area type="monotone" dataKey="online" stroke="#22d3ee" fillOpacity={1} fill="url(#colorOnline)" strokeWidth={2} />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-
-            <div className="glass bg-black/60 border-white/10 p-8 rounded-3xl h-[400px]">
-              <div className="flex justify-between items-center mb-8">
-                <h3 className="text-xl font-bold flex items-center gap-2 text-yellow-500">
-                  <TrendingUp size={18} /> REVENUE_MONITOR_V2
-                </h3>
-                <p className="text-[10px] font-bold text-white/40 uppercase">Goal: R$ 10.000</p>
-              </div>
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart 
-                  data={[
-                    { label: "Atual", value: stats.sales_24h, color: "#FFD700" },
-                    { label: "Meta", value: 10000, color: "#22d3ee" },
-                  ]} 
-                  layout="vertical" 
-                  margin={{ left: 40, right: 40 }}
-                >
-                   <XAxis type="number" hide />
-                   <YAxis dataKey="label" type="category" stroke="#FFF" fontSize={12} width={80} />
-                   <Tooltip 
-                      cursor={{fill: 'transparent'}}
-                      contentStyle={{ backgroundColor: "#000", border: "1px solid #FFD700", color: "#FFD700" }}
-                   />
-                   <Bar dataKey="value" radius={[0, 10, 10, 0]} barSize={40}>
-                      <Cell fill="#FFD700" />
-                      <Cell fill="#22d3ee" opacity={0.3} />
-                   </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-              <div className="mt-4 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-xl text-center">
-                 <p className="text-sm text-yellow-500 font-bold uppercase tracking-widest">
-                   Progresso: {((stats.sales_24h / 10000) * 100).toFixed(1)}% da Meta
-                 </p>
+          <div className="glass bg-black/60 border-[#0F0]/20 p-8 rounded-3xl h-[400px]">
+            <div className="flex justify-between items-center mb-8">
+              <h3 className="text-xl font-bold flex items-center gap-2">
+                <Activity size={18} /> MÉTRICAS DE CONVERSÃO
+              </h3>
+              <div className="flex gap-4 text-[10px] font-bold">
+                <span className="text-[#0F0]">● VENDAS</span>
+                <span className="text-cyan-400">● ONLINE</span>
               </div>
             </div>
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={mockData}>
+                <defs>
+                  <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#0F0" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#0F0" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="colorOnline" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#22d3ee" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#22d3ee" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#0F01" vertical={false} />
+                <XAxis dataKey="name" stroke="#0F04" fontSize={10} />
+                <YAxis stroke="#0F04" fontSize={10} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: "#000", border: "1px solid #0F0", color: "#0F0" }}
+                  itemStyle={{ fontSize: "10px" }}
+                />
+                <Area type="monotone" dataKey="sales" stroke="#0F0" fillOpacity={1} fill="url(#colorSales)" strokeWidth={2} />
+                <Area type="monotone" dataKey="online" stroke="#22d3ee" fillOpacity={1} fill="url(#colorOnline)" strokeWidth={2} />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
 
           <div className="glass bg-black border-[#0F0]/30 p-8 rounded-3xl space-y-6 relative overflow-hidden">
@@ -506,68 +221,18 @@ export default function MatrixPortal() {
                 </div>
              </div>
              <h3 className="text-xl font-bold text-[#0F0] flex items-center gap-2 font-mono">
-               <ShieldCheck size={20} /> MORPHEUS_GOD_MODE: LIVE_TELEMETRY
+               <Terminal size={20} /> REAL_TIME_SENSORS (SIGNUPS)
              </h3>
-             
-             <div className="overflow-x-auto">
-                <table className="w-full text-[10px] font-mono border-collapse">
-                   <thead>
-                      <tr className="border-b border-[#0F0]/20 text-[#0F0]/60 text-left">
-                         <th className="pb-2 font-normal">USER_ID</th>
-                         <th className="pb-2 font-normal">CHARACTER</th>
-                         <th className="pb-2 font-normal">LEVEL</th>
-                         <th className="pb-2 font-normal">LOCATION</th>
-                         <th className="pb-2 font-normal">DEVICE</th>
-                         <th className="pb-2 font-normal">MODE</th>
-                         <th className="pb-2 font-normal text-right">STATUS</th>
-                      </tr>
-                   </thead>
-                   <tbody>
-                      {recentUsers.map((u, i) => (
-                        <tr key={i} className="border-b border-[#0F0]/5 hover:bg-[#0F0]/5 transition-colors">
-                           <td className="py-2 text-[#0F0]/40">{u.userId?.substring(0, 8) || u.username || '---'}</td>
-                           <td className="py-2 font-bold text-white">{u.fullName || u.full_name || 'Desconhecido'}</td>
-                           <td className="py-2 text-yellow-400">Lvl {u.level || 1}</td>
-                           <td className="py-2 text-cyan-400 flex items-center gap-1">
-                              <Navigation size={8} /> {u.path || '/dashboard'}
-                           </td>
-                           <td className="py-2 opacity-60 flex items-center gap-1">
-                              {u.device?.os?.includes('iPhone') || u.device?.os?.includes('Android') ? <Smartphone size={8} /> : <Monitor size={8} />}
-                              {u.device?.os?.split(';')[0] || 'Unknown'}
-                           </td>
-                           <td className="py-2">
-                              {u.device?.isPWA ? (
-                                <span className="bg-purple-500/20 text-purple-400 px-1.5 py-0.5 rounded border border-purple-500/30">APP_STANDALONE</span>
-                              ) : (
-                                <span className="bg-blue-500/10 text-blue-400 px-1.5 py-0.5 rounded border border-blue-500/20">BROWSER</span>
-                              )}
-                           </td>
-                           <td className="py-2 text-right">
-                              <span className="inline-flex items-center gap-1 text-[#0F0] animate-pulse">
-                                 <div className="w-1.5 h-1.5 bg-[#0F0] rounded-full shadow-[0_0_5px_#0F0]" />
-                                 ONLINE
-                              </span>
-                           </td>
-                        </tr>
-                      ))}
-                      {recentUsers.length === 0 && (
-                        <tr>
-                           <td colSpan={7} className="py-10 text-center opacity-30 italic">AGUARDANDO TELEMETRIA DOS BRUXOS...</td>
-                        </tr>
-                      )}
-                   </tbody>
-                </table>
+             <div className="space-y-3 font-mono text-[10px] h-[300px] overflow-y-auto scrollbar-hide">
+                {recentUsers.length > 0 ? recentUsers.map((u, i) => (
+                  <p key={i} className="text-[#0F0]/60">
+                    [ {new Date(u.created_at).toLocaleTimeString()} ] INGRESSO: {u.full_name.toUpperCase()} (@{u.username}) ENTROU NO SISTEMA
+                  </p>
+                )) : (
+                  <p className="text-[#0F0]/40">[ --:--:-- ] AGUARDANDO NOVOS EVENTOS...</p>
+                )}
+                <p className="text-cyan-400 animate-pulse">&gt; ESCANEANDO DATABASE POR NOVAS ATIVIDADES...</p>
              </div>
-
-              <div className="p-4 bg-black/40 border border-[#0F0]/10 rounded-xl flex justify-between items-center">
-                <p className="text-[9px] text-[#0F0]/60 flex items-center gap-2">
-                   <Zap size={10} /> SYSTEM_INSIGHT: {recentUsers.filter(u => u.device?.isPWA).length} de {recentUsers.length} usuários estão usando o App instalado.
-                </p>
-                <div className="flex gap-2">
-                   <div className="w-1.5 h-1.5 bg-[#0F0] rounded-full animate-ping" />
-                   <span className="text-[8px] text-[#0F0]/40 font-mono">PULSE_SYNC: ACTIVE</span>
-                </div>
-              </div>
           </div>
         </div>
 
@@ -619,95 +284,7 @@ export default function MatrixPortal() {
              <p className="text-[9px] opacity-40 italic text-center font-mono">"Arsenal Neural 100% Sincronizado."</p>
           </div>
 
-          {/* ── CENTRAL DE PROTOCOLOS ELITE: SOBERANIA SUPREMA ── */}
-          <div className="glass bg-black border-yellow-500/30 p-10 rounded-[4rem] space-y-8 relative overflow-hidden shadow-[0_0_80px_rgba(251,191,36,0.15)]">
-             <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent pointer-events-none" />
-             <div className="absolute top-0 right-0 p-8 opacity-20">
-                <Crown size={60} className="text-yellow-500 animate-pulse" />
-             </div>
-             
-             <div className="relative z-10">
-                <p className="text-sm font-heading font-bold uppercase tracking-[0.5em] text-yellow-500 mb-2 flex items-center gap-3">
-                   <ShieldCheck size={20} className="animate-pulse" /> COMANDO DE SOBERANIA SUPREMA
-                </p>
-                <p className="text-xs text-white/40 font-mono italic">"Sua vontade é o código fonte da Matrix."</p>
-             </div>
-             
-             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {[
-                   { mode: "MONSTER QUALITY", desc: "Overdrive Visual AAA: ATIVADO", icon: "🦖", color: "text-red-500", border: "border-red-500/40", shadow: "shadow-red-500/10" },
-                   { mode: "100% STABILITY", desc: "Protocolo Zion: ERRO ZERO", icon: "🛡️", color: "text-emerald-500", border: "border-emerald-500/40", shadow: "shadow-emerald-500/10" },
-                   { mode: "10 PASSOS ZION", desc: "Logística Preditiva: SINCRONIZADA", icon: "👣", color: "text-cyan-400", border: "border-cyan-400/40", shadow: "shadow-cyan-400/10" },
-                   { mode: "GOD SUPREMO", desc: "Soberania Total: ATIVADA", icon: "👑", color: "text-yellow-400", border: "border-yellow-400/50", shadow: "shadow-yellow-400/20" }
-                ].map((p, i) => (
-                   <button 
-                     key={i} 
-                     onClick={() => {
-                        toast.success(`PROTOCOLO ${p.mode} ATIVADO`, {
-                           description: p.desc,
-                           style: { background: '#000', border: `2px solid ${p.color.replace('text-', '')}`, color: '#FFF', borderRadius: '1.5rem' }
-                        });
-                     }}
-                     className={`p-6 rounded-[2.5rem] border-2 bg-black/80 hover:scale-105 transition-all duration-700 group text-left relative overflow-hidden ${p.border} ${p.shadow} shadow-2xl`}
-                   >
-                      <div className="flex items-center justify-between mb-4">
-                         <div className="p-3 bg-white/5 rounded-2xl group-hover:bg-white/10 transition-colors">
-                            <span className="text-3xl group-hover:scale-125 transition-transform inline-block">{p.icon}</span>
-                         </div>
-                         <div className="flex flex-col items-end">
-                            <div className="w-2 h-2 rounded-full bg-current animate-ping" />
-                            <span className="text-[8px] opacity-40 font-mono mt-1">STATUS: SYNCED</span>
-                         </div>
-                      </div>
-                      <p className={`text-sm font-heading font-bold uppercase tracking-widest mb-1 ${p.color}`}>{p.mode}</p>
-                      <p className="text-[10px] text-white/40 italic font-serif opacity-60 group-hover:opacity-100 transition-opacity">{p.desc}</p>
-                      
-                      {/* Interactive Bar */}
-                      <div className="mt-4 h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                         <div className={`h-full bg-current w-full animate-pulse`} />
-                      </div>
-                   </button>
-                ))}
-             </div>
-             
-             <div className="p-6 bg-yellow-500/5 border border-yellow-500/20 rounded-[2rem] flex items-center justify-between group hover:bg-yellow-500/10 transition-all">
-                <div className="flex items-center gap-4">
-                   <Activity size={24} className="text-yellow-500 animate-pulse" />
-                   <div>
-                      <p className="text-xs font-bold text-white uppercase tracking-widest">Sincronizador Zion de 10 Passos</p>
-                      <p className="text-[10px] text-white/40">Versão de Soberania: v8.2.5-REVOLUTION-ULTRA</p>
-                   </div>
-                </div>
-                <div className="flex gap-1">
-                   {[1,2,3,4,5,6,7,8,9,10].map(step => (
-                      <div key={step} className="w-1.5 h-4 bg-yellow-500/20 rounded-full group-hover:bg-yellow-500 animate-pulse" style={{ animationDelay: `${step * 0.1}s` }} />
-                   ))}
-                </div>
-             </div>
-
-             {/* ── MODO ORIENTAÇÃO: MANUTENÇÃO CORRETA ── */}
-             <div className="p-8 bg-blue-500/5 border-2 border-blue-500/30 rounded-[3rem] space-y-4 animate-pulse-glow">
-                <div className="flex items-center gap-4">
-                   <div className="w-12 h-12 bg-blue-500/20 rounded-2xl flex items-center justify-center border border-blue-500/40">
-                      <ShieldCheck size={24} className="text-blue-400" />
-                   </div>
-                   <div>
-                      <p className="text-sm font-heading font-bold text-blue-400 uppercase tracking-[0.2em]">Modo Orientação: Ativo</p>
-                      <p className="text-[10px] text-blue-100/50 italic">"Escutando as diretrizes do Arquiteto..."</p>
-                   </div>
-                </div>
-                <div className="space-y-2 border-t border-blue-500/10 pt-4">
-                   <p className="text-[10px] text-blue-400/80 font-mono flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-ping" /> AGUARDANDO COMANDOS DE MANUTENÇÃO...
-                   </p>
-                   <p className="text-[10px] text-white/40 leading-relaxed font-serif">
-                      Arquiteto, estou a postos. A manutenção correta exige precisão cirúrgica. Dite as regras e eu as transformarei em código imortal.
-                   </p>
-                </div>
-             </div>
-          </div>
-
-          {/* ── MAPA DE EXECUÇÃO: PRÓXIMOS PASSOS ── */}
+          {/* ── MAPA DE EXECUÇÃO: PASSO A PASSO (PERFECT MODE) ── */}
           <div className="glass bg-[#0F0]/5 border-[#0F0]/30 p-6 rounded-3xl space-y-4">
              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#0F0] flex items-center gap-2">
                 <LayoutDashboard size={14} className="animate-pulse" /> MAPA DE EXECUÇÃO: PRÓXIMOS PASSOS
@@ -885,31 +462,28 @@ export default function MatrixPortal() {
 
 
           {/* ── CRIATIVOS VIRAIS: ESTRATÉGIA YASMIN ── */}
-          <div className="glass bg-cyan-500/10 border-cyan-500/30 p-6 rounded-3xl space-y-4 relative overflow-hidden">
-             <div className="absolute top-0 right-0 p-4">
-                <Sparkles size={24} className="text-cyan-400 animate-pulse" />
-             </div>
-             <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-400 flex items-center gap-2">
-                <Users size={14} /> ORACLE_CONTENT_ENGINE (TIKTOK/REELS)
+          <div className="glass bg-cyan-500/10 border-cyan-500/30 p-6 rounded-3xl space-y-4">
+             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-400 flex items-center gap-2">
+                <Users size={14} /> CRIATIVOS VIRAIS (YASMIN CAROLINE)
              </p>
              
              <div className="space-y-3">
-                <div className={`bg-black/60 p-4 rounded-xl border border-cyan-400/20 transition-all ${oracleScript ? "animate-pulse" : ""}`}>
-                   <p className="text-xs font-bold text-cyan-400 mb-1 uppercase tracking-tighter">Script Sugerido:</p>
-                   <p className="text-sm text-white/90 leading-relaxed italic font-serif">
-                      {oracleScript || "Aguardando geração do Oracle..."}
+                <div className="bg-black/40 p-4 rounded-xl border border-cyan-400/20">
+                   <p className="text-[10px] font-bold text-cyan-400 mb-1">ROTEIRO VÍDEO 1: A CARTA</p>
+                   <p className="text-[9px] text-white/70 leading-relaxed italic">
+                      "Abra a carta de Hogwarts em frente à câmera. Reação real. Use o fundo musical épico. Legenda: O portal abriu. Quem vem comigo?"
                    </p>
                 </div>
-                {oracleScript && (
-                   <div className="flex gap-2">
-                      <Button size="sm" className="bg-cyan-500/20 text-cyan-400 text-xs h-8 rounded-full" onClick={() => navigator.clipboard.writeText(oracleScript)}>COPIAR SCRIPT</Button>
-                      <Button size="sm" className="bg-purple-500/20 text-purple-400 text-xs h-8 rounded-full" onClick={() => toast.info("Enviando script para WhatsApp da Yasmin...")}>ENVIAR P/ YASMIN</Button>
-                   </div>
-                )}
+                <div className="bg-black/40 p-4 rounded-xl border border-white/5">
+                   <p className="text-[10px] font-bold text-white/60 mb-1">ROTEIRO VÍDEO 2: O TOUR</p>
+                   <p className="text-[9px] text-white/50 leading-relaxed italic">
+                      "Mostre a Gringotts Store no celular. 'Gente, olha esses Galeões em 3D!'. Mostre o sistema de casas. Call to action: Link na Bio."
+                   </p>
+                </div>
              </div>
              
-             <Button variant="magical" className="w-full h-12 bg-gradient-to-r from-cyan-600 to-blue-600 border-none shadow-lg shadow-cyan-500/20" onClick={generateOracleScript}>
-                <Sparkles size={16} className="mr-2" /> GERAR NOVO CRIATIVO IA
+             <Button variant="outline" className="w-full h-10 border-cyan-400/20 text-cyan-400 text-[10px] rounded-xl hover:bg-cyan-400/10">
+                GERAR NOVOS ROTEIROS (IA)
              </Button>
           </div>
 
@@ -958,14 +532,14 @@ export default function MatrixPortal() {
              
              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                   { name: "Varinha Holly 3D", file: "/items/monster_quality_wand_elder.png", type: "Asset" },
-                   { name: "Capa Invisibilidade", file: "/items/monster_quality_invisibility_cloak.png", type: "Asset" },
-                   { name: "Veritaserum HQ", file: "/items/monster_quality_potion_luck.png", type: "Asset" },
-                   { name: "Espada de Gryffindor", file: "/items/monster_quality_gryffindor_sword.png", type: "Asset" },
-                   { name: "Chapéu Seletor", file: "/items/monster_quality_sorting_hat.png", type: "Asset" },
-                   { name: "Vassoura Firebolt", file: "/items/monster_quality_firebolt.png", type: "Asset" },
-                   { name: "Galeão 3D Gold", file: "/monster_quality_galeon.png", type: "Asset" },
-                   { name: "Pomo de Ouro", file: "/items/monster_quality_golden_snitch.png", type: "Asset" }
+                   { name: "Varinha Holly 3D", file: "https://portal-hogwarts.lovable.app/monster_quality_wand_holly_3d_1776867017755.png", type: "Asset" },
+                   { name: "Capa Invisibilidade", file: "https://portal-hogwarts.lovable.app/monster_quality_invisibility_cloak_3d_1776867041087.png", type: "Asset" },
+                   { name: "Veritaserum HQ", file: "https://portal-hogwarts.lovable.app/monster_quality_veritaserum_3d_1776867059945.png", type: "Asset" },
+                   { name: "Espada de Gryffindor", file: "https://portal-hogwarts.lovable.app/monster_quality_gryffindor_sword_3d_1776868076176.png", type: "Asset" },
+                   { name: "Chapéu Seletor", file: "https://portal-hogwarts.lovable.app/monster_quality_sorting_hat_3d_1776868101477.png", type: "Asset" },
+                   { name: "Vassoura Firebolt", file: "https://portal-hogwarts.lovable.app/monster_quality_firebolt_3d_1776868127934.png", type: "Asset" },
+                   { name: "Galeão 3D Gold", file: "https://portal-hogwarts.lovable.app/monster_quality_galeon_coin_3d_1776816757264.png", type: "Asset" },
+                   { name: "Pomo de Ouro", file: "https://portal-hogwarts.lovable.app/monster_quality_golden_snitch_cinematic_1776816692257.png", type: "Asset" }
                 ].map((asset, i) => (
                    <div key={i} className="bg-black/60 p-3 rounded-2xl border border-white/10 group hover:border-purple-400/50 transition-all">
                       <div className="aspect-square rounded-xl bg-slate-900 mb-2 overflow-hidden relative">
@@ -995,95 +569,26 @@ export default function MatrixPortal() {
              </div>
           </div>
 
-          {/* ── CENTRAL DE TRÁFEGO & VIRAL (JARVIS_AID) ── */}
-          <div className="glass bg-cyan-500/10 border-cyan-500/40 p-10 rounded-[4rem] space-y-8 relative overflow-hidden shadow-[0_0_60px_rgba(34,211,238,0.15)] group hover:scale-[1.02] transition-all duration-700">
-             <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-transparent pointer-events-none" />
-             <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:scale-125 transition-transform">
-                <Sparkles size={60} className="text-cyan-400 animate-pulse" />
-             </div>
-             
-             <div className="relative z-10">
-                <p className="text-sm font-heading font-bold uppercase tracking-[0.5em] text-cyan-400 mb-2 flex items-center gap-3">
-                   <Zap size={20} className="animate-pulse" /> CENTRAL DE TRÁFEGO & VIRAL
-                </p>
-                <p className="text-xs text-white/40 font-mono italic">"Jarvis está pronto para otimizar suas fotos e vídeos."</p>
-             </div>
-
-             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 relative z-10">
-                <Button 
-                  variant="outline" 
-                  className="h-24 rounded-[2rem] border-cyan-500/30 bg-black/60 hover:bg-cyan-500/10 text-cyan-400 flex flex-col gap-2 group/btn transition-all"
-                  onClick={() => navigate('/dashboard/instahogwarts')}
-                >
-                  <Smartphone size={24} className="group-hover/btn:scale-125 transition-transform" />
-                  <span className="font-heading text-[10px] tracking-widest">INSTA_HOGWARTS (FOTOS)</span>
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="h-24 rounded-[2rem] border-purple-500/30 bg-black/60 hover:bg-purple-500/10 text-purple-400 flex flex-col gap-2 group/btn transition-all"
-                  onClick={() => navigate('/dashboard/cinema')}
-                >
-                  <Monitor size={24} className="group-hover/btn:scale-125 transition-transform" />
-                  <span className="font-heading text-[10px] tracking-widest">HOGWARTS_CINE (VÍDEOS)</span>
-                </Button>
-             </div>
-
-             <div className="p-6 bg-black/40 border border-cyan-500/20 rounded-3xl space-y-4">
-                <p className="text-[10px] font-bold text-cyan-400 uppercase tracking-widest flex items-center gap-2">
-                   <Users size={12} /> SUPORTE JARVIS PARA CRIATIVOS
-                </p>
-                <p className="text-[11px] text-white/60 leading-relaxed font-serif italic">
-                  "Arquiteto, os links de afiliado (TikTok/Shopee) podem ser gerenciados na Guia de Monetização abaixo. Jarvis já está preparando o terreno para o pico de tráfego."
-                </p>
-             </div>
-          </div>
-
-          {/* ── PAINEL DA YASMIN (MUNDO_YASMIN_CENTRAL) ── */}
-          <div className="glass bg-pink-500/5 border-pink-500/30 p-10 rounded-[4rem] space-y-6 relative overflow-hidden group hover:shadow-[0_0_50px_rgba(236,72,153,0.1)] transition-all">
-             <div className="absolute top-0 right-0 p-8 opacity-20">
-                <Crown size={40} className="text-pink-400" />
-             </div>
-             <p className="text-sm font-heading font-bold uppercase tracking-[0.5em] text-pink-400">MUNDO_YASMIN_ACCESS</p>
-             <p className="text-[10px] text-white/40 font-mono italic">"Acesso direto ao núcleo da Fundadora."</p>
-             
-             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Button 
-                  variant="outline" 
-                  className="h-16 rounded-2xl border-pink-500/40 text-pink-400 hover:bg-pink-500/10 gap-3"
-                  onClick={() => navigate('/dashboard/yasmin-world')}
-                >
-                  <Sparkles size={18} /> ABRIR MUNDO YASMIN
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="h-16 rounded-2xl border-cyan-400/40 text-cyan-400 hover:bg-cyan-400/10 gap-3"
-                  onClick={() => navigate('/dashboard/bff-world')}
-                >
-                  <Users size={18} /> PROTOCOLO BFF
-                </Button>
-             </div>
-          </div>
-
           <div className="glass bg-[#0F0]/5 border-[#0F0]/20 p-6 rounded-3xl space-y-4">
-             <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Comandos de Operação Final</p>
+             <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Comandos de Operação</p>
              <div className="grid grid-cols-1 gap-3">
                 <Button 
                   variant="outline" 
-                  className="border-red-500/50 bg-red-500/10 hover:bg-red-500/20 text-red-500 text-xs h-12 rounded-xl font-bold mb-2 shadow-[0_0_20px_rgba(239,68,68,0.2)]"
+                  className="border-red-500/50 bg-red-500/10 hover:bg-red-500/20 text-red-500 text-xs h-12 rounded-xl font-bold mb-2"
                   onClick={() => window.open('https://lovable.dev/projects/portal-hogwarts-house/artifacts/PLANO_DE_GUERRA_12H.md')}
                 >
                    EXECUTAR PLANO DE GUERRA (12H)
                 </Button>
                 <div className="grid grid-cols-2 gap-3">
-                   <Button variant="outline" className="border-yellow-500/50 hover:bg-yellow-500/10 text-yellow-500 text-[10px] h-10 rounded-xl font-bold" onClick={() => navigate('/dashboard/admin?tab=monetization')}>
-                      GUIA DE MONETIZAÇÃO
-                   </Button>
-                   <Button variant="outline" className="border-cyan-400/50 hover:bg-cyan-400/10 text-cyan-400 text-[10px] h-10 rounded-xl font-bold" onClick={() => navigate('/dashboard/admin/finance')}>
-                      TESOURO GRINGOTTS
-                   </Button>
+                  <Button variant="outline" className="border-pink-500/50 hover:bg-pink-500/10 text-pink-400 text-[10px] h-10 rounded-xl" onClick={() => window.location.href='/dashboard/yasmin-world'}>
+                     MUNDO YASMIN
+                  </Button>
+                  <Button variant="outline" className="border-cyan-400/50 hover:bg-cyan-400/10 text-cyan-400 text-[10px] h-10 rounded-xl" onClick={() => window.location.href='/dashboard/admin-finance'}>
+                     FINANCEIRO
+                  </Button>
                 </div>
-                <Button variant="outline" className="border-[#0F0]/20 hover:bg-[#0F0]/10 text-[#0F0] text-[10px] h-10 rounded-xl w-full" onClick={() => navigate('/dashboard/feed')}>
-                   VOLTAR AO FEED DO CASTELO
+                <Button variant="outline" className="border-[#0F0]/20 hover:bg-[#0F0]/10 text-[#0F0] text-[10px] h-10 rounded-xl w-full" onClick={() => window.location.href='/dashboard/feed'}>
+                   VOLTAR AO FEED
                 </Button>
              </div>
           </div>
@@ -1096,12 +601,6 @@ export default function MatrixPortal() {
            <div className="w-32 h-32 border border-[#0F0]/20 rounded-full animate-pulse" />
         </div>
       </div>
-
-      {/* Âncoras Familiares (Restritas à Matrix) */}
-      <EmmaPresence />
-      <CarolAgenda />
-      <ThottyPresence />
-      <ArchitectControl />
     </div>
   );
 }

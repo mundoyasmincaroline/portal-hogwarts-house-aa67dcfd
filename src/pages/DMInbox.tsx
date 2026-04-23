@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
-import { MessageCircle, Flame } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import SafeImage from "@/components/SafeImage";
 
 interface DMThread {
@@ -13,7 +13,6 @@ interface DMThread {
   last_message: string;
   last_at: string;
   unread: number;
-  streak_count?: number;
 }
 
 export default function DMInbox() {
@@ -64,7 +63,6 @@ export default function DMInbox() {
     // Fetch partner profiles
     const ids = Array.from(partnerMap.keys());
     const { data: profiles } = await supabase.from("profiles").select("user_id, full_name, username, avatar_url").in("user_id", ids);
-    const { data: friendships } = await supabase.from("friendships").select("user_id, friend_id, streak_count").or(`user_id.eq.${user.id},friend_id.eq.${user.id}`);
 
     const result: DMThread[] = ids.map(pid => {
       const prof = profiles?.find(p => p.user_id === pid);
@@ -77,7 +75,6 @@ export default function DMInbox() {
         last_message: info.lastMsg.content,
         last_at: info.lastMsg.created_at,
         unread: info.unread,
-        streak_count: friendships?.find(f => (f.user_id === pid && f.friend_id === user.id) || (f.user_id === user.id && f.friend_id === pid))?.streak_count || 0
       };
     }).sort((a, b) => new Date(b.last_at).getTime() - new Date(a.last_at).getTime());
 
@@ -125,15 +122,7 @@ export default function DMInbox() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <p className="font-heading text-sm text-foreground truncate">{t.partner_name}</p>
-                    {t.streak_count && t.streak_count > 0 && (
-                      <div className="flex items-center gap-0.5 text-orange-500 animate-pulse shrink-0">
-                        <Flame size={12} fill="currentColor" />
-                        <span className="text-[10px] font-bold">{t.streak_count}</span>
-                      </div>
-                    )}
-                  </div>
+                  <p className="font-heading text-sm text-foreground truncate">{t.partner_name}</p>
                   <span className="text-[10px] text-muted-foreground shrink-0 ml-2">
                     {new Date(t.last_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
                   </span>

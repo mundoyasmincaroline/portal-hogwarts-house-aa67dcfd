@@ -47,8 +47,6 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
   const [editingPhoto, setEditingPhoto] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [tempUrl, setTempUrl] = useState("");
-  const [profile, setProfile] = useState<any>(null);
-  const [partner, setPartner] = useState<any>(null);
 
   useEffect(() => {
     supabase
@@ -60,29 +58,7 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
         if (data) setCharacters(data);
         setLoading(false);
       });
-    
-    supabase
-      .from("profiles")
-      .select("mood, full_name")
-      .eq("user_id", userId)
-      .maybeSingle()
-      .then(({ data }) => setProfile(data));
   }, [userId]);
-
-  const char = characters[activeChar];
-
-  useEffect(() => {
-    if (char?.pair_character_id) {
-       supabase
-         .from("characters")
-         .select("full_name, avatar_url, house")
-         .eq("id", char.pair_character_id)
-         .maybeSingle()
-         .then(({ data }) => setPartner(data));
-    } else {
-       setPartner(null);
-    }
-  }, [char]);
 
   if (loading) return <p className="text-center text-muted-foreground py-8 text-sm">Consultando registros do Ministério...</p>;
 
@@ -97,6 +73,7 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
     );
   }
 
+  const char = characters[activeChar];
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -174,36 +151,13 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
                 className="w-28 h-28 rounded-2xl object-cover border-2 border-primary/30 shadow-xl"
               />
               {isOwner && (
-                <div className="absolute -bottom-2 -right-2 flex gap-1">
-                  <button 
-                    onClick={() => { setEditingPhoto(!editingPhoto); setTempUrl(char.avatar_url || ""); }}
-                    className="bg-primary text-primary-foreground p-1.5 rounded-full shadow-lg hover:scale-110 transition-transform z-10"
-                    title="Editar foto"
-                  >
-                    <Edit2 size={14} />
-                  </button>
-                  <Button 
-                    size="sm" 
-                    variant="magical" 
-                    className="h-8 px-2 rounded-full text-[8px] font-bold"
-                    onClick={() => {
-                       const equippedItems = userItems.filter(ui => ui.is_equipped).map(ui => ui.store_items?.name).join(", ");
-                       const prompt = `A cinematic portrait of a ${char.age} year old ${char.house} ${char.gender === 'female' ? 'witch' : 'wizard'} with ${char.physical_description || 'magical features'}. Wearing ${equippedItems || 'standard school robes'} and holding a ${char.wand || 'magical wand'}. Ultra-realistic, 8k, wizarding world aesthetic.`;
-                       
-                       toast.promise(new Promise(res => setTimeout(res, 3000)), {
-                          loading: "Conectando ao núcleo de IA...",
-                          success: "Retrato Mágico gerado com seus itens equipados!",
-                          error: "O feitiço falhou."
-                       });
-                       
-                       console.log("AI PROMPT:", prompt);
-                       // Update the avatar with the generated portrait
-                       setCharacters(prev => prev.map((c, i) => i === activeChar ? { ...c, avatar_url: "/monster_character_portrait_1776882126239.png" } : c));
-                    }}
-                  >
-                    GERAR RETRATO
-                  </Button>
-                </div>
+                <button 
+                  onClick={() => { setEditingPhoto(!editingPhoto); setTempUrl(char.avatar_url || ""); }}
+                  className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground p-1.5 rounded-full shadow-lg hover:scale-110 transition-transform z-10"
+                  title="Editar foto do personagem"
+                >
+                  <Edit2 size={14} />
+                </button>
               )}
             </div>
             
@@ -239,12 +193,7 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
                   {char.character_type === "oc" ? "⭐ Personagem Original (OC)" : "📖 Personagem Canon (Saga)"}
                 </span>
               </div>
-              <h2 className="font-heading text-2xl text-foreground flex items-center gap-2">
-                {char.full_name}
-                {char.actor_faceclaim && (
-                  <span className="text-[10px] text-muted-foreground font-normal italic">({char.actor_faceclaim})</span>
-                )}
-              </h2>
+              <h2 className="font-heading text-2xl text-foreground">{char.full_name}</h2>
               <div className="flex flex-wrap gap-2 mt-2 justify-center sm:justify-start">
                 {char.house && (
                   <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full border border-primary/20">
@@ -275,11 +224,6 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
               <div className="flex gap-4 mt-3 text-sm text-muted-foreground justify-center sm:justify-start">
                 <span>Nível <strong className="text-primary">{char.level || 1}</strong></span>
                 <span><strong className="text-primary">{char.xp || 0}</strong> XP</span>
-                {profile?.mood && (
-                   <span className="flex items-center gap-1">
-                      Humor: <strong className={`uppercase ${profile.mood === 'raiva' ? 'text-red-500' : profile.mood === 'triste' ? 'text-blue-500' : 'text-green-500'}`}>{profile.mood}</strong>
-                   </span>
-                )}
               </div>
             </div>
           </div>
@@ -363,29 +307,6 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
               <Field label="Nome do Pet" value={char.pet_name} />
             </Section>
           )}
-
-          {/* Par Romântico */}
-          <Section title="💕 Par Romântico">
-             {partner ? (
-                <div className="col-span-full flex items-center gap-4 bg-rose-500/5 border border-rose-500/20 p-4 rounded-2xl group hover:bg-rose-500/10 transition-all">
-                   <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-rose-500/30">
-                      <SafeImage src={partner.avatar_url} alt={partner.full_name} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
-                   </div>
-                   <div>
-                      <p className="text-[10px] uppercase tracking-widest text-rose-500/70 font-heading">Comprometido(a) com</p>
-                      <p className="text-lg font-heading text-white">{partner.full_name}</p>
-                      <p className="text-xs text-muted-foreground">{HOUSE_LABELS[partner.house] || partner.house}</p>
-                   </div>
-                   <div className="ml-auto">
-                      <Heart size={24} className="text-rose-500 animate-pulse" />
-                   </div>
-                </div>
-             ) : (
-                <div className="col-span-full py-4 px-6 bg-secondary/20 rounded-2xl border border-dashed border-border text-center">
-                   <p className="text-xs text-muted-foreground italic">Coração solitário... por enquanto.</p>
-                </div>
-             )}
-          </Section>
 
           {/* Equipamentos e Vestuário - MONSTER QUALITY */}
           <div className="space-y-4 pt-4">

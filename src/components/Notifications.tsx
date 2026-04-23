@@ -2,8 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Link } from "react-router-dom";
-import MagicalEmoji from "./MagicalEmoji";
-import { X, Bell, Trash2, CheckCircle2 } from "lucide-react";
 
 interface Notification {
   id: string;
@@ -35,32 +33,17 @@ export default function Notifications() {
 
     fetchNotifs();
 
-    const channelName = `notifications:${user.id}:${Math.random().toString(36).substring(7)}`;
     const sub = supabase
-      .channel(channelName)
-      .on(
-        "postgres_changes",
-        { 
-          event: "INSERT", 
-          schema: "public", 
-          table: "notifications", 
-          filter: `user_id=eq.${user.id}` 
-        }, 
-        (payload) => {
-          setNotifications((prev) => [payload.new as Notification, ...prev]);
-        }
-      )
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') {
-          console.log("NOTIFICATIONS: Escuta Realtime ativada para o bruxo", user.id);
-        }
-      });
+      .channel(`notifications:${user.id}`)
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` }, (payload) => {
+        setNotifications((prev) => [payload.new as Notification, ...prev]);
+      })
+      .subscribe();
 
     return () => {
-      console.log("NOTIFICATIONS: Encerrando canal", channelName);
       supabase.removeChannel(sub);
     };
-  }, [user?.id]);
+  }, [user]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -87,12 +70,12 @@ export default function Notifications() {
   return (
     <div className="relative" ref={ref}>
       <button 
-        onClick={() => { setOpen(!open); playMagicSound(); }}
-        className={`relative p-3 transition-all duration-300 rounded-2xl active:scale-90 group ${open ? "bg-primary/20 scale-110" : "hover:bg-primary/10"}`}
+        onClick={() => setOpen(!open)}
+        className="relative p-2 text-muted-foreground hover:text-primary transition-colors rounded-full hover:bg-secondary"
       >
-        <MagicalEmoji emoji="🔔" size="sm" />
+        🔔
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 min-w-[20px] h-5 bg-red-600 rounded-full text-[10px] text-white flex items-center justify-center font-bold border-2 border-zinc-950 shadow-[0_0_10px_#dc2626] animate-bounce px-1">
+          <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center font-bold">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
@@ -120,9 +103,7 @@ export default function Notifications() {
                   onClick={() => { if (!n.read) markAsRead(n.id); }}
                 >
                   <div className="flex gap-3">
-                    <div className="shrink-0">
-                      <MagicalEmoji emoji="🦉" size="sm" />
-                    </div>
+                    <div className="text-xl mt-0.5">🦉</div>
                     <div>
                       <h4 className={`text-sm ${!n.read ? "font-bold text-foreground" : "font-medium text-foreground/80"}`}>
                         {n.title}

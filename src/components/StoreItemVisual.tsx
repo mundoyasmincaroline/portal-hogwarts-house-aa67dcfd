@@ -1,6 +1,4 @@
 import SafeImage from "@/components/SafeImage";
-import { Check, Sparkles } from "lucide-react";
-import MagicalEmoji from "./MagicalEmoji";
 
 /**
  * StoreItemVisual — arte digital para itens da loja Gringotts
@@ -146,8 +144,6 @@ function getEpicPlaceholder(category: string, name: string): string {
 }
 
 
-
-
 export default function StoreItemVisual({ imageUrl, name, category, isOwned }: Props) {
   const finalImage = (imageUrl && !imageUrl.includes("placeholder")) 
     ? imageUrl 
@@ -156,40 +152,39 @@ export default function StoreItemVisual({ imageUrl, name, category, isOwned }: P
   const theme = getTheme(name, category);
 
   return (
-    <div className={`monster-item-card w-full h-full group p-1 overflow-hidden bg-gradient-to-br from-white/5 to-transparent border-white/10 rounded-[3.5rem] shadow-2xl`}>
-      <div className="relative w-full h-full rounded-[3.2rem] overflow-hidden">
-        <SafeImage 
-          src={finalImage} 
-          alt={name}
-          className="w-full h-full object-cover group-hover:scale-125 transition-all duration-[3000ms] opacity-90 grayscale-[0.1] contrast-[1.2] brightness-90"
-          fallbackEmoji="📦"
-        />
-        
-        {/* Cinematic Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10" />
-        <div className="absolute inset-0 border-[10px] border-black/40 rounded-[3.2rem] pointer-events-none z-20" />
-        <div className="absolute inset-0 shadow-[inner_0_0_40px_rgba(0,0,0,0.8)] pointer-events-none z-20" />
-      </div>
+    <div className={`relative w-full h-full bg-black group overflow-hidden border-2 ${theme.border} rounded-[2rem] shadow-2xl`}>
+      <SafeImage 
+        src={finalImage} 
+        alt={name}
+        className="w-full h-full object-cover group-hover:scale-125 group-hover:rotate-2 transition-all duration-[2000ms] opacity-90"
+        fallbackEmoji="📦"
+      />
       
-      <div className="absolute top-6 right-6 z-30">
-        <MagicalEmoji emoji={theme.badge} size="xs" glowColor={theme.glow} />
-      </div>
+      {/* Premium Cinematic Overlays */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent pointer-events-none z-10" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_30%,rgba(0,0,0,0.8)_100%)] pointer-events-none z-10" />
       
-      {/* Luxury Reflection */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-20 bg-gradient-to-tr from-white/20 via-transparent to-transparent transition-opacity duration-1000 z-20" />
+      {/* Holographic Shimmer */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-40 mix-blend-overlay transition-opacity duration-1000 bg-gradient-to-tr from-yellow-500 via-transparent to-blue-500 pointer-events-none z-20" />
+      
+      {/* Dynamic Particles */}
+      <div className="absolute inset-0 z-10 pointer-events-none">
+        {theme.particles.map((p, i) => (
+          <div key={i} className="absolute w-1 h-1 bg-white rounded-full animate-pulse opacity-40" style={{
+            top: `${p.y}%`,
+            left: `${p.x}%`,
+            animationDelay: `${p.delay}s`
+          }} />
+        ))}
+      </div>
 
       {isOwned && (
-        <div className="absolute inset-0 bg-black/80 backdrop-blur-md flex flex-col items-center justify-center z-30 animate-in fade-in duration-500">
-          <div className="flex flex-col items-center gap-4 transform scale-90 group-hover:scale-100 transition-all duration-700">
-            <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center border border-primary/30 shadow-[0_0_40px_rgba(212,175,55,0.3)] animate-pulse">
-                <Check className="text-primary" size={40} />
+        <div className="absolute inset-0 bg-green-950/70 backdrop-blur-md flex flex-col items-center justify-center z-30 animate-in fade-in duration-500">
+          <div className="flex flex-col items-center gap-3 transform group-hover:scale-110 transition-all duration-700">
+            <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center border border-green-500/40 shadow-[0_0_30px_rgba(34,197,94,0.4)]">
+                <span className="text-4xl">✅</span>
             </div>
-            <div className="text-center">
-              <span className="font-heading text-primary text-xs font-bold uppercase tracking-[0.4em] block mb-1">Relíquia Obtida</span>
-              <div className="flex justify-center gap-1">
-                {[1, 2, 3].map(i => <Sparkles key={i} size={8} className="text-primary/40" />)}
-              </div>
-            </div>
+            <span className="font-heading text-green-400 text-sm font-bold uppercase tracking-[0.3em] drop-shadow-lg">Relíquia Obtida</span>
           </div>
         </div>
       )}

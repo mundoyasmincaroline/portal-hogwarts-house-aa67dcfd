@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import HouseCrest from "./HouseCrest";
 import { Input } from "./ui/input";
 import SafeImage from "./SafeImage";
-import { Eye, Flame } from "lucide-react";
+import { Eye } from "lucide-react";
 
 export default function StoriesBar() {
   const { user } = useAuth();
@@ -110,19 +110,6 @@ export default function StoriesBar() {
     }
   };
 
-  const [friendships, setFriendships] = useState<any[]>([]);
-  useEffect(() => {
-    if (user) {
-      supabase.from("friendships").select("*").or(`user_id.eq.${user.id},friend_id.eq.${user.id}`)
-        .then(({ data }) => { if (data) setFriendships(data); });
-    }
-  }, [user]);
-
-  const getStreak = (userId: string) => {
-    const f = friendships?.find(f => (f.user_id === userId && f.friend_id === user?.id) || (f.user_id === user?.id && f.friend_id === userId));
-    return f?.streak_count || 0;
-  };
-
   const handleAddStory = async () => {
     if (!newStoryContent && !newStoryImage && !newStoryFile) return;
     if (!user) return;
@@ -219,28 +206,22 @@ export default function StoriesBar() {
             <button
               key={userId}
               onClick={() => openStory(userId)}
-              className="flex flex-col items-center gap-2 shrink-0 group relative"
+              className="flex flex-col items-center gap-2 shrink-0 group"
             >
-              <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full p-1 transition-all duration-500 group-hover:scale-110 active:scale-95 relative`}>
-                <div className={`absolute inset-0 rounded-full animate-pulse blur-[6px] opacity-40 bg-primary/40`} />
-                <div className="w-full h-full rounded-full bg-secondary border-2 border-primary/30 overflow-hidden relative shadow-[0_0_20px_rgba(212,175,55,0.1)]">
+              <div className={`w-16 h-16 rounded-full p-0.5 group-hover:scale-105 transition-transform ${isMe ? "border-2 border-dashed border-primary/70" : "border-2 border-primary"}`}>
+                <div className="w-full h-full rounded-full bg-secondary overflow-hidden relative">
                   <SafeImage
                     src={prof?.avatar_url}
                     alt={prof?.full_name || ""}
                     fallbackText={prof?.full_name}
-                    className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700"
+                    className="w-full h-full object-cover"
                   />
-                  <div className="absolute bottom-0 right-0 w-5 h-5 bg-black rounded-full flex items-center justify-center border border-white/10">
+                  <div className="absolute bottom-0 right-0 w-4 h-4 bg-background rounded-full flex items-center justify-center">
                     <HouseCrest house={prof?.house} size="sm" />
                   </div>
-                  {getStreak(userId) > 0 && (
-                    <div className="absolute -top-1 -right-1 bg-black rounded-full p-1 border border-orange-500 shadow-xl z-20 animate-bounce">
-                      <Flame size={10} className="text-orange-500" fill="currentColor" />
-                    </div>
-                  )}
                 </div>
               </div>
-              <span className="text-[10px] font-heading text-foreground/80 truncate w-16 text-center uppercase tracking-widest">
+              <span className="text-xs font-heading text-foreground truncate w-16 text-center">
                 {isMe ? "Você" : (prof?.full_name?.split(" ")[0] || "?")}
               </span>
             </button>

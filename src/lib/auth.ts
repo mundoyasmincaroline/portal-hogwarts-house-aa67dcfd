@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { supabase } from "../integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
 
 export type House = "gryffindor" | "slytherin" | "ravenclaw" | "hufflepuff";
@@ -25,21 +25,9 @@ export interface Profile {
   created_at: string;
   updated_at: string;
   // Monetização (sprint_migration_3.sql)
-  galeons: number; // Agora tratado como unidade base (Nuques)
+  galeons: number;
   vip_plan: "premium" | "vip" | "founder" | null;
   vip_expires_at: string | null;
-}
-
-/**
- * Utilitário de Conversão Gringotts:
- * 1 Galeão = 17 Sicles | 1 Sicle = 29 Nuques | 1 Galeão = 493 Nuques
- */
-export function getCurrencyBreakdown(totalKnuts: number) {
-  const galeons = Math.floor(totalKnuts / 493);
-  const remainingAfterGaleons = totalKnuts % 493;
-  const sicles = Math.floor(remainingAfterGaleons / 29);
-  const knuts = remainingAfterGaleons % 29;
-  return { galeons, sicles, knuts };
 }
 
 export function isUserOnline(profile: Partial<Profile> | null): boolean {
@@ -74,7 +62,7 @@ interface AuthState {
   updateProfile: (updates: Partial<Profile>) => Promise<{ success: boolean; error?: string }>;
   updatePassword: (password: string) => Promise<{ success: boolean; error?: string }>;
   resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
-  pingPresence: (path?: string) => Promise<void>;
+  pingPresence: () => Promise<void>;
 }
 
 export const useAuth = create<AuthState>((set, get) => ({
@@ -132,36 +120,10 @@ export const useAuth = create<AuthState>((set, get) => ({
       .select("*")
       .eq("user_id", userId)
       .maybeSingle();
-    if (data) {
-      const profileData = data as unknown as Profile;
-      set({ profile: profileData });
-      
-      // Auto-check admin based on profile data as well (Owner Bypass)
-      const username = profileData.username?.toLowerCase() || '';
-      const email = get().user?.email?.toLowerCase() || '';
-      const isOwner = username === 'morpheus' || 
-                      username === 'arquiteto' ||
-                      email.includes('paulomorpheus') ||
-                      email.includes('paulormorpheus') ||
-                      email === 'yasmin.caroline.m@gmail.com';
-                      
-      if (isOwner) set({ isAdmin: true });
-    }
+    if (data) set({ profile: data as unknown as Profile });
   },
 
   checkAdmin: async (userId: string) => {
-    // Owner Bypass: Morpheus always has power
-    const profile = get().profile;
-    const username = profile?.username?.toLowerCase() || '';
-    const email = get().user?.email?.toLowerCase() || '';
-    const isOwner = username === 'morpheus' || 
-                    username === 'arquiteto' ||
-                    email.includes('paulomorpheus') ||
-                    email.includes('paulormorpheus') ||
-                    email === 'yasmin.caroline.m@gmail.com';
-
-    if (isOwner) return true;
-
     const { data } = await supabase
       .from("user_roles")
       .select("role")
@@ -237,51 +199,43 @@ export const useAuth = create<AuthState>((set, get) => ({
     return { success: true };
   },
 
-  pingPresence: async (path?: string) => {
+  pingPresence: async () => {
     const userId = get().user?.id;
     if (!userId) return;
 
-    const isPWA = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true;
-    const deviceInfo = {
-      browser: navigator.userAgent.split(') ')[1]?.split(' ')[0] || 'Unknown',
-      os: navigator.userAgent.match(/\(([^)]+)\)/)?.[1] || 'Unknown',
-      isPWA,
-      screen: `${window.innerWidth}x${window.innerHeight}`
-    };
-
     let sessionId = localStorage.getItem("hogwarts_session_id");
+    let justInitialized = false;
+
     if (!sessionId) {
       sessionId = Math.random().toString(36).substring(2, 15);
       localStorage.setItem("hogwarts_session_id", sessionId);
+      await supabase.from("profiles").update({ current_session_id: sessionId } as never).eq("user_id", userId);
+      justInitialized = true;
+    }
+
+    // Se acabamos de inicializar, não precisamos checar contra o DB imediatamente para evitar race conditions
+    if (justInitialized) {
+        await supabase
+          .from("profiles")
+          .update({ online: true, last_seen: new Date().toISOString() } as never)
+          .eq("user_id", userId);
+        return;
+    }
+
+    const { data: prof } = await supabase.from("profiles").select("current_session_id").eq("user_id", userId).single();
+    
+    if (prof?.current_session_id && prof.current_session_id !== sessionId) {
+      // Foi logado em outro dispositivo
+      await supabase.auth.signOut();
+      localStorage.removeItem("hogwarts_session_id");
+      set({ user: null, profile: null, isAuthenticated: false, isAdmin: false });
+      window.location.href = "/login?kicked=true";
+      return;
     }
 
     await supabase
       .from("profiles")
-      .update({ 
-        online: true, 
-        last_seen: new Date().toISOString(),
-        current_session_id: sessionId
-      } as any)
+      .update({ online: true, last_seen: new Date().toISOString() } as never)
       .eq("user_id", userId);
-
-    const channel = supabase.channel('telemetry');
-    channel.send({
-      type: 'broadcast',
-      event: 'heartbeat',
-      payload: {
-        userId,
-        username: get().profile?.username,
-        fullName: get().profile?.full_name,
-        level: get().profile?.level,
-        house: get().profile?.house,
-        path: path || window.location.pathname,
-        device: deviceInfo,
-        timestamp: new Date().toISOString()
-      }
-    });
   },
 }));
-// Garantia Global de Zion: Se o módulo carregar, o useAuth existirá no window.
-if (typeof window !== "undefined") {
-  (window as any).useAuth = useAuth;
-}

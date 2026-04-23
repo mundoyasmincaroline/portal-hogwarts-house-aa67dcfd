@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "../lib/auth";
+import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import MagicalParticles from "@/components/MagicalParticles";
-import { Eye, EyeOff, Crown } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { playDoorSound } from "@/lib/sounds";
 
@@ -101,24 +101,18 @@ export default function Login() {
     <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
       {/* ── CINEMATIC BACKGROUND ── */}
       <div className="absolute inset-0 z-0">
-         <img src="/hogwarts_bg.png" className="w-full h-full object-cover opacity-20 grayscale scale-110" alt="Background" />
+         <img src="https://images.unsplash.com/photo-1514894780037-d2ef692277bb?auto=format&fit=crop&q=80&w=2000" className="w-full h-full object-cover opacity-20 grayscale scale-110" alt="Background" />
          <div className="absolute inset-0 bg-gradient-to-br from-black via-black/90 to-purple-950/30" />
       </div>
 
       <MagicalParticles />
       <div className="glass rounded-[2.5rem] p-10 w-full max-w-md z-20 animate-fade-in-up border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.8)]">
-        <div className="text-center mb-16">
-          <div className="relative w-32 h-32 mx-auto mb-10 group">
-             <div className="absolute inset-0 bg-primary/20 rounded-full blur-[40px] animate-pulse group-hover:bg-primary/40 transition-all" />
-             <div className="relative z-10 w-full h-full bg-black/80 border-2 border-primary/40 rounded-[2.5rem] flex items-center justify-center backdrop-blur-2xl shadow-2xl transition-transform duration-700 group-hover:scale-110 group-hover:rotate-6">
-                <Crown size={64} className="text-primary drop-shadow-[0_0_20px_rgba(var(--primary),1)]" />
-             </div>
-          </div>
-          <h1 className="font-heading text-5xl md:text-7xl text-gold-gradient mb-4 tracking-tighter drop-shadow-2xl uppercase leading-[0.9]">
-            {isRecoveryMode ? "NOVA SENHA" : "ENTRAR NO CASTELO"}
+        <div className="text-center mb-8">
+          <h1 className="font-heading text-3xl text-gold-gradient mb-2">
+            {isRecoveryMode ? "Nova Senha" : "Entrar"}
           </h1>
-          <p className="text-primary/60 text-sm font-bold uppercase tracking-[0.5em] opacity-80">
-            {isRecoveryMode ? "Redefina sua Identidade Mística" : "Acesse o Conselho das Sombras"}
+          <p className="text-muted-foreground text-sm">
+            {isRecoveryMode ? "Defina sua nova senha mágica abaixo" : "Acesse o Portal Hogwarts House"}
           </p>
         </div>
 

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Sparkles, Trophy, Castle, Zap } from "lucide-react";
+import { Sparkles, Trophy } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import { HOUSES, type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,7 +20,6 @@ import MagicalGaleon from "@/components/MagicalGaleon";
 import WelcomeChestModal from "@/components/WelcomeChestModal";
 import JarvisPresence from "@/components/JarvisPresence";
 import MagicalMemories from "@/components/MagicalMemories";
-import HouseCupWidget from "@/components/HouseCupWidget";
 
 
 const REACTIONS = ["⚡", "❤️", "🔥", "🦁", "🦅", "🐍", "🦡"];
@@ -62,74 +61,63 @@ export default function Feed() {
   const [showWelcomeChest, setShowWelcomeChest] = useState(false);
 
   const loadFeed = useCallback(async () => {
-    try {
-      setLoading(true);
-      const { data: postsData, error: postsError } = await supabase
-        .from("posts")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(50);
-        
-      if (postsError) throw postsError;
-      if (!postsData) { setLoading(false); return; }
+    const { data: postsData } = await supabase
+      .from("posts")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(50);
+    if (!postsData) { setLoading(false); return; }
 
-      const userIds = [...new Set(postsData.map((p) => p.user_id))];
-      const { data: authors, error: authorsError } = await supabase
-        .from("profiles")
-        .select("user_id, full_name, username, house, avatar_url, vip_plan")
-        .in("user_id", userIds.length ? userIds : ["00000000-0000-0000-0000-000000000000"]);
+    const userIds = [...new Set(postsData.map((p) => p.user_id))];
+    const { data: authors } = await supabase
+      .from("profiles")
+      .select("user_id, full_name, username, house, avatar_url, vip_plan")
+      .in("user_id", userIds.length ? userIds : ["00000000-0000-0000-0000-000000000000"]);
 
-      if (authorsError) throw authorsError;
+    const postIds = postsData.map((p) => p.id);
+    const safeIds = postIds.length ? postIds : ["00000000-0000-0000-0000-000000000000"];
+    const [{ data: reactions }, { data: comments }] = await Promise.all([
+      supabase.from("post_reactions").select("post_id, emoji, user_id").in("post_id", safeIds),
+      supabase.from("post_comments").select("*").in("post_id", safeIds).order("created_at", { ascending: true }),
+    ]);
 
-      const postIds = postsData.map((p) => p.id);
-      const safeIds = postIds.length ? postIds : ["00000000-0000-0000-0000-000000000000"];
-      const [{ data: reactions }, { data: comments }] = await Promise.all([
-        supabase.from("post_reactions").select("post_id, emoji, user_id").in("post_id", safeIds),
-        supabase.from("post_comments").select("*").in("post_id", safeIds).order("created_at", { ascending: true }),
-      ]);
+    const commentUserIds = [...new Set((comments || []).map((c) => c.user_id))];
+    const { data: commentAuthors } = await supabase
+      .from("profiles")
+      .select("user_id, full_name, username, house, avatar_url")
+      .in("user_id", commentUserIds.length ? commentUserIds : ["00000000-0000-0000-0000-000000000000"]);
 
-      const commentUserIds = [...new Set((comments || []).map((c) => c.user_id))];
-      const { data: commentAuthors } = await supabase
-        .from("profiles")
-        .select("user_id, full_name, username, house, avatar_url")
-        .in("user_id", commentUserIds.length ? commentUserIds : ["00000000-0000-0000-0000-000000000000"]);
+    const authorMap = new Map((authors || []).map((a) => [a.user_id, a as PostAuthor & { user_id: string }]));
+    const commentAuthorMap = new Map((commentAuthors || []).map((a) => [a.user_id, a as PostAuthor & { user_id: string }]));
 
-      const authorMap = new Map((authors || []).map((a) => [a.user_id, a as PostAuthor & { user_id: string }]));
-      const commentAuthorMap = new Map((commentAuthors || []).map((a) => [a.user_id, a as PostAuthor & { user_id: string }]));
-
-      const enriched: FeedPost[] = postsData.map((p) => {
-        const postReactions = (reactions || []).filter((r) => r.post_id === p.id);
-        const grouped: Record<string, { count: number; mine: boolean }> = {};
-        postReactions.forEach((r) => {
-          if (!grouped[r.emoji]) grouped[r.emoji] = { count: 0, mine: false };
-          grouped[r.emoji].count++;
-          if (r.user_id === user?.id) grouped[r.emoji].mine = true;
-        });
-
-        const postComments = (comments || []).filter((c) => c.post_id === p.id).map((c) => ({
-          ...c,
-          author: commentAuthorMap.get(c.user_id),
-        }));
-
-        return {
-          id: p.id,
-          user_id: p.user_id,
-          content: p.content,
-          music_url: p.music_url,
-          created_at: p.created_at,
-          author: authorMap.get(p.user_id),
-          reactions: Object.entries(grouped).map(([emoji, v]) => ({ emoji, count: v.count, mine: v.mine })),
-          comments: postComments,
-        };
+    const enriched: FeedPost[] = postsData.map((p) => {
+      const postReactions = (reactions || []).filter((r) => r.post_id === p.id);
+      const grouped: Record<string, { count: number; mine: boolean }> = {};
+      postReactions.forEach((r) => {
+        if (!grouped[r.emoji]) grouped[r.emoji] = { count: 0, mine: false };
+        grouped[r.emoji].count++;
+        if (r.user_id === user?.id) grouped[r.emoji].mine = true;
       });
 
-      setPosts(enriched);
-    } catch (err: any) {
-      console.error("ZION_FEED_ERROR:", err);
-      toast.error("Erro ao carregar o feed. A conexão com o castelo está instável.");
-    } finally {
-      setLoading(false);
-    }
+      const postComments = (comments || []).filter((c) => c.post_id === p.id).map((c) => ({
+        ...c,
+        author: commentAuthorMap.get(c.user_id),
+      }));
+
+      return {
+        id: p.id,
+        user_id: p.user_id,
+        content: p.content,
+        music_url: p.music_url,
+        created_at: p.created_at,
+        author: authorMap.get(p.user_id),
+        reactions: Object.entries(grouped).map(([emoji, v]) => ({ emoji, count: v.count, mine: v.mine })),
+        comments: postComments,
+      };
+    });
+
+    setPosts(enriched);
+    setLoading(false);
   }, [user?.id]);
 
   const loadSidebar = useCallback(async () => {
@@ -185,7 +173,7 @@ export default function Feed() {
       let reason = hasBannedWord ? "Palavra proibida" : isAllCaps ? "Gritaria (CAPS LOCK)" : "Spam (letras repetidas)";
       toast.error(
         <div className="flex gap-3 items-center">
-          <img src="/default_avatar.png" alt="Filch" className="w-10 h-10 rounded-full border border-red-500 object-cover" />
+          <img src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Filch" className="w-10 h-10 rounded-full border border-red-500 object-cover" />
           <div>
             <p className="font-bold text-red-500">Argus Filch</p>
             <p className="text-sm">Publicação bloqueada: {reason}</p>
@@ -262,7 +250,6 @@ export default function Feed() {
       <MagicalMemories />
       <StoriesBar />
       <DynamicGreeting />
-      <HouseCupWidget />
 
       
       {showWelcomeChest && (
@@ -359,9 +346,9 @@ export default function Feed() {
                     <button
                       key={r.emoji}
                       onClick={() => toggleReaction(post.id, r.emoji, r.mine)}
-                      className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs transition-all duration-300 hover:scale-110 ${r.mine ? "bg-primary/30 text-primary border border-primary/20" : "glass hover:bg-secondary/80"}`}
+                      className={`px-3 py-1 rounded-full text-xs transition-colors ${r.mine ? "bg-primary/30 text-primary" : "glass hover:bg-secondary/80"}`}
                     >
-                      <MagicalEmoji emoji={r.emoji} size="xs" /> {r.count}
+                      {r.emoji} {r.count}
                     </button>
                   ))}
                   <div className="flex gap-1 glass rounded-full px-2 py-1">
@@ -374,7 +361,7 @@ export default function Feed() {
                           onClick={() => toggleReaction(post.id, emoji, false)}
                           className="text-xs hover:scale-125 transition-transform"
                         >
-                          <MagicalEmoji emoji={emoji} size="xs" />
+                          {emoji}
                         </button>
                       );
                     })}
@@ -426,75 +413,69 @@ export default function Feed() {
         </div>
 
         <div className="space-y-4">
-          <div className="glass rounded-[2rem] p-6 border-white/5 bg-gradient-to-br from-black/40 to-transparent shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-4 opacity-10">
-               <Castle className="text-primary w-12 h-12" />
-            </div>
-            <h3 className="font-heading text-xs text-primary mb-6 flex items-center gap-2 uppercase tracking-[0.2em] font-bold">
-               🏰 Bruxos no Castelo
-            </h3>
+          <div className="glass rounded-xl p-4">
+            <h3 className="font-heading text-sm text-primary mb-3">🏰 Bruxos no Castelo</h3>
             
             <JarvisPresence />
             
             {/* Morpheus - Arquiteto */}
-            <div className="flex items-center gap-3 mb-3 p-3 bg-black border-2 border-green-500/30 rounded-2xl group shadow-[0_0_20px_rgba(34,197,94,0.15)] relative overflow-hidden">
-              <div className="absolute inset-0 bg-green-500/5 group-hover:bg-green-500/10 transition-colors" />
-              <div className="w-10 h-10 rounded-xl shrink-0 border-2 border-green-500 relative bg-black flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-green-500/20 z-10 animate-pulse"></div>
-                <span className="text-green-500 font-mono text-sm font-bold animate-pulse relative z-20">M</span>
+            <div className="flex items-center gap-2 mb-2 p-2 bg-black border border-green-500/50 rounded-lg group shadow-[0_0_10px_rgba(34,197,94,0.2)]">
+              <div className="w-8 h-8 rounded-none shrink-0 border border-green-500 relative bg-black flex items-center justify-center">
+                <div className="absolute inset-0 bg-green-500/10 z-10"></div>
+                <span className="text-green-500 font-mono text-xs font-bold animate-pulse">M</span>
               </div>
-              <div className="flex-1 min-w-0 relative z-20">
-                <p className="text-xs text-green-500 font-bold font-mono truncate tracking-widest uppercase">&gt; MORPHEUS</p>
-                <p className="text-[9px] font-mono text-green-500/60 truncate uppercase">SYSTEM_ARCHITECT</p>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-green-500 font-bold font-mono truncate tracking-widest">&gt; MORPHEUS</p>
+                <p className="text-[9px] font-mono text-green-500/70 truncate">SYSTEM_ARCHITECT</p>
               </div>
-              <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_#22c55e] animate-pulse"></div>
+              <div className="w-2 h-2 rounded-none bg-green-500 animate-[ping_3s_linear_infinite]"></div>
             </div>
 
             {/* Yasmin Caroline - A Fundadora */}
-            <div className="flex items-center gap-3 mb-3 p-3 bg-yellow-500/10 border-2 border-yellow-400/40 rounded-2xl group shadow-[0_0_20px_rgba(250,204,21,0.2)] hover:scale-[1.02] transition-all cursor-default">
-              <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border-2 border-yellow-400 relative shadow-lg">
-                <div className="absolute inset-0 bg-yellow-400/20 mix-blend-overlay z-10 animate-pulse"></div>
-                <img src="/default_avatar.png" alt="Yasmin Caroline" className="w-full h-full object-cover" />
+            <div className="flex items-center gap-2 mb-2 p-2 bg-yellow-500/10 border border-yellow-400/50 rounded-lg group shadow-[0_0_15px_rgba(250,204,21,0.3)] hover:scale-105 transition-transform cursor-default">
+              <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border-2 border-yellow-400 relative">
+                <div className="absolute inset-0 bg-yellow-400/30 mix-blend-overlay z-10 animate-pulse"></div>
+                <img src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Yasmin Caroline" className="w-full h-full object-cover" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-yellow-400 font-bold truncate tracking-tight">✨ Yasmin Caroline</p>
-                <p className="text-[9px] text-yellow-500/70 truncate font-bold uppercase tracking-widest">Fundadora Genial</p>
+                <p className="text-xs text-yellow-400 font-bold truncate">✨ Yasmin Caroline</p>
+                <p className="text-[9px] text-yellow-500/80 truncate font-bold">A FUNDADORA GENIAL</p>
               </div>
-              <div className="w-2 h-2 rounded-full bg-yellow-400 shadow-[0_0_10px_#eab308] animate-bounce"></div>
+              <div className="w-2 h-2 rounded-full bg-yellow-400 animate-bounce"></div>
             </div>
 
             {/* Carolina Assis - A Guardiã */}
-            <div className="flex items-center gap-3 mb-3 p-3 bg-blue-500/10 border-2 border-blue-400/40 rounded-2xl group shadow-[0_0_20px_rgba(96,165,250,0.15)]">
-              <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border-2 border-blue-400 relative shadow-lg">
-                <div className="absolute inset-0 bg-blue-400/10 mix-blend-overlay z-10 animate-pulse"></div>
-                <img src="/default_avatar.png" alt="Carolina Assis" className="w-full h-full object-cover" />
+            <div className="flex items-center gap-2 mb-2 p-2 bg-blue-500/10 border border-blue-400/50 rounded-lg group shadow-[0_0_10px_rgba(96,165,250,0.2)]">
+              <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-blue-400 relative">
+                <div className="absolute inset-0 bg-blue-400/20 mix-blend-overlay z-10 animate-pulse"></div>
+                <img src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Carolina Assis" className="w-full h-full object-cover" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-blue-400 font-bold truncate">🛡️ Carolina Assis</p>
-                <p className="text-[9px] text-blue-400/70 truncate font-bold uppercase tracking-widest">Mãe Zelosa • Vigiando</p>
+                <p className="text-[9px] text-blue-400/80 truncate font-bold">MÃE ZELOSA • VIGIANDO</p>
               </div>
-              <div className="w-2 h-2 rounded-full bg-blue-400 shadow-[0_0_10px_#60a5fa] animate-pulse"></div>
+              <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></div>
             </div>
 
             {/* Argus Filch - Sempre Online */}
-            <div className="flex items-center gap-3 mb-6 p-3 bg-red-950/20 border border-red-900/30 rounded-2xl group">
-              <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border border-red-500/30">
-                <img src="/default_avatar.png" alt="Argus Filch" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all opacity-40 group-hover:opacity-100" />
+            <div className="flex items-center gap-2 mb-4 p-2 bg-red-950/30 border border-red-900/50 rounded-lg group">
+              <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-red-500/50">
+                <img src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Argus Filch" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-red-500/60 font-bold truncate group-hover:text-red-500 transition-colors">Argus Filch</p>
-                <p className="text-[10px] text-muted-foreground/40 truncate italic group-hover:text-muted-foreground transition-colors">Patrulhando os corredores...</p>
+                <p className="text-xs text-red-500 font-bold truncate">Argus Filch</p>
+                <p className="text-[10px] text-muted-foreground truncate">Vigiando os corredores...</p>
               </div>
-              <div className="w-2 h-2 rounded-full bg-red-500/40 shadow-[0_0_10px_rgba(239,68,68,0.2)]" />
+              <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
             </div>
 
-            <div className="space-y-3 max-h-[250px] overflow-y-auto pr-2 custom-scrollbar">
+            <div className="space-y-2 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
               {onlineUsers.length === 0 && (
-                <p className="text-[10px] text-muted-foreground uppercase text-center py-4 tracking-[0.2em] opacity-30 italic">O castelo está em silêncio...</p>
+                <p className="text-xs text-muted-foreground">Ninguém à vista.</p>
               )}
               {onlineUsers.map((u) => (
-                <div key={u.id} className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors group">
-                  <div className={`w-8 h-8 rounded-full overflow-hidden border-2 shrink-0 shadow-md ${u.house === 'gryffindor' ? 'border-red-500/50' : u.house === 'slytherin' ? 'border-green-500/50' : u.house === 'ravenclaw' ? 'border-blue-500/50' : 'border-yellow-500/50'}`}>
+                <div key={u.id} className="flex items-center gap-2">
+                  <div className={`w-6 h-6 rounded-full overflow-hidden border-2 shrink-0 ${u.house === 'gryffindor' ? 'border-red-500' : u.house === 'slytherin' ? 'border-green-500' : u.house === 'ravenclaw' ? 'border-blue-500' : 'border-yellow-500'}`}>
                     <SafeImage 
                       src={u.avatar_url} 
                       alt={u.username} 
@@ -503,41 +484,35 @@ export default function Feed() {
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs text-foreground group-hover:text-primary transition-colors font-medium truncate">{(u.full_name || u.username || 'Bruxo').split(' ')[0]}</p>
-                    <p className="text-[8px] text-muted-foreground uppercase tracking-widest">{u.house || 'Aprendiz'}</p>
+                    <p className="text-xs text-foreground truncate">{(u.full_name || u.username || 'Bruxo').split(' ')[0]}</p>
                   </div>
-                  <span className={`w-1.5 h-1.5 rounded-full ${isUserOnline(u) ? 'bg-green-500 shadow-[0_0_8px_#22c55e]' : 'bg-muted'}`} />
+                  <span className={`w-2 h-2 rounded-full ${isUserOnline(u) ? 'bg-green-500' : 'bg-muted'}`} title={isUserOnline(u) ? 'Online' : 'Offline'} />
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="glass rounded-[2rem] p-6 border-white/5 bg-gradient-to-br from-black/40 to-transparent shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-4 opacity-10">
-               <Zap className="text-primary w-12 h-12 animate-pulse" />
-            </div>
-            <h3 className="font-heading text-xs text-primary mb-6 flex items-center gap-2 uppercase tracking-[0.2em] font-bold">
+          <div className="glass rounded-[2rem] p-6 border-white/5 bg-gradient-to-br from-black/40 to-transparent shadow-2xl">
+            <h3 className="font-heading text-sm text-primary mb-5 flex items-center gap-2">
               <Sparkles size={16} /> Desafios Ativos
             </h3>
             <div className="space-y-4">
               {activeChallenges.length === 0 && (
-                <p className="text-[10px] text-muted-foreground uppercase text-center py-6 tracking-widest opacity-30 italic">Nenhum desafio ativo agora.</p>
+                <p className="text-[10px] text-muted-foreground uppercase text-center py-4 tracking-widest opacity-50">Nenhum desafio ativo agora.</p>
               )}
               {activeChallenges.map((c) => (
-                <div key={c.id} className="group relative glass rounded-2xl p-4 border border-white/5 bg-white/5 hover:bg-white/10 transition-all cursor-pointer overflow-hidden shadow-lg hover:shadow-primary/10">
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="flex items-center gap-4 relative z-10">
-                    <div className="w-12 h-12 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center relative overflow-hidden shrink-0 group-hover:border-primary/40 transition-colors">
-                       <div className="absolute inset-0 bg-primary/5 animate-pulse" />
+                <div key={c.id} className="group relative glass rounded-2xl p-4 border border-white/5 bg-white/5 hover:bg-white/10 transition-all cursor-pointer overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="flex items-center gap-3 relative z-10">
+                    <MagicalIcon size="sm">
                        <MagicalEmoji emoji={c.type === 'daily' ? '⚡' : '🔥'} size="sm" />
-                    </div>
+                    </MagicalIcon>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate mb-1">{c.title}</p>
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-1.5 px-2 py-0.5 bg-white/5 rounded-full border border-white/10">
-                           <span className="text-[8px] text-muted-foreground uppercase tracking-widest font-bold">{c.type === "daily" ? "Diário" : "Semanal"}</span>
-                        </div>
-                        <span className="text-[10px] text-primary font-heading font-bold drop-shadow-[0_0_8px_rgba(var(--primary),0.4)]">{c.xp_reward} XP</span>
+                      <p className="text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">{c.title}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{c.type === "daily" ? "Diário" : "Semanal"}</span>
+                        <div className="w-1 h-1 rounded-full bg-white/20" />
+                        <span className="text-[10px] text-primary font-bold">{c.xp_reward} XP</span>
                       </div>
                     </div>
                   </div>
