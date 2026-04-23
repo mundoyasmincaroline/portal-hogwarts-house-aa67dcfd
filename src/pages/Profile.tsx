@@ -159,7 +159,6 @@ export default function Profile() {
       loadReferrals(user!.id);
       loadBadges(user!.id);
       loadExtras(user!.id);
-      checkFamilyPrefs(currentUserProfile.active_character_id);
     } else if (userId) {
       loadTargetProfile();
       loadFriends(userId);
@@ -168,19 +167,6 @@ export default function Profile() {
       loadExtras(userId);
     }
   }, [userId, isMe, currentUserProfile]);
-
-  const checkFamilyPrefs = async (charId: string | null) => {
-    if (!isMe || !charId) return;
-    const { data: char } = await supabase.from("characters").select("family_name").eq("id", charId).maybeSingle();
-    if (char && !char.family_name) {
-      setTimeout(() => {
-        toast("Edwiges: Você ainda não definiu as preferências de família (irmãos, parentesco) do seu personagem! Por favor, atualize sua ficha na aba 'Fichas'.", {
-          duration: 15000,
-          icon: "🦉"
-        });
-      }, 3000);
-    }
-  };
 
   const loadTargetProfile = async () => {
     setLoadingTarget(true);
@@ -473,15 +459,6 @@ export default function Profile() {
           >
             <div className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]" />
             Revolution
-          </button>
-        )}
-        {(isMe && ((profile?.username?.toLowerCase() || '').includes('yasmin') || profile?.username === 'morpheus' || isAdmin)) && (
-          <button 
-            onClick={() => navigate("/dashboard/yasmin-world")} 
-            className="pb-2 font-heading text-sm transition-colors shrink-0 text-red-500 hover:text-red-400 flex items-center gap-2"
-          >
-            <div className="w-2 h-2 rounded-full bg-red-600 shadow-[0_0_8px_#dc2626]" />
-            Mundo Yasmin
           </button>
         )}
       </div>

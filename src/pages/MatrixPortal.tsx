@@ -272,88 +272,16 @@ export default function MatrixPortal() {
                    { name: "SENTINEL", status: "GUARD", icon: <Terminal size={10} /> },
                    { name: "LEGION", status: "SCALING", icon: <Users size={10} /> }
                 ].map((ai, i) => (
-                   <div key={i} className="bg-black/40 border border-cyan-500/10 p-2 rounded-lg flex items-center justify-between">
-                      <div className="flex items-center gap-1.5">
-                         <span className="text-cyan-400">{ai.icon}</span>
-                         <span className="text-[9px] font-bold">{ai.name}</span>
-                      </div>
-                      <span className="text-[8px] text-[#0F0] animate-pulse">{ai.status}</span>
-                   </div>
+                  <div key={i} className="bg-black/40 border border-cyan-500/10 p-2 rounded-lg flex items-center justify-between">
+                     <div className="flex items-center gap-1.5">
+                        <span className="text-cyan-400">{ai.icon}</span>
+                        <span className="text-[9px] font-bold">{ai.name}</span>
+                     </div>
+                     <span className="text-[8px] text-[#0F0] animate-pulse">{ai.status}</span>
+                  </div>
                 ))}
              </div>
              <p className="text-[9px] opacity-40 italic text-center font-mono">"Arsenal Neural 100% Sincronizado."</p>
-          </div>
-
-          {/* ── MAPA DE EXECUÇÃO: PASSO A PASSO (PERFECT MODE) ── */}
-          <div className="glass bg-[#0F0]/5 border-[#0F0]/30 p-6 rounded-3xl space-y-4">
-             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#0F0] flex items-center gap-2">
-                <LayoutDashboard size={14} className="animate-pulse" /> MAPA DE EXECUÇÃO: PRÓXIMOS PASSOS
-             </p>
-             
-             <div className="space-y-4">
-                {[
-                   { step: 1, task: "REVISÃO 'MONSTER QUALITY' GLOBAL", desc: "Auditar cada imagem e animação para garantir o padrão AAA.", status: "DONE" },
-                   { step: 2, task: "ESTRATÉGIA VIRAL (YASMIN)", desc: "Postar Vídeo 1 (O Convite) e engajar leads nos comentários.", status: "IN_PROGRESS" },
-                   { step: 3, task: "MONITORAMENTO DE VENDAS 12H", desc: "Verificar status da InfinitePay e liberar galeões pendentes.", status: "IN_PROGRESS" },
-                   { step: 4, task: "EXPANSÃO DO COFRE DE ASSETS", desc: "Gerar novos criativos para os próximos lançamentos (Luma/Flux).", status: "DONE" },
-                   { step: 5, task: "ATIVAÇÃO 'GOD MODE' (ESTABILIDADE)", desc: "Auto-scan diário de erros para prevenir quedas no mobile.", status: "DONE" }
-                ].map((item, i) => (
-                   <div key={i} className={`p-4 rounded-2xl border transition-all ${item.status === 'DONE' ? 'bg-[#0F0]/10 border-[#0F0]/40 opacity-50' : 'bg-black/60 border-white/10 group hover:border-[#0F0]/50'}`}>
-                      <div className="flex items-center justify-between mb-2">
-                         <span className="text-[10px] font-bold text-[#0F0] bg-[#0F0]/10 px-2 py-0.5 rounded-full">PASSO {item.step}</span>
-                         <span className={`text-[8px] font-bold ${item.status === 'DONE' ? 'text-[#0F0]' : item.status === 'IN_PROGRESS' ? 'text-yellow-500 animate-pulse' : 'text-white/40'}`}>{item.status}</span>
-                      </div>
-                      <p className="text-xs font-bold text-white mb-1">{item.task}</p>
-                      <p className="text-[10px] text-white/50 font-serif italic">{item.desc}</p>
-                   </div>
-                ))}
-             </div>
-          </div>
-
-          {/* ── LIVRO DO ARQUITETO: PENDÊNCIAS & LOGÍSTICA ── */}
-          <div className="glass bg-red-950/20 border-red-500/30 p-6 rounded-3xl space-y-4 relative overflow-hidden">
-             <div className="absolute top-0 right-0 p-4 opacity-20">
-                <Scale size={40} className="text-red-500" />
-             </div>
-             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-400 flex items-center gap-2">
-                <Settings size={14} /> LIVRO DO ARQUITETO (PRIVATE_LEDGER)
-             </p>
-             
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
-                <div className="space-y-3">
-                   <p className="text-[9px] font-bold text-red-400/60 uppercase border-b border-red-500/20 pb-1">Negócios & Viral</p>
-                   {[
-                      { label: "Postagens TikTok Shop", desc: "Amostras Grátis (Pendentes)", icon: "📱" },
-                      { label: "Suporte Carolina", desc: "Segurança do Clã e Logística", icon: "🛡️" }
-                   ].map((p, i) => (
-                      <div key={i} className="flex items-center gap-3 bg-black/40 p-3 rounded-xl border border-white/5">
-                         <span className="text-lg">{p.icon}</span>
-                         <div>
-                            <p className="text-[10px] font-bold text-white">{p.label}</p>
-                            <p className="text-[8px] text-red-400/60 font-mono">{p.desc}</p>
-                         </div>
-                      </div>
-                   ))}
-                </div>
-
-                <div className="space-y-3">
-                   <p className="text-[9px] font-bold text-red-400/60 uppercase border-b border-red-500/20 pb-1">Contas & Operações (Vencimentos)</p>
-                   {[
-                      { label: "Água & Internet", status: "PAGAR", color: "text-blue-400" },
-                      { label: "Miqueias & Renato", status: "DÍVIDA", color: "text-red-500" },
-                      { label: "TV dos Pais", status: "APARELHO", color: "text-cyan-400" }
-                   ].map((c, i) => (
-                      <div key={i} className="flex items-center justify-between bg-black/40 p-3 rounded-xl border border-white/5">
-                         <p className="text-[10px] font-bold text-white">{c.label}</p>
-                         <span className={`text-[8px] font-bold px-2 py-0.5 rounded-full border border-current ${c.color}`}>{c.status}</span>
-                      </div>
-                   ))}
-                </div>
-             </div>
-             
-             <p className="text-[9px] text-red-400/40 font-mono italic text-center mt-4">
-                "Não acumularás dívidas no mundo dos homens enquanto constróis o império dos deuses."
-             </p>
           </div>
 
           <div className="glass bg-black border-[#0F0]/20 p-6 rounded-3xl space-y-4">
@@ -459,115 +387,74 @@ export default function MatrixPortal() {
           </div>
 
 
-
-
-          {/* ── CRIATIVOS VIRAIS: ESTRATÉGIA YASMIN ── */}
-          <div className="glass bg-cyan-500/10 border-cyan-500/30 p-6 rounded-3xl space-y-4">
-             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-400 flex items-center gap-2">
-                <Users size={14} /> CRIATIVOS VIRAIS (YASMIN CAROLINE)
-             </p>
-             
-             <div className="space-y-3">
-                <div className="bg-black/40 p-4 rounded-xl border border-cyan-400/20">
-                   <p className="text-[10px] font-bold text-cyan-400 mb-1">ROTEIRO VÍDEO 1: A CARTA</p>
-                   <p className="text-[9px] text-white/70 leading-relaxed italic">
-                      "Abra a carta de Hogwarts em frente à câmera. Reação real. Use o fundo musical épico. Legenda: O portal abriu. Quem vem comigo?"
-                   </p>
-                </div>
-                <div className="bg-black/40 p-4 rounded-xl border border-white/5">
-                   <p className="text-[10px] font-bold text-white/60 mb-1">ROTEIRO VÍDEO 2: O TOUR</p>
-                   <p className="text-[9px] text-white/50 leading-relaxed italic">
-                      "Mostre a Gringotts Store no celular. 'Gente, olha esses Galeões em 3D!'. Mostre o sistema de casas. Call to action: Link na Bio."
-                   </p>
-                </div>
-             </div>
-             
-             <Button variant="outline" className="w-full h-10 border-cyan-400/20 text-cyan-400 text-[10px] rounded-xl hover:bg-cyan-400/10">
-                GERAR NOVOS ROTEIROS (IA)
-             </Button>
-          </div>
-
-          {/* ── PERFECT MODE: SYSTEM HEALTH AUDIT ── */}
-          <div className="glass bg-[#0F0]/5 border-[#0F0]/30 p-6 rounded-3xl space-y-4">
-             <div className="flex justify-between items-center">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#0F0] flex items-center gap-2">
-                   <ShieldCheck size={14} className="animate-pulse" /> PROTOCOLO PERFECT_MODE
-                </p>
-                <div className="flex gap-2">
-                   <span className="text-[8px] bg-[#0F0]/20 text-[#0F0] px-2 py-0.5 rounded-full border border-[#0F0]/30 animate-pulse">ESTÁVEL</span>
-                </div>
-             </div>
-             
-             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {[
-                   { label: "SOBREPOSIÇÃO UI", status: "CORRIGIDO", color: "text-[#0F0]" },
-                   { label: "ASSETS VISUAIS", status: "MONSTER", color: "text-cyan-400" },
-                   { label: "LATÊNCIA DB", status: "14ms", color: "text-[#0F0]" },
-                   { label: "CASH_FLOW", status: "SYNCED", color: "text-yellow-400" }
-                ].map((item, i) => (
-                   <div key={i} className="bg-black/40 border border-white/5 p-3 rounded-xl text-center">
-                      <p className="text-[8px] opacity-40 mb-1">{item.label}</p>
-                      <p className={`text-[10px] font-bold ${item.color}`}>{item.status}</p>
-                   </div>
-                ))}
-             </div>
-
-             <div className="p-4 bg-[#0F0]/10 rounded-xl border border-[#0F0]/20">
-                <p className="text-[10px] font-bold text-[#0F0] mb-2 uppercase">Log de Auditoria em Tempo Real:</p>
-                <div className="space-y-1 text-[9px] opacity-70 font-mono">
-                   <p>&gt; [OK] Corujoteca realocada para RIGHT_SIDE (Avoid Sidebar Overlap)</p>
-                   <p>&gt; [OK] Ícones Lucide: Crown, Medal, Trophy importados em todos os módulos</p>
-                   <p>&gt; [OK] Gringotts Store: Todos os assets 3D validados como Monster Quality</p>
-                   <p className="animate-pulse text-[#0F0]">&gt; [RUNNING] Scan global de integridade de pixels...</p>
-                </div>
-             </div>
-          </div>
-
-          {/* ── MOBILE DOWNLOAD VAULT: REVOLUTION ASSETS ── */}
-          <div className="glass bg-purple-500/10 border-purple-500/30 p-6 rounded-3xl space-y-4">
-             <p className="text-[10px] font-bold uppercase tracking-widest text-purple-400 flex items-center gap-2">
-                <Sparkles size={14} /> COFRE DE ASSETS (DOWNLOAD MOBILE)
-             </p>
-             <p className="text-[9px] opacity-60 italic">— "Para baixar direto no celular e postar no TikTok/Insta."</p>
-             
-             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {[
-                   { name: "Varinha Holly 3D", file: "https://portal-hogwarts.lovable.app/monster_quality_wand_holly_3d_1776867017755.png", type: "Asset" },
-                   { name: "Capa Invisibilidade", file: "https://portal-hogwarts.lovable.app/monster_quality_invisibility_cloak_3d_1776867041087.png", type: "Asset" },
-                   { name: "Veritaserum HQ", file: "https://portal-hogwarts.lovable.app/monster_quality_veritaserum_3d_1776867059945.png", type: "Asset" },
-                   { name: "Espada de Gryffindor", file: "https://portal-hogwarts.lovable.app/monster_quality_gryffindor_sword_3d_1776868076176.png", type: "Asset" },
-                   { name: "Chapéu Seletor", file: "https://portal-hogwarts.lovable.app/monster_quality_sorting_hat_3d_1776868101477.png", type: "Asset" },
-                   { name: "Vassoura Firebolt", file: "https://portal-hogwarts.lovable.app/monster_quality_firebolt_3d_1776868127934.png", type: "Asset" },
-                   { name: "Galeão 3D Gold", file: "https://portal-hogwarts.lovable.app/monster_quality_galeon_coin_3d_1776816757264.png", type: "Asset" },
-                   { name: "Pomo de Ouro", file: "https://portal-hogwarts.lovable.app/monster_quality_golden_snitch_cinematic_1776816692257.png", type: "Asset" }
-                ].map((asset, i) => (
-                   <div key={i} className="bg-black/60 p-3 rounded-2xl border border-white/10 group hover:border-purple-400/50 transition-all">
-                      <div className="aspect-square rounded-xl bg-slate-900 mb-2 overflow-hidden relative">
-                         <img src={asset.file} className="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-opacity" alt={asset.name} />
-                         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <Button size="icon" variant="ghost" className="text-white" onClick={() => window.open(asset.file)}>
-                               <Eye size={16} />
-                            </Button>
-                         </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="glass bg-[#0F0]/5 border-[#0F0]/20 p-6 rounded-3xl space-y-4">
+               <p className="text-[10px] font-bold uppercase tracking-widest text-[#0F0]">Comando do Arquiteto (Sprint 48h)</p>
+               <div className="space-y-3">
+                  {[
+                    { label: "AUDITORIA 'MONSTER QUALITY' 3D", done: true },
+                    { label: "ESTABILIZAÇÃO E REFATORAÇÃO MOBILE", done: true },
+                    { label: "LANÇAMENTO: CAMPANHA DE FUNDADORES", done: false },
+                    { label: "MONITORAMENTO DE CONVERSÃO (META R$ 10K)", done: false }
+                  ].map((step, i) => (
+                    <div key={i} className={`flex items-center gap-3 p-3 rounded-xl border ${step.done ? "border-[#0F0]/40 bg-[#0F0]/10" : "border-white/5 bg-black/40"} transition-all`}>
+                      <div className={`w-4 h-4 rounded border flex items-center justify-center ${step.done ? "bg-[#0F0] border-[#0F0]" : "border-white/20"}`}>
+                        {step.done && <ShieldCheck size={10} className="text-black" />}
                       </div>
-                      <div className="flex justify-between items-center px-1">
-                         <div className="min-w-0">
-                            <p className="text-[8px] font-bold truncate">{asset.name}</p>
-                            <p className="text-[6px] opacity-40">{asset.type} | PNG</p>
-                         </div>
-                         <Button size="icon" variant="ghost" className="h-6 w-6 text-purple-400" onClick={() => {
-                            const link = document.createElement('a');
-                            link.href = asset.file;
-                            link.download = `${asset.name.toLowerCase().replace(/ /g, '_')}.png`;
-                            link.click();
-                         }}>
-                            <LayoutDashboard size={12} />
-                         </Button>
+                      <span className={`text-[9px] font-bold ${step.done ? "text-[#0F0] line-through opacity-50" : "text-white"}`}>{step.label}</span>
+                    </div>
+                  ))}
+               </div>
+            </div>
+
+            <div className="glass bg-cyan-500/5 border-cyan-500/20 p-6 rounded-3xl space-y-4">
+               <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-400">Missão Yasmin Caroline (Viral)</p>
+               <div className="space-y-3">
+                  {[
+                    { label: "GERAÇÃO DA CARTA DE ACEITAÇÃO HD", done: true },
+                    { label: "POSTAGEM: O CONVITE (VÍDEO 1)", done: false },
+                    { label: "POSTAGEM: A SELEÇÃO (VÍDEO 2)", done: false },
+                    { label: "INTERAÇÃO E ENGAJAMENTO DE LEADS", done: false }
+                  ].map((step, i) => (
+                    <div key={i} className={`flex items-center gap-3 p-3 rounded-xl border ${step.done ? "border-cyan-400/40 bg-cyan-400/10" : "border-white/5 bg-black/40"} transition-all`}>
+                      <div className={`w-4 h-4 rounded border flex items-center justify-center ${step.done ? "bg-cyan-400 border-cyan-400" : "border-white/20"}`}>
+                        {step.done && <ShieldCheck size={10} className="text-black" />}
                       </div>
-                   </div>
-                ))}
-             </div>
+                      <span className={`text-[9px] font-bold ${step.done ? "text-cyan-400 line-through opacity-50" : "text-white"}`}>{step.label}</span>
+                    </div>
+                  ))}
+               </div>
+            </div>
+
+            <div className="glass bg-pink-500/5 border-pink-500/20 p-6 rounded-3xl space-y-4 col-span-1 md:col-span-2">
+               <p className="text-[10px] font-bold uppercase tracking-widest text-pink-400">Carolina Assis (A Guardiã do Castelo)</p>
+               <div className="flex flex-col md:flex-row gap-6 items-center">
+                  <div className="shrink-0 relative">
+                     <div className="absolute inset-0 bg-pink-500/20 blur-xl animate-pulse" />
+                     <img src="https://i.pinimg.com/736x/8a/7d/5a/8a7d5a5a5a5a5a5a5a5a5a5a5a5a5a5a.jpg" alt="Carol" className="w-20 h-20 rounded-full border-2 border-pink-500/50 object-cover relative z-10" 
+                        onError={(e) => { (e.target as any).src = "https://ui-avatars.com/api/?name=Carolina+Assis&background=db2777&color=fff"; }}
+                     />
+                  </div>
+                  <div className="flex-1 space-y-2 text-center md:text-left">
+                     <p className="text-[11px] text-pink-100 italic leading-relaxed">
+                        "Mãe zelosa, guerreira fantástica e o pilar emocional da Revolução. Onde houver 13 reais e fé, haverá um império."
+                     </p>
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+                        <div className="bg-pink-500/10 border border-pink-500/20 p-2 rounded-lg">
+                           <p className="text-[9px] font-bold text-pink-400">STATUS: GUARDIÃ SUPREMA</p>
+                        </div>
+                        <div className="bg-pink-500/10 border border-pink-500/20 p-2 rounded-lg">
+                           <p className="text-[9px] font-bold text-pink-400">OBJETIVO: SEGURANÇA DO CLÃ</p>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+
           </div>
+
+
 
           <div className="glass bg-[#0F0]/5 border-[#0F0]/20 p-6 rounded-3xl space-y-4">
              <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Comandos de Operação</p>
@@ -579,17 +466,21 @@ export default function MatrixPortal() {
                 >
                    EXECUTAR PLANO DE GUERRA (12H)
                 </Button>
+                <Button 
+                  variant="outline" 
+                  className="border-cyan-400/50 bg-cyan-400/10 hover:bg-cyan-400/20 text-cyan-400 text-xs h-12 rounded-xl font-bold animate-pulse"
+                  onClick={() => window.open('https://lovable.dev/projects/portal-hogwarts-house/artifacts/PROJETO_REVOLUCAO_48H.md')}
+                >
+                   VER MAPA DA REVOLUÇÃO (48H)
+                </Button>
                 <div className="grid grid-cols-2 gap-3">
-                  <Button variant="outline" className="border-pink-500/50 hover:bg-pink-500/10 text-pink-400 text-[10px] h-10 rounded-xl" onClick={() => window.location.href='/dashboard/yasmin-world'}>
-                     MUNDO YASMIN
-                  </Button>
-                  <Button variant="outline" className="border-cyan-400/50 hover:bg-cyan-400/10 text-cyan-400 text-[10px] h-10 rounded-xl" onClick={() => window.location.href='/dashboard/admin-finance'}>
+                  <Button variant="outline" className="border-[#0F0]/20 hover:bg-[#0F0]/10 text-[#0F0] text-[10px] h-10 rounded-xl" onClick={() => window.location.href='/dashboard/admin-finance'}>
                      FINANCEIRO
                   </Button>
+                  <Button variant="outline" className="border-[#0F0]/20 hover:bg-[#0F0]/10 text-[#0F0] text-[10px] h-10 rounded-xl" onClick={() => window.location.href='/dashboard/feed'}>
+                     VOLTAR
+                  </Button>
                 </div>
-                <Button variant="outline" className="border-[#0F0]/20 hover:bg-[#0F0]/10 text-[#0F0] text-[10px] h-10 rounded-xl w-full" onClick={() => window.location.href='/dashboard/feed'}>
-                   VOLTAR AO FEED
-                </Button>
              </div>
           </div>
         </div>

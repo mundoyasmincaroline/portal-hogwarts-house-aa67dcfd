@@ -420,30 +420,6 @@ export default function AdminMemberModal({ memberId, memberName, onClose, onSave
                             <label className="text-xs text-muted-foreground">Instagram (personagem)</label>
                             <Input value={char.instagram || ""} onChange={e => cf(char.id, "instagram", e.target.value)} className="bg-secondary/50" />
                           </div>
-                          <div className="space-y-1">
-                            <label className="text-xs text-muted-foreground">Família / Sobrenome RP</label>
-                            <Input value={char.family_name || ""} onChange={e => cf(char.id, "family_name", e.target.value)} className="bg-secondary/50" placeholder="Ex: Black, Potter, Malfoy" />
-                          </div>
-                          <div className="space-y-1 flex items-center gap-3 pt-4">
-                            <label className="flex items-center gap-2 cursor-pointer text-[10px] text-muted-foreground uppercase">
-                              <input
-                                type="checkbox"
-                                checked={!!char.family_allow_siblings}
-                                onChange={e => cf(char.id, "family_allow_siblings", e.target.checked)}
-                                className="accent-primary w-3 h-3"
-                              />
-                              Permitir Irmãos
-                            </label>
-                            <label className="flex items-center gap-2 cursor-pointer text-[10px] text-muted-foreground uppercase">
-                              <input
-                                type="checkbox"
-                                checked={!!char.family_allow_extended}
-                                onChange={e => cf(char.id, "family_allow_extended", e.target.checked)}
-                                className="accent-primary w-3 h-3"
-                              />
-                              Permitir Parentes
-                            </label>
-                          </div>
                         </div>
 
                         {/* Avatar / Foto */}
