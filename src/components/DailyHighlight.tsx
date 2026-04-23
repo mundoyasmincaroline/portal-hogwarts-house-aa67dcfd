@@ -48,7 +48,7 @@ export default function DailyHighlight() {
   const bgStyle = houseStyles[highlightedUser.house] || houseStyles.gryffindor;
 
   return (
-    <div className={`relative overflow-hidden rounded-[4rem] p-10 text-center my-10 group border-4 shadow-[0_30px_90px_rgba(0,0,0,0.5)] transition-all duration-1000 hover:scale-[1.02] ${bgStyle} ${highlightedUser.house === 'slytherin' ? 'border-green-500/40' : 'border-primary/40'}`}>
+    <div className={`relative overflow-hidden rounded-[2rem] md:rounded-[4rem] p-6 md:p-10 text-center my-6 md:my-10 group border-2 md:border-4 shadow-[0_30px_90px_rgba(0,0,0,0.5)] transition-all duration-1000 hover:scale-[1.02] ${bgStyle} ${highlightedUser.house === 'slytherin' ? 'border-green-500/40' : 'border-primary/40'}`}>
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dust.png')] opacity-20 pointer-events-none" />
       <div className="absolute inset-0 bg-black/50 transition-opacity duration-1000 group-hover:bg-black/30" />
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent" />

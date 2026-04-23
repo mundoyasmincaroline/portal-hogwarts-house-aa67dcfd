@@ -66,16 +66,18 @@ const CURRENT_OFFICIAL_DOMAIN = "portal-hogwarts-house-60feca43.vercel.app";
 
 const App = () => {
   useEffect(() => {
+    // Redirecionamento desativado temporariamente para permitir desenvolvimento estável
+    /*
     const hostname = window.location.hostname;
     if (hostname.includes("lovable.app") && hostname !== CURRENT_OFFICIAL_DOMAIN) {
       console.log("REVOLUTION: Redirecionando para o núcleo estável...");
       const newUrl = `https://${CURRENT_OFFICIAL_DOMAIN}${window.location.pathname}${window.location.search}`;
       
-      // Pequeno delay para o usuário ver que algo está acontecendo (transição suave)
       setTimeout(() => {
         window.location.replace(newUrl);
       }, 1000);
     }
+    */
   }, []);
 
   return (

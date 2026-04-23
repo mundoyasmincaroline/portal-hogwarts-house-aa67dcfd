@@ -64,7 +64,7 @@ const revenueData = [
 ];
 
 export default function MatrixPortal() {
-  const { user, profile, isAdmin } = useAuth();
+  const { user, profile, isAdmin, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { isListening, transcript, startListening, speak, setTranscript } = useVoice('jarvis');
   const [stats, setStats] = useState({ 
@@ -83,14 +83,31 @@ export default function MatrixPortal() {
     }
   }, [isListening, transcript, handleCommand]);
 
-  if (!isAdmin) {
+  const username = profile?.username?.toLowerCase() || '';
+  const email = user?.email?.toLowerCase() || '';
+  const isArchitect = username === 'morpheus' || 
+                      username === 'arquiteto' ||
+                      email === 'paulomorpheus21@gmail.com';
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-[#0F0] font-mono animate-pulse">CONNECTING TO MATRIX...</div>
+      </div>
+    );
+  }
+
+  if (!isAdmin && !isArchitect) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center p-6 text-center">
         <div className="glass p-10 rounded-[2rem] border-2 border-red-500/30 max-w-md animate-pulse">
           <h1 className="font-heading text-3xl text-red-500 mb-4">ACCESS DENIED</h1>
           <p className="text-muted-foreground font-mono uppercase tracking-widest text-xs">
-            Este terminal é restrito ao Arquiteto do Sistema. Sua tentativa de intrusão foi registrada.
+            Este terminal é restrito ao Arquiteto do Sistema (@{username}). Sua tentativa de intrusão foi registrada.
           </p>
+          <Button variant="outline" className="mt-6 border-red-500/30 text-red-500" onClick={() => navigate('/dashboard')}>
+            VOLTAR PARA O CASTELO
+          </Button>
         </div>
       </div>
     );
@@ -323,7 +340,7 @@ export default function MatrixPortal() {
             variant="magical" 
             className="h-16 px-8 rounded-xl bg-red-600 hover:bg-red-700 border-none shadow-[0_0_20px_rgba(220,38,38,0.3)] animate-pulse"
             onClick={async () => {
-              const newVersion = `7.2.1-REV-${Date.now()}`;
+              const newVersion = `8.2.1-REV-${Date.now()}`;
               
               setTerminalText(prev => [
                 ...prev, 

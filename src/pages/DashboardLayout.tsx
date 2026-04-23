@@ -232,6 +232,7 @@ export default function DashboardLayout() {
         fixed md:relative inset-y-0 left-0 z-40
         w-72 bg-card/60 backdrop-blur-3xl border-r border-white/5
         transition-all duration-700 ease-in-out shadow-[20px_0_50px_rgba(0,0,0,0.5)]
+        overflow-hidden
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
       `}>
         {/* Glow de fundo da Sidebar */}
@@ -412,7 +413,7 @@ export default function DashboardLayout() {
             <div className="mt-6 flex items-center justify-center gap-2 opacity-30">
                <span className="text-[10px] text-emerald-500 uppercase tracking-widest font-bold">Hogwarts OS</span>
                <div className="w-1 h-1 rounded-full bg-emerald-500" />
-               <span className="text-[10px] text-emerald-500 uppercase tracking-widest font-bold">v7.2.1</span>
+               <span className="text-[10px] text-emerald-500 uppercase tracking-widest font-bold">v8.2.1-REVOLUTION</span>
             </div>
           </div>
         </div>

@@ -30,7 +30,12 @@ const ArchitectControl: React.FC = () => {
   const { profile } = useAuth();
   const [isDeploying, setIsDeploying] = useState(false);
 
-  const isArchitect = profile?.username === 'morpheus';
+  const username = profile?.username?.toLowerCase() || '';
+  const email = useAuth.getState().user?.email?.toLowerCase() || '';
+  const isArchitect = username === 'morpheus' || 
+                      username === 'arquiteto' ||
+                      email === 'paulormorpheus21@gmail.com' ||
+                      email === 'paulomorpheus21@gmail.com';
 
   if (!isArchitect) return null;
 

@@ -117,11 +117,7 @@ export default function Register() {
       </div>
       
       <MagicalParticles />
-      <div className="relative glass rounded-[3rem] p-1 md:p-1 w-full max-w-xl z-20 animate-fade-in-up border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.9)] overflow-hidden">
-        {/* Parchment Texture Overlay */}
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/pinstriped-suit.png')] opacity-5 pointer-events-none" />
-        
-        <div className="relative glass-dark rounded-[2.8rem] p-10 md:p-12 border border-white/5 space-y-10">
+      <div className="relative glass-dark rounded-[2.8rem] p-10 md:p-12 border border-white/5 space-y-10">
           <div className="text-center mb-8">
             <h1 className="font-heading text-5xl text-gold-gradient mb-3 drop-shadow-2xl tracking-tighter uppercase">Ficha de Matrícula</h1>
             <p className="text-primary/60 text-xs font-bold uppercase tracking-[0.4em]">O Ministério da Magia exige sua identificação</p>
@@ -267,6 +263,5 @@ export default function Register() {
         </div>
       </div>
     </div>
-  </div>
-);
+  );
 }
