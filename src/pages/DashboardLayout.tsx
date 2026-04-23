@@ -218,7 +218,17 @@ export default function DashboardLayout() {
     }
   }, []);
 
-  if (!user) return null;
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1547756536-cde3673fa2e5?q=80&w=2000')] opacity-10 grayscale" />
+        <div className="relative z-10 flex flex-col items-center gap-6">
+           <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+           <p className="text-primary font-heading tracking-widest animate-pulse">SINCRONIZANDO COM ZION...</p>
+        </div>
+      </div>
+    );
+  }
 
   const currentHouse = (Object.values(HOUSES) as any[]).find((h) => h.id === profile?.house) || Object.values(HOUSES)[0];
 
@@ -413,7 +423,7 @@ export default function DashboardLayout() {
             <div className="mt-6 flex items-center justify-center gap-2 opacity-30">
                <span className="text-[10px] text-emerald-500 uppercase tracking-widest font-bold">Hogwarts OS</span>
                <div className="w-1 h-1 rounded-full bg-emerald-500" />
-               <span className="text-[10px] text-emerald-500 uppercase tracking-widest font-bold">v8.2.1-REVOLUTION</span>
+               <span className="text-[10px] text-emerald-500 uppercase tracking-widest font-bold">v8.2.5-REVOLUTION</span>
             </div>
           </div>
         </div>

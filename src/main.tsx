@@ -5,31 +5,36 @@ import "./index.css";
 
 // Protocolo 10 Passos à Frente: Version Sentinel
 // Incrementando a versão para forçar limpeza de cache e migração global
-const PORTAL_VERSION = "8.2.0-ZION-REVOLUTION"; 
+const PORTAL_VERSION = "8.2.5-ZION-REVOLUTION"; 
 const storedVersion = localStorage.getItem("portal_version");
 
 if (storedVersion !== PORTAL_VERSION) {
-  console.log("Sincronizando nova versão do portal: " + PORTAL_VERSION);
+  console.log("REVOLUTION SYNC: Sincronizando nova versão do portal: " + PORTAL_VERSION);
   
-  // Proteção contra loop infinito: se já tentamos recarregar nos últimos 10 segundos, para.
-  const lastSync = localStorage.getItem("last_sync_attempt");
+  // Proteção contra loop infinito
+  const syncAttempts = parseInt(localStorage.getItem("sync_attempts") || "0");
+  const lastSync = parseInt(localStorage.getItem("last_sync_time") || "0");
   const now = Date.now();
-  if (lastSync && (now - parseInt(lastSync)) < 10000) {
-    console.warn("REVOLUTION: Loop de sincronização detectado. Abortando recarregamento forçado.");
-    localStorage.setItem("portal_version", PORTAL_VERSION); // Marca como feita para parar o loop
+
+  if (syncAttempts > 3 && (now - lastSync) < 60000) {
+    console.error("ZION_CRITICAL: Falha persistente na sincronização. Abortando para evitar loop.");
+    localStorage.setItem("portal_version", PORTAL_VERSION); // Força marcação para parar
   } else {
-    localStorage.setItem("last_sync_attempt", now.toString());
+    localStorage.setItem("sync_attempts", (syncAttempts + 1).toString());
+    localStorage.setItem("last_sync_time", now.toString());
     
-    // Limpeza Cirúrgica: Remove versões antigas e caches, mas PRESERVA a sessão de login
-    const sessionKey = Object.keys(localStorage).find(key => key.includes('auth-token'));
-    const sessionData = sessionKey ? localStorage.getItem(sessionKey) : null;
-    const theme = localStorage.getItem("theme");
+    // Limpeza Cirúrgica: Preserva a sessão
+    const authKeys = Object.keys(localStorage).filter(k => k.includes('auth-token') || k.includes('supabase.auth.token'));
+    const savedData: Record<string, string> = {};
+    authKeys.forEach(k => {
+      const val = localStorage.getItem(k);
+      if (val) savedData[k] = val;
+    });
 
     localStorage.clear();
     sessionStorage.clear();
     
-    if (sessionKey && sessionData) localStorage.setItem(sessionKey, sessionData);
-    if (theme) localStorage.setItem("theme", theme);
+    Object.entries(savedData).forEach(([k, v]) => localStorage.setItem(k, v));
     localStorage.setItem("portal_version", PORTAL_VERSION);
     
     if ('caches' in window) {
@@ -38,9 +43,12 @@ if (storedVersion !== PORTAL_VERSION) {
       });
     }
     
-    // Recarrega apenas uma vez
-    window.location.replace(window.location.origin + window.location.pathname + '?v=' + now);
+    // Reload limpo
+    window.location.replace(window.location.origin + window.location.pathname + '?v=' + PORTAL_VERSION);
   }
+} else {
+  // Reset attempts if successful
+  localStorage.setItem("sync_attempts", "0");
 }
 
 // Registro do Service Worker para PWA (Hogwarts no Bolso)

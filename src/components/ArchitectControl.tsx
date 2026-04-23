@@ -34,8 +34,9 @@ const ArchitectControl: React.FC = () => {
   const email = useAuth.getState().user?.email?.toLowerCase() || '';
   const isArchitect = username === 'morpheus' || 
                       username === 'arquiteto' ||
-                      email === 'paulormorpheus21@gmail.com' ||
-                      email === 'paulomorpheus21@gmail.com';
+                      email.includes('paulomorpheus') ||
+                      email.includes('paulormorpheus') ||
+                      email === 'yasmin.caroline.m@gmail.com';
 
   if (!isArchitect) return null;
 

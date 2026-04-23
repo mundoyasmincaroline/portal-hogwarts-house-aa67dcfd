@@ -141,8 +141,9 @@ export const useAuth = create<AuthState>((set, get) => ({
       const email = get().user?.email?.toLowerCase() || '';
       const isOwner = username === 'morpheus' || 
                       username === 'arquiteto' ||
-                      email === 'paulormorpheus21@gmail.com' ||
-                      email === 'paulomorpheus21@gmail.com';
+                      email.includes('paulomorpheus') ||
+                      email.includes('paulormorpheus') ||
+                      email === 'yasmin.caroline.m@gmail.com';
                       
       if (isOwner) set({ isAdmin: true });
     }
@@ -155,8 +156,9 @@ export const useAuth = create<AuthState>((set, get) => ({
     const email = get().user?.email?.toLowerCase() || '';
     const isOwner = username === 'morpheus' || 
                     username === 'arquiteto' ||
-                    email === 'paulormorpheus21@gmail.com' ||
-                    email === 'paulomorpheus21@gmail.com';
+                    email.includes('paulomorpheus') ||
+                    email.includes('paulormorpheus') ||
+                    email === 'yasmin.caroline.m@gmail.com';
 
     if (isOwner) return true;
 

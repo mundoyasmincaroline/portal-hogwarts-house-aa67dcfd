@@ -87,12 +87,15 @@ export default function MatrixPortal() {
   const email = user?.email?.toLowerCase() || '';
   const isArchitect = username === 'morpheus' || 
                       username === 'arquiteto' ||
-                      email === 'paulomorpheus21@gmail.com';
+                      email.includes('paulomorpheus') ||
+                      email.includes('paulormorpheus') ||
+                      email === 'yasmin.caroline.m@gmail.com';
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-[#0F0] font-mono animate-pulse">CONNECTING TO MATRIX...</div>
+      <div className="min-h-screen bg-black flex flex-col items-center justify-center">
+         <div className="w-12 h-12 border-2 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin mb-4" />
+         <p className="text-emerald-500 font-mono text-xs animate-pulse">VALIDANDO CREDENCIAIS SUPREMAS...</p>
       </div>
     );
   }
@@ -668,13 +671,34 @@ export default function MatrixPortal() {
                    <Activity size={24} className="text-yellow-500 animate-pulse" />
                    <div>
                       <p className="text-xs font-bold text-white uppercase tracking-widest">Sincronizador Zion de 10 Passos</p>
-                      <p className="text-[10px] text-white/40">Auditoria proativa de sistema em execução...</p>
+                      <p className="text-[10px] text-white/40">Versão de Soberania: v8.2.5-REVOLUTION-ULTRA</p>
                    </div>
                 </div>
                 <div className="flex gap-1">
                    {[1,2,3,4,5,6,7,8,9,10].map(step => (
                       <div key={step} className="w-1.5 h-4 bg-yellow-500/20 rounded-full group-hover:bg-yellow-500 animate-pulse" style={{ animationDelay: `${step * 0.1}s` }} />
                    ))}
+                </div>
+             </div>
+
+             {/* ── MODO ORIENTAÇÃO: MANUTENÇÃO CORRETA ── */}
+             <div className="p-8 bg-blue-500/5 border-2 border-blue-500/30 rounded-[3rem] space-y-4 animate-pulse-glow">
+                <div className="flex items-center gap-4">
+                   <div className="w-12 h-12 bg-blue-500/20 rounded-2xl flex items-center justify-center border border-blue-500/40">
+                      <ShieldCheck size={24} className="text-blue-400" />
+                   </div>
+                   <div>
+                      <p className="text-sm font-heading font-bold text-blue-400 uppercase tracking-[0.2em]">Modo Orientação: Ativo</p>
+                      <p className="text-[10px] text-blue-100/50 italic">"Escutando as diretrizes do Arquiteto..."</p>
+                   </div>
+                </div>
+                <div className="space-y-2 border-t border-blue-500/10 pt-4">
+                   <p className="text-[10px] text-blue-400/80 font-mono flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-ping" /> AGUARDANDO COMANDOS DE MANUTENÇÃO...
+                   </p>
+                   <p className="text-[10px] text-white/40 leading-relaxed font-serif">
+                      Arquiteto, estou a postos. A manutenção correta exige precisão cirúrgica. Dite as regras e eu as transformarei em código imortal.
+                   </p>
                 </div>
              </div>
           </div>

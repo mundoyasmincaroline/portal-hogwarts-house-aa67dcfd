@@ -64,11 +64,13 @@
   }
   body {
     @apply bg-background text-foreground font-body antialiased;
-    /* Altura correta em mobile com barra de URL visível */
-    min-height: 100dvh;
-    min-height: -webkit-fill-available;
+    /* Bloqueio de scroll no body para evitar saltos de layout (Zion Protocol) */
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    overflow: hidden;
     overscroll-behavior: none;
-    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading;
