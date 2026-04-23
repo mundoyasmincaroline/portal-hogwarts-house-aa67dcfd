@@ -141,7 +141,7 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
     return (
       <div
         onClick={goToProfile}
-        className="flex items-center gap-3 p-4 rounded-2xl glass border border-white/10 hover:border-primary/40 hover:bg-white/5 cursor-pointer transition-all group relative overflow-hidden"
+        className="flex items-center gap-3 p-4 rounded-[2rem] glass border border-white/10 hover:border-primary/40 hover:bg-white/5 cursor-pointer transition-all group relative overflow-hidden"
       >
         {isVip && <div className="absolute inset-0 bg-yellow-500/5 pointer-events-none" />}
         <div className="relative shrink-0">
@@ -172,10 +172,10 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
   return (
     <div
       onClick={goToProfile}
-      className={`relative glass rounded-[2.5rem] p-6 border-2 transition-all duration-700 cursor-pointer group flex flex-col items-center text-center overflow-hidden ${
+      className={`relative glass rounded-[3.5rem] p-8 border-2 transition-all duration-1000 cursor-pointer group flex flex-col items-center text-center overflow-hidden ${
         isVip 
-          ? "border-yellow-500/40 bg-gradient-to-br from-yellow-950/20 via-black to-black shadow-[0_20px_50px_rgba(250,204,21,0.2)] hover:border-yellow-400" 
-          : `border-white/10 bg-gradient-to-br ${hc.gradient} hover:border-white/30 hover:-translate-y-2 shadow-2xl`
+          ? "border-yellow-500/40 bg-gradient-to-br from-yellow-950/20 via-black to-black shadow-[0_30px_80px_rgba(250,204,21,0.3)] hover:border-yellow-400" 
+          : `border-white/10 bg-gradient-to-br ${hc.gradient} hover:border-white/40 hover:-translate-y-4 shadow-[0_20px_60px_rgba(0,0,0,0.5)]`
       }`}
     >
       {/* Background Decorative Crest */}
@@ -196,7 +196,7 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
           <SafeImage
             src={member.avatar_url || ""}
             alt={member.full_name}
-            className={`w-full h-full rounded-full object-cover border-2 transition-all relative z-10 ${
+            className={`w-full h-full rounded-[3rem] object-cover border-4 transition-all relative z-10 ${
               isVip ? "border-yellow-400 shadow-2xl" : "border-white/10 group-hover:border-white/40"
             }`}
           />

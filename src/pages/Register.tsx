@@ -222,34 +222,34 @@ export default function Register() {
               {errors.captcha && <p className="text-destructive text-xs mt-1 font-bold">{errors.captcha}</p>}
             </div>
             {errors.general && <p className="text-destructive text-sm">{errors.general}</p>}
-            <Button variant="magical" className="w-full font-heading" onClick={handleNext}>
-              Próximo → Escolher Casa
+            <Button variant="plaque" className="w-full h-20 rounded-[2rem] font-heading text-lg bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-600 border-none shadow-[0_20px_50px_rgba(234,179,8,0.4)] text-black" onClick={handleNext}>
+              PRÓXIMO → ESCOLHER CASA
             </Button>
           </div>
         )}
 
         {step === 2 && (
-          <div className="space-y-4">
-            <p className="text-center text-muted-foreground text-sm mb-4">Escolha a casa que mais combina com você</p>
-            <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-6">
+            <p className="text-center text-primary/60 text-xs font-bold uppercase tracking-[0.3em] mb-4">Escolha sua linhagem de sangue</p>
+            <div className="grid grid-cols-2 gap-4">
               {houses.map((h) => (
                 <button
                   key={h.id}
                   onClick={() => setForm({ ...form, house: h.id })}
-                  className={`glass rounded-xl p-4 text-center transition-all hover:scale-[1.02] ${form.house === h.id ? "ring-2 ring-primary animate-pulse-glow" : ""}`}
+                  className={`glass rounded-[2rem] p-6 text-center transition-all hover:scale-[1.05] ${form.house === h.id ? "ring-4 ring-primary animate-pulse-glow bg-primary/10 shadow-[0_0_30px_rgba(212,175,55,0.4)]" : "border-white/5"}`}
                 >
                   <HouseCrest house={h.id} size="md" />
-                  <p className="font-heading text-sm mt-2 text-foreground">{h.name}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{h.motto}</p>
+                  <p className="font-heading text-lg mt-3 text-gold-gradient">{h.name}</p>
+                  <p className="text-[10px] text-muted-foreground mt-1 uppercase tracking-widest">{h.motto}</p>
                 </button>
               ))}
             </div>
-            {errors.house && <p className="text-destructive text-xs text-center">{errors.house}</p>}
-            {errors.general && <p className="text-destructive text-sm text-center font-bold bg-destructive/10 p-2 rounded-lg border border-destructive/20">{errors.general}</p>}
-            <div className="flex gap-3">
-              <Button variant="outline" className="flex-1 font-heading" onClick={() => setStep(1)}>← Voltar</Button>
-              <Button variant="magical" className="flex-1 font-heading" onClick={handleSubmit} disabled={loading}>
-                {loading ? "Enviando..." : "Enviar Matrícula"}
+            {errors.house && <p className="text-destructive text-xs text-center font-bold">{errors.house}</p>}
+            {errors.general && <p className="text-destructive text-sm text-center font-bold bg-destructive/10 p-4 rounded-2xl border border-destructive/20">{errors.general}</p>}
+            <div className="flex gap-4 pt-4">
+              <Button variant="outline" className="flex-1 h-20 rounded-[2rem] font-heading border-white/10 hover:bg-white/5" onClick={() => setStep(1)}>← VOLTAR</Button>
+              <Button variant="plaque" className="flex-1 h-20 rounded-[2rem] font-heading text-lg bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-600 border-none shadow-[0_20px_50px_rgba(234,179,8,0.4)] text-black" onClick={handleSubmit} disabled={loading}>
+                {loading ? "ENVIANDO..." : "ENVIAR MATRÍCULA"}
               </Button>
             </div>
           </div>

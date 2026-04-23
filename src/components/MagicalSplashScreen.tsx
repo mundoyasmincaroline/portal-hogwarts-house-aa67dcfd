@@ -48,7 +48,7 @@ export default function MagicalSplashScreen() {
       
       {/* Cinematic Background Magic */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=2000')] opacity-20 mix-blend-overlay scale-110 animate-pulse-slow" />
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1547756536-cde3673fa2e5?q=80&w=2000')] opacity-20 mix-blend-overlay scale-110 animate-pulse-slow" />
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-leather.png')] opacity-30" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-primary/10 rounded-full blur-[180px] animate-pulse" />
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/40 to-transparent shadow-[0_0_20px_rgba(var(--primary),0.3)]" />

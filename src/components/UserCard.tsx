@@ -8,7 +8,7 @@ export default function UserCard({ user, compact = false }: { user: UserProfile;
 
   if (compact) {
     return (
-      <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer">
+      <div className="flex items-center gap-3 p-3 rounded-[1.2rem] hover:bg-secondary/50 transition-colors cursor-pointer border border-transparent hover:border-white/10">
         <div className="relative">
           <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-sm font-heading text-primary">
             {user.fullName[0]}
@@ -25,7 +25,7 @@ export default function UserCard({ user, compact = false }: { user: UserProfile;
   }
 
   return (
-    <div className="glass rounded-xl p-4 animate-fade-in-up">
+    <div className="glass rounded-[3rem] p-8 animate-fade-in-up border-2 border-white/10 shadow-2xl">
       <div className="flex items-start gap-4">
         <div className="relative">
           <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary/30 to-secondary flex items-center justify-center text-2xl font-heading text-primary">

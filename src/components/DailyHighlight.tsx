@@ -47,7 +47,7 @@ export default function DailyHighlight() {
   const bgStyle = houseStyles[highlightedUser.house] || houseStyles.gryffindor;
 
   return (
-    <div className={`relative overflow-hidden rounded-[2.5rem] p-8 text-center my-8 group border-2 shadow-2xl transition-all duration-700 hover:scale-[1.01] ${bgStyle} ${highlightedUser.house === 'slytherin' ? 'border-green-500/40' : 'border-primary/40'}`}>
+    <div className={`relative overflow-hidden rounded-[4rem] p-10 text-center my-10 group border-4 shadow-[0_30px_90px_rgba(0,0,0,0.5)] transition-all duration-1000 hover:scale-[1.02] ${bgStyle} ${highlightedUser.house === 'slytherin' ? 'border-green-500/40' : 'border-primary/40'}`}>
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dust.png')] opacity-20 pointer-events-none" />
       <div className="absolute inset-0 bg-black/50 transition-opacity duration-1000 group-hover:bg-black/30" />
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
@@ -61,7 +61,7 @@ export default function DailyHighlight() {
         <div className="flex flex-col md:flex-row items-center gap-8 text-left">
           <div className="relative shrink-0 group/avatar">
             <div className="absolute inset-0 bg-white/20 rounded-full blur-2xl animate-pulse scale-125" />
-            <div className="w-32 h-32 rounded-[2.5rem] border-4 border-white/20 overflow-hidden shadow-2xl relative z-10 group-hover/avatar:rotate-3 transition-transform duration-500">
+            <div className="w-32 h-32 rounded-[3.5rem] border-4 border-white/30 overflow-hidden shadow-2xl relative z-10 group-hover/avatar:rotate-6 transition-transform duration-700">
               <img 
                 src={highlightedUser.avatar_url || `https://api.dicebear.com/7.x/adventurer/svg?seed=${highlightedUser.username}`} 
                 alt={highlightedUser.username}

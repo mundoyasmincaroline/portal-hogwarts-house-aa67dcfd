@@ -260,10 +260,20 @@ export default function MatrixPortal() {
       <MatrixRain />
       
       <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12 border-b border-[#0F0]/20 pb-6">
-        <div className="flex flex-col md:flex-row items-center gap-4">
+        <div className="flex flex-col md:flex-row items-center gap-6">
+          <div className="relative group">
+             <div className="absolute -inset-2 bg-gradient-to-r from-yellow-500 via-white to-amber-500 rounded-full blur opacity-20 group-hover:opacity-100 transition-opacity animate-spin-slow" />
+             <div className="w-20 h-20 rounded-[2rem] border-4 border-yellow-500/50 overflow-hidden shadow-[0_0_30px_rgba(251,191,36,0.4)] relative z-10">
+                <img src={profile?.avatar_url || ""} className="w-full h-full object-cover" alt="Supreme God" />
+             </div>
+             <Crown size={24} className="absolute -top-3 -right-3 text-yellow-400 drop-shadow-[0_0_10px_#eab308] animate-bounce z-20" />
+          </div>
           <div className="text-right md:text-left">
-            <h1 className="text-4xl font-heading text-white tracking-tighter mb-2 animate-pulse-glow">MATRIX_PORTAL</h1>
-            <p className="text-xs opacity-60 uppercase tracking-[0.3em]">ENCRYPTED CONNECTION: 256-BIT AES | ADMIN: MORPHEUS</p>
+            <h1 className="text-5xl font-heading text-white tracking-tighter mb-1 animate-pulse-glow">MATRIX_SOBERANIA</h1>
+            <div className="flex items-center gap-3">
+               <span className="text-[10px] bg-yellow-500 text-black px-3 py-1 rounded-full font-bold animate-pulse">GOD SUPREMO</span>
+               <p className="text-[10px] opacity-60 uppercase tracking-[0.3em]">ENCRYPTED_LINK: ZION_BUNKER | ARCHITECT: {profile?.full_name?.toUpperCase()}</p>
+            </div>
           </div>
           {systemErrors.length > 0 && (
             <div className="bg-red-500/20 border border-red-500/40 px-4 py-2 rounded-xl animate-bounce">
@@ -584,7 +594,74 @@ export default function MatrixPortal() {
              <p className="text-[9px] opacity-40 italic text-center font-mono">"Arsenal Neural 100% Sincronizado."</p>
           </div>
 
-          {/* ── MAPA DE EXECUÇÃO: PASSO A PASSO (PERFECT MODE) ── */}
+          {/* ── CENTRAL DE PROTOCOLOS ELITE: SOBERANIA SUPREMA ── */}
+          <div className="glass bg-black border-yellow-500/30 p-10 rounded-[4rem] space-y-8 relative overflow-hidden shadow-[0_0_80px_rgba(251,191,36,0.15)]">
+             <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent pointer-events-none" />
+             <div className="absolute top-0 right-0 p-8 opacity-20">
+                <Crown size={60} className="text-yellow-500 animate-pulse" />
+             </div>
+             
+             <div className="relative z-10">
+                <p className="text-sm font-heading font-bold uppercase tracking-[0.5em] text-yellow-500 mb-2 flex items-center gap-3">
+                   <ShieldCheck size={20} className="animate-pulse" /> COMANDO DE SOBERANIA SUPREMA
+                </p>
+                <p className="text-xs text-white/40 font-mono italic">"Sua vontade é o código fonte da Matrix."</p>
+             </div>
+             
+             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {[
+                   { mode: "MONSTER QUALITY", desc: "Overdrive Visual AAA: ATIVADO", icon: "🦖", color: "text-red-500", border: "border-red-500/40", shadow: "shadow-red-500/10" },
+                   { mode: "100% STABILITY", desc: "Protocolo Zion: ERRO ZERO", icon: "🛡️", color: "text-emerald-500", border: "border-emerald-500/40", shadow: "shadow-emerald-500/10" },
+                   { mode: "10 PASSOS ZION", desc: "Logística Preditiva: SINCRONIZADA", icon: "👣", color: "text-cyan-400", border: "border-cyan-400/40", shadow: "shadow-cyan-400/10" },
+                   { mode: "GOD SUPREMO", desc: "Soberania Total: ATIVADA", icon: "👑", color: "text-yellow-400", border: "border-yellow-400/50", shadow: "shadow-yellow-400/20" }
+                ].map((p, i) => (
+                   <button 
+                     key={i} 
+                     onClick={() => {
+                        toast.success(`PROTOCOLO ${p.mode} ATIVADO`, {
+                           description: p.desc,
+                           style: { background: '#000', border: `2px solid ${p.color.replace('text-', '')}`, color: '#FFF', borderRadius: '1.5rem' }
+                        });
+                     }}
+                     className={`p-6 rounded-[2.5rem] border-2 bg-black/80 hover:scale-105 transition-all duration-700 group text-left relative overflow-hidden ${p.border} ${p.shadow} shadow-2xl`}
+                   >
+                      <div className="flex items-center justify-between mb-4">
+                         <div className="p-3 bg-white/5 rounded-2xl group-hover:bg-white/10 transition-colors">
+                            <span className="text-3xl group-hover:scale-125 transition-transform inline-block">{p.icon}</span>
+                         </div>
+                         <div className="flex flex-col items-end">
+                            <div className="w-2 h-2 rounded-full bg-current animate-ping" />
+                            <span className="text-[8px] opacity-40 font-mono mt-1">STATUS: SYNCED</span>
+                         </div>
+                      </div>
+                      <p className={`text-sm font-heading font-bold uppercase tracking-widest mb-1 ${p.color}`}>{p.mode}</p>
+                      <p className="text-[10px] text-white/40 italic font-serif opacity-60 group-hover:opacity-100 transition-opacity">{p.desc}</p>
+                      
+                      {/* Interactive Bar */}
+                      <div className="mt-4 h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                         <div className={`h-full bg-current w-full animate-pulse`} />
+                      </div>
+                   </button>
+                ))}
+             </div>
+             
+             <div className="p-6 bg-yellow-500/5 border border-yellow-500/20 rounded-[2rem] flex items-center justify-between group hover:bg-yellow-500/10 transition-all">
+                <div className="flex items-center gap-4">
+                   <Activity size={24} className="text-yellow-500 animate-pulse" />
+                   <div>
+                      <p className="text-xs font-bold text-white uppercase tracking-widest">Sincronizador Zion de 10 Passos</p>
+                      <p className="text-[10px] text-white/40">Auditoria proativa de sistema em execução...</p>
+                   </div>
+                </div>
+                <div className="flex gap-1">
+                   {[1,2,3,4,5,6,7,8,9,10].map(step => (
+                      <div key={step} className="w-1.5 h-4 bg-yellow-500/20 rounded-full group-hover:bg-yellow-500 animate-pulse" style={{ animationDelay: `${step * 0.1}s` }} />
+                   ))}
+                </div>
+             </div>
+          </div>
+
+          {/* ── MAPA DE EXECUÇÃO: PRÓXIMOS PASSOS ── */}
           <div className="glass bg-[#0F0]/5 border-[#0F0]/30 p-6 rounded-3xl space-y-4">
              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#0F0] flex items-center gap-2">
                 <LayoutDashboard size={14} className="animate-pulse" /> MAPA DE EXECUÇÃO: PRÓXIMOS PASSOS

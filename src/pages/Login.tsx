@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "../lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import MagicalParticles from "@/components/MagicalParticles";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Crown } from "lucide-react";
 import { toast } from "sonner";
 import { playDoorSound } from "@/lib/sounds";
 
@@ -107,17 +107,17 @@ export default function Login() {
 
       <MagicalParticles />
       <div className="glass rounded-[2.5rem] p-10 w-full max-w-md z-20 animate-fade-in-up border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.8)]">
-        <div className="text-center mb-12">
-          <div className="relative w-24 h-24 mx-auto mb-6 group">
-             <div className="absolute inset-0 bg-primary/20 rounded-full blur-2xl animate-pulse group-hover:bg-primary/40 transition-all" />
-             <div className="relative z-10 w-full h-full bg-black/60 border-2 border-primary/40 rounded-[2rem] flex items-center justify-center backdrop-blur-xl shadow-2xl transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
-                <Crown size={48} className="text-primary drop-shadow-[0_0_15px_rgba(var(--primary),0.8)]" />
+        <div className="text-center mb-16">
+          <div className="relative w-32 h-32 mx-auto mb-10 group">
+             <div className="absolute inset-0 bg-primary/20 rounded-full blur-[40px] animate-pulse group-hover:bg-primary/40 transition-all" />
+             <div className="relative z-10 w-full h-full bg-black/80 border-2 border-primary/40 rounded-[2.5rem] flex items-center justify-center backdrop-blur-2xl shadow-2xl transition-transform duration-700 group-hover:scale-110 group-hover:rotate-6">
+                <Crown size={64} className="text-primary drop-shadow-[0_0_20px_rgba(var(--primary),1)]" />
              </div>
           </div>
-          <h1 className="font-heading text-5xl text-gold-gradient mb-3 tracking-tighter drop-shadow-2xl">
+          <h1 className="font-heading text-5xl md:text-7xl text-gold-gradient mb-4 tracking-tighter drop-shadow-2xl uppercase leading-[0.9]">
             {isRecoveryMode ? "NOVA SENHA" : "ENTRAR NO CASTELO"}
           </h1>
-          <p className="text-primary/60 text-xs font-bold uppercase tracking-[0.4em]">
+          <p className="text-primary/60 text-sm font-bold uppercase tracking-[0.5em] opacity-80">
             {isRecoveryMode ? "Redefina sua Identidade Mística" : "Acesse o Conselho das Sombras"}
           </p>
         </div>

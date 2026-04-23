@@ -93,12 +93,17 @@ const WelcomeChestModal: React.FC<WelcomeChestModalProps> = ({ onClose }) => {
                 </div>
 
                 <div className="relative group cursor-pointer" onClick={!isOpening ? handleOpenChest : undefined}>
-                  <div className={`absolute inset-0 bg-primary/20 blur-3xl transition-all duration-1000 ${isOpening ? "scale-150 opacity-100" : "scale-100 opacity-50"}`} />
-                  <img
-                    src="/legendary_chest_3d_v2.png"
-                    alt="Magic Chest"
-                    className={`w-64 h-64 mx-auto object-contain relative z-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-all duration-700 ${isOpening ? "animate-bounce scale-110 rotate-12" : "animate-float group-hover:scale-105"}`}
-                  />
+                  <div className={`absolute -inset-10 bg-primary/30 blur-[80px] transition-all duration-1000 ${isOpening ? "scale-150 opacity-100" : "scale-100 opacity-40"}`} />
+                  
+                  <div className="relative z-10 w-64 h-64 mx-auto rounded-[5rem] border-4 border-primary/40 overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.9)] bg-black/40 transform transition-all duration-700 group-hover:scale-110 group-hover:rotate-3">
+                    <img
+                      src="/legendary_chest_3d_v2.png"
+                      alt="Magic Chest"
+                      className={`w-full h-full object-cover relative z-10 opacity-90 contrast-[1.1] brightness-90 transition-all duration-700 ${isOpening ? "animate-bounce" : "animate-float"}`}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                    <div className="absolute inset-0 border-[15px] border-black/40 rounded-[4.8rem] pointer-events-none" />
+                  </div>
                   {isOpening && (
                     <div className="absolute inset-0 flex items-center justify-center z-20">
                       <Sparkles className="text-primary animate-spin" size={48} />

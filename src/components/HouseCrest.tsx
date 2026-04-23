@@ -7,18 +7,26 @@ const crests: Record<House, { letter: string; bg: string }> = {
   hufflepuff: { letter: "H", bg: "from-hufflepuff to-hufflepuff-black" },
 };
 
-export default function HouseCrest({ house, size = "md" }: { house: House; size?: "sm" | "md" | "lg" }) {
+export default function HouseCrest({ house, size = "md" }: { house: House; size?: "xs" | "sm" | "md" | "lg" }) {
   const safeHouse = house || "gryffindor";
   const c = crests[safeHouse] || crests.gryffindor;
   const sizeClasses = {
+    xs: "w-6 h-6 text-xs",
     sm: "w-8 h-8 text-lg",
-    md: "w-12 h-12 text-2xl",
-    lg: "w-20 h-20 text-5xl",
+    md: "w-14 h-14 text-3xl",
+    lg: "w-24 h-24 text-6xl",
+  };
+
+  const roundingClasses = {
+    xs: "rounded-lg",
+    sm: "rounded-[0.8rem]",
+    md: "rounded-[1.5rem]",
+    lg: "rounded-[2.5rem]",
   };
 
   return (
     <div
-      className={`${sizeClasses[size]} rounded-2xl bg-gradient-to-br ${c.bg} flex items-center justify-center shadow-[0_15px_35px_rgba(0,0,0,0.6)] overflow-hidden border-t-2 border-white/40 border-l-2 border-white/20 relative font-heading font-bold transition-all duration-500 hover:scale-110 hover:shadow-[0_20px_45px_rgba(0,0,0,0.8)] group`}
+      className={`${sizeClasses[size]} ${roundingClasses[size]} bg-gradient-to-br ${c.bg} flex items-center justify-center shadow-[0_15px_35px_rgba(0,0,0,0.6)] overflow-hidden border-t-2 border-white/40 border-l-2 border-white/20 relative font-heading font-bold transition-all duration-500 hover:scale-110 hover:shadow-[0_20px_45px_rgba(0,0,0,0.8)] group`}
       title={safeHouse.charAt(0).toUpperCase() + safeHouse.slice(1)}
     >
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 pointer-events-none" />

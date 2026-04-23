@@ -118,7 +118,7 @@ export default function DailyRewardSystem() {
 
   return (
     <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
-      <div className="glass w-full max-w-2xl rounded-[3rem] p-8 md:p-12 border border-primary/30 relative overflow-hidden text-center">
+      <div className="glass w-full max-w-2xl rounded-[4rem] p-10 md:p-16 border-2 border-primary/30 relative overflow-hidden text-center shadow-[0_40px_100px_rgba(0,0,0,0.8)]">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-primary/20 rounded-full blur-[100px] pointer-events-none" />
         
         <div className="relative z-10 space-y-8">
@@ -137,9 +137,9 @@ export default function DailyRewardSystem() {
 
                     return (
                         <div key={r.day} className={`flex flex-col items-center gap-2 transition-all ${isNext ? "scale-110" : ""}`}>
-                            <div className={`w-full aspect-square rounded-2xl flex items-center justify-center text-xl border-2 transition-all ${
+                            <div className={`w-full aspect-square rounded-[1.5rem] flex items-center justify-center text-xl border-2 transition-all ${
                                 isCompleted ? "bg-green-500/20 border-green-500/50 text-green-500" :
-                                isNext ? "bg-primary/30 border-primary animate-pulse shadow-[0_0_15px_hsl(var(--primary)/0.5)]" :
+                                isNext ? "bg-primary/30 border-primary animate-pulse shadow-[0_0_20px_hsl(var(--primary)/0.5)]" :
                                 "bg-secondary/40 border-border/50 opacity-40"
                             }`}>
                                 {isCompleted ? <CheckCircle2 size={20} /> : <MagicalEmoji emoji={r.emoji} size="sm" />}

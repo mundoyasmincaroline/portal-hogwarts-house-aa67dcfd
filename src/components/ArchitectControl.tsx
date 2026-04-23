@@ -9,7 +9,12 @@ import {
   Sun,
   Flame,
   Wand2,
-  Settings
+  Settings,
+  Crown,
+  LayoutDashboard,
+  ShieldCheck,
+  Activity,
+  Heart
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
@@ -29,11 +34,11 @@ const ArchitectControl: React.FC = () => {
   if (!isArchitect) return null;
 
   const triggerGlobalEffect = (effect: string, icon: string) => {
-    toast(`EFEITO GLOBAL ATIVADO: ${effect} ${icon}`, {
-      description: "Todos os bruxos no portal sentirão a mudança agora.",
-      style: { background: '#000', border: '1px solid #eab308', color: '#eab308' }
+    toast(`PROTOCOLO ATIVADO: ${effect.toUpperCase()} ${icon}`, {
+      description: "O Portal Hogwarts agora opera sob este comando supremo.",
+      style: { background: '#000', border: '2px solid #eab308', color: '#eab308', borderRadius: '1.5rem', fontWeight: 'bold' }
     });
-    // Aqui no futuro integraríamos com um canal do Supabase Realtime para mudar o CSS globalmente
+    // Integrar futuramente com store global para mudar estilos
   };
 
   const sendGlobalAnnouncement = () => {
@@ -62,19 +67,23 @@ const ArchitectControl: React.FC = () => {
 
         {/* Menu do God Mode */}
         {isDeploying && (
-          <div className="absolute top-14 right-0 w-64 glass p-6 rounded-3xl border-amber-500/30 bg-black/90 shadow-2xl animate-in fade-in slide-in-from-top-4 duration-300">
-            <h3 className="font-heading text-amber-500 text-xs uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
-               <ShieldAlert size={14} /> Architect God Mode
-            </h3>
+          <div className="absolute top-14 right-0 w-72 glass p-8 rounded-[2.5rem] border-2 border-yellow-500/40 bg-black/95 shadow-[0_40px_100px_rgba(0,0,0,1)] animate-in fade-in slide-in-from-top-4 duration-500">
+            <div className="flex items-center justify-between mb-6">
+               <h3 className="font-heading text-yellow-500 text-sm uppercase tracking-[0.4em] flex items-center gap-3">
+                  <Crown size={18} className="animate-pulse" /> SOBERANIA
+               </h3>
+               <span className="text-[8px] bg-yellow-500 text-black px-2 py-0.5 rounded-full font-bold animate-pulse">GOD SUPREMO</span>
+            </div>
             
-            <div className="grid grid-cols-2 gap-2 mb-6">
+            <div className="grid grid-cols-2 gap-3 mb-6">
+               <ControlBtn icon={<Crown size={16} />} label="MONSTER" onClick={() => triggerGlobalEffect("Modo Monster Quality", "🦖")} />
+               <ControlBtn icon={<Zap size={16} />} label="100% MODE" onClick={() => triggerGlobalEffect("Estabilidade 100% Zion", "⚡")} />
+               <ControlBtn icon={<ShieldCheck size={16} />} label="10 PASSOS" onClick={() => triggerGlobalEffect("Modo 10 Passos Zion", "👣")} />
+               <ControlBtn icon={<Activity size={16} />} label="GOD ZION" onClick={() => triggerGlobalEffect("Protocolo God Zion", "🛡️")} />
                <ControlBtn icon={<CloudSnow size={16} />} label="Neve" onClick={() => triggerGlobalEffect("Neve", "❄️")} />
                <ControlBtn icon={<Flame size={16} />} label="Fogos" onClick={() => triggerGlobalEffect("Fogos de Artifício", "🎆")} />
-               <ControlBtn icon={<Music size={16} />} label="Música" onClick={() => triggerGlobalEffect("Ambiente Mágico", "🎵")} />
                <ControlBtn icon={<Ghost size={16} />} label="Fantasmas" onClick={() => triggerGlobalEffect("Aparições", "👻")} />
-               <ControlBtn icon={<Sun size={16} />} label="Dia" onClick={() => triggerGlobalEffect("Luz do Sol", "☀️")} />
-               <ControlBtn icon={<Zap size={16} />} label="Tempestade" onClick={() => triggerGlobalEffect("Raios", "⚡")} />
-               <ControlBtn icon={<ShieldAlert size={16} />} label="ZION BUNKER" onClick={() => triggerGlobalEffect("Bunker de Zion Ativado. Portal Selado.", "🛡️")} />
+               <ControlBtn icon={<Heart size={16} />} label="BFF LOVE" onClick={() => triggerGlobalEffect("Aura de Amor BFF", "💖")} />
             </div>
 
             <div className="space-y-2 border-t border-amber-900/30 pt-4">
@@ -124,10 +133,10 @@ const ArchitectControl: React.FC = () => {
 const ControlBtn = ({ icon, label, onClick }: { icon: any, label: string, onClick: () => void }) => (
   <button 
     onClick={onClick}
-    className="flex flex-col items-center justify-center p-3 rounded-2xl bg-amber-950/20 border border-amber-900/30 hover:border-amber-500/50 hover:bg-amber-500/10 transition-all gap-1 group"
+    className="flex flex-col items-center justify-center p-4 rounded-[1.2rem] bg-amber-950/10 border border-amber-900/20 hover:border-amber-500/50 hover:bg-amber-500/10 transition-all gap-2 group shadow-inner"
   >
-    <span className="text-amber-500 group-hover:scale-125 transition-transform">{icon}</span>
-    <span className="text-[8px] text-amber-600 uppercase font-bold">{label}</span>
+    <span className="text-amber-500 group-hover:scale-125 transition-transform duration-500">{icon}</span>
+    <span className="text-[9px] text-amber-600 uppercase font-heading font-bold tracking-tighter">{label}</span>
   </button>
 );
 

@@ -512,7 +512,7 @@ export default function GringottsStore() {
           ))}
         </div>
 
-        <div className="absolute inset-0 opacity-25 mix-blend-overlay pointer-events-none" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=2000')" }} />
+        <div className="absolute inset-0 opacity-25 mix-blend-overlay pointer-events-none" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1547756536-cde3673fa2e5?q=80&w=2000')" }} />
         
         <div className="relative z-10 p-8 sm:p-14 lg:p-20 flex flex-col md:flex-row items-center justify-between w-full gap-10">
           <div className="flex-1 text-left space-y-8 animate-in fade-in slide-in-from-left-8 duration-1000">
@@ -670,7 +670,7 @@ export default function GringottsStore() {
 
           {/* FEATURED MEGA CARD */}
           <div className="relative group rounded-[3.5rem] overflow-hidden border-2 border-yellow-500/30 bg-gradient-to-br from-amber-950 via-black to-blue-900/40 p-1 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.8)]">
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=2000')] bg-cover opacity-10 mix-blend-overlay group-hover:scale-110 transition-transform duration-1000" />
+            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1547756536-cde3673fa2e5?q=80&w=2000')] bg-cover opacity-10 mix-blend-overlay group-hover:scale-110 transition-transform duration-1000" />
             <div className="relative glass rounded-[3.2rem] p-10 md:p-16 flex flex-col lg:flex-row items-center gap-14 backdrop-blur-md">
               
               <div className="relative shrink-0 w-full max-w-sm">

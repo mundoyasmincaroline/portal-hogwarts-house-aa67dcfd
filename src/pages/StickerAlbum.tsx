@@ -153,7 +153,7 @@ export default function StickerAlbum() {
   return (
     <div className="max-w-7xl mx-auto space-y-12 pb-20 px-4">
       {/* ── HEADER MONSTER QUALITY ── */}
-      <div className="relative glass rounded-[3rem] p-10 md:p-16 text-center overflow-hidden border border-yellow-500/20 shadow-2xl group">
+      <div className="relative glass rounded-[4rem] p-10 md:p-20 text-center overflow-hidden border-2 border-yellow-500/30 shadow-[0_0_100px_rgba(0,0,0,1)] group">
         <div className="absolute inset-0 bg-gradient-to-br from-amber-900/40 via-black to-blue-900/40 opacity-60 z-0" />
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2070')] bg-cover bg-center opacity-10 group-hover:scale-105 transition-transform duration-1000" />
         
@@ -223,10 +223,10 @@ export default function StickerAlbum() {
                 </div>
               </div>
 
-              <div className={`relative w-72 h-[420px] rounded-[2.5rem] overflow-hidden border-4 shadow-[0_0_100px_rgba(0,0,0,0.8)] group transition-all duration-1000 ${
-                packReveal.rarity === "gold" ? "border-yellow-400 shadow-yellow-400/30 ring-4 ring-yellow-400/20"
-                : packReveal.rarity === "silver" ? "border-slate-300 shadow-white/10 ring-2 ring-slate-300/10"
-                : "border-amber-800 shadow-amber-900/20"
+              <div className={`relative w-72 h-[450px] rounded-[4rem] overflow-hidden border-8 shadow-[0_0_120px_rgba(0,0,0,0.9)] group transition-all duration-1000 ${
+                packReveal.rarity === "gold" ? "border-yellow-400/60 shadow-yellow-400/40 ring-8 ring-yellow-400/20"
+                : packReveal.rarity === "silver" ? "border-slate-300/40 shadow-white/10 ring-4 ring-slate-300/10"
+                : "border-amber-900/60 shadow-amber-900/20"
               }`}>
                 {/* Holographic Overlays */}
                 {packReveal.rarity === "gold" && (
@@ -356,9 +356,9 @@ export default function StickerAlbum() {
 
           return (
             <div key={s.id}
-              className={`relative aspect-[3/4.5] rounded-[2.5rem] flex flex-col overflow-hidden border-2 transition-all duration-700 group ${
+              className={`relative aspect-[3/4.8] rounded-[3.5rem] flex flex-col overflow-hidden border-4 transition-all duration-700 group ${
                 unlocked ? rarityStyle : "border-white/5 bg-secondary/5 hover:border-white/20"
-              } ${unlocked && isGold ? 'hover:shadow-[0_0_40px_rgba(251,191,36,0.3)]' : ''}`}
+              } ${unlocked && isGold ? 'hover:shadow-[0_0_50px_rgba(251,191,36,0.4)]' : ''}`}
             >
               <div className="absolute inset-0 z-0 overflow-hidden">
                 <div className={`absolute inset-0 transition-transform duration-1000 ${unlocked ? 'group-hover:scale-110' : ''}`}>

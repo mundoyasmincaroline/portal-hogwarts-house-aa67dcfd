@@ -244,8 +244,11 @@ export default function DashboardLayout() {
             
             <div className="flex items-center gap-4 mb-6 relative z-10">
               <div className="relative group/avatar">
-                <div className={`absolute inset-0 bg-gradient-to-br ${currentHouse?.color || 'from-primary/20'} blur-lg opacity-20 group-hover/avatar:opacity-60 transition-opacity duration-500`} />
-                <div className="w-16 h-16 rounded-2xl overflow-hidden relative border-2 border-white/10 shadow-2xl transition-transform duration-500 group-hover/avatar:scale-105">
+                {/* Supreme God Aura */}
+                <div className="absolute -inset-4 bg-gradient-to-r from-yellow-400 via-amber-200 to-yellow-600 rounded-full blur-2xl opacity-40 animate-pulse scale-150" />
+                <div className="absolute -inset-1 bg-gradient-to-r from-yellow-500 via-white to-amber-500 rounded-[2.2rem] blur opacity-30 group-hover/avatar:opacity-100 transition-all duration-1000 animate-spin-slow" />
+                
+                <div className="w-20 h-20 rounded-[2rem] overflow-hidden relative border-4 border-yellow-400/60 shadow-[0_0_30px_rgba(251,191,36,0.5)] transition-all duration-700 group-hover/avatar:scale-110">
                   <img 
                     src={profile?.avatar_url || "/default_avatar.png"} 
                     alt="Perfil" 
@@ -254,24 +257,30 @@ export default function DashboardLayout() {
                 </div>
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-heading text-lg text-white truncate drop-shadow-md">{profile?.full_name || "Bruxo"}</h3>
-                <div className="flex items-center gap-2">
-                   <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
-                   <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Online em {currentHouse?.name || "Hogwarts"}</p>
+                <div className="flex items-center gap-2 mb-1">
+                   <h3 className="font-heading text-lg text-white truncate drop-shadow-md">{profile?.full_name || "Bruxo"}</h3>
+                   <Crown size={14} className="text-yellow-400 animate-bounce" />
+                </div>
+                <div className="flex flex-col gap-1">
+                   <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                      <p className="text-[10px] uppercase tracking-widest text-emerald-400 font-bold">GOD SUPREMO</p>
+                   </div>
+                   <p className="text-[8px] text-white/30 font-mono tracking-tighter">[ MATRIX_SINC: 100% ]</p>
                 </div>
               </div>
             </div>
 
             {/* Status do Bruxo - Monster Plaques */}
             <div className="grid grid-cols-2 gap-3 mb-6 relative z-10">
-              <div className="glass-light p-3 rounded-2xl border-white/5 bg-white/5 hover:bg-white/10 transition-colors">
+              <div className="glass-light p-4 rounded-[1.5rem] border-white/5 bg-white/5 hover:bg-white/10 transition-colors shadow-inner">
                 <div className="flex items-center gap-2 mb-1">
                   <MagicalGaleon size="xs" />
                   <span className="text-[10px] font-heading text-white/40 uppercase tracking-tighter">Galeões</span>
                 </div>
                 <p className="text-sm font-bold text-white">{(profile?.currency || profile?.galeons || 0).toLocaleString("pt-BR")}</p>
               </div>
-              <div className="glass-light p-3 rounded-2xl border-white/5 bg-white/5 hover:bg-white/10 transition-colors">
+              <div className="glass-light p-4 rounded-[1.5rem] border-white/5 bg-white/5 hover:bg-white/10 transition-colors shadow-inner">
                 <div className="flex items-center gap-2 mb-1">
                   <Sparkles size={12} className="text-primary animate-pulse" />
                   <span className="text-[10px] font-heading text-white/40 uppercase tracking-tighter">Nível</span>
@@ -315,9 +324,9 @@ export default function DashboardLayout() {
                   playMagicSound();
                 }}
                 className={`
-                  flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 group relative
+                  flex items-center gap-4 px-4 py-3 rounded-[1.2rem] transition-all duration-300 group relative
                   ${location.pathname === item.path 
-                    ? "bg-primary/10 text-primary border border-primary/20 shadow-[0_0_15px_rgba(var(--primary),0.1)]" 
+                    ? "bg-primary/10 text-primary border border-primary/20 shadow-[0_0_20px_rgba(var(--primary),0.15)]" 
                     : "hover:bg-primary/5 text-muted-foreground hover:text-foreground border border-transparent"}
                   ${item.isBFF ? "bg-pink-500/5 hover:bg-pink-500/10 text-pink-500/70 hover:text-pink-500" : ""}
                   ${item.isFamily ? "bg-amber-500/5 hover:bg-amber-500/10 text-amber-500/70 hover:text-amber-500" : ""}
@@ -445,28 +454,31 @@ export default function DashboardLayout() {
         </div>
       </div>
 
-      {/* ── WELCOME GIFT MODAL (CINEMATIC) ── */}
+       {/* ── WELCOME GIFT MODAL (CINEMATIC) ── */}
       <Dialog open={showWelcome} onOpenChange={setShowWelcome}>
-        <DialogContent className="max-w-md bg-gradient-to-br from-amber-950 via-black to-blue-950 border-yellow-500/30 text-white rounded-[2.5rem] p-0 overflow-hidden shadow-[0_0_80px_rgba(234,179,8,0.3)] border-none">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=1000')] opacity-10 mix-blend-overlay pointer-events-none" />
+        <DialogContent className="max-w-md bg-gradient-to-br from-amber-950 via-black to-blue-950 border-yellow-500/30 text-white rounded-[3.5rem] p-0 overflow-hidden shadow-[0_0_100px_rgba(0,0,0,1)] border-none">
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1547756536-cde3673fa2e5?q=80&w=1000')] opacity-10 mix-blend-overlay pointer-events-none" />
           
-          <div className="relative p-10 space-y-8 text-center">
+          <div className="relative p-12 space-y-10 text-center">
              <div className="relative group mx-auto w-fit">
-                <div className="absolute -inset-10 bg-yellow-400/20 rounded-full blur-[60px] animate-pulse" />
-                <div className="w-48 h-48 bg-gradient-to-b from-yellow-500/20 to-transparent rounded-[3rem] border-4 border-yellow-500/30 flex items-center justify-center shadow-2xl relative z-10 overflow-hidden transform group-hover:scale-105 transition-transform duration-700">
+                <div className="absolute -inset-16 bg-yellow-400/20 rounded-full blur-[80px] animate-pulse" />
+                <div className="absolute -inset-1 bg-gradient-to-r from-yellow-500 via-amber-200 to-yellow-500 rounded-[4rem] blur opacity-30 group-hover:opacity-60 transition-opacity" />
+                
+                <div className="w-56 h-56 bg-black/40 rounded-[4rem] border-4 border-yellow-500/40 flex items-center justify-center shadow-[0_0_50px_rgba(234,179,8,0.3)] relative z-10 overflow-hidden transform group-hover:scale-110 transition-transform duration-1000">
                    <img 
-                     src="https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=1000" 
-                     className="w-full h-full object-cover mix-blend-screen opacity-80"
+                     src="https://images.unsplash.com/photo-1547756536-cde3673fa2e5?q=80&w=1000" 
+                     className="w-full h-full object-cover mix-blend-screen opacity-90 rounded-[3.8rem]"
                      alt="Relíquia"
                    />
-                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                   <Gift size={64} className="absolute text-yellow-500 drop-shadow-[0_0_20px_rgba(251,191,36,1)] animate-bounce" />
+                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
+                   <div className="absolute inset-0 border-[12px] border-black/40 rounded-[3.8rem] pointer-events-none" />
+                   <Gift size={80} className="absolute text-yellow-500 drop-shadow-[0_0_30px_rgba(251,191,36,1)] animate-float" />
                 </div>
              </div>
              
-             <div className="space-y-4">
-                <h2 className="text-4xl md:text-5xl font-heading text-gold-gradient tracking-tighter drop-shadow-2xl">BEM-VINDO A HOGWARTS</h2>
-                <p className="text-lg text-yellow-100/60 font-serif italic leading-relaxed">"O Ministério da Magia preparou um kit de elite para sua ascensão imediata."</p>
+             <div className="space-y-6">
+                <h2 className="text-5xl md:text-6xl font-heading text-gold-gradient tracking-tighter drop-shadow-2xl uppercase leading-[0.9]">BEM-VINDO A HOGWARTS</h2>
+                <p className="text-xl text-yellow-100/70 font-serif italic leading-relaxed">"O Ministério da Magia preparou um kit de elite para sua ascensão imediata."</p>
              </div>
 
              <div className="grid grid-cols-2 gap-6 py-6">

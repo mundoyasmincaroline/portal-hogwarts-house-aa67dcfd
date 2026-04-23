@@ -156,18 +156,22 @@ export default function StoreItemVisual({ imageUrl, name, category, isOwned }: P
   const theme = getTheme(name, category);
 
   return (
-    <div className={`monster-item-card w-full h-full group p-0`}>
-      <SafeImage 
-        src={finalImage} 
-        alt={name}
-        className="w-full h-full object-cover group-hover:scale-110 transition-all opacity-90 grayscale-[0.2] contrast-[1.1]"
-        style={{ transitionDuration: '3000ms' }}
-        fallbackEmoji="📦"
-      />
+    <div className={`monster-item-card w-full h-full group p-1 overflow-hidden bg-gradient-to-br from-white/5 to-transparent border-white/10 rounded-[3.5rem] shadow-2xl`}>
+      <div className="relative w-full h-full rounded-[3.2rem] overflow-hidden">
+        <SafeImage 
+          src={finalImage} 
+          alt={name}
+          className="w-full h-full object-cover group-hover:scale-125 transition-all duration-[3000ms] opacity-90 grayscale-[0.1] contrast-[1.2] brightness-90"
+          fallbackEmoji="📦"
+        />
+        
+        {/* Cinematic Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10" />
+        <div className="absolute inset-0 border-[10px] border-black/40 rounded-[3.2rem] pointer-events-none z-20" />
+        <div className="absolute inset-0 shadow-[inner_0_0_40px_rgba(0,0,0,0.8)] pointer-events-none z-20" />
+      </div>
       
-      {/* Cinematic Overlays */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
-      <div className="absolute top-4 right-4 z-20">
+      <div className="absolute top-6 right-6 z-30">
         <MagicalEmoji emoji={theme.badge} size="xs" glowColor={theme.glow} />
       </div>
       
