@@ -44,6 +44,12 @@ const WelcomeChestModal: React.FC<WelcomeChestModalProps> = ({ onClose }) => {
           _xp: 100
         });
 
+        // Award the actual legendary chest item so they can see/open it in the store/inventory
+        await supabase.from("user_items").insert({
+          user_id: user.id,
+          item_id: "mq_item_chest_epic"
+        } as never);
+
         // Mark as seen
         await updateProfile({ has_seen_intro: true });
 

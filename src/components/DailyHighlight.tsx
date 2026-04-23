@@ -64,7 +64,7 @@ export default function DailyHighlight() {
             <div className="absolute inset-0 bg-white/20 rounded-full blur-2xl animate-pulse scale-125" />
             <div className="w-32 h-32 rounded-[3.5rem] border-4 border-white/30 overflow-hidden shadow-2xl relative z-10 group-hover/avatar:rotate-6 transition-transform duration-700">
               <img 
-                src={highlightedUser.avatar_url || `https://api.dicebear.com/7.x/adventurer/svg?seed=${highlightedUser.username}`} 
+                src={highlightedUser.avatar_url || "/default_avatar.png"} 
                 alt={highlightedUser.username}
                 className="w-full h-full object-cover group-hover/avatar:scale-110 transition-transform duration-1000"
               />
