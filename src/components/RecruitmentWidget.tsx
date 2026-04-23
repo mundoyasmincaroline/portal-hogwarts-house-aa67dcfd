@@ -3,6 +3,7 @@ import { Share2, Users, Gift, Copy, CheckCircle2, Sparkles, Youtube, Instagram, 
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
 import MagicalEmoji from "./MagicalEmoji";
 
 export default function RecruitmentWidget() {

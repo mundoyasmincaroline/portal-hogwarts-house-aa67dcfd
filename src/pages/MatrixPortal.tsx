@@ -20,7 +20,8 @@ import {
   Globe,
   Navigation,
   Monitor,
-  ShieldAlert
+  ShieldAlert,
+  Crown
 } from "lucide-react";
 
 import { 
