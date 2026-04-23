@@ -58,7 +58,9 @@ export default function MagicalSplashScreen() {
         <div className="relative group">
           <div className="absolute -inset-8 bg-primary/20 rounded-full blur-2xl animate-pulse" />
           <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-[3rem] border-2 border-primary/30 flex items-center justify-center bg-black/40 backdrop-blur-xl shadow-2xl overflow-hidden">
-             <img src="/favicon.ico" alt="Hogwarts" className="w-20 h-20 md:w-24 md:h-24 object-contain animate-float" />
+             <div className="relative animate-float">
+                <Sparkles className="text-primary" size={64} />
+             </div>
              <div className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent" />
           </div>
           
