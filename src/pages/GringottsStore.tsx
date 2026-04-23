@@ -42,7 +42,11 @@ const MONSTER_QUALITY_ITEMS: StoreItem[] = [
   { id: "mq_cloth_crimson", name: "Manto Carmesim", category: "clothing", price_galeons: 2800, image_url: "/robe_carmesim.png", rarity: "legendary", is_featured: true, description: "Um manto imponente que emana uma aura de autoridade e coragem." },
   { id: "mq_cloth_stealth", name: "Capa de Invisibilidade", category: "clothing", price_galeons: 10000, image_url: "/items/monster_quality_invisibility_cloak.png", rarity: "legendary", is_featured: true, description: "Tecida com fios de seminviso, esta capa torna o usuário indetectável." },
 
-  // POTIONS
+  // POTIONS (Alquimia Emocional do Arquiteto)
+  { id: "mq_potion_euphoria", name: "Poção de Euforia", category: "potion", price_galeons: 500, image_url: "/items/monster_quality_potion_luck.png", rarity: "rare", is_featured: true, description: "Induz um estado de ALEGRIA absoluta. Concede +20% de bônus de XP em todas as atividades." },
+  { id: "mq_potion_rage", name: "Poção de Ódio Puro", category: "potion", price_galeons: 800, image_url: "/items/monster_quality_potion_luck.png", rarity: "rare", is_featured: true, description: "Desperta a RAIVA latente. Aumenta o dano de feitiços ofensivos em 50% nos duelos." },
+  { id: "mq_potion_peace", name: "Elixir da Paz", category: "potion", price_galeons: 300, image_url: "/items/monster_quality_potion_luck.png", rarity: "uncommon", is_featured: false, description: "Acalma a alma e restaura a mana instantaneamente. Retorna ao estado NEUTRO." },
+  { id: "mq_potion_sorrow", name: "Extrato de Melancolia", category: "potion", price_galeons: 400, image_url: "/items/monster_quality_potion_luck.png", rarity: "rare", is_featured: false, description: "Induz o estado de TRISTEZA profunda. Fortalece o escudo mágico e a defesa em 40%." },
   { id: "mq_potion_dragon", name: "Sangue de Dragão", category: "potion", price_galeons: 1500, image_url: "/items/monster_quality_potion_luck.png", rarity: "rare", is_featured: false, description: "Uma poção poderosa que amplifica a força vital e resistência mágica." },
   { id: "mq_potion_luck", name: "Felix Felicis", category: "potion", price_galeons: 4000, image_url: "/items/monster_quality_potion_luck.png", rarity: "legendary", is_featured: true, description: "A Sorte Líquida. Por um tempo limitado, todas as suas ações serão bem-sucedidas." },
   { id: "mq_potion_truth", name: "Veritaserum", category: "potion", price_galeons: 2000, image_url: "/items/monster_quality_potion_luck.png", rarity: "rare", is_featured: false, description: "O mais poderoso soro da verdade conhecido no mundo bruxo." },
@@ -416,6 +420,66 @@ export default function GringottsStore() {
     finally { setBuying(null); }
   };
 
+  // ── Vender Item (Liquidez Mágica) ──────────────────
+  const sellItem = async (itemId: string) => {
+    if (!user || !profile) return;
+    
+    const item = items.find(i => i.id === itemId);
+    if (!item) return;
+
+    const sellPrice = Math.floor(item.price_galeons * 0.5); // Gringotts paga 50%
+    const userBal = profile.galeons || 0;
+
+    setBuying(`sell-${itemId}`);
+    try {
+      // 1. Remover o item do inventário
+      const { data: userItem } = await supabase
+        .from("user_items")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("item_id", itemId)
+        .limit(1)
+        .maybeSingle();
+
+      if (!userItem) throw new Error("Item não encontrado no inventário.");
+
+      const { error: delErr } = await supabase
+        .from("user_items")
+        .delete()
+        .eq("id", userItem.id);
+
+      if (delErr) throw delErr;
+
+      // 2. Adicionar Galeões
+      const { error: addErr } = await supabase
+        .from("profiles")
+        .update({ galeons: userBal + sellPrice } as never)
+        .eq("user_id", user.id);
+
+      if (addErr) throw addErr;
+
+      toast.success(`💰 Item vendido! +${sellPrice} Galeões adicionados ao cofre.`, {
+        description: "Gringotts agradece a preferência."
+      });
+      
+      setOwned(prev => {
+        const index = prev.indexOf(itemId);
+        if (index > -1) {
+          const next = [...prev];
+          next.splice(index, 1);
+          return next;
+        }
+        return prev;
+      });
+      
+      await fetchProfile(user.id);
+    } catch (e: any) {
+      toast.error("Erro na venda: " + e.message);
+    } finally {
+      setBuying(null);
+    }
+  };
+
   // ── Abrir Baú (Lógica Funcional) ──────────────────
   const handleOpenChest = async (chestItemId: string) => {
     if (!user || !profile) return;
@@ -612,17 +676,68 @@ export default function GringottsStore() {
           <div className="relative group">
             <div className="flex overflow-x-auto gap-6 pb-8 pt-2 px-4 no-scrollbar scroll-smooth">
               {items.filter(i => owned.includes(i.id)).map(item => (
-                <div key={`owned-${item.id}`} className="shrink-0 w-48 glass bg-white/5 border border-white/10 rounded-[2rem] p-4 group/item hover:border-primary/50 transition-all cursor-pointer">
+                <div key={`owned-${item.id}`} className="shrink-0 w-48 glass bg-white/5 border border-white/10 rounded-[2rem] p-4 group/item hover:border-primary/50 transition-all">
                   <div className="aspect-square rounded-2xl overflow-hidden bg-black/40 mb-4 relative">
                     <img src={item.image_url} alt={item.name} className="w-full h-full object-contain group-hover/item:scale-110 transition-transform" />
-                    <div className="absolute top-2 right-2">
+                    <div className="absolute top-2 right-2 flex flex-col gap-2">
                       <div className="bg-green-500/20 text-green-400 p-1.5 rounded-full border border-green-500/30">
                         <Check size={10} />
                       </div>
                     </div>
                   </div>
                   <h4 className="text-xs font-bold text-white text-center truncate mb-1">{item.name}</h4>
-                  <p className="text-[8px] text-muted-foreground text-center uppercase tracking-widest">{item.category}</p>
+                  <p className="text-[8px] text-muted-foreground text-center uppercase tracking-widest mb-4">{item.category}</p>
+                  
+                  <div className="flex gap-2">
+                    {item.id.includes("chest") ? (
+                      <Button variant="magical" size="xs" className="w-full h-8 text-[9px]" onClick={() => handleOpenChest(item.id)} disabled={!!buying}>
+                        ABRIR 🎁
+                      </Button>
+                    ) : item.category === "potion" && item.id.startsWith("mq_potion_") ? (
+                      <Button variant="magical" size="xs" className="w-full h-8 text-[9px] bg-emerald-600 hover:bg-emerald-500" onClick={async () => {
+                        if (!user) return;
+                        setBuying(item.id);
+                        try {
+                          const moodMap: Record<string, string> = {
+                            mq_potion_euphoria: "alegre",
+                            mq_potion_rage: "raiva",
+                            mq_potion_peace: "neutro",
+                            mq_potion_sorrow: "triste"
+                          };
+                          const newMood = moodMap[item.id] || "neutro";
+                          
+                          // 1. Atualizar Humor
+                          await supabase.from("profiles").update({ 
+                            mood: newMood, 
+                            mood_power: 100 
+                          } as any).eq("user_id", user.id);
+                          
+                          // 2. Remover Poção (Consumir)
+                          const { data: itemToDelete } = await supabase.from("user_items").select("id").eq("user_id", user.id).eq("item_id", item.id).limit(1).single();
+                          if (itemToDelete) await supabase.from("user_items").delete().eq("id", itemToDelete.id);
+                          
+                          toast.success(`✨ Você consumiu ${item.name}! Seu estado emocional agora é: ${newMood.toUpperCase()}.`);
+                          setOwned(prev => {
+                            const index = prev.indexOf(item.id);
+                            const next = [...prev];
+                            next.splice(index, 1);
+                            return next;
+                          });
+                          await fetchProfile(user.id);
+                        } catch (e: any) {
+                          toast.error("Erro ao consumir: " + e.message);
+                        } finally {
+                          setBuying(null);
+                        }
+                      }} disabled={!!buying}>
+                        CONSUMIR ✨
+                      </Button>
+                    ) : (
+                      <Button variant="outline" size="xs" className="w-full h-8 text-[9px] border-red-500/30 text-red-400 hover:bg-red-500/10" onClick={() => sellItem(item.id)} disabled={!!buying}>
+                        VENDER 💰
+                      </Button>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

@@ -210,8 +210,41 @@ const BFFWorld: React.FC = () => {
                 </div>
               </div>
               
-              <Button variant="plaque" className="w-full mt-6 border-amber-500/30 text-amber-500 h-12 gap-2 uppercase text-[10px] tracking-widest font-bold">
-                 <Sparkles size={14} /> Reivindicar Bônus BFF
+              <Button 
+                variant="plaque" 
+                className="w-full mt-6 border-amber-500/30 text-amber-500 h-12 gap-2 uppercase text-[10px] tracking-widest font-bold animate-pulse-glow"
+                onClick={async () => {
+                  if (!user || !profile || !anita) return;
+                  if (streak < 1) {
+                    toast.error("A chama está fria! Conversem mais para gerar energia financeira.");
+                    return;
+                  }
+                  
+                  const bonusGaleons = streak * 10; // 10 Galeões por dia de streak
+                  
+                  try {
+                    // 1. Dar Galeões
+                    await supabase.rpc("award_galeons", { 
+                      _user_id: user.id, 
+                      _amount: bonusGaleons, 
+                      _reason: "bff_streak_bonus" 
+                    });
+                    
+                    // 2. Melhorar Humor
+                    await supabase.from("profiles").update({ 
+                      mood: "alegre", 
+                      mood_power: 100 
+                    } as any).eq("user_id", user.id);
+                    
+                    toast.success(`✨ Vínculo de Fogo Ativo! +${bonusGaleons} Galeões adicionados ao seu cofre.`, {
+                      description: "Sua amizade com Anita Potter gerou prosperidade!"
+                    });
+                  } catch (e: any) {
+                    toast.error("Erro ao reivindicar: " + e.message);
+                  }
+                }}
+              >
+                 <Sparkles size={14} /> Reivindicar Bônus de Amizade (+{streak * 10} Galeões)
               </Button>
             </div>
 

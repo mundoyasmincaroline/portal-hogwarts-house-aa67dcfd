@@ -20,6 +20,7 @@ import MagicalGaleon from "@/components/MagicalGaleon";
 import WelcomeChestModal from "@/components/WelcomeChestModal";
 import JarvisPresence from "@/components/JarvisPresence";
 import MagicalMemories from "@/components/MagicalMemories";
+import HouseCupWidget from "@/components/HouseCupWidget";
 
 
 const REACTIONS = ["⚡", "❤️", "🔥", "🦁", "🦅", "🐍", "🦡"];
@@ -261,6 +262,7 @@ export default function Feed() {
       <MagicalMemories />
       <StoriesBar />
       <DynamicGreeting />
+      <HouseCupWidget />
 
       
       {showWelcomeChest && (

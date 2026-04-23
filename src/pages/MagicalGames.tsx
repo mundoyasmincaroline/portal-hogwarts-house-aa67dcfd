@@ -183,6 +183,15 @@ export default function MagicalGames() {
     setPlayerMove(move);
     setOpponentMove(oppMove);
 
+    // Protocolo de Sentimentos do Arquiteto: Multiplicadores Emocionais
+    const mood = profile?.mood || "alegre";
+    let damageMult = 1.0;
+    let defenseMult = 1.0;
+
+    if (mood === "raiva") damageMult = 1.5; // Mais dano, menos controle
+    if (mood === "triste") defenseMult = 1.4; // Mais focado em se proteger
+    if (mood === "alegre") damageMult = 1.2; // Chance de bônus crítico
+
     let res: "win" | "lose" | "draw" = "draw";
     if (move === oppMove) res = "draw";
     else if (
@@ -191,16 +200,18 @@ export default function MagicalGames() {
       (move === "curse" && oppMove === "defend")
     ) {
       res = "win";
-      setOpponentHP(prev => Math.max(0, prev - 25));
+      const baseDamage = 25;
+      setOpponentHP(prev => Math.max(0, prev - Math.floor(baseDamage * damageMult)));
     } else {
       res = "lose";
-      setPlayerHP(prev => Math.max(0, prev - 25));
+      const baseDamage = 25;
+      setPlayerHP(prev => Math.max(0, prev - Math.floor(baseDamage / defenseMult)));
     }
 
     setResult(res);
     setGameState("result");
     
-    if (res === "win") toast.success("✨ Feitiço certeiro! Você venceu o turno.");
+    if (res === "win") toast.success(`✨ Feitiço ${mood === 'raiva' ? 'FURIOSO' : 'certeiro'}! Você venceu o turno.`);
     if (res === "lose") toast.error("🌑 O oponente foi mais rápido...");
   };
 
@@ -319,9 +330,17 @@ export default function MagicalGames() {
 
                 {gameState === "playing" ? (
                   <div className="space-y-4">
-                    <div className={`text-center py-2 rounded-lg border ${isMyTurn ? "border-primary bg-primary/10 animate-pulse" : "border-white/5 opacity-50"}`}>
-                       <p className="text-xs font-bold uppercase tracking-widest">
-                          {isMyTurn ? "SUA VEZ DE ATACAR!" : "AGUARDANDO OPONENTE..."}
+                    <div className={`text-center py-2 rounded-lg border transition-all duration-500 ${
+                      mood === "raiva" ? "border-red-500 bg-red-500/20 shadow-[0_0_20px_rgba(239,68,68,0.3)]" :
+                      mood === "triste" ? "border-blue-500 bg-blue-500/20 shadow-[0_0_20px_rgba(37,99,235,0.3)]" :
+                      isMyTurn ? "border-primary bg-primary/10 animate-pulse" : "border-white/5 opacity-50"
+                    }`}>
+                       <p className={`text-xs font-bold uppercase tracking-widest ${
+                         mood === "raiva" ? "text-red-400" :
+                         mood === "triste" ? "text-blue-400" :
+                         "text-white"
+                       }`}>
+                          {isMyTurn ? (mood === "raiva" ? "ATAQUE COM FÚRIA!" : "SUA VEZ DE ATACAR!") : "AGUARDANDO OPONENTE..."}
                        </p>
                     </div>
 
@@ -330,9 +349,17 @@ export default function MagicalGames() {
                         <button 
                           key={m.id} 
                           onClick={() => handleOnlineMove(m.id)}
-                          className="glass bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col items-center gap-2 hover:bg-primary/20 hover:border-primary/40 transition-all group/move active:scale-90"
+                          className={`glass bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col items-center gap-2 transition-all group/move active:scale-90 ${
+                            mood === "raiva" ? "hover:bg-red-500/20 hover:border-red-500/40" :
+                            mood === "triste" ? "hover:bg-blue-500/20 hover:border-blue-500/40" :
+                            "hover:bg-primary/20 hover:border-primary/40"
+                          }`}
                         >
-                          <m.icon size={24} className="text-primary group-hover/move:animate-bounce" />
+                          <m.icon size={24} className={`group-hover/move:animate-bounce ${
+                            mood === "raiva" ? "text-red-500" :
+                            mood === "triste" ? "text-blue-500" :
+                            "text-primary"
+                          }`} />
                           <span className="text-xs font-bold uppercase tracking-tight text-white/80">{m.label}</span>
                           <span className="text-[10px] text-white/30 uppercase">{m.strength}</span>
                         </button>

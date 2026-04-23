@@ -752,6 +752,15 @@ export default function Admin() {
   };
 
   useEffect(() => {
+    // Ler aba da URL se presente
+    const params = new URLSearchParams(window.location.search);
+    const initialTab = params.get("tab") as Tab;
+    const validTabs: Tab[] = ["members", "pending_members", "challenges", "houses", "fichas", "tasks", "banned", "channels", "monetization", "moderation", "filch", "pedidos", "festas"];
+    
+    if (initialTab && validTabs.includes(initialTab)) {
+      setTab(initialTab);
+    }
+
     if (isAdmin) fetchAll();
     else setLoading(false);
   }, [isAdmin]);

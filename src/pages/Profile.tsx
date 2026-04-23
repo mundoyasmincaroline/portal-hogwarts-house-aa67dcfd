@@ -603,10 +603,26 @@ export default function Profile() {
             <p className="text-sm text-muted-foreground mt-3 font-serif italic">{profile.bio || "Sem bio ainda..."}</p>
             {/* Saldo de Galeões — visível apenas no próprio perfil */}
             {isMe && (
-              <div className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-yellow-500/30 bg-yellow-900/10 text-yellow-400 text-sm font-heading">
-              <span className="flex items-center gap-2">
-                <MagicalGaleon size="xs" /> {user?.email === 'paulormorpheus21@gmail.com' ? '∞' : ((profile as any).galeons || 0).toLocaleString("pt-BR")} Galeões
-              </span>
+              <div className="mt-3 flex flex-wrap justify-center gap-2">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-yellow-500/30 bg-yellow-900/10 text-yellow-400 text-sm font-heading">
+                  <span className="flex items-center gap-2">
+                    <MagicalGaleon size="xs" /> {user?.email === 'paulormorpheus21@gmail.com' ? '∞' : ((profile as any).galeons || 0).toLocaleString("pt-BR")} Galeões
+                  </span>
+                </div>
+                
+                {profile.mood && (
+                  <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border transition-all animate-pulse ${
+                    profile.mood === 'Euforia' ? 'border-yellow-400 bg-yellow-400/10 text-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.3)]' :
+                    profile.mood === 'Ódio' ? 'border-red-600 bg-red-600/10 text-red-500 shadow-[0_0_10px_rgba(220,38,38,0.3)]' :
+                    profile.mood === 'Tristeza' ? 'border-blue-400 bg-blue-400/10 text-blue-400 shadow-[0_0_10px_rgba(96,165,250,0.3)]' :
+                    profile.mood === 'Paz' ? 'border-emerald-400 bg-emerald-400/10 text-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.3)]' :
+                    'border-primary/30 bg-primary/10 text-primary'
+                  }`}>
+                    <span className="text-[10px] font-heading uppercase tracking-widest flex items-center gap-1.5">
+                      <Sparkles size={10} /> {profile.mood}
+                    </span>
+                  </div>
+                )}
               </div>
             )}
             

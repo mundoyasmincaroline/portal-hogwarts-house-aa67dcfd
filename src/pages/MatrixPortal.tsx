@@ -45,8 +45,11 @@ import { useVoice } from "@/hooks/useVoice";
 import MatrixRain from "@/components/MatrixRain";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Mic, MicOff, Coins } from "lucide-react";
 import { getCurrencyBreakdown } from "@/lib/auth";
+import EmmaPresence from "@/components/EmmaPresence";
+import CarolAgenda from "@/components/CarolAgenda";
+import ThottyPresence from "@/components/ThottyPresence";
+import ArchitectControl from "@/components/ArchitectControl";
 
 const mockData = [
   { name: "00:00", sales: 400, online: 120 },
@@ -991,26 +994,95 @@ export default function MatrixPortal() {
              </div>
           </div>
 
+          {/* ── CENTRAL DE TRÁFEGO & VIRAL (JARVIS_AID) ── */}
+          <div className="glass bg-cyan-500/10 border-cyan-500/40 p-10 rounded-[4rem] space-y-8 relative overflow-hidden shadow-[0_0_60px_rgba(34,211,238,0.15)] group hover:scale-[1.02] transition-all duration-700">
+             <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-transparent pointer-events-none" />
+             <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:scale-125 transition-transform">
+                <Sparkles size={60} className="text-cyan-400 animate-pulse" />
+             </div>
+             
+             <div className="relative z-10">
+                <p className="text-sm font-heading font-bold uppercase tracking-[0.5em] text-cyan-400 mb-2 flex items-center gap-3">
+                   <Zap size={20} className="animate-pulse" /> CENTRAL DE TRÁFEGO & VIRAL
+                </p>
+                <p className="text-xs text-white/40 font-mono italic">"Jarvis está pronto para otimizar suas fotos e vídeos."</p>
+             </div>
+
+             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 relative z-10">
+                <Button 
+                  variant="outline" 
+                  className="h-24 rounded-[2rem] border-cyan-500/30 bg-black/60 hover:bg-cyan-500/10 text-cyan-400 flex flex-col gap-2 group/btn transition-all"
+                  onClick={() => navigate('/dashboard/instahogwarts')}
+                >
+                  <Smartphone size={24} className="group-hover/btn:scale-125 transition-transform" />
+                  <span className="font-heading text-[10px] tracking-widest">INSTA_HOGWARTS (FOTOS)</span>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="h-24 rounded-[2rem] border-purple-500/30 bg-black/60 hover:bg-purple-500/10 text-purple-400 flex flex-col gap-2 group/btn transition-all"
+                  onClick={() => navigate('/dashboard/cinema')}
+                >
+                  <Monitor size={24} className="group-hover/btn:scale-125 transition-transform" />
+                  <span className="font-heading text-[10px] tracking-widest">HOGWARTS_CINE (VÍDEOS)</span>
+                </Button>
+             </div>
+
+             <div className="p-6 bg-black/40 border border-cyan-500/20 rounded-3xl space-y-4">
+                <p className="text-[10px] font-bold text-cyan-400 uppercase tracking-widest flex items-center gap-2">
+                   <Users size={12} /> SUPORTE JARVIS PARA CRIATIVOS
+                </p>
+                <p className="text-[11px] text-white/60 leading-relaxed font-serif italic">
+                  "Arquiteto, os links de afiliado (TikTok/Shopee) podem ser gerenciados na Guia de Monetização abaixo. Jarvis já está preparando o terreno para o pico de tráfego."
+                </p>
+             </div>
+          </div>
+
+          {/* ── PAINEL DA YASMIN (MUNDO_YASMIN_CENTRAL) ── */}
+          <div className="glass bg-pink-500/5 border-pink-500/30 p-10 rounded-[4rem] space-y-6 relative overflow-hidden group hover:shadow-[0_0_50px_rgba(236,72,153,0.1)] transition-all">
+             <div className="absolute top-0 right-0 p-8 opacity-20">
+                <Crown size={40} className="text-pink-400" />
+             </div>
+             <p className="text-sm font-heading font-bold uppercase tracking-[0.5em] text-pink-400">MUNDO_YASMIN_ACCESS</p>
+             <p className="text-[10px] text-white/40 font-mono italic">"Acesso direto ao núcleo da Fundadora."</p>
+             
+             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Button 
+                  variant="outline" 
+                  className="h-16 rounded-2xl border-pink-500/40 text-pink-400 hover:bg-pink-500/10 gap-3"
+                  onClick={() => navigate('/dashboard/yasmin-world')}
+                >
+                  <Sparkles size={18} /> ABRIR MUNDO YASMIN
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="h-16 rounded-2xl border-cyan-400/40 text-cyan-400 hover:bg-cyan-400/10 gap-3"
+                  onClick={() => navigate('/dashboard/bff-world')}
+                >
+                  <Users size={18} /> PROTOCOLO BFF
+                </Button>
+             </div>
+          </div>
+
           <div className="glass bg-[#0F0]/5 border-[#0F0]/20 p-6 rounded-3xl space-y-4">
-             <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Comandos de Operação</p>
+             <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Comandos de Operação Final</p>
              <div className="grid grid-cols-1 gap-3">
                 <Button 
                   variant="outline" 
-                  className="border-red-500/50 bg-red-500/10 hover:bg-red-500/20 text-red-500 text-xs h-12 rounded-xl font-bold mb-2"
+                  className="border-red-500/50 bg-red-500/10 hover:bg-red-500/20 text-red-500 text-xs h-12 rounded-xl font-bold mb-2 shadow-[0_0_20px_rgba(239,68,68,0.2)]"
                   onClick={() => window.open('https://lovable.dev/projects/portal-hogwarts-house/artifacts/PLANO_DE_GUERRA_12H.md')}
                 >
                    EXECUTAR PLANO DE GUERRA (12H)
                 </Button>
                 <div className="grid grid-cols-2 gap-3">
-                  <Button variant="outline" className="border-pink-500/50 hover:bg-pink-500/10 text-pink-400 text-[10px] h-10 rounded-xl" onClick={() => window.location.href='/dashboard/yasmin-world'}>
-                     MUNDO YASMIN
-                  </Button>
-                  <Button variant="outline" className="border-cyan-400/50 hover:bg-cyan-400/10 text-cyan-400 text-[10px] h-10 rounded-xl" onClick={() => window.location.href='/dashboard/admin-finance'}>
-                     FINANCEIRO
-                  </Button>
+                   <Button variant="outline" className="border-yellow-500/50 hover:bg-yellow-500/10 text-yellow-500 text-[10px] h-10 rounded-xl font-bold" onClick={() => navigate('/dashboard/admin?tab=monetization')}>
+                      GUIA DE MONETIZAÇÃO
+                   </Button>
+                   <Button variant="outline" className="border-cyan-400/50 hover:bg-cyan-400/10 text-cyan-400 text-[10px] h-10 rounded-xl font-bold" onClick={() => navigate('/dashboard/admin/finance')}>
+                      TESOURO GRINGOTTS
+                   </Button>
                 </div>
-                <Button variant="outline" className="border-[#0F0]/20 hover:bg-[#0F0]/10 text-[#0F0] text-[10px] h-10 rounded-xl w-full" onClick={() => window.location.href='/dashboard/feed'}>
-                   VOLTAR AO FEED
+                <Button variant="outline" className="border-[#0F0]/20 hover:bg-[#0F0]/10 text-[#0F0] text-[10px] h-10 rounded-xl w-full" onClick={() => navigate('/dashboard/feed')}>
+                   VOLTAR AO FEED DO CASTELO
                 </Button>
              </div>
           </div>
@@ -1023,6 +1095,12 @@ export default function MatrixPortal() {
            <div className="w-32 h-32 border border-[#0F0]/20 rounded-full animate-pulse" />
         </div>
       </div>
+
+      {/* Âncoras Familiares (Restritas à Matrix) */}
+      <EmmaPresence />
+      <CarolAgenda />
+      <ThottyPresence />
+      <ArchitectControl />
     </div>
   );
 }

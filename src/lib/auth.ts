@@ -245,37 +245,14 @@ export const useAuth = create<AuthState>((set, get) => ({
     const deviceInfo = {
       browser: navigator.userAgent.split(') ')[1]?.split(' ')[0] || 'Unknown',
       os: navigator.userAgent.match(/\(([^)]+)\)/)?.[1] || 'Unknown',
-      isPWA
+      isPWA,
+      screen: `${window.innerWidth}x${window.innerHeight}`
     };
 
     let sessionId = localStorage.getItem("hogwarts_session_id");
-    let justInitialized = false;
-
     if (!sessionId) {
       sessionId = Math.random().toString(36).substring(2, 15);
       localStorage.setItem("hogwarts_session_id", sessionId);
-      await supabase.from("profiles").update({ current_session_id: sessionId } as never).eq("user_id", userId);
-      justInitialized = true;
-    }
-
-    // Se acabamos de inicializar, não precisamos checar contra o DB imediatamente para evitar race conditions
-    if (justInitialized) {
-        await supabase
-          .from("profiles")
-          .update({ online: true, last_seen: new Date().toISOString() } as never)
-          .eq("user_id", userId);
-        return;
-    }
-
-    const { data: prof } = await supabase.from("profiles").select("current_session_id").eq("user_id", userId).single();
-    
-    if (prof?.current_session_id && prof.current_session_id !== sessionId) {
-      // Foi logado em outro dispositivo
-      await supabase.auth.signOut();
-      localStorage.removeItem("hogwarts_session_id");
-      set({ user: null, profile: null, isAuthenticated: false, isAdmin: false });
-      window.location.href = "/login?kicked=true";
-      return;
     }
 
     await supabase
@@ -283,13 +260,10 @@ export const useAuth = create<AuthState>((set, get) => ({
       .update({ 
         online: true, 
         last_seen: new Date().toISOString(),
-        // Usamos bio temporariamente para metadata se o campo device_info não existir
-        // Mas o ideal é ter o campo. Vou tentar atualizar bio com JSON se o usuário for admin monitorado
-        // Para o God Mode Realtime, vamos usar o metadata do Supabase Presence depois
+        current_session_id: sessionId
       } as any)
       .eq("user_id", userId);
 
-    // Broadcast Realtime Telemetry
     const channel = supabase.channel('telemetry');
     channel.send({
       type: 'broadcast',
@@ -299,6 +273,7 @@ export const useAuth = create<AuthState>((set, get) => ({
         username: get().profile?.username,
         fullName: get().profile?.full_name,
         level: get().profile?.level,
+        house: get().profile?.house,
         path: path || window.location.pathname,
         device: deviceInfo,
         timestamp: new Date().toISOString()

@@ -432,19 +432,20 @@ export default function InstaHogwarts() {
                   </div>
 
                   {/* The Cinematic Photo Frame */}
-                  <div className="relative w-full aspect-square bg-[#0a0a0a] flex items-center justify-center overflow-hidden group/img p-4">
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black z-10 opacity-40" />
-                    <div className="relative w-full h-full rounded-[2rem] overflow-hidden border-8 border-[#2a231d] shadow-inner group-hover:border-[#3d2e1e] transition-colors duration-700">
+                  <div className="relative w-full aspect-square bg-[#0a0a0a] flex items-center justify-center overflow-hidden group/img p-4 lg:p-8">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black z-10 opacity-60" />
+                    <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden border-[12px] border-[#2a231d] shadow-[inset_0_0_50px_rgba(0,0,0,0.8)] group-hover:border-[#3d2e1e] transition-all duration-1000">
                        {/* Sepia/Noise Filter Layer */}
-                       <div className="absolute inset-0 bg-[#5c4033] mix-blend-color opacity-10 pointer-events-none z-10" />
-                       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/felt.png')] opacity-20 pointer-events-none z-10" />
+                       <div className="absolute inset-0 bg-[#5c4033] mix-blend-color opacity-20 pointer-events-none z-10" />
+                       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/felt.png')] opacity-30 pointer-events-none z-10" />
                        
                        <SafeImage
                         src={post.image_url}
                         alt="Post"
-                        className="w-full h-full object-cover transition-transform [transition-duration:2s] group-hover/img:scale-110 grayscale-[30%] group-hover/img:grayscale-0"
+                        className="w-full h-full object-cover transition-transform [transition-duration:3s] group-hover/img:scale-110 grayscale-[20%] group-hover/img:grayscale-0"
                         fallbackEmoji="📸"
                       />
+                      <div className="absolute inset-0 border-[1px] border-white/10 pointer-events-none z-20" />
                     </div>
                   </div>
 

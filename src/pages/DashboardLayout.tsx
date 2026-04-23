@@ -27,9 +27,12 @@ import CastleEntrance from "@/pages/CastleEntrance";
 import EngagementBot from "@/components/EngagementBot";
 import MagicalCelebration from "@/components/MagicalCelebration";
 import AnitaPresence from "@/components/AnitaPresence";
+import EmmaPresence from "@/components/EmmaPresence";
+import HeloPresence from "@/components/HeloPresence";
+import ThottyPresence from "@/components/ThottyPresence";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt";
+import MagicAdBanner from "@/components/MagicAdBanner";
 import ProtocoloBFF from "@/components/ProtocoloBFF";
-import CarolAgenda from "@/components/CarolAgenda";
-import ArchitectControl from "@/components/ArchitectControl";
 
 
 const NAV_ITEMS = [
@@ -64,6 +67,21 @@ export default function DashboardLayout() {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [unreadDMs, setUnreadDMs] = useState(0);
+
+  const username = profile?.username?.toLowerCase() || '';
+  const email = user?.email?.toLowerCase() || '';
+  
+  const isArchitect = username === 'morpheus' || 
+                      username === 'arquiteto' ||
+                      email.includes('paulomorpheus') ||
+                      email.includes('paulormorpheus') ||
+                      email === 'yasmin.caroline.m@gmail.com';
+
+  const isYasmin = username.includes('yasmin') || email === 'yasmin.caroline.m@gmail.com';
+  const isCarol = username.includes('carol') || email.includes('carol');
+  const isFamily = isArchitect || isYasmin || isCarol;
+
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true;
 
   const filteredNavItems = NAV_ITEMS.filter(item => {
     if (item.isAdmin && !isAdmin) return false;
@@ -283,7 +301,7 @@ export default function DashboardLayout() {
             </div>
 
             {/* Status do Bruxo - Monster Plaques */}
-            <div className="grid grid-cols-2 gap-3 mb-6 relative z-10">
+            <div className="grid grid-cols-2 gap-3 mb-4 relative z-10">
               <div className="glass-light p-4 rounded-[1.5rem] border-white/5 bg-white/5 hover:bg-white/10 transition-colors shadow-inner">
                 <div className="flex items-center gap-2 mb-1">
                   <MagicalGaleon size="xs" />
@@ -298,6 +316,45 @@ export default function DashboardLayout() {
                 </div>
                 <p className="text-sm font-bold text-white">{(profile?.xp || 0) / 100 >> 0 || 1}</p>
               </div>
+            </div>
+
+            {/* RPG HUD: Saúde, Mana e Estamina (Soberania) */}
+            <div className="space-y-3 mb-6 px-2 relative z-10">
+               {/* Saúde */}
+               <div className="space-y-1">
+                 <div className="flex justify-between text-[8px] font-bold text-red-500 uppercase tracking-widest">
+                   <span>Saúde Vital</span>
+                   <span>100%</span>
+                 </div>
+                 <div className="h-1.5 w-full bg-red-950/30 rounded-full overflow-hidden border border-red-500/10">
+                   <div className="h-full bg-gradient-to-r from-red-600 to-red-400 shadow-[0_0_10px_rgba(239,68,68,0.5)]" style={{ width: '100%' }} />
+                 </div>
+               </div>
+               
+               {/* Mana */}
+               <div className="space-y-1">
+                 <div className="flex justify-between text-[8px] font-bold text-blue-500 uppercase tracking-widest">
+                   <span>Energia Mágica (MP)</span>
+                   <span>85%</span>
+                 </div>
+                 <div className="h-1.5 w-full bg-blue-950/30 rounded-full overflow-hidden border border-blue-500/10">
+                   <div className="h-full bg-gradient-to-r from-blue-600 to-cyan-400 shadow-[0_0_10px_rgba(37,99,235,0.5)]" style={{ width: '85%' }} />
+                 </div>
+               </div>
+
+               {/* Sentimento / Mood */}
+               <div className="pt-2">
+                 <div className="glass-light p-3 rounded-2xl border-white/5 bg-gradient-to-r from-white/5 to-transparent flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                       <div className="text-xl animate-bounce">✨</div>
+                       <div>
+                          <p className="text-[8px] text-white/40 uppercase font-bold tracking-widest">Estado Emocional</p>
+                          <p className="text-xs font-heading text-yellow-400 uppercase">ALEGRE / RADIANTE</p>
+                       </div>
+                    </div>
+                    <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse shadow-[0_0_10px_rgba(250,204,21,0.8)]" />
+                 </div>
+               </div>
             </div>
             
             <div className="flex items-center justify-between gap-4 px-2">
@@ -395,6 +452,22 @@ export default function DashboardLayout() {
                 <div className="ml-auto w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" />
               </Link>
             )}
+
+            {!isStandalone && (
+              <div className="mt-8 px-2">
+                <Button 
+                  variant="outline" 
+                  className="w-full h-12 rounded-xl border-primary/30 text-primary hover:bg-primary/10 text-[10px] font-heading uppercase tracking-widest gap-2"
+                  onClick={() => {
+                    toast.info("Para baixar o app:", {
+                      description: "No iPhone: Compartilhar > Adicionar à Tela de Início. No Android: Clique no banner que aparecerá abaixo!"
+                    });
+                  }}
+                >
+                  <Smartphone size={14} /> Baixar App Hogwarts
+                </Button>
+              </div>
+            )}
           </nav>
           {/* Footer Sidebar (Magical Elite Icons) */}
           <div className="p-6 border-t border-white/5 bg-black/20 backdrop-blur-md">
@@ -458,10 +531,13 @@ export default function DashboardLayout() {
           </div>
 
           <EngagementBot />
-          <AnitaPresence />
+          {isYasmin && <AnitaPresence />}
+          {isYasmin && <EmmaPresence />}
+          {isCarol && <HeloPresence />}
+          {isFamily && <ThottyPresence />}
+          
+          <PWAInstallPrompt />
           <ProtocoloBFF />
-          <CarolAgenda />
-          <ArchitectControl />
         </div>
       </div>
 

@@ -4,12 +4,12 @@ import App from "./App.tsx";
 import "./index.css";
 
 // Protocolo 10 Passos à Frente: Version Sentinel
-// Incrementando a versão para forçar limpeza de cache e migração global
+// Esta versão deve ser alterada APENAS para resets globais de cache.
 const PORTAL_VERSION = "8.2.5-ZION-REVOLUTION"; 
 const storedVersion = localStorage.getItem("portal_version");
 
-if (storedVersion !== PORTAL_VERSION) {
-  console.log("REVOLUTION SYNC: Sincronizando nova versão do portal: " + PORTAL_VERSION);
+if (storedVersion && storedVersion !== PORTAL_VERSION && !storedVersion.includes('FORCE')) {
+  console.log("REVOLUTION SYNC: Sincronizando nova versão base do portal: " + PORTAL_VERSION);
   
   // Proteção contra loop infinito
   const syncAttempts = parseInt(localStorage.getItem("sync_attempts") || "0");
@@ -18,7 +18,7 @@ if (storedVersion !== PORTAL_VERSION) {
 
   if (syncAttempts > 3 && (now - lastSync) < 60000) {
     console.error("ZION_CRITICAL: Falha persistente na sincronização. Abortando para evitar loop.");
-    localStorage.setItem("portal_version", PORTAL_VERSION); // Força marcação para parar
+    localStorage.setItem("portal_version", PORTAL_VERSION);
   } else {
     localStorage.setItem("sync_attempts", (syncAttempts + 1).toString());
     localStorage.setItem("last_sync_time", now.toString());
@@ -43,9 +43,13 @@ if (storedVersion !== PORTAL_VERSION) {
       });
     }
     
-    // Reload limpo
+    // Reload limpo com flag de versão
     window.location.replace(window.location.origin + window.location.pathname + '?v=' + PORTAL_VERSION);
   }
+} else if (!storedVersion) {
+  // Inicialização primária
+  localStorage.setItem("portal_version", PORTAL_VERSION);
+  localStorage.setItem("sync_attempts", "0");
 } else {
   // Reset attempts if successful
   localStorage.setItem("sync_attempts", "0");
