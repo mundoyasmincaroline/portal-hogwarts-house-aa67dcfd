@@ -1,6 +1,5 @@
 import React from "react";
 import { Sparkles, RefreshCw, LogOut, ChevronLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -68,20 +67,18 @@ class MagicalErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                  <Button 
+                  <button 
                     onClick={() => window.location.href = "/"}
-                    variant="plaque" 
-                    className="flex-1 h-16 rounded-2xl text-base shadow-[0_15px_40px_rgba(0,0,0,0.5)] active:scale-95"
+                    className="flex-1 h-16 rounded-2xl text-base shadow-[0_15px_40px_rgba(0,0,0,0.5)] active:scale-95 bg-primary text-primary-foreground hover:bg-primary/90 font-heading uppercase tracking-widest transition-all"
                   >
                     RETORNAR AOS PORTÕES
-                  </Button>
-                  <Button 
+                  </button>
+                  <button 
                     onClick={() => window.location.reload()}
-                    variant="outline" 
-                    className="flex-1 h-16 rounded-2xl border-white/10 hover:bg-white/5 text-xs uppercase tracking-widest font-bold"
+                    className="flex-1 h-16 rounded-2xl border border-white/10 hover:bg-white/5 text-xs uppercase tracking-widest font-bold text-white transition-all"
                   >
                     TENTAR RECONEXÃO ⚡
-                  </Button>
+                  </button>
                 </div>
 
                 <p className="text-[9px] text-white/20 uppercase tracking-[0.5em] font-bold">Protocolo Zion Security v9.0</p>

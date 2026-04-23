@@ -9,6 +9,7 @@ import {
   LayoutDashboard, Heart, Gift
 } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";
 import MagicalIcon from "@/components/MagicalIcon";
