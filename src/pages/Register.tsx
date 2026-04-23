@@ -121,13 +121,13 @@ export default function Register() {
         {/* Parchment Texture Overlay */}
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/pinstriped-suit.png')] opacity-5 pointer-events-none" />
         
-        <div className="relative glass-dark rounded-[2.8rem] p-8 md:p-10 border border-white/5 space-y-6">
-          <div className="text-center mb-6">
-            <h1 className="font-heading text-4xl text-gold-gradient mb-2 drop-shadow-2xl tracking-tighter">Ficha de Matrícula</h1>
-            <p className="text-primary/60 text-xs font-serif italic uppercase tracking-[0.2em]">O Ministério da Magia exige sua identificação</p>
-            <div className="flex justify-center gap-3 mt-6">
+        <div className="relative glass-dark rounded-[2.8rem] p-10 md:p-12 border border-white/5 space-y-10">
+          <div className="text-center mb-8">
+            <h1 className="font-heading text-5xl text-gold-gradient mb-3 drop-shadow-2xl tracking-tighter uppercase">Ficha de Matrícula</h1>
+            <p className="text-primary/60 text-xs font-bold uppercase tracking-[0.4em]">O Ministério da Magia exige sua identificação</p>
+            <div className="flex justify-center gap-4 mt-10">
               {[1, 2, 3].map((s) => (
-                <div key={s} className={`h-1.5 rounded-full transition-all duration-700 ${step === s ? "w-12 bg-primary shadow-[0_0_15px_rgba(212,175,55,0.6)]" : step > s ? "w-6 bg-primary/40" : "w-6 bg-white/5"}`} />
+                <div key={s} className={`h-2 rounded-full transition-all duration-700 ${step === s ? "w-16 bg-primary shadow-[0_0_20px_rgba(212,175,55,0.8)]" : step > s ? "w-8 bg-primary/40" : "w-8 bg-white/5"}`} />
               ))}
             </div>
           </div>

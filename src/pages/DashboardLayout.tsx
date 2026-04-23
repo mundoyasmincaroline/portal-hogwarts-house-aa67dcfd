@@ -47,6 +47,7 @@ const NAV_ITEMS = [
   { icon: <MagicalIcon icon={BookMarked} size="xs" color="#10b981" />, label: "Aulas", path: "/dashboard/classes" },
   { icon: <MagicalIcon icon={Library} size="xs" color="#f59e0b" />, label: "Biblioteca", path: "/dashboard/library" },
   { icon: <MagicalIcon icon={ShoppingBag} size="xs" color="#a855f7" />, label: "Beco Diagonal", path: "/dashboard/store" },
+  { icon: <MagicalIcon icon={ImageIcon} size="xs" color="#f97316" />, label: "Álbum Real", path: "/dashboard/album" },
   { icon: <MagicalIcon icon={ScrollText} size="xs" color="#94a3b8" />, label: "Regras", path: "/dashboard/rules" },
   { icon: <MagicalIcon icon={Lock} size="xs" color="#ef4444" />, label: "Azkaban", path: "/dashboard/azkaban" },
   { icon: <MagicalEmoji emoji="💖" size="xs" />, label: "Mundo BFF", path: "/dashboard/bff-world", isBFF: true },
@@ -449,38 +450,49 @@ export default function DashboardLayout() {
         <DialogContent className="max-w-md bg-gradient-to-br from-amber-950 via-black to-blue-950 border-yellow-500/30 text-white rounded-[2.5rem] p-0 overflow-hidden shadow-[0_0_80px_rgba(234,179,8,0.3)] border-none">
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=1000')] opacity-10 mix-blend-overlay pointer-events-none" />
           
-          <div className="relative p-8 space-y-6 text-center">
-             <div className="w-24 h-24 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto border border-yellow-500/30 shadow-inner animate-bounce mt-4">
-                <Gift size={48} className="text-yellow-500 drop-shadow-[0_0_15px_rgba(251,191,36,0.8)]" />
+          <div className="relative p-10 space-y-8 text-center">
+             <div className="relative group mx-auto w-fit">
+                <div className="absolute -inset-10 bg-yellow-400/20 rounded-full blur-[60px] animate-pulse" />
+                <div className="w-48 h-48 bg-gradient-to-b from-yellow-500/20 to-transparent rounded-[3rem] border-4 border-yellow-500/30 flex items-center justify-center shadow-2xl relative z-10 overflow-hidden transform group-hover:scale-105 transition-transform duration-700">
+                   <img 
+                     src="https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=1000" 
+                     className="w-full h-full object-cover mix-blend-screen opacity-80"
+                     alt="Relíquia"
+                   />
+                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                   <Gift size={64} className="absolute text-yellow-500 drop-shadow-[0_0_20px_rgba(251,191,36,1)] animate-bounce" />
+                </div>
              </div>
              
-             <div className="space-y-2">
-                <h2 className="text-3xl font-heading text-gold-gradient tracking-tighter">BEM-VINDO A HOGWARTS</h2>
-                <p className="text-sm text-yellow-100/60 font-serif italic">"O Ministério da Magia preparou um kit inicial para sua jornada acadêmica."</p>
+             <div className="space-y-4">
+                <h2 className="text-4xl md:text-5xl font-heading text-gold-gradient tracking-tighter drop-shadow-2xl">BEM-VINDO A HOGWARTS</h2>
+                <p className="text-lg text-yellow-100/60 font-serif italic leading-relaxed">"O Ministério da Magia preparou um kit de elite para sua ascensão imediata."</p>
              </div>
 
-             <div className="grid grid-cols-2 gap-4 py-4">
-                <div className="glass bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col items-center gap-2">
-                   <MagicalGaleon size="sm" />
-                   <p className="text-lg font-heading text-yellow-400">500 Galeões</p>
-                   <p className="text-[8px] uppercase tracking-widest text-white/40">Unidade Base</p>
+             <div className="grid grid-cols-2 gap-6 py-6">
+                <div className="glass bg-white/5 border border-white/10 p-6 rounded-[2rem] flex flex-col items-center gap-3 hover:bg-white/10 transition-colors">
+                   <MagicalGaleon size="md" />
+                   <p className="text-2xl font-heading text-gold-gradient">500 Galeões</p>
+                   <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-bold">Unidade Base</p>
                 </div>
-                <div className="glass bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col items-center gap-2">
-                   <ShoppingBag size={20} className="text-purple-400" />
-                   <p className="text-lg font-heading text-purple-400">Baú Épico</p>
-                   <p className="text-[8px] uppercase tracking-widest text-white/40">Relíquia Surpresa</p>
+                <div className="glass bg-white/5 border border-white/10 p-6 rounded-[2rem] flex flex-col items-center gap-3 hover:bg-white/10 transition-colors">
+                   <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center border border-purple-500/40">
+                      <ShoppingBag size={24} className="text-purple-400 animate-pulse" />
+                   </div>
+                   <p className="text-2xl font-heading text-purple-400">Baú Épico</p>
+                   <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-bold">Relíquia Surpresa</p>
                 </div>
              </div>
 
              <Button 
                variant="plaque" 
-               className="w-full h-16 rounded-2xl text-lg shadow-2xl animate-pulse-glow"
+               className="w-full h-20 rounded-[2rem] text-xl shadow-[0_20px_50px_rgba(234,179,8,0.4)] animate-pulse-glow"
                onClick={claimWelcomeGift}
              >
-               RESGATAR MEUS PRESENTES ✨
+               RESGATAR MINHA HERANÇA ✨
              </Button>
              
-             <p className="text-[9px] text-white/20 uppercase tracking-[0.2em] pb-4">Toque para aceitar sua herança mágica</p>
+             <p className="text-[10px] text-white/20 uppercase tracking-[0.5em] font-bold">Protocolo de Onboarding Ativo</p>
           </div>
         </DialogContent>
       </Dialog>

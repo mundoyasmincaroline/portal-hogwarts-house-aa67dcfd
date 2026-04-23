@@ -107,12 +107,18 @@ export default function Login() {
 
       <MagicalParticles />
       <div className="glass rounded-[2.5rem] p-10 w-full max-w-md z-20 animate-fade-in-up border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.8)]">
-        <div className="text-center mb-8">
-          <h1 className="font-heading text-3xl text-gold-gradient mb-2">
-            {isRecoveryMode ? "Nova Senha" : "Entrar"}
+        <div className="text-center mb-12">
+          <div className="relative w-24 h-24 mx-auto mb-6 group">
+             <div className="absolute inset-0 bg-primary/20 rounded-full blur-2xl animate-pulse group-hover:bg-primary/40 transition-all" />
+             <div className="relative z-10 w-full h-full bg-black/60 border-2 border-primary/40 rounded-[2rem] flex items-center justify-center backdrop-blur-xl shadow-2xl transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
+                <Crown size={48} className="text-primary drop-shadow-[0_0_15px_rgba(var(--primary),0.8)]" />
+             </div>
+          </div>
+          <h1 className="font-heading text-5xl text-gold-gradient mb-3 tracking-tighter drop-shadow-2xl">
+            {isRecoveryMode ? "NOVA SENHA" : "ENTRAR NO CASTELO"}
           </h1>
-          <p className="text-muted-foreground text-sm">
-            {isRecoveryMode ? "Defina sua nova senha mágica abaixo" : "Acesse o Portal Hogwarts House"}
+          <p className="text-primary/60 text-xs font-bold uppercase tracking-[0.4em]">
+            {isRecoveryMode ? "Redefina sua Identidade Mística" : "Acesse o Conselho das Sombras"}
           </p>
         </div>
 

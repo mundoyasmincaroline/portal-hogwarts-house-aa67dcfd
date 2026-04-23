@@ -66,18 +66,18 @@ class MagicalErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
                   </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                <div className="flex flex-col sm:flex-row gap-6 pt-6">
                   <button 
                     onClick={() => window.location.href = "/"}
-                    className="flex-1 h-16 rounded-2xl text-base shadow-[0_15px_40px_rgba(0,0,0,0.5)] active:scale-95 bg-primary text-primary-foreground hover:bg-primary/90 font-heading uppercase tracking-widest transition-all"
+                    className="flex-1 h-20 rounded-[2rem] bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-600 border-none shadow-[0_20px_50px_rgba(234,179,8,0.4)] active:scale-95 transition-all text-black font-heading text-lg font-bold tracking-[0.2em] uppercase"
                   >
                     RETORNAR AOS PORTÕES
                   </button>
                   <button 
                     onClick={() => window.location.reload()}
-                    className="flex-1 h-16 rounded-2xl border border-white/10 hover:bg-white/5 text-xs uppercase tracking-widest font-bold text-white transition-all"
+                    className="flex-1 h-20 rounded-[2rem] bg-white/5 border-2 border-white/10 hover:bg-white/10 hover:border-primary/40 text-sm uppercase tracking-[0.3em] font-heading font-bold text-white transition-all shadow-2xl flex items-center justify-center gap-3"
                   >
-                    TENTAR RECONEXÃO ⚡
+                    TENTAR RECONEXÃO <Sparkles size={20} className="text-primary animate-pulse" />
                   </button>
                 </div>
 

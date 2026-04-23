@@ -141,24 +141,24 @@ export default function MagicAdBanner() {
           </div>
         </div>
         
-        <div className="flex-1 min-w-0 text-center md:text-left space-y-6">
-          <div className="space-y-3">
-            <h4 className="font-heading text-3xl md:text-5xl text-gold-gradient drop-shadow-lg leading-tight">{ad.title}</h4>
-            <p className="text-sm md:text-lg text-yellow-100/70 font-serif italic leading-relaxed line-clamp-3">
+        <div className="flex-1 min-w-0 text-center md:text-left space-y-8">
+          <div className="space-y-4">
+            <h4 className="font-heading text-4xl md:text-7xl text-gold-gradient drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] leading-[0.9] tracking-tighter uppercase">{ad.title}</h4>
+            <p className="text-lg md:text-2xl text-yellow-100/80 font-serif italic leading-relaxed line-clamp-3 drop-shadow-md">
               "{ad.description || "Uma oportunidade única revelada pelas estrelas. Adquira este artefato antes que o feitiço expire."}"
             </p>
           </div>
           
-          <div className="flex flex-col sm:flex-row items-center gap-8">
+          <div className="flex flex-col sm:flex-row items-center gap-10">
             <div className="w-full sm:w-auto relative group/btn">
-              <div className="absolute inset-0 bg-yellow-500/20 blur-xl rounded-2xl opacity-0 group-hover/btn:opacity-100 transition-opacity" />
-              <Button variant="plaque" className="relative w-full sm:w-auto h-16 px-12 rounded-2xl text-xl bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-600 border-none shadow-[0_15px_35px_rgba(234,179,8,0.4)] hover:scale-105 active:scale-95 transition-all">
-                INVOCAR OFERTA <ExternalLink size={20} className="ml-3 animate-pulse" />
+              <div className="absolute inset-0 bg-yellow-500/30 blur-2xl rounded-[2rem] opacity-0 group-hover/btn:opacity-100 transition-opacity" />
+              <Button variant="plaque" className="relative w-full sm:w-auto h-20 px-16 rounded-[2.5rem] text-2xl bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-600 border-none shadow-[0_25px_50px_rgba(234,179,8,0.5)] hover:scale-105 active:scale-95 transition-all">
+                INVOCAR OFERTA <ExternalLink size={24} className="ml-4 animate-pulse" />
               </Button>
             </div>
-            <div className="flex flex-col items-center sm:items-start opacity-60">
-               <span className="text-[10px] text-yellow-500 uppercase tracking-[0.4em] font-bold">Verificado pelo</span>
-               <span className="text-sm text-yellow-500 font-heading tracking-[0.2em]">MINISTÉRIO DA MAGIA</span>
+            <div className="flex flex-col items-center sm:items-start opacity-80">
+               <span className="text-[11px] text-yellow-500 uppercase tracking-[0.5em] font-bold">Verificado pelo</span>
+               <span className="text-lg text-yellow-500 font-heading tracking-[0.3em] font-bold">MINISTÉRIO DA MAGIA</span>
             </div>
           </div>
         </div>
