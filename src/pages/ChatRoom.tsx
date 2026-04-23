@@ -240,8 +240,9 @@ export default function ChatRoom() {
   useEffect(() => {
     if (!channel?.id) return;
     
+    const chatChannelName = `chat:${channel.id}:${Math.random().toString(36).substring(7)}`;
     const subscription = supabase
-      .channel(`messages:${channel.id}`)
+      .channel(chatChannelName)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `channel_id=eq.${channel.id}` }, async (payload) => {
         // Só adiciona ao vivo se a data selecionada for hoje
         const todayStr = new Date().toLocaleDateString('en-CA');
@@ -254,9 +255,14 @@ export default function ChatRoom() {
           setMessages(prev => [...prev, { ...payload.new, profiles: userData, characters: charData, user_role: roleData?.role } as unknown as Message]);
         }
       })
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          console.log("CHAT: Conectado ao Salão", channel.id);
+        }
+      });
 
     return () => {
+      console.log("CHAT: Encerrando conexão", chatChannelName);
       supabase.removeChannel(subscription);
     };
   }, [channel?.id]);

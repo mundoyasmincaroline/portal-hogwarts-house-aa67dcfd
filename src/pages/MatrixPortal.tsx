@@ -188,7 +188,8 @@ export default function MatrixPortal() {
     fetchSprint();
     
     // Morpheus God Mode Realtime Telemetry
-    const channel = supabase.channel('telemetry')
+    const telemetryChannelName = `telemetry_${Math.random().toString(36).substring(7)}`;
+    const channel = supabase.channel(telemetryChannelName)
       .on('broadcast', { event: 'heartbeat' }, (payload) => {
         setRecentUsers(prev => {
           const exists = prev.find(u => u.userId === payload.payload.userId);

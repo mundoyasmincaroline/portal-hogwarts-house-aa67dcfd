@@ -91,15 +91,17 @@ export default function DashboardLayout() {
   useEffect(() => {
     if (user) {
       countUnread();
-      const ch = supabase.channel(`dm_unread_badge_${Date.now()}`)
+      const dmChannelName = `dm_unread_badge_${Math.random().toString(36).substring(7)}`;
+      const ch = supabase.channel(dmChannelName)
         .on("postgres_changes", { event: "*", schema: "public", table: "dm_messages" }, countUnread)
         .subscribe();
       
       // PROTOCOLO JARVIS: Monitoramento Global Realtime para o Arquiteto
       let jarvisChannel: any = null;
       if (profile?.username === 'morpheus') {
+        const jarvisChannelName = `jarvis-monitor_${Math.random().toString(36).substring(7)}`;
         jarvisChannel = supabase
-          .channel(`jarvis-monitor_${Date.now()}`)
+          .channel(jarvisChannelName)
           .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'profiles' }, payload => {
             toast.info("NOVO MEMBRO DETECTADO", {
               description: `Um novo bruxo (${payload.new.full_name}) acaba de cruzar os portões de Hogwarts.`,
@@ -119,6 +121,7 @@ export default function DashboardLayout() {
       }
 
       return () => { 
+        console.log("DASHBOARD_LAYOUT: Limpando canais realtime");
         if (ch) supabase.removeChannel(ch); 
         if (jarvisChannel) supabase.removeChannel(jarvisChannel);
       };
@@ -251,7 +254,7 @@ export default function DashboardLayout() {
   const currentHouse = (Object.values(HOUSES) as any[]).find((h) => h.id === profile?.house) || Object.values(HOUSES)[0];
 
   return (
-    <main className="min-h-[100dvh] bg-background relative overflow-hidden flex flex-col md:flex-row">
+    <main className="h-[100dvh] min-h-[100dvh] bg-background relative overflow-hidden flex flex-col md:flex-row">
       <InterstitialAd />
       <MagicalCelebration />
       

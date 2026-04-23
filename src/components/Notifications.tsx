@@ -35,14 +35,29 @@ export default function Notifications() {
 
     fetchNotifs();
 
+    const channelName = `notifications:${user.id}:${Math.random().toString(36).substring(7)}`;
     const sub = supabase
-      .channel(`notifications:${user.id}:${Date.now()}`)
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` }, (payload) => {
-        setNotifications((prev) => [payload.new as Notification, ...prev]);
-      })
-      .subscribe();
+      .channel(channelName)
+      .on(
+        "postgres_changes",
+        { 
+          event: "INSERT", 
+          schema: "public", 
+          table: "notifications", 
+          filter: `user_id=eq.${user.id}` 
+        }, 
+        (payload) => {
+          setNotifications((prev) => [payload.new as Notification, ...prev]);
+        }
+      )
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          console.log("NOTIFICATIONS: Escuta Realtime ativada para o bruxo", user.id);
+        }
+      });
 
     return () => {
+      console.log("NOTIFICATIONS: Encerrando canal", channelName);
       supabase.removeChannel(sub);
     };
   }, [user?.id]);

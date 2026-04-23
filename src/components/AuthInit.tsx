@@ -27,6 +27,11 @@ export default function AuthInit({ children }: AuthInitProps) {
           const remoteVersion = (data.setting_value as any)?.version;
           const localVersion = localStorage.getItem("portal_version");
           
+          if (!localVersion && remoteVersion) {
+            localStorage.setItem("portal_version", remoteVersion);
+            return;
+          }
+
           if (remoteVersion && localVersion && remoteVersion !== localVersion) {
             console.log("REVOLUTION SYNC: Nova versão detectada via nuvem. Reiniciando...");
             setIsSyncing(true);
@@ -38,7 +43,7 @@ export default function AuthInit({ children }: AuthInitProps) {
                 for (let name of names) await caches.delete(name);
               }
               window.location.reload();
-            }, 3000);
+            }, 2500);
           }
         }
       } catch (err) {
