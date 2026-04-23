@@ -18,26 +18,34 @@ export default function MagicalSplashScreen() {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
+    // Fail-safe: Força o fechamento após 5 segundos se algo der errado
+    const failSafe = setTimeout(() => {
+      console.warn("ZION_REVOLUTION: Splash Screen forçado a fechar por timeout.");
+      setIsVisible(false);
+    }, 5000);
+
     const progressInterval = setInterval(() => {
       setProgress(prev => {
         if (prev >= 100) {
           clearInterval(progressInterval);
-          setTimeout(() => setIsVisible(false), 500);
+          clearTimeout(failSafe);
+          setTimeout(() => setIsVisible(false), 300); // Fecha mais rápido quando 100%
           return 100;
         }
         // Incremento aleatório para parecer real
-        const inc = Math.random() * 15;
+        const inc = Math.random() * 20; // Incremento um pouco maior para ser mais ágil
         return Math.min(prev + inc, 100);
       });
-    }, 200);
+    }, 150); // Intervalo menor para fluidez
 
     const tipInterval = setInterval(() => {
       setTip(TIPS[Math.floor(Math.random() * TIPS.length)]);
-    }, 2500);
+    }, 2000);
 
     return () => {
       clearInterval(progressInterval);
       clearInterval(tipInterval);
+      clearTimeout(failSafe);
     };
   }, []);
 

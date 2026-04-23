@@ -61,63 +61,74 @@ export default function Feed() {
   const [showWelcomeChest, setShowWelcomeChest] = useState(false);
 
   const loadFeed = useCallback(async () => {
-    const { data: postsData } = await supabase
-      .from("posts")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(50);
-    if (!postsData) { setLoading(false); return; }
+    try {
+      setLoading(true);
+      const { data: postsData, error: postsError } = await supabase
+        .from("posts")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(50);
+        
+      if (postsError) throw postsError;
+      if (!postsData) { setLoading(false); return; }
 
-    const userIds = [...new Set(postsData.map((p) => p.user_id))];
-    const { data: authors } = await supabase
-      .from("profiles")
-      .select("user_id, full_name, username, house, avatar_url, vip_plan")
-      .in("user_id", userIds.length ? userIds : ["00000000-0000-0000-0000-000000000000"]);
+      const userIds = [...new Set(postsData.map((p) => p.user_id))];
+      const { data: authors, error: authorsError } = await supabase
+        .from("profiles")
+        .select("user_id, full_name, username, house, avatar_url, vip_plan")
+        .in("user_id", userIds.length ? userIds : ["00000000-0000-0000-0000-000000000000"]);
 
-    const postIds = postsData.map((p) => p.id);
-    const safeIds = postIds.length ? postIds : ["00000000-0000-0000-0000-000000000000"];
-    const [{ data: reactions }, { data: comments }] = await Promise.all([
-      supabase.from("post_reactions").select("post_id, emoji, user_id").in("post_id", safeIds),
-      supabase.from("post_comments").select("*").in("post_id", safeIds).order("created_at", { ascending: true }),
-    ]);
+      if (authorsError) throw authorsError;
 
-    const commentUserIds = [...new Set((comments || []).map((c) => c.user_id))];
-    const { data: commentAuthors } = await supabase
-      .from("profiles")
-      .select("user_id, full_name, username, house, avatar_url")
-      .in("user_id", commentUserIds.length ? commentUserIds : ["00000000-0000-0000-0000-000000000000"]);
+      const postIds = postsData.map((p) => p.id);
+      const safeIds = postIds.length ? postIds : ["00000000-0000-0000-0000-000000000000"];
+      const [{ data: reactions }, { data: comments }] = await Promise.all([
+        supabase.from("post_reactions").select("post_id, emoji, user_id").in("post_id", safeIds),
+        supabase.from("post_comments").select("*").in("post_id", safeIds).order("created_at", { ascending: true }),
+      ]);
 
-    const authorMap = new Map((authors || []).map((a) => [a.user_id, a as PostAuthor & { user_id: string }]));
-    const commentAuthorMap = new Map((commentAuthors || []).map((a) => [a.user_id, a as PostAuthor & { user_id: string }]));
+      const commentUserIds = [...new Set((comments || []).map((c) => c.user_id))];
+      const { data: commentAuthors } = await supabase
+        .from("profiles")
+        .select("user_id, full_name, username, house, avatar_url")
+        .in("user_id", commentUserIds.length ? commentUserIds : ["00000000-0000-0000-0000-000000000000"]);
 
-    const enriched: FeedPost[] = postsData.map((p) => {
-      const postReactions = (reactions || []).filter((r) => r.post_id === p.id);
-      const grouped: Record<string, { count: number; mine: boolean }> = {};
-      postReactions.forEach((r) => {
-        if (!grouped[r.emoji]) grouped[r.emoji] = { count: 0, mine: false };
-        grouped[r.emoji].count++;
-        if (r.user_id === user?.id) grouped[r.emoji].mine = true;
+      const authorMap = new Map((authors || []).map((a) => [a.user_id, a as PostAuthor & { user_id: string }]));
+      const commentAuthorMap = new Map((commentAuthors || []).map((a) => [a.user_id, a as PostAuthor & { user_id: string }]));
+
+      const enriched: FeedPost[] = postsData.map((p) => {
+        const postReactions = (reactions || []).filter((r) => r.post_id === p.id);
+        const grouped: Record<string, { count: number; mine: boolean }> = {};
+        postReactions.forEach((r) => {
+          if (!grouped[r.emoji]) grouped[r.emoji] = { count: 0, mine: false };
+          grouped[r.emoji].count++;
+          if (r.user_id === user?.id) grouped[r.emoji].mine = true;
+        });
+
+        const postComments = (comments || []).filter((c) => c.post_id === p.id).map((c) => ({
+          ...c,
+          author: commentAuthorMap.get(c.user_id),
+        }));
+
+        return {
+          id: p.id,
+          user_id: p.user_id,
+          content: p.content,
+          music_url: p.music_url,
+          created_at: p.created_at,
+          author: authorMap.get(p.user_id),
+          reactions: Object.entries(grouped).map(([emoji, v]) => ({ emoji, count: v.count, mine: v.mine })),
+          comments: postComments,
+        };
       });
 
-      const postComments = (comments || []).filter((c) => c.post_id === p.id).map((c) => ({
-        ...c,
-        author: commentAuthorMap.get(c.user_id),
-      }));
-
-      return {
-        id: p.id,
-        user_id: p.user_id,
-        content: p.content,
-        music_url: p.music_url,
-        created_at: p.created_at,
-        author: authorMap.get(p.user_id),
-        reactions: Object.entries(grouped).map(([emoji, v]) => ({ emoji, count: v.count, mine: v.mine })),
-        comments: postComments,
-      };
-    });
-
-    setPosts(enriched);
-    setLoading(false);
+      setPosts(enriched);
+    } catch (err: any) {
+      console.error("ZION_FEED_ERROR:", err);
+      toast.error("Erro ao carregar o feed. A conexão com o castelo está instável.");
+    } finally {
+      setLoading(false);
+    }
   }, [user?.id]);
 
   const loadSidebar = useCallback(async () => {

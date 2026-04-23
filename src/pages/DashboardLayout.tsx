@@ -223,7 +223,7 @@ export default function DashboardLayout() {
   const currentHouse = (Object.values(HOUSES) as any[]).find((h) => h.id === profile?.house) || Object.values(HOUSES)[0];
 
   return (
-    <main className="min-h-screen bg-background relative overflow-hidden flex flex-col md:flex-row">
+    <main className="min-h-[100dvh] bg-background relative overflow-hidden flex flex-col md:flex-row">
       <InterstitialAd />
       <MagicalCelebration />
       
@@ -428,7 +428,7 @@ export default function DashboardLayout() {
         <div className="flex-1 relative z-10 flex flex-col bg-transparent">
           
           {/* Header Mobile */}
-          <header className="md:hidden h-16 flex items-center justify-between px-6 border-b border-border sticky top-0 z-30 bg-background/80 backdrop-blur-md">
+          <header className="md:hidden h-20 flex items-center justify-between px-6 border-b border-white/5 sticky top-0 z-30 bg-background/80 backdrop-blur-xl">
             <button onClick={() => setSidebarOpen(true)} className="p-2 -ml-2">
               <Menu size={24} />
             </button>
@@ -440,8 +440,8 @@ export default function DashboardLayout() {
           </header>
 
           {/* Renderização das Páginas */}
-          <div className="flex-1 overflow-y-auto custom-scrollbar relative">
-             <div className="p-4 md:p-8 max-w-7xl mx-auto w-full min-h-full">
+          <div className="flex-1 overflow-y-auto custom-scrollbar relative flex flex-col">
+             <div className="p-4 md:p-8 max-w-7xl mx-auto w-full flex-1 flex flex-col">
                 <Outlet />
              </div>
           </div>
