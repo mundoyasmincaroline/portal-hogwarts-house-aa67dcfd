@@ -10,8 +10,12 @@ interface AuthInitProps {
 export default function AuthInit({ children }: AuthInitProps) {
   const init = useAuth((s) => s.init);
   const [isSyncing, setIsSyncing] = useState(false);
+  const hasChecked = React.useRef(false);
   
   useEffect(() => { 
+    if (hasChecked.current) return;
+    hasChecked.current = true;
+    
     init(); 
     
     // Protocolo 10 Passos à Frente: Auto-Update Monitor
@@ -33,17 +37,21 @@ export default function AuthInit({ children }: AuthInitProps) {
           }
 
           if (remoteVersion && localVersion && remoteVersion !== localVersion) {
-            console.log("REVOLUTION SYNC: Nova versão detectada via nuvem. Reiniciando...");
+            console.log("REVOLUTION SYNC: Nova versão detectada. Preparando núcleo...");
             setIsSyncing(true);
             
+            // Persistir antes do reload para evitar loop
+            localStorage.setItem("portal_version", remoteVersion);
+
             setTimeout(async () => {
-              localStorage.setItem("portal_version", remoteVersion);
               if ('caches' in window) {
-                const names = await caches.keys();
-                for (let name of names) await caches.delete(name);
+                try {
+                  const names = await caches.keys();
+                  for (let name of names) await caches.delete(name);
+                } catch (e) { console.warn("Cache clear failed", e); }
               }
               window.location.reload();
-            }, 2500);
+            }, 2000);
           }
         }
       } catch (err) {
@@ -53,21 +61,26 @@ export default function AuthInit({ children }: AuthInitProps) {
 
     checkVersion();
     
-    // Realtime listener para atualizações forçadas pelo Arquiteto
+    // Realtime listener para atualizações críticas
+    const channelName = `portal_updates_${Math.random().toString(36).substring(7)}`;
     const channel = supabase
-      .channel(`portal_updates_${Date.now()}`)
+      .channel(channelName)
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'site_settings' }, payload => {
         if (payload.new.setting_key === 'portal_version') {
           const newVer = payload.new.setting_value?.version;
-          if (newVer && newVer !== localStorage.getItem("portal_version")) {
+          const currentVer = localStorage.getItem("portal_version");
+          if (newVer && newVer !== currentVer) {
             setIsSyncing(true);
-            setTimeout(() => window.location.reload(), 3000);
+            localStorage.setItem("portal_version", newVer);
+            setTimeout(() => window.location.reload(), 2000);
           }
         }
       })
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => { 
+      supabase.removeChannel(channel); 
+    };
   }, [init]);
   
   return (

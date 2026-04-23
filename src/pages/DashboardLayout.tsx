@@ -6,7 +6,7 @@ import {
   Settings, LogOut, Volume2, VolumeX, RefreshCw, Menu, Users,
   Coins, Lock, Wallet, Map as MapIcon, Sparkles, Zap, Image as ImageIcon,
   MessageSquare, Crown, Newspaper, Coffee, GraduationCap, Train,
-  LayoutDashboard, Heart, Gift
+  LayoutDashboard, Heart, Gift, Smartphone
 } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
