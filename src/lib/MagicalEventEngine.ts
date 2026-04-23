@@ -11,6 +11,8 @@ export interface MagicalEvent {
   type: string;
   xp: number;
   galeons: number;
+  sicles: number;
+  knuts: number;
   audience: "all" | "canons" | "ocs";
   description: string;
   riddles: { q: string; a: string }[];
@@ -88,9 +90,11 @@ export function getEventsForToday(customCelebrations: { name: string; type: stri
       end: "09:30",
       type: "history",
       xp: 100,
-      galeons: 10,
+      galeons: 0,
+      sicles: 15,
+      knuts: 20,
       audience: "canons",
-      description: "Um treino intensivo para começar o dia com a mente afiada.",
+      description: "Um treino intensivo para começar o dia com a mente afiada. Recompensa em Prata!",
       riddles: getRandomRiddles("history")
     },
     {
@@ -100,12 +104,14 @@ export function getEventsForToday(customCelebrations: { name: string; type: stri
       end: "15:30",
       type: "spells",
       xp: (isSagaBirthday || ocCelebration) ? 300 : 150,
-      galeons: (isSagaBirthday || ocCelebration) ? 50 : 25,
+      galeons: (isSagaBirthday || ocCelebration) ? 5 : 0,
+      sicles: (isSagaBirthday || ocCelebration) ? 50 : 30,
+      knuts: (isSagaBirthday || ocCelebration) ? 100 : 50,
       audience: "all",
       description: ocCelebration 
         ? `Hoje celebramos o personagem de um de nossos membros: ${ocCelebration.name}! Parabéns por sua jornada em Hogwarts.`
         : (isSagaBirthday 
-            ? `Hoje celebramos o nascimento de ${isSagaBirthday}! O portal está em festa com recompensas dobradas.`
+            ? `Hoje celebramos o nascimento de ${isSagaBirthday}! O portal está em festa com recompensas de Gringotts dobradas.`
             : "Os cofres de Gringotts estão abertos para quem provar seu valor."),
       riddles: (isSagaBirthday || ocCelebration) ? [
         { q: "Qual a saudação mágica para o aniversariante?", a: "parabens" },
@@ -120,9 +126,11 @@ export function getEventsForToday(customCelebrations: { name: string; type: stri
       end: "21:30",
       type: "dark_arts",
       xp: 250,
-      galeons: 60,
+      galeons: 1,
+      sicles: 60,
+      knuts: 200,
       audience: "ocs",
-      description: "As criaturas da noite estão agitadas. Apenas OCs podem entrar nesta missão.",
+      description: "As criaturas da noite estão agitadas. Uma incursão perigosa que garante até um Galeão de ouro!",
       riddles: getRandomRiddles("dark_arts")
     }
   ];

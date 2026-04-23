@@ -6,8 +6,9 @@ import {
   Settings, LogOut, Volume2, VolumeX, RefreshCw, Menu, Users,
   Coins, Lock, Wallet, Map as MapIcon, Sparkles, Zap, Image as ImageIcon,
   MessageSquare, Crown, Newspaper, Coffee, GraduationCap, Train,
-  LayoutDashboard, Heart
+  LayoutDashboard, Heart, Gift
 } from "lucide-react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";
 import MagicalIcon from "@/components/MagicalIcon";
@@ -54,7 +55,7 @@ const NAV_ITEMS = [
 
 
 export default function DashboardLayout() {
-  const { user, profile, logout } = useAuth();
+  const { user, profile, logout, updateProfile } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -106,7 +107,7 @@ export default function DashboardLayout() {
     setUnreadDMs(count || 0);
   }
 
-  // Daily login streak — concede XP uma vez por dia
+  // Daily login streak — concede XP uma vez por dia e Processa Indicações Pendentes
   useEffect(() => {
     if (!user) return;
     const lastLogin = localStorage.getItem(`last_login_${user.id}`);
@@ -118,7 +119,80 @@ export default function DashboardLayout() {
         toast.success("Bônus diário!", { description: "Você ganhou +10 XP por visitar Hogwarts hoje! ✨" });
       });
     }
+
+    // Processamento de Indicação (Protocolo Viral)
+    const processReferral = async () => {
+      const pendingRef = localStorage.getItem("pending_referral");
+      if (pendingRef && user) {
+        try {
+          console.log("REVOLUTION REFERRAL: Processando convite de:", pendingRef);
+          
+          // 1. Vincular o usuário ao inviter via RPC
+          const { data, error } = await supabase.rpc("complete_referral_action", { 
+            _invited_id: user.id 
+          });
+
+          if (error) {
+            console.warn("Referral already processed or error:", error.message);
+          } else {
+            toast.success("MAGIA DE RECRUTAMENTO!", {
+              description: `Você entrou via convite de @${pendingRef}! Recompensas creditadas para ambos.`,
+              icon: "🤝"
+            });
+          }
+          
+          // Limpar para não processar de novo
+          localStorage.removeItem("pending_referral");
+        } catch (err) {
+          console.error("Erro ao processar indicação:", err);
+        }
+      }
+    };
+
+    processReferral();
   }, [user]);
+
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  useEffect(() => {
+    if (profile && profile.has_seen_intro === false) {
+      setShowWelcome(true);
+    }
+  }, [profile]);
+
+  const claimWelcomeGift = async () => {
+    if (!user || !profile) return;
+    
+    try {
+      // 1. Dar 500 Galeões (246500 Nuques)
+      const currentGaleons = profile.galeons || 0;
+      const newTotal = currentGaleons + 246500;
+      
+      const { error: gErr } = await supabase
+        .from("profiles")
+        .update({ galeons: newTotal } as any)
+        .eq("user_id", user.id);
+      
+      if (gErr) throw gErr;
+
+      // 2. Dar o Baú Épico
+      await supabase.from("user_items").insert({ 
+        user_id: user.id, 
+        item_id: "mq_item_chest_epic" 
+      } as any);
+
+      // 3. Marcar como visto para não repetir
+      await updateProfile({ has_seen_intro: true });
+      
+      setShowWelcome(false);
+      toast.success("BÔNUS DE BOAS-VINDAS RESGATADO!", {
+        description: "500 Galeões e 1 Baú Épico foram adicionados ao seu cofre! 🏰✨",
+        duration: 8000
+      });
+    } catch (err: any) {
+      toast.error("Erro ao resgatar presente: " + err.message);
+    }
+  };
 
   const handleLogout = async () => {
     await logout();
@@ -332,6 +406,47 @@ export default function DashboardLayout() {
           <ArchitectControl />
         </div>
       </div>
+
+      {/* ── WELCOME GIFT MODAL (CINEMATIC) ── */}
+      <Dialog open={showWelcome} onOpenChange={setShowWelcome}>
+        <DialogContent className="max-w-md bg-gradient-to-br from-amber-950 via-black to-blue-950 border-yellow-500/30 text-white rounded-[2.5rem] p-0 overflow-hidden shadow-[0_0_80px_rgba(234,179,8,0.3)] border-none">
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618501275376-7eb3e284f3cc?q=80&w=1000')] opacity-10 mix-blend-overlay pointer-events-none" />
+          
+          <div className="relative p-8 space-y-6 text-center">
+             <div className="w-24 h-24 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto border border-yellow-500/30 shadow-inner animate-bounce mt-4">
+                <Gift size={48} className="text-yellow-500 drop-shadow-[0_0_15px_rgba(251,191,36,0.8)]" />
+             </div>
+             
+             <div className="space-y-2">
+                <h2 className="text-3xl font-heading text-gold-gradient tracking-tighter">BEM-VINDO A HOGWARTS</h2>
+                <p className="text-sm text-yellow-100/60 font-serif italic">"O Ministério da Magia preparou um kit inicial para sua jornada acadêmica."</p>
+             </div>
+
+             <div className="grid grid-cols-2 gap-4 py-4">
+                <div className="glass bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col items-center gap-2">
+                   <MagicalGaleon size="sm" />
+                   <p className="text-lg font-heading text-yellow-400">500 Galeões</p>
+                   <p className="text-[8px] uppercase tracking-widest text-white/40">Unidade Base</p>
+                </div>
+                <div className="glass bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col items-center gap-2">
+                   <ShoppingBag size={20} className="text-purple-400" />
+                   <p className="text-lg font-heading text-purple-400">Baú Épico</p>
+                   <p className="text-[8px] uppercase tracking-widest text-white/40">Relíquia Surpresa</p>
+                </div>
+             </div>
+
+             <Button 
+               variant="plaque" 
+               className="w-full h-16 rounded-2xl text-lg shadow-2xl animate-pulse-glow"
+               onClick={claimWelcomeGift}
+             >
+               RESGATAR MEUS PRESENTES ✨
+             </Button>
+             
+             <p className="text-[9px] text-white/20 uppercase tracking-[0.2em] pb-4">Toque para aceitar sua herança mágica</p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }

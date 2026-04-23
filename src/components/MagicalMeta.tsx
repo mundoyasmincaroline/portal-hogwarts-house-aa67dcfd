@@ -45,6 +45,12 @@ export default function MagicalMeta() {
     const ogDescription = document.querySelector('meta[property="og:description"]');
     if (ogDescription) ogDescription.setAttribute("content", description);
 
+    const ogImage = document.querySelector('meta[property="og:image"]');
+    if (ogImage) ogImage.setAttribute("content", "https://portal-hogwarts-house-60feca43.vercel.app/og-image.png");
+
+    const twitterImage = document.querySelector('meta[name="twitter:image"]');
+    if (twitterImage) twitterImage.setAttribute("content", "https://portal-hogwarts-house-60feca43.vercel.app/og-image.png");
+
   }, [location]);
 
   return null;

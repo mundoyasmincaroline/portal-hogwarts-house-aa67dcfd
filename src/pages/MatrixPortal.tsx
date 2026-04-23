@@ -44,7 +44,8 @@ import { useVoice } from "@/hooks/useVoice";
 import MatrixRain from "@/components/MatrixRain";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Mic, MicOff } from "lucide-react";
+import { Mic, MicOff, Coins } from "lucide-react";
+import { getCurrencyBreakdown } from "@/lib/auth";
 
 const mockData = [
   { name: "00:00", sales: 400, online: 120 },
@@ -65,12 +66,14 @@ export default function MatrixPortal() {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
   const { isListening, transcript, startListening, speak, setTranscript } = useVoice('jarvis');
-  const [stats, setStats] = useState({ online: 0, sales_24h: 0, total_users: 0 });
-
-  // Sync transcript to command
-  useEffect(() => {
-    if (transcript) setCommand(transcript);
-  }, [transcript]);
+  const [stats, setStats] = useState({ 
+    online: 0, 
+    sales_24h: 0, 
+    total_users: 0,
+    total_galeons: 0,
+    total_sicles: 0,
+    total_knuts: 0
+  });
 
   // Handle voice auto-send
   useEffect(() => {
@@ -112,22 +115,42 @@ export default function MatrixPortal() {
 
   useEffect(() => {
     const fetchStats = async () => {
+      // Bruxos Online
       const { count: onlineCount } = await supabase.from("profiles").select("*", { count: "exact", head: true }).eq("online", true);
+      
+      // Total de Usuários
       const { count: userCount } = await supabase.from("profiles").select("*", { count: "exact", head: true });
+      
+      // Receita 24h (Real)
+      const { data: salesData } = await supabase
+        .from("galeon_orders" as any)
+        .select("amount_brl")
+        .eq("status", "paid")
+        .gte("created_at", new Date(Date.now() - 24*3600*1000).toISOString());
+      
+      const totalRevenue24h = salesData?.reduce((acc: number, curr: any) => acc + (curr.amount_brl || 0), 0) || 0;
+
+      // Riqueza Global (PIB Bruxo)
+      const { data: profilesData } = await supabase.from("profiles").select("galeons");
+      const totalNuques = profilesData?.reduce((acc: number, curr: any) => acc + (curr.galeons || 0), 0) || 0;
+      const b = getCurrencyBreakdown(totalNuques);
       
       setStats({
         online: onlineCount || 0,
-        sales_24h: 1250,
-        total_users: userCount || 0
+        sales_24h: totalRevenue24h,
+        total_users: userCount || 0,
+        total_galeons: b.galeons,
+        total_sicles: b.sicles,
+        total_knuts: b.knuts
       });
     };
 
     const fetchRecent = async () => {
       const { data } = await supabase
         .from("profiles")
-        .select("full_name, created_at, username")
+        .select("full_name, created_at, username, level, house")
         .order("created_at", { ascending: false })
-        .limit(10);
+        .limit(20);
       if (data) setRecentUsers(data);
     };
 
@@ -354,7 +377,7 @@ export default function MatrixPortal() {
             {[
               { icon: <Users size={20} />, label: "Bruxos Online", value: stats.online, color: "text-[#0F0]" },
               { icon: <TrendingUp size={20} />, label: "Receita Hoje", value: `R$ ${stats.sales_24h}`, color: "text-yellow-400" },
-              { icon: <Zap size={20} />, label: "Meta 48h", value: "R$ 10.000", color: "text-cyan-400" },
+              { icon: <Coins size={20} />, label: "Galeões Globais", value: stats.total_galeons, color: "text-amber-500" },
             ].map((m, i) => (
               <div key={i} className="glass bg-black/60 border-white/10 p-6 rounded-2xl hover:border-[#0F0]/50 transition-all group overflow-hidden relative">
                 <div className="absolute top-0 right-0 p-2 opacity-5">
@@ -411,7 +434,14 @@ export default function MatrixPortal() {
                 <p className="text-[10px] font-bold text-white/40 uppercase">Goal: R$ 10.000</p>
               </div>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={revenueData} layout="vertical" margin={{ left: 40, right: 40 }}>
+                <BarChart 
+                  data={[
+                    { label: "Atual", value: stats.sales_24h, color: "#FFD700" },
+                    { label: "Meta", value: 10000, color: "#22d3ee" },
+                  ]} 
+                  layout="vertical" 
+                  margin={{ left: 40, right: 40 }}
+                >
                    <XAxis type="number" hide />
                    <YAxis dataKey="label" type="category" stroke="#FFF" fontSize={12} width={80} />
                    <Tooltip 
@@ -419,14 +449,15 @@ export default function MatrixPortal() {
                       contentStyle={{ backgroundColor: "#000", border: "1px solid #FFD700", color: "#FFD700" }}
                    />
                    <Bar dataKey="value" radius={[0, 10, 10, 0]} barSize={40}>
-                      {revenueData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
+                      <Cell fill="#FFD700" />
+                      <Cell fill="#22d3ee" opacity={0.3} />
                    </Bar>
                 </BarChart>
               </ResponsiveContainer>
               <div className="mt-4 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-xl text-center">
-                 <p className="text-sm text-yellow-500 font-bold uppercase tracking-widest">Pace: +12% Ahead of Target</p>
+                 <p className="text-sm text-yellow-500 font-bold uppercase tracking-widest">
+                   Progresso: {((stats.sales_24h / 10000) * 100).toFixed(1)}% da Meta
+                 </p>
               </div>
             </div>
           </div>

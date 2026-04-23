@@ -26,7 +26,7 @@ interface StoreItem {
 const GALEON_PACKAGES = [
   { id: "bolsinha",  name: "Bolsinha de Galeões",     galeons: 100,  price_brl: 4.90,  icon: "💰", image_url: "/monster_quality_galeon.png", color: "from-amber-800/40 to-amber-900/40", border: "border-amber-600/40", glow: "group-hover:shadow-[0_0_20px_rgba(217,119,6,0.3)]" },
   { id: "saco",      name: "Saco de Galeões",          galeons: 300,  price_brl: 12.90, icon: "🪙", image_url: "/monster_quality_galeon.png", color: "from-amber-700/50 to-yellow-800/40", border: "border-yellow-500/50", glow: "group-hover:shadow-[0_0_25px_rgba(234,179,8,0.4)]", badge: "Mais Popular" },
-  { id: "bau",       name: "Baú de Galeões",           galeons: 700,  price_brl: 24.90, icon: "💎", image_url: "/monster_quality_galeon.png", color: "from-yellow-600/50 to-amber-700/50", border: "border-amber-400/60", glow: "group-hover:shadow-[0_0_30px_rgba(251,191,36,0.5)]", badge: "Melhor Valor" },
+  { id: "starter",   name: "Pacote do Fundador",      galeons: 2000, price_brl: 47.90, icon: "✨", image_url: "/monster_quality_galeon.png", color: "from-purple-600/50 to-amber-600/50", border: "border-purple-400/70", glow: "group-hover:shadow-[0_0_40px_rgba(168,85,247,0.6)]", badge: "OFERTA ÚNICA" },
   { id: "tesouro",   name: "Tesouro de Gringotts",     galeons: 1500, price_brl: 44.90, icon: "👑", image_url: "/monster_quality_galeon.png", color: "from-yellow-500/60 to-amber-600/50", border: "border-yellow-400/70", glow: "group-hover:shadow-[0_0_35px_rgba(250,204,21,0.6)]", badge: "Melhor Valor" },
   { id: "cofre",     name: "Cofre Lendário",           galeons: 4000, price_brl: 99.90, icon: "🏆", image_url: "/monster_quality_galeon.png", color: "from-yellow-400/70 to-amber-500/60", border: "border-yellow-300/80", glow: "group-hover:shadow-[0_0_45px_rgba(253,224,71,0.7)]", badge: "Lendário" },
 ];
@@ -164,7 +164,13 @@ const TABS = [
   { id: "potion",   label: "🧪 Poções",     icon: Gem, color: "from-emerald-400 to-teal-700" },
   { id: "clothing", label: "👗 Roupas",     icon: Shirt, color: "from-rose-400 to-pink-700" },
   { id: "upgrade",  label: "⚡ Upgrades",   icon: Zap, color: "from-cyan-400 to-blue-700" },
+  { id: "bank",     label: "🏦 Banco",      icon: Landmark, color: "from-emerald-600 to-green-900" },
 ];
+
+import { Landmark, ArrowRightLeft } from "lucide-react";
+import MagicalSicle from "@/components/MagicalSicle";
+import MagicalKnut from "@/components/MagicalKnut";
+import { getCurrencyBreakdown } from "@/lib/auth";
 
 export default function GringottsStore() {
   const { profile, user, fetchProfile } = useAuth();
@@ -173,8 +179,39 @@ export default function GringottsStore() {
   const [items, setItems] = useState<StoreItem[]>([]);
   const [owned, setOwned] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [timeLeft, setTimeLeft] = useState({ days: 2, hours: 14, minutes: 45, seconds: 30 });
   const [buying, setBuying] = useState<string|null>(null);
   const [pendingOrderId, setPendingOrderId] = useState<string|null>(null);
+
+  // Deep Linking: Auto-scroll para item específico via URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const itemId = params.get("item");
+    if (itemId && !loading) {
+      setTimeout(() => {
+        const element = document.getElementById(`item-${itemId}`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          element.classList.add('ring-4', 'ring-yellow-500', 'animate-pulse');
+          setTimeout(() => element.classList.remove('ring-4', 'ring-yellow-500', 'animate-pulse'), 3000);
+        }
+      }, 500);
+    }
+  }, [loading, tab]);
+
+  // Timer Dinâmico (Sincronizado com a Urgência Global)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
+        if (prev.minutes > 0) return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
+        if (prev.hours > 0) return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
+        if (prev.days > 0) return { ...prev, days: prev.days - 1, hours: 23, minutes: 59, seconds: 59 };
+        return prev;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => { loadStore(); }, [user?.id]);
 
@@ -275,6 +312,48 @@ export default function GringottsStore() {
     finally { setBuying(null); }
   };
 
+  // ── Câmbio Mágico ──────────────────────────────────
+  const exchangeCurrency = async (fromType: 'galeon' | 'sicle', toType: 'sicle' | 'knut', amountFrom: number) => {
+    if (!user || !profile) return;
+    const currentTotal = profile.galeons || 0;
+    
+    // 1 Galeão = 493 Nuques | 1 Sicle = 29 Nuques
+    let nuquesToDeduct = 0;
+    let nuquesToAdd = 0;
+    let label = "";
+
+    if (fromType === 'galeon' && toType === 'sicle') {
+      nuquesToDeduct = amountFrom * 493;
+      // 1 Galeão deveria dar 17 Sicles (17 * 29 = 493 Nuques)
+      nuquesToAdd = amountFrom * 17 * 29; 
+      // Aplicando taxa de 2% (Gringotts Profit)
+      nuquesToAdd = Math.floor(nuquesToAdd * 0.98);
+      label = `${amountFrom} Galeões por Sicles`;
+    } else if (fromType === 'sicle' && toType === 'knut') {
+      nuquesToDeduct = amountFrom * 29;
+      nuquesToAdd = amountFrom * 29; // Sicle para Nuque é 1:29
+      nuquesToAdd = Math.floor(nuquesToAdd * 0.98);
+      label = `${amountFrom} Sicles por Nuques`;
+    }
+
+    if (currentTotal < nuquesToDeduct) return toast.error("Saldo insuficiente para o câmbio!");
+
+    setBuying("exchange");
+    try {
+      const { error } = await supabase.from("profiles").update({ 
+        galeons: currentTotal - nuquesToDeduct + nuquesToAdd 
+      } as never).eq("user_id", user.id);
+      
+      if (error) throw error;
+      toast.success(`✨ Câmbio realizado: ${label}. Taxa de Gringotts aplicada.`);
+      await fetchProfile(user.id);
+    } catch (e: any) {
+      toast.error("Erro no câmbio: " + e.message);
+    } finally {
+      setBuying(null);
+    }
+  };
+
   // ── Comprar Item ──────────────────────────────────
   const buyItem = async (item: StoreItem) => {
     if (!user || !profile) return toast.error("Você precisa estar logado.");
@@ -337,6 +416,77 @@ export default function GringottsStore() {
       setTimeout(() => { window.location.href = payUrl; }, 800);
     } catch (e: any) { toast.error(e.message || "Erro ao ativar VIP."); }
     finally { setBuying(null); }
+  };
+
+  // ── Abrir Baú (Lógica Funcional) ──────────────────
+  const handleOpenChest = async (chestItemId: string) => {
+    if (!user || !profile) return;
+    
+    // 1. Verificar se possui o baú
+    const { data: hasChest } = await supabase
+      .from("user_items")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("item_id", chestItemId)
+      .limit(1)
+      .maybeSingle();
+
+    if (!hasChest) return toast.error("Você não possui este baú no inventário!");
+
+    setBuying(chestItemId);
+    playMagicSound();
+
+    toast.promise(
+      new Promise(async (resolve, reject) => {
+        try {
+          // Pequeno delay para suspense cinematográfico
+          await new Promise(r => setTimeout(r, 2000));
+
+          // 2. Sortear um item (Lógica do Chapéu Seletor de Itens)
+          // Filtramos itens que não sejam o próprio baú e que sejam raros/lendários
+          const pool = items.filter(i => 
+            !i.id.includes("chest") && 
+            (i.rarity === "legendary" || i.rarity === "rare")
+          );
+          
+          if (pool.length === 0) throw new Error("Cofre vazio!");
+          
+          const wonItem = pool[Math.floor(Math.random() * pool.length)];
+
+          // 3. Consumir o baú (Remover uma instância)
+          const { error: delErr } = await supabase
+            .from("user_items")
+            .delete()
+            .eq("id", hasChest.id);
+          
+          if (delErr) throw delErr;
+
+          // 4. Adicionar o prêmio
+          const { error: insErr } = await supabase
+            .from("user_items")
+            .insert({ user_id: user.id, item_id: wonItem.id } as never);
+          
+          if (insErr) throw insErr;
+
+          // 5. Atualizar estado local
+          setOwned(prev => {
+            const next = prev.filter(id => id !== chestItemId);
+            return [...next, wonItem.id];
+          });
+
+          resolve(wonItem);
+        } catch (err) {
+          reject(err);
+        }
+      }),
+      {
+        loading: '🪄 Conjurando abertura do cofre...',
+        success: (item: any) => `✨ VOCÊ GANHOU: ${item.name}! Verifique seu inventário.`,
+        error: 'A magia falhou ao abrir o baú.',
+      }
+    );
+    
+    setBuying(null);
   };
 
   const galeons = profile?.galeons ?? 0;
@@ -421,13 +571,13 @@ export default function GringottsStore() {
         
         <div className="flex gap-4">
           {[
-            { val: "02", label: "DIAS" },
-            { val: "14", label: "HORAS" },
-            { val: "45", label: "MIN" },
-            { val: "30", label: "SEG" }
+            { val: timeLeft.days.toString().padStart(2, '0'), label: "DIAS" },
+            { val: timeLeft.hours.toString().padStart(2, '0'), label: "HORAS" },
+            { val: timeLeft.minutes.toString().padStart(2, '0'), label: "MIN" },
+            { val: timeLeft.seconds.toString().padStart(2, '0'), label: "SEG" }
           ].map((t, i) => (
-            <div key={i} className="glass bg-black/60 border border-red-500/30 w-20 h-24 rounded-2xl flex flex-col items-center justify-center backdrop-blur-xl">
-              <span className="text-3xl font-heading text-red-500">{t.val}</span>
+            <div key={i} className="glass bg-black/60 border border-red-500/30 w-16 h-20 md:w-20 md:h-24 rounded-2xl flex flex-col items-center justify-center backdrop-blur-xl">
+              <span className="text-2xl md:text-3xl font-heading text-red-500 tabular-nums">{t.val}</span>
               <span className="text-[8px] text-red-200/40 font-bold uppercase tracking-widest">{t.label}</span>
             </div>
           ))}
@@ -593,8 +743,11 @@ export default function GringottsStore() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
                     <StoreItemVisual imageUrl={item.image_url} name={item.name} category={item.category} isOwned={isOwned} />
                     
-                    <div className="absolute top-4 left-4 z-20">
-                      <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/50 text-[9px] uppercase tracking-widest px-3 py-1 backdrop-blur-md">Lendário</Badge>
+                    <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
+                      <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/50 text-[9px] uppercase tracking-widest px-3 py-1 backdrop-blur-md w-fit">Lendário</Badge>
+                      {item.price_galeons > 3000 && (
+                        <Badge className="bg-red-500/20 text-red-400 border-red-500/50 text-[8px] uppercase tracking-widest px-2 py-0.5 backdrop-blur-md animate-pulse w-fit">Apenas {Math.floor(Math.random() * 5) + 1} em estoque</Badge>
+                      )}
                     </div>
 
                     <div className="absolute inset-0 z-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
@@ -658,16 +811,16 @@ export default function GringottsStore() {
                     variant="plaque" 
                     className="h-20 px-12 text-2xl rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 hover:from-purple-500 hover:to-indigo-500 border-none shadow-[0_15px_40px_rgba(124,58,237,0.4)] transition-all active:scale-95 group"
                     onClick={() => {
-                        if (galeons < 50) return toast.error("Galeões insuficientes!");
-                        playMagicSound();
-                        toast.promise(new Promise(r => setTimeout(r, 2500)), {
-                            loading: '🪄 Conjurando abertura do cofre...',
-                            success: (res) => "✨ Tesouro Encontrado! Verifique seu inventário.",
-                            error: 'A magia falhou.',
-                        });
+                        const chestId = "mq_item_chest_epic";
+                        if (owned.includes(chestId)) {
+                          handleOpenChest(chestId);
+                        } else {
+                          if (galeons < 1500) return toast.error("Galeões insuficientes para comprar este baú!");
+                          buyItem(items.find(i => i.id === chestId) || MONSTER_QUALITY_ITEMS.find(i => i.id === chestId)!);
+                        }
                     }}
                   >
-                    Girar a Chave ✨
+                    {owned.includes("mq_item_chest_epic") ? "Abrir Baú ✨" : "Comprar Baú 🛒"}
                   </Button>
                 </div>
               </div>
@@ -760,6 +913,66 @@ export default function GringottsStore() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── ABA: BANCO (CÂMBIO) ── */}
+      {tab === "bank" && (
+        <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
+          <div className="text-center max-w-3xl mx-auto space-y-4">
+            <h2 className="text-4xl md:text-6xl font-heading text-foreground flex items-center justify-center gap-4">
+              <Landmark className="text-emerald-500 animate-pulse" size={40} /> Banco Gringotts
+            </h2>
+            <p className="text-muted-foreground text-lg font-serif">"Fortunas convertidas com a precisão dos duendes. Taxas administrativas de 2% aplicadas a cada transação."</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* Galeão -> Sicles */}
+            <div className="glass rounded-[2.5rem] p-8 border border-emerald-500/30 bg-gradient-to-br from-emerald-950/20 to-black flex flex-col items-center text-center group">
+              <div className="flex items-center gap-4 mb-6">
+                <MagicalGaleon size="md" />
+                <ArrowRightLeft className="text-emerald-500 animate-pulse" />
+                <MagicalSicle size="md" />
+              </div>
+              <h3 className="font-heading text-2xl text-white mb-2">Câmbio de Ouro para Prata</h3>
+              <p className="text-sm text-muted-foreground mb-8 font-serif italic">Converta seus Galeões Premium em Sicles para compras do dia a dia.</p>
+              
+              <div className="grid grid-cols-2 gap-4 w-full">
+                {[1, 5, 10, 50].map(amount => (
+                  <Button key={amount} variant="outline" className="h-16 rounded-xl border-emerald-500/20 hover:bg-emerald-500/10 text-emerald-400 font-bold" onClick={() => exchangeCurrency('galeon', 'sicle', amount)}>
+                    {amount} {amount === 1 ? 'Galeão' : 'Galeões'}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            {/* Sicles -> Nuques */}
+            <div className="glass rounded-[2.5rem] p-8 border border-orange-500/30 bg-gradient-to-br from-orange-950/20 to-black flex flex-col items-center text-center group">
+              <div className="flex items-center gap-4 mb-6">
+                <MagicalSicle size="md" />
+                <ArrowRightLeft className="text-orange-500 animate-pulse" />
+                <MagicalKnut size="md" />
+              </div>
+              <h3 className="font-heading text-2xl text-white mb-2">Câmbio de Prata para Bronze</h3>
+              <p className="text-sm text-muted-foreground mb-8 font-serif italic">Troque seus Sicles por Nuques para pequenos consumíveis e gorjetas.</p>
+              
+              <div className="grid grid-cols-2 gap-4 w-full">
+                {[10, 50, 100, 500].map(amount => (
+                  <Button key={amount} variant="outline" className="h-16 rounded-xl border-orange-500/20 hover:bg-orange-500/10 text-orange-400 font-bold" onClick={() => exchangeCurrency('sicle', 'knut', amount)}>
+                    {amount} {amount === 1 ? 'Sicle' : 'Sicles'}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="glass rounded-2xl p-6 border border-white/10 max-w-2xl mx-auto text-center">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-2 font-bold">Taxa de Custo Gringotts</p>
+            <p className="text-sm text-foreground">
+              Cada transação de câmbio contribui para a manutenção da segurança dos cofres de Hogwarts. <br/>
+              <span className="text-emerald-400 font-bold">Taxa Atual: 2%</span>
+            </p>
           </div>
         </div>
       )}

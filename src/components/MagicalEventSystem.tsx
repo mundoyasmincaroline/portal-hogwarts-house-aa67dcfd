@@ -203,6 +203,11 @@ export default function MagicalEventSystem() {
 
       const finalXP = Math.round(activeEvent.xp * multiplier);
       const finalGaleons = Math.round(activeEvent.galeons * multiplier);
+      const finalSicles = Math.round((activeEvent.sicles || 0) * multiplier);
+      const finalKnuts = Math.round((activeEvent.knuts || 0) * multiplier);
+
+      // Conversão para Unidade Base (Nuques)
+      const totalNuquesReward = (finalGaleons * 493) + (finalSicles * 29) + finalKnuts;
 
       // Salvar participação
       const { error: err } = await supabase.from("user_challenges").insert({
@@ -217,12 +222,12 @@ export default function MagicalEventSystem() {
       // Recompensas
       await supabase.rpc("award_xp_action", { _action: "global_event", _user_id: user.id, _xp: finalXP });
       
-      const newGaleons = (profile.galeons || 0) + finalGaleons;
-      await supabase.from("profiles").update({ galeons: newGaleons } as never).eq("user_id", user.id);
+      const newTotalNuques = (profile.galeons || 0) + totalNuquesReward;
+      await supabase.from("profiles").update({ galeons: newTotalNuques } as never).eq("user_id", user.id);
       
       await fetchProfile(user.id);
       setHasCompleted(true);
-      toast.success(`🔮 Desafio Concluído! +${finalXP} XP e +${finalGaleons}🪙 Galeões!`);
+      toast.success(`🔮 Desafio Concluído! Recompensas de Gringotts creditadas no seu cofre!`);
     } catch (e: any) {
       toast.error("Erro ao salvar progresso: " + e.message);
     } finally {
@@ -359,14 +364,22 @@ export default function MagicalEventSystem() {
               <h2 className="text-4xl font-heading text-gold-gradient">VICTÓRIA MÁGICA!</h2>
               <p className="text-muted-foreground">Você provou seu valor no evento global.</p>
               
-              <div className="flex gap-4 justify-center">
-                <div className="glass px-6 py-3 rounded-2xl border border-primary/20">
-                  <p className="text-[10px] text-muted-foreground uppercase">XP Adquirido</p>
-                  <p className="text-2xl font-heading text-primary">+{Math.round(activeEvent.xp * (profile.vip_plan === 'founder' ? 2 : profile.vip_plan === 'vip' ? 1.5 : profile.vip_plan === 'premium' ? 1.25 : 1))}</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 justify-center max-w-2xl mx-auto">
+                <div className="glass px-4 py-3 rounded-2xl border border-primary/20">
+                  <p className="text-[10px] text-muted-foreground uppercase">XP</p>
+                  <p className="text-xl font-heading text-primary">+{Math.round(activeEvent.xp * (profile.vip_plan === 'founder' ? 2 : profile.vip_plan === 'vip' ? 1.5 : profile.vip_plan === 'premium' ? 1.25 : 1))}</p>
                 </div>
-                <div className="glass px-6 py-3 rounded-2xl border border-yellow-500/20">
+                <div className="glass px-4 py-3 rounded-2xl border border-yellow-500/20">
                   <p className="text-[10px] text-muted-foreground uppercase">Galeões</p>
-                  <p className="text-2xl font-heading text-yellow-500">+{Math.round(activeEvent.galeons * (profile.vip_plan === 'founder' ? 2 : profile.vip_plan === 'vip' ? 1.5 : profile.vip_plan === 'premium' ? 1.25 : 1))}</p>
+                  <p className="text-xl font-heading text-yellow-500">+{Math.round(activeEvent.galeons * (profile.vip_plan === 'founder' ? 2 : profile.vip_plan === 'vip' ? 1.5 : profile.vip_plan === 'premium' ? 1.25 : 1))}</p>
+                </div>
+                <div className="glass px-4 py-3 rounded-2xl border border-slate-400/20">
+                  <p className="text-[10px] text-muted-foreground uppercase">Sicles</p>
+                  <p className="text-xl font-heading text-slate-300">+{Math.round((activeEvent.sicles || 0) * (profile.vip_plan === 'founder' ? 2 : profile.vip_plan === 'vip' ? 1.5 : profile.vip_plan === 'premium' ? 1.25 : 1))}</p>
+                </div>
+                <div className="glass px-4 py-3 rounded-2xl border border-orange-800/20">
+                  <p className="text-[10px] text-muted-foreground uppercase">Nuques</p>
+                  <p className="text-xl font-heading text-orange-700">+{Math.round((activeEvent.knuts || 0) * (profile.vip_plan === 'founder' ? 2 : profile.vip_plan === 'vip' ? 1.5 : profile.vip_plan === 'premium' ? 1.25 : 1))}</p>
                 </div>
               </div>
 

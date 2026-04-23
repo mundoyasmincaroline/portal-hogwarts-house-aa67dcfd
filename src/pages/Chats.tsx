@@ -25,6 +25,7 @@ const ROOMS: RoomDefinition[] = [
   { name: "Chat Off", description: "Bate-papo fora do personagem.", category: "Geral", allowed_houses: null, is_admin_only: false, icon: Coffee },
   { name: "Eventos", description: "Avisos e cobertura de eventos do portal.", category: "Geral", allowed_houses: null, is_admin_only: false, icon: Sparkles },
   { name: "Profeta Diário", description: "Notícias do mundo bruxo.", category: "Geral", allowed_houses: null, is_admin_only: false, icon: Newspaper },
+  { name: "Suporte à Diretoria", description: "Ajuda técnica e financeira direta com a administração.", category: "Geral", allowed_houses: null, is_admin_only: false, icon: Shield },
   
   { name: "Chat ON", description: "Conversas gerais dentro do RPG.", category: "RPG", allowed_houses: null, is_admin_only: false, icon: MessageSquare },
   { name: "Castelo RPG", description: "Exploração e interação pelo castelo de Hogwarts.", category: "RPG", allowed_houses: null, is_admin_only: false, icon: Castle },

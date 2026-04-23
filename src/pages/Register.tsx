@@ -112,21 +112,25 @@ export default function Register() {
     <div className="relative min-h-screen flex items-center justify-center px-4 py-12 overflow-hidden">
       {/* ── CINEMATIC BACKGROUND ── */}
       <div className="absolute inset-0 z-0">
-         <img src="https://images.unsplash.com/photo-1547756536-cde3673fa2e5?auto=format&fit=crop&q=80&w=2000" className="w-full h-full object-cover opacity-20 grayscale scale-110" alt="Background" />
-         <div className="absolute inset-0 bg-gradient-to-br from-black via-black/80 to-blue-950/40" />
+         <img src="/hogwarts_entrance.png" className="w-full h-full object-cover opacity-40 scale-105" alt="Hogwarts Entrance" />
+         <div className="absolute inset-0 bg-gradient-to-br from-black via-black/80 to-blue-950/60" />
       </div>
       
       <MagicalParticles />
-      <div className="glass rounded-[2.5rem] p-10 w-full max-w-xl z-20 animate-fade-in-up border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.8)]">
-        <div className="text-center mb-6">
-          <h1 className="font-heading text-3xl text-gold-gradient mb-2">Solicitar Vaga</h1>
-          <p className="text-muted-foreground text-sm">Preencha sua ficha de matrícula</p>
-          <div className="flex justify-center gap-2 mt-4">
-            {[1, 2, 3].map((s) => (
-              <div key={s} className={`w-8 h-1 rounded-full ${step >= s ? "bg-primary" : "bg-secondary"}`} />
-            ))}
+      <div className="relative glass rounded-[3rem] p-1 md:p-1 w-full max-w-xl z-20 animate-fade-in-up border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.9)] overflow-hidden">
+        {/* Parchment Texture Overlay */}
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/pinstriped-suit.png')] opacity-5 pointer-events-none" />
+        
+        <div className="relative glass-dark rounded-[2.8rem] p-8 md:p-10 border border-white/5 space-y-6">
+          <div className="text-center mb-6">
+            <h1 className="font-heading text-4xl text-gold-gradient mb-2 drop-shadow-2xl tracking-tighter">Ficha de Matrícula</h1>
+            <p className="text-primary/60 text-xs font-serif italic uppercase tracking-[0.2em]">O Ministério da Magia exige sua identificação</p>
+            <div className="flex justify-center gap-3 mt-6">
+              {[1, 2, 3].map((s) => (
+                <div key={s} className={`h-1.5 rounded-full transition-all duration-700 ${step === s ? "w-12 bg-primary shadow-[0_0_15px_rgba(212,175,55,0.6)]" : step > s ? "w-6 bg-primary/40" : "w-6 bg-white/5"}`} />
+              ))}
+            </div>
           </div>
-        </div>
 
         {step === 1 && (
           <div className="space-y-4">

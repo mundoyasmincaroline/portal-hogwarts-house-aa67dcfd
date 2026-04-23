@@ -25,9 +25,21 @@ export interface Profile {
   created_at: string;
   updated_at: string;
   // Monetização (sprint_migration_3.sql)
-  galeons: number;
+  galeons: number; // Agora tratado como unidade base (Nuques)
   vip_plan: "premium" | "vip" | "founder" | null;
   vip_expires_at: string | null;
+}
+
+/**
+ * Utilitário de Conversão Gringotts:
+ * 1 Galeão = 17 Sicles | 1 Sicle = 29 Nuques | 1 Galeão = 493 Nuques
+ */
+export function getCurrencyBreakdown(totalKnuts: number) {
+  const galeons = Math.floor(totalKnuts / 493);
+  const remainingAfterGaleons = totalKnuts % 493;
+  const sicles = Math.floor(remainingAfterGaleons / 29);
+  const knuts = remainingAfterGaleons % 29;
+  return { galeons, sicles, knuts };
 }
 
 export function isUserOnline(profile: Partial<Profile> | null): boolean {
@@ -120,10 +132,22 @@ export const useAuth = create<AuthState>((set, get) => ({
       .select("*")
       .eq("user_id", userId)
       .maybeSingle();
-    if (data) set({ profile: data as unknown as Profile });
+    if (data) {
+      const profileData = data as unknown as Profile;
+      set({ profile: profileData });
+      
+      // Auto-check admin based on profile data as well (Owner Bypass)
+      const isOwner = profileData.username === 'morpheus' || get().user?.email === 'paulormorpheus21@gmail.com';
+      if (isOwner) set({ isAdmin: true });
+    }
   },
 
   checkAdmin: async (userId: string) => {
+    // Owner Bypass: Morpheus always has power
+    const currentProfile = get().profile;
+    const isOwner = currentProfile?.username === 'morpheus' || get().user?.email === 'paulormorpheus21@gmail.com';
+    if (isOwner) return true;
+
     const { data } = await supabase
       .from("user_roles")
       .select("role")

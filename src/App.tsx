@@ -57,6 +57,7 @@ import MagicalErrorBoundary from "./components/MagicalErrorBoundary";
 import MagicalSyncOverlay from "./components/MagicalSyncOverlay";
 
 import AuthInit from "./components/AuthInit";
+import MagicalSplashScreen from "./components/MagicalSplashScreen";
 
 const queryClient = new QueryClient();
 
@@ -80,6 +81,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
     <TooltipProvider>
+      <MagicalSplashScreen />
       <MagicalErrorBoundary>
         <AuthInit>
           <Toaster />
