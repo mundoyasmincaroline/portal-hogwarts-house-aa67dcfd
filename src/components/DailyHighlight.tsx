@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { Sparkles } from "lucide-react";
 
 export default function DailyHighlight() {
   const [highlightedUser, setHighlightedUser] = useState<any>(null);
