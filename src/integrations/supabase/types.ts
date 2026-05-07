@@ -18,7 +18,9 @@ export type Database = {
         Row: {
           active: boolean
           ad_type: string
+          clicks: number | null
           created_at: string
+          description: string | null
           id: string
           image_url: string | null
           link: string
@@ -27,7 +29,9 @@ export type Database = {
         Insert: {
           active?: boolean
           ad_type?: string
+          clicks?: number | null
           created_at?: string
+          description?: string | null
           id?: string
           image_url?: string | null
           link?: string
@@ -36,7 +40,9 @@ export type Database = {
         Update: {
           active?: boolean
           ad_type?: string
+          clicks?: number | null
           created_at?: string
+          description?: string | null
           id?: string
           image_url?: string | null
           link?: string
@@ -44,13 +50,53 @@ export type Database = {
         }
         Relationships: []
       }
+      azkaban_status: {
+        Row: {
+          active: boolean | null
+          created_at: string | null
+          id: string
+          reason: string | null
+          release_at: string
+          user_id: string
+          xp_penalty: number | null
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string | null
+          id?: string
+          reason?: string | null
+          release_at: string
+          user_id: string
+          xp_penalty?: number | null
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string | null
+          id?: string
+          reason?: string | null
+          release_at?: string
+          user_id?: string
+          xp_penalty?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "azkaban_status_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       badges: {
         Row: {
           created_at: string
           description: string | null
           icon: string | null
           id: string
+          image_url: string | null
           name: string
+          rarity: string | null
           xp_required: number | null
         }
         Insert: {
@@ -58,7 +104,9 @@ export type Database = {
           description?: string | null
           icon?: string | null
           id?: string
+          image_url?: string | null
           name: string
+          rarity?: string | null
           xp_required?: number | null
         }
         Update: {
@@ -66,7 +114,9 @@ export type Database = {
           description?: string | null
           icon?: string | null
           id?: string
+          image_url?: string | null
           name?: string
+          rarity?: string | null
           xp_required?: number | null
         }
         Relationships: []
@@ -92,21 +142,24 @@ export type Database = {
       canon_claims: {
         Row: {
           canon_name: string
-          claimed_by: string
+          claimed_by: string | null
           created_at: string | null
           id: string
+          user_id: string | null
         }
         Insert: {
           canon_name: string
-          claimed_by: string
+          claimed_by?: string | null
           created_at?: string | null
           id?: string
+          user_id?: string | null
         }
         Update: {
           canon_name?: string
-          claimed_by?: string
+          claimed_by?: string | null
           created_at?: string | null
           id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -165,6 +218,7 @@ export type Database = {
           icon: string | null
           id: string
           is_admin_only: boolean | null
+          is_disabled: boolean | null
           is_premium: boolean | null
           meet_link: string | null
           name: string
@@ -179,6 +233,7 @@ export type Database = {
           icon?: string | null
           id?: string
           is_admin_only?: boolean | null
+          is_disabled?: boolean | null
           is_premium?: boolean | null
           meet_link?: string | null
           name: string
@@ -193,6 +248,7 @@ export type Database = {
           icon?: string | null
           id?: string
           is_admin_only?: boolean | null
+          is_disabled?: boolean | null
           is_premium?: boolean | null
           meet_link?: string | null
           name?: string
@@ -207,7 +263,11 @@ export type Database = {
           age: number | null
           age_category: string
           avatar_url: string | null
+          background: string | null
           blood_status: string | null
+          canon_era: string | null
+          canon_notes: string | null
+          canon_portrayed_by: string | null
           character_type: string
           created_at: string | null
           dreams: string | null
@@ -220,16 +280,20 @@ export type Database = {
           fears: string | null
           full_name: string
           gender: string
+          history: string | null
           house: Database["public"]["Enums"]["house_type"] | null
           id: string
           instagram: string | null
           level: number | null
+          pair_character_id: string | null
           patronus: string | null
           personality: string | null
           pet: string | null
           pet_avatar: string | null
           pet_name: string | null
+          physical_description: string | null
           quotes: string | null
+          relationship_status: string | null
           secrets: string | null
           strength: string | null
           user_id: string
@@ -242,9 +306,13 @@ export type Database = {
           actor_faceclaim?: string | null
           adult_job?: string | null
           age?: number | null
-          age_category: string
+          age_category?: string
           avatar_url?: string | null
+          background?: string | null
           blood_status?: string | null
+          canon_era?: string | null
+          canon_notes?: string | null
+          canon_portrayed_by?: string | null
           character_type: string
           created_at?: string | null
           dreams?: string | null
@@ -256,17 +324,21 @@ export type Database = {
           favorite_spell?: string | null
           fears?: string | null
           full_name: string
-          gender: string
+          gender?: string
+          history?: string | null
           house?: Database["public"]["Enums"]["house_type"] | null
           id?: string
           instagram?: string | null
           level?: number | null
+          pair_character_id?: string | null
           patronus?: string | null
           personality?: string | null
           pet?: string | null
           pet_avatar?: string | null
           pet_name?: string | null
+          physical_description?: string | null
           quotes?: string | null
+          relationship_status?: string | null
           secrets?: string | null
           strength?: string | null
           user_id: string
@@ -281,7 +353,11 @@ export type Database = {
           age?: number | null
           age_category?: string
           avatar_url?: string | null
+          background?: string | null
           blood_status?: string | null
+          canon_era?: string | null
+          canon_notes?: string | null
+          canon_portrayed_by?: string | null
           character_type?: string
           created_at?: string | null
           dreams?: string | null
@@ -294,16 +370,20 @@ export type Database = {
           fears?: string | null
           full_name?: string
           gender?: string
+          history?: string | null
           house?: Database["public"]["Enums"]["house_type"] | null
           id?: string
           instagram?: string | null
           level?: number | null
+          pair_character_id?: string | null
           patronus?: string | null
           personality?: string | null
           pet?: string | null
           pet_avatar?: string | null
           pet_name?: string | null
+          physical_description?: string | null
           quotes?: string | null
+          relationship_status?: string | null
           secrets?: string | null
           strength?: string | null
           user_id?: string
@@ -312,7 +392,15 @@ export type Database = {
           xp?: number | null
           xp_to_next?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "characters_pair_character_id_fkey"
+            columns: ["pair_character_id"]
+            isOneToOne: false
+            referencedRelation: "characters"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       characters_birthdays: {
         Row: {
@@ -477,6 +565,33 @@ export type Database = {
           },
         ]
       }
+      dm_messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          read: boolean | null
+          receiver_id: string
+          sender_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          read?: boolean | null
+          receiver_id: string
+          sender_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          read?: boolean | null
+          receiver_id?: string
+          sender_id?: string
+        }
+        Relationships: []
+      }
       fichas: {
         Row: {
           age: number | null
@@ -527,21 +642,27 @@ export type Database = {
           created_at: string
           friend_id: string
           id: string
+          last_interaction_at: string | null
           status: string
+          streak_count: number | null
           user_id: string
         }
         Insert: {
           created_at?: string
           friend_id: string
           id?: string
+          last_interaction_at?: string | null
           status?: string
+          streak_count?: number | null
           user_id: string
         }
         Update: {
           created_at?: string
           friend_id?: string
           id?: string
+          last_interaction_at?: string | null
           status?: string
+          streak_count?: number | null
           user_id?: string
         }
         Relationships: [
@@ -554,6 +675,53 @@ export type Database = {
           },
           {
             foreignKeyName: "friendships_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      galeon_orders: {
+        Row: {
+          amount_brl: number
+          created_at: string | null
+          galeons: number
+          id: string
+          infinitepay_id: string | null
+          package_id: string
+          paid_at: string | null
+          payment_link: string | null
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          amount_brl: number
+          created_at?: string | null
+          galeons: number
+          id?: string
+          infinitepay_id?: string | null
+          package_id: string
+          paid_at?: string | null
+          payment_link?: string | null
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          amount_brl?: number
+          created_at?: string | null
+          galeons?: number
+          id?: string
+          infinitepay_id?: string | null
+          package_id?: string
+          paid_at?: string | null
+          payment_link?: string | null
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "galeon_orders_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -588,9 +756,67 @@ export type Database = {
         }
         Relationships: []
       }
+      insta_character_follows: {
+        Row: {
+          created_at: string | null
+          followed_char_id: string
+          follower_user_id: string
+          id: string
+        }
+        Insert: {
+          created_at?: string | null
+          followed_char_id: string
+          follower_user_id: string
+          id?: string
+        }
+        Update: {
+          created_at?: string | null
+          followed_char_id?: string
+          follower_user_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "insta_character_follows_followed_char_id_fkey"
+            columns: ["followed_char_id"]
+            isOneToOne: false
+            referencedRelation: "characters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "insta_character_follows_follower_user_id_fkey"
+            columns: ["follower_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      insta_follows: {
+        Row: {
+          created_at: string | null
+          followed_user_id: string
+          follower_user_id: string
+          id: string
+        }
+        Insert: {
+          created_at?: string | null
+          followed_user_id: string
+          follower_user_id: string
+          id?: string
+        }
+        Update: {
+          created_at?: string | null
+          followed_user_id?: string
+          follower_user_id?: string
+          id?: string
+        }
+        Relationships: []
+      }
       insta_posts: {
         Row: {
           caption: string | null
+          character_id: string | null
           created_at: string
           id: string
           image_url: string
@@ -600,6 +826,7 @@ export type Database = {
         }
         Insert: {
           caption?: string | null
+          character_id?: string | null
           created_at?: string
           id?: string
           image_url: string
@@ -609,6 +836,7 @@ export type Database = {
         }
         Update: {
           caption?: string | null
+          character_id?: string | null
           created_at?: string
           id?: string
           image_url?: string
@@ -616,7 +844,15 @@ export type Database = {
           spotify_uri?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "insta_posts_character_id_fkey"
+            columns: ["character_id"]
+            isOneToOne: false
+            referencedRelation: "characters"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       messages: {
         Row: {
@@ -625,6 +861,7 @@ export type Database = {
           content: string
           created_at: string
           id: string
+          is_pinned: boolean | null
           user_id: string
         }
         Insert: {
@@ -633,6 +870,7 @@ export type Database = {
           content: string
           created_at?: string
           id?: string
+          is_pinned?: boolean | null
           user_id: string
         }
         Update: {
@@ -641,6 +879,7 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
+          is_pinned?: boolean | null
           user_id?: string
         }
         Relationships: [
@@ -849,6 +1088,7 @@ export type Database = {
           created_at: string
           current_session_id: string | null
           full_name: string
+          galeons: number | null
           has_accepted_rules: boolean | null
           has_seen_intro: boolean | null
           house: Database["public"]["Enums"]["house_type"]
@@ -860,6 +1100,8 @@ export type Database = {
           updated_at: string
           user_id: string
           username: string
+          vip_expires_at: string | null
+          vip_plan: string | null
           xp: number
           xp_to_next: number
         }
@@ -873,6 +1115,7 @@ export type Database = {
           created_at?: string
           current_session_id?: string | null
           full_name?: string
+          galeons?: number | null
           has_accepted_rules?: boolean | null
           has_seen_intro?: boolean | null
           house?: Database["public"]["Enums"]["house_type"]
@@ -884,6 +1127,8 @@ export type Database = {
           updated_at?: string
           user_id: string
           username: string
+          vip_expires_at?: string | null
+          vip_plan?: string | null
           xp?: number
           xp_to_next?: number
         }
@@ -897,6 +1142,7 @@ export type Database = {
           created_at?: string
           current_session_id?: string | null
           full_name?: string
+          galeons?: number | null
           has_accepted_rules?: boolean | null
           has_seen_intro?: boolean | null
           house?: Database["public"]["Enums"]["house_type"]
@@ -908,6 +1154,8 @@ export type Database = {
           updated_at?: string
           user_id?: string
           username?: string
+          vip_expires_at?: string | null
+          vip_plan?: string | null
           xp?: number
           xp_to_next?: number
         }
@@ -981,6 +1229,54 @@ export type Database = {
         }
         Relationships: []
       }
+      sticker_trades: {
+        Row: {
+          accepted_at: string | null
+          accepted_by_id: string | null
+          created_at: string | null
+          id: string
+          offered_sticker_id: string
+          offerer_id: string
+          status: string | null
+          wanted_sticker_id: string | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          accepted_by_id?: string | null
+          created_at?: string | null
+          id?: string
+          offered_sticker_id: string
+          offerer_id: string
+          status?: string | null
+          wanted_sticker_id?: string | null
+        }
+        Update: {
+          accepted_at?: string | null
+          accepted_by_id?: string | null
+          created_at?: string | null
+          id?: string
+          offered_sticker_id?: string
+          offerer_id?: string
+          status?: string | null
+          wanted_sticker_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sticker_trades_offered_sticker_id_fkey"
+            columns: ["offered_sticker_id"]
+            isOneToOne: false
+            referencedRelation: "stickers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sticker_trades_wanted_sticker_id_fkey"
+            columns: ["wanted_sticker_id"]
+            isOneToOne: false
+            referencedRelation: "stickers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       stickers: {
         Row: {
           character_name: string
@@ -1008,6 +1304,45 @@ export type Database = {
           image_url?: string
           level_required?: number
           rarity?: string
+        }
+        Relationships: []
+      }
+      store_items: {
+        Row: {
+          category: string
+          created_at: string | null
+          description: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          is_featured: boolean | null
+          name: string
+          price_galeons: number
+          rarity: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          name: string
+          price_galeons: number
+          rarity?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          name?: string
+          price_galeons?: number
+          rarity?: string | null
         }
         Relationships: []
       }
@@ -1041,6 +1376,65 @@ export type Database = {
           image_url?: string | null
           media_url?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      story_views: {
+        Row: {
+          id: string
+          story_id: string
+          viewed_at: string | null
+          viewer_id: string
+        }
+        Insert: {
+          id?: string
+          story_id: string
+          viewed_at?: string | null
+          viewer_id: string
+        }
+        Update: {
+          id?: string
+          story_id?: string
+          viewed_at?: string | null
+          viewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "story_views_story_id_fkey"
+            columns: ["story_id"]
+            isOneToOne: false
+            referencedRelation: "stories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      system_logs: {
+        Row: {
+          created_at: string | null
+          id: string
+          level: string
+          message: string
+          stack: string | null
+          user_id: string | null
+          username: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          level: string
+          message: string
+          stack?: string | null
+          user_id?: string | null
+          username?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          level?: string
+          message?: string
+          stack?: string | null
+          user_id?: string | null
+          username?: string | null
         }
         Relationships: []
       }
@@ -1174,6 +1568,52 @@ export type Database = {
         }
         Relationships: []
       }
+      user_items: {
+        Row: {
+          character_id: string | null
+          id: string
+          item_id: string
+          purchased_at: string | null
+          user_id: string
+        }
+        Insert: {
+          character_id?: string | null
+          id?: string
+          item_id: string
+          purchased_at?: string | null
+          user_id: string
+        }
+        Update: {
+          character_id?: string | null
+          id?: string
+          item_id?: string
+          purchased_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_items_character_id_fkey"
+            columns: ["character_id"]
+            isOneToOne: false
+            referencedRelation: "characters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_items_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "store_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_items_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: string
@@ -1196,18 +1636,21 @@ export type Database = {
         Row: {
           id: string
           obtained_at: string
+          quantity: number | null
           sticker_id: string
           user_id: string
         }
         Insert: {
           id?: string
           obtained_at?: string
+          quantity?: number | null
           sticker_id: string
           user_id: string
         }
         Update: {
           id?: string
           obtained_at?: string
+          quantity?: number | null
           sticker_id?: string
           user_id?: string
         }
@@ -1218,6 +1661,50 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "stickers"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      vip_subscriptions: {
+        Row: {
+          amount_brl: number
+          expires_at: string
+          galeons_monthly: number | null
+          id: string
+          infinitepay_id: string | null
+          plan: string
+          started_at: string | null
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          amount_brl: number
+          expires_at: string
+          galeons_monthly?: number | null
+          id?: string
+          infinitepay_id?: string | null
+          plan: string
+          started_at?: string | null
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          amount_brl?: number
+          expires_at?: string
+          galeons_monthly?: number | null
+          id?: string
+          infinitepay_id?: string | null
+          plan?: string
+          started_at?: string | null
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vip_subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -1239,12 +1726,48 @@ export type Database = {
         Args: { _invited_id: string }
         Returns: undefined
       }
+      create_infinitepay_link: {
+        Args: {
+          p_amount_brl: number
+          p_description: string
+          p_galeons?: number
+          p_order_id: string
+          p_user_email: string
+          p_user_id: string
+          p_user_name: string
+          p_vip_plan?: string
+        }
+        Returns: Json
+      }
+      get_payment_link: {
+        Args: { p_order_id: string; p_request_id: number }
+        Returns: Json
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      start_payment_request: {
+        Args: {
+          p_amount_brl: number
+          p_description: string
+          p_order_id: string
+          p_user_email: string
+          p_user_id: string
+          p_user_name: string
+        }
+        Returns: Json
+      }
+      verify_infinitepay_payment: {
+        Args: {
+          p_order_nsu: string
+          p_slug?: string
+          p_transaction_nsu: string
+        }
+        Returns: Json
       }
     }
     Enums: {
