@@ -20,11 +20,9 @@ import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Chats from "./pages/Chats";
 import ChatRoom from "./pages/ChatRoom";
-import CineHogwarts from "./pages/CineHogwarts";
 import InstaHogwarts from "./pages/InstaHogwarts";
 import StickerAlbum from "./pages/StickerAlbum";
 import Classes from "./pages/Classes";
-import EmojiShop from "./components/EmojiShop";
 import Rules from "./pages/Rules";
 import MaraudersGuide from "./pages/MaraudersGuide";
 import DMInbox from "./pages/DMInbox";
@@ -38,13 +36,7 @@ import Wallet from "./pages/Wallet";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import ParentsGuide from "./pages/ParentsGuide";
-import MagicalSagas from "./pages/MagicalSagas";
-
 import AdminFinance from "./pages/AdminFinance";
-import MagicalGames from "./pages/MagicalGames";
-import MatrixPortal from "./pages/MatrixPortal";
-// import MagicalTournaments from "./components/MagicalTournaments";
-
 
 const queryClient = new QueryClient();
 
@@ -69,13 +61,10 @@ const App = () => (
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/parents" element={<ParentsGuide />} />
             <Route path="/dashboard" element={<DashboardLayout />}>
-
               <Route index element={<Feed />} />
               <Route path="chats" element={<Chats />} />
               <Route path="chat/:roomId" element={<ChatRoom />} />
-              <Route path="cinema" element={<CineHogwarts />} />
               <Route path="instahogwarts" element={<InstaHogwarts />} />
-
               <Route path="album" element={<StickerAlbum />} />
               <Route path="classes" element={<Classes />} />
               <Route path="houses" element={<Houses />} />
@@ -86,7 +75,6 @@ const App = () => (
               <Route path="profile/:userId" element={<Profile />} />
               <Route path="admin" element={<Admin />} />
               <Route path="admin/finance" element={<AdminFinance />} />
-              <Route path="shop" element={<EmojiShop />} />
               <Route path="rules" element={<Rules />} />
               <Route path="guide" element={<MaraudersGuide />} />
               <Route path="dm" element={<DMInbox />} />
@@ -97,11 +85,6 @@ const App = () => (
               <Route path="members" element={<Members />} />
               <Route path="store" element={<GringottsStore />} />
               <Route path="wallet" element={<Wallet />} />
-              <Route path="sagas" element={<MagicalSagas />} />
-              <Route path="games" element={<MagicalGames />} />
-              <Route path="matrix" element={<MatrixPortal />} />
-              {/* <Route path="sagas" element={<MagicalTournaments />} /> */}
-
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

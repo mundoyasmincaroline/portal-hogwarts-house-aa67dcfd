@@ -7,8 +7,20 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import MagicalEmoji from "@/components/MagicalEmoji";
 
-// ─── Reusando Configurações dos Eventos ───────────────────────────────────────────
-import { getEventsForToday, type MagicalEvent } from "@/lib/MagicalEventEngine";
+type MagicalEvent = {
+  id: string;
+  name: string;
+  start: string;
+  end: string;
+  type: string;
+  xp: number;
+  galeons: number;
+  audience: string;
+  description: string;
+  riddles?: { q: string; a: string }[];
+  isSpecial?: boolean;
+};
+const getEventsForToday = (_celebrations: any[]): MagicalEvent[] => [];
 
 export default function Events() {
   const { user, profile } = useAuth();
