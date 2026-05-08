@@ -17,8 +17,6 @@ import SafeImage from "@/components/SafeImage";
 import MagicalIcon from "@/components/MagicalIcon";
 import MagicalEmoji from "@/components/MagicalEmoji";
 import MagicalGaleon from "@/components/MagicalGaleon";
-import WelcomeChestModal from "@/components/WelcomeChestModal";
-import JarvisPresence from "@/components/JarvisPresence";
 import MagicalMemories from "@/components/MagicalMemories";
 
 
