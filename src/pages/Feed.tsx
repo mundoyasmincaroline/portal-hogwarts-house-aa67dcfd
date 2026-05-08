@@ -250,10 +250,6 @@ export default function Feed() {
       <DynamicGreeting />
 
       
-      {showWelcomeChest && (
-        <WelcomeChestModal onClose={() => setShowWelcomeChest(false)} />
-      )}
-
       <BirthdayBanner />
       <VipUpsellBanner
         currentVip={(profile as any)?.vip_plan}
@@ -414,8 +410,6 @@ export default function Feed() {
         <div className="space-y-4">
           <div className="glass rounded-xl p-4">
             <h3 className="font-heading text-sm text-primary mb-3">🏰 Bruxos no Castelo</h3>
-            
-            <JarvisPresence />
             
             {/* Morpheus - Arquiteto */}
             <div className="flex items-center gap-2 mb-2 p-2 bg-black border border-green-500/50 rounded-lg group shadow-[0_0_10px_rgba(34,197,94,0.2)]">
