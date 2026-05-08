@@ -163,6 +163,45 @@ export type Database = {
         }
         Relationships: []
       }
+      canon_professors: {
+        Row: {
+          active: boolean | null
+          avatar_url: string | null
+          bio: string | null
+          canon_name: string
+          catchphrase: string | null
+          created_at: string
+          difficulty: number | null
+          id: string
+          subject: string
+          title: string
+        }
+        Insert: {
+          active?: boolean | null
+          avatar_url?: string | null
+          bio?: string | null
+          canon_name: string
+          catchphrase?: string | null
+          created_at?: string
+          difficulty?: number | null
+          id?: string
+          subject: string
+          title?: string
+        }
+        Update: {
+          active?: boolean | null
+          avatar_url?: string | null
+          bio?: string | null
+          canon_name?: string
+          catchphrase?: string | null
+          created_at?: string
+          difficulty?: number | null
+          id?: string
+          subject?: string
+          title?: string
+        }
+        Relationships: []
+      }
       challenges: {
         Row: {
           action_type: string | null
@@ -253,6 +292,66 @@ export type Database = {
           meet_link?: string | null
           name?: string
           type?: string
+        }
+        Relationships: []
+      }
+      character_infractions: {
+        Row: {
+          context: string | null
+          created_at: string
+          detail: string | null
+          id: string
+          points_lost: number
+          reason: string
+          user_id: string
+        }
+        Insert: {
+          context?: string | null
+          created_at?: string
+          detail?: string | null
+          id?: string
+          points_lost?: number
+          reason: string
+          user_id: string
+        }
+        Update: {
+          context?: string | null
+          created_at?: string
+          detail?: string | null
+          id?: string
+          points_lost?: number
+          reason?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      character_spells: {
+        Row: {
+          character_id: string
+          id: string
+          learned_at: string
+          learned_from: string | null
+          mastery: number
+          spell_id: string
+          times_cast: number
+        }
+        Insert: {
+          character_id: string
+          id?: string
+          learned_at?: string
+          learned_from?: string | null
+          mastery?: number
+          spell_id: string
+          times_cast?: number
+        }
+        Update: {
+          character_id?: string
+          id?: string
+          learned_at?: string
+          learned_from?: string | null
+          mastery?: number
+          spell_id?: string
+          times_cast?: number
         }
         Relationships: []
       }
@@ -592,6 +691,117 @@ export type Database = {
         }
         Relationships: []
       }
+      duel_turns: {
+        Row: {
+          actor: string
+          created_at: string
+          damage: number | null
+          duel_id: string
+          hit: boolean | null
+          id: string
+          narrative: string | null
+          spell_id: string | null
+          spell_name: string
+          turn_number: number
+        }
+        Insert: {
+          actor: string
+          created_at?: string
+          damage?: number | null
+          duel_id: string
+          hit?: boolean | null
+          id?: string
+          narrative?: string | null
+          spell_id?: string | null
+          spell_name: string
+          turn_number: number
+        }
+        Update: {
+          actor?: string
+          created_at?: string
+          damage?: number | null
+          duel_id?: string
+          hit?: boolean | null
+          id?: string
+          narrative?: string | null
+          spell_id?: string | null
+          spell_name?: string
+          turn_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "duel_turns_duel_id_fkey"
+            columns: ["duel_id"]
+            isOneToOne: false
+            referencedRelation: "duels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "duel_turns_spell_id_fkey"
+            columns: ["spell_id"]
+            isOneToOne: false
+            referencedRelation: "spells"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      duels: {
+        Row: {
+          challenger_character_id: string
+          challenger_hp: number | null
+          challenger_user_id: string
+          created_at: string
+          current_turn: string | null
+          finished_at: string | null
+          galeons_reward: number | null
+          id: string
+          opponent_canon_name: string | null
+          opponent_character_id: string | null
+          opponent_hp: number | null
+          opponent_type: string
+          opponent_user_id: string | null
+          status: string | null
+          winner: string | null
+          xp_reward: number | null
+        }
+        Insert: {
+          challenger_character_id: string
+          challenger_hp?: number | null
+          challenger_user_id: string
+          created_at?: string
+          current_turn?: string | null
+          finished_at?: string | null
+          galeons_reward?: number | null
+          id?: string
+          opponent_canon_name?: string | null
+          opponent_character_id?: string | null
+          opponent_hp?: number | null
+          opponent_type?: string
+          opponent_user_id?: string | null
+          status?: string | null
+          winner?: string | null
+          xp_reward?: number | null
+        }
+        Update: {
+          challenger_character_id?: string
+          challenger_hp?: number | null
+          challenger_user_id?: string
+          created_at?: string
+          current_turn?: string | null
+          finished_at?: string | null
+          galeons_reward?: number | null
+          id?: string
+          opponent_canon_name?: string | null
+          opponent_character_id?: string | null
+          opponent_hp?: number | null
+          opponent_type?: string
+          opponent_user_id?: string | null
+          status?: string | null
+          winner?: string | null
+          xp_reward?: number | null
+        }
+        Relationships: []
+      }
       fichas: {
         Row: {
           age: number | null
@@ -854,6 +1064,41 @@ export type Database = {
           },
         ]
       }
+      lesson_attendance: {
+        Row: {
+          attended_at: string
+          character_id: string
+          id: string
+          lesson_id: string
+          spell_learned: boolean | null
+          user_id: string
+        }
+        Insert: {
+          attended_at?: string
+          character_id: string
+          id?: string
+          lesson_id: string
+          spell_learned?: boolean | null
+          user_id: string
+        }
+        Update: {
+          attended_at?: string
+          character_id?: string
+          id?: string
+          lesson_id?: string
+          spell_learned?: boolean | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_attendance_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "professor_lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       messages: {
         Row: {
           channel_id: string
@@ -1077,6 +1322,66 @@ export type Database = {
           },
         ]
       }
+      professor_lessons: {
+        Row: {
+          created_at: string
+          description: string | null
+          duration_minutes: number | null
+          galeons_reward: number | null
+          id: string
+          max_students: number | null
+          professor_id: string
+          scheduled_at: string
+          spell_id: string | null
+          status: string | null
+          title: string
+          xp_reward: number | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number | null
+          galeons_reward?: number | null
+          id?: string
+          max_students?: number | null
+          professor_id: string
+          scheduled_at?: string
+          spell_id?: string | null
+          status?: string | null
+          title: string
+          xp_reward?: number | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number | null
+          galeons_reward?: number | null
+          id?: string
+          max_students?: number | null
+          professor_id?: string
+          scheduled_at?: string
+          spell_id?: string | null
+          status?: string | null
+          title?: string
+          xp_reward?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "professor_lessons_professor_id_fkey"
+            columns: ["professor_id"]
+            isOneToOne: false
+            referencedRelation: "canon_professors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "professor_lessons_spell_id_fkey"
+            columns: ["spell_id"]
+            isOneToOne: false
+            referencedRelation: "spells"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           active_character_id: string | null
@@ -1226,6 +1531,57 @@ export type Database = {
           setting_key?: string
           setting_value?: Json
           updated_at?: string
+        }
+        Relationships: []
+      }
+      spells: {
+        Row: {
+          base_damage: number | null
+          base_defense: number | null
+          category: string
+          created_at: string
+          description: string
+          difficulty: number
+          effect: string
+          icon: string | null
+          id: string
+          incantation: string
+          is_unforgivable: boolean | null
+          min_year: number
+          name: string
+          taught_by: string | null
+        }
+        Insert: {
+          base_damage?: number | null
+          base_defense?: number | null
+          category?: string
+          created_at?: string
+          description?: string
+          difficulty?: number
+          effect?: string
+          icon?: string | null
+          id?: string
+          incantation: string
+          is_unforgivable?: boolean | null
+          min_year?: number
+          name: string
+          taught_by?: string | null
+        }
+        Update: {
+          base_damage?: number | null
+          base_defense?: number | null
+          category?: string
+          created_at?: string
+          description?: string
+          difficulty?: number
+          effect?: string
+          icon?: string | null
+          id?: string
+          incantation?: string
+          is_unforgivable?: boolean | null
+          min_year?: number
+          name?: string
+          taught_by?: string | null
         }
         Relationships: []
       }
@@ -1453,6 +1809,30 @@ export type Database = {
           key?: string
           updated_at?: string | null
           value?: Json
+        }
+        Relationships: []
+      }
+      user_audio_prefs: {
+        Row: {
+          ambient_enabled: boolean
+          track: string | null
+          updated_at: string
+          user_id: string
+          volume: number
+        }
+        Insert: {
+          ambient_enabled?: boolean
+          track?: string | null
+          updated_at?: string
+          user_id: string
+          volume?: number
+        }
+        Update: {
+          ambient_enabled?: boolean
+          track?: string | null
+          updated_at?: string
+          user_id?: string
+          volume?: number
         }
         Relationships: []
       }
