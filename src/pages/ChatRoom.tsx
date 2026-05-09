@@ -173,8 +173,8 @@ export default function ChatRoom() {
       return;
     }
     setChannel(data);
-    if (data.pinned_message_id) {
-      const { data: pm } = await supabase.from("messages").select("*, characters(full_name, house, avatar_url)").eq("id", data.pinned_message_id).single();
+    if ((data as any).pinned_message_id) {
+      const { data: pm } = await supabase.from("messages").select("*, characters(full_name, house, avatar_url)").eq("id", (data as any).pinned_message_id).single();
       if (pm) {
         // Fetch profile for pinned message too
         const { data: p } = await supabase.from("profiles").select("user_id, full_name, username, house, avatar_url").eq("user_id", pm.user_id).single();
@@ -353,12 +353,8 @@ export default function ChatRoom() {
           const senderName = profile?.full_name || 'Admin';
           const notifs = allMembers
             .filter(p => p.user_id !== user.id)
-            .map(p => ({
-              user_id: p.user_id,
-              type: 'system',
-              content: `📣 @TODOS: ${senderName} enviou uma mensagem importante no chat "${channel.name}"`,
-              read: false
-            }));
+            .map(p => ({ user_id: p.user_id, title: 'system', message: `📣 @TODOS: ${senderName} enviou uma mensagem importante no chat "${channel.name}"`, read: false
+             }));
           await supabase.from("notifications").insert(notifs);
           toast.success("📣 Chamado Geral enviado para todos os bruxos!");
         }
@@ -383,12 +379,8 @@ export default function ChatRoom() {
           const senderName = profile?.username || 'alguém';
           const notifs = mentionedProfiles
             .filter(p => p.user_id !== user.id)
-            .map(p => ({
-              user_id: p.user_id,
-              type: 'mention',
-              content: `@${senderName} mencionou você no chat "${channel.name}"`,
-              read: false
-            }));
+            .map(p => ({ user_id: p.user_id, title: 'mention', message: `@${senderName} mencionou você no chat "${channel.name}"`, read: false
+             }));
           if (notifs.length > 0) {
             await supabase.from('notifications').insert(notifs);
           }

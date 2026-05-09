@@ -1,3 +1,4 @@
+import { playMagicSound } from "@/lib/sounds";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,9 +17,9 @@ import MagicalGaleon from "@/components/MagicalGaleon";
 
 // ─── Tipos ────────────────────────────────────────────────
 interface StoreItem {
-  id: string; name: string; description: string; category: string;
-  price_galeons: number; image_url: string; rarity: string;
-  is_featured: boolean;
+  id: string; name: string; description?: string; category: string;
+  price_galeons: number; image_url: string; rarity?: string;
+  is_featured?: boolean;
 }
 
 // ─── Pacotes de Galeões ────────────────────────────────────
@@ -167,12 +168,12 @@ export default function GringottsStore() {
         p_slug:            slug,
       });
       if (error) throw new Error(error.message);
-      if (data?.success) {
+      if ((data as any)?.success) {
         if (data.type === "vip") toast.success(`🎉 Plano ${data.plan?.toUpperCase()} ativado! Bem-vindo ao VIP!`, { duration: 6000 });
         else toast.success(`🎉 ${data.galeons} Galeões adicionados à sua conta!`, { duration: 6000 });
         setPendingOrderId(null);
         setTimeout(() => window.location.reload(), 1500);
-      } else if (data?.message === "Já processado") {
+      } else if ((data as any)?.message === "Já processado") {
         toast.info("✅ Pagamento já confirmado anteriormente!");
         setPendingOrderId(null);
       } else {
