@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import HouseCrest from "@/components/HouseCrest";
 import SafeImage from "@/components/SafeImage";
 import { House } from "@/lib/store";
-import { UserPlus, UserCheck, Heart, Users } from "lucide-react";
+import { UserPlus, UserCheck, Heart, Users, Camera } from "lucide-react";
 
 interface Character {
   id: string;
