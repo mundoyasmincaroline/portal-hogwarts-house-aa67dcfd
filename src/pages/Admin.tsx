@@ -219,7 +219,7 @@ function MonetizationTab({ members, fetchAll, adForm, setAdForm, ads, createAd, 
                 if (orderErr) throw orderErr;
 
                 // 2. Solicitar link (etapa 1 RPC)
-                const { data: started, error: startErr } = await supabase.rpc("start_payment_request", {
+                const { data: dataAny: started, error: startErr } = await supabase.rpc("start_payment_request", {
                   p_order_id: order.id,
                   p_amount_brl: 1.00,
                   p_description: "PEDIDO TESTE - Portal Hogwarts",
@@ -393,14 +393,14 @@ function PartiesTab() {
   useEffect(() => { loadParties(); }, []);
 
   const loadParties = async () => {
-    const { data } = await supabase.from("site_events").select("*").order("created_at", { ascending: false });
+    const { data } = await supabase.from("site_events" as any).select("*").order("created_at", { ascending: false });
     setParties(data || []);
     setLoading(false);
   };
 
   const createParty = async () => {
     if (!form.title) return toast.error("Dê um nome para a festa!");
-    const { error } = await supabase.from("site_events").insert({
+    const { error } = await supabase.from("site_events" as any).insert({
       ...form,
       active: false,
       foods: form.foods.split(",").map(f => f.trim())
@@ -416,16 +416,16 @@ function PartiesTab() {
 
   const toggleParty = async (id: string, current: boolean) => {
     if (!current) {
-      await supabase.from("site_events").update({ active: false } as never).neq("id", id);
+      await supabase.from("site_events" as any).update({ active: false } as never).neq("id", id);
     }
-    const { error } = await supabase.from("site_events").update({ active: !current } as never).eq("id", id);
+    const { error } = await supabase.from("site_events" as any).update({ active: !current } as never).eq("id", id);
     if (error) toast.error("Erro ao atualizar status.");
     else loadParties();
   };
 
   const deleteParty = async (id: string) => {
     if (!confirm("Deseja cancelar esta festa permanentemente?")) return;
-    const { error } = await supabase.from("site_events").delete().eq("id", id);
+    const { error } = await supabase.from("site_events" as any).delete().eq("id", id);
     if (error) toast.error("Erro ao deletar.");
     else loadParties();
   };

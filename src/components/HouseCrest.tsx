@@ -7,10 +7,11 @@ const crests: Record<House, { letter: string; bg: string }> = {
   hufflepuff: { letter: "H", bg: "from-hufflepuff to-hufflepuff-black" },
 };
 
-export default function HouseCrest({ house, size = "md" }: { house: House; size?: "sm" | "md" | "lg" }) {
+export default function HouseCrest({ house, size = "md" }: { house: House; size?: "xs" | "sm" | "md" | "lg" }) {
   const safeHouse = house || "gryffindor";
   const c = crests[safeHouse] || crests.gryffindor;
   const sizeClasses = {
+    xs: "w-5 h-5 text-[9px]",
     sm: "w-8 h-8 text-lg",
     md: "w-12 h-12 text-2xl",
     lg: "w-20 h-20 text-5xl",

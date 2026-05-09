@@ -199,7 +199,7 @@ export default function Feed() {
     setNewMusicUrl("");
     toast.success("Publicado! ✨");
     // +2 Galeões por publicar
-    supabase.rpc("award_galeons", { _user_id: user.id, _amount: 2, _reason: "post" }).then(() => {});
+    supabase.rpc("award_galeons" as any, { _user_id: user.id, _amount: 2, _reason: "post" }).then(() => {});
   };
 
   const toggleReaction = async (postId: string, emoji: string, mine: boolean) => {

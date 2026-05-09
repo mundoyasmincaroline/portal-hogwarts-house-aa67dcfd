@@ -34,8 +34,7 @@ export default function AdminFinance() {
   useEffect(() => {
     loadFinanceData();
     // Real-time subscription to orders
-    const sub = supabase.channel("admin_finance")
-      .on("postgres_changes", { event: "*", table: "galeon_orders" }, () => loadFinanceData())
+    const sub = (supabase.channel("admin_finance") as any).on("postgres_changes", { event: "*", table: "galeon_orders" }, () => loadFinanceData())
       .subscribe();
     return () => { supabase.removeChannel(sub); };
   }, []);
