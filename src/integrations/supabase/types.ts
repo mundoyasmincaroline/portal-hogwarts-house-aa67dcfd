@@ -361,15 +361,23 @@ export type Database = {
           adult_job: string | null
           age: number | null
           age_category: string
+          alignment: string | null
+          amortentia: string | null
+          animago_form: string | null
           avatar_url: string | null
           background: string | null
+          best_subject: string | null
+          birthday: string | null
           blood_status: string | null
+          boggart: string | null
+          broomstick: string | null
           canon_era: string | null
           canon_notes: string | null
           canon_portrayed_by: string | null
           character_type: string
           created_at: string | null
           dreams: string | null
+          faction: string | null
           family_father: string | null
           family_mother: string | null
           family_relatives: string | null
@@ -380,10 +388,16 @@ export type Database = {
           full_name: string
           gender: string
           history: string | null
+          hobbies: string | null
           house: Database["public"]["Enums"]["house_type"] | null
+          hp: number | null
           id: string
           instagram: string | null
           level: number | null
+          max_hp: number | null
+          mbti: string | null
+          mirror_of_erised: string | null
+          nationality: string | null
           pair_character_id: string | null
           patronus: string | null
           personality: string | null
@@ -391,13 +405,21 @@ export type Database = {
           pet_avatar: string | null
           pet_name: string | null
           physical_description: string | null
+          quidditch_position: string | null
           quotes: string | null
           relationship_status: string | null
+          school_year: number | null
           secrets: string | null
+          special_skills: string | null
           strength: string | null
           user_id: string
           wand: string | null
+          wand_core: string | null
+          wand_flexibility: string | null
+          wand_length: string | null
+          wand_wood: string | null
           weakness: string | null
+          worst_subject: string | null
           xp: number | null
           xp_to_next: number | null
         }
@@ -406,15 +428,23 @@ export type Database = {
           adult_job?: string | null
           age?: number | null
           age_category?: string
+          alignment?: string | null
+          amortentia?: string | null
+          animago_form?: string | null
           avatar_url?: string | null
           background?: string | null
+          best_subject?: string | null
+          birthday?: string | null
           blood_status?: string | null
+          boggart?: string | null
+          broomstick?: string | null
           canon_era?: string | null
           canon_notes?: string | null
           canon_portrayed_by?: string | null
           character_type: string
           created_at?: string | null
           dreams?: string | null
+          faction?: string | null
           family_father?: string | null
           family_mother?: string | null
           family_relatives?: string | null
@@ -425,10 +455,16 @@ export type Database = {
           full_name: string
           gender?: string
           history?: string | null
+          hobbies?: string | null
           house?: Database["public"]["Enums"]["house_type"] | null
+          hp?: number | null
           id?: string
           instagram?: string | null
           level?: number | null
+          max_hp?: number | null
+          mbti?: string | null
+          mirror_of_erised?: string | null
+          nationality?: string | null
           pair_character_id?: string | null
           patronus?: string | null
           personality?: string | null
@@ -436,13 +472,21 @@ export type Database = {
           pet_avatar?: string | null
           pet_name?: string | null
           physical_description?: string | null
+          quidditch_position?: string | null
           quotes?: string | null
           relationship_status?: string | null
+          school_year?: number | null
           secrets?: string | null
+          special_skills?: string | null
           strength?: string | null
           user_id: string
           wand?: string | null
+          wand_core?: string | null
+          wand_flexibility?: string | null
+          wand_length?: string | null
+          wand_wood?: string | null
           weakness?: string | null
+          worst_subject?: string | null
           xp?: number | null
           xp_to_next?: number | null
         }
@@ -451,15 +495,23 @@ export type Database = {
           adult_job?: string | null
           age?: number | null
           age_category?: string
+          alignment?: string | null
+          amortentia?: string | null
+          animago_form?: string | null
           avatar_url?: string | null
           background?: string | null
+          best_subject?: string | null
+          birthday?: string | null
           blood_status?: string | null
+          boggart?: string | null
+          broomstick?: string | null
           canon_era?: string | null
           canon_notes?: string | null
           canon_portrayed_by?: string | null
           character_type?: string
           created_at?: string | null
           dreams?: string | null
+          faction?: string | null
           family_father?: string | null
           family_mother?: string | null
           family_relatives?: string | null
@@ -470,10 +522,16 @@ export type Database = {
           full_name?: string
           gender?: string
           history?: string | null
+          hobbies?: string | null
           house?: Database["public"]["Enums"]["house_type"] | null
+          hp?: number | null
           id?: string
           instagram?: string | null
           level?: number | null
+          max_hp?: number | null
+          mbti?: string | null
+          mirror_of_erised?: string | null
+          nationality?: string | null
           pair_character_id?: string | null
           patronus?: string | null
           personality?: string | null
@@ -481,13 +539,21 @@ export type Database = {
           pet_avatar?: string | null
           pet_name?: string | null
           physical_description?: string | null
+          quidditch_position?: string | null
           quotes?: string | null
           relationship_status?: string | null
+          school_year?: number | null
           secrets?: string | null
+          special_skills?: string | null
           strength?: string | null
           user_id?: string
           wand?: string | null
+          wand_core?: string | null
+          wand_flexibility?: string | null
+          wand_length?: string | null
+          wand_wood?: string | null
           weakness?: string | null
+          worst_subject?: string | null
           xp?: number | null
           xp_to_next?: number | null
         }
