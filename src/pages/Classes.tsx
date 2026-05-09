@@ -3,7 +3,7 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Clock, BookOpen, Star, AlertCircle } from "lucide-react";
+import { Clock, BookOpen, Star, AlertCircle, GraduationCap } from "lucide-react";
 
 interface SchoolClass {
   id: string;
