@@ -9,7 +9,7 @@ import SafeImage from "@/components/SafeImage";
 interface Sticker {
   id: string;
   character_name: string;
-  rarity: "bronze" | "silver" | "gold";
+  rarity: string;
   image_url: string;
 }
 
