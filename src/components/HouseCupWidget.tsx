@@ -27,8 +27,8 @@ export default function HouseCupWidget({ isLanding = false }: { isLanding?: bool
 
   useEffect(() => {
     fetchScores();
-    const sub = supabase.channel('house_points_updates')
-      .on('postgres_changes', { event: '*', table: 'profiles' }, () => fetchScores())
+    const sub = (supabase as any).channel('house_points_updates')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, () => fetchScores())
       .subscribe();
     return () => { supabase.removeChannel(sub); };
   }, []);
