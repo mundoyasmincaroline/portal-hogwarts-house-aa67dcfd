@@ -162,18 +162,19 @@ export default function GringottsStore() {
   const verifyAndCreditPayment = async (orderNsu: string, transactionNsu: string, slug: string) => {
     try {
       toast.info("🔍 Verificando seu pagamento...");
-      const { data, error } = await supabase.rpc("verify_infinitepay_payment", {
+      const { data: rawData, error } = await supabase.rpc("verify_infinitepay_payment", {
         p_order_nsu:       orderNsu,
         p_transaction_nsu: transactionNsu,
         p_slug:            slug,
       });
+      const data: any = rawData;
       if (error) throw new Error(error.message);
-      if ((data as any)?.success) {
+      if (data?.success) {
         if (data.type === "vip") toast.success(`🎉 Plano ${data.plan?.toUpperCase()} ativado! Bem-vindo ao VIP!`, { duration: 6000 });
         else toast.success(`🎉 ${data.galeons} Galeões adicionados à sua conta!`, { duration: 6000 });
         setPendingOrderId(null);
         setTimeout(() => window.location.reload(), 1500);
-      } else if ((data as any)?.message === "Já processado") {
+      } else if (data?.message === "Já processado") {
         toast.info("✅ Pagamento já confirmado anteriormente!");
         setPendingOrderId(null);
       } else {
@@ -190,14 +191,16 @@ export default function GringottsStore() {
   // ── Gerar Link (2 etapas) ───────────────────
   const createInfinitePayLink = async (orderId: string, amountBrl: number, description: string, userEmail: string, userName: string): Promise<string | null> => {
     try {
-      const { data: started, error: startErr } = await supabase.rpc("start_payment_request", {
+      const { data: startedRaw, error: startErr } = await supabase.rpc("start_payment_request", {
         p_order_id: orderId, p_amount_brl: amountBrl, p_description: description, p_user_id: user?.id, p_user_email: userEmail, p_user_name: userName,
       });
+      const started: any = startedRaw;
       if (startErr || !started?.success) return null;
       const requestId: number = started.request_id;
       for (let attempt = 1; attempt <= 4; attempt++) {
         await new Promise(r => setTimeout(r, 2000));
-        const { data: result } = await supabase.rpc("get_payment_link", { p_request_id: requestId, p_order_id: orderId });
+        const { data: resultRaw } = await supabase.rpc("get_payment_link", { p_request_id: requestId, p_order_id: orderId });
+        const result: any = resultRaw;
         if (result?.ready && result?.payment_url) return result.payment_url;
       }
       return null;
