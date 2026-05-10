@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import SafeImage from "@/components/SafeImage";
+import MagicalEmoji from "@/components/MagicalEmoji";
 
 interface Sticker {
   id: string;
@@ -81,6 +82,7 @@ export default function StickerTrades() {
 
       const enriched: Trade[] = tradesData.map(t => ({
         ...t,
+        status: t.status as Trade["status"],
         offered_sticker: stickerMap[t.offered_sticker_id],
         wanted_sticker: t.wanted_sticker_id ? stickerMap[t.wanted_sticker_id] : null,
         offerer_profile: profileMap[t.offerer_id] || { full_name: "Bruxo", username: "bruxo", avatar_url: null },

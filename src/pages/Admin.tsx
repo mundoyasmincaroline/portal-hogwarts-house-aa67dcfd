@@ -219,7 +219,7 @@ function MonetizationTab({ members, fetchAll, adForm, setAdForm, ads, createAd, 
                 if (orderErr) throw orderErr;
 
                 // 2. Solicitar link (etapa 1 RPC)
-                const { data: dataAny: started, error: startErr } = await supabase.rpc("start_payment_request", {
+                const { data: started, error: startErr } = await (supabase as any).rpc("start_payment_request", {
                   p_order_id: order.id,
                   p_amount_brl: 1.00,
                   p_description: "PEDIDO TESTE - Portal Hogwarts",
@@ -236,7 +236,7 @@ function MonetizationTab({ members, fetchAll, adForm, setAdForm, ads, createAd, 
                 let paymentUrl = null;
                 for (let i = 0; i < 5; i++) {
                   await new Promise(r => setTimeout(r, 2000));
-                  const { data: result } = await supabase.rpc("get_payment_link", { p_request_id: requestId, p_order_id: order.id });
+                  const { data: result } = await (supabase as any).rpc("get_payment_link", { p_request_id: requestId, p_order_id: order.id });
                   if (result?.ready && result?.payment_url) {
                     paymentUrl = result.payment_url;
                     break;
