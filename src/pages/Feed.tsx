@@ -151,7 +151,7 @@ export default function Feed() {
   }, [loadFeed, loadSidebar]);
 
   useEffect(() => {
-    if (profile && profile.has_seen_intro === false) {
+    if (profile && (profile as any).has_seen_intro === false) {
       // Pequeno delay para não abrir instantaneamente no fade-in da página
       const timer = setTimeout(() => setShowWelcomeChest(true), 1500);
       return () => clearTimeout(timer);
