@@ -2159,15 +2159,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      award_xp_action:
-        | {
-            Args: { _action: string; _user_id: string; _xp: number }
-            Returns: undefined
-          }
-        | {
-            Args: { _action: string; _user_id: string; _xp: number }
-            Returns: undefined
-          }
+      award_xp_action: {
+        Args: { _action: string; _user_id: string; _xp: number }
+        Returns: undefined
+      }
       complete_referral_action: {
         Args: { _invited_id: string }
         Returns: undefined
