@@ -3,7 +3,7 @@ import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Castle, BookOpen, User, MessageCircle, Camera, Trophy,
   Shield, Swords, Library, ShoppingBag, ScrollText,
-  LogOut, Volume2, VolumeX, RefreshCw, Menu, Users,
+  LogOut, Volume2, VolumeX, Menu, Users,
   Lock, Wallet, Sparkles, Zap, Image as ImageIcon,
   GraduationCap
 } from "lucide-react";
@@ -27,6 +27,7 @@ import HouseCupWidget from "@/components/HouseCupWidget";
 import DailyProphetTicker from "@/components/DailyProphetTicker";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import AmbientAudio from "@/components/AmbientAudio";
+import TurnSwitcher from "@/components/TurnSwitcher";
 
 const NAV_ITEMS = [
   { icon: <MagicalIcon icon={Castle} size="xs" color="#60a5fa" />, label: "O Castelo", path: "/dashboard" },
@@ -220,14 +221,7 @@ export default function DashboardLayout() {
             </Link>
 
             <div className="flex items-center gap-1 shrink-0">
-              <button
-                onClick={async () => {
-                  await supabase.from("profiles").update({ active_character_id: null } as never).eq("user_id", user.id);
-                  window.location.reload();
-                }}
-                className="p-1.5 text-muted-foreground hover:bg-secondary/80 hover:text-primary rounded-md"
-                title="Trocar Personagem"
-              ><RefreshCw size={14} /></button>
+              <TurnSwitcher />
               <button
                 onClick={() => setSoundOn(toggleSound())}
                 className="p-1.5 text-muted-foreground hover:bg-secondary/80 hover:text-primary rounded-md"
