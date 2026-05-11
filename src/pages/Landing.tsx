@@ -105,9 +105,6 @@ export default function Landing() {
                 "O portal definitivo para bruxos e bruxas. Um mundo de <span className="text-primary font-bold">gamificação</span>, <span className="text-primary font-bold">RPG imersivo</span>, 
                 coleções mágicas e uma comunidade de elite que vive e respira a verdadeira magia."
               </p>
-              <div className="mt-4 pt-4 border-t border-white/5">
-                <p className="text-[10px] text-white/30 uppercase tracking-[0.4em] font-mono">✦ Mundo Yasmin Caroline ✦</p>
-              </div>
             </div>
           </div>
 
