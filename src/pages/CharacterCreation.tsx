@@ -47,6 +47,25 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
   const [relationshipStatus, setRelationshipStatus] = useState<"single"|"paired">("single");
   const [searchingPair, setSearchingPair] = useState(false);
 
+  // Carrega rascunho do Cadastro-Rito (Register.tsx) na primeira ficha
+  useEffect(() => {
+    const raw = localStorage.getItem("pending_character_draft");
+    if (!raw) return;
+    try {
+      const draft = JSON.parse(raw);
+      const wandWood = draft.wand_wood ? String(draft.wand_wood) : "";
+      const wandCore = draft.wand_core ? String(draft.wand_core) : "";
+      const wand = [wandWood, wandCore].filter(Boolean).join(" + ");
+      setForm((f) => ({
+        ...f,
+        blood_status: draft.blood_status || f.blood_status,
+        house: draft.house || f.house,
+        wand: wand || f.wand,
+      }));
+      localStorage.removeItem("pending_character_draft");
+    } catch { /* ignore */ }
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>) =>
     setForm(f => ({ ...f, [e.target.name]: e.target.value }));
 

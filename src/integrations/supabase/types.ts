@@ -368,6 +368,7 @@ export type Database = {
           background: string | null
           best_subject: string | null
           birthday: string | null
+          blood_locked: boolean
           blood_status: string | null
           boggart: string | null
           broomstick: string | null
@@ -382,6 +383,7 @@ export type Database = {
           family_mother: string | null
           family_relatives: string | null
           family_siblings: string | null
+          father_id: string | null
           favorite_class: string | null
           favorite_spell: string | null
           fears: string | null
@@ -397,6 +399,7 @@ export type Database = {
           max_hp: number | null
           mbti: string | null
           mirror_of_erised: string | null
+          mother_id: string | null
           nationality: string | null
           pair_character_id: string | null
           patronus: string | null
@@ -435,6 +438,7 @@ export type Database = {
           background?: string | null
           best_subject?: string | null
           birthday?: string | null
+          blood_locked?: boolean
           blood_status?: string | null
           boggart?: string | null
           broomstick?: string | null
@@ -449,6 +453,7 @@ export type Database = {
           family_mother?: string | null
           family_relatives?: string | null
           family_siblings?: string | null
+          father_id?: string | null
           favorite_class?: string | null
           favorite_spell?: string | null
           fears?: string | null
@@ -464,6 +469,7 @@ export type Database = {
           max_hp?: number | null
           mbti?: string | null
           mirror_of_erised?: string | null
+          mother_id?: string | null
           nationality?: string | null
           pair_character_id?: string | null
           patronus?: string | null
@@ -502,6 +508,7 @@ export type Database = {
           background?: string | null
           best_subject?: string | null
           birthday?: string | null
+          blood_locked?: boolean
           blood_status?: string | null
           boggart?: string | null
           broomstick?: string | null
@@ -516,6 +523,7 @@ export type Database = {
           family_mother?: string | null
           family_relatives?: string | null
           family_siblings?: string | null
+          father_id?: string | null
           favorite_class?: string | null
           favorite_spell?: string | null
           fears?: string | null
@@ -531,6 +539,7 @@ export type Database = {
           max_hp?: number | null
           mbti?: string | null
           mirror_of_erised?: string | null
+          mother_id?: string | null
           nationality?: string | null
           pair_character_id?: string | null
           patronus?: string | null
@@ -558,6 +567,20 @@ export type Database = {
           xp_to_next?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "characters_father_id_fkey"
+            columns: ["father_id"]
+            isOneToOne: false
+            referencedRelation: "characters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "characters_mother_id_fkey"
+            columns: ["mother_id"]
+            isOneToOne: false
+            referencedRelation: "characters"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "characters_pair_character_id_fkey"
             columns: ["pair_character_id"]
@@ -2162,6 +2185,10 @@ export type Database = {
       award_xp_action: {
         Args: { _action: string; _user_id: string; _xp: number }
         Returns: undefined
+      }
+      calc_blood_status: {
+        Args: { _father_id: string; _mother_id: string }
+        Returns: string
       }
       complete_referral_action: {
         Args: { _invited_id: string }
