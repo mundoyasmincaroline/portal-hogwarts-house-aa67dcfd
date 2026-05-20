@@ -1,5 +1,5 @@
 import { playMagicSound } from "@/lib/sounds";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -9,6 +9,9 @@ import { Badge } from "@/components/ui/badge";
 import StoreItemVisual from "@/components/StoreItemVisual";
 import SafeImage from "@/components/SafeImage";
 import MagicalGaleon from "@/components/MagicalGaleon";
+import { useStore } from "@/hooks/useStore";
+import { storeService, StoreItem } from "@/services/storeService";
+import { CATEGORY_LABELS, RARITY_LABELS } from "@/constants/gameConstants";
 
 // ─── Config ────────────────────────────────────────────────────────────
 // Tudo via supabase.rpc() — sem CORS, server-side via pg_net
@@ -119,32 +122,12 @@ const TABS = [
 
 export default function GringottsStore() {
   const { user, profile } = useAuth();
+  const { items, owned, loading, buyingId, loadStore, buyItem: handleBuyItem, galeons } = useStore();
   const [tab, setTab] = useState("featured");
-  const [items, setItems] = useState<StoreItem[]>([]);
-  const [owned, setOwned] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [buying, setBuying] = useState<string|null>(null);
   const [pendingOrderId, setPendingOrderId] = useState<string|null>(null);
+  const [buyingPackageId, setBuyingPackageId] = useState<string|null>(null);
 
-  useEffect(() => { loadStore(); }, [user?.id]);
-
-  const loadStore = async () => {
-    const { data } = await supabase.from("store_items").select("*").eq("is_active", true).order("price_galeons");
-    
-    // Mesclar itens do banco com os itens Monster Quality hardcoded
-    const dbItems = data || [];
-    const allItems = [...MONSTER_QUALITY_ITEMS, ...dbItems];
-    
-    // Remover duplicatas por ID caso existam no banco
-    const uniqueItems = allItems.filter((v, i, a) => a.findIndex(t => t.id === v.id) === i);
-    
-    setItems(uniqueItems);
-    if (user) {
-      const { data: myItems } = await supabase.from("user_items").select("item_id").eq("user_id", user.id);
-      setOwned((myItems || []).map(i => i.item_id));
-    }
-    setLoading(false);
-  };
+  useEffect(() => { loadStore(); }, [loadStore]);
 
   // ── Detectar retorno de pagamento na URL ─────────────────
   useEffect(() => {
@@ -212,7 +195,7 @@ export default function GringottsStore() {
   // ── Comprar Galeões ───────────────────────────────────────
   const buyGaleons = async (pkg: typeof GALEON_PACKAGES[0]) => {
     if (!user || !profile) return toast.error("Você precisa estar logado.");
-    setBuying(pkg.id);
+    setBuyingPackageId(pkg.id);
     try {
       const { data: order, error } = await supabase.from("galeon_orders").insert({
         user_id: user.id, package_id: pkg.id, amount_brl: pkg.price_brl, galeons: pkg.galeons, status: "pending",
@@ -265,7 +248,7 @@ export default function GringottsStore() {
   // ── Assinar VIP ───────────────────────────────────────────
   const buyVip = async (plan: typeof VIP_PLANS[0]) => {
     if (!user || !profile) return toast.error("Você precisa estar logado.");
-    setBuying(plan.id);
+    setBuyingPackageId(plan.id);
     try {
       const { data: order, error } = await supabase.from("galeon_orders").insert({
         user_id: user.id, package_id: `vip_${plan.id}`, amount_brl: plan.price_brl, galeons: 0, status: "pending",
@@ -278,13 +261,11 @@ export default function GringottsStore() {
       toast.info("💳 Redirecionando...");
       setTimeout(() => { window.location.href = payUrl; }, 800);
     } catch (e: any) { toast.error(e.message || "Erro ao ativar VIP."); }
-    finally { setBuying(null); }
+    finally { setBuyingPackageId(null); }
   };
 
-  const galeons = profile?.galeons ?? 0;
-  const currentVip = profile?.vip_plan;
-  const filteredItems = items.filter(i => i.category === tab);
-  const featuredItems = items.filter(i => i.is_featured || i.rarity === 'legendary').slice(0, 12);
+  const filteredItems = useMemo(() => items.filter(i => i.category === tab), [items, tab]);
+  const featuredItems = useMemo(() => items.filter(i => i.is_featured || i.rarity === 'legendary').slice(0, 12), [items]);
 
   return (
     <div className="max-w-7xl mx-auto space-y-12 pb-24 px-4 sm:px-6">
