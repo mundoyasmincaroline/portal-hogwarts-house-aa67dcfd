@@ -135,7 +135,7 @@ export default function DashboardLayout() {
     };
   }, [user, pingPresence]);
 
-  if (isLoading) {
+  if (isLoading || hasCharacters === null) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <div className="text-center">
@@ -146,26 +146,11 @@ export default function DashboardLayout() {
     );
   }
 
-  if (!user || !profile) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <div className="text-4xl animate-pulse">🔮</div>
-      </div>
-    );
-  }
-
   if (!profile.approved && !isAdmin) return <PendingApproval />;
   if (!isAdmin && !profile.has_accepted_rules) return <RulesAgreement />;
 
   const adminSkipped = isAdmin && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
 
-  if (hasCharacters === null) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <div className="text-4xl animate-float">⚡</div>
-      </div>
-    );
-  }
 
   if ((!profile.active_character_id || !hasCharacters) && !adminSkipped) {
     return <CharacterSelection adminMode={isAdmin} />;
