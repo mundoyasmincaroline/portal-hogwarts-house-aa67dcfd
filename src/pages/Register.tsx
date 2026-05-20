@@ -101,7 +101,9 @@ export default function Register() {
           const { error: upErr } = await supabase.storage.from("avatars").upload(path, avatarFile, { upsert: true });
           if (!upErr) {
             const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
-            await supabase.from("profiles").update({ avatar_url: `${publicUrl}?t=${Date.now()}` } as never).eq("user_id", signInData.user.id);
+            await supabase.from("profiles").update({ avatar_url: `${publicUrl}?t=${Date.now()}`, blood_status: form.blood } as never).eq("user_id", signInData.user.id);
+          } else {
+            await supabase.from("profiles").update({ blood_status: form.blood } as never).eq("user_id", signInData.user.id);
           }
           await supabase.auth.signOut();
         }
