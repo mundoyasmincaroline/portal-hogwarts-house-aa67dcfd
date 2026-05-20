@@ -60,18 +60,23 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
       const wandWood = draft.wand_wood ? String(draft.wand_wood) : "";
       const wandCore = draft.wand_core ? String(draft.wand_core) : "";
       const wand = [wandWood, wandCore].filter(Boolean).join(" + ");
+      
       setForm((f) => ({
         ...f,
+        full_name: profile?.full_name || f.full_name, // Pré-preenche com nome do registro
         blood_status: draft.blood_status || f.blood_status,
         house: draft.house || f.house,
         wand: wand || f.wand,
+        avatar_url: profile?.avatar_url || f.avatar_url, // Pré-preenche avatar do registro
       }));
       localStorage.removeItem("pending_character_draft");
     } catch { /* ignore */ }
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>) =>
-    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setForm(f => ({ ...f, [name]: value }));
+  };
 
   const handleAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]; if (!file) return;
@@ -125,9 +130,25 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
       toast.error("Por favor, preencha o nome e selecione uma Casa.");
       return;
     }
-    if (!form.full_name || !form.avatar_url && !avatarFile || !form.blood_status || !form.wand || !form.patronus || !form.personality || !form.strength || !form.weakness || !form.fears || !form.dreams) {
-      toast.error("Preencha todos os campos obrigatórios da ficha!");
+    if (!form.full_name || !form.house) {
+      toast.error("Por favor, preencha o nome e selecione uma Casa.");
       return;
+    }
+    
+    // Campos mínimos para permitir avanço se for o primeiro personagem (vindo do rito)
+    const isFirstCharacter = !profile?.active_character_id;
+    
+    if (isFirstCharacter) {
+       // No primeiro personagem, somos mais flexíveis ou garantimos que os dados do rito estão aqui
+       if (!form.avatar_url && !avatarFile) {
+         toast.error("O castelo precisa ver seu rosto! Adicione uma foto.");
+         return;
+       }
+    } else {
+      if (!form.avatar_url && !avatarFile || !form.blood_status || !form.wand || !form.patronus || !form.personality || !form.strength || !form.weakness || !form.fears || !form.dreams) {
+        toast.error("Preencha todos os campos obrigatórios da ficha!");
+        return;
+      }
     }
     if (type === "canon" && !form.canon_portrayed_by) {
       toast.error("Informe o ator/atriz original do personagem Canon!");
@@ -194,7 +215,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
         await supabase.from("canon_claims").insert({ canon_name: form.full_name, user_id: user.id } as never).select();
       }
 
-      await supabase.from("profiles").update({ active_character_id: char!.id } as never).eq("user_id", user.id);
+      await supabase.from("profiles").update({ active_character_id: char!.id, has_seen_intro: false } as never).eq("user_id", user.id);
       toast.success(`Ficha ${type === "oc" ? "OC" : "Canon"} criada com sucesso! ✨`);
       onComplete();
     } catch (e: any) {

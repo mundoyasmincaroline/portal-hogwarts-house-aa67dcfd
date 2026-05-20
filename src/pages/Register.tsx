@@ -126,6 +126,7 @@ export default function Register() {
       localStorage.setItem("pending_referral", form.referralCode.trim().toLowerCase().replace("@", ""));
     }
     setStep(6); // carta de aceitação
+    toast.success("Bruxo(a) registrado(a) com sucesso! ✨");
   };
 
   /* ── moldura cinematográfica ── */
