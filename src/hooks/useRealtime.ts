@@ -12,15 +12,10 @@ export function useRealtime<T>(
   filter?: string
 ) {
   const callbackRef = useRef(callback);
-  const instanceIdRef = useRef(
-    typeof crypto !== "undefined" && "randomUUID" in crypto
-      ? crypto.randomUUID()
-      : `${Date.now()}-${Math.random().toString(36).slice(2)}`
-  );
   callbackRef.current = callback;
 
   useEffect(() => {
-    const channelName = `realtime-${table}-${event}-${filter || 'all'}-${instanceIdRef.current}`;
+    const channelName = `realtime-${table}-${event}-${filter || 'all'}-${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const channel = supabase.channel(channelName);
     
     channel
