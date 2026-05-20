@@ -126,6 +126,7 @@ export default function Rules() {
                   
                   <div className="pt-6">
                     <Button 
+
                       variant="plaque" 
                       onClick={() => navigate("/dashboard")}
                       className="h-16 px-12 bg-[#3e2723] text-white border-none shadow-xl hover:scale-105 transition-all"
