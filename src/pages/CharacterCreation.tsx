@@ -35,7 +35,7 @@ const EMPTY = { full_name:"", avatar_url:"", age:"", blood_status:"", gender:"ma
   mother_id: null as string | null, father_id: null as string | null };
 
 export default function CharacterCreation({ onComplete, onCancel, canCancel }: Props) {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   // Step: "select" | "oc" | "canon"
   const [step, setStep] = useState<"select"|"oc"|"canon">("select");
   const [form, setForm] = useState({ ...EMPTY });
