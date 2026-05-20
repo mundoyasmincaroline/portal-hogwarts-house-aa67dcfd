@@ -224,8 +224,8 @@ export default function Feed() {
           )}
 
           {posts.map((post, index) => (
-            <div key={post.id}>
-              {index > 0 && index % 3 === 0 && <MagicAdBanner />}
+            <div key={post.id} className="min-h-[200px]">
+              {index > 0 && index % 5 === 0 && <MagicAdBanner />}
               <div className="glass rounded-xl p-4 animate-fade-in-up">
                 <div className="flex items-center gap-3 mb-3">
                   <div className={`w-10 h-10 rounded-full bg-secondary flex items-center justify-center font-heading text-primary overflow-hidden border-2 shrink-0 ${post.author?.house === 'gryffindor' ? 'border-red-500' : post.author?.house === 'slytherin' ? 'border-green-500' : post.author?.house === 'ravenclaw' ? 'border-blue-500' : 'border-yellow-500'}`}>
