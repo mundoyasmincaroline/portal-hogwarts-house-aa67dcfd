@@ -383,82 +383,54 @@ export default function Profile() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-8 pb-10">
       {/* ── HOUSE THEMED BACKGROUND OVERLAY ── */}
-      <div className={`fixed inset-0 pointer-events-none z-0 transition-opacity duration-1000 opacity-30 ${
-        profile.house === 'gryffindor' ? 'bg-[radial-gradient(circle_at_center,_rgba(220,38,38,0.15),transparent_70%)]' :
-        profile.house === 'slytherin' ? 'bg-[radial-gradient(circle_at_center,_rgba(16,185,129,0.15),transparent_70%)]' :
-        profile.house === 'ravenclaw' ? 'bg-[radial-gradient(circle_at_center,_rgba(37,99,235,0.15),transparent_70%)]' :
-        'bg-[radial-gradient(circle_at_center,_rgba(217,119,6,0.15),transparent_70%)]'
+      <div className={`fixed inset-0 pointer-events-none z-0 transition-opacity duration-1000 opacity-20 ${
+        profile.house === 'gryffindor' ? 'bg-[radial-gradient(circle_at_center,_rgba(220,38,38,0.2),transparent_70%)]' :
+        profile.house === 'slytherin' ? 'bg-[radial-gradient(circle_at_center,_rgba(16,185,129,0.2),transparent_70%)]' :
+        profile.house === 'ravenclaw' ? 'bg-[radial-gradient(circle_at_center,_rgba(37,99,235,0.2),transparent_70%)]' :
+        'bg-[radial-gradient(circle_at_center,_rgba(217,119,6,0.2),transparent_70%)]'
       }`} />
       
-      {/* Abas */}
-      <div className="flex gap-4 border-b border-border mb-6 overflow-x-auto pb-1 scrollbar-hide whitespace-nowrap relative z-10">
-        <button 
-          onClick={() => { setActiveTab("about"); setEditing(false); }} 
-          className={`pb-2 font-heading text-sm transition-colors ${activeTab === "about" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          Sobre
-        </button>
-        <button
-          onClick={() => { setActiveTab("friends"); setEditing(false); }}
-          className={`pb-2 font-heading text-sm transition-colors ${activeTab === "friends" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          Amigos ({friends.length})
-        </button>
-        <button
-          onClick={() => { setActiveTab("members"); setEditing(false); }}
-          className={`pb-2 font-heading text-sm transition-colors ${activeTab === "members" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          👥 Membros
-        </button>
-        <button 
-          onClick={() => { setActiveTab("fichas"); setEditing(false); }} 
-          className={`pb-2 font-heading text-sm transition-colors ${activeTab === "fichas" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          Fichas 📜
-        </button>
-        <button 
-          onClick={() => { setActiveTab("album"); setEditing(false); }} 
-          className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "album" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          Álbum
-        </button>
-        <button 
-          onClick={() => { setActiveTab("achievements"); setEditing(false); }} 
-          className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "achievements" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          🏆 Conquistas
-        </button>
-        <button 
-          onClick={() => { setActiveTab("inventory"); setEditing(false); }} 
-          className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "inventory" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          🎒 Inventário
-        </button>
-        {isMe && (
-          <button 
-            onClick={() => { setActiveTab("referral"); setEditing(false); }} 
-            className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "referral" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
+      {/* Premium Navigation Tabs */}
+      <div className="flex gap-1 border-b border-white/5 mb-8 overflow-x-auto pb-px scrollbar-hide whitespace-nowrap relative z-10 p-1 bg-card/40 backdrop-blur-md rounded-2xl">
+        {[
+          { id: "about", label: "Sobre", icon: "👤" },
+          { id: "friends", label: `Amigos (${friends.length})`, icon: "🤝" },
+          { id: "members", label: "Membros", icon: "👥" },
+          { id: "fichas", label: "Fichas", icon: "📜" },
+          { id: "album", label: "Álbum", icon: "📸" },
+          { id: "achievements", label: "Conquistas", icon: "🏆" },
+          { id: "inventory", label: "Inventário", icon: "🎒" },
+          ...(isMe ? [{ id: "referral", label: "Recrutamento", icon: "📢" }] : []),
+          ...(isMe ? [{ id: "security", label: "Segurança", icon: "🔒" }] : []),
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => { setActiveTab(tab.id as any); setEditing(false); }}
+            className={`relative px-4 py-2.5 rounded-xl font-heading text-xs transition-all flex items-center gap-2 group ${
+              activeTab === tab.id ? "text-primary" : "text-muted-foreground hover:text-foreground"
+            }`}
           >
-            Recrutamento
+            {activeTab === tab.id && (
+              <motion.div 
+                layoutId="active-tab-indicator"
+                className="absolute inset-0 bg-primary/10 border border-primary/20 rounded-xl"
+                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              />
+            )}
+            <span className="relative z-10">{tab.icon}</span>
+            <span className="relative z-10">{tab.label}</span>
           </button>
-        )}
-        {isMe && (
-          <button 
-            onClick={() => { setActiveTab("security"); setEditing(false); }} 
-            className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "security" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-          >
-            Segurança
-          </button>
-        )}
-        {(isMe && (isAdmin || profile?.username === 'morpheus' || user?.email === 'paulormorpheus21@gmail.com')) && (
+        ))}
+        
+        {isMe && (isAdmin || profile?.username === 'morpheus' || user?.email === 'paulormorpheus21@gmail.com') && (
           <button 
             onClick={() => navigate("/dashboard/matrix")} 
-            className="pb-2 font-heading text-sm transition-colors shrink-0 text-cyan-400 hover:text-cyan-300 flex items-center gap-2 animate-pulse"
+            className="px-4 py-2.5 rounded-xl font-heading text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-2"
           >
-            <div className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]" />
-            Revolution
+            <div className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee] animate-pulse" />
+            <span>Matrix</span>
           </button>
         )}
       </div>
