@@ -10,7 +10,7 @@ import StoreItemVisual from "@/components/StoreItemVisual";
 import SafeImage from "@/components/SafeImage";
 import MagicalGaleon from "@/components/MagicalGaleon";
 import { useStore } from "@/hooks/useStore";
-import { storeService, StoreItem } from "@/services/storeService";
+import { storeService, StoreItem as ServiceStoreItem } from "@/services/storeService";
 import { CATEGORY_LABELS, RARITY_LABELS } from "@/constants/gameConstants";
 
 // ─── Config ────────────────────────────────────────────────────────────
@@ -19,11 +19,8 @@ import { CATEGORY_LABELS, RARITY_LABELS } from "@/constants/gameConstants";
 
 
 // ─── Tipos ────────────────────────────────────────────────
-interface StoreItem {
-  id: string; name: string; description?: string; category: string;
-  price_galeons: number; image_url: string; rarity?: string;
-  is_featured?: boolean;
-}
+// Usando o tipo do serviço para evitar conflitos
+type StoreItem = ServiceStoreItem;
 
 // ─── Pacotes de Galeões ────────────────────────────────────
 const GALEON_PACKAGES = [
