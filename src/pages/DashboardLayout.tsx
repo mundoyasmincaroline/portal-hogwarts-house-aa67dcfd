@@ -112,7 +112,8 @@ export default function DashboardLayout() {
       setDmUnread(count || 0);
     };
     countUnread();
-    const ch = (supabase.channel("dm_unread_badge") as any)
+    const channelId = `dm_unread_badge:${user.id}:${Date.now()}:${Math.random().toString(36).slice(2)}`;
+    const ch = (supabase.channel(channelId) as any)
       .on("postgres_changes", { event: "*", schema: "public", table: "dm_messages" }, countUnread)
       .subscribe();
     return () => { supabase.removeChannel(ch); };
