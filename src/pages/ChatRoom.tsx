@@ -240,8 +240,9 @@ export default function ChatRoom() {
   useEffect(() => {
     if (!channel?.id) return;
     
+    const channelId = `messages:${channel.id}:${Date.now()}:${Math.random().toString(36).slice(2)}`;
     const subscription = supabase
-      .channel(`messages:${channel.id}`)
+      .channel(channelId)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `channel_id=eq.${channel.id}` }, async (payload) => {
         // Só adiciona ao vivo se a data selecionada for hoje
         const todayStr = new Date().toLocaleDateString('en-CA');
