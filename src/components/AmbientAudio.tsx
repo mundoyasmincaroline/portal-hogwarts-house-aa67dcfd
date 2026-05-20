@@ -29,15 +29,18 @@ export default function AmbientAudio() {
   // Toca/pausa conforme estado
   useEffect(() => {
     if (!loaded) return;
-    if (!audioRef.current) {
+    
+    // Lazy initialize audio only if enabled to save initial bandwidth/memory
+    if (enabled && !audioRef.current) {
       const a = new Audio(AMBIENT_URL);
       a.loop = true;
       a.volume = 0.18;
       audioRef.current = a;
     }
-    if (enabled) {
+
+    if (enabled && audioRef.current) {
       audioRef.current.play().catch(() => {});
-    } else {
+    } else if (audioRef.current) {
       audioRef.current.pause();
     }
   }, [enabled, loaded]);
