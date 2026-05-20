@@ -93,6 +93,10 @@ export default function DashboardLayout() {
 
   useAchievements(user?.id, profile?.xp ?? 0, profile?.level ?? 1);
 
+  // Hooks must be called unconditionally - keep above any early returns
+  const house = useMemo(() => HOUSES[(profile?.house as House) || "gryffindor"] || HOUSES.gryffindor, [profile?.house]);
+  const groups = useMemo(() => isAdmin ? [...NAV_GROUPS, ADMIN_GROUP] : NAV_GROUPS, [isAdmin]);
+
   useEffect(() => {
     if (!user) return;
     (async () => {
@@ -151,9 +155,6 @@ export default function DashboardLayout() {
   if ((!profile.active_character_id || !hasCharacters) && !adminSkipped) {
     return <CharacterSelection adminMode={isAdmin} />;
   }
-
-  const house = useMemo(() => HOUSES[profile.house as House] || HOUSES.gryffindor, [profile.house]);
-  const groups = useMemo(() => isAdmin ? [...NAV_GROUPS, ADMIN_GROUP] : NAV_GROUPS, [isAdmin]);
 
   return (
     <div className="flex h-screen bg-background overflow-hidden relative">
