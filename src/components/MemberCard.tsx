@@ -131,22 +131,23 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
 
   if (compact) {
     return (
-      <div
+      <motion.div
         onClick={goToProfile}
-        className="flex items-center gap-3 p-4 rounded-2xl glass border border-white/10 hover:border-primary/40 hover:bg-white/5 cursor-pointer transition-all group relative overflow-hidden"
+        whileHover={{ x: 5, backgroundColor: "rgba(255, 255, 255, 0.05)" }}
+        className="flex items-center gap-3 p-4 rounded-2xl glass border border-white/5 hover:border-primary/40 cursor-pointer transition-all group relative overflow-hidden"
       >
-        {isVip && <div className="absolute inset-0 bg-yellow-500/5 pointer-events-none" />}
+        {isVip && <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/5 to-transparent pointer-events-none" />}
         <div className="relative shrink-0">
           <div className="w-12 h-12 shrink-0 relative">
              {isVip && <div className="absolute inset-0 bg-yellow-500/20 rounded-full blur-md animate-pulse" />}
              <SafeImage 
                 src={member.avatar_url || ""} 
                 alt={member.full_name} 
-                className={`w-full h-full rounded-full object-cover border-2 transition-all relative z-10 ${isVip ? "border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.3)]" : "border-white/10"}`} 
+                className={`w-full h-full rounded-full object-cover border-2 transition-all relative z-10 ${isVip ? "border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.3)]" : "border-white/10 group-hover:border-primary/50"}`} 
               />
           </div>
           {member.online !== undefined && (
-            <span className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-4 border-zinc-900 z-20 ${member.online ? "bg-green-500" : "bg-zinc-600"}`} />
+            <span className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-4 border-card z-20 ${member.online ? "bg-green-500 shadow-[0_0_5px_rgba(34,197,94,0.5)]" : "bg-zinc-600"}`} />
           )}
         </div>
         <div className="flex-1 min-w-0 relative z-10">
@@ -154,10 +155,12 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
             <p className="font-heading text-sm text-white truncate group-hover:text-primary transition-colors">{member.full_name}</p>
             {isFounder && <Crown size={12} className="text-yellow-400 shrink-0" />}
           </div>
-          <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-tighter">@{member.username} · Lv.{member.level || 1}</p>
+          <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-tight opacity-60">@{member.username} · Lv.{member.level || 1}</p>
         </div>
-        {member.house && <HouseCrest house={member.house as House} size="xs" />}
-      </div>
+        <div className="shrink-0 opacity-40 group-hover:opacity-100 group-hover:scale-110 transition-all">
+          {member.house && <HouseCrest house={member.house as House} size="xs" />}
+        </div>
+      </motion.div>
     );
   }
 
@@ -180,7 +183,7 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
       {/* House watermark in background */}
       {member.house && (
         <div className="absolute -right-4 -bottom-4 opacity-[0.03] rotate-12 group-hover:scale-110 group-hover:opacity-[0.06] transition-all duration-700 pointer-events-none">
-          <HouseCrest house={member.house as House} size="xl" />
+          <HouseCrest house={member.house as House} size="lg" />
         </div>
       )}
 
