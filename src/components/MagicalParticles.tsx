@@ -24,9 +24,12 @@ export default function MagicalParticles() {
     window.addEventListener("resize", resize);
 
     const isMobile = window.innerWidth < 768;
-    const count = isMobile 
-      ? (theme === "snow" ? 30 : theme === "leaves" ? 10 : 15) 
-      : (theme === "snow" ? 100 : theme === "leaves" ? 30 : 50);
+    const isUltraMobile = window.innerWidth < 400;
+    const count = isUltraMobile
+      ? (theme === "snow" ? 15 : theme === "leaves" ? 5 : 8)
+      : isMobile 
+        ? (theme === "snow" ? 30 : theme === "leaves" ? 10 : 15) 
+        : (theme === "snow" ? 100 : theme === "leaves" ? 30 : 50);
     
     for (let i = 0; i < count; i++) {
       particles.push({
