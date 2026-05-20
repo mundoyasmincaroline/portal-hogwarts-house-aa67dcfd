@@ -63,15 +63,15 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
       
       setForm((f) => ({
         ...f,
-        full_name: profile?.full_name || f.full_name, // Pré-preenche com nome do registro
+        full_name: profile?.full_name || f.full_name,
         blood_status: draft.blood_status || f.blood_status,
         house: draft.house || f.house,
         wand: wand || f.wand,
-        avatar_url: profile?.avatar_url || f.avatar_url, // Pré-preenche avatar do registro
+        avatar_url: profile?.avatar_url || f.avatar_url,
       }));
-      localStorage.removeItem("pending_character_draft");
+      // Removemos o removeItem daqui para garantir que os dados persistam se a página for recarregada antes de salvar
     } catch { /* ignore */ }
-  }, []);
+  }, [profile]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -219,6 +219,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
       }
 
       await supabase.from("profiles").update({ active_character_id: char!.id, has_seen_intro: false } as never).eq("user_id", user.id);
+      localStorage.removeItem("pending_character_draft"); // Remove o rascunho apenas após salvar com sucesso
       toast.success(`Ficha ${type === "oc" ? "OC" : "Canon"} criada com sucesso! ✨`);
       onComplete();
     } catch (e: any) {
