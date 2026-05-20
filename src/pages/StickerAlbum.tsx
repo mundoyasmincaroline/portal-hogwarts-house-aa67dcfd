@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -7,91 +7,52 @@ import { Trophy, Sparkles, Gift, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import StickerVisual from "@/components/StickerVisual";
 import MagicalEmoji from "@/components/MagicalEmoji";
+import { useStickers } from "@/hooks/useStickers";
+import { Sticker } from "@/services/stickerService";
+import { RARITY_COST, PACK_COST } from "@/constants/gameConstants";
 
-interface Sticker {
-  id: string;
-  character_name: string;
-  rarity: "bronze" | "silver" | "gold";
-  image_url: string;
-  level_required: number;
-}
-
-const RARITY_COST = { bronze: 20, silver: 50, gold: 100 };
 const RARITY_ORDER = { bronze: 0, silver: 1, gold: 2 };
 
 export default function StickerAlbum() {
   const { profile, user, fetchProfile } = useAuth();
-  const [stickers, setStickers] = useState<Sticker[]>([]);
-  const [userStickers, setUserStickers] = useState<Record<string, boolean>>({});
-  const [loading, setLoading] = useState(true);
+  const { stickers, userStickers, loading, loadAlbum, buySticker: handleBuySticker } = useStickers();
   const [buyingId, setBuyingId] = useState<string | null>(null);
   const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
   const [activeRarity, setActiveRarity] = useState<"all" | "bronze" | "silver" | "gold">("all");
-  const [completedBanner, setCompletedBanner] = useState(false);
   const [openingPack, setOpeningPack] = useState(false);
   const [packReveal, setPackReveal] = useState<Sticker | null>(null);
   const [packPhase, setPackPhase] = useState<"idle" | "shaking" | "reveal">("idle");
   const navigate = useNavigate();
 
-  useEffect(() => { loadAlbum(); }, [user]);
-
-  const loadAlbum = async () => {
-    if (!user) return;
-    const { data: allStickers } = await supabase.from("stickers").select("*").order("level_required", { ascending: true });
-    const { data: myStickers } = await supabase.from("user_stickers").select("sticker_id").eq("user_id", user.id);
-    setStickers((allStickers as Sticker[]) || []);
-    const myMap: Record<string, boolean> = {};
-    if (myStickers) myStickers.forEach(s => myMap[s.sticker_id] = true);
-    setUserStickers(myMap);
-    setLoading(false);
-
-    if (allStickers && myStickers && allStickers.length > 0 && myStickers.length >= allStickers.length) {
-      setCompletedBanner(true);
-    }
-  };
+  const completedBanner = useMemo(() => {
+    return stickers.length > 0 && Object.keys(userStickers).length >= stickers.length;
+  }, [stickers, userStickers]);
+  const [openingPack, setOpeningPack] = useState(false);
+  const [packReveal, setPackReveal] = useState<Sticker | null>(null);
+  const [packPhase, setPackPhase] = useState<"idle" | "shaking" | "reveal">("idle");
+  const navigate = useNavigate();
 
   const buySticker = async (sticker: Sticker) => {
-    if (!user || !profile) return;
-    const cost = RARITY_COST[sticker.rarity];
-    if (profile.xp < cost) { toast.error(`Você precisa de ${cost} XP para esta figurinha! Você tem ${profile.xp} XP.`); return; }
-
     setBuyingId(sticker.id);
-    try {
-      const { error: xpErr } = await supabase.rpc("award_xp_action", { _action: "buy_sticker", _user_id: user.id, _xp: -cost });
-      if (xpErr) throw xpErr;
-      const { error: insertErr } = await supabase.from("user_stickers").insert({ user_id: user.id, sticker_id: sticker.id } as never);
-      if (insertErr) throw insertErr;
+    const success = await handleBuySticker(sticker);
+    setBuyingId(null);
 
-      const newMap = { ...userStickers, [sticker.id]: true };
-      setUserStickers(newMap);
-      await fetchProfile(user.id);
-
-      toast.success(`✨ Figurinha de ${sticker.character_name} desbloqueada! -${cost} XP`);
-
-      if (Object.keys(newMap).length >= stickers.length) {
-        setCompletedBanner(true);
-        await supabase.rpc("award_xp_action", { _action: "album_complete", _user_id: user.id, _xp: 500 });
-        setTimeout(() => {
-          toast(
-            <div className="text-center">
-              <div className="text-4xl mb-2">🏆</div>
-              <p className="font-heading text-xl text-yellow-400 font-bold">ÁLBUM COMPLETO!</p>
-              <p className="text-sm text-muted-foreground">Você é uma lenda de Hogwarts! +500 XP de bônus!</p>
-            </div>,
-            { duration: 8000 }
-          );
-        }, 500);
-      }
-    } catch (err: any) {
-      toast.error("Erro ao comprar figurinha: " + (err.message || "Tente novamente."));
-    } finally {
-      setBuyingId(null);
+    if (success && stickers.length > 0 && (Object.keys(userStickers).length + 1) >= stickers.length) {
+      setTimeout(() => {
+        toast(
+          <div className="text-center">
+            <div className="text-4xl mb-2">🏆</div>
+            <p className="font-heading text-xl text-yellow-400 font-bold">ÁLBUM COMPLETO!</p>
+            <p className="text-sm text-muted-foreground">Você é uma lenda de Hogwarts! +500 XP de bônus!</p>
+          </div>,
+          { duration: 8000 }
+        );
+      }, 500);
     }
   };
 
   const openSurprisePack = async () => {
     if (!user || !profile) return;
-    const PACK_COST = 80;
 
     if (profile.xp < PACK_COST) {
       toast.error(`Você precisa de ${PACK_COST} XP para abrir um pacote! Você tem apenas ${profile.xp} XP.`);
