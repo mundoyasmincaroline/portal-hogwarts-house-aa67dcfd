@@ -328,15 +328,35 @@ export default function Register() {
 
               <div className="flex gap-3 pt-2">
                 <Button variant="outline" className="font-heading" onClick={back}><ArrowLeft className="w-4 h-4 mr-2" />Voltar</Button>
-                <Button variant="magical" className="flex-1 font-heading" onClick={handleSubmit} disabled={loading}>
-                  {loading ? "Selando a carta…" : "Selar e enviar coruja"}
+                <Button variant="magical" className="flex-1 font-heading" onClick={() => setStep(7)} disabled={loading}>
+                  {loading ? "Preparando..." : "Ver Prévia da Carta"}
                   <Sparkles className="ml-2 w-4 h-4" />
                 </Button>
               </div>
             </div>
           )}
 
-          {/* ─── STEP 6 — CARTA FINAL ─── */}
+          {/* ─── STEP 7 — PRÉVIA DA CARTA ─── */}
+          {step === 7 && (
+            <div className="animate-fade-in">
+              <AcceptanceLetter 
+                fullName={form.fullName}
+                house={form.house ? HOUSES[form.house as House].name : undefined}
+                blood={BLOODS.find(b => b.id === form.blood)?.label}
+                wandWood={WAND_WOODS.find(w => w.id === form.wandWood)?.label}
+                wandCore={WAND_CORES.find(c => c.id === form.wandCore)?.label}
+                onContinue={handleSubmit}
+                isPreview={true}
+              />
+              <div className="mt-4 flex justify-center">
+                <Button variant="ghost" className="text-muted-foreground hover:text-foreground text-xs" onClick={() => setStep(5)}>
+                  <ArrowLeft className="w-3 h-3 mr-1" /> Editar dados
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* ─── STEP 6 — CARTA FINAL (PÓS-CADASTRO) ─── */}
           {step === 6 && (
             <AcceptanceLetter fullName={form.fullName} onContinue={() => navigate("/login")} />
           )}
