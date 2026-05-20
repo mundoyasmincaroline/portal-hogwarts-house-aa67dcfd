@@ -97,16 +97,6 @@ export default function Landing() {
             Hogwarts House
           </h1>
 
-          {/* Cinematic Description Plaque - MONSTER QUALITY */}
-          <div className="relative max-w-2xl mx-auto mb-10 group animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300">
-            <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20 rounded-[2.5rem] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200" />
-            <div className="relative glass rounded-[2.5rem] p-8 md:p-10 border border-white/10 shadow-2xl backdrop-blur-xl bg-black/20">
-              <p className="text-lg sm:text-xl text-white/90 leading-relaxed font-serif font-medium italic">
-                "O portal definitivo para bruxos e bruxas. Um mundo de <span className="text-primary font-bold">gamificação</span>, <span className="text-primary font-bold">RPG imersivo</span>, 
-                coleções mágicas e uma comunidade de elite que vive e respira a verdadeira magia."
-              </p>
-            </div>
-          </div>
 
           {/* Stats - Artifact Style */}
           <div className="flex items-center justify-center gap-4 sm:gap-10 mb-12 flex-wrap animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-500">
