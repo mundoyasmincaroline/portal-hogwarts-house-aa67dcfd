@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Sparkles, Trophy } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import { HOUSES, type House } from "@/lib/store";
@@ -33,6 +33,12 @@ export default function Feed() {
   const [houseStats, setHouseStats] = useState<Record<House, number>>({
     gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0,
   });
+  // Memoize house scores for performance
+  const sortedHouses = useMemo(() => {
+    return Object.values(HOUSES)
+      .map((h) => ({ ...h, points: houseStats[h.id] }))
+      .sort((a, b) => b.points - a.points);
+  }, [houseStats]);
   const [activeChallenges, setActiveChallenges] = useState<{ id: string; title: string; xp_reward: number; type: string }[]>([]);
   const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
   const [bannedWords, setBannedWords] = useState<string[]>([]);
@@ -160,9 +166,6 @@ export default function Feed() {
     setPosts((ps) => ps.map((p) => (p.id === postId ? { ...p, showComments: !p.showComments } : p)));
   };
 
-  const sortedHouses = Object.values(HOUSES)
-    .map((h) => ({ ...h, points: houseStats[h.id] }))
-    .sort((a, b) => b.points - a.points);
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
