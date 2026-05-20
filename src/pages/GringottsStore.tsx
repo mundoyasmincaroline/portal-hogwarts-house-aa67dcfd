@@ -59,18 +59,18 @@ const MONSTER_QUALITY_ITEMS: StoreItem[] = [
 
   // WAND POWER (UPGRADES)
   { id: "mq_upgrade_core", name: "Núcleo de Fibra de Coração de Dragão", category: "upgrade", price_galeons: 2500, image_url: "", rarity: "rare", is_featured: false, description: "Aumenta o dano dos feitiços e a precisão da varinha." },
-  { id: "mq_upgrade_phoenix", name: "Pena de Fênix Real", category: "upgrade", price_galeons: 3500, image_url: "", rarity: "rare", is_featured: true, description: "Concede maior versatilidade e regeneração mágica." },
+  { id: "mq_upgrade_phoenix", name: "Pena de Fênix Real", category: "upgrade", price_galeons: 3500, image_url: "/items/phoenix_feather.jpg", rarity: "rare", is_featured: true, description: "Concede maior versatilidade e regeneração mágica." },
 
   // SPECIAL SPELLS
-  { id: "mq_spell_patronus", name: "Expecto Patronum", category: "spell", price_galeons: 8000, image_url: "", rarity: "legendary", is_featured: true, description: "A defesa suprema contra Dementores. O brilho da sua alma manifestado." },
-  { id: "mq_spell_avada", name: "Avada Kedavra", category: "spell", price_galeons: 25000, image_url: "", rarity: "legendary", is_featured: true, description: "O feitiço proibido. Dano instantâneo e poder absoluto sobre a vida." },
+  { id: "mq_spell_patronus", name: "Expecto Patronum", category: "spell", price_galeons: 8000, image_url: "/items/spell_patronus.jpg", rarity: "legendary", is_featured: true, description: "A defesa suprema contra Dementores. O brilho da sua alma manifestado." },
+  { id: "mq_spell_avada", name: "Avada Kedavra", category: "spell", price_galeons: 25000, image_url: "/items/spell_avada.jpg", rarity: "legendary", is_featured: true, description: "O feitiço proibido. Dano instantâneo e poder absoluto sobre a vida." },
 
   // INGREDIENTS
   { id: "mq_ing_mandrake", name: "Raiz de Mandrágora", category: "potion", price_galeons: 800, image_url: "", rarity: "uncommon", is_featured: false, description: "Essencial para poções de cura severas." },
   { id: "mq_ing_lacewing", name: "Hemeróbios Secos", category: "potion", price_galeons: 500, image_url: "", rarity: "common", is_featured: false, description: "Base para a Poção Polissuco." },
   { id: "mq_ing_unicorn", name: "Sangue de Unicórnio", category: "potion", price_galeons: 3500, image_url: "", rarity: "legendary", is_featured: true, description: "Uma vida amaldiçoada para quem o bebe. Mas mantém você vivo mesmo no limiar da morte." },
-  { id: "mq_item_sword", name: "Espada de Gryffindor", category: "accessory", price_galeons: 20000, image_url: "", rarity: "legendary", is_featured: true, description: "Feita de prata pura por duendes. Absorve o que a fortalece." },
-  { id: "mq_item_firebolt", name: "Vassoura Firebolt", category: "accessory", price_galeons: 50000, image_url: "", rarity: "legendary", is_featured: true, description: "A vassoura de corrida mais rápida do mundo. Aerodinâmica perfeita e cabo de freixo polido." },
+  { id: "mq_item_sword", name: "Espada de Gryffindor", category: "accessory", price_galeons: 20000, image_url: "/items/sword_gryffindor.jpg", rarity: "legendary", is_featured: true, description: "Feita de prata pura por duendes. Absorve o que a fortalece." },
+  { id: "mq_item_firebolt", name: "Vassoura Firebolt", category: "accessory", price_galeons: 50000, image_url: "/items/broom_firebolt.jpg", rarity: "legendary", is_featured: true, description: "A vassoura de corrida mais rápida do mundo. Aerodinâmica perfeita e cabo de freixo polido." },
   { id: "mq_item_snitch", name: "Pomo de Ouro Místico", category: "accessory", price_galeons: 15000, image_url: "https://portal-hogwarts.lovable.app/monster_quality_golden_snitch_cinematic_1776816692257.png", rarity: "legendary", is_featured: true, description: "Brilha com um ouro eterno. Abre ao toque de quem o capturou." },
   { id: "mq_item_founder", name: "Emblema dos Fundadores", category: "accessory", price_galeons: 10000, image_url: "https://portal-hogwarts.lovable.app/hogwarts_founder_emblem_3d_1776816719117.png", rarity: "legendary", is_featured: true, description: "O símbolo máximo de autoridade e tradição mágica." },
   { id: "mq_item_chest_epic", name: "Baú de Relíquias Épicas", category: "upgrade", price_galeons: 1500, image_url: "https://portal-hogwarts.lovable.app/legendary_chest_3d_1776816744823.png", rarity: "legendary", is_featured: true, description: "Contém um item aleatório de raridade Rara ou Lendária. Sorte pura." },
