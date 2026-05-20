@@ -743,7 +743,6 @@ export default function GringottsStore() {
                         </div>
                       )}
                     </div>
-                  </div>
                 );
               })}
             </div>
@@ -754,12 +753,4 @@ export default function GringottsStore() {
   </AnimatePresence>
 </div>
 );
-}
-              })}
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
 }
