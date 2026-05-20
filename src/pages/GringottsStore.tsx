@@ -265,7 +265,7 @@ export default function GringottsStore() {
               <span className="text-xs font-heading text-yellow-500 uppercase tracking-[0.2em] font-bold">Mercado de Relíquias Ancestrais</span>
             </div>
             
-            <h1 className="text-6xl md:text-8xl font-heading text-gold-gradient drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] leading-tight tracking-tighter">
+            <h1 className="text-4xl sm:text-6xl md:text-8xl font-heading text-gold-gradient drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] leading-tight tracking-tighter">
               GRINGOTTS<br/><span className="text-white/90">VAULT</span>
             </h1>
             
@@ -406,7 +406,7 @@ export default function GringottsStore() {
               
               <div className="flex-1 space-y-8 text-center lg:text-left">
                 <div className="space-y-4">
-                  <h3 className="text-4xl md:text-6xl font-heading text-gold-gradient drop-shadow-lg">Robe Azul-Safira do Conhecimento Ancestral</h3>
+                  <h3 className="text-2xl sm:text-4xl md:text-6xl font-heading text-gold-gradient drop-shadow-lg">Robe Azul-Safira do Conhecimento Ancestral</h3>
                   <p className="text-blue-100/70 text-lg font-serif italic leading-relaxed">
                     "Diz a lenda que este manto foi tecido com fios de memórias de bruxos sábios. Ao vesti-lo, a clareza mental do portador atinge níveis inimagináveis."
                   </p>
@@ -434,7 +434,7 @@ export default function GringottsStore() {
                       <span className="text-2xl text-muted-foreground/40 line-through flex items-center gap-1">
                         <MagicalGaleon size="xs" /> 5.000
                       </span>
-                      <span className="text-5xl font-heading text-yellow-400 drop-shadow-[0_0_20px_rgba(251,191,36,0.6)] flex items-center gap-2">
+                      <span className="text-3xl sm:text-5xl font-heading text-yellow-400 drop-shadow-[0_0_20px_rgba(251,191,36,0.6)] flex items-center gap-2">
                         <MagicalGaleon size="sm" /> 3.500
                       </span>
                     </div>
@@ -508,7 +508,7 @@ export default function GringottsStore() {
               </div>
               
               <div className="flex-1 text-center md:text-left space-y-6">
-                <h2 className="text-4xl md:text-5xl font-heading text-purple-100 tracking-tight">Cofre Misterioso de Gringotts</h2>
+                <h2 className="text-2xl sm:text-4xl md:text-5xl font-heading text-purple-100 tracking-tight">Cofre Misterioso de Gringotts</h2>
                 <p className="text-purple-200/60 text-lg font-serif max-w-2xl leading-relaxed">
                   Uma chance única de obter itens que nem o ouro pode comprar. O destino sorri para os corajosos que ousam girar a chave do mistério.
                 </p>

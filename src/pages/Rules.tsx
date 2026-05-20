@@ -21,7 +21,7 @@ export default function Rules() {
       <div className={`relative max-w-4xl w-full transition-all duration-1000 transform ${revealed ? 'scale-100' : 'scale-95 opacity-90'}`}>
         
         {/* Parchment Container */}
-        <div className="relative bg-[#d4b996] rounded-sm shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-[12px] border-[#8b7355] p-1 overflow-hidden min-h-[80vh]">
+        <div className="relative bg-[#d4b996] rounded-sm shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-[6px] sm:border-[12px] border-[#8b7355] p-1 overflow-hidden min-h-[80vh]">
           {/* Paper Texture Overlay */}
           <div className="absolute inset-0 opacity-40 mix-blend-multiply pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/parchment.png')]" />
           <div className="absolute inset-0 opacity-20 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
@@ -30,13 +30,13 @@ export default function Rules() {
           <div className="absolute inset-4 border border-[#5d4037]/30 rounded-sm pointer-events-none" />
           <div className="absolute inset-6 border-2 border-[#5d4037]/10 rounded-sm pointer-events-none" />
 
-          <div className="relative z-10 p-8 md:p-12 h-full flex flex-col">
+          <div className="relative z-10 p-4 sm:p-8 md:p-12 h-full flex flex-col">
             
             {!revealed ? (
               <div className="flex-1 flex flex-col items-center justify-center text-center space-y-12 py-20">
                 <div className="space-y-4">
                   <MagicalEmoji emoji="📜" size="lg" className="mx-auto grayscale opacity-80" />
-                  <h1 className="font-heading text-4xl text-[#5d4037] drop-shadow-sm">O Juramento do Bruxo</h1>
+                  <h1 className="font-heading text-2xl sm:text-4xl text-[#5d4037] drop-shadow-sm">O Juramento do Bruxo</h1>
                   <p className="text-[#5d4037]/70 font-serif italic max-w-md mx-auto text-lg">
                     "Para entrar neste mundo, é preciso mais que uma varinha. É preciso honra."
                   </p>
@@ -62,7 +62,7 @@ export default function Rules() {
                     <Scroll />
                     <Sparkles className="animate-pulse" />
                   </div>
-                  <h1 className="font-heading text-3xl md:text-5xl text-[#3e2723] tracking-tighter">
+                  <h1 className="font-heading text-xl sm:text-3xl md:text-5xl text-[#3e2723] tracking-tighter">
                     𝐎𝐬 𝐃𝐞𝐜𝐫𝐞𝐭𝐨𝐬 𝐝𝐞 𝐇𝐨𝐠𝐰𝐚𝐫𝐭𝐬 𝐇𝐨𝐮𝐬𝐞
                   </h1>
                   <div className="h-1 w-32 bg-gradient-to-r from-transparent via-[#5d4037]/40 to-transparent mx-auto" />
@@ -115,7 +115,7 @@ export default function Rules() {
                 </div>
 
                 {/* Footer Warning */}
-                <div className="mt-12 p-8 border-2 border-dashed border-[#5d4037]/30 bg-black/5 rounded-sm text-center space-y-6">
+                <div className="mt-6 sm:mt-12 p-4 sm:p-8 border-2 border-dashed border-[#5d4037]/30 bg-black/5 rounded-sm text-center space-y-4 sm:space-y-6">
                   <ShieldAlert className="mx-auto text-red-900 w-12 h-12 opacity-80" />
                   <div className="space-y-2">
                     <h4 className="font-heading text-xl text-red-900 uppercase tracking-widest">Aviso do Ministério</h4>
