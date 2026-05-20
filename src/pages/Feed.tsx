@@ -18,29 +18,10 @@ import MagicalIcon from "@/components/MagicalIcon";
 import MagicalEmoji from "@/components/MagicalEmoji";
 import MagicalGaleon from "@/components/MagicalGaleon";
 import MagicalMemories from "@/components/MagicalMemories";
-
+import { useFeed } from "@/hooks/useFeed";
+import { FeedPost, PostAuthor } from "@/services/feedService";
 
 const REACTIONS = ["⚡", "❤️", "🔥", "🦁", "🦅", "🐍", "🦡"];
-
-interface PostAuthor {
-  full_name: string;
-  username: string;
-  house: House;
-  avatar_url?: string | null;
-  vip_plan?: string | null;
-}
-
-interface FeedPost {
-  id: string;
-  user_id: string;
-  content: string;
-  music_url?: string;
-  created_at: string;
-  author?: PostAuthor;
-  reactions: { emoji: string; count: number; mine: boolean }[];
-  comments: { id: string; user_id: string; content: string; created_at: string; author?: PostAuthor }[];
-  showComments?: boolean;
-}
 
 export default function Feed() {
   const { profile, user } = useAuth();
