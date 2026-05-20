@@ -973,7 +973,8 @@ export default function Profile() {
             </Button>
           </form>
         </div>
-      ) : null}
+        </motion.div>
+      </AnimatePresence>
 
       {adminEditModal && profile && (
         <AdminMemberModal
