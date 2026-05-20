@@ -79,6 +79,8 @@ const ADMIN_GROUP = {
 
 export default function DashboardLayout() {
   const { user, profile, isAdmin, isLoading, logout, pingPresence } = useAuth();
+  // Optimize: skip character check if not logged in yet
+  const authReady = !isLoading && user && profile;
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -125,10 +127,12 @@ export default function DashboardLayout() {
   }, [isLoading, user, navigate]);
 
 
-  if (profile && !profile.approved && !isAdmin) return <PendingApproval />;
-  if (profile && !isAdmin && !profile.has_accepted_rules) return <RulesAgreement />;
+  if (!authReady) return null; // Wait for profile
 
-  const adminSkipped = isAdmin && user && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
+  if (!profile.approved && !isAdmin) return <PendingApproval />;
+  if (!isAdmin && !profile.has_accepted_rules) return <RulesAgreement />;
+
+  const adminSkipped = isAdmin && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
 
 
   if ((!profile.active_character_id || !hasCharacters) && !adminSkipped) {
