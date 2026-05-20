@@ -13,6 +13,7 @@ export interface Profile {
   birth_date: string | null;
   house: House;
   level: number;
+  blood_status: string | null;
   xp: number;
   xp_to_next: number;
   bio: string;
