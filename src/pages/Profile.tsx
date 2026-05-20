@@ -698,7 +698,8 @@ export default function Profile() {
             )}
           </div>
         </>
-      ) : activeTab === "friends" ? (
+          )}
+          {activeTab === "friends" && (
         <div className="space-y-4">
           <h2 className="font-heading text-xl text-foreground">Amigos de {profile.full_name}</h2>
           {friends.length === 0 ? (
@@ -724,12 +725,15 @@ export default function Profile() {
             </div>
           )}
         </div>
-      ) : activeTab === "members" ? (
+          )}
+          {activeTab === "members" && (
         <MembersTab currentUserId={user?.id} />
-      ) : activeTab === "fichas" ? (
+          )}
+          {activeTab === "fichas" && (
         <CharacterSheetView userId={profile.user_id} isOwner={isMe} userItems={userItems} />
 
-      ) : activeTab === "album" ? (
+          )}
+          {activeTab === "album" && (
         <ProfileAlbum userId={profile.user_id} />
       ) : activeTab === "referral" && isMe ? (
         <div className="space-y-8">
@@ -768,7 +772,8 @@ export default function Profile() {
             )}
           </div>
         </div>
-      ) : activeTab === "achievements" ? (
+          )}
+          {activeTab === "achievements" && (
         <div className="space-y-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-center md:text-left">
@@ -865,7 +870,8 @@ export default function Profile() {
             </div>
           </div>
         </div>
-      ) : activeTab === "inventory" ? (
+          )}
+          {activeTab === "inventory" && (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="font-heading text-xl text-foreground">🎒 Mochila de Relíquias</h2>
@@ -953,7 +959,8 @@ export default function Profile() {
             </div>
           )}
         </div>
-      ) : activeTab === "security" && isMe ? (
+          )}
+          {activeTab === "security" && isMe && (
         <div className="glass rounded-2xl p-6">
           <h2 className="font-heading text-xl text-foreground mb-1">🔐 Segurança e Acesso</h2>
           <p className="text-sm text-muted-foreground mb-6">Altere sua senha mágica para manter sua conta protegida.</p>
