@@ -36,29 +36,29 @@ const MONSTER_QUALITY_ITEMS: StoreItem[] = [
   // WANDS
   { id: "mq_wand_elder", name: "Varinha das Varinhas", category: "wand", price_galeons: 5000, image_url: "https://portal-hogwarts.lovable.app/legendary_elder_wand_cinematic_1776814022237.png", rarity: "legendary", is_featured: true, description: "A varinha mais poderosa já fabricada, feita de sabugueiro e núcleo de pelo de testrálio." },
   { id: "mq_wand_ebony", name: "Varinha de Ébano", category: "wand", price_galeons: 2500, image_url: "https://portal-hogwarts.lovable.app/monster_quality_wand_ebony_1776815361581.png", rarity: "rare", is_featured: false, description: "Ébano é uma madeira preta e impressionante, com um brilho quase metálico." },
-  { id: "mq_wand_holly", name: "Varinha de Azevinho", category: "wand", price_galeons: 1200, image_url: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=600", rarity: "uncommon", is_featured: false, description: "Uma das madeiras de varinha mais raras e protetoras." },
+  { id: "mq_wand_holly", name: "Varinha de Azevinho", category: "wand", price_galeons: 1200, image_url: "", rarity: "uncommon", is_featured: false, description: "Uma das madeiras de varinha mais raras e protetoras." },
   
   // CLOTHING
   { id: "mq_cloth_founder", name: "Robe Azul-Safira", category: "clothing", price_galeons: 3500, image_url: "https://portal-hogwarts.lovable.app/royal_hogwarts_robe_sapphire_1776814034473.png", rarity: "legendary", is_featured: true, description: "Robe cerimonial usado pelos antigos fundadores, com bordados de ouro puro." },
   { id: "mq_cloth_crimson", name: "Manto Carmesim", category: "clothing", price_galeons: 2800, image_url: "https://portal-hogwarts.lovable.app/monster_quality_robe_crimson_1776815376496.png", rarity: "legendary", is_featured: true, description: "Um manto imponente que emana uma aura de autoridade e coragem." },
-  { id: "mq_cloth_stealth", name: "Capa de Invisibilidade", category: "clothing", price_galeons: 10000, image_url: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?q=80&w=600", rarity: "legendary", is_featured: true, description: "Tecida com fios de seminviso, esta capa torna o usuário indetectável." },
+  { id: "mq_cloth_stealth", name: "Capa de Invisibilidade", category: "clothing", price_galeons: 10000, image_url: "", rarity: "legendary", is_featured: true, description: "Tecida com fios de seminviso, esta capa torna o usuário indetectável." },
 
   // POTIONS
   { id: "mq_potion_dragon", name: "Sangue de Dragão", category: "potion", price_galeons: 1500, image_url: "https://portal-hogwarts.lovable.app/mystical_dragon_blood_potion_1776814048076.png", rarity: "rare", is_featured: false, description: "Uma poção poderosa que amplifica a força vital e resistência mágica." },
   { id: "mq_potion_luck", name: "Felix Felicis", category: "potion", price_galeons: 4000, image_url: "https://portal-hogwarts.lovable.app/monster_quality_potion_mystical_1776815391813.png", rarity: "legendary", is_featured: true, description: "A Sorte Líquida. Por um tempo limitado, todas as suas ações serão bem-sucedidas." },
-  { id: "mq_potion_truth", name: "Veritaserum", category: "potion", price_galeons: 2000, image_url: "https://images.unsplash.com/photo-1589483232748-515c025575ec?q=80&w=600", rarity: "rare", is_featured: false, description: "O mais poderoso soro da verdade conhecido no mundo bruxo." },
+  { id: "mq_potion_truth", name: "Veritaserum", category: "potion", price_galeons: 2000, image_url: "", rarity: "rare", is_featured: false, description: "O mais poderoso soro da verdade conhecido no mundo bruxo." },
 
   // ACCESSORIES
   { id: "mq_accessory_crown", name: "Coroa de Ravenclaw", category: "accessory", price_galeons: 4500, image_url: "https://portal-hogwarts.lovable.app/monster_quality_crown_legendary_1776815405819.png", rarity: "legendary", is_featured: true, description: "O diadema perdido de Rowena Ravenclaw. Dizem que concede sabedoria inigualável." },
   { id: "mq_item_snitch", name: "Pomo de Ouro de Vidro", category: "accessory", price_galeons: 3000, image_url: "https://portal-hogwarts.lovable.app/monster_quality_golden_snitch_orb_1776816956118.png", rarity: "rare", is_featured: true, description: "Um artefato de luxo que captura a essência do voo e da vitória." },
-  { id: "mq_item_ring", name: "Anel de Gaunt", category: "accessory", price_galeons: 6000, image_url: "https://images.unsplash.com/photo-1599839619722-39751411ea63?q=80&w=600", rarity: "legendary", is_featured: false, description: "Um anel antigo com uma pedra misteriosa encravada." },
+  { id: "mq_item_ring", name: "Anel de Gaunt", category: "accessory", price_galeons: 6000, image_url: "", rarity: "legendary", is_featured: false, description: "Um anel antigo com uma pedra misteriosa encravada." },
 
   // HORCRUXES (OSTENTAÇÃO)
-  { id: "mq_horcrux_diary", name: "Diário de Tom Riddle", category: "accessory", price_galeons: 15000, image_url: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=600", rarity: "legendary", is_featured: true, description: "Uma das relíquias mais sombrias. Somente para bruxos que buscam o controle absoluto." },
-  { id: "mq_horcrux_locket", name: "Medalhão de Slytherin", category: "accessory", price_galeons: 12000, image_url: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=600", rarity: "legendary", is_featured: true, description: "Um artefato que emana uma aura de superioridade e poder antigo." },
+  { id: "mq_horcrux_diary", name: "Diário de Tom Riddle", category: "accessory", price_galeons: 15000, image_url: "", rarity: "legendary", is_featured: true, description: "Uma das relíquias mais sombrias. Somente para bruxos que buscam o controle absoluto." },
+  { id: "mq_horcrux_locket", name: "Medalhão de Slytherin", category: "accessory", price_galeons: 12000, image_url: "", rarity: "legendary", is_featured: true, description: "Um artefato que emana uma aura de superioridade e poder antigo." },
 
   // WAND POWER (UPGRADES)
-  { id: "mq_upgrade_core", name: "Núcleo de Fibra de Coração de Dragão", category: "upgrade", price_galeons: 2500, image_url: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=600", rarity: "rare", is_featured: false, description: "Aumenta o dano dos feitiços e a precisão da varinha." },
+  { id: "mq_upgrade_core", name: "Núcleo de Fibra de Coração de Dragão", category: "upgrade", price_galeons: 2500, image_url: "", rarity: "rare", is_featured: false, description: "Aumenta o dano dos feitiços e a precisão da varinha." },
   { id: "mq_upgrade_phoenix", name: "Pena de Fênix Real", category: "upgrade", price_galeons: 3500, image_url: "https://i.pinimg.com/736x/f4/62/7b/f4627b08499298491295e86d26798835.jpg", rarity: "rare", is_featured: true, description: "Concede maior versatilidade e regeneração mágica." },
 
   // SPECIAL SPELLS
@@ -66,9 +66,9 @@ const MONSTER_QUALITY_ITEMS: StoreItem[] = [
   { id: "mq_spell_avada", name: "Avada Kedavra", category: "spell", price_galeons: 25000, image_url: "https://i.pinimg.com/736x/21/2e/4d/212e4d898495f3209867938363784912.jpg", rarity: "legendary", is_featured: true, description: "O feitiço proibido. Dano instantâneo e poder absoluto sobre a vida." },
 
   // INGREDIENTS
-  { id: "mq_ing_mandrake", name: "Raiz de Mandrágora", category: "potion", price_galeons: 800, image_url: "https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=600", rarity: "uncommon", is_featured: false, description: "Essencial para poções de cura severas." },
-  { id: "mq_ing_lacewing", name: "Hemeróbios Secos", category: "potion", price_galeons: 500, image_url: "https://images.unsplash.com/photo-1533234407053-ada8c9579737?q=80&w=600", rarity: "common", is_featured: false, description: "Base para a Poção Polissuco." },
-  { id: "mq_ing_unicorn", name: "Sangue de Unicórnio", category: "potion", price_galeons: 3500, image_url: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=600", rarity: "legendary", is_featured: true, description: "Uma vida amaldiçoada para quem o bebe. Mas mantém você vivo mesmo no limiar da morte." },
+  { id: "mq_ing_mandrake", name: "Raiz de Mandrágora", category: "potion", price_galeons: 800, image_url: "", rarity: "uncommon", is_featured: false, description: "Essencial para poções de cura severas." },
+  { id: "mq_ing_lacewing", name: "Hemeróbios Secos", category: "potion", price_galeons: 500, image_url: "", rarity: "common", is_featured: false, description: "Base para a Poção Polissuco." },
+  { id: "mq_ing_unicorn", name: "Sangue de Unicórnio", category: "potion", price_galeons: 3500, image_url: "", rarity: "legendary", is_featured: true, description: "Uma vida amaldiçoada para quem o bebe. Mas mantém você vivo mesmo no limiar da morte." },
   { id: "mq_item_sword", name: "Espada de Gryffindor", category: "accessory", price_galeons: 20000, image_url: "https://i.pinimg.com/736x/01/21/50/0121509355375c7b3955212938363784.jpg", rarity: "legendary", is_featured: true, description: "Feita de prata pura por duendes. Absorve o que a fortalece." },
   { id: "mq_item_firebolt", name: "Vassoura Firebolt", category: "accessory", price_galeons: 50000, image_url: "https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg", rarity: "legendary", is_featured: true, description: "A vassoura de corrida mais rápida do mundo. Aerodinâmica perfeita e cabo de freixo polido." },
   { id: "mq_item_snitch", name: "Pomo de Ouro Místico", category: "accessory", price_galeons: 15000, image_url: "https://portal-hogwarts.lovable.app/monster_quality_golden_snitch_cinematic_1776816692257.png", rarity: "legendary", is_featured: true, description: "Brilha com um ouro eterno. Abre ao toque de quem o capturou." },
