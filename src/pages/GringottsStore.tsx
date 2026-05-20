@@ -597,8 +597,8 @@ export default function GringottsStore() {
                     Câmbio Premium Gringotts
                   </p>
 
-                  <Button variant={pkg.badge ? "magical" : "outline"} className={`w-full h-14 font-bold text-sm rounded-2xl shadow-xl transition-all ${!pkg.badge && 'border-yellow-500/40 text-yellow-400 hover:bg-yellow-500/10'}`} disabled={buying === pkg.id} onClick={() => buyGaleons(pkg)}>
-                    {buying === pkg.id ? "⏳ ..." : `R$ ${pkg.price_brl.toFixed(2).replace(".", ",")}`}
+                  <Button variant={pkg.badge ? "magical" : "outline"} className={`w-full h-14 font-bold text-sm rounded-2xl shadow-xl transition-all ${!pkg.badge && 'border-yellow-500/40 text-yellow-400 hover:bg-yellow-500/10'}`} disabled={!!buyingId || !!buyingPackageId} onClick={() => buyGaleons(pkg)}>
+                    {buyingPackageId === pkg.id ? "⏳ ..." : `R$ ${pkg.price_brl.toFixed(2).replace(".", ",")}`}
                   </Button>
                 </div>
               </div>
@@ -666,12 +666,12 @@ export default function GringottsStore() {
                   </ul>
 
                   <Button size="lg" className={`w-full h-16 rounded-2xl font-bold text-lg shadow-2xl transition-all hover:scale-105 active:scale-95 ${
-                      currentVip === plan.id ? "bg-green-600/20 text-green-400 border-2 border-green-500/50" : ""
+                      profile?.vip_plan === plan.id ? "bg-green-600/20 text-green-400 border-2 border-green-500/50" : ""
                     }`} 
-                    variant={currentVip === plan.id ? "outline" : "plaque"}
-                    disabled={buying === plan.id || currentVip === plan.id}
+                    variant={profile?.vip_plan === plan.id ? "outline" : "plaque"}
+                    disabled={!!buyingId || !!buyingPackageId || profile?.vip_plan === plan.id}
                     onClick={() => buyVip(plan)}>
-                    {buying === plan.id ? "✨ Processando..." : currentVip === plan.id ? "Status Ativo ✅" : "Assinar agora"}
+                    {buyingPackageId === plan.id ? "✨ Processando..." : profile?.vip_plan === plan.id ? "Status Ativo ✅" : "Assinar agora"}
                   </Button>
                 </div>
               </div>
@@ -748,10 +748,10 @@ export default function GringottsStore() {
                            </span>
                         </div>
                         <Button size="sm" variant={isOwned ? "outline" : "magical"}
-                          disabled={isOwned || buying === item.id || (!canAfford && !isOwned)}
+                          disabled={isOwned || !!buyingId || !!buyingPackageId || (!canAfford && !isOwned)}
                           onClick={() => !isOwned && buyItem(item)}
                           className={`text-[10px] px-5 h-9 rounded-xl font-bold uppercase tracking-widest transition-all ${isOwned ? 'border-green-500/40 text-green-400 bg-green-500/10' : ''}`}>
-                          {isOwned ? "No Baú" : !canAfford ? "Saldo Insuficiente" : buying === item.id ? "..." : "Comprar"}
+                          {isOwned ? "No Baú" : !canAfford ? "Saldo Insuficiente" : buyingId === item.id ? "..." : "Comprar"}
                         </Button>
                       </div>
                       
