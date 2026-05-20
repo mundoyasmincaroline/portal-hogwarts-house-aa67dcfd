@@ -128,6 +128,7 @@ export default function Rules() {
                   <div className="pt-6">
                     <Button 
 
+
                       variant="plaque" 
                       onClick={async () => {
                         const { error } = await supabase.from("profiles").update({ has_accepted_rules: true } as never).eq("user_id", (await supabase.auth.getUser()).data.user?.id);
