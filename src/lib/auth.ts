@@ -30,14 +30,13 @@ export interface Profile {
   vip_expires_at: string | null;
 }
 
-export function isUserOnline(profile: Partial<Profile> | null): boolean {
+export const isUserOnline = (profile: Partial<Profile> | null): boolean => {
   if (!profile) return false;
-  if (!profile.last_seen) return !!profile.online;
-  // Consider online if last_seen is within the last 2 minutes (120000 ms)
+  if (profile.online === true) return true;
+  if (!profile.last_seen) return false;
   const lastSeenDate = new Date(profile.last_seen).getTime();
-  const now = new Date().getTime();
-  return (now - lastSeenDate) < 120000;
-}
+  return (Date.now() - lastSeenDate) < 180000; // 3 minutes buffer
+};
 
 interface AuthState {
   user: User | null;
@@ -209,49 +208,25 @@ export const useAuth = create<AuthState>((set, get) => ({
     const userId = get().user?.id;
     if (!userId) return;
 
-    let sessionId = localStorage.getItem("hogwarts_session_id");
-    let justInitialized = false;
+    // Use debouncing logic inside create to avoid too many writes
+    const now = new Date();
+    const lastPing = (get() as any)._lastPingAt;
+    if (lastPing && (now.getTime() - lastPing.getTime()) < 45000) {
+      return;
+    }
+    set({ _lastPingAt: now } as any);
 
+    let sessionId = localStorage.getItem("hogwarts_session_id");
     if (!sessionId) {
       sessionId = Math.random().toString(36).substring(2, 15);
       localStorage.setItem("hogwarts_session_id", sessionId);
-      const { error } = await supabase.from("profiles").update({ current_session_id: sessionId } as never).eq("user_id", userId);
-      if (error) {
-        console.error("Erro ao registrar session_id:", error);
-        return;
-      }
-      justInitialized = true;
+      await supabase.from("profiles").update({ current_session_id: sessionId } as never).eq("user_id", userId);
     }
 
-    // Se acabamos de inicializar, não precisamos checar contra o DB imediatamente para evitar race conditions
-    if (justInitialized) {
-        await supabase
-          .from("profiles")
-          .update({ online: true, last_seen: new Date().toISOString() } as never)
-          .eq("user_id", userId);
-        return;
-    }
-
-    const { data: prof, error: profError } = await supabase.from("profiles").select("current_session_id").eq("user_id", userId).maybeSingle();
-    
-    if (profError) {
-      console.error("Erro ao verificar sessão ativa:", profError);
-      return;
-    }
-
-    if (prof?.current_session_id && prof.current_session_id !== sessionId) {
-      // Foi logado em outro dispositivo
-      console.warn("Múltiplas sessões detectadas. Desconectando sessão local...");
-      await supabase.auth.signOut();
-      localStorage.removeItem("hogwarts_session_id");
-      set({ user: null, profile: null, isAuthenticated: false, isAdmin: false });
-      window.location.href = "/login?kicked=true";
-      return;
-    }
-
+    // Only update online status if really needed or once every few minutes
     await supabase
       .from("profiles")
-      .update({ online: true, last_seen: new Date().toISOString() } as never)
+      .update({ online: true, last_seen: now.toISOString() } as never)
       .eq("user_id", userId);
   },
 }));

@@ -18,16 +18,11 @@ export function useFeed() {
         return;
       }
 
-      const userIds = [...new Set(postsData.map((p) => p.user_id))];
-      const authors = await feedService.getProfiles(userIds);
-
       const postIds = postsData.map((p) => p.id);
       const { reactions, comments } = await feedService.getReactionsAndComments(postIds);
 
       const commentUserIds = [...new Set(comments.map((c) => c.user_id))];
       const commentAuthors = await feedService.getProfiles(commentUserIds);
-
-      const authorMap = new Map(authors.map((a) => [a.user_id, a as PostAuthor & { user_id: string }]));
       const commentAuthorMap = new Map(commentAuthors.map((a) => [a.user_id, a as PostAuthor & { user_id: string }]));
 
       const enriched: FeedPost[] = postsData.map((p) => {
@@ -46,7 +41,7 @@ export function useFeed() {
 
         return {
           ...p,
-          author: authorMap.get(p.user_id),
+          author: p.author, // Already joined in service
           reactions: Object.entries(grouped).map(([emoji, data]) => ({ emoji, ...data })),
           comments: postComments,
           showComments: false,

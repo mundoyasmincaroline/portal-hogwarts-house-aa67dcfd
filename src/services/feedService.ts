@@ -22,10 +22,10 @@ export interface FeedPost {
 }
 
 export const feedService = {
-  async getPosts(limit = 50): Promise<any[]> {
+  async getPosts(limit = 20): Promise<any[]> {
     const { data, error } = await supabase
       .from("posts")
-      .select("*")
+      .select("*, author:profiles!posts_user_id_fkey(user_id, full_name, username, house, avatar_url, vip_plan)")
       .order("created_at", { ascending: false })
       .limit(limit);
     

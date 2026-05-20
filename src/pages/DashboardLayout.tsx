@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -79,9 +79,12 @@ const ADMIN_GROUP = {
 
 export default function DashboardLayout() {
   const { user, profile, isAdmin, isLoading, logout, pingPresence } = useAuth();
+  // Optimize: skip character check if not logged in yet
+  const authReady = !isLoading && user && profile;
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const closeSidebar = useCallback(() => setSidebarOpen(false), []);
   const [soundOn, setSoundOn] = useState(isSoundEnabled());
   const [dmUnread, setDmUnread] = useState(0);
   const [hasCharacters, setHasCharacters] = useState<boolean | null>(null);
@@ -120,20 +123,13 @@ export default function DashboardLayout() {
   }, [user, profile]);
 
   useEffect(() => {
-    if (!isLoading && !user) navigate("/login");
-  }, [isLoading, user, navigate]);
-
-  useEffect(() => {
     if (!user) return;
     pingPresence();
-    const interval = setInterval(pingPresence, 30000);
-    return () => {
-      clearInterval(interval);
-      supabase.from("profiles").update({ online: false } as never).eq("user_id", user.id);
-    };
+    const interval = setInterval(pingPresence, 60000); 
+    return () => clearInterval(interval);
   }, [user, pingPresence]);
 
-  if (isLoading) {
+  if (isLoading || hasCharacters === null) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <div className="text-center">
@@ -144,40 +140,25 @@ export default function DashboardLayout() {
     );
   }
 
-  if (!user || !profile) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <div className="text-4xl animate-pulse">🔮</div>
-      </div>
-    );
-  }
+  if (profile && !profile.approved && !isAdmin) return <PendingApproval />;
+  if (profile && !isAdmin && !profile.has_accepted_rules) return <RulesAgreement />;
 
-  if (!profile.approved && !isAdmin) return <PendingApproval />;
-  if (!isAdmin && !profile.has_accepted_rules) return <RulesAgreement />;
+  const adminSkipped = isAdmin && user && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
 
-  const adminSkipped = isAdmin && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
-
-  if (hasCharacters === null) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <div className="text-4xl animate-float">⚡</div>
-      </div>
-    );
-  }
 
   if ((!profile.active_character_id || !hasCharacters) && !adminSkipped) {
     return <CharacterSelection adminMode={isAdmin} />;
   }
 
-  const house = HOUSES[profile.house as House] || HOUSES.gryffindor;
-  const groups = isAdmin ? [...NAV_GROUPS, ADMIN_GROUP] : NAV_GROUPS;
+  const house = useMemo(() => HOUSES[profile.house as House] || HOUSES.gryffindor, [profile.house]);
+  const groups = useMemo(() => isAdmin ? [...NAV_GROUPS, ADMIN_GROUP] : NAV_GROUPS, [isAdmin]);
 
   return (
     <div className="flex h-screen bg-background overflow-hidden relative">
       <AmbientAudio />
 
       {sidebarOpen && (
-        <div className="fixed inset-0 bg-background/80 z-30 md:hidden" onClick={() => setSidebarOpen(false)} />
+        <div className="fixed inset-0 bg-background/80 z-30 md:hidden" onClick={closeSidebar} />
       )}
 
       <aside className={`fixed md:static inset-y-0 left-0 z-40 w-64 bg-card border-r border-border flex flex-col transition-transform md:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
@@ -202,7 +183,7 @@ export default function DashboardLayout() {
                     <Link
                       key={item.path}
                       to={item.path}
-                      onClick={() => setSidebarOpen(false)}
+                      onClick={closeSidebar}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group relative overflow-hidden ${
                         isActive 
                           ? "bg-primary/10 text-primary font-bold border border-primary/20 shadow-[inset_0_0_20px_rgba(212,175,55,0.05)]" 

@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Trophy, Shield, Zap, Star, Sparkles } from "lucide-react";
+import { useRealtime } from "@/hooks/useRealtime";
 import HouseCrest from "./HouseCrest";
 import MagicalEmoji from "./MagicalEmoji";
 import { House } from "@/lib/store";
@@ -25,15 +26,7 @@ export default function HouseCupWidget({ isLanding = false }: { isLanding?: bool
   const [loading, setLoading] = useState(true);
   const [leader, setLeader] = useState<HouseScore | null>(null);
 
-  useEffect(() => {
-    fetchScores();
-    const sub = (supabase as any).channel('house_points_updates')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, () => fetchScores())
-      .subscribe();
-    return () => { supabase.removeChannel(sub); };
-  }, []);
-
-  const fetchScores = async () => {
+  const fetchScores = useCallback(async () => {
     try {
       const { data, error } = await supabase.from('profiles').select('house, xp');
       if (error) throw error;
@@ -46,7 +39,6 @@ export default function HouseCupWidget({ isLanding = false }: { isLanding?: bool
       const allZeros = Object.values(totals).every(v => v === 0);
       
       if (allZeros) {
-        // Fallback para simulação premium - Faz o portal parecer vivo mesmo sem dados
         const simulatedPoints = {
           gryffindor: 12450,
           slytherin: 11820,
@@ -81,11 +73,16 @@ export default function HouseCupWidget({ isLanding = false }: { isLanding?: bool
       setLoading(false);
     } catch (e) {
       console.warn("Erro ao buscar pontos das casas:", e);
-      // Fallback estático
       setScores(scores.map(s => ({ ...s, points: 100, percentage: 30 })));
       setLoading(false);
     }
-  };
+  }, [scores]);
+
+  useEffect(() => {
+    fetchScores();
+  }, [fetchScores]);
+
+  useRealtime('profiles', '*', fetchScores);
 
   const leaderColor = leader?.house === 'slytherin' ? 'rgba(16, 185, 129, 0.4)' : leader?.house === 'gryffindor' ? 'rgba(220, 38, 38, 0.4)' : leader?.house === 'ravenclaw' ? 'rgba(37, 99, 235, 0.4)' : 'rgba(217, 119, 6, 0.4)';
 

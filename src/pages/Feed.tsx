@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Sparkles, Trophy } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import { HOUSES, type House } from "@/lib/store";
@@ -19,6 +19,7 @@ import MagicalEmoji from "@/components/MagicalEmoji";
 import MagicalGaleon from "@/components/MagicalGaleon";
 import MagicalMemories from "@/components/MagicalMemories";
 import { useFeed } from "@/hooks/useFeed";
+import { useRealtime } from "@/hooks/useRealtime";
 import { FeedPost } from "@/services/feedService";
 
 const REACTIONS = ["⚡", "❤️", "🔥", "🦁", "🦅", "🐍", "🦡"];
@@ -33,42 +34,59 @@ export default function Feed() {
   const [houseStats, setHouseStats] = useState<Record<House, number>>({
     gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0,
   });
+  // Memoize house scores for performance
+  const sortedHouses = useMemo(() => {
+    return Object.values(HOUSES)
+      .map((h) => ({ ...h, points: houseStats[h.id] }))
+      .sort((a, b) => b.points - a.points);
+  }, [houseStats]);
   const [activeChallenges, setActiveChallenges] = useState<{ id: string; title: string; xp_reward: number; type: string }[]>([]);
   const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
   const [bannedWords, setBannedWords] = useState<string[]>([]);
   const [showWelcomeChest, setShowWelcomeChest] = useState(false);
+  
+  // Throttle sidebar loading if needed
+  const sidebarLoaded = useRef(false);
 
   const loadSidebar = useCallback(async () => {
-    const { data: hp } = await supabase.from("house_points").select("house, points");
+    // Combine queries to reduce RTT
+    const [{ data: hp }, { data: ch }, { data: users }] = await Promise.all([
+      supabase.from("house_points").select("house, points"),
+      supabase.from("challenges").select("id, title, xp_reward, type").eq("active", true).limit(5),
+      supabase.from("profiles").select("id, user_id, full_name, username, house, avatar_url, online, last_seen").eq("approved", true).order("online", { ascending: false }).limit(10)
+    ]);
+
     const stats: Record<House, number> = { gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0 };
     (hp || []).forEach((row: any) => {
       const house = row.house as House;
       stats[house] = (stats[house] || 0) + row.points;
     });
     setHouseStats(stats);
-
-    const { data: ch } = await supabase.from("challenges").select("id, title, xp_reward, type").eq("active", true).limit(5);
     setActiveChallenges(ch || []);
-    const { data: users } = await supabase.from("profiles").select("id, user_id, full_name, username, house, avatar_url, online, last_seen").eq("approved", true).order("online", { ascending: false }).limit(10);
     setOnlineUsers(users || []);
   }, []);
 
   useEffect(() => {
     loadFeed();
-    loadSidebar();
+    if (!sidebarLoaded.current) {
+        loadSidebar();
+        sidebarLoaded.current = true;
+    }
     
     // Buscar palavras proibidas
     supabase.from("banned_words").select("word").then(({ data }) => {
       if (data) setBannedWords(data.map(d => d.word.toLowerCase()));
     });
+  }, [loadFeed]);
 
-    const channel = supabase
-      .channel("feed-changes")
-      .on("postgres_changes", { event: "*", schema: "public", table: "posts" }, () => loadFeed())
-      .on("postgres_changes", { event: "*", schema: "public", table: "post_comments" }, () => loadFeed())
-      .on("postgres_changes", { event: "*", schema: "public", table: "post_reactions" }, () => loadFeed())
-      .subscribe();
-    return () => { supabase.removeChannel(channel); };
+  // Use centralized realtime hooks
+  useRealtime("posts", "*", loadFeed);
+  useRealtime("post_comments", "*", loadFeed);
+  useRealtime("post_reactions", "*", loadFeed);
+
+  useEffect(() => {
+    loadFeed();
+    loadSidebar();
   }, [loadFeed, loadSidebar]);
 
   useEffect(() => {
@@ -160,9 +178,6 @@ export default function Feed() {
     setPosts((ps) => ps.map((p) => (p.id === postId ? { ...p, showComments: !p.showComments } : p)));
   };
 
-  const sortedHouses = Object.values(HOUSES)
-    .map((h) => ({ ...h, points: houseStats[h.id] }))
-    .sort((a, b) => b.points - a.points);
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -215,9 +230,9 @@ export default function Feed() {
           )}
 
           {posts.map((post, index) => (
-            <div key={post.id}>
-              {index > 0 && index % 3 === 0 && <MagicAdBanner />}
-              <div className="glass rounded-xl p-4 animate-fade-in-up">
+            <div key={post.id} className="min-h-[150px] content-visibility-auto">
+              {index > 0 && index % 5 === 0 && <MagicAdBanner />}
+              <div className="glass rounded-xl p-4 transition-all duration-300">
                 <div className="flex items-center gap-3 mb-3">
                   <div className={`w-10 h-10 rounded-full bg-secondary flex items-center justify-center font-heading text-primary overflow-hidden border-2 shrink-0 ${post.author?.house === 'gryffindor' ? 'border-red-500' : post.author?.house === 'slytherin' ? 'border-green-500' : post.author?.house === 'ravenclaw' ? 'border-blue-500' : 'border-yellow-500'}`}>
                     <SafeImage 

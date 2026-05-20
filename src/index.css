@@ -106,14 +106,8 @@
   75% { opacity: 0.95; }
 }
 
-.animate-float { animation: float 3s ease-in-out infinite; }
-.animate-shimmer { 
-  background-size: 200% auto;
-  animation: shimmer 3s linear infinite; 
-}
 .animate-sparkle { animation: sparkle 2s ease-in-out infinite; }
 .animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
-.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
 .animate-torch { animation: torch-flicker 1.5s ease-in-out infinite; }
 
 /* Scrollbar styling */
@@ -140,6 +134,7 @@
     0 10px 30px -10px rgba(0, 0, 0, 0.5),
     inset 0 1px 1px hsl(var(--foreground) / 0.05);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  contain: layout style;
 }
 
 .glass:hover {
@@ -147,6 +142,20 @@
   box-shadow: 
     0 20px 40px -15px rgba(0, 0, 0, 0.6),
     inset 0 1px 1px hsl(var(--foreground) / 0.1);
+}
+
+.animate-float { 
+  animation: float 3s ease-in-out infinite;
+  will-change: transform;
+}
+.animate-shimmer { 
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite; 
+  will-change: background-position;
+}
+.animate-pulse-glow { 
+  animation: pulse-glow 2s ease-in-out infinite; 
+  will-change: box-shadow;
 }
 
 /* Parchment style */
