@@ -981,6 +981,7 @@ export default function Profile() {
             </Button>
           </form>
         </div>
+          )}
         </motion.div>
       </AnimatePresence>
 
