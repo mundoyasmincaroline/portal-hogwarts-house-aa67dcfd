@@ -15,7 +15,7 @@ import ProfileAlbum from "@/components/ProfileAlbum";
 import CharacterSheetView from "@/components/CharacterSheetView";
 import MemberCard from "@/components/MemberCard";
 import AdminMemberModal from "@/components/AdminMemberModal";
-import { Info, Users, Search, Scroll, Book, Lock, Trophy, ShoppingBag, Flame, Sparkles, Star, CheckCircle2, Crown } from "lucide-react";
+import { Info, Users, Search, Scroll, Book, Lock, Trophy, ShoppingBag, Flame, Sparkles, Star, CheckCircle2, Crown, Camera } from "lucide-react";
 import SafeImage from "@/components/SafeImage";
 import RecruitmentWidget from "@/components/RecruitmentWidget";
 import MagicalIcon from "@/components/MagicalIcon";
