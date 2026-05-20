@@ -135,9 +135,6 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
       return;
     }
     
-    // Campos mínimos para permitir avanço se for o primeiro personagem (vindo do rito)
-    const isFirstCharacter = !profile?.active_character_id;
-    
     // Verificação de campos obrigatórios (Rito é mais flexível no primeiro personagem)
     const isFirstCharacter = !profile?.active_character_id;
     const requiredFields = ["full_name", "house", "blood_status", "wand", "patronus", "personality", "strength", "weakness", "fears", "dreams"];
