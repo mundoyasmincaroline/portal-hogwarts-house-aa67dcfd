@@ -229,7 +229,7 @@ export default function InstaHogwarts() {
   return (
     <div className="max-w-xl mx-auto space-y-10 pb-20">
       {/* ── CINEMATIC HEADER ── */}
-      <div className="relative glass rounded-[2.5rem] p-8 text-center overflow-hidden border border-primary/20 shadow-2xl group">
+      <div className="relative glass rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 text-center overflow-hidden border border-primary/20 shadow-2xl group">
         <div className="absolute inset-0 bg-gradient-to-br from-black via-zinc-900 to-amber-900/20 opacity-80" />
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/pinstriped-suit.png')] opacity-20 pointer-events-none" />
         
@@ -237,13 +237,13 @@ export default function InstaHogwarts() {
            <div className="inline-flex items-center gap-2 bg-primary/20 backdrop-blur-xl border border-primary/30 rounded-full px-4 py-1 mb-2">
             <span className="text-[9px] font-heading text-primary uppercase tracking-widest font-bold">Edição Especial</span>
           </div>
-          <h1 className="font-heading text-4xl text-gold-gradient drop-shadow-2xl">O Profeta Diário</h1>
+          <h1 className="font-heading text-3xl sm:text-4xl text-gold-gradient drop-shadow-2xl">O Profeta Diário</h1>
           <p className="text-muted-foreground text-xs font-serif italic italic italic">"Toda a magia capturada em um só lugar."</p>
         </div>
       </div>
 
       {/* ── UPLOAD PLAQUE ── */}
-      <div className="relative glass rounded-[2rem] p-8 border border-white/10 shadow-2xl overflow-hidden group">
+      <div className="relative glass rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-8 border border-white/10 shadow-2xl overflow-hidden group">
         <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none" />
 
