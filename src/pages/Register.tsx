@@ -92,16 +92,20 @@ export default function Register() {
       avatarUrl: form.avatarUrl || undefined,
     });
 
-    if (result.success && avatarFile) {
+    if (result.success) {
       try {
         const { data: signInData } = await supabase.auth.signInWithPassword({ email: form.email, password: form.password });
         if (signInData?.user) {
-          const ext = avatarFile.name.split(".").pop();
-          const path = `${signInData.user.id}/avatar.${ext}`;
-          const { error: upErr } = await supabase.storage.from("avatars").upload(path, avatarFile, { upsert: true });
-          if (!upErr) {
-            const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
-            await supabase.from("profiles").update({ avatar_url: `${publicUrl}?t=${Date.now()}`, blood_status: form.blood } as never).eq("user_id", signInData.user.id);
+          if (avatarFile) {
+            const ext = avatarFile.name.split(".").pop();
+            const path = `${signInData.user.id}/avatar.${ext}`;
+            const { error: upErr } = await supabase.storage.from("avatars").upload(path, avatarFile, { upsert: true });
+            if (!upErr) {
+              const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
+              await supabase.from("profiles").update({ avatar_url: `${publicUrl}?t=${Date.now()}`, blood_status: form.blood } as never).eq("user_id", signInData.user.id);
+            } else {
+              await supabase.from("profiles").update({ blood_status: form.blood } as never).eq("user_id", signInData.user.id);
+            }
           } else {
             await supabase.from("profiles").update({ blood_status: form.blood } as never).eq("user_id", signInData.user.id);
           }
