@@ -188,7 +188,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
         full_name: form.full_name,
         avatar_url: avatarUrl,
         age: form.age ? parseInt(form.age) : null,
-        blood_status: profile?.blood_locked ? profile.blood_status : form.blood_status,
+        blood_status: (profile?.blood_locked && profile?.blood_status) ? profile.blood_status : form.blood_status,
         actor_faceclaim: form.actor_faceclaim,
         wand: form.wand,
         patronus: form.patronus,
