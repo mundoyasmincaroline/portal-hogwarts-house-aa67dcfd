@@ -29,6 +29,7 @@ import DailyProphetTicker from "@/components/DailyProphetTicker";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import AmbientAudio from "@/components/AmbientAudio";
 import TurnSwitcher from "@/components/TurnSwitcher";
+import SafeImage from "@/components/SafeImage";
 
 const NAV_GROUPS = [
   {
