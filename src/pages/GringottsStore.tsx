@@ -205,41 +205,12 @@ export default function GringottsStore() {
       toast.info("💳 Redirecionando...");
       setTimeout(() => { window.location.href = payUrl; }, 800);
     } catch (e: any) { toast.error(e.message || "Erro ao processar."); }
-    finally { setBuying(null); }
+    finally { setBuyingPackageId(null); }
   };
 
-  // ── Comprar Item ──────────────────────────────────
   const buyItem = async (item: StoreItem) => {
-    if (!user || !profile) return toast.error("Você precisa estar logado.");
-    const bal = profile?.galeons ?? 0;
-    if (bal < item.price_galeons) return toast.error(`Galeões insuficientes! Você tem ${bal} Galeões.`);
-    setBuying(item.id);
-    try {
-      // Bypass FK para itens 3D injetados localmente
-      if (item.id.startsWith("3d_") || item.id.startsWith("mq_")) {
-        const { error: deduct } = await supabase.from("profiles").update({ galeons: bal - item.price_galeons } as never).eq("user_id", user.id);
-        if (deduct) throw deduct;
-        
-        // Registrar item para o usuário
-        await supabase.from("user_items").insert({ user_id: user.id, item_id: item.id } as never);
-        
-        setOwned(prev => [...prev, item.id]);
-        toast.success(`✅ "${item.name}" adicionado ao inventário!`);
-        setBuying(null);
-        return;
-      }
-
-      const { error: deduct } = await supabase.from("profiles").update({ galeons: bal - item.price_galeons } as never).eq("user_id", user.id);
-      if (deduct) throw deduct;
-      const { error: ins } = await supabase.from("user_items").insert({ user_id: user.id, item_id: item.id } as never);
-      if (ins) {
-        await supabase.from("profiles").update({ galeons: bal } as never).eq("user_id", user.id);
-        throw ins;
-      }
-      setOwned(prev => [...prev, item.id]);
-      toast.success(`✅ "${item.name}" adicionado ao inventário!`);
-    } catch (e: any) { toast.error("Erro: " + (e.message || "Tente novamente.")); }
-    finally { setBuying(null); }
+    const success = await handleBuyItem(item);
+    if (success) playMagicSound();
   };
 
   // ── Assinar VIP ───────────────────────────────────────────
