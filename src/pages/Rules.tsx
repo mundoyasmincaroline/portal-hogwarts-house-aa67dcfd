@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Scroll, ShieldAlert, Zap, Sparkles, Feather } from "lucide-react";
 import { useNavigate } from "react-router-dom";
