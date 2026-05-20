@@ -2104,6 +2104,38 @@ export type Database = {
         }
         Relationships: []
       }
+      user_spells: {
+        Row: {
+          id: string
+          learned_at: string
+          mastery_level: number | null
+          spell_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          learned_at?: string
+          mastery_level?: number | null
+          spell_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          learned_at?: string
+          mastery_level?: number | null
+          spell_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_spells_spell_id_fkey"
+            columns: ["spell_id"]
+            isOneToOne: false
+            referencedRelation: "spells"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_stickers: {
         Row: {
           id: string
