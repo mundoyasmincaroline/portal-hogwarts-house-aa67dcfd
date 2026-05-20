@@ -35,7 +35,7 @@ const EMPTY = { full_name:"", avatar_url:"", age:"", blood_status:"", gender:"ma
   mother_id: null as string | null, father_id: null as string | null };
 
 export default function CharacterCreation({ onComplete, onCancel, canCancel }: Props) {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   // Step: "select" | "oc" | "canon"
   const [step, setStep] = useState<"select"|"oc"|"canon">("select");
   const [form, setForm] = useState({ ...EMPTY });
@@ -60,18 +60,23 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
       const wandWood = draft.wand_wood ? String(draft.wand_wood) : "";
       const wandCore = draft.wand_core ? String(draft.wand_core) : "";
       const wand = [wandWood, wandCore].filter(Boolean).join(" + ");
+      
       setForm((f) => ({
         ...f,
+        full_name: profile?.full_name || f.full_name, // Pré-preenche com nome do registro
         blood_status: draft.blood_status || f.blood_status,
         house: draft.house || f.house,
         wand: wand || f.wand,
+        avatar_url: profile?.avatar_url || f.avatar_url, // Pré-preenche avatar do registro
       }));
       localStorage.removeItem("pending_character_draft");
     } catch { /* ignore */ }
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>) =>
-    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setForm(f => ({ ...f, [name]: value }));
+  };
 
   const handleAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]; if (!file) return;
@@ -125,10 +130,29 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
       toast.error("Por favor, preencha o nome e selecione uma Casa.");
       return;
     }
-    if (!form.full_name || !form.avatar_url && !avatarFile || !form.blood_status || !form.wand || !form.patronus || !form.personality || !form.strength || !form.weakness || !form.fears || !form.dreams) {
-      toast.error("Preencha todos os campos obrigatórios da ficha!");
+    if (!form.full_name || !form.house) {
+      toast.error("Por favor, preencha o nome e selecione uma Casa.");
       return;
     }
+    
+    // Verificação de campos obrigatórios (Rito é mais flexível no primeiro personagem)
+    const isFirstCharacter = !profile?.active_character_id;
+    const requiredFields = ["full_name", "house", "blood_status", "wand", "patronus", "personality", "strength", "weakness", "fears", "dreams"];
+    
+    if (!isFirstCharacter) {
+      const missing = requiredFields.filter(f => !form[f as keyof typeof form]);
+      if (missing.length > 0 || (!form.avatar_url && !avatarFile)) {
+        toast.error("Preencha todos os campos obrigatórios da ficha!");
+        return;
+      }
+    } else {
+      // No primeiro personagem (Rito), garantimos apenas Nome, Casa e Foto
+      if (!form.full_name || !form.house || (!form.avatar_url && !avatarFile)) {
+        toast.error("Nome, Casa e Foto são obrigatórios para atravessar o portal!");
+        return;
+      }
+    }
+    
     if (type === "canon" && !form.canon_portrayed_by) {
       toast.error("Informe o ator/atriz original do personagem Canon!");
       return;
@@ -194,7 +218,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
         await supabase.from("canon_claims").insert({ canon_name: form.full_name, user_id: user.id } as never).select();
       }
 
-      await supabase.from("profiles").update({ active_character_id: char!.id } as never).eq("user_id", user.id);
+      await supabase.from("profiles").update({ active_character_id: char!.id, has_seen_intro: false } as never).eq("user_id", user.id);
       toast.success(`Ficha ${type === "oc" ? "OC" : "Canon"} criada com sucesso! ✨`);
       onComplete();
     } catch (e: any) {
