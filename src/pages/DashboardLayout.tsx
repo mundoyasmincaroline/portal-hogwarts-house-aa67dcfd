@@ -126,10 +126,11 @@ export default function DashboardLayout() {
   useEffect(() => {
     if (!user) return;
     pingPresence();
-    const interval = setInterval(pingPresence, 30000);
+    const interval = setInterval(pingPresence, 60000); // 1 minute is enough for presence
     return () => {
       clearInterval(interval);
-      supabase.from("profiles").update({ online: false } as never).eq("user_id", user.id);
+      // Don't force offline on every tiny re-render or layout shift, only on true unmount if possible
+      // but in SPA, layout stays. We rely on last_seen.
     };
   }, [user, pingPresence]);
 

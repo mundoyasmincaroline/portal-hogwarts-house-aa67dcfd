@@ -8,11 +8,11 @@ import { useAuth } from "@/lib/auth";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 // Critical Routes (Loaded immediately)
-import Landing from "./pages/Landing";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import DashboardLayout from "./pages/DashboardLayout";
-import Feed from "./pages/Feed";
+const Landing = lazy(() => import("./pages/Landing"));
+const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
+const DashboardLayout = lazy(() => import("./pages/DashboardLayout"));
+const Feed = lazy(() => import("./pages/Feed"));
 
 // Lazy Routes (Loaded on demand for better performance)
 const Houses = lazy(() => import("./pages/Houses"));
@@ -47,7 +47,16 @@ const LoadingFallback = () => (
   </div>
 );
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      gcTime: 1000 * 60 * 30, // 30 minutes
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function AuthInit({ children }: { children: React.ReactNode }) {
   const init = useAuth((s) => s.init);
