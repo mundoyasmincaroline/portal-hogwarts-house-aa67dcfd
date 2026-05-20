@@ -365,8 +365,15 @@ export default function GringottsStore() {
         </div>
       </div>
 
-      {/* ── ABA: DESTAQUES / EXCLUSIVOS ── */}
-      {tab === "featured" && (
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={tab}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+        >
+          {tab === "featured" && (
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
           <div className="text-center max-w-3xl mx-auto space-y-4">
             <div className="inline-block p-1 rounded-full bg-orange-500/10 border border-orange-500/20 mb-2">
@@ -535,7 +542,7 @@ export default function GringottsStore() {
       )}
 
       {/* ── ABA: GALEÕES ── */}
-      {tab === "galeons" && (
+          {tab === "galeons" && (
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
           <div className="text-center max-w-3xl mx-auto space-y-4">
             <h2 className="text-4xl md:text-6xl font-heading text-foreground flex items-center justify-center gap-4">
@@ -580,7 +587,7 @@ export default function GringottsStore() {
       )}
 
       {/* ── ABA: VIP ── */}
-      {tab === "vip" && (
+          {tab === "vip" && (
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
           <div className="text-center max-w-3xl mx-auto space-y-4">
             <h2 className="text-4xl md:text-6xl font-heading text-foreground flex items-center justify-center gap-4">
@@ -675,7 +682,8 @@ export default function GringottsStore() {
               </div>
               <h3 className="text-3xl font-heading mb-4 text-white/80">Cofre em Manutenção</h3>
               <p className="text-muted-foreground text-lg font-serif">Os duendes de Gringotts estão reabastecendo esta seção com itens lendários. Volte em breve para descobrir as novidades.</p>
-            </div>
+        </motion.div>
+      </AnimatePresence>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
               {filteredItems.map(item => {
