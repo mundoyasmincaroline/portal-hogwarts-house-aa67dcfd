@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Trophy, Shield, Zap, Star, Sparkles } from "lucide-react";
+import { useRealtime } from "@/hooks/useRealtime";
 import HouseCrest from "./HouseCrest";
 import MagicalEmoji from "./MagicalEmoji";
 import { House } from "@/lib/store";
@@ -27,11 +28,9 @@ export default function HouseCupWidget({ isLanding = false }: { isLanding?: bool
 
   useEffect(() => {
     fetchScores();
-    const sub = (supabase as any).channel('house_points_updates')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, () => fetchScores())
-      .subscribe();
-    return () => { supabase.removeChannel(sub); };
   }, []);
+
+  useRealtime('profiles', '*', fetchScores);
 
   const fetchScores = async () => {
     try {
