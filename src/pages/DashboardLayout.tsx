@@ -124,27 +124,6 @@ export default function DashboardLayout() {
     if (!isLoading && !user) navigate("/login");
   }, [isLoading, user, navigate]);
 
-  useEffect(() => {
-    if (!user) return;
-    pingPresence();
-    const interval = setInterval(pingPresence, 60000); // 1 minute is enough for presence
-    return () => {
-      clearInterval(interval);
-      // Don't force offline on every tiny re-render or layout shift, only on true unmount if possible
-      // but in SPA, layout stays. We rely on last_seen.
-    };
-  }, [user, pingPresence]);
-
-  if (isLoading || hasCharacters === null) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <div className="text-center">
-          <div className="text-4xl animate-float mb-4">⚡</div>
-          <p className="font-heading text-muted-foreground">Carregando portal...</p>
-        </div>
-      </div>
-    );
-  }
 
   if (profile && !profile.approved && !isAdmin) return <PendingApproval />;
   if (profile && !isAdmin && !profile.has_accepted_rules) return <RulesAgreement />;
