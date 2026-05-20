@@ -143,7 +143,7 @@ export default function Register() {
         {step > 0 && step < 6 && (
           <div className="flex justify-center gap-1.5 mb-6">
             {Array.from({ length: totalSteps - 1 }).map((_, i) => (
-              <div key={i} className={`h-0.5 w-10 rounded-full transition-all ${i + 1 <= step ? "bg-primary" : "bg-white/15"}`} />
+              <div key={i} className={`h-0.5 w-10 rounded-full transition-all ${i + 1 <= (step === 7 ? 6 : step) ? "bg-primary" : "bg-white/15"}`} />
             ))}
           </div>
         )}
