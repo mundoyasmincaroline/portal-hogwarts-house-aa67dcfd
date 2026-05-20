@@ -13,6 +13,7 @@ export interface Profile {
   birth_date: string | null;
   house: House;
   level: number;
+  blood_status: string | null;
   xp: number;
   xp_to_next: number;
   bio: string;
@@ -28,6 +29,7 @@ export interface Profile {
   galeons: number;
   vip_plan: "premium" | "vip" | "founder" | null;
   vip_expires_at: string | null;
+  blood_locked: boolean;
 }
 
 export const isUserOnline = (profile: Partial<Profile> | null): boolean => {

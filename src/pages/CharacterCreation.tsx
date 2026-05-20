@@ -188,7 +188,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
         full_name: form.full_name,
         avatar_url: avatarUrl,
         age: form.age ? parseInt(form.age) : null,
-        blood_status: form.blood_status,
+        blood_status: (profile?.blood_locked && profile?.blood_status) ? profile.blood_status : form.blood_status,
         actor_faceclaim: form.actor_faceclaim,
         wand: form.wand,
         patronus: form.patronus,
@@ -374,8 +374,8 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
                   name="blood_status" 
                   value={form.blood_status} 
                   onChange={handleChange}
-                  disabled={!!(form.mother_id || form.father_id)}
-                  className={`w-full bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground border border-border focus:border-primary/50 focus:outline-none ${ (form.mother_id || form.father_id) ? "opacity-50 cursor-not-allowed" : "" }`}
+                  disabled={!!(form.mother_id || form.father_id || profile?.blood_locked)}
+                  className={`w-full bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground border border-border focus:border-primary/50 focus:outline-none ${ (form.mother_id || form.father_id || profile?.blood_locked) ? "opacity-50 cursor-not-allowed" : "" }`}
                 >
                   <option value="">Selecione...</option>
                   <option value="puro-sangue">Puro-Sangue</option>

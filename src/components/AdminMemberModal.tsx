@@ -82,6 +82,7 @@ export default function AdminMemberModal({ memberId, memberName, onClose, onSave
       age:        profile.age ? Number(profile.age) : null,
       birth_date: profile.birth_date || null,
       avatar_url: profile.avatar_url || null,
+      blood_locked: !!profile.blood_locked,
     } as never).eq("user_id", memberId);
     setSaving(false);
     if (error) { toast.error("Erro ao salvar perfil: " + error.message); return; }
@@ -237,7 +238,7 @@ export default function AdminMemberModal({ memberId, memberName, onClose, onSave
                   <label className="text-xs text-muted-foreground">Bio / Apresentação</label>
                   <Textarea value={profile.bio || ""} onChange={e => pf("bio", e.target.value)} className="bg-secondary/50 min-h-[80px]" placeholder="Bio do membro..." />
                 </div>
-                <div className="sm:col-span-2 flex items-center gap-3">
+                <div className="sm:col-span-2 flex flex-col gap-3">
                   <label className="flex items-center gap-2 cursor-pointer text-sm">
                     <input
                       type="checkbox"
@@ -246,6 +247,16 @@ export default function AdminMemberModal({ memberId, memberName, onClose, onSave
                       className="accent-primary w-4 h-4"
                     />
                     <span className="text-foreground">Membro aprovado</span>
+                  </label>
+                  
+                  <label className="flex items-center gap-2 cursor-pointer text-sm">
+                    <input
+                      type="checkbox"
+                      checked={!!profile.blood_locked}
+                      onChange={e => pf("blood_locked", e.target.checked)}
+                      className="accent-primary w-4 h-4"
+                    />
+                    <span className="text-foreground">🔒 Status Sanguíneo Fixado (Impedir alteração automática)</span>
                   </label>
                 </div>
               </div>
