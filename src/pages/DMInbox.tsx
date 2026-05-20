@@ -26,8 +26,9 @@ export default function DMInbox() {
     loadThreads();
 
     // Realtime: refresh inbox when new DM arrives
+    const channelId = `dm_inbox:${user.id}:${Date.now()}:${Math.random().toString(36).slice(2)}`;
     const channel = supabase
-      .channel("dm_inbox")
+      .channel(channelId)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "dm_messages" }, () => loadThreads())
       .subscribe();
 
