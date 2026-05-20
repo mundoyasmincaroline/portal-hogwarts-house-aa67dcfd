@@ -1,5 +1,5 @@
 import { playMagicSound } from "@/lib/sounds";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -9,6 +9,9 @@ import { Badge } from "@/components/ui/badge";
 import StoreItemVisual from "@/components/StoreItemVisual";
 import SafeImage from "@/components/SafeImage";
 import MagicalGaleon from "@/components/MagicalGaleon";
+import { useStore } from "@/hooks/useStore";
+import { storeService, StoreItem as ServiceStoreItem } from "@/services/storeService";
+import { CATEGORY_LABELS, RARITY_LABELS } from "@/constants/gameConstants";
 
 // ─── Config ────────────────────────────────────────────────────────────
 // Tudo via supabase.rpc() — sem CORS, server-side via pg_net
@@ -16,11 +19,8 @@ import MagicalGaleon from "@/components/MagicalGaleon";
 
 
 // ─── Tipos ────────────────────────────────────────────────
-interface StoreItem {
-  id: string; name: string; description?: string; category: string;
-  price_galeons: number; image_url: string; rarity?: string;
-  is_featured?: boolean;
-}
+// Usando o tipo do serviço para evitar conflitos
+type StoreItem = ServiceStoreItem;
 
 // ─── Pacotes de Galeões ────────────────────────────────────
 const GALEON_PACKAGES = [
@@ -119,32 +119,12 @@ const TABS = [
 
 export default function GringottsStore() {
   const { user, profile } = useAuth();
+  const { items, owned, loading, buyingId, loadStore, buyItem: handleBuyItem, galeons } = useStore();
   const [tab, setTab] = useState("featured");
-  const [items, setItems] = useState<StoreItem[]>([]);
-  const [owned, setOwned] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [buying, setBuying] = useState<string|null>(null);
   const [pendingOrderId, setPendingOrderId] = useState<string|null>(null);
+  const [buyingPackageId, setBuyingPackageId] = useState<string|null>(null);
 
-  useEffect(() => { loadStore(); }, [user?.id]);
-
-  const loadStore = async () => {
-    const { data } = await supabase.from("store_items").select("*").eq("is_active", true).order("price_galeons");
-    
-    // Mesclar itens do banco com os itens Monster Quality hardcoded
-    const dbItems = data || [];
-    const allItems = [...MONSTER_QUALITY_ITEMS, ...dbItems];
-    
-    // Remover duplicatas por ID caso existam no banco
-    const uniqueItems = allItems.filter((v, i, a) => a.findIndex(t => t.id === v.id) === i);
-    
-    setItems(uniqueItems);
-    if (user) {
-      const { data: myItems } = await supabase.from("user_items").select("item_id").eq("user_id", user.id);
-      setOwned((myItems || []).map(i => i.item_id));
-    }
-    setLoading(false);
-  };
+  useEffect(() => { loadStore(); }, [loadStore]);
 
   // ── Detectar retorno de pagamento na URL ─────────────────
   useEffect(() => {
@@ -212,7 +192,7 @@ export default function GringottsStore() {
   // ── Comprar Galeões ───────────────────────────────────────
   const buyGaleons = async (pkg: typeof GALEON_PACKAGES[0]) => {
     if (!user || !profile) return toast.error("Você precisa estar logado.");
-    setBuying(pkg.id);
+    setBuyingPackageId(pkg.id);
     try {
       const { data: order, error } = await supabase.from("galeon_orders").insert({
         user_id: user.id, package_id: pkg.id, amount_brl: pkg.price_brl, galeons: pkg.galeons, status: "pending",
@@ -225,47 +205,18 @@ export default function GringottsStore() {
       toast.info("💳 Redirecionando...");
       setTimeout(() => { window.location.href = payUrl; }, 800);
     } catch (e: any) { toast.error(e.message || "Erro ao processar."); }
-    finally { setBuying(null); }
+    finally { setBuyingPackageId(null); }
   };
 
-  // ── Comprar Item ──────────────────────────────────
   const buyItem = async (item: StoreItem) => {
-    if (!user || !profile) return toast.error("Você precisa estar logado.");
-    const bal = profile?.galeons ?? 0;
-    if (bal < item.price_galeons) return toast.error(`Galeões insuficientes! Você tem ${bal} Galeões.`);
-    setBuying(item.id);
-    try {
-      // Bypass FK para itens 3D injetados localmente
-      if (item.id.startsWith("3d_") || item.id.startsWith("mq_")) {
-        const { error: deduct } = await supabase.from("profiles").update({ galeons: bal - item.price_galeons } as never).eq("user_id", user.id);
-        if (deduct) throw deduct;
-        
-        // Registrar item para o usuário
-        await supabase.from("user_items").insert({ user_id: user.id, item_id: item.id } as never);
-        
-        setOwned(prev => [...prev, item.id]);
-        toast.success(`✅ "${item.name}" adicionado ao inventário!`);
-        setBuying(null);
-        return;
-      }
-
-      const { error: deduct } = await supabase.from("profiles").update({ galeons: bal - item.price_galeons } as never).eq("user_id", user.id);
-      if (deduct) throw deduct;
-      const { error: ins } = await supabase.from("user_items").insert({ user_id: user.id, item_id: item.id } as never);
-      if (ins) {
-        await supabase.from("profiles").update({ galeons: bal } as never).eq("user_id", user.id);
-        throw ins;
-      }
-      setOwned(prev => [...prev, item.id]);
-      toast.success(`✅ "${item.name}" adicionado ao inventário!`);
-    } catch (e: any) { toast.error("Erro: " + (e.message || "Tente novamente.")); }
-    finally { setBuying(null); }
+    const success = await handleBuyItem(item);
+    if (success) playMagicSound();
   };
 
   // ── Assinar VIP ───────────────────────────────────────────
   const buyVip = async (plan: typeof VIP_PLANS[0]) => {
     if (!user || !profile) return toast.error("Você precisa estar logado.");
-    setBuying(plan.id);
+    setBuyingPackageId(plan.id);
     try {
       const { data: order, error } = await supabase.from("galeon_orders").insert({
         user_id: user.id, package_id: `vip_${plan.id}`, amount_brl: plan.price_brl, galeons: 0, status: "pending",
@@ -278,13 +229,11 @@ export default function GringottsStore() {
       toast.info("💳 Redirecionando...");
       setTimeout(() => { window.location.href = payUrl; }, 800);
     } catch (e: any) { toast.error(e.message || "Erro ao ativar VIP."); }
-    finally { setBuying(null); }
+    finally { setBuyingPackageId(null); }
   };
 
-  const galeons = profile?.galeons ?? 0;
-  const currentVip = profile?.vip_plan;
-  const filteredItems = items.filter(i => i.category === tab);
-  const featuredItems = items.filter(i => i.is_featured || i.rarity === 'legendary').slice(0, 12);
+  const filteredItems = useMemo(() => items.filter(i => i.category === tab), [items, tab]);
+  const featuredItems = useMemo(() => items.filter(i => i.is_featured || i.rarity === 'legendary').slice(0, 12), [items]);
 
   return (
     <div className="max-w-7xl mx-auto space-y-12 pb-24 px-4 sm:px-6">
@@ -619,8 +568,8 @@ export default function GringottsStore() {
                     Câmbio Premium Gringotts
                   </p>
 
-                  <Button variant={pkg.badge ? "magical" : "outline"} className={`w-full h-14 font-bold text-sm rounded-2xl shadow-xl transition-all ${!pkg.badge && 'border-yellow-500/40 text-yellow-400 hover:bg-yellow-500/10'}`} disabled={buying === pkg.id} onClick={() => buyGaleons(pkg)}>
-                    {buying === pkg.id ? "⏳ ..." : `R$ ${pkg.price_brl.toFixed(2).replace(".", ",")}`}
+                  <Button variant={pkg.badge ? "magical" : "outline"} className={`w-full h-14 font-bold text-sm rounded-2xl shadow-xl transition-all ${!pkg.badge && 'border-yellow-500/40 text-yellow-400 hover:bg-yellow-500/10'}`} disabled={!!buyingId || !!buyingPackageId} onClick={() => buyGaleons(pkg)}>
+                    {buyingPackageId === pkg.id ? "⏳ ..." : `R$ ${pkg.price_brl.toFixed(2).replace(".", ",")}`}
                   </Button>
                 </div>
               </div>
@@ -688,12 +637,12 @@ export default function GringottsStore() {
                   </ul>
 
                   <Button size="lg" className={`w-full h-16 rounded-2xl font-bold text-lg shadow-2xl transition-all hover:scale-105 active:scale-95 ${
-                      currentVip === plan.id ? "bg-green-600/20 text-green-400 border-2 border-green-500/50" : ""
+                      profile?.vip_plan === plan.id ? "bg-green-600/20 text-green-400 border-2 border-green-500/50" : ""
                     }`} 
-                    variant={currentVip === plan.id ? "outline" : "plaque"}
-                    disabled={buying === plan.id || currentVip === plan.id}
+                    variant={profile?.vip_plan === plan.id ? "outline" : "plaque"}
+                    disabled={!!buyingId || !!buyingPackageId || profile?.vip_plan === plan.id}
                     onClick={() => buyVip(plan)}>
-                    {buying === plan.id ? "✨ Processando..." : currentVip === plan.id ? "Status Ativo ✅" : "Assinar agora"}
+                    {buyingPackageId === plan.id ? "✨ Processando..." : profile?.vip_plan === plan.id ? "Status Ativo ✅" : "Assinar agora"}
                   </Button>
                 </div>
               </div>
@@ -770,10 +719,10 @@ export default function GringottsStore() {
                            </span>
                         </div>
                         <Button size="sm" variant={isOwned ? "outline" : "magical"}
-                          disabled={isOwned || buying === item.id || (!canAfford && !isOwned)}
+                          disabled={isOwned || !!buyingId || !!buyingPackageId || (!canAfford && !isOwned)}
                           onClick={() => !isOwned && buyItem(item)}
                           className={`text-[10px] px-5 h-9 rounded-xl font-bold uppercase tracking-widest transition-all ${isOwned ? 'border-green-500/40 text-green-400 bg-green-500/10' : ''}`}>
-                          {isOwned ? "No Baú" : !canAfford ? "Saldo Insuficiente" : buying === item.id ? "..." : "Comprar"}
+                          {isOwned ? "No Baú" : !canAfford ? "Saldo Insuficiente" : buyingId === item.id ? "..." : "Comprar"}
                         </Button>
                       </div>
                       

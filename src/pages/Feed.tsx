@@ -18,36 +18,16 @@ import MagicalIcon from "@/components/MagicalIcon";
 import MagicalEmoji from "@/components/MagicalEmoji";
 import MagicalGaleon from "@/components/MagicalGaleon";
 import MagicalMemories from "@/components/MagicalMemories";
-
+import { useFeed } from "@/hooks/useFeed";
+import { FeedPost } from "@/services/feedService";
 
 const REACTIONS = ["⚡", "❤️", "🔥", "🦁", "🦅", "🐍", "🦡"];
 
-interface PostAuthor {
-  full_name: string;
-  username: string;
-  house: House;
-  avatar_url?: string | null;
-  vip_plan?: string | null;
-}
-
-interface FeedPost {
-  id: string;
-  user_id: string;
-  content: string;
-  music_url?: string;
-  created_at: string;
-  author?: PostAuthor;
-  reactions: { emoji: string; count: number; mine: boolean }[];
-  comments: { id: string; user_id: string; content: string; created_at: string; author?: PostAuthor }[];
-  showComments?: boolean;
-}
-
 export default function Feed() {
   const { profile, user } = useAuth();
+  const { posts, setPosts, loading, loadFeed } = useFeed();
   const [newPost, setNewPost] = useState("");
   const [newMusicUrl, setNewMusicUrl] = useState("");
-  const [posts, setPosts] = useState<FeedPost[]>([]);
-  const [loading, setLoading] = useState(true);
   const [posting, setPosting] = useState(false);
   const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
   const [houseStats, setHouseStats] = useState<Record<House, number>>({
@@ -58,71 +38,12 @@ export default function Feed() {
   const [bannedWords, setBannedWords] = useState<string[]>([]);
   const [showWelcomeChest, setShowWelcomeChest] = useState(false);
 
-  const loadFeed = useCallback(async () => {
-    const { data: postsData } = await supabase
-      .from("posts")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(50);
-    if (!postsData) { setLoading(false); return; }
-
-    const userIds = [...new Set(postsData.map((p) => p.user_id))];
-    const { data: authors } = await supabase
-      .from("profiles")
-      .select("user_id, full_name, username, house, avatar_url, vip_plan")
-      .in("user_id", userIds.length ? userIds : ["00000000-0000-0000-0000-000000000000"]);
-
-    const postIds = postsData.map((p) => p.id);
-    const safeIds = postIds.length ? postIds : ["00000000-0000-0000-0000-000000000000"];
-    const [{ data: reactions }, { data: comments }] = await Promise.all([
-      supabase.from("post_reactions").select("post_id, emoji, user_id").in("post_id", safeIds),
-      supabase.from("post_comments").select("*").in("post_id", safeIds).order("created_at", { ascending: true }),
-    ]);
-
-    const commentUserIds = [...new Set((comments || []).map((c) => c.user_id))];
-    const { data: commentAuthors } = await supabase
-      .from("profiles")
-      .select("user_id, full_name, username, house, avatar_url")
-      .in("user_id", commentUserIds.length ? commentUserIds : ["00000000-0000-0000-0000-000000000000"]);
-
-    const authorMap = new Map((authors || []).map((a) => [a.user_id, a as PostAuthor & { user_id: string }]));
-    const commentAuthorMap = new Map((commentAuthors || []).map((a) => [a.user_id, a as PostAuthor & { user_id: string }]));
-
-    const enriched: FeedPost[] = postsData.map((p) => {
-      const postReactions = (reactions || []).filter((r) => r.post_id === p.id);
-      const grouped: Record<string, { count: number; mine: boolean }> = {};
-      postReactions.forEach((r) => {
-        if (!grouped[r.emoji]) grouped[r.emoji] = { count: 0, mine: false };
-        grouped[r.emoji].count++;
-        if (r.user_id === user?.id) grouped[r.emoji].mine = true;
-      });
-
-      const postComments = (comments || []).filter((c) => c.post_id === p.id).map((c) => ({
-        ...c,
-        author: commentAuthorMap.get(c.user_id),
-      }));
-
-      return {
-        id: p.id,
-        user_id: p.user_id,
-        content: p.content,
-        music_url: p.music_url,
-        created_at: p.created_at,
-        author: authorMap.get(p.user_id),
-        reactions: Object.entries(grouped).map(([emoji, v]) => ({ emoji, count: v.count, mine: v.mine })),
-        comments: postComments,
-      };
-    });
-
-    setPosts(enriched);
-    setLoading(false);
-  }, [user?.id]);
-
   const loadSidebar = useCallback(async () => {
     const { data: hp } = await supabase.from("house_points").select("house, points");
     const stats: Record<House, number> = { gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0 };
-    (hp || []).forEach((row: { house: House; points: number }) => {
-      stats[row.house] = (stats[row.house] || 0) + row.points;
+    (hp || []).forEach((row: any) => {
+      const house = row.house as House;
+      stats[house] = (stats[house] || 0) + row.points;
     });
     setHouseStats(stats);
 

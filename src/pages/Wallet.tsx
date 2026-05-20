@@ -1,21 +1,10 @@
-import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
-import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { Coins, Crown, ShoppingBag, Zap, Star, Trophy, Calendar, ChevronRight, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MagicalEmoji from "@/components/MagicalEmoji";
 import MagicalGaleon from "@/components/MagicalGaleon";
-
-interface Order {
-  id: string;
-  package_id: string;
-  amount_brl: number;
-  galeons: number;
-  status: string;
-  created_at: string;
-  paid_at?: string;
-}
+import { useWallet } from "@/hooks/useWallet";
 
 const VIP_CONFIG: Record<string, { name: string; color: string; icon: string; galeons: number }> = {
   premium: { name: "Iniciante",  color: "from-slate-700 to-slate-600",   icon: "⭐", galeons: 0 },
@@ -41,32 +30,9 @@ const PACKAGES = [
 ];
 
 export default function Wallet() {
-  const { profile, user } = useAuth();
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!user) return;
-    const load = async () => {
-      const { data } = await supabase
-        .from("galeon_orders")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(20);
-      setOrders((data as Order[]) || []);
-      setLoading(false);
-    };
-    load();
-  }, [user]);
-
-  const galeons = (profile as any)?.galeons ?? 0;
-  const vipPlan = (profile as any)?.vip_plan as string | null;
-  const vipExpires = (profile as any)?.vip_expires_at;
+  const { galeons, vipPlan, vipExpires, paidOrders, pendingOrders, totalSpent, loading } = useWallet();
   const vipConf = vipPlan ? VIP_CONFIG[vipPlan] : null;
-  const totalSpent = orders.filter(o => o.status === "paid").reduce((s, o) => s + o.amount_brl, 0);
-  const paidOrders = orders.filter(o => o.status === "paid");
-  const pendingOrders = orders.filter(o => o.status === "pending");
+
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-16">
