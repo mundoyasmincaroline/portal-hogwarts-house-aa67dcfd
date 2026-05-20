@@ -46,17 +46,20 @@ export default function Feed() {
   const [showWelcomeChest, setShowWelcomeChest] = useState(false);
 
   const loadSidebar = useCallback(async () => {
-    const { data: hp } = await supabase.from("house_points").select("house, points");
+    // Combine queries to reduce RTT
+    const [{ data: hp }, { data: ch }, { data: users }] = await Promise.all([
+      supabase.from("house_points").select("house, points"),
+      supabase.from("challenges").select("id, title, xp_reward, type").eq("active", true).limit(5),
+      supabase.from("profiles").select("id, user_id, full_name, username, house, avatar_url, online, last_seen").eq("approved", true).order("online", { ascending: false }).limit(10)
+    ]);
+
     const stats: Record<House, number> = { gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0 };
     (hp || []).forEach((row: any) => {
       const house = row.house as House;
       stats[house] = (stats[house] || 0) + row.points;
     });
     setHouseStats(stats);
-
-    const { data: ch } = await supabase.from("challenges").select("id, title, xp_reward, type").eq("active", true).limit(5);
     setActiveChallenges(ch || []);
-    const { data: users } = await supabase.from("profiles").select("id, user_id, full_name, username, house, avatar_url, online, last_seen").eq("approved", true).order("online", { ascending: false }).limit(10);
     setOnlineUsers(users || []);
   }, []);
 
