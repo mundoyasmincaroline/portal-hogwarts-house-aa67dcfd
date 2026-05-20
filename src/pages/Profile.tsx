@@ -615,10 +615,19 @@ export default function Profile() {
             </div>
           </div>
         )}
-      </div>
+      </motion.div>
 
-      {activeTab === "about" ? (
-        <>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeTab}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+          className="space-y-6"
+        >
+          {activeTab === "about" && (
+            <>
           <div className="grid grid-cols-4 gap-3">
             <div className="glass rounded-xl p-4 text-center">
               <p className="text-xl font-heading text-primary">{profile.xp}</p>
