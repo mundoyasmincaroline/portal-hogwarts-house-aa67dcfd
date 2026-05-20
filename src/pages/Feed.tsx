@@ -52,20 +52,6 @@ export default function Feed() {
     setOnlineUsers(users || []);
   }, []);
 
-  const loadSidebar = useCallback(async () => {
-    const { data: hp } = await supabase.from("house_points").select("house, points");
-    const stats: Record<House, number> = { gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0 };
-    (hp || []).forEach((row: { house: House; points: number }) => {
-      stats[row.house] = (stats[row.house] || 0) + row.points;
-    });
-    setHouseStats(stats);
-
-    const { data: ch } = await supabase.from("challenges").select("id, title, xp_reward, type").eq("active", true).limit(5);
-    setActiveChallenges(ch || []);
-    const { data: users } = await supabase.from("profiles").select("id, user_id, full_name, username, house, avatar_url, online, last_seen").eq("approved", true).order("online", { ascending: false }).limit(10);
-    setOnlineUsers(users || []);
-  }, []);
-
   useEffect(() => {
     loadFeed();
     loadSidebar();
