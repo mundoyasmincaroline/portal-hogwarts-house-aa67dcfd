@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Scroll, ShieldAlert, Zap, Sparkles, Feather } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -126,8 +127,13 @@ export default function Rules() {
                   
                   <div className="pt-6">
                     <Button 
+
+
                       variant="plaque" 
-                      onClick={() => navigate("/dashboard")}
+                      onClick={async () => {
+                        const { error } = await supabase.from("profiles").update({ has_accepted_rules: true } as never).eq("user_id", (await supabase.auth.getUser()).data.user?.id);
+                        if (!error) navigate("/dashboard");
+                      }}
                       className="h-16 px-12 bg-[#3e2723] text-white border-none shadow-xl hover:scale-105 transition-all"
                     >
                       Eu aceito os termos e entro no Castelo
