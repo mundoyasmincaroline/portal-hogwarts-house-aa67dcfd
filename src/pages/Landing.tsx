@@ -93,7 +93,7 @@ export default function Landing() {
           </div>
 
           {/* Title */}
-          <h1 className="font-heading text-6xl sm:text-7xl md:text-9xl text-gold-gradient mb-4 tracking-tighter drop-shadow-[0_10px_30px_rgba(212,175,55,0.4)] animate-in fade-in zoom-in duration-1000">
+          <h1 className="text-4xl sm:text-7xl md:text-9xl font-heading text-gold-gradient mb-4 tracking-tighter drop-shadow-[0_10px_30px_rgba(212,175,55,0.4)] animate-in fade-in zoom-in duration-1000">
             Hogwarts House
           </h1>
 
@@ -183,7 +183,7 @@ export default function Landing() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {HOUSES.map(h => (
             <div key={h.id} onClick={() => navigate("/register")}
-              className={`relative glass rounded-[3rem] p-10 border-2 bg-gradient-to-br ${h.color} text-center cursor-pointer hover:-translate-y-4 hover:shadow-[0_30px_100px_rgba(0,0,0,0.6)] transition-all duration-700 group flex flex-col items-center gap-6 overflow-hidden`}>
+              className={`relative glass rounded-[2.5rem] sm:rounded-[3rem] p-6 sm:p-10 border-2 bg-gradient-to-br ${h.color} text-center cursor-pointer hover:-translate-y-4 hover:shadow-[0_30px_100px_rgba(0,0,0,0.6)] transition-all duration-700 group flex flex-col items-center gap-4 sm:gap-6 overflow-hidden`}>
               
               {/* Inner Glow Artifact */}
               <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -241,7 +241,7 @@ export default function Landing() {
 
       {/* ── MONETIZAÇÃO FLASH SALE (URGÊNCIA MÁXIMA) ── */}
       <div className="relative z-10 px-4 py-16 max-w-5xl mx-auto">
-        <div className="glass rounded-[3rem] p-10 md:p-16 border-2 border-red-500/40 bg-gradient-to-br from-red-950/60 via-black to-amber-950/40 relative overflow-hidden shadow-[0_0_80px_rgba(220,38,38,0.3)] group">
+        <div className="glass rounded-[2.5rem] sm:rounded-[3rem] p-6 sm:p-10 md:p-16 border-2 border-red-500/40 bg-gradient-to-br from-red-950/60 via-black to-amber-950/40 relative overflow-hidden shadow-[0_0_80px_rgba(220,38,38,0.3)] group">
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-400/80 to-transparent animate-shimmer" />
           <div className="absolute -top-20 -right-20 w-96 h-96 bg-red-500/10 rounded-full blur-[100px] animate-pulse" />
           
