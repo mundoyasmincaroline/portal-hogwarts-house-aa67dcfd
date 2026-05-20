@@ -1,4 +1,5 @@
 import { playMagicSound } from "@/lib/sounds";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
@@ -364,8 +365,15 @@ export default function GringottsStore() {
         </div>
       </div>
 
-      {/* ── ABA: DESTAQUES / EXCLUSIVOS ── */}
-      {tab === "featured" && (
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={tab}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+        >
+          {tab === "featured" && (
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
           <div className="text-center max-w-3xl mx-auto space-y-4">
             <div className="inline-block p-1 rounded-full bg-orange-500/10 border border-orange-500/20 mb-2">
@@ -534,7 +542,7 @@ export default function GringottsStore() {
       )}
 
       {/* ── ABA: GALEÕES ── */}
-      {tab === "galeons" && (
+          {tab === "galeons" && (
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
           <div className="text-center max-w-3xl mx-auto space-y-4">
             <h2 className="text-4xl md:text-6xl font-heading text-foreground flex items-center justify-center gap-4">
@@ -579,7 +587,7 @@ export default function GringottsStore() {
       )}
 
       {/* ── ABA: VIP ── */}
-      {tab === "vip" && (
+          {tab === "vip" && (
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
           <div className="text-center max-w-3xl mx-auto space-y-4">
             <h2 className="text-4xl md:text-6xl font-heading text-foreground flex items-center justify-center gap-4">
@@ -742,6 +750,8 @@ export default function GringottsStore() {
           )}
         </div>
       )}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

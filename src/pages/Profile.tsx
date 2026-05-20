@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import { HOUSES, getLevelFromXP, type House } from "@/lib/store";
 import HouseCrest from "@/components/HouseCrest";
@@ -14,7 +15,7 @@ import ProfileAlbum from "@/components/ProfileAlbum";
 import CharacterSheetView from "@/components/CharacterSheetView";
 import MemberCard from "@/components/MemberCard";
 import AdminMemberModal from "@/components/AdminMemberModal";
-import { Info, Users, Search, Scroll, Book, Lock, Trophy, ShoppingBag, Flame, Sparkles, Star, CheckCircle2, Crown } from "lucide-react";
+import { Info, Users, Search, Scroll, Book, Lock, Trophy, ShoppingBag, Flame, Sparkles, Star, CheckCircle2, Crown, Camera } from "lucide-react";
 import SafeImage from "@/components/SafeImage";
 import RecruitmentWidget from "@/components/RecruitmentWidget";
 import MagicalIcon from "@/components/MagicalIcon";
@@ -383,112 +384,88 @@ export default function Profile() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-8 pb-10">
       {/* ── HOUSE THEMED BACKGROUND OVERLAY ── */}
-      <div className={`fixed inset-0 pointer-events-none z-0 transition-opacity duration-1000 opacity-30 ${
-        profile.house === 'gryffindor' ? 'bg-[radial-gradient(circle_at_center,_rgba(220,38,38,0.15),transparent_70%)]' :
-        profile.house === 'slytherin' ? 'bg-[radial-gradient(circle_at_center,_rgba(16,185,129,0.15),transparent_70%)]' :
-        profile.house === 'ravenclaw' ? 'bg-[radial-gradient(circle_at_center,_rgba(37,99,235,0.15),transparent_70%)]' :
-        'bg-[radial-gradient(circle_at_center,_rgba(217,119,6,0.15),transparent_70%)]'
+      <div className={`fixed inset-0 pointer-events-none z-0 transition-opacity duration-1000 opacity-20 ${
+        profile.house === 'gryffindor' ? 'bg-[radial-gradient(circle_at_center,_rgba(220,38,38,0.2),transparent_70%)]' :
+        profile.house === 'slytherin' ? 'bg-[radial-gradient(circle_at_center,_rgba(16,185,129,0.2),transparent_70%)]' :
+        profile.house === 'ravenclaw' ? 'bg-[radial-gradient(circle_at_center,_rgba(37,99,235,0.2),transparent_70%)]' :
+        'bg-[radial-gradient(circle_at_center,_rgba(217,119,6,0.2),transparent_70%)]'
       }`} />
       
-      {/* Abas */}
-      <div className="flex gap-4 border-b border-border mb-6 overflow-x-auto pb-1 scrollbar-hide whitespace-nowrap relative z-10">
-        <button 
-          onClick={() => { setActiveTab("about"); setEditing(false); }} 
-          className={`pb-2 font-heading text-sm transition-colors ${activeTab === "about" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          Sobre
-        </button>
-        <button
-          onClick={() => { setActiveTab("friends"); setEditing(false); }}
-          className={`pb-2 font-heading text-sm transition-colors ${activeTab === "friends" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          Amigos ({friends.length})
-        </button>
-        <button
-          onClick={() => { setActiveTab("members"); setEditing(false); }}
-          className={`pb-2 font-heading text-sm transition-colors ${activeTab === "members" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          👥 Membros
-        </button>
-        <button 
-          onClick={() => { setActiveTab("fichas"); setEditing(false); }} 
-          className={`pb-2 font-heading text-sm transition-colors ${activeTab === "fichas" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          Fichas 📜
-        </button>
-        <button 
-          onClick={() => { setActiveTab("album"); setEditing(false); }} 
-          className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "album" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          Álbum
-        </button>
-        <button 
-          onClick={() => { setActiveTab("achievements"); setEditing(false); }} 
-          className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "achievements" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          🏆 Conquistas
-        </button>
-        <button 
-          onClick={() => { setActiveTab("inventory"); setEditing(false); }} 
-          className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "inventory" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-        >
-          🎒 Inventário
-        </button>
-        {isMe && (
-          <button 
-            onClick={() => { setActiveTab("referral"); setEditing(false); }} 
-            className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "referral" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
+      {/* Premium Navigation Tabs */}
+      <div className="flex gap-1 border-b border-white/5 mb-8 overflow-x-auto pb-px scrollbar-hide whitespace-nowrap relative z-10 p-1 bg-card/40 backdrop-blur-md rounded-2xl">
+        {[
+          { id: "about", label: "Sobre", icon: "👤" },
+          { id: "friends", label: `Amigos (${friends.length})`, icon: "🤝" },
+          { id: "members", label: "Membros", icon: "👥" },
+          { id: "fichas", label: "Fichas", icon: "📜" },
+          { id: "album", label: "Álbum", icon: "📸" },
+          { id: "achievements", label: "Conquistas", icon: "🏆" },
+          { id: "inventory", label: "Inventário", icon: "🎒" },
+          ...(isMe ? [{ id: "referral", label: "Recrutamento", icon: "📢" }] : []),
+          ...(isMe ? [{ id: "security", label: "Segurança", icon: "🔒" }] : []),
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => { setActiveTab(tab.id as any); setEditing(false); }}
+            className={`relative px-4 py-2.5 rounded-xl font-heading text-xs transition-all flex items-center gap-2 group ${
+              activeTab === tab.id ? "text-primary" : "text-muted-foreground hover:text-foreground"
+            }`}
           >
-            Recrutamento
+            {activeTab === tab.id && (
+              <motion.div 
+                layoutId="active-tab-indicator"
+                className="absolute inset-0 bg-primary/10 border border-primary/20 rounded-xl"
+                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              />
+            )}
+            <span className="relative z-10">{tab.icon}</span>
+            <span className="relative z-10">{tab.label}</span>
           </button>
-        )}
-        {isMe && (
-          <button 
-            onClick={() => { setActiveTab("security"); setEditing(false); }} 
-            className={`pb-2 font-heading text-sm transition-colors shrink-0 ${activeTab === "security" ? "border-b-2 border-primary text-primary" : "text-muted-foreground hover:text-foreground"}`}
-          >
-            Segurança
-          </button>
-        )}
-        {(isMe && (isAdmin || profile?.username === 'morpheus' || user?.email === 'paulormorpheus21@gmail.com')) && (
+        ))}
+        
+        {isMe && (isAdmin || profile?.username === 'morpheus' || user?.email === 'paulormorpheus21@gmail.com') && (
           <button 
             onClick={() => navigate("/dashboard/matrix")} 
-            className="pb-2 font-heading text-sm transition-colors shrink-0 text-cyan-400 hover:text-cyan-300 flex items-center gap-2 animate-pulse"
+            className="px-4 py-2.5 rounded-xl font-heading text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-2"
           >
-            <div className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]" />
-            Revolution
+            <div className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee] animate-pulse" />
+            <span>Matrix</span>
           </button>
         )}
       </div>
 
-      <div className="glass rounded-[3rem] p-10 md:p-16 text-center relative overflow-hidden border-2 border-primary/20 shadow-[0_30px_100px_rgba(0,0,0,0.5)]">
-        {/* Floating Magic Dust */}
-        <div className="absolute inset-0 pointer-events-none opacity-20">
-           <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white rounded-full animate-float-slow blur-[1px]" />
-           <div className="absolute top-1/2 right-1/4 w-1.5 h-1.5 bg-primary rounded-full animate-float-slow delay-700 blur-[1px]" />
-           <div className="absolute bottom-1/4 left-1/3 w-3 h-3 bg-white/50 rounded-full animate-float-slow delay-1000 blur-[2px]" />
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="glass rounded-[2.5rem] p-8 md:p-12 text-center relative overflow-hidden border border-white/5 shadow-2xl"
+      >
+        {/* Animated background pattern */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] animate-pulse" />
         </div>
 
-        <div className="relative inline-block mb-8">
-          <div className="w-24 h-24 shrink-0 mx-auto">
+        <div className="relative inline-block mb-8 group">
+          <div className="w-32 h-32 shrink-0 mx-auto relative">
+            <motion.div 
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className={`absolute -inset-2 rounded-full border border-dashed border-primary/30 pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity`}
+            />
             <SafeImage
               src={profile.avatar_url}
               alt={profile.full_name}
-              className={`w-full h-full rounded-full object-cover animate-pulse-glow ${user?.email === 'paulormorpheus21@gmail.com' ? 'border-2 border-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.5)]' : ''}`}
+              className={`w-full h-full rounded-full object-cover relative z-10 border-4 ${user?.email === 'paulormorpheus21@gmail.com' ? 'border-cyan-500 shadow-[0_0_30px_rgba(34,211,238,0.4)]' : 'border-white/10 group-hover:border-primary/50'} transition-colors`}
               fallbackText={profile.full_name[0]}
             />
-            {user?.email === 'paulormorpheus21@gmail.com' && (
-              <div className="absolute inset-[-8px] border border-cyan-400/20 rounded-full animate-spin-slow pointer-events-none" />
-            )}
           </div>
-          <div className="absolute -bottom-1 -right-1">
-            <HouseCrest house={profile.house as House} size="sm" />
+          <div className="absolute -bottom-2 -right-2 z-20 hover:scale-125 transition-transform duration-300">
+            <HouseCrest house={profile.house as House} size="md" />
           </div>
           {isMe && (
-            <label className="absolute -top-1 -right-1 w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center cursor-pointer hover:scale-110 transition-transform" title="Trocar foto">
-              📷
+            <label className="absolute -top-2 -right-2 w-9 h-9 rounded-full bg-primary text-primary-foreground text-sm flex items-center justify-center cursor-pointer hover:scale-110 transition-all z-20 shadow-xl border-2 border-background" title="Trocar foto">
+              <Camera size={16} />
               <input type="file" accept="image/*" className="hidden" onChange={uploadAvatar} disabled={uploading} />
             </label>
           )}
@@ -638,10 +615,19 @@ export default function Profile() {
             </div>
           </div>
         )}
-      </div>
+      </motion.div>
 
-      {activeTab === "about" ? (
-        <>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeTab}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+          className="space-y-6"
+        >
+          {activeTab === "about" && (
+            <>
           <div className="grid grid-cols-4 gap-3">
             <div className="glass rounded-xl p-4 text-center">
               <p className="text-xl font-heading text-primary">{profile.xp}</p>
@@ -712,7 +698,8 @@ export default function Profile() {
             )}
           </div>
         </>
-      ) : activeTab === "friends" ? (
+          )}
+          {activeTab === "friends" && (
         <div className="space-y-4">
           <h2 className="font-heading text-xl text-foreground">Amigos de {profile.full_name}</h2>
           {friends.length === 0 ? (
@@ -738,14 +725,18 @@ export default function Profile() {
             </div>
           )}
         </div>
-      ) : activeTab === "members" ? (
+          )}
+          {activeTab === "members" && (
         <MembersTab currentUserId={user?.id} />
-      ) : activeTab === "fichas" ? (
+          )}
+          {activeTab === "fichas" && (
         <CharacterSheetView userId={profile.user_id} isOwner={isMe} userItems={userItems} />
 
-      ) : activeTab === "album" ? (
-        <ProfileAlbum userId={profile.user_id} />
-      ) : activeTab === "referral" && isMe ? (
+          )}
+          {activeTab === "album" && (
+            <ProfileAlbum userId={profile.user_id} />
+          )}
+          {activeTab === "referral" && isMe && (
         <div className="space-y-8">
           <RecruitmentWidget />
           
@@ -782,7 +773,8 @@ export default function Profile() {
             )}
           </div>
         </div>
-      ) : activeTab === "achievements" ? (
+          )}
+          {activeTab === "achievements" && (
         <div className="space-y-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-center md:text-left">
@@ -879,7 +871,8 @@ export default function Profile() {
             </div>
           </div>
         </div>
-      ) : activeTab === "inventory" ? (
+          )}
+          {activeTab === "inventory" && (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="font-heading text-xl text-foreground">🎒 Mochila de Relíquias</h2>
@@ -967,7 +960,8 @@ export default function Profile() {
             </div>
           )}
         </div>
-      ) : activeTab === "security" && isMe ? (
+          )}
+          {activeTab === "security" && isMe && (
         <div className="glass rounded-2xl p-6">
           <h2 className="font-heading text-xl text-foreground mb-1">🔐 Segurança e Acesso</h2>
           <p className="text-sm text-muted-foreground mb-6">Altere sua senha mágica para manter sua conta protegida.</p>
@@ -987,7 +981,9 @@ export default function Profile() {
             </Button>
           </form>
         </div>
-      ) : null}
+          )}
+        </motion.div>
+      </AnimatePresence>
 
       {adminEditModal && profile && (
         <AdminMemberModal
