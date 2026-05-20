@@ -138,18 +138,24 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
     // Campos mínimos para permitir avanço se for o primeiro personagem (vindo do rito)
     const isFirstCharacter = !profile?.active_character_id;
     
-    if (isFirstCharacter) {
-       // No primeiro personagem, somos mais flexíveis ou garantimos que os dados do rito estão aqui
-       if (!form.avatar_url && !avatarFile) {
-         toast.error("O castelo precisa ver seu rosto! Adicione uma foto.");
-         return;
-       }
-    } else {
-      if (!form.avatar_url && !avatarFile || !form.blood_status || !form.wand || !form.patronus || !form.personality || !form.strength || !form.weakness || !form.fears || !form.dreams) {
+    // Verificação de campos obrigatórios (Rito é mais flexível no primeiro personagem)
+    const isFirstCharacter = !profile?.active_character_id;
+    const requiredFields = ["full_name", "house", "blood_status", "wand", "patronus", "personality", "strength", "weakness", "fears", "dreams"];
+    
+    if (!isFirstCharacter) {
+      const missing = requiredFields.filter(f => !form[f as keyof typeof form]);
+      if (missing.length > 0 || (!form.avatar_url && !avatarFile)) {
         toast.error("Preencha todos os campos obrigatórios da ficha!");
         return;
       }
+    } else {
+      // No primeiro personagem (Rito), garantimos apenas Nome, Casa e Foto
+      if (!form.full_name || !form.house || (!form.avatar_url && !avatarFile)) {
+        toast.error("Nome, Casa e Foto são obrigatórios para atravessar o portal!");
+        return;
+      }
     }
+    
     if (type === "canon" && !form.canon_portrayed_by) {
       toast.error("Informe o ator/atriz original do personagem Canon!");
       return;
