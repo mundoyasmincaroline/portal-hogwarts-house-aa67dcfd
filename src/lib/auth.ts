@@ -30,14 +30,13 @@ export interface Profile {
   vip_expires_at: string | null;
 }
 
-export function isUserOnline(profile: Partial<Profile> | null): boolean {
+export const isUserOnline = (profile: Partial<Profile> | null): boolean => {
   if (!profile) return false;
-  if (!profile.last_seen) return !!profile.online;
-  // Consider online if last_seen is within the last 2 minutes (120000 ms)
+  if (profile.online === true) return true;
+  if (!profile.last_seen) return false;
   const lastSeenDate = new Date(profile.last_seen).getTime();
-  const now = new Date().getTime();
-  return (now - lastSeenDate) < 120000;
-}
+  return (Date.now() - lastSeenDate) < 180000; // 3 minutes buffer
+};
 
 interface AuthState {
   user: User | null;
