@@ -44,6 +44,9 @@ export default function Feed() {
   const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
   const [bannedWords, setBannedWords] = useState<string[]>([]);
   const [showWelcomeChest, setShowWelcomeChest] = useState(false);
+  
+  // Throttle sidebar loading if needed
+  const sidebarLoaded = useRef(false);
 
   const loadSidebar = useCallback(async () => {
     // Combine queries to reduce RTT
@@ -65,7 +68,10 @@ export default function Feed() {
 
   useEffect(() => {
     loadFeed();
-    loadSidebar();
+    if (!sidebarLoaded.current) {
+        loadSidebar();
+        sidebarLoaded.current = true;
+    }
     
     // Buscar palavras proibidas
     supabase.from("banned_words").select("word").then(({ data }) => {
