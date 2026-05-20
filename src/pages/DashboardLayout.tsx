@@ -288,13 +288,21 @@ export default function DashboardLayout() {
         </div>
       </aside>
 
-      <main className="flex-1 flex flex-col min-w-0">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <NotificationBanner />
-        <div className="md:hidden flex items-center gap-3 p-3 border-b border-border bg-card">
-          <button onClick={() => setSidebarOpen(true)} className="p-2 -ml-2 text-muted-foreground hover:text-foreground">
-            <Menu size={20} />
-          </button>
-          <span className="font-heading text-sm text-gold-gradient">Hogwarts House</span>
+        <div className="md:hidden flex items-center justify-between p-3 border-b border-border bg-card/80 backdrop-blur-md sticky top-0 z-30">
+          <div className="flex items-center gap-3">
+            <button onClick={() => setSidebarOpen(true)} className="p-2 -ml-2 text-muted-foreground hover:text-foreground active:scale-95 transition-transform">
+              <Menu size={20} />
+            </button>
+            <span className="font-heading text-sm text-gold-gradient">Hogwarts House</span>
+          </div>
+          <div className="flex items-center gap-2">
+             <div className="scale-90"><Notifications /></div>
+             <Link to="/dashboard/profile" className="w-8 h-8 rounded-full overflow-hidden border border-primary/30">
+                <SafeImage src={profile.avatar_url} alt={profile.full_name} className="w-full h-full object-cover" />
+             </Link>
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto relative scroll-smooth">
