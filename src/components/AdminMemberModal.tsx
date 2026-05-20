@@ -420,6 +420,14 @@ export default function AdminMemberModal({ memberId, memberName, onClose, onSave
                             <label className="text-xs text-muted-foreground">Instagram (personagem)</label>
                             <Input value={char.instagram || ""} onChange={e => cf(char.id, "instagram", e.target.value)} className="bg-secondary/50" />
                           </div>
+                          <div className="space-y-1">
+                            <label className="text-xs text-muted-foreground">Mãe (ID Portal)</label>
+                            <Input value={char.mother_id || ""} onChange={e => cf(char.id, "mother_id", e.target.value)} className="bg-secondary/50" placeholder="UUID da mãe" />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-xs text-muted-foreground">Pai (ID Portal)</label>
+                            <Input value={char.father_id || ""} onChange={e => cf(char.id, "father_id", e.target.value)} className="bg-secondary/50" placeholder="UUID do pai" />
+                          </div>
                         </div>
 
                         {/* Avatar / Foto */}
