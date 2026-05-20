@@ -438,13 +438,13 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
                     />
                     {parentResults.mother.length > 0 && (
                       <div className="absolute z-40 w-full mt-1 bg-card border border-border rounded-lg overflow-hidden shadow-xl">
-                        {parentResults.mother.map(m => (
-                          <button key={m.id} type="button" onClick={() => { setForm(f => ({ ...f, mother_id: m.id })); setParentSearch(p => ({ ...p, mother: "" })); }}
+                        {parentResults.mother.map(m_item => (
+                          <button key={m_item.id} type="button" onClick={() => { setForm(f => ({ ...f, mother_id: m_item.id })); setParentSearch(p => ({ ...p, mother: "" })); }}
                             className="w-full flex items-center gap-2 px-2 py-1.5 hover:bg-secondary/50 transition-colors text-left">
-                            <img src={m.avatar_url || "/placeholder.svg"} className="w-6 h-6 rounded-full object-cover" />
+                            <img src={m_item.avatar_url || "/placeholder.svg"} className="w-6 h-6 rounded-full object-cover" />
                             <div className="overflow-hidden">
-                              <p className="font-heading text-[10px] truncate">{m.full_name}</p>
-                              <p className="text-[8px] text-muted-foreground">{m.blood_status}</p>
+                              <p className="font-heading text-[10px] truncate">{m_item.full_name}</p>
+                              <p className="text-[8px] text-muted-foreground">{m_item.blood_status}</p>
                             </div>
                           </button>
                         ))}
