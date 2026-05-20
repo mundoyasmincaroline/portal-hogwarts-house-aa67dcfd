@@ -5,6 +5,7 @@
  */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -161,74 +162,87 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
   }
 
   return (
-    <div
+    <motion.div
       onClick={goToProfile}
-      className={`relative glass rounded-[2.5rem] p-6 border-2 transition-all duration-500 cursor-pointer group flex flex-col items-center text-center ${
+      whileHover={{ y: -8, scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className={`relative glass rounded-[2rem] p-6 border transition-all duration-500 cursor-pointer group flex flex-col items-center text-center overflow-hidden ${
         isVip 
-          ? "border-yellow-500/40 bg-gradient-to-br from-yellow-950/20 to-black shadow-[0_20px_50px_rgba(250,204,21,0.1)] hover:border-yellow-400" 
-          : "border-white/10 bg-black/40 hover:border-white/30 hover:-translate-y-2 shadow-2xl"
+          ? "border-yellow-500/30 bg-gradient-to-br from-yellow-950/20 via-card to-black shadow-[0_20px_50px_rgba(250,204,21,0.1)] hover:border-yellow-400" 
+          : "border-white/5 bg-card/60 hover:border-primary/30 shadow-2xl"
       }`}
     >
-      {/* VIP Aura */}
+      {/* Decorative magical aura for VIPs */}
       {isVip && (
-        <div className="absolute inset-0 bg-yellow-500/5 rounded-[2.5rem] pointer-events-none animate-pulse-glow" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(250,204,21,0.1),transparent_70%)] pointer-events-none" />
+      )}
+
+      {/* House watermark in background */}
+      {member.house && (
+        <div className="absolute -right-4 -bottom-4 opacity-[0.03] rotate-12 group-hover:scale-110 group-hover:opacity-[0.06] transition-all duration-700 pointer-events-none">
+          <HouseCrest house={member.house as House} size="xl" />
+        </div>
       )}
 
       {/* Avatar Section */}
       <div className="relative mb-6">
-        <div className="relative w-24 h-24 shrink-0">
+        <div className="relative w-28 h-28 shrink-0">
           {isVip && (
-            <div className="absolute inset-0 bg-yellow-400/20 rounded-full blur-2xl animate-pulse scale-125" />
+            <motion.div 
+              animate={{ rotate: 360 }}
+              transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+              className="absolute -inset-1 rounded-full bg-gradient-to-r from-yellow-400 via-amber-200 to-yellow-600 opacity-30 blur-sm"
+            />
           )}
-          <SafeImage
-            src={member.avatar_url || ""}
-            alt={member.full_name}
-            className={`w-full h-full rounded-full object-cover border-2 transition-all relative z-10 ${
-              isVip ? "border-yellow-400 shadow-2xl" : "border-white/10 group-hover:border-white/40"
-            }`}
-          />
+          <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white/10 group-hover:border-primary/50 transition-colors z-10">
+            <SafeImage
+              src={member.avatar_url || ""}
+              alt={member.full_name}
+              className="w-full h-full object-cover"
+            />
+          </div>
           {member.online !== undefined && (
-            <span className={`absolute bottom-1 right-1 w-5 h-5 rounded-full border-4 border-zinc-900 z-20 ${member.online ? "bg-green-500" : "bg-zinc-600"}`} />
+            <span className={`absolute bottom-2 right-2 w-5 h-5 rounded-full border-4 border-card z-20 ${member.online ? "bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]" : "bg-zinc-600"}`} />
           )}
         </div>
         
         {/* Floating Badges */}
-        <div className="absolute -top-2 -right-2 z-30">
+        <div className="absolute -top-1 -right-1 z-30 flex flex-col gap-1">
           {isFounder ? (
-            <div className="bg-yellow-400 text-black px-2 py-0.5 rounded-lg text-[8px] font-heading font-bold shadow-xl">FUNDADOR</div>
+            <span className="bg-yellow-400 text-black px-2 py-0.5 rounded-lg text-[8px] font-heading font-bold shadow-lg border border-yellow-200">FUNDADOR</span>
           ) : isVip ? (
-            <div className="bg-primary text-primary-foreground px-2 py-0.5 rounded-lg text-[8px] font-heading font-bold shadow-xl">VIP Bruxo</div>
+            <span className="bg-primary text-primary-foreground px-2 py-0.5 rounded-lg text-[8px] font-heading font-bold shadow-lg">VIP</span>
           ) : null}
         </div>
       </div>
 
       {/* Content */}
-      <div className="space-y-1 mb-6 w-full px-2">
-        <h3 className={`font-heading text-lg truncate w-full transition-colors ${isVip ? "text-yellow-100" : "text-white group-hover:text-primary"}`}>
+      <div className="space-y-1 mb-6 w-full relative z-10">
+        <h3 className={`font-heading text-xl truncate w-full transition-colors ${isVip ? "text-yellow-100 group-hover:text-yellow-400" : "text-white group-hover:text-primary"}`}>
           {member.full_name}
         </h3>
-        <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-[0.2em]">@{member.username}</p>
+        <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-[0.2em] opacity-60">@{member.username}</p>
         
-        <div className="flex items-center justify-center gap-3 pt-3">
-          <div className="bg-white/5 border border-white/10 rounded-xl px-3 py-1 flex items-center gap-2">
+        <div className="flex items-center justify-center gap-2 pt-4">
+          <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-full px-4 py-1.5 flex items-center gap-2 group-hover:border-primary/20 transition-colors">
             {member.house && <HouseCrest house={member.house as House} size="xs" />}
-            <span className={`text-[10px] font-heading uppercase font-bold ${isVip ? "text-yellow-400" : "text-primary"}`}>Nv. {member.level || 1}</span>
+            <span className={`text-[11px] font-heading uppercase font-bold tracking-wider ${isVip ? "text-yellow-400" : "text-primary/80"}`}>Nível {member.level || 1}</span>
           </div>
         </div>
       </div>
 
-      {/* Action buttons (Fixed layout to prevent break) */}
+      {/* Action buttons */}
       {!isMe && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full mt-auto" onClick={e => e.stopPropagation()}>
-          <div className="flex justify-center">{friendBtn()}</div>
+        <div className="grid grid-cols-2 gap-3 w-full mt-auto relative z-10" onClick={e => e.stopPropagation()}>
+          <div className="flex justify-stretch w-full">{friendBtn()}</div>
           <button
             onClick={goToDM}
-            className="flex items-center justify-center gap-2 px-3 py-1.5 rounded-xl text-[9px] font-heading uppercase tracking-widest bg-white/5 border border-white/10 text-white/60 hover:border-primary/50 hover:text-white transition-all"
+            className="btn-magical flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-[10px] font-heading uppercase tracking-widest bg-white/5 border border-white/10 text-white/60 hover:border-primary/40 hover:text-white"
           >
             <MessageSquare size={12} /> DM
           </button>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
