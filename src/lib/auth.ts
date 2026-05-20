@@ -115,12 +115,18 @@ export const useAuth = create<AuthState>((set, get) => ({
   },
 
   fetchProfile: async (userId: string) => {
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", userId)
-      .maybeSingle();
-    if (data) set({ profile: data as unknown as Profile });
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", userId)
+        .maybeSingle();
+      
+      if (error) throw error;
+      if (data) set({ profile: data as unknown as Profile });
+    } catch (err) {
+      console.error("Erro ao buscar perfil:", err);
+    }
   },
 
   checkAdmin: async (userId: string) => {
@@ -209,7 +215,11 @@ export const useAuth = create<AuthState>((set, get) => ({
     if (!sessionId) {
       sessionId = Math.random().toString(36).substring(2, 15);
       localStorage.setItem("hogwarts_session_id", sessionId);
-      await supabase.from("profiles").update({ current_session_id: sessionId } as never).eq("user_id", userId);
+      const { error } = await supabase.from("profiles").update({ current_session_id: sessionId } as never).eq("user_id", userId);
+      if (error) {
+        console.error("Erro ao registrar session_id:", error);
+        return;
+      }
       justInitialized = true;
     }
 
@@ -222,10 +232,16 @@ export const useAuth = create<AuthState>((set, get) => ({
         return;
     }
 
-    const { data: prof } = await supabase.from("profiles").select("current_session_id").eq("user_id", userId).single();
+    const { data: prof, error: profError } = await supabase.from("profiles").select("current_session_id").eq("user_id", userId).maybeSingle();
     
+    if (profError) {
+      console.error("Erro ao verificar sessão ativa:", profError);
+      return;
+    }
+
     if (prof?.current_session_id && prof.current_session_id !== sessionId) {
       // Foi logado em outro dispositivo
+      console.warn("Múltiplas sessões detectadas. Desconectando sessão local...");
       await supabase.auth.signOut();
       localStorage.removeItem("hogwarts_session_id");
       set({ user: null, profile: null, isAuthenticated: false, isAdmin: false });
