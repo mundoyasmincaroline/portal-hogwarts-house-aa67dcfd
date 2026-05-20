@@ -1479,6 +1479,7 @@ export type Database = {
           avatar_url: string | null
           bio: string | null
           birth_date: string | null
+          blood_locked: boolean | null
           created_at: string
           current_session_id: string | null
           full_name: string
@@ -1506,6 +1507,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           birth_date?: string | null
+          blood_locked?: boolean | null
           created_at?: string
           current_session_id?: string | null
           full_name?: string
@@ -1533,6 +1535,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           birth_date?: string | null
+          blood_locked?: boolean | null
           created_at?: string
           current_session_id?: string | null
           full_name?: string
