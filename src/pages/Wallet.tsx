@@ -56,11 +56,9 @@ export default function Wallet() {
               <p className="font-heading text-5xl text-yellow-400">{galeons.toLocaleString("pt-BR")}</p>
               <p className="text-xs text-muted-foreground mt-1">🪙 Galeões</p>
               <Link to="/dashboard/store">
-              <Link to="/dashboard/store">
                 <Button variant="plaque" size="sm" className="mt-3 text-[10px]">
                   <ShoppingBag size={12} className="mr-1" /> Usar na Loja
                 </Button>
-              </Link>
               </Link>
             </div>
 
