@@ -682,8 +682,7 @@ export default function GringottsStore() {
               </div>
               <h3 className="text-3xl font-heading mb-4 text-white/80">Cofre em Manutenção</h3>
               <p className="text-muted-foreground text-lg font-serif">Os duendes de Gringotts estão reabastecendo esta seção com itens lendários. Volte em breve para descobrir as novidades.</p>
-        </motion.div>
-      </AnimatePresence>
+            </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
               {filteredItems.map(item => {
@@ -746,6 +745,16 @@ export default function GringottsStore() {
                     </div>
                   </div>
                 );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+    </motion.div>
+  </AnimatePresence>
+</div>
+);
+}
               })}
             </div>
           )}
