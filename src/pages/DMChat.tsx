@@ -60,8 +60,9 @@ export default function DMChat() {
   // Realtime subscription
   useEffect(() => {
     if (!user || !partnerId) return;
+    const channelId = `dm_${[user.id, partnerId].sort().join("_")}:${Date.now()}:${Math.random().toString(36).slice(2)}`;
     const channel = supabase
-      .channel(`dm_${[user.id, partnerId].sort().join("_")}`)
+      .channel(channelId)
       .on("postgres_changes", {
         event: "INSERT",
         schema: "public",
