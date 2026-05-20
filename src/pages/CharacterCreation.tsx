@@ -219,6 +219,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
       }
 
       await supabase.from("profiles").update({ active_character_id: char!.id, has_seen_intro: false } as never).eq("user_id", user.id);
+      localStorage.removeItem("pending_character_draft"); // Remove o rascunho apenas após salvar com sucesso
       toast.success(`Ficha ${type === "oc" ? "OC" : "Canon"} criada com sucesso! ✨`);
       onComplete();
     } catch (e: any) {
