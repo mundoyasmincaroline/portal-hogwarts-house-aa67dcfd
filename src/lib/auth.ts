@@ -223,7 +223,6 @@ export const useAuth = create<AuthState>((set, get) => ({
       await supabase.from("profiles").update({ current_session_id: sessionId } as never).eq("user_id", userId);
     }
 
-    // Only update online status if really needed or once every few minutes
     await supabase
       .from("profiles")
       .update({ online: true, last_seen: now.toISOString() } as never)

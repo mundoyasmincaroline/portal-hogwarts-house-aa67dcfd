@@ -127,7 +127,7 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* Spacer to maintain layout height after removing the description card */}
+          {/* Mantendo o espaço para estética de jogo */}
           <div className="h-28 md:h-32 mb-6" aria-hidden="true" />
 
           {/* CTA */}
