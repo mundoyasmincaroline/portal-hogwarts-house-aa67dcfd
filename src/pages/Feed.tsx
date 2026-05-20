@@ -19,6 +19,7 @@ import MagicalEmoji from "@/components/MagicalEmoji";
 import MagicalGaleon from "@/components/MagicalGaleon";
 import MagicalMemories from "@/components/MagicalMemories";
 import { useFeed } from "@/hooks/useFeed";
+import { useRealtime } from "@/hooks/useRealtime";
 import { FeedPost } from "@/services/feedService";
 
 const REACTIONS = ["⚡", "❤️", "🔥", "🦁", "🦅", "🐍", "🦡"];
@@ -67,14 +68,16 @@ export default function Feed() {
     supabase.from("banned_words").select("word").then(({ data }) => {
       if (data) setBannedWords(data.map(d => d.word.toLowerCase()));
     });
+  }, [loadFeed]);
 
-    const channel = supabase
-      .channel("feed-changes")
-      .on("postgres_changes", { event: "*", schema: "public", table: "posts" }, () => loadFeed())
-      .on("postgres_changes", { event: "*", schema: "public", table: "post_comments" }, () => loadFeed())
-      .on("postgres_changes", { event: "*", schema: "public", table: "post_reactions" }, () => loadFeed())
-      .subscribe();
-    return () => { supabase.removeChannel(channel); };
+  // Use centralized realtime hooks
+  useRealtime("posts", "*", loadFeed);
+  useRealtime("post_comments", "*", loadFeed);
+  useRealtime("post_reactions", "*", loadFeed);
+
+  useEffect(() => {
+    loadFeed();
+    loadSidebar();
   }, [loadFeed, loadSidebar]);
 
   useEffect(() => {
