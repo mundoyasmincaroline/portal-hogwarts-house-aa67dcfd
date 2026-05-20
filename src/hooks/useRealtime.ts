@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
@@ -15,7 +15,7 @@ export function useRealtime<T>(
   callbackRef.current = callback;
 
   useEffect(() => {
-    const channelName = `realtime-${table}-${event}-${filter || 'all'}`;
+    const channelName = `realtime-${table}-${event}-${filter || 'all'}-${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const channel = supabase.channel(channelName);
     
     channel

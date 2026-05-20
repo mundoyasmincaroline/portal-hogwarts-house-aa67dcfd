@@ -66,8 +66,9 @@ export default function Duels() {
   };
 
   const subscribeToDuels = () => {
+    const channelId = `active_duels_page:${user?.id ?? "guest"}:${Date.now()}:${Math.random().toString(36).slice(2)}`;
     const channel = supabase
-      .channel("active_duels_page")
+      .channel(channelId)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "duels" },

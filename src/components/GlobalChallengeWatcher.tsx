@@ -12,8 +12,9 @@ export default function GlobalChallengeWatcher() {
 
   useEffect(() => {
     // Escutar por novos desafios criados
+    const channelId = `challenges_channel:${Date.now()}:${Math.random().toString(36).slice(2)}`;
     const channel = supabase
-      .channel("challenges_channel")
+      .channel(channelId)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "challenges" }, (payload) => {
         if (payload.new && payload.new.active) {
             handleNewChallenge(payload.new);
