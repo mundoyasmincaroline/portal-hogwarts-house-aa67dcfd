@@ -106,14 +106,8 @@
   75% { opacity: 0.95; }
 }
 
-.animate-float { animation: float 3s ease-in-out infinite; }
-.animate-shimmer { 
-  background-size: 200% auto;
-  animation: shimmer 3s linear infinite; 
-}
 .animate-sparkle { animation: sparkle 2s ease-in-out infinite; }
 .animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
-.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
 .animate-torch { animation: torch-flicker 1.5s ease-in-out infinite; }
 
 /* Scrollbar styling */
