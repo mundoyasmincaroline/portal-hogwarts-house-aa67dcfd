@@ -7,14 +7,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/lib/auth";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
-// Critical Routes (Loaded immediately)
+// Critical Routes (Loaded on demand but prioritized)
 const Landing = lazy(() => import("./pages/Landing"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const DashboardLayout = lazy(() => import("./pages/DashboardLayout"));
 const Feed = lazy(() => import("./pages/Feed"));
 
-// Lazy Routes (Loaded on demand for better performance)
+// Lazy Routes
 const Houses = lazy(() => import("./pages/Houses"));
 const Ranking = lazy(() => import("./pages/Ranking"));
 const Challenges = lazy(() => import("./pages/Challenges"));
@@ -47,88 +47,90 @@ const LoadingFallback = () => (
   </div>
 );
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      gcTime: 1000 * 60 * 30, // 30 minutes
-      retry: 1,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
-
 function AuthInit({ children }: { children: React.ReactNode }) {
   const init = useAuth((s) => s.init);
   useEffect(() => { init(); }, [init]);
   return <>{children}</>;
 }
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <AuthInit>
-        <BrowserRouter>
-          <Suspense fallback={<LoadingFallback />}>
-            <Routes>
-              <Route path="/" element={<Landing />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/parents" element={<ParentsGuide />} />
-              
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <DashboardLayout />
-                </ProtectedRoute>
-              }>
-                <Route index element={<Feed />} />
-                <Route path="chats" element={<Chats />} />
-                <Route path="chat/:roomId" element={<ChatRoom />} />
-                <Route path="instahogwarts" element={<InstaHogwarts />} />
-                <Route path="album" element={<StickerAlbum />} />
-                <Route path="classes" element={<Classes />} />
-                <Route path="houses" element={<Houses />} />
-                <Route path="ranking" element={<Ranking />} />
-                <Route path="challenges" element={<Challenges />} />
-                <Route path="events" element={<Events />} />
-                <Route path="profile" element={<Profile />} />
-                <Route path="profile/:userId" element={<Profile />} />
+const App = () => {
+  const queryClient = useMemo(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 1000 * 60 * 5, // 5 minutes
+        gcTime: 1000 * 60 * 30, // 30 minutes
+        retry: 1,
+        refetchOnWindowFocus: false,
+      },
+    },
+  }), []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <AuthInit>
+          <BrowserRouter>
+            <Suspense fallback={<LoadingFallback />}>
+              <Routes>
+                <Route path="/" element={<Landing />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/parents" element={<ParentsGuide />} />
                 
-                {/* Admin Only Routes */}
-                <Route path="admin" element={
-                  <ProtectedRoute adminOnly>
-                    <Admin />
+                <Route path="/dashboard" element={
+                  <ProtectedRoute>
+                    <DashboardLayout />
                   </ProtectedRoute>
-                } />
-                <Route path="admin/finance" element={
-                  <ProtectedRoute adminOnly>
-                    <AdminFinance />
-                  </ProtectedRoute>
-                } />
+                }>
+                  <Route index element={<Feed />} />
+                  <Route path="chats" element={<Chats />} />
+                  <Route path="chat/:roomId" element={<ChatRoom />} />
+                  <Route path="instahogwarts" element={<InstaHogwarts />} />
+                  <Route path="album" element={<StickerAlbum />} />
+                  <Route path="classes" element={<Classes />} />
+                  <Route path="houses" element={<Houses />} />
+                  <Route path="ranking" element={<Ranking />} />
+                  <Route path="challenges" element={<Challenges />} />
+                  <Route path="events" element={<Events />} />
+                  <Route path="profile" element={<Profile />} />
+                  <Route path="profile/:userId" element={<Profile />} />
+                  
+                  {/* Admin Only Routes */}
+                  <Route path="admin" element={
+                    <ProtectedRoute adminOnly>
+                      <Admin />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="admin/finance" element={
+                    <ProtectedRoute adminOnly>
+                      <AdminFinance />
+                    </ProtectedRoute>
+                  } />
+                  
+                  <Route path="rules" element={<Rules />} />
+                  <Route path="guide" element={<MaraudersGuide />} />
+                  <Route path="dm" element={<DMInbox />} />
+                  <Route path="dm/:userId" element={<DMChat />} />
+                  <Route path="friends" element={<Friends />} />
+                  <Route path="trades" element={<StickerTrades />} />
+                  <Route path="azkaban" element={<Azkaban />} />
+                  <Route path="members" element={<Members />} />
+                  <Route path="store" element={<GringottsStore />} />
+                  <Route path="wallet" element={<Wallet />} />
+                </Route>
                 
-                <Route path="rules" element={<Rules />} />
-                <Route path="guide" element={<MaraudersGuide />} />
-                <Route path="dm" element={<DMInbox />} />
-                <Route path="dm/:userId" element={<DMChat />} />
-                <Route path="friends" element={<Friends />} />
-                <Route path="trades" element={<StickerTrades />} />
-                <Route path="azkaban" element={<Azkaban />} />
-                <Route path="members" element={<Members />} />
-                <Route path="store" element={<GringottsStore />} />
-                <Route path="wallet" element={<Wallet />} />
-              </Route>
-              
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </Suspense>
-        </BrowserRouter>
-      </AuthInit>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </Suspense>
+          </BrowserRouter>
+        </AuthInit>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
