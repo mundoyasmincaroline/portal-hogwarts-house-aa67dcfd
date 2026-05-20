@@ -41,8 +41,9 @@ export default function Feed() {
   const loadSidebar = useCallback(async () => {
     const { data: hp } = await supabase.from("house_points").select("house, points");
     const stats: Record<House, number> = { gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0 };
-    (hp || []).forEach((row: { house: House; points: number }) => {
-      stats[row.house] = (stats[row.house] || 0) + row.points;
+    (hp || []).forEach((row: any) => {
+      const house = row.house as House;
+      stats[house] = (stats[house] || 0) + row.points;
     });
     setHouseStats(stats);
 
