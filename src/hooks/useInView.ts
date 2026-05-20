@@ -1,22 +1,23 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /**
- * useInView — Hook simples para detectar visibilidade de um elemento.
+ * useInView — Hook simples para detectar visibilidade de um elemento para lazy rendering.
  */
-export function useInView(options = {}) {
-  const ref = useRef(null);
-  const [isInView, setIsInView] = useRef(false);
+export function useInView(options: IntersectionObserverInit = {}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
 
   useEffect(() => {
-    if (!ref.current) return;
+    const element = ref.current;
+    if (!element) return;
 
     const observer = new IntersectionObserver(([entry]) => {
       setIsInView(entry.isIntersecting);
     }, options);
 
-    observer.observe(ref.current);
+    observer.observe(element);
     return () => observer.disconnect();
   }, [options]);
 
-  return [ref, isInView];
+  return { ref, isInView };
 }
