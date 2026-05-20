@@ -743,14 +743,15 @@ export default function GringottsStore() {
                         </div>
                       )}
                     </div>
+                  </div>
                 );
               })}
             </div>
           )}
         </div>
       )}
-    </motion.div>
-  </AnimatePresence>
-</div>
-);
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
 }
