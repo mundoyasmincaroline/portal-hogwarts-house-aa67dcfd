@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -82,6 +82,7 @@ export default function DashboardLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const closeSidebar = useCallback(() => setSidebarOpen(false), []);
   const [soundOn, setSoundOn] = useState(isSoundEnabled());
   const [dmUnread, setDmUnread] = useState(0);
   const [hasCharacters, setHasCharacters] = useState<boolean | null>(null);
@@ -170,15 +171,15 @@ export default function DashboardLayout() {
     return <CharacterSelection adminMode={isAdmin} />;
   }
 
-  const house = HOUSES[profile.house as House] || HOUSES.gryffindor;
-  const groups = isAdmin ? [...NAV_GROUPS, ADMIN_GROUP] : NAV_GROUPS;
+  const house = useMemo(() => HOUSES[profile.house as House] || HOUSES.gryffindor, [profile.house]);
+  const groups = useMemo(() => isAdmin ? [...NAV_GROUPS, ADMIN_GROUP] : NAV_GROUPS, [isAdmin]);
 
   return (
     <div className="flex h-screen bg-background overflow-hidden relative">
       <AmbientAudio />
 
       {sidebarOpen && (
-        <div className="fixed inset-0 bg-background/80 z-30 md:hidden" onClick={() => setSidebarOpen(false)} />
+        <div className="fixed inset-0 bg-background/80 z-30 md:hidden" onClick={closeSidebar} />
       )}
 
       <aside className={`fixed md:static inset-y-0 left-0 z-40 w-64 bg-card border-r border-border flex flex-col transition-transform md:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
@@ -203,7 +204,7 @@ export default function DashboardLayout() {
                     <Link
                       key={item.path}
                       to={item.path}
-                      onClick={() => setSidebarOpen(false)}
+                      onClick={closeSidebar}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group relative overflow-hidden ${
                         isActive 
                           ? "bg-primary/10 text-primary font-bold border border-primary/20 shadow-[inset_0_0_20px_rgba(212,175,55,0.05)]" 
