@@ -47,17 +47,27 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
   const [editingPhoto, setEditingPhoto] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [tempUrl, setTempUrl] = useState("");
+  const [parents, setParents] = useState<{ mother: any; father: any }>({ mother: null, father: null });
 
   useEffect(() => {
-    supabase
-      .from("characters")
-      .select("*")
-      .eq("user_id", userId)
-      .order("created_at")
-      .then(({ data }) => {
-        if (data) setCharacters(data);
-        setLoading(false);
-      });
+    const fetchCharData = async () => {
+      const { data: chars } = await supabase
+        .from("characters")
+        .select(`
+          *,
+          mother:characters!characters_mother_id_fkey(id, full_name, avatar_url, house),
+          father:characters!characters_father_id_fkey(id, full_name, avatar_url, house)
+        `)
+        .eq("user_id", userId)
+        .order("created_at");
+
+      if (chars) {
+        setCharacters(chars);
+      }
+      setLoading(false);
+    };
+
+    fetchCharData();
   }, [userId]);
 
   if (loading) return <p className="text-center text-muted-foreground py-8 text-sm">Consultando registros do Ministério...</p>;
@@ -283,11 +293,39 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
             </Section>
           )}
 
-          {/* Família */}
-          {(char.family_mother || char.family_father || char.family_siblings || char.family_relatives) && (
-            <Section title="👨‍👩‍👧 Família">
-              <Field label="Mãe" value={char.family_mother} />
-              <Field label="Pai" value={char.family_father} />
+          {/* Genealogia / Família */}
+          {(char.family_mother || char.family_father || char.family_siblings || char.family_relatives || char.mother || char.father) && (
+            <Section title="👨‍👩‍👧 Genealogia & Família">
+              {char.mother ? (
+                <div className="space-y-1">
+                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground/70 font-heading">Mãe (Portal)</p>
+                  <div className="flex items-center gap-2 bg-secondary/30 p-2 rounded-lg border border-border/40">
+                    <img src={char.mother.avatar_url || "/placeholder.svg"} className="w-8 h-8 rounded-full object-cover border border-primary/20" />
+                    <div className="flex-1 overflow-hidden">
+                      <p className="text-xs font-heading truncate">{char.mother.full_name}</p>
+                      <p className="text-[9px] text-primary/60">{HOUSE_LABELS[char.mother.house] || char.mother.house}</p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <Field label="Mãe (Histórico)" value={char.family_mother} />
+              )}
+
+              {char.father ? (
+                <div className="space-y-1">
+                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground/70 font-heading">Pai (Portal)</p>
+                  <div className="flex items-center gap-2 bg-secondary/30 p-2 rounded-lg border border-border/40">
+                    <img src={char.father.avatar_url || "/placeholder.svg"} className="w-8 h-8 rounded-full object-cover border border-primary/20" />
+                    <div className="flex-1 overflow-hidden">
+                      <p className="text-xs font-heading truncate">{char.father.full_name}</p>
+                      <p className="text-[9px] text-primary/60">{HOUSE_LABELS[char.father.house] || char.father.house}</p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <Field label="Pai (Histórico)" value={char.family_father} />
+              )}
+
               <Field label="Irmãos" value={char.family_siblings} />
               <Field label="Outros Parentes" value={char.family_relatives} />
             </Section>

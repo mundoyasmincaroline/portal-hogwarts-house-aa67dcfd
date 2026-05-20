@@ -31,7 +31,8 @@ const SECTION = ({ title, icon, children }: any) => (
 const EMPTY = { full_name:"", avatar_url:"", age:"", blood_status:"", gender:"male", house:"gryffindor",
   actor_faceclaim:"", wand:"", patronus:"", pet:"", favorite_class:"", favorite_spell:"",
   personality:"", strength:"", weakness:"", fears:"", dreams:"", quote:"", instagram:"",
-  background:"", physical_description:"", canon_era:"", canon_portrayed_by:"", canon_notes:"" };
+  background:"", physical_description:"", canon_era:"", canon_portrayed_by:"", canon_notes:"",
+  mother_id: null as string | null, father_id: null as string | null };
 
 export default function CharacterCreation({ onComplete, onCancel, canCancel }: Props) {
   const { user } = useAuth();
@@ -46,6 +47,9 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
   const [selectedPair, setSelectedPair] = useState<any|null>(null);
   const [relationshipStatus, setRelationshipStatus] = useState<"single"|"paired">("single");
   const [searchingPair, setSearchingPair] = useState(false);
+  const [parentSearch, setParentSearch] = useState({ mother: "", father: "" });
+  const [parentResults, setParentResults] = useState<{ mother: any[], father: any[] }>({ mother: [], father: [] });
+  const [searchingParent, setSearchingParent] = useState({ mother: false, father: false });
 
   // Carrega rascunho do Cadastro-Rito (Register.tsx) na primeira ficha
   useEffect(() => {
@@ -89,6 +93,31 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
     }, 400);
     return () => clearTimeout(t);
   }, [pairSearch, form.gender]);
+
+  useEffect(() => {
+    const searchParent = async (type: "mother" | "father", query: string) => {
+      if (query.length < 2) {
+        setParentResults(prev => ({ ...prev, [type]: [] }));
+        return;
+      }
+      setSearchingParent(prev => ({ ...prev, [type]: true }));
+      const genderReq = type === "mother" ? "female" : "male";
+      const { data } = await supabase.from("characters")
+        .select("id, full_name, avatar_url, house, blood_status")
+        .ilike("full_name", `%${query}%`)
+        .eq("gender", genderReq)
+        .limit(5);
+      setParentResults(prev => ({ ...prev, [type]: data || [] }));
+      setSearchingParent(prev => ({ ...prev, [type]: false }));
+    };
+
+    const tMother = setTimeout(() => searchParent("mother", parentSearch.mother), 400);
+    const tFather = setTimeout(() => searchParent("father", parentSearch.father), 400);
+    return () => {
+      clearTimeout(tMother);
+      clearTimeout(tFather);
+    };
+  }, [parentSearch.mother, parentSearch.father]);
 
   const handleSubmit = async (type: "oc"|"canon") => {
     if (!user) return;
@@ -155,7 +184,9 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
         canon_portrayed_by: type === "canon" ? form.canon_portrayed_by : null,
         pair_character_id: pairId,
         relationship_status: pairId ? "paired" : "single",
-      } as never).select("id").single();
+        mother_id: form.mother_id,
+        father_id: form.father_id,
+      } as any).select("id").single();
 
       if (error) throw error;
 
@@ -314,8 +345,13 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
               <FIELD label="Idade *" name="age" value={form.age} onChange={handleChange} placeholder="Ex: 17" type="number" />
               <div>
                 <label className="text-xs font-heading text-muted-foreground block mb-1">Status de Sangue *</label>
-                <select name="blood_status" value={form.blood_status} onChange={handleChange}
-                  className="w-full bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground border border-border focus:border-primary/50 focus:outline-none">
+                <select 
+                  name="blood_status" 
+                  value={form.blood_status} 
+                  onChange={handleChange}
+                  disabled={!!(form.mother_id || form.father_id)}
+                  className={`w-full bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground border border-border focus:border-primary/50 focus:outline-none ${ (form.mother_id || form.father_id) ? "opacity-50 cursor-not-allowed" : "" }`}
+                >
                   <option value="">Selecione...</option>
                   <option value="puro-sangue">Puro-Sangue</option>
                   <option value="mestiço">Mestiço</option>
@@ -368,6 +404,103 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
               placeholder="Uma frase que representa este personagem..." />
             <FIELD label="Instagram do Personagem (@ opcional)" name="instagram" value={form.instagram} onChange={handleChange}
               placeholder="@nome_do_personagem" />
+          </SECTION>
+
+          {/* GENEALOGIA */}
+          <SECTION title="Genealogia (Pais)" icon="👪">
+            <p className="text-[10px] text-muted-foreground mb-2">
+              Selecione os pais do personagem para cálculo automático de sangue.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* MÃE */}
+              <div className="space-y-2">
+                <label className="text-xs font-heading text-muted-foreground block">Mãe</label>
+                {form.mother_id ? (
+                  <div className="flex items-center gap-3 bg-secondary/50 rounded-xl p-2 border border-border">
+                    {parentResults.mother.find(m => m.id === form.mother_id)?.avatar_url && (
+                      <img src={parentResults.mother.find(m => m.id === form.mother_id)?.avatar_url} className="w-8 h-8 rounded-full object-cover" />
+                    )}
+                    <div className="flex-1 overflow-hidden">
+                      <p className="font-heading text-xs truncate">{parentResults.mother.find(m => m.id === form.mother_id)?.full_name || "Mãe Selecionada"}</p>
+                    </div>
+                    <button type="button" onClick={() => setForm(f => ({ ...f, mother_id: null }))}>
+                      <X size={14} className="text-muted-foreground hover:text-destructive" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <Search size={12} className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    <Input 
+                      value={parentSearch.mother} 
+                      onChange={e => setParentSearch(p => ({ ...p, mother: e.target.value }))}
+                      placeholder="Buscar mãe..."
+                      className="bg-secondary/50 pl-7 h-8 text-xs"
+                    />
+                    {parentResults.mother.length > 0 && (
+                      <div className="absolute z-40 w-full mt-1 bg-card border border-border rounded-lg overflow-hidden shadow-xl">
+                        {parentResults.mother.map(m_item => (
+                          <button key={m_item.id} type="button" onClick={() => { setForm(f => ({ ...f, mother_id: m_item.id })); setParentSearch(p => ({ ...p, mother: "" })); }}
+                            className="w-full flex items-center gap-2 px-2 py-1.5 hover:bg-secondary/50 transition-colors text-left">
+                            <img src={m_item.avatar_url || "/placeholder.svg"} className="w-6 h-6 rounded-full object-cover" />
+                            <div className="overflow-hidden">
+                              <p className="font-heading text-[10px] truncate">{m_item.full_name}</p>
+                              <p className="text-[8px] text-muted-foreground">{m_item.blood_status}</p>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* PAI */}
+              <div className="space-y-2">
+                <label className="text-xs font-heading text-muted-foreground block">Pai</label>
+                {form.father_id ? (
+                  <div className="flex items-center gap-3 bg-secondary/50 rounded-xl p-2 border border-border">
+                    {parentResults.father.find(f => f.id === form.father_id)?.avatar_url && (
+                      <img src={parentResults.father.find(f => f.id === form.father_id)?.avatar_url} className="w-8 h-8 rounded-full object-cover" />
+                    )}
+                    <div className="flex-1 overflow-hidden">
+                      <p className="font-heading text-xs truncate">{parentResults.father.find(f => f.id === form.father_id)?.full_name || "Pai Selecionado"}</p>
+                    </div>
+                    <button type="button" onClick={() => setForm(f => ({ ...f, father_id: null }))}>
+                      <X size={14} className="text-muted-foreground hover:text-destructive" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <Search size={12} className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    <Input 
+                      value={parentSearch.father} 
+                      onChange={e => setParentSearch(p => ({ ...p, father: e.target.value }))}
+                      placeholder="Buscar pai..."
+                      className="bg-secondary/50 pl-7 h-8 text-xs"
+                    />
+                    {parentResults.father.length > 0 && (
+                      <div className="absolute z-40 w-full mt-1 bg-card border border-border rounded-lg overflow-hidden shadow-xl">
+                        {parentResults.father.map(f_item => (
+                          <button key={f_item.id} type="button" onClick={() => { setForm(f => ({ ...f, father_id: f_item.id })); setParentSearch(p => ({ ...p, father: "" })); }}
+                            className="w-full flex items-center gap-2 px-2 py-1.5 hover:bg-secondary/50 transition-colors text-left">
+                             <img src={f_item.avatar_url || "/placeholder.svg"} className="w-6 h-6 rounded-full object-cover" />
+                            <div className="overflow-hidden">
+                              <p className="font-heading text-[10px] truncate">{f_item.full_name}</p>
+                              <p className="text-[8px] text-muted-foreground">{f_item.blood_status}</p>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+            { (form.mother_id || form.father_id) && (
+              <p className="text-[10px] text-primary/70 italic mt-2">
+                ✨ O status de sangue será bloqueado para edição manual se os pais forem definidos.
+              </p>
+            )}
           </SECTION>
 
           {/* PAR ROMÂNTICO */}
