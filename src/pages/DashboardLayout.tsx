@@ -123,16 +123,27 @@ export default function DashboardLayout() {
   }, [user, profile]);
 
   useEffect(() => {
-    if (!isLoading && !user) navigate("/login");
-  }, [isLoading, user, navigate]);
+    if (!user) return;
+    pingPresence();
+    const interval = setInterval(pingPresence, 60000); 
+    return () => clearInterval(interval);
+  }, [user, pingPresence]);
 
+  if (isLoading || hasCharacters === null) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="text-4xl animate-float mb-4">⚡</div>
+          <p className="font-heading text-muted-foreground">Carregando portal...</p>
+        </div>
+      </div>
+    );
+  }
 
-  if (!authReady) return null; // Wait for profile
+  if (profile && !profile.approved && !isAdmin) return <PendingApproval />;
+  if (profile && !isAdmin && !profile.has_accepted_rules) return <RulesAgreement />;
 
-  if (!profile.approved && !isAdmin) return <PendingApproval />;
-  if (!isAdmin && !profile.has_accepted_rules) return <RulesAgreement />;
-
-  const adminSkipped = isAdmin && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
+  const adminSkipped = isAdmin && user && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
 
 
   if ((!profile.active_character_id || !hasCharacters) && !adminSkipped) {
