@@ -27,10 +27,6 @@ export default function StickerAlbum() {
   const completedBanner = useMemo(() => {
     return stickers.length > 0 && Object.keys(userStickers).length >= stickers.length;
   }, [stickers, userStickers]);
-  const [openingPack, setOpeningPack] = useState(false);
-  const [packReveal, setPackReveal] = useState<Sticker | null>(null);
-  const [packPhase, setPackPhase] = useState<"idle" | "shaking" | "reveal">("idle");
-  const navigate = useNavigate();
 
   const buySticker = async (sticker: Sticker) => {
     setBuyingId(sticker.id);
@@ -84,7 +80,8 @@ export default function StickerAlbum() {
 
       await supabase.from("user_stickers").upsert({ user_id: user.id, sticker_id: picked.id } as never);
       await fetchProfile(user.id);
-      setUserStickers(prev => ({ ...prev, [picked.id]: true }));
+      // A atualização do estado agora é feita via reload no hook ou manualmente se necessário
+      await loadAlbum();
       setTimeout(() => { setPackPhase("reveal"); setPackReveal(picked); }, 1500);
     } catch (err: any) {
       toast.error("Erro ao abrir o pacote: " + (err.message || "Tente novamente."));
