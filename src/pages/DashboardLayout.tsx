@@ -44,7 +44,8 @@ const NAV_GROUPS = [
   {
     title: "Atividades",
     items: [
-      { icon: <MagicalIcon icon={Swords} size="xs" color="#ef4444" />, label: "Chats RPG", path: "/dashboard/chats" },
+      { icon: <MagicalIcon icon={Swords} size="xs" color="#ef4444" />, label: "Duelos", path: "/dashboard/duels" },
+      { icon: <MagicalIcon icon={MessageCircle} size="xs" color="#3b82f6" />, label: "Chats RPG", path: "/dashboard/chats" },
       { icon: <MagicalIcon icon={Camera} size="xs" color="#f43f5e" />, label: "InstaHogwarts", path: "/dashboard/instahogwarts" },
       { icon: <MagicalIcon icon={Zap} size="xs" color="#a855f7" />, label: "Desafios", path: "/dashboard/challenges" },
       { icon: <MagicalIcon icon={Sparkles} size="xs" color="#f472b6" />, label: "Eventos", path: "/dashboard/events" },

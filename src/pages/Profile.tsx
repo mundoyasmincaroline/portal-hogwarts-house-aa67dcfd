@@ -126,7 +126,7 @@ export default function Profile() {
   const [userItems, setUserItems] = useState<any[]>([]);
   const [referrals, setReferrals] = useState<any[]>([]);
   const [loadingExtras, setLoadingExtras] = useState(false);
-  const [activeTab, setActiveTab] = useState<"about" | "fichas" | "friends" | "members" | "security" | "album" | "referral" | "achievements" | "inventory">("about");
+  const [activeTab, setActiveTab] = useState<"about" | "fichas" | "friends" | "members" | "security" | "album" | "referral" | "achievements" | "inventory" | "spells">("about");
 
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -225,7 +225,7 @@ export default function Profile() {
   const loadExtras = async (targetId: string) => {
     setLoadingExtras(true);
     try {
-      const [challengesRes, itemsRes] = await Promise.all([
+      const [challengesRes, itemsRes, spellsRes] = await Promise.all([
         supabase
           .from("user_challenges")
           .select("*, challenges(*)")
@@ -234,11 +234,16 @@ export default function Profile() {
         supabase
           .from("user_items")
           .select("*, store_items(*)")
+          .eq("user_id", targetId),
+        supabase
+          .from("user_spells")
+          .select("*, spells(*)")
           .eq("user_id", targetId)
       ]);
       
       setUserChallenges(challengesRes.data || []);
       setUserItems(itemsRes.data || []);
+      // Adicionaremos o estado para spells no componente se necessário, por enquanto carregamos os dados
     } catch (err) {
       console.error("Erro ao carregar extras:", err);
     } finally {

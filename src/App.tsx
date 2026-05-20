@@ -36,6 +36,7 @@ const StickerTrades = lazy(() => import("./pages/StickerTrades"));
 const Azkaban = lazy(() => import("./pages/Azkaban"));
 const Members = lazy(() => import("./pages/Members"));
 const GringottsStore = lazy(() => import("./pages/GringottsStore"));
+const Duels = lazy(() => import("./pages/Duels"));
 const Wallet = lazy(() => import("./pages/Wallet"));
 const Terms = lazy(() => import("./pages/Terms"));
 const Privacy = lazy(() => import("./pages/Privacy"));
@@ -120,6 +121,7 @@ const App = () => {
                   <Route path="azkaban" element={<Azkaban />} />
                   <Route path="members" element={<Members />} />
                   <Route path="store" element={<GringottsStore />} />
+                  <Route path="duels" element={<Duels />} />
                   <Route path="wallet" element={<Wallet />} />
                 </Route>
                 
