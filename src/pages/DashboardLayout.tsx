@@ -146,10 +146,10 @@ export default function DashboardLayout() {
     );
   }
 
-  if (!profile.approved && !isAdmin) return <PendingApproval />;
-  if (!isAdmin && !profile.has_accepted_rules) return <RulesAgreement />;
+  if (profile && !profile.approved && !isAdmin) return <PendingApproval />;
+  if (profile && !isAdmin && !profile.has_accepted_rules) return <RulesAgreement />;
 
-  const adminSkipped = isAdmin && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
+  const adminSkipped = isAdmin && user && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
 
 
   if ((!profile.active_character_id || !hasCharacters) && !adminSkipped) {
