@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import { HOUSES, getLevelFromXP, type House } from "@/lib/store";
 import HouseCrest from "@/components/HouseCrest";
@@ -435,32 +436,36 @@ export default function Profile() {
         )}
       </div>
 
-      <div className="glass rounded-[3rem] p-10 md:p-16 text-center relative overflow-hidden border-2 border-primary/20 shadow-[0_30px_100px_rgba(0,0,0,0.5)]">
-        {/* Floating Magic Dust */}
-        <div className="absolute inset-0 pointer-events-none opacity-20">
-           <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white rounded-full animate-float-slow blur-[1px]" />
-           <div className="absolute top-1/2 right-1/4 w-1.5 h-1.5 bg-primary rounded-full animate-float-slow delay-700 blur-[1px]" />
-           <div className="absolute bottom-1/4 left-1/3 w-3 h-3 bg-white/50 rounded-full animate-float-slow delay-1000 blur-[2px]" />
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="glass rounded-[2.5rem] p-8 md:p-12 text-center relative overflow-hidden border border-white/5 shadow-2xl"
+      >
+        {/* Animated background pattern */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] animate-pulse" />
         </div>
 
-        <div className="relative inline-block mb-8">
-          <div className="w-24 h-24 shrink-0 mx-auto">
+        <div className="relative inline-block mb-8 group">
+          <div className="w-32 h-32 shrink-0 mx-auto relative">
+            <motion.div 
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className={`absolute -inset-2 rounded-full border border-dashed border-primary/30 pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity`}
+            />
             <SafeImage
               src={profile.avatar_url}
               alt={profile.full_name}
-              className={`w-full h-full rounded-full object-cover animate-pulse-glow ${user?.email === 'paulormorpheus21@gmail.com' ? 'border-2 border-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.5)]' : ''}`}
+              className={`w-full h-full rounded-full object-cover relative z-10 border-4 ${user?.email === 'paulormorpheus21@gmail.com' ? 'border-cyan-500 shadow-[0_0_30px_rgba(34,211,238,0.4)]' : 'border-white/10 group-hover:border-primary/50'} transition-colors`}
               fallbackText={profile.full_name[0]}
             />
-            {user?.email === 'paulormorpheus21@gmail.com' && (
-              <div className="absolute inset-[-8px] border border-cyan-400/20 rounded-full animate-spin-slow pointer-events-none" />
-            )}
           </div>
-          <div className="absolute -bottom-1 -right-1">
-            <HouseCrest house={profile.house as House} size="sm" />
+          <div className="absolute -bottom-2 -right-2 z-20 hover:scale-125 transition-transform duration-300">
+            <HouseCrest house={profile.house as House} size="md" />
           </div>
           {isMe && (
-            <label className="absolute -top-1 -right-1 w-7 h-7 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center cursor-pointer hover:scale-110 transition-transform" title="Trocar foto">
-              📷
+            <label className="absolute -top-2 -right-2 w-9 h-9 rounded-full bg-primary text-primary-foreground text-sm flex items-center justify-center cursor-pointer hover:scale-110 transition-all z-20 shadow-xl border-2 border-background" title="Trocar foto">
+              <Camera size={16} />
               <input type="file" accept="image/*" className="hidden" onChange={uploadAvatar} disabled={uploading} />
             </label>
           )}
