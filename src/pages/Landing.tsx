@@ -127,19 +127,8 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* Dynamic time-of-day card */}
-          <div className="glass rounded-2xl px-6 py-4 mb-6 max-w-md mx-auto border border-primary/20 text-center">
-            <p className="text-primary font-heading text-xs tracking-widest uppercase mb-1">
-              {timeOfDay === "morning" ? "Amanhecer Mágico" : timeOfDay === "afternoon" ? "Tarde em Hogwarts" : "Magia Noturna"}
-            </p>
-            <p className="text-muted-foreground text-sm font-serif leading-relaxed">
-              {timeOfDay === "morning"
-                ? "Os primeiros raios de sol iluminam as portas de carvalho do castelo. O Grande Salão desperta com o voo das corujas."
-                : timeOfDay === "afternoon"
-                ? "O sol da tarde aquece as pedras milenares de Hogwarts. Pelas janelas, você pode ver os alunos praticando feitiços nos jardins."
-                : "O castelo repousa sob um céu estrelado. Os feitiços brilham mais forte à noite. Os segredos aguardam na escuridão."}
-            </p>
-          </div>
+          {/* Spacer to maintain layout height after removing the description card */}
+          <div className="h-28 md:h-32 mb-6" aria-hidden="true" />
 
           {/* CTA */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8 px-4">
