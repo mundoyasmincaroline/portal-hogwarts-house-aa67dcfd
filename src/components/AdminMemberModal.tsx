@@ -82,6 +82,7 @@ export default function AdminMemberModal({ memberId, memberName, onClose, onSave
       age:        profile.age ? Number(profile.age) : null,
       birth_date: profile.birth_date || null,
       avatar_url: profile.avatar_url || null,
+      blood_locked: !!profile.blood_locked,
     } as never).eq("user_id", memberId);
     setSaving(false);
     if (error) { toast.error("Erro ao salvar perfil: " + error.message); return; }
