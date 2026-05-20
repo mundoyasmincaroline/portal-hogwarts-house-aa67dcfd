@@ -734,8 +734,9 @@ export default function Profile() {
 
           )}
           {activeTab === "album" && (
-        <ProfileAlbum userId={profile.user_id} />
-      ) : activeTab === "referral" && isMe ? (
+            <ProfileAlbum userId={profile.user_id} />
+          )}
+          {activeTab === "referral" && isMe && (
         <div className="space-y-8">
           <RecruitmentWidget />
           
