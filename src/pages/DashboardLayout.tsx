@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Castle, BookOpen, User, MessageCircle, Camera, Trophy,
   Shield, Swords, Library, ShoppingBag, ScrollText,
@@ -169,7 +170,7 @@ export default function DashboardLayout() {
   }
 
   const house = HOUSES[profile.house as House] || HOUSES.gryffindor;
-  const items = isAdmin ? [...NAV_ITEMS, ...ADMIN_ITEMS] : NAV_ITEMS;
+  const groups = isAdmin ? [...NAV_GROUPS, ADMIN_GROUP] : NAV_GROUPS;
 
   return (
     <div className="flex h-screen bg-background overflow-hidden relative">
@@ -187,28 +188,75 @@ export default function DashboardLayout() {
           </Link>
         </div>
 
-        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-          {items.map((item) => {
-            const isActive = location.pathname === item.path;
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setSidebarOpen(false)}
-                className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all group ${
-                  isActive ? "bg-primary/10 text-primary font-bold border border-primary/20" : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
-                }`}
-              >
-                <span>{item.icon}</span>
-                <span className="font-heading text-sm">{item.label}</span>
-                {item.label === "Mensagens" && dmUnread > 0 && (
-                  <span className="ml-auto min-w-[18px] h-[18px] px-1 bg-primary text-primary-foreground rounded-full text-[10px] flex items-center justify-center font-bold">
-                    {dmUnread > 9 ? "9+" : dmUnread}
-                  </span>
-                )}
-              </Link>
-            );
-          })}
+        <nav className="flex-1 p-3 space-y-6 overflow-y-auto scrollbar-hide">
+          {groups.map((group) => (
+            <div key={group.title} className="space-y-1">
+              <h4 className="px-3 text-[10px] font-heading font-bold uppercase tracking-[0.2em] text-muted-foreground/60 mb-2 flex items-center gap-2">
+                <span className="w-4 h-[1px] bg-border" />
+                {group.title}
+              </h4>
+              <div className="space-y-1">
+                {group.items.map((item) => {
+                  const isActive = location.pathname === item.path;
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      onClick={() => setSidebarOpen(false)}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group relative overflow-hidden ${
+                        isActive 
+                          ? "bg-primary/10 text-primary font-bold border border-primary/20 shadow-[inset_0_0_20px_rgba(212,175,55,0.05)]" 
+                          : "text-muted-foreground/80 hover:bg-secondary/40 hover:text-foreground"
+                      }`}
+                    >
+                      {isActive && (
+                        <motion.div 
+                          layoutId="active-nav-glow"
+                          className="absolute inset-0 bg-primary/5 blur-sm"
+                        />
+                      )}
+                      <span className={`relative z-10 transition-transform group-hover:scale-110 duration-300 ${isActive ? "scale-110" : ""}`}>{item.icon}</span>
+                      <span className="font-heading text-xs relative z-10">{item.label}</span>
+                      {item.label === "Mensagens" && dmUnread > 0 && (
+                        <span className="ml-auto min-w-[18px] h-[18px] px-1 bg-primary text-primary-foreground rounded-full text-[9px] flex items-center justify-center font-bold relative z-10 animate-pulse">
+                          {dmUnread > 9 ? "9+" : dmUnread}
+                        </span>
+                      )}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+          
+          {/* Mobile Profile & DM shortcuts in sidebar if needed, but they are already at the bottom */}
+          <div className="pt-2">
+            <Link
+              to="/dashboard/profile"
+              onClick={() => setSidebarOpen(false)}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group ${
+                location.pathname === "/dashboard/profile" ? "bg-primary/10 text-primary border border-primary/20" : "text-muted-foreground/80 hover:bg-secondary/40 hover:text-foreground"
+              }`}
+            >
+              <MagicalIcon icon={User} size="xs" color="#a855f7" />
+              <span className="font-heading text-xs">Meu Perfil</span>
+            </Link>
+            <Link
+              to="/dashboard/dm"
+              onClick={() => setSidebarOpen(false)}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group mt-1 ${
+                location.pathname === "/dashboard/dm" ? "bg-primary/10 text-primary border border-primary/20" : "text-muted-foreground/80 hover:bg-secondary/40 hover:text-foreground"
+              }`}
+            >
+              <MagicalIcon icon={MessageCircle} size="xs" color="#3b82f6" />
+              <span className="font-heading text-xs">Mensagens</span>
+              {dmUnread > 0 && (
+                <span className="ml-auto min-w-[18px] h-[18px] px-1 bg-primary text-primary-foreground rounded-full text-[9px] flex items-center justify-center font-bold animate-pulse">
+                  {dmUnread}
+                </span>
+              )}
+            </Link>
+          </div>
         </nav>
 
         <div className="p-3 border-t border-border bg-card/80 backdrop-blur-sm">
