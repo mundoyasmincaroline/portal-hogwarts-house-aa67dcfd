@@ -4,10 +4,23 @@ import { Sparkles, Scroll } from "lucide-react";
 
 interface AcceptanceLetterProps {
   fullName: string;
+  house?: string;
+  blood?: string;
+  wandWood?: string;
+  wandCore?: string;
   onContinue: () => void;
+  isPreview?: boolean;
 }
 
-export default function AcceptanceLetter({ fullName, onContinue }: AcceptanceLetterProps) {
+export default function AcceptanceLetter({ 
+  fullName, 
+  house, 
+  blood, 
+  wandWood, 
+  wandCore, 
+  onContinue,
+  isPreview = false 
+}: AcceptanceLetterProps) {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -15,8 +28,8 @@ export default function AcceptanceLetter({ fullName, onContinue }: AcceptanceLet
   }, []);
 
   return (
-    <div className={`fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-md transition-all duration-1000 ${show ? 'opacity-100' : 'opacity-0'}`}>
-      <div className={`relative max-w-lg w-full transform transition-all duration-1000 ${show ? 'scale-100 translate-y-0' : 'scale-90 translate-y-10'}`}>
+    <div className={`${isPreview ? '' : 'fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-md'} transition-all duration-1000 ${show ? 'opacity-100' : 'opacity-0'}`}>
+      <div className={`relative max-w-lg w-full transform transition-all duration-1000 ${show ? 'scale-100 translate-y-0' : 'scale-90 translate-y-10'} mx-auto`}>
         {/* The Letter Parchment */}
         <div className="relative bg-[#f4e4bc] p-10 md:p-16 rounded-sm shadow-[0_30px_60px_-15px_rgba(0,0,0,0.7)] border-double border-8 border-[#8d775f] overflow-hidden">
           {/* Wax Seal */}
@@ -42,7 +55,20 @@ export default function AcceptanceLetter({ fullName, onContinue }: AcceptanceLet
               </p>
             </div>
 
-            <div className="pt-8">
+            {(house || blood || wandWood) && (
+              <div className="pt-4 border-t border-[#3e2c1c]/10 space-y-1">
+                <p className="text-[10px] uppercase tracking-widest font-bold opacity-80">Registros do Ministério:</p>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[11px]">
+                  {house && <p><strong>Casa:</strong> {house}</p>}
+                  {blood && <p><strong>Sangue:</strong> {blood}</p>}
+                  {wandWood && wandCore && (
+                    <p className="col-span-2"><strong>Varinha:</strong> {wandWood} e {wandCore}</p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <div className="pt-4">
               <p>Atenciosamente,</p>
               <p className="font-bold text-lg mt-1 italic">Minevra McGonagall</p>
               <p className="text-[10px] opacity-70">Diretora Substituta</p>
@@ -60,7 +86,7 @@ export default function AcceptanceLetter({ fullName, onContinue }: AcceptanceLet
             onClick={onContinue}
             className="h-16 px-12 rounded-2xl bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-600 text-black border-none font-bold text-xl shadow-[0_20px_50px_rgba(234,179,8,0.4)] animate-bounce"
           >
-            ATRAVESSAR O PORTAL <Sparkles className="ml-2" />
+            {isPreview ? "CONFIRMAR E SELAR" : "ATRAVESSAR O PORTAL"} <Sparkles className="ml-2" />
           </Button>
         </div>
       </div>
