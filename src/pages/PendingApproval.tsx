@@ -6,7 +6,7 @@ export default function PendingApproval() {
 
   return (
     <div className="min-h-screen bg-background p-6 flex flex-col items-center justify-center">
-      <div className="max-w-md w-full glass rounded-2xl p-8 text-center space-y-6">
+      <div className="max-w-md w-full glass rounded-2xl p-6 sm:p-8 text-center space-y-6">
         <div className="text-6xl animate-pulse">⏳</div>
         <h1 className="font-heading text-2xl text-gold-gradient">Aguardando Aprovação</h1>
         
