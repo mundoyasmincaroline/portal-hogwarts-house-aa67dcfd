@@ -192,8 +192,8 @@ export default function MaraudersGuide() {
   ];
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
-      <div className="glass rounded-2xl p-8 text-center relative overflow-hidden border border-primary/30">
+    <div className="max-w-3xl mx-auto space-y-6 px-1 sm:px-0">
+      <div className="glass rounded-2xl p-6 sm:p-8 text-center relative overflow-hidden border border-primary/30">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/old-mathematics.png')] opacity-10"></div>
         <div className="relative z-10">
           <span className="text-5xl drop-shadow-md">📜</span>
@@ -204,7 +204,7 @@ export default function MaraudersGuide() {
       </div>
 
       {/* Índice rápido */}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap justify-center gap-2">
         {guidePages.map((page, i) => (
           <button
             key={i}
@@ -220,7 +220,7 @@ export default function MaraudersGuide() {
         ))}
       </div>
 
-      <div className="glass rounded-2xl p-6 sm:p-10 border border-border">
+      <div className="glass rounded-2xl p-5 sm:p-10 border border-border">
         <div className="flex justify-between items-center mb-6 border-b border-border pb-4">
           <Button
             variant="outline"

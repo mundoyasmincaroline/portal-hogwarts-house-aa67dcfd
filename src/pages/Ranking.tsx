@@ -83,10 +83,10 @@ export default function Ranking() {
   );
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 pb-10">
+    <div className="max-w-4xl mx-auto space-y-6 pb-10 px-2 sm:px-0">
 
       {/* Header */}
-      <div className="glass rounded-3xl p-8 relative overflow-hidden border border-primary/20 text-center">
+      <div className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 relative overflow-hidden border border-primary/20 text-center">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-yellow-900/10" />
         <div className="relative z-10">
           <Trophy size={40} className="mx-auto text-yellow-400 mb-3 drop-shadow-[0_0_12px_rgba(251,191,36,0.5)]" />

@@ -227,7 +227,7 @@ export default function InstaHogwarts() {
   const activeChar = myChars.find(c => c.id === selectedCharId);
 
   return (
-    <div className="max-w-xl mx-auto space-y-10 pb-20">
+    <div className="max-w-xl mx-auto space-y-8 sm:space-y-10 pb-20 px-2 sm:px-0">
       {/* ── CINEMATIC HEADER ── */}
       <div className="relative glass rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-8 text-center overflow-hidden border border-primary/20 shadow-2xl group">
         <div className="absolute inset-0 bg-gradient-to-br from-black via-zinc-900 to-amber-900/20 opacity-80" />
@@ -243,7 +243,7 @@ export default function InstaHogwarts() {
       </div>
 
       {/* ── UPLOAD PLAQUE ── */}
-      <div className="relative glass rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-8 border border-white/10 shadow-2xl overflow-hidden group">
+      <div className="relative glass rounded-2xl sm:rounded-[2rem] p-5 sm:p-8 border border-white/10 shadow-2xl overflow-hidden group">
         <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none" />
 
