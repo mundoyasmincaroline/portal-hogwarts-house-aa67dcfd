@@ -93,7 +93,7 @@ export default function StickerVisual({ name, rarity, unlocked, imageUrl, failed
           {theme.emoji}
         </span>
         {rarity === "gold" && unlocked && (
-          <span className="text-[10px] font-heading text-yellow-400 tracking-widest uppercase opacity-80">✦ Raro ✦</span>
+          <span className="text-[8px] sm:text-[10px] font-heading text-yellow-400 tracking-widest uppercase opacity-80">✦ Raro ✦</span>
         )}
       </div>
 

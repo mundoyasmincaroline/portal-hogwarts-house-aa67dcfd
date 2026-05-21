@@ -312,7 +312,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
 
           {/* FOTO */}
           <SECTION title="Foto do Personagem" icon="📷">
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center gap-4">
               <div className="w-24 h-24 rounded-full border-2 border-border overflow-hidden flex-shrink-0 bg-secondary flex items-center justify-center">
                 {avatarPreview || form.avatar_url
                   ? <img src={avatarPreview || form.avatar_url} className="w-full h-full object-cover" />
@@ -345,7 +345,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
               </>
             )}
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-xs font-heading text-muted-foreground block mb-1">Gênero *</label>
                 <select name="gender" value={form.gender} onChange={handleChange}

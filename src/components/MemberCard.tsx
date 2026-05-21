@@ -122,7 +122,7 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
       <button
         onClick={handleFriendAction}
         disabled={loading || status === "blocked"}
-        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[9px] font-heading uppercase tracking-widest border transition-all ${cfg.cls} disabled:opacity-50`}
+        className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl text-[8px] sm:text-[9px] font-heading uppercase tracking-widest border transition-all ${cfg.cls} disabled:opacity-50`}
       >
         {cfg.icon} {cfg.label}
       </button>
@@ -169,7 +169,7 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
       onClick={goToProfile}
       whileHover={{ y: -8, scale: 1.02 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className={`relative glass rounded-[2rem] p-6 border transition-all duration-500 cursor-pointer group flex flex-col items-center text-center overflow-hidden ${
+      className={`relative glass rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 border transition-all duration-500 cursor-pointer group flex flex-col items-center text-center overflow-hidden ${
         isVip 
           ? "border-yellow-500/30 bg-gradient-to-br from-yellow-950/20 via-card to-black shadow-[0_20px_50px_rgba(250,204,21,0.1)] hover:border-yellow-400" 
           : "border-white/5 bg-card/60 hover:border-primary/30 shadow-2xl"
@@ -189,7 +189,7 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
 
       {/* Avatar Section */}
       <div className="relative mb-6">
-        <div className="relative w-28 h-28 shrink-0">
+        <div className="relative w-20 h-20 sm:w-28 sm:h-28 shrink-0">
           {isVip && (
             <motion.div 
               animate={{ rotate: 360 }}
@@ -236,11 +236,11 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
 
       {/* Action buttons */}
       {!isMe && (
-        <div className="grid grid-cols-2 gap-3 w-full mt-auto relative z-10" onClick={e => e.stopPropagation()}>
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 w-full mt-auto relative z-10" onClick={e => e.stopPropagation()}>
           <div className="flex justify-stretch w-full">{friendBtn()}</div>
           <button
             onClick={goToDM}
-            className="btn-magical flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-[10px] font-heading uppercase tracking-widest bg-white/5 border border-white/10 text-white/60 hover:border-primary/40 hover:text-white"
+            className="btn-magical flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-xl text-[9px] sm:text-[10px] font-heading uppercase tracking-widest bg-white/5 border border-white/10 text-white/60 hover:border-primary/40 hover:text-white"
           >
             <MessageSquare size={12} /> DM
           </button>
