@@ -35,10 +35,10 @@ export default function Wallet() {
 
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 pb-16">
+    <div className="max-w-4xl mx-auto space-y-6 pb-16 px-2 sm:px-0">
 
       {/* ── Header ── */}
-      <div className="glass rounded-3xl p-8 relative overflow-hidden border border-yellow-500/30">
+      <div className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 relative overflow-hidden border border-yellow-500/30">
         <div className="absolute inset-0 bg-gradient-to-br from-yellow-900/20 via-transparent to-amber-900/10" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(251,191,36,0.08),transparent_60%)]" />
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-yellow-400/50 to-transparent" />
