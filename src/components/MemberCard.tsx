@@ -152,7 +152,7 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
         </div>
         <div className="flex-1 min-w-0 relative z-10">
           <div className="flex items-center gap-2">
-            <p className="font-heading text-sm text-white truncate group-hover:text-primary transition-colors">{member.full_name}</p>
+            <p className="font-heading text-xs sm:text-sm text-white truncate group-hover:text-primary transition-colors">{member.full_name}</p>
             {isFounder && <Crown size={12} className="text-yellow-400 shrink-0" />}
           </div>
           <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-tight opacity-60">@{member.username} · Lv.{member.level || 1}</p>
@@ -221,7 +221,7 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
 
       {/* Content */}
       <div className="space-y-1 mb-6 w-full relative z-10">
-        <h3 className={`font-heading text-xl truncate w-full transition-colors ${isVip ? "text-yellow-100 group-hover:text-yellow-400" : "text-white group-hover:text-primary"}`}>
+        <h3 className={`font-heading text-lg sm:text-xl truncate w-full transition-colors ${isVip ? "text-yellow-100 group-hover:text-yellow-400" : "text-white group-hover:text-primary"}`}>
           {member.full_name}
         </h3>
         <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-[0.2em] opacity-60">@{member.username}</p>
