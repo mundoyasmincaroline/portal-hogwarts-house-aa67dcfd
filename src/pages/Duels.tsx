@@ -193,13 +193,13 @@ export default function Duels() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <div className="glass rounded-2xl p-6 text-center">
+      <div className="glass rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center">
         <h1 className="font-heading text-2xl text-gold-gradient mb-2">Clube de Duelos</h1>
         <p className="text-muted-foreground text-sm">Honra e coragem</p>
       </div>
 
       {!activeDuel || activeDuel.status === 'completed' ? (
-        <div className="glass rounded-[3rem] p-12 text-center space-y-6 border border-white/5">
+        <div className="glass rounded-2xl sm:rounded-[3rem] p-8 sm:p-12 text-center space-y-6 border border-white/5">
           <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto border border-primary/20 shadow-[0_0_30px_rgba(212,175,55,0.2)]">
             <Swords size={40} className="text-primary animate-float" />
           </div>
@@ -240,7 +240,7 @@ export default function Duels() {
              </div>
           </div>
 
-          <div className="glass rounded-[2.5rem] p-8">
+          <div className="glass rounded-2xl sm:rounded-[2.5rem] p-4 sm:p-8">
              <div className="flex items-center gap-3 mb-6">
                 <Sparkles size={20} className="text-primary" />
                 <h2 className="font-heading text-xl">Seu Livro de Feitiços</h2>

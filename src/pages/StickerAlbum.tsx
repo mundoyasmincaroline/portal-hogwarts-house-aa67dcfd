@@ -111,7 +111,7 @@ export default function StickerAlbum() {
   return (
     <div className="max-w-7xl mx-auto space-y-12 pb-20 px-4">
       {/* ── HEADER MONSTER QUALITY ── */}
-      <div className="relative glass rounded-[2.5rem] sm:rounded-[3rem] p-6 sm:p-10 md:p-16 text-center overflow-hidden border border-yellow-500/20 shadow-2xl group">
+      <div className="relative glass rounded-2xl sm:rounded-[3rem] p-5 sm:p-10 md:p-16 text-center overflow-hidden border border-yellow-500/20 shadow-2xl group">
         <div className="absolute inset-0 bg-gradient-to-br from-amber-900/40 via-black to-blue-900/40 opacity-60 z-0" />
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2070')] bg-cover bg-center opacity-10 group-hover:scale-105 transition-transform duration-1000" />
         
@@ -121,7 +121,7 @@ export default function StickerAlbum() {
             <span className="text-[10px] font-heading text-yellow-500 uppercase tracking-[0.3em] font-bold">Relíquias de Hogwarts</span>
           </div>
           
-          <h1 className="font-heading text-3xl sm:text-5xl md:text-7xl text-gold-gradient mb-3 drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
+          <h1 className="font-heading text-2xl sm:text-5xl md:text-7xl text-gold-gradient mb-3 drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
             {completedBanner ? "🏆 ÁLBUM LENDÁRIO 🏆" : "Álbum de Figurinhas"}
           </h1>
           <p className="text-yellow-100/70 text-lg max-w-2xl mx-auto font-serif italic">
@@ -222,7 +222,7 @@ export default function StickerAlbum() {
 
       {/* ── STATS & PROGRESS ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 glass rounded-[2.5rem] p-10 space-y-8 border border-white/5 bg-gradient-to-br from-white/5 to-transparent relative overflow-hidden group">
+        <div className="lg:col-span-2 glass rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-10 space-y-8 border border-white/5 bg-gradient-to-br from-white/5 to-transparent relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[100px] -z-10 group-hover:opacity-20 transition-opacity" />
             
             <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
@@ -253,7 +253,7 @@ export default function StickerAlbum() {
                     { label: "Prata", owned: silverOwned, total: silverTotal, color: "text-slate-200", bg: "bg-slate-800/20 border-slate-400/20", icon: "🥈" },
                     { label: "Ouro", owned: goldOwned, total: goldTotal, color: "text-yellow-400", bg: "bg-yellow-950/20 border-yellow-500/30", icon: "🥇" },
                 ].map(r => (
-                    <div key={r.label} className={`rounded-[2rem] p-6 text-center border-2 backdrop-blur-sm transition-transform hover:scale-105 ${r.bg}`}>
+                    <div key={r.label} className={`rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 text-center border-2 backdrop-blur-sm transition-transform hover:scale-105 ${r.bg}`}>
                         <div className="text-3xl mb-3">{r.icon}</div>
                         <p className={`font-heading text-3xl mb-1 ${r.color}`}>{r.owned}<span className="text-lg opacity-40">/{r.total}</span></p>
                         <p className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-bold">{r.label}</p>
@@ -262,7 +262,7 @@ export default function StickerAlbum() {
             </div>
         </div>
 
-        <div className="glass rounded-[2.5rem] p-10 flex flex-col items-center justify-center text-center gap-8 border border-white/5 bg-gradient-to-t from-black/40 to-white/5 relative group">
+        <div className="glass rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-10 flex flex-col items-center justify-center text-center gap-6 sm:gap-8 border border-white/5 bg-gradient-to-t from-black/40 to-white/5 relative group">
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-20 group-hover:scale-110 transition-transform duration-1000" />
             <MagicalEmoji icon={RefreshCw} size="md" glowColor="rgba(255, 255, 255, 0.2)" className="group-hover:rotate-180 transition-transform duration-1000" />
             <div className="space-y-3 relative z-10">
@@ -278,10 +278,10 @@ export default function StickerAlbum() {
 
       {/* ── FILTERS ── */}
       <div className="flex justify-center py-4">
-          <div className="glass p-2 rounded-full border border-white/5 bg-black/40 backdrop-blur-2xl inline-flex flex-wrap gap-3">
+          <div className="glass p-1.5 sm:p-2 rounded-full border border-white/5 bg-black/40 backdrop-blur-2xl inline-flex flex-wrap justify-center gap-1.5 sm:gap-3">
             {(["all", "gold", "silver", "bronze"] as const).map(r => (
             <button key={r} onClick={() => setActiveRarity(r)}
-                className={`px-8 py-3 rounded-full text-xs font-bold font-heading transition-all duration-500 relative overflow-hidden group ${
+                className={`px-4 sm:px-8 py-2 sm:py-3 rounded-full text-[10px] sm:text-xs font-bold font-heading transition-all duration-500 relative overflow-hidden group ${
                 activeRarity === r
                     ? r === "gold" ? "bg-yellow-400 text-black shadow-lg shadow-yellow-400/20"
                     : r === "silver" ? "bg-slate-200 text-black shadow-lg shadow-white/10"
