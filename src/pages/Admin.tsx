@@ -648,13 +648,13 @@ export default function Admin() {
   ];
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto space-y-6 px-2 sm:px-0">
       <div className="glass rounded-2xl p-6">
         <h1 className="font-heading text-2xl text-gold-gradient mb-1">Painel Administrativo</h1>
         <p className="text-muted-foreground text-sm">Gerencie o Portal Hogwarts House</p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-3">
         <div className="glass rounded-xl p-4 text-center cursor-pointer hover:bg-secondary/40 transition-colors" onClick={() => { setTab("members"); setFilterOnline(false); }}>
           <p className="text-2xl font-heading text-primary">{members.length}</p>
           <p className="text-xs text-muted-foreground">Membros</p>
@@ -673,7 +673,7 @@ export default function Admin() {
         </div>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto">
+      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
         {tabs.map((t) => (
           <button
             key={t.id}
@@ -708,7 +708,7 @@ export default function Admin() {
                     <p className="text-sm font-heading text-foreground">{m.full_name}</p>
                     <p className="text-xs text-muted-foreground">@{m.username} • {m.age} anos • Nível {m.level} • {m.xp} XP</p>
                   </div>
-                  <div className="flex flex-col items-end gap-1">
+                  <div className="flex flex-col items-end gap-1 shrink-0">
                     {isUserOnline(m) ? (
                       <span className="text-xs text-green-500 font-medium">🟢 Online</span>
                     ) : (
@@ -752,7 +752,7 @@ export default function Admin() {
                           <p className="text-sm font-heading text-foreground">{m.full_name}</p>
                           <p className="text-xs text-muted-foreground">@{m.username} • {m.age} anos</p>
                         </div>
-                        <div className="flex gap-2 flex-wrap justify-end">
+                        <div className="flex gap-2 flex-wrap justify-center sm:justify-end">
                           <Button variant="outline" size="sm" className="text-destructive border-destructive" onClick={async () => {
                             await supabase.from("profiles").delete().eq("user_id", m.user_id);
                             toast.success("Membro rejeitado.");
