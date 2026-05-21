@@ -147,9 +147,9 @@ export default function StickerTrades() {
   const otherTrades = trades.filter(t => t.offerer_id !== user?.id);
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 pb-10">
+    <div className="max-w-5xl mx-auto space-y-8 pb-10 px-2 sm:px-0">
       {/* ── HEADER MONSTER QUALITY ── */}
-      <div className="relative glass rounded-[3rem] p-10 md:p-16 text-center overflow-hidden border border-yellow-500/20 shadow-2xl group animate-in fade-in slide-in-from-top-10 duration-1000">
+      <div className="relative glass rounded-2xl sm:rounded-[3rem] p-6 sm:p-10 md:p-16 text-center overflow-hidden border border-yellow-500/20 shadow-2xl group animate-in fade-in slide-in-from-top-10 duration-1000">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/40 via-black to-purple-900/40 opacity-60 z-0" />
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=2070')] bg-cover bg-center opacity-10 group-hover:scale-105 transition-transform duration-1000" />
         

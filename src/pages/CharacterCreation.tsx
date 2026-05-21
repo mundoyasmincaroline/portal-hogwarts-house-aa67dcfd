@@ -230,7 +230,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
   // ---------- TELA DE SELEÇÃO ----------
   if (step === "select") {
     return (
-      <div className="relative min-h-screen flex flex-col items-center justify-center p-6">
+      <div className="relative min-h-screen flex flex-col items-center justify-center p-4 sm:p-6">
         <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-0" />
         <MagicalParticles />
         <div className="relative z-10 max-w-3xl w-full">
@@ -241,7 +241,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* OC */}
             <button onClick={() => setStep("oc")}
-              className="glass rounded-3xl p-8 border border-yellow-500/30 hover:border-yellow-400/70 hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(234,179,8,0.2)] transition-all text-left group">
+              className="glass rounded-[2rem] sm:rounded-3xl p-6 sm:p-8 border border-yellow-500/30 hover:border-yellow-400/70 hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(234,179,8,0.2)] transition-all text-left group">
               <div className="text-5xl mb-4">⭐</div>
               <h2 className="font-heading text-2xl text-yellow-400 mb-2">Personagem OC</h2>
               <p className="text-sm text-muted-foreground mb-4">
@@ -257,7 +257,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
             </button>
             {/* Canon */}
             <button onClick={() => setStep("canon")}
-              className="glass rounded-3xl p-8 border border-purple-500/30 hover:border-purple-400/70 hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(168,85,247,0.2)] transition-all text-left group">
+              className="glass rounded-[2rem] sm:rounded-3xl p-6 sm:p-8 border border-purple-500/30 hover:border-purple-400/70 hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(168,85,247,0.2)] transition-all text-left group">
               <div className="text-5xl mb-4">📖</div>
               <h2 className="font-heading text-2xl text-purple-400 mb-2">Personagem Canon</h2>
               <p className="text-sm text-muted-foreground mb-4">

@@ -77,8 +77,8 @@ export default function CharacterSelection({ adminMode }: Props) {
       <MagicalParticles />
       
       <div className="relative z-10 max-w-4xl w-full">
-        <div className="text-center mb-8">
-          <h1 className="font-heading text-4xl text-gold-gradient mb-2">Quem você será hoje?</h1>
+        <div className="text-center mb-6 sm:mb-8 px-2">
+          <h1 className="font-heading text-3xl sm:text-4xl text-gold-gradient mb-2">Quem você será hoje?</h1>
           <p className="text-muted-foreground">Escolha qual personagem vai assumir neste turno ou crie um novo.</p>
         </div>
 
