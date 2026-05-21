@@ -323,7 +323,7 @@ export default function DashboardLayout() {
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 exit={{ opacity: 0, y: -10, filter: "blur(8px)" }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
-                className="pb-20"
+                className="pb-24 md:pb-20"
               >
                 <Outlet />
               </motion.div>

@@ -87,7 +87,7 @@ export default function HouseCupWidget({ isLanding = false }: { isLanding?: bool
   const leaderColor = leader?.house === 'slytherin' ? 'rgba(16, 185, 129, 0.4)' : leader?.house === 'gryffindor' ? 'rgba(220, 38, 38, 0.4)' : leader?.house === 'ravenclaw' ? 'rgba(37, 99, 235, 0.4)' : 'rgba(217, 119, 6, 0.4)';
 
   return (
-    <div className={`relative group ${isLanding ? 'max-w-6xl mx-auto py-16' : 'w-full px-2 py-4'}`}>
+    <div className={`relative group ${isLanding ? 'max-w-6xl mx-auto py-8 sm:py-16' : 'w-full px-1 sm:px-2 py-4'}`}>
       {/* ── CINEMATIC AURA (THE "FACE" OF THE HOUSE) ── */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <div 
@@ -96,7 +96,7 @@ export default function HouseCupWidget({ isLanding = false }: { isLanding?: bool
         />
       </div>
 
-      <div className={`relative z-10 glass rounded-[3rem] p-8 md:p-12 border border-white/10 bg-gradient-to-br from-black/90 via-zinc-900/40 to-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-700 ${isLanding ? 'hover:scale-[1.01]' : ''}`}>
+      <div className={`relative z-10 glass rounded-2xl sm:rounded-[3rem] p-5 sm:p-8 md:p-12 border border-white/10 bg-gradient-to-br from-black/90 via-zinc-900/40 to-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-700 ${isLanding ? 'hover:scale-[1.01]' : ''}`}>
         {/* Background Textures */}
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none" />
         <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
