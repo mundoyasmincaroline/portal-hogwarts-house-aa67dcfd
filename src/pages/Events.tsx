@@ -99,15 +99,15 @@ export default function Events() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-10 pb-20">
+    <div className="max-w-5xl mx-auto space-y-8 sm:space-y-10 pb-20 px-2 sm:px-0">
       {/* Header */}
-      <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-indigo-950 via-background to-black border border-primary/20 p-12 text-center">
+      <div className="relative overflow-hidden rounded-2xl sm:rounded-[2.5rem] bg-gradient-to-br from-indigo-950 via-background to-black border border-primary/20 p-6 sm:p-12 text-center">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1510137600163-2729bc6959a6?q=80&w=2000')] opacity-10 mix-blend-overlay pointer-events-none" />
         <div className="relative z-10 space-y-4">
           <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 px-4 py-1">
             Programação Diária
           </Badge>
-          <h1 className="text-5xl font-heading text-gold-gradient">Eventos Mágicos</h1>
+          <h1 className="text-3xl sm:text-5xl font-heading text-gold-gradient">Eventos Mágicos</h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Participe dos desafios globais em horários específicos para ganhar recompensas épicas e fortalecer seu legado em Hogwarts.
           </p>
@@ -126,7 +126,7 @@ export default function Events() {
           return (
             <div 
               key={event.id}
-              className={`relative group rounded-[2rem] border-2 transition-all duration-500 overflow-hidden ${
+              className={`relative group rounded-2xl sm:rounded-[2rem] border-2 transition-all duration-500 overflow-hidden ${
                 isActive ? "border-primary shadow-[0_0_30px_hsl(var(--primary)/0.3)] bg-primary/5 -translate-y-2" :
                 isCompleted ? "border-green-500/30 bg-green-500/5 opacity-80" :
                 isPast ? "border-muted/20 bg-secondary/10 opacity-60 grayscale" :

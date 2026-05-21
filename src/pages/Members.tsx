@@ -96,9 +96,9 @@ export default function Members() {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 pb-10">
+    <div className="max-w-6xl mx-auto space-y-6 pb-10 px-2 sm:px-0">
       {/* Header */}
-      <div className="glass rounded-3xl p-8 relative overflow-hidden border border-primary/20">
+      <div className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 relative overflow-hidden border border-primary/20">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2070')] bg-cover bg-center opacity-10" />
         <div className="relative z-10">
           <h1 className="font-heading text-4xl text-gold-gradient flex items-center gap-3">
@@ -121,10 +121,10 @@ export default function Members() {
             className="pl-9 bg-secondary/50"
           />
         </div>
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-1.5 sm:gap-2 flex-wrap">
           <button
             onClick={() => setHouseFilter("all")}
-            className={`px-3 py-2 rounded-full text-xs font-heading transition-all border ${houseFilter === "all" ? "bg-primary/20 border-primary text-primary" : "border-border text-muted-foreground hover:border-primary/50"}`}
+            className={`px-3 py-2 rounded-full text-[10px] sm:text-xs font-heading transition-all border ${houseFilter === "all" ? "bg-primary/20 border-primary text-primary" : "border-border text-muted-foreground hover:border-primary/50"}`}
           >
             Todas
           </button>
@@ -132,7 +132,7 @@ export default function Members() {
             <button
               key={h.id}
               onClick={() => setHouseFilter(houseFilter === h.id ? "all" : h.id)}
-              className={`px-3 py-2 rounded-full text-xs font-heading transition-all border ${houseFilter === h.id ? "bg-primary/20 border-primary text-primary" : "border-border text-muted-foreground hover:border-primary/50"}`}
+              className={`px-3 py-2 rounded-full text-[10px] sm:text-xs font-heading transition-all border ${houseFilter === h.id ? "bg-primary/20 border-primary text-primary" : "border-border text-muted-foreground hover:border-primary/50"}`}
             >
               {h.label}
             </button>

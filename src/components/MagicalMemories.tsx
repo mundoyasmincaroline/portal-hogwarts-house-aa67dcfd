@@ -31,7 +31,7 @@ export default function MagicalMemories() {
   const memory = MEMORIES[current];
 
   return (
-    <div className="glass rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-black/80 to-purple-900/20 overflow-hidden relative group shadow-2xl">
+    <div className="glass rounded-2xl sm:rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-black/80 to-purple-900/20 overflow-hidden relative group shadow-2xl">
         <div 
           key={memory.id}
           className="relative aspect-[16/9] w-full animate-fade-in"
@@ -40,12 +40,12 @@ export default function MagicalMemories() {
           <img src={memory.image} alt={memory.context} className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-[5s]" />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
           
-          <div className="absolute bottom-0 inset-x-0 p-8 space-y-3">
+          <div className="absolute bottom-0 inset-x-0 p-5 sm:p-8 space-y-3">
              <div className="flex items-center gap-2">
                <Heart className="text-red-500 fill-red-500 animate-pulse" size={14} />
                <span className="text-[10px] font-heading text-white/50 uppercase tracking-widest">{memory.context}</span>
              </div>
-             <p className="text-xl md:text-2xl font-serif text-white italic leading-relaxed drop-shadow-lg">
+             <p className="text-lg sm:text-xl md:text-2xl font-serif text-white italic leading-relaxed drop-shadow-lg">
                "{memory.quote}"
              </p>
              <div className="pt-2">

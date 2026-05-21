@@ -240,7 +240,7 @@ export default function GringottsStore() {
     <div className="max-w-7xl mx-auto space-y-12 pb-24 px-4 sm:px-6">
       
       {/* ── SUPER HERO BANNER: MONSTER QUALITY ── */}
-      <div className="relative overflow-hidden rounded-[3rem] border border-yellow-500/30 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)] group min-h-[420px] flex items-center mb-8">
+      <div className="relative overflow-hidden rounded-2xl sm:rounded-[3rem] border border-yellow-500/30 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)] group min-h-[320px] sm:min-h-[420px] flex items-center mb-8">
         <div className="absolute inset-0 bg-gradient-to-br from-amber-950 via-black to-blue-950 z-0 pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-yellow-500/25 via-transparent to-transparent pointer-events-none animate-pulse" />
         
@@ -265,7 +265,7 @@ export default function GringottsStore() {
               <span className="text-xs font-heading text-yellow-500 uppercase tracking-[0.2em] font-bold">Mercado de Relíquias Ancestrais</span>
             </div>
             
-            <h1 className="text-4xl sm:text-6xl md:text-8xl font-heading text-gold-gradient drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] leading-tight tracking-tighter">
+            <h1 className="text-3xl sm:text-6xl md:text-8xl font-heading text-gold-gradient drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] leading-tight tracking-tighter">
               GRINGOTTS<br/><span className="text-white/90">VAULT</span>
             </h1>
             
@@ -300,7 +300,7 @@ export default function GringottsStore() {
       </div>
 
       {/* ── FLASH SALE COUNTDOWN ── */}
-      <div className="glass rounded-[2rem] p-8 border-2 border-red-500/30 bg-gradient-to-r from-red-950/40 via-black to-red-950/40 flex flex-col md:flex-row items-center justify-between gap-8 animate-in fade-in zoom-in duration-700 shadow-[0_0_50px_rgba(220,38,38,0.2)]">
+      <div className="glass rounded-2xl sm:rounded-[2rem] p-5 sm:p-8 border-2 border-red-500/30 bg-gradient-to-r from-red-950/40 via-black to-red-950/40 flex flex-col md:flex-row items-center justify-between gap-8 animate-in fade-in zoom-in duration-700 shadow-[0_0_50px_rgba(220,38,38,0.2)]">
         <div className="flex items-center gap-5">
           <div className="w-16 h-16 bg-red-500/20 rounded-2xl flex items-center justify-center border border-red-500/30 shadow-inner animate-pulse">
             <Flame size={32} className="text-red-500" />
@@ -345,13 +345,13 @@ export default function GringottsStore() {
 
       {/* ── CATEGORY NAVIGATION: MONSTER STYLE ── */}
       <div className="relative z-40 flex justify-center py-6 mb-8">
-        <div className="glass p-2.5 rounded-full border border-white/10 inline-flex flex-wrap justify-center gap-2 bg-black/60 backdrop-blur-3xl shadow-2xl">
+        <div className="glass p-2 sm:p-2.5 rounded-full border border-white/10 inline-flex flex-wrap justify-center gap-1 sm:gap-2 bg-black/60 backdrop-blur-3xl shadow-2xl">
           {TABS.map(t => {
             const isActive = tab === t.id;
             const Icon = t.icon;
             return (
               <button key={t.id} onClick={() => { playMagicSound(); setTab(t.id); }}
-                className={`flex items-center gap-2.5 px-6 py-3 rounded-full text-xs font-bold font-heading transition-all duration-500 relative overflow-hidden group ${
+                className={`flex items-center gap-1.5 sm:gap-2.5 px-3 sm:px-6 py-2 sm:py-3 rounded-full text-[10px] sm:text-xs font-bold font-heading transition-all duration-500 relative overflow-hidden group ${
                   isActive 
                     ? `bg-gradient-to-r ${t.color} text-white shadow-[0_10px_25px_-5px_rgba(0,0,0,0.5)] border-t border-white/20` 
                     : "bg-transparent text-muted-foreground hover:bg-white/5 hover:text-white border border-transparent"
@@ -386,9 +386,9 @@ export default function GringottsStore() {
           </div>
 
           {/* FEATURED MEGA CARD */}
-          <div className="relative group rounded-[3.5rem] overflow-hidden border-2 border-yellow-500/30 bg-gradient-to-br from-amber-950 via-black to-blue-900/40 p-1 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.8)]">
+          <div className="relative group rounded-3xl sm:rounded-[3.5rem] overflow-hidden border-2 border-yellow-500/30 bg-gradient-to-br from-amber-950 via-black to-blue-900/40 p-1 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.8)]">
             <div className="absolute inset-0 bg-[url('/hogwarts-castle-bg.jpg')] bg-cover opacity-10 mix-blend-overlay group-hover:scale-110 transition-transform duration-1000" />
-            <div className="relative glass rounded-[3.2rem] p-10 md:p-16 flex flex-col lg:flex-row items-center gap-14 backdrop-blur-md">
+            <div className="relative glass rounded-2xl sm:rounded-[3.2rem] p-6 sm:p-10 md:p-16 flex flex-col lg:flex-row items-center gap-10 sm:gap-14 backdrop-blur-md">
               
               <div className="relative shrink-0 w-full max-w-sm">
                 <div className="absolute inset-0 bg-blue-500/20 blur-[100px] rounded-full animate-pulse" />

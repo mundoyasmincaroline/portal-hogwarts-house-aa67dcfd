@@ -40,7 +40,7 @@ export default function RulesAgreement() {
       <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-0" />
       <MagicalParticles />
       
-      <div className="glass max-w-2xl w-full p-8 rounded-2xl z-10 border border-border/50 shadow-2xl relative overflow-hidden animate-fade-in-up">
+      <div className="glass max-w-2xl w-full p-6 sm:p-8 rounded-2xl z-10 border border-border/50 shadow-2xl relative overflow-hidden animate-fade-in-up mx-2">
         {/* Decorative elements */}
         <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50" />
         

@@ -147,9 +147,9 @@ export default function StickerTrades() {
   const otherTrades = trades.filter(t => t.offerer_id !== user?.id);
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 pb-10">
+    <div className="max-w-5xl mx-auto space-y-8 pb-10 px-2 sm:px-0">
       {/* ── HEADER MONSTER QUALITY ── */}
-      <div className="relative glass rounded-[3rem] p-10 md:p-16 text-center overflow-hidden border border-yellow-500/20 shadow-2xl group animate-in fade-in slide-in-from-top-10 duration-1000">
+      <div className="relative glass rounded-2xl sm:rounded-[3rem] p-6 sm:p-10 md:p-16 text-center overflow-hidden border border-yellow-500/20 shadow-2xl group animate-in fade-in slide-in-from-top-10 duration-1000">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/40 via-black to-purple-900/40 opacity-60 z-0" />
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=2070')] bg-cover bg-center opacity-10 group-hover:scale-105 transition-transform duration-1000" />
         
@@ -159,7 +159,7 @@ export default function StickerTrades() {
             <span className="text-[10px] font-heading text-yellow-500 uppercase tracking-[0.3em] font-bold">Mercado de Relíquias</span>
           </div>
           
-          <h1 className="font-heading text-5xl md:text-7xl text-gold-gradient mb-3 drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
+          <h1 className="font-heading text-3xl sm:text-5xl md:text-7xl text-gold-gradient mb-3 drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
             Trocas de Figurinhas
           </h1>
           <p className="text-yellow-100/70 text-lg max-w-2xl mx-auto font-serif italic">
@@ -173,7 +173,7 @@ export default function StickerTrades() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-3">
+      <div className="flex gap-2 sm:gap-3 flex-wrap">
         {(["mercado", "minhas"] as const).map(t => (
           <button
             key={t}
@@ -186,7 +186,7 @@ export default function StickerTrades() {
       </div>
 
       {/* ── CRIAR OFERTA MONSTER ── */}
-      <div className="glass rounded-[2.5rem] p-8 border border-white/10 bg-gradient-to-br from-white/5 to-transparent shadow-2xl space-y-8 animate-in zoom-in-95 duration-700">
+      <div className="glass rounded-2xl sm:rounded-[2.5rem] p-5 sm:p-8 border border-white/10 bg-gradient-to-br from-white/5 to-transparent shadow-2xl space-y-6 sm:space-y-8 animate-in zoom-in-95 duration-700">
         <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center border border-primary/30 shadow-inner">
                 <MagicalEmoji emoji="✨" size="xs" />
@@ -261,7 +261,7 @@ export default function StickerTrades() {
           )}
 
           {(tab === "mercado" ? otherTrades : myTrades).map(trade => (
-            <div key={trade.id} className="glass rounded-[2.5rem] p-8 flex flex-col md:flex-row items-start md:items-center gap-10 border border-white/5 hover:border-primary/20 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 group animate-in slide-in-from-left-4 duration-700">
+            <div key={trade.id} className="glass rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center gap-6 sm:gap-10 border border-white/5 hover:border-primary/20 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 group animate-in slide-in-from-left-4 duration-700">
               {/* Figurinha oferecida */}
               <div className="flex items-center gap-6 flex-1">
                 <div className={`w-20 h-28 rounded-2xl overflow-hidden border-2 flex-shrink-0 transition-transform group-hover:scale-105 duration-500 ${RARITY_COLOR[trade.offered_sticker?.rarity || "bronze"]}`}>

@@ -80,7 +80,7 @@ export default function Azkaban() {
         <div className="absolute inset-0 bg-blue-500/5 opacity-0 animate-lightning-flare" />
       </div>
 
-      <div className="relative z-10 max-w-2xl w-full mx-auto px-4 py-16 space-y-8">
+      <div className="relative z-10 max-w-2xl w-full mx-auto px-2 sm:px-4 py-16 space-y-6 sm:space-y-8">
         {/* Header */}
         <div className="text-center space-y-4 flex flex-col items-center">
           <MagicalEmoji emoji="⛓️" size="lg" glowColor="rgba(59, 130, 246, 0.4)" className="animate-pulse" />
@@ -94,12 +94,12 @@ export default function Azkaban() {
 
         {/* Status Card */}
         {isInAzkaban ? (
-          <div className="glass rounded-2xl p-8 border border-blue-500/30 bg-blue-950/40 backdrop-blur-md text-center space-y-6">
+          <div className="glass rounded-2xl p-6 sm:p-8 border border-blue-500/30 bg-blue-950/40 backdrop-blur-md text-center space-y-6">
             <div className="flex items-center justify-center gap-3 text-blue-300">
               <Clock size={24} />
               <span className="font-heading text-2xl">Você está em Azkaban</span>
             </div>
-            <div className="text-6xl font-heading text-white font-bold tracking-widest">
+            <div className="text-4xl sm:text-6xl font-heading text-white font-bold tracking-widest">
               {formatTime(timeLeft)}
             </div>
             <p className="text-blue-200/70 text-sm">

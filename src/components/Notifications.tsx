@@ -83,7 +83,7 @@ export default function Notifications() {
       </button>
 
       {open && (
-        <div className="absolute bottom-12 left-0 w-80 bg-card border border-border shadow-2xl rounded-xl overflow-hidden z-50 animate-in fade-in slide-in-from-bottom-2">
+        <div className="absolute bottom-12 left-0 w-[calc(100vw-32px)] sm:w-80 bg-card border border-border shadow-2xl rounded-xl overflow-hidden z-50 animate-in fade-in slide-in-from-bottom-2">
           <div className="p-3 border-b border-border flex justify-between items-center bg-secondary/30">
             <h3 className="font-heading text-sm text-foreground">Notificações</h3>
             {unreadCount > 0 && (

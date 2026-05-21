@@ -93,7 +93,7 @@ export default function AdminFinance() {
   const COLORS = ["#f59e0b", "#a855f7", "#3b82f6", "#ef4444"];
 
   return (
-    <div className="max-w-7xl mx-auto space-y-10 pb-20 px-4">
+    <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10 pb-20 px-2 sm:px-4">
       {/* ── HEADER ── */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
@@ -121,7 +121,7 @@ export default function AdminFinance() {
       {/* ── CHARTS SECTION ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Revenue Chart */}
-        <Card className="lg:col-span-2 glass rounded-[2.5rem] p-8 border-white/10 bg-black/40 backdrop-blur-3xl shadow-2xl">
+        <Card className="lg:col-span-2 glass rounded-2xl sm:rounded-[2.5rem] p-5 sm:p-8 border-white/10 bg-black/40 backdrop-blur-3xl shadow-2xl">
           <div className="flex items-center justify-between mb-8">
             <h3 className="font-heading text-xl flex items-center gap-2">
               <TrendingUp className="text-primary" size={20} /> Receita (Últimos 7 dias)
@@ -153,7 +153,7 @@ export default function AdminFinance() {
         </Card>
 
         {/* Distribution Chart */}
-        <Card className="glass rounded-[2.5rem] p-8 border-white/10 bg-black/40 backdrop-blur-3xl shadow-2xl">
+        <Card className="glass rounded-2xl sm:rounded-[2.5rem] p-5 sm:p-8 border-white/10 bg-black/40 backdrop-blur-3xl shadow-2xl">
           <h3 className="font-heading text-xl mb-8 flex items-center gap-2">
             <Zap className="text-purple-400" size={20} /> Distribuição de Vendas
           </h3>
@@ -184,7 +184,7 @@ export default function AdminFinance() {
       </div>
 
       {/* ── TRANSACTIONS TABLE (PLANILHA) ── */}
-      <Card className="glass rounded-[3rem] border-white/10 bg-black/60 backdrop-blur-3xl shadow-2xl overflow-hidden">
+      <Card className="glass rounded-2xl sm:rounded-[3rem] border-white/10 bg-black/60 backdrop-blur-3xl shadow-2xl overflow-hidden">
         <div className="p-8 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <h3 className="font-heading text-2xl flex items-center gap-3">
             <ScrollText className="text-primary" size={24} /> Log de Transações Gringotts
