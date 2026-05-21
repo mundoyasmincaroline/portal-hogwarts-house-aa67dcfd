@@ -115,9 +115,9 @@ export default function DMChat() {
   }, {} as Record<string, DM[]>);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-120px)] max-w-xl mx-auto">
+    <div className="flex flex-col h-[calc(100vh-120px)] max-w-xl mx-auto px-2 sm:px-0">
       {/* Header */}
-      <div className="glass rounded-2xl p-4 mb-3 flex items-center gap-3 shrink-0">
+      <div className="glass rounded-2xl p-3 sm:p-4 mb-3 flex items-center gap-3 shrink-0">
         <button onClick={() => navigate("/dashboard/dm")} className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft size={18} />
         </button>
@@ -159,7 +159,7 @@ export default function DMChat() {
                 return (
                   <div key={m.id} className={`flex mb-1 ${isMe ? "justify-end" : "justify-start"}`}>
                     <div
-                      className={`max-w-[75%] px-4 py-2 rounded-2xl text-sm leading-relaxed shadow-sm ${
+                      className={`max-w-[85%] sm:max-w-[75%] px-4 py-2 rounded-2xl text-sm leading-relaxed shadow-sm ${
                         isMe
                           ? "bg-primary text-primary-foreground rounded-br-sm"
                           : "glass rounded-bl-sm text-foreground"
@@ -189,7 +189,7 @@ export default function DMChat() {
           placeholder="Escreva uma mensagem..."
           rows={1}
           className="flex-1 bg-transparent text-foreground text-sm placeholder:text-muted-foreground resize-none focus:outline-none max-h-32 leading-relaxed py-1"
-          style={{ minHeight: "36px" }}
+          style={{ minHeight: "36px", maxHeight: "120px" }}
         />
         <button
           onClick={send}

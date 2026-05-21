@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 export default function ParentsGuide() {
   return (
     <div className="min-h-screen bg-black text-white p-6 md:p-12 font-serif selection:bg-primary/30">
-      <div className="max-w-4xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+      <div className="max-w-4xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-1000 px-2 sm:px-0">
         
         {/* Header */}
         <div className="text-center space-y-4">
@@ -18,7 +18,7 @@ export default function ParentsGuide() {
         </div>
 
         {/* Introduction */}
-        <div className="glass rounded-[3rem] p-8 md:p-12 border border-white/10 space-y-6 leading-relaxed">
+        <div className="glass rounded-2xl sm:rounded-[3rem] p-6 sm:p-8 md:p-12 border border-white/10 space-y-6 leading-relaxed">
           <h2 className="text-2xl font-heading text-primary flex items-center gap-3">
             <Heart size={24} /> Nosso Compromisso com a Segurança
           </h2>
@@ -29,7 +29,7 @@ export default function ParentsGuide() {
 
         {/* Pillars of Safety */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="glass rounded-3xl p-8 border border-white/5 space-y-4">
+          <div className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-white/5 space-y-4">
             <Lock className="text-blue-400 w-8 h-8" />
             <h3 className="font-heading text-xl text-blue-300">Moderação Ativa (Vigia)</h3>
             <p className="text-sm text-muted-foreground">
