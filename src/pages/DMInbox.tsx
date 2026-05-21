@@ -84,8 +84,8 @@ export default function DMInbox() {
   };
 
   return (
-    <div className="max-w-xl mx-auto space-y-4">
-      <div className="glass rounded-2xl p-6 flex items-center gap-3">
+    <div className="max-w-xl mx-auto space-y-4 px-2 sm:px-0">
+      <div className="glass rounded-2xl p-5 sm:p-6 flex items-center gap-3">
         <MessageCircle size={24} className="text-primary" />
         <div>
           <h1 className="font-heading text-xl text-gold-gradient">Corujoteca — Mensagens Diretas</h1>

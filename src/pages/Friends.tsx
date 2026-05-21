@@ -134,9 +134,9 @@ export default function Friends() {
   );
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 pb-10">
-      <div className="glass rounded-2xl p-6 border border-primary/20">
-        <h1 className="font-heading text-3xl text-gold-gradient flex items-center gap-3">
+    <div className="max-w-4xl mx-auto space-y-6 pb-10 px-2 sm:px-0">
+      <div className="glass rounded-2xl p-5 sm:p-6 border border-primary/20">
+        <h1 className="font-heading text-2xl sm:text-3xl text-gold-gradient flex items-center gap-3">
           <Users /> Meus Amigos
         </h1>
         <p className="text-sm text-muted-foreground mt-2">
@@ -146,10 +146,10 @@ export default function Friends() {
 
       <Tabs defaultValue="friends" className="w-full">
         <TabsList className="grid grid-cols-4 w-full">
-          <TabsTrigger value="friends">Amigos ({friends.length})</TabsTrigger>
-          <TabsTrigger value="incoming">Pedidos ({incoming.length})</TabsTrigger>
-          <TabsTrigger value="outgoing">Enviados ({outgoing.length})</TabsTrigger>
-          <TabsTrigger value="blocked">Bloqueados ({blocked.length})</TabsTrigger>
+          <TabsTrigger value="friends" className="text-[10px] sm:text-sm px-1">Amigos ({friends.length})</TabsTrigger>
+          <TabsTrigger value="incoming" className="text-[10px] sm:text-sm px-1">Pedidos ({incoming.length})</TabsTrigger>
+          <TabsTrigger value="outgoing" className="text-[10px] sm:text-sm px-1">Enviados ({outgoing.length})</TabsTrigger>
+          <TabsTrigger value="blocked" className="text-[10px] sm:text-sm px-1">Bloqueados ({blocked.length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="friends" className="space-y-2 mt-4">
