@@ -151,9 +151,9 @@ export default function Classes() {
   if (loading) return <div className="text-center py-10">Consultando pergaminhos...</div>;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-10 pb-20">
+    <div className="max-w-4xl mx-auto space-y-8 sm:space-y-10 pb-20 px-2 sm:px-0">
       {/* ── CINEMATIC HEADER (THE SCROLL) ── */}
-      <div className="relative glass rounded-[3rem] p-10 md:p-16 text-center overflow-hidden border border-primary/20 shadow-2xl group">
+      <div className="relative glass rounded-2xl sm:rounded-[3rem] p-6 sm:p-10 md:p-16 text-center overflow-hidden border border-primary/20 shadow-2xl group">
         <div className="absolute inset-0 bg-gradient-to-br from-black via-zinc-900 to-amber-900/20 opacity-80" />
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/pinstriped-suit.png')] opacity-20 pointer-events-none" />
         
@@ -162,7 +162,7 @@ export default function Classes() {
             <GraduationCap className="w-4 h-4 text-primary animate-float" />
             <span className="text-[10px] font-heading text-primary uppercase tracking-widest font-bold">Ministério da Magia</span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-heading text-gold-gradient drop-shadow-2xl">Horário de Aulas</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-heading text-gold-gradient drop-shadow-2xl">Horário de Aulas</h1>
           
           <div className="flex flex-col md:flex-row items-center justify-center gap-6 pt-4">
             <div className="glass px-6 py-3 rounded-2xl border border-white/10 flex items-center gap-3">
@@ -190,7 +190,7 @@ export default function Classes() {
       {/* ── CLASSES GRID ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {classes.length === 0 ? (
-          <div className="col-span-full relative glass rounded-[3rem] p-24 text-center border border-white/5 shadow-2xl overflow-hidden group">
+          <div className="col-span-full relative glass rounded-2xl sm:rounded-[3rem] p-12 sm:p-24 text-center border border-white/5 shadow-2xl overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent" />
             <div className="relative z-10">
               <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/10 group-hover:scale-110 transition-transform">
@@ -211,7 +211,7 @@ export default function Classes() {
                   <div className="absolute inset-0 bg-primary/10 blur-[80px] rounded-[2.5rem] animate-pulse pointer-events-none" />
                 )}
 
-                <div className={`relative glass rounded-[2.5rem] p-8 border transition-all duration-500 overflow-hidden flex flex-col h-full ${
+                <div className={`relative glass rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-8 border transition-all duration-500 overflow-hidden flex flex-col h-full ${
                   active && !attended
                     ? "border-primary/50 bg-gradient-to-br from-primary/10 via-black to-black shadow-[0_20px_50px_rgba(212,175,55,0.2)]" 
                     : "border-white/10 bg-black/40 hover:border-white/30"
