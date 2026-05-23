@@ -1,18 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/auth";
-
-export interface SeasonalEvent {
-  id: string;
-  title: string;
-  description: string;
-  start_date: string;
-  end_date: string;
-  event_type: string;
-  house_points_bonus: number;
-  xp_multiplier: number;
-  active: boolean;
-}
+import { SeasonalEvent } from "@/types";
 
 export function useSeasonalEvents() {
   const [activeEvents, setActiveEvents] = useState<SeasonalEvent[]>([]);

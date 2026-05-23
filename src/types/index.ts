@@ -90,3 +90,15 @@ export interface Order {
   created_at: string;
   paid_at?: string;
 }
+
+export interface SeasonalEvent {
+  id: string;
+  title: string;
+  description: string;
+  start_date: string;
+  end_date: string;
+  event_type: string;
+  house_points_bonus: number;
+  xp_multiplier: number;
+  active: boolean;
+}
