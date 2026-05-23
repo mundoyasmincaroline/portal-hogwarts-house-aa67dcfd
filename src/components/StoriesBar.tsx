@@ -186,16 +186,16 @@ export default function StoriesBar() {
 
   return (
     <>
-      <div className="flex gap-4 overflow-x-auto pb-4 mb-4 custom-scrollbar items-center">
+      <div className="flex gap-4 overflow-x-auto pb-6 mb-6 custom-scrollbar items-center scroll-smooth pr-10">
         {/* Adicionar Story */}
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex flex-col items-center gap-2 shrink-0 group"
+          className="flex flex-col items-center gap-3 shrink-0 group relative"
         >
-          <div className="w-16 h-16 rounded-full bg-secondary border-2 border-dashed border-primary flex items-center justify-center group-hover:scale-105 transition-transform">
-            <span className="text-2xl text-primary">+</span>
+          <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-3xl bg-secondary/30 border-2 border-dashed border-primary/40 flex items-center justify-center transition-all duration-500 group-hover:border-primary group-hover:scale-105 active:scale-95 group-hover:rotate-3 shadow-lg">
+            <span className="text-3xl text-primary font-light">+</span>
           </div>
-          <span className="text-xs font-heading text-muted-foreground group-hover:text-primary">Novo Story</span>
+          <span className="text-[10px] font-heading text-muted-foreground uppercase tracking-widest group-hover:text-primary transition-colors">Seu Story</span>
         </button>
 
         {/* Lista de Stories */}
@@ -206,22 +206,22 @@ export default function StoriesBar() {
             <button
               key={userId}
               onClick={() => openStory(userId)}
-              className="flex flex-col items-center gap-2 shrink-0 group"
+              className="flex flex-col items-center gap-3 shrink-0 group relative"
             >
-              <div className={`w-16 h-16 rounded-full p-0.5 group-hover:scale-105 transition-transform ${isMe ? "border-2 border-dashed border-primary/70" : "border-2 border-primary"}`}>
-                <div className="w-full h-full rounded-full bg-secondary overflow-hidden relative">
+              <div className={`w-18 h-18 sm:w-20 sm:h-20 rounded-3xl p-1 transition-all duration-500 group-hover:scale-110 active:scale-95 group-hover:-rotate-3 shadow-xl ${isMe ? "bg-gradient-to-tr from-primary/20 to-transparent border border-dashed border-primary/50" : "bg-gradient-to-tr from-primary via-primary/40 to-primary border-2 border-transparent shadow-[0_0_20px_rgba(212,175,55,0.3)]"}`}>
+                <div className="w-full h-full rounded-[1.25rem] bg-card overflow-hidden relative border border-black/20">
                   <SafeImage
                     src={prof?.avatar_url}
                     alt={prof?.full_name || ""}
                     fallbackText={prof?.full_name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-125"
                   />
-                  <div className="absolute bottom-0 right-0 w-4 h-4 bg-background rounded-full flex items-center justify-center">
-                    <HouseCrest house={prof?.house} size="sm" />
+                  <div className="absolute bottom-0 right-0 w-6 h-6 bg-card rounded-tl-xl flex items-center justify-center border-t border-l border-white/10 shadow-lg">
+                    <HouseCrest house={prof?.house} size="xs" />
                   </div>
                 </div>
               </div>
-              <span className="text-xs font-heading text-foreground truncate w-16 text-center">
+              <span className={`text-[10px] font-heading truncate w-20 text-center uppercase tracking-widest transition-colors ${isMe ? "text-primary font-bold" : "text-foreground group-hover:text-primary"}`}>
                 {isMe ? "Você" : (prof?.full_name?.split(" ")[0] || "?")}
               </span>
             </button>
@@ -229,13 +229,15 @@ export default function StoriesBar() {
         })}
       </div>
 
+
       {/* Story Viewer */}
       {currentActiveStory && (
-        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center" onClick={() => setActiveStoryUser(null)}>
+        <div className="fixed inset-0 z-[60] bg-black/95 sm:bg-black/80 sm:backdrop-blur-xl flex items-center justify-center p-0 sm:p-4" onClick={() => setActiveStoryUser(null)}>
           <div
-            className="w-full max-w-md h-[85vh] relative rounded-2xl overflow-hidden shadow-2xl flex flex-col bg-card/10 border border-primary/20 backdrop-blur-sm"
+            className="w-full max-w-md h-full sm:h-[85vh] sm:max-h-[800px] relative sm:rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col bg-card border-none sm:border sm:border-white/10"
             onClick={e => e.stopPropagation()}
           >
+
             {/* Progress bars */}
             <div className="absolute top-2 left-2 right-2 flex gap-1 z-20">
               {groupedStories[activeStoryUser!].map((_, idx) => (
