@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import MagicalParticles from "@/components/MagicalParticles";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
-import { playDoorSound } from "@/lib/sounds";
+import { playDoorSound } from "@/services/core/soundService";
 
 export default function Login() {
   const navigate = useNavigate();

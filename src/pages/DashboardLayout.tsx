@@ -10,7 +10,7 @@ import MagicalGaleon from "@/components/MagicalGaleon";
 import { HOUSES } from "@/lib/store";
 import { House } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
-import { isSoundEnabled, toggleSound } from "@/lib/sounds";
+import { isSoundEnabled, toggleSound } from "@/services/core/soundService";
 import { toast } from "sonner";
 
 import Notifications from "@/components/Notifications";
@@ -18,7 +18,7 @@ import PendingApproval from "@/pages/PendingApproval";
 import RulesAgreement from "@/pages/RulesAgreement";
 import CharacterSelection from "@/pages/CharacterSelection";
 import NotificationBanner from "@/components/NotificationBanner";
-import { useAchievements } from "@/lib/useAchievements";
+import { useAchievements } from "@/hooks/features/useAchievements";
 import HouseCupWidget from "@/components/HouseCupWidget";
 import DailyProphetTicker from "@/components/DailyProphetTicker";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";

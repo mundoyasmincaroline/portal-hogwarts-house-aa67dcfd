@@ -1,4 +1,4 @@
-import { playMagicSound } from "@/lib/sounds";
+import { playMagicSound } from "@/services/core/soundService";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "@/lib/auth";

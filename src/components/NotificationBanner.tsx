@@ -1,4 +1,4 @@
-import { getSeasonalEvent } from "@/lib/seasonal";
+import { getSeasonalEvent } from "@/constants/seasonal";
 
 export default function NotificationBanner() {
   const season = getSeasonalEvent();
