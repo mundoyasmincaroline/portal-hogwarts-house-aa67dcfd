@@ -23,10 +23,3 @@ export async function addXP(userId: string, amount: number, actionType: 'message
     return { success: false, message: "Erro ao processar XP." };
   }
 }
-
-    return { success: true };
-  } catch (err) {
-    console.error("Error adding XP:", err);
-    return { success: false, message: "Erro ao processar XP." };
-  }
-}
