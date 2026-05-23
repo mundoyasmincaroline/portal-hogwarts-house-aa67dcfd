@@ -9,6 +9,7 @@ export interface StoreItem {
   image_url: string;
   rarity?: string;
   is_featured?: boolean;
+  effects?: Record<string, any>;
 }
 
 export const storeService = {
