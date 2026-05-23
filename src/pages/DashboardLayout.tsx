@@ -140,7 +140,10 @@ export default function DashboardLayout() {
   if (!profile.approved && !isAdmin) return <PendingApproval />;
   if (!isAdmin && !profile.has_accepted_rules) return <RulesAgreement />;
 
-  const adminSkipped = isAdmin && user && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
+  const adminSkipped = useMemo(() => {
+    if (!isAdmin || !user) return false;
+    return localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
+  }, [isAdmin, user]);
 
   // Só bloqueia se hasCharacters for explicitamente false (carregou e viu que não tem)
   // E se não houver um personagem ativo no perfil
@@ -206,12 +209,16 @@ export default function DashboardLayout() {
         </nav>
 
         <div className="p-3 border-t border-border bg-card/80 backdrop-blur-sm">
-          <Link to="/dashboard/store" className="flex items-center justify-between px-4 py-3 mb-2 rounded-2xl border border-yellow-500/40 bg-gradient-to-br from-amber-600/20 via-yellow-900/40 to-black hover:border-yellow-300 transition-all group">
-            <div className="flex items-center gap-2">
+          <Link 
+            to="/dashboard/store" 
+            className="flex items-center justify-between px-4 py-3 mb-2 rounded-2xl border border-yellow-500/40 bg-gradient-to-br from-amber-600/20 via-yellow-900/40 to-black hover:border-yellow-300 transition-all group overflow-hidden relative"
+          >
+            <div className="absolute inset-0 bg-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="flex items-center gap-2 relative z-10">
               <MagicalGaleon size="xs" />
               <span className="text-[11px] text-yellow-400/90 font-heading uppercase tracking-wider">Galeões</span>
             </div>
-            <span className="font-heading text-lg text-yellow-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]">
+            <span className="font-heading text-lg text-yellow-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] relative z-10">
               {(profile?.galeons || 0).toLocaleString("pt-BR")}
             </span>
           </Link>

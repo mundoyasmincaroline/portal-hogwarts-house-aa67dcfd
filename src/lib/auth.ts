@@ -76,38 +76,15 @@ export const useAuth = create<AuthState>((set, get) => ({
 
   init: async () => {
     try {
-      // 1. Listen for auth changes
-      supabase.auth.onAuthStateChange(async (event, session) => {
-        try {
-          if (session?.user) {
-            const userId = session.user.id;
-            set({ user: session.user, isAuthenticated: true });
-
-            const [admin] = await Promise.all([
-              get().checkAdmin(userId),
-              get().fetchProfile(userId),
-            ]);
-
-            set({ isAdmin: admin });
-            get().pingPresence();
-          } else {
-            set({ user: null, profile: null, isAuthenticated: false, isAdmin: false });
-          }
-        } catch (err) {
-          console.error("Erro no onAuthStateChange:", err);
-        } finally {
-          set({ isLoading: false });
-        }
-      });
-
-      // 2. Initial session check
-      const { data: { session }, error } = await supabase.auth.getSession();
-      if (error) throw error;
+      // 1. Initial session check BEFORE setting up listener to avoid race conditions
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError) throw sessionError;
 
       if (session?.user) {
         const userId = session.user.id;
         set({ user: session.user, isAuthenticated: true });
         
+        // Parallel fetch for speed
         const [admin] = await Promise.all([
           get().checkAdmin(userId),
           get().fetchProfile(userId)
@@ -116,9 +93,44 @@ export const useAuth = create<AuthState>((set, get) => ({
         set({ isAdmin: admin });
         get().pingPresence();
       }
+
+      // 2. Listen for auth changes
+      supabase.auth.onAuthStateChange(async (event, session) => {
+        try {
+          if (event === 'SIGNED_OUT') {
+            set({ user: null, profile: null, isAuthenticated: false, isAdmin: false, isLoading: false });
+            return;
+          }
+
+          if (session?.user) {
+            const userId = session.user.id;
+            const currentUser = get().user;
+            
+            // Avoid re-fetching if it's the same user and profile exists
+            if (currentUser?.id === userId && get().profile) {
+              set({ isLoading: false });
+              return;
+            }
+
+            set({ user: session.user, isAuthenticated: true, isLoading: true });
+
+            const [admin] = await Promise.all([
+              get().checkAdmin(userId),
+              get().fetchProfile(userId),
+            ]);
+
+            set({ isAdmin: admin, isLoading: false });
+            get().pingPresence();
+          } else {
+            set({ user: null, profile: null, isAuthenticated: false, isAdmin: false, isLoading: false });
+          }
+        } catch (err) {
+          console.error("Erro no onAuthStateChange:", err);
+          set({ isLoading: false });
+        }
+      });
     } catch (globalErr) {
       console.error("Erro global no Auth Init:", globalErr);
-    } finally {
       set({ isLoading: false });
     }
   },

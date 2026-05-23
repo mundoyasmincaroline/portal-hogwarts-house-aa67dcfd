@@ -40,7 +40,7 @@ export default function Feed() {
   // Memoize house scores for performance
   const sortedHouses = useMemo(() => {
     return Object.values(HOUSES)
-      .map((h) => ({ ...h, points: houseStats[h.id] }))
+      .map((h) => ({ ...h, points: houseStats[h.id] || 0 }))
       .sort((a, b) => b.points - a.points);
   }, [houseStats]);
   const [activeChallenges, setActiveChallenges] = useState<{ id: string; title: string; xp_reward: number; type: string }[]>([]);
