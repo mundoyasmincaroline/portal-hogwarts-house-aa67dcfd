@@ -135,6 +135,25 @@ export default function Register() {
     toast.success("Bruxo(a) registrado(a) com sucesso! ✨");
   };
 
+  const NavRow = ({ onBack, onNext, disabled = false, labelNext = "Continuar" }: { onBack: () => void; onNext: () => void; disabled?: boolean; labelNext?: string }) => (
+    <div className="flex gap-3 mt-6">
+      <Button variant="ghost" className="flex-1 font-heading text-muted-foreground hover:text-foreground border border-white/5" onClick={onBack}>
+        <ArrowLeft className="mr-2 w-4 h-4" /> Voltar
+      </Button>
+      <Button variant="magical" className="flex-[2] font-heading shadow-[0_0_20px_-5px_hsl(var(--primary))]" onClick={onNext} disabled={disabled}>
+        {labelNext}
+      </Button>
+    </div>
+  );
+
+  const Field = ({ label, children, error }: { label: string; children: React.ReactNode; error?: string }) => (
+    <div className="space-y-1">
+      <label className="text-xs font-heading text-muted-foreground block">{label}</label>
+      {children}
+      {error && <p className="text-destructive text-[10px] font-bold mt-1 animate-in slide-in-from-left-2">{error}</p>}
+    </div>
+  );
+
   /* ── moldura cinematográfica ── */
   return (
     <div className="relative min-h-screen flex items-center justify-center px-4 py-12 overflow-hidden">

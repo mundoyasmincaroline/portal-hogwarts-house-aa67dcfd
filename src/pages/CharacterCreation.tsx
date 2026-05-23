@@ -216,13 +216,19 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
         await supabase.from("canon_claims").insert({ canon_name: form.full_name, user_id: user.id } as never).select();
       }
 
-      await supabase.from("profiles").update({ active_character_id: char!.id, has_seen_intro: false } as never).eq("user_id", user.id);
+      await supabase.from("profiles").update({ active_character_id: char!.id, has_seen_intro: false } as any).eq("user_id", user.id);
       localStorage.removeItem("pending_character_draft"); // Remove o rascunho apenas após salvar com sucesso
       toast.success(`Ficha ${type === "oc" ? "OC" : "Canon"} criada com sucesso! ✨`);
       onComplete();
     } catch (e: any) {
+      console.error("Erro na criação:", e);
       toast.error("Erro ao salvar ficha: " + (e.message || "Tente novamente"));
     } finally { setLoading(false); }
+  };
+
+  const handleBack = () => {
+    if (step !== "select") setStep("select");
+    else if (onCancel) onCancel();
   };
 
   // ---------- TELA DE SELEÇÃO ----------
