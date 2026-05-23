@@ -122,10 +122,11 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
       <button
         onClick={handleFriendAction}
         disabled={loading || status === "blocked"}
-        className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl text-[8px] sm:text-[9px] font-heading uppercase tracking-widest border transition-all ${cfg.cls} disabled:opacity-50`}
+        className={`flex items-center gap-1 sm:gap-1.5 px-3 sm:px-4 py-2 rounded-2xl text-[8px] sm:text-[9px] font-heading uppercase tracking-widest border transition-all duration-300 active:scale-90 ${cfg.cls} disabled:opacity-50 shadow-md hover:shadow-lg`}
       >
         {cfg.icon} {cfg.label}
       </button>
+
     );
   };
 
@@ -240,10 +241,11 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
           <div className="flex justify-stretch w-full">{friendBtn()}</div>
           <button
             onClick={goToDM}
-            className="btn-magical flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-xl text-[9px] sm:text-[10px] font-heading uppercase tracking-widest bg-white/5 border border-white/10 text-white/60 hover:border-primary/40 hover:text-white"
+            className="btn-magical flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 rounded-2xl text-[9px] sm:text-[10px] font-heading uppercase tracking-widest bg-white/5 border border-white/10 text-white/60 hover:border-primary/40 hover:text-white transition-all active:scale-90 shadow-md hover:shadow-lg"
           >
-            <MessageSquare size={12} /> DM
+            <MessageSquare size={14} /> DM
           </button>
+
         </div>
       )}
     </motion.div>
