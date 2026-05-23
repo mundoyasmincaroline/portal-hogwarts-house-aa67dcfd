@@ -2851,6 +2851,10 @@ export type Database = {
         }
         Returns: Json
       }
+      toggle_insta_like: {
+        Args: { p_post_id: string; p_user_id: string }
+        Returns: undefined
+      }
       verify_infinitepay_payment: {
         Args: {
           p_order_nsu: string

@@ -23,13 +23,14 @@ export default function TurnSwitcher() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
-          className="p-1.5 text-muted-foreground hover:bg-secondary/80 hover:text-primary rounded-md transition-colors"
-          title="Botão de Giro · Trocar turno"
+          className="touch-target w-9 h-9 text-muted-foreground hover:bg-primary/10 hover:text-primary rounded-xl transition-all active:scale-90"
+          title="Trocar Personagem"
         >
-          <RefreshCw size={14} className={switchingId ? "animate-spin" : ""} />
+          <RefreshCw size={16} className={switchingId ? "animate-spin" : "transition-transform group-hover:rotate-180 duration-700"} />
         </button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-72 p-2 bg-card border-primary/20">
+      <PopoverContent align="end" className="w-80 p-0 bg-card border-primary/20 shadow-[0_20px_50px_rgba(0,0,0,0.8)] rounded-[2rem] overflow-hidden backdrop-blur-2xl">
+
         <div className="px-2 py-2 mb-1 border-b border-border/40">
           <p className="text-[10px] font-heading uppercase tracking-[0.2em] text-primary">Botão de Giro</p>
           <p className="text-xs text-muted-foreground italic">Quem você será neste turno?</p>

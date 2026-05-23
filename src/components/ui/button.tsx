@@ -15,8 +15,9 @@ const buttonVariants = cva(
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        magical: "bg-gradient-to-r from-primary/90 to-primary text-primary-foreground hover:shadow-[0_0_25px_hsl(43_65%_54%/0.5)] transition-all duration-300 active:scale-95 disabled:opacity-50",
-        plaque: "relative overflow-hidden bg-gradient-to-br from-zinc-900/60 via-zinc-800/40 to-black/80 border border-white/10 text-white font-heading uppercase tracking-widest shadow-[0_10px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl transition-all duration-500 hover:scale-[1.02] hover:border-white/20 active:scale-95 disabled:opacity-50 after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-white/10 after:to-transparent after:-translate-x-[200%] hover:after:translate-x-[200%] after:transition-transform after:duration-1000",
+        magical: "bg-gradient-to-br from-primary via-primary/80 to-primary/90 text-primary-foreground hover:shadow-[0_0_25px_hsl(43_65%_54%/0.4)] transition-all duration-300 active:scale-95 disabled:opacity-50 border border-primary/20",
+        plaque: "relative overflow-hidden bg-gradient-to-br from-zinc-900/80 via-zinc-800/50 to-black/90 border border-white/10 text-white font-heading uppercase tracking-widest shadow-[0_15px_35px_rgba(0,0,0,0.6)] backdrop-blur-xl transition-all duration-500 hover:scale-[1.03] hover:border-white/25 active:scale-95 disabled:opacity-50 after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-white/10 after:to-transparent after:-translate-x-[200%] hover:after:translate-x-[200%] after:transition-transform after:duration-1000",
+
         gryffindor: "bg-gryffindor text-foreground hover:bg-gryffindor/80",
         slytherin: "bg-slytherin text-foreground hover:bg-slytherin/80",
         ravenclaw: "bg-ravenclaw text-foreground hover:bg-ravenclaw/80",

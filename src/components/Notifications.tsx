@@ -84,54 +84,59 @@ export default function Notifications() {
       </button>
 
       {open && (
-        <div className="absolute bottom-12 left-0 w-[calc(100vw-32px)] sm:w-80 bg-card border border-border shadow-2xl rounded-xl overflow-hidden z-50 animate-in fade-in slide-in-from-bottom-2">
-          <div className="p-3 border-b border-border flex justify-between items-center bg-secondary/30">
-            <h3 className="font-heading text-sm text-foreground">Notificações</h3>
+        <div className="absolute bottom-14 left-0 w-[calc(100vw-32px)] sm:w-96 bg-card border border-primary/20 shadow-[0_20px_50px_rgba(0,0,0,0.8)] rounded-[2rem] overflow-hidden z-50 animate-in fade-in slide-in-from-bottom-4 duration-300 backdrop-blur-2xl">
+          <div className="p-5 border-b border-white/5 flex justify-between items-center bg-primary/5">
+            <h3 className="font-heading text-sm text-foreground uppercase tracking-widest">Corujal</h3>
             {unreadCount > 0 && (
-              <button onClick={markAllAsRead} className="text-[10px] text-primary hover:underline">Marcar tudo como lido</button>
+              <button onClick={markAllAsRead} className="text-[10px] text-primary hover:text-primary/80 transition-colors uppercase font-bold tracking-tighter">Limpar pergaminhos</button>
             )}
           </div>
           
-          <div className="max-h-80 overflow-y-auto">
+          <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
             {notifications.length === 0 ? (
-              <div className="p-4 text-center text-xs text-muted-foreground">
-                Nenhuma coruja chegou ainda.
+              <div className="p-10 text-center space-y-3">
+                <div className="text-4xl opacity-20 grayscale">🦉</div>
+                <p className="text-xs text-muted-foreground italic font-serif">O corujal está silencioso hoje.</p>
               </div>
             ) : (
-              notifications.map((n) => (
-                <div 
-                  key={n.id} 
-                  className={`p-3 border-b border-border/50 hover:bg-secondary/50 transition-colors ${!n.read ? "bg-primary/5" : ""}`}
-                  onClick={() => { if (!n.read) markAsRead(n.id); }}
-                >
-                  <div className="flex gap-3">
-                    <div className="text-xl mt-0.5">🦉</div>
-                    <div>
-                      <h4 className={`text-sm ${!n.read ? "font-bold text-foreground" : "font-medium text-foreground/80"}`}>
-                        {n.title}
-                      </h4>
-                      <p className="text-xs text-muted-foreground mt-0.5">{n.message}</p>
-                      
-                      {n.link && (
-                        <Link 
-                          to={n.link} 
-                          onClick={() => setOpen(false)}
-                          className="text-[11px] font-heading text-primary mt-1 inline-block hover:underline"
-                        >
-                          Ver detalhes →
-                        </Link>
-                      )}
-                      <p className="text-[10px] text-muted-foreground mt-1">
-                        {new Date(n.created_at).toLocaleDateString()} às {new Date(n.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                      </p>
+              <div className="divide-y divide-white/5">
+                {notifications.map((n) => (
+                  <div 
+                    key={n.id} 
+                    className={`p-4 hover:bg-white/5 transition-all duration-300 cursor-pointer group ${!n.read ? "bg-primary/5" : ""}`}
+                    onClick={() => { if (!n.read) markAsRead(n.id); }}
+                  >
+                    <div className="flex gap-4">
+                      <div className="text-2xl mt-1 group-hover:scale-110 transition-transform duration-500">🦉</div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className={`text-sm leading-tight mb-1 ${!n.read ? "font-bold text-foreground" : "font-medium text-foreground/70"}`}>
+                          {n.title}
+                        </h4>
+                        <p className="text-xs text-muted-foreground/80 leading-relaxed italic font-serif">{n.message}</p>
+                        
+                        {n.link && (
+                          <Link 
+                            to={n.link} 
+                            onClick={() => setOpen(false)}
+                            className="text-[10px] font-heading text-primary mt-2 inline-flex items-center gap-1 hover:gap-2 transition-all uppercase tracking-widest"
+                          >
+                            Investigar →
+                          </Link>
+                        )}
+                        <p className="text-[9px] text-muted-foreground/40 mt-2 uppercase tracking-tighter font-mono">
+                          {new Date(n.created_at).toLocaleDateString()} · {new Date(n.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                        </p>
+                      </div>
+                      {!n.read && <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 shadow-[0_0_8px_rgba(212,175,55,0.5)]" />}
                     </div>
                   </div>
-                </div>
-              ))
+                ))}
+              </div>
             )}
           </div>
         </div>
       )}
+
     </div>
   );
 }

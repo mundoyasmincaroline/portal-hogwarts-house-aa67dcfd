@@ -157,13 +157,27 @@ export default function InstaHogwarts() {
       ? post.likes.filter(id => id !== user.id)
       : [...post.likes, user.id];
 
+    // Optimistic update
     setPosts(prev => prev.map(p => p.id === post.id ? { ...p, likes: newLikes } : p));
-    await supabase.from("insta_posts").update({ likes: newLikes } as never).eq("id", post.id);
+    
+    try {
+      const { error } = await supabase.rpc("toggle_insta_like", { 
+        p_post_id: post.id, 
+        p_user_id: user.id 
+      });
+      if (error) throw error;
 
-    if (!hasLiked && post.user_id !== user.id) {
-      await supabase.rpc("award_xp_action", { _action: "insta_like", _user_id: post.user_id, _xp: XP_LIKE });
+      if (!hasLiked && post.user_id !== user.id) {
+        await supabase.rpc("award_xp_action", { _action: "insta_like", _user_id: post.user_id, _xp: XP_LIKE });
+      }
+    } catch (error: any) {
+      console.error("Error toggling like:", error);
+      toast.error("Erro ao curtir pergaminho.");
+      // Rollback optimistic update
+      setPosts(prev => prev.map(p => p.id === post.id ? { ...p, likes: post.likes } : p));
     }
   };
+
 
   // Follow user (not character)
   const toggleFollowUser = async (targetUserId: string) => {
