@@ -230,25 +230,25 @@ export default function Feed() {
           )}
 
           {posts.map((post, index) => (
-            <ErrorBoundary key={post.id} fallback={
-              <div className="glass rounded-xl p-4 min-h-[100px] flex items-center justify-center border-red-500/20">
-                <p className="text-xs text-red-400 font-heading">Erro ao carregar pergaminho 📜</p>
-              </div>
-            }>
             <div key={post.id} className="min-h-[150px]">
               {index > 0 && index % 5 === 0 && <MagicAdBanner />}
-              <div className="glass rounded-xl p-4 transition-all duration-300">
+              <ErrorBoundary fallback={
+                <div className="glass rounded-xl p-4 min-h-[100px] flex items-center justify-center border-red-500/20">
+                  <p className="text-xs text-red-400 font-heading">Erro ao carregar pergaminho 📜</p>
+                </div>
+              }>
                 <PostCard 
                   post={post} 
                   user={user} 
                   onToggleReaction={toggleReaction} 
                   onToggleComments={toggleComments}
-                  onCommentDraftChange={(text) => setCommentDrafts(d => ({ ...d, [post.id]: text }))}
+                  onCommentDraftChange={(text: string) => setCommentDrafts(d => ({ ...d, [post.id]: text }))}
                   commentDraft={commentDrafts[post.id] || ""}
                   onSubmitComment={() => submitComment(post.id)}
                   reactions={REACTIONS}
                 />
-            </ErrorBoundary>
+              </ErrorBoundary>
+            </div>
           ))}
         </div>
 
