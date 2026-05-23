@@ -442,10 +442,10 @@ export default function GringottsStore() {
                       </div>
                     </div>
                     
-                    <Button variant={isOwned ? "outline" : "plaque"} size="sm" 
-                      className={`w-full rounded-xl h-12 font-bold ${isOwned ? 'border-green-500/30 text-green-400' : ''}`}
+                    <Button variant={isOwned ? "outline" : "plaque"} size="sm"
+                      className={`w-full rounded-xl h-12 px-2 text-[10px] sm:text-xs tracking-wider whitespace-nowrap ${isOwned ? 'border-green-500/30 text-green-400' : ''}`}
                       onClick={() => !isOwned && buyItem(item)} disabled={isOwned || !canAfford}>
-                      {isOwned ? "Já é seu" : "Adquirir Agora"}
+                      {isOwned ? "Já é seu" : !canAfford ? "Sem Galeões" : "Adquirir"}
                     </Button>
                   </div>
                 </div>
