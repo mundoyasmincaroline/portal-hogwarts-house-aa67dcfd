@@ -141,11 +141,15 @@ export default function DashboardLayout() {
 
   const adminSkipped = isAdmin && user && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
 
-  if (hasCharacters === false && !adminSkipped) {
+  // Só bloqueia se hasCharacters for explicitamente false (carregou e viu que não tem)
+  // E se não houver um personagem ativo no perfil
+  if (hasCharacters === false && !profile.active_character_id && !adminSkipped) {
     return <CharacterSelection adminMode={isAdmin} />;
   }
 
-  if (hasCharacters === null) {
+  // Se ainda está carregando os personagens (hasCharacters === null), mas já passou do isLoading do auth,
+  // mostra um loader menor para não dar flash de tela preta
+  if (hasCharacters === null && !profile.active_character_id && !adminSkipped) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <div className="text-4xl animate-pulse text-primary/40">✨</div>
