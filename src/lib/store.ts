@@ -1,6 +1,4 @@
-// Simple in-memory store for the portal (will be replaced by Supabase later)
-
-export type House = "gryffindor" | "slytherin" | "ravenclaw" | "hufflepuff";
+import { House } from "@/types";
 
 export interface UserProfile {
   id: string;
