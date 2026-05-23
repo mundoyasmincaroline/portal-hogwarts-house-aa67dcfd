@@ -214,7 +214,7 @@ export const useAuth = create<AuthState>((set, get) => ({
     if (!userId) return { success: false, error: "Não autenticado" };
     const { error } = await supabase
       .from("profiles")
-      .update(updates)
+      .update(updates as any) // Mantido as any temporariamente para evitar conflito de tipos com Database['public']['Tables']['profiles']['Update'] sem regeneração imediata
       .eq("user_id", userId);
     if (error) return { success: false, error: error.message };
 
