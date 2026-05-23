@@ -31,7 +31,6 @@ export interface Profile {
   vip_expires_at: string | null;
   blood_locked: boolean;
   current_session_id: string | null;
-  _hasCharacters?: boolean;
 }
 
 export const isUserOnline = (profile: Partial<Profile> | null): boolean => {
@@ -117,22 +116,18 @@ export const useAuth = create<AuthState>((set, get) => ({
 
   fetchProfile: async (userId: string) => {
     try {
-      // Otimização: Busca perfil e conta personagens em paralelo
-      const [profileRes, charRes] = await Promise.all([
-        supabase.from("profiles").select("*").eq("user_id", userId).maybeSingle(),
-        supabase.from("characters").select("*", { count: "exact", head: true }).eq("user_id", userId)
-      ]);
-      
-      if (profileRes.error) throw profileRes.error;
-      
-      set({ 
-        profile: profileRes.data ? ({ 
-          ...profileRes.data, 
-          _hasCharacters: (charRes.count ?? 0) > 0 
-        } as any) : null
-      });
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", userId)
+        .maybeSingle();
+      if (error) throw error;
+      if (data) set({ profile: data as unknown as Profile });
     } catch (err) {
       console.error("Erro ao buscar perfil:", err);
+    } finally {
+      // Garante que isLoading sempre se resolve, mesmo em erro
+      set({ isLoading: false });
     }
   },
 
