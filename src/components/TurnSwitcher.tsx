@@ -3,7 +3,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { RefreshCw, Check, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { HOUSES, type House } from "@/lib/store";
-import { useCharacters } from "@/hooks/useCharacters";
+import { useCharacters } from "@/hooks/features/useCharacters";
 
 export default function TurnSwitcher() {
   const navigate = useNavigate();

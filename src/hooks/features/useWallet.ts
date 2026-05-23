@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { walletService, Order } from "@/services/walletService";
+import { walletService, Order } from "@/services/features/walletService";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 

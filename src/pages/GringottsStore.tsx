@@ -10,8 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import StoreItemVisual from "@/components/StoreItemVisual";
 import SafeImage from "@/components/SafeImage";
 import MagicalGaleon from "@/components/MagicalGaleon";
-import { useStore } from "@/hooks/useStore";
-import { storeService, StoreItem as ServiceStoreItem } from "@/services/storeService";
+import { useStore } from "@/hooks/features/useStore";
+import { storeService, StoreItem as ServiceStoreItem } from "@/services/features/storeService";
 import { CATEGORY_LABELS, RARITY_LABELS } from "@/constants/gameConstants";
 
 // ─── Config ────────────────────────────────────────────────────────────

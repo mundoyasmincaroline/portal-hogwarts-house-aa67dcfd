@@ -19,9 +19,9 @@ import MagicalIcon from "@/components/MagicalIcon";
 import MagicalEmoji from "@/components/MagicalEmoji";
 import MagicalGaleon from "@/components/MagicalGaleon";
 import MagicalMemories from "@/components/MagicalMemories";
-import { useFeed } from "@/hooks/useFeed";
-import { useRealtime } from "@/hooks/useRealtime";
-import { FeedPost } from "@/services/feedService";
+import { useFeed } from "@/hooks/features/useFeed";
+import { useRealtime } from "@/hooks/core/useRealtime";
+import { FeedPost } from "@/services/features/feedService";
 import PostCard from "@/components/PostCard";
 
 

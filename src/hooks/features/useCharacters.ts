@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { characterService, Character } from "@/services/characterService";
+import { characterService, Character } from "@/services/features/characterService";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 
