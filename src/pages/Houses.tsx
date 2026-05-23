@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { HOUSES, type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
 import HouseCrest from "@/components/HouseCrest";
+import { Shield } from "lucide-react";
 
 const HOUSE_GRADIENTS: Record<string, { bg: string; border: string; bar: string }> = {
   gryffindor: { bg: "from-red-900/20 to-transparent",    border: "border-red-500/30",    bar: "bg-red-500" },
