@@ -7,7 +7,8 @@ import {
 import { useAuth, isUserOnline } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";
 import MagicalGaleon from "@/components/MagicalGaleon";
-import { HOUSES, type House } from "@/lib/store";
+import { HOUSES } from "@/lib/store";
+import { House } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
 import { isSoundEnabled, toggleSound } from "@/lib/sounds";
 import { toast } from "sonner";
