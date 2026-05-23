@@ -2786,6 +2786,33 @@ export type Database = {
           },
         ]
       }
+      webhook_audit_log: {
+        Row: {
+          created_at: string | null
+          event_type: string
+          id: string
+          payload_hash: string
+          result_message: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string | null
+          event_type: string
+          id?: string
+          payload_hash: string
+          result_message?: string | null
+          status: string
+        }
+        Update: {
+          created_at?: string | null
+          event_type?: string
+          id?: string
+          payload_hash?: string
+          result_message?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

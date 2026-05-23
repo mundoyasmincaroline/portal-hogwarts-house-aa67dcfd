@@ -185,7 +185,7 @@ export const useAuth = create<AuthState>((set, get) => ({
   logout: async () => {
     const userId = get().user?.id;
     if (userId) {
-      await supabase.from("profiles").update({ online: false } as any).eq("user_id", userId);
+      await supabase.from("profiles").update({ online: false }).eq("user_id", userId);
     }
     await supabase.auth.signOut();
     localStorage.removeItem("hogwarts_session_id");
@@ -214,7 +214,7 @@ export const useAuth = create<AuthState>((set, get) => ({
     if (!userId) return { success: false, error: "Não autenticado" };
     const { error } = await supabase
       .from("profiles")
-      .update(updates as any)
+      .update(updates as any) // Mantido as any temporariamente para evitar conflito de tipos com Database['public']['Tables']['profiles']['Update'] sem regeneração imediata
       .eq("user_id", userId);
     if (error) return { success: false, error: error.message };
 
@@ -259,7 +259,7 @@ export const useAuth = create<AuthState>((set, get) => ({
     if (!sessionId) {
       sessionId = Math.random().toString(36).substring(2, 15);
       localStorage.setItem("hogwarts_session_id", sessionId);
-      await supabase.from("profiles").update({ current_session_id: sessionId } as any).eq("user_id", userId);
+      await supabase.from("profiles").update({ current_session_id: sessionId }).eq("user_id", userId);
       set((state) => ({ profile: state.profile ? { ...state.profile, current_session_id: sessionId } : null }));
     } else if (get().profile && get().profile?.current_session_id !== sessionId) {
       // Re-sync if local storage has it but profile state doesn't
@@ -268,7 +268,7 @@ export const useAuth = create<AuthState>((set, get) => ({
 
     await supabase
       .from("profiles")
-      .update({ online: true, last_seen: now.toISOString() } as any)
+      .update({ online: true, last_seen: now.toISOString() })
       .eq("user_id", userId);
   },
 }));
