@@ -77,16 +77,6 @@ export default function Feed() {
     supabase.from("banned_words").select("word").then(({ data }) => {
       if (data) setBannedWords(data.map(d => d.word.toLowerCase()));
     });
-  }, [loadFeed]);
-
-  // Use centralized realtime hooks
-  useRealtime("posts", "*", loadFeed);
-  useRealtime("post_comments", "*", loadFeed);
-  useRealtime("post_reactions", "*", loadFeed);
-
-  useEffect(() => {
-    loadFeed();
-    loadSidebar();
   }, [loadFeed, loadSidebar]);
 
   useEffect(() => {
@@ -138,7 +128,8 @@ export default function Feed() {
     setNewMusicUrl("");
     toast.success("Publicado! ✨");
     // +2 Galeões por publicar
-    supabase.rpc("award_galeons" as any, { _user_id: user.id, _amount: 2, _reason: "post" }).then(() => {});
+    supabase.rpc("award_galeons" as any, { _user_id: user.id, _amount: 2, _reason: "post" })
+      .catch(err => console.error("Erro ao creditar galeões:", err));
   };
 
   const toggleReaction = async (postId: string, emoji: string, mine: boolean) => {
