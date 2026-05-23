@@ -229,7 +229,7 @@ export default function Feed() {
           )}
 
           {posts.map((post, index) => (
-            <div key={post.id} className="min-h-[150px] content-visibility-auto">
+            <div key={post.id} className="min-h-[150px]" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 150px' }}>
               {index > 0 && index % 5 === 0 && <MagicAdBanner />}
               <div className="glass rounded-xl p-4 transition-all duration-300">
                 <div className="flex items-center gap-3 mb-3">
@@ -263,6 +263,7 @@ export default function Feed() {
                         height="80" 
                         frameBorder="0" 
                         allow="encrypted-media" 
+                        loading="lazy"
                         className="rounded-lg opacity-80 hover:opacity-100 transition-opacity"
                       ></iframe>
                     ) : (
