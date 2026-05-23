@@ -1950,6 +1950,41 @@ export type Database = {
         }
         Relationships: []
       }
+      referral_rewards: {
+        Row: {
+          amount: number | null
+          claimed: boolean | null
+          created_at: string | null
+          id: string
+          referral_id: string | null
+          reward_type: string | null
+        }
+        Insert: {
+          amount?: number | null
+          claimed?: boolean | null
+          created_at?: string | null
+          id?: string
+          referral_id?: string | null
+          reward_type?: string | null
+        }
+        Update: {
+          amount?: number | null
+          claimed?: boolean | null
+          created_at?: string | null
+          id?: string
+          referral_id?: string | null
+          reward_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_rewards_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       referrals: {
         Row: {
           created_at: string | null
