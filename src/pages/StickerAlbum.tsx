@@ -8,7 +8,8 @@ import { useNavigate } from "react-router-dom";
 import StickerVisual from "@/components/StickerVisual";
 import MagicalEmoji from "@/components/MagicalEmoji";
 import { useStickers } from "@/hooks/features/useStickers";
-import { Sticker } from "@/services/features/stickerService";
+import { stickerService } from "@/services/features/stickerService";
+import { Sticker } from "@/types";
 import { RARITY_COST, PACK_COST } from "@/constants/gameConstants";
 
 const RARITY_ORDER = { bronze: 0, silver: 1, gold: 2 };

@@ -153,7 +153,7 @@ export default function Landing() {
           </p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {HOUSES.map(h => (
+          {HOUSES_INFO.map(h => (
             <div key={h.id} onClick={() => navigate("/register")}
               className={`relative glass rounded-3xl sm:rounded-[3rem] p-6 sm:p-10 border-2 bg-gradient-to-br ${h.color} text-center cursor-pointer hover:-translate-y-2 sm:hover:-translate-y-4 hover:shadow-[0_30px_100px_rgba(0,0,0,0.6)] transition-all duration-700 group flex flex-col items-center gap-4 sm:gap-6 overflow-hidden`}>
               

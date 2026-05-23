@@ -21,7 +21,8 @@ import MagicalGaleon from "@/components/MagicalGaleon";
 import MagicalMemories from "@/components/MagicalMemories";
 import { useFeed } from "@/hooks/features/useFeed";
 import { useRealtime } from "@/hooks/core/useRealtime";
-import { FeedPost } from "@/services/features/feedService";
+import { feedService } from "@/services/features/feedService";
+import { FeedPost } from "@/types";
 import PostCard from "@/components/PostCard";
 
 

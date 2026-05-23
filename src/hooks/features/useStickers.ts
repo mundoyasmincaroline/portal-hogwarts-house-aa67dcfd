@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import { stickerService, Sticker } from "@/services/features/stickerService";
+import { stickerService } from "@/services/features/stickerService";
 import { useAuth } from "@/lib/auth";
+import { Sticker } from "@/types";
 import { toast } from "sonner";
 import { RARITY_COST } from "@/constants/gameConstants";
 
