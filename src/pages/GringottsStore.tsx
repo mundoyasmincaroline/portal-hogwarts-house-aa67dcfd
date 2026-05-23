@@ -112,10 +112,11 @@ const TABS = [
   { id: "galeons",  label: "🪙 Galeões",    icon: Coins, color: "from-yellow-400 to-amber-600" },
   { id: "vip",      label: "👑 VIP",        icon: Crown, color: "from-purple-500 to-indigo-600" },
   { id: "wand",     label: "🪄 Varinhas",   icon: Wand2, color: "from-amber-700 to-yellow-900" },
-  { id: "spell",    label: "📜 Feitiços",   icon: Sparkles, color: "from-blue-400 to-indigo-600" },
+  { id: "pet",      label: "🐾 Pets",       icon: Sparkles, color: "from-emerald-400 to-teal-600" },
   { id: "potion",   label: "🧪 Poções",     icon: Gem, color: "from-emerald-400 to-teal-700" },
   { id: "clothing", label: "👗 Roupas",     icon: Shirt, color: "from-rose-400 to-pink-700" },
-  { id: "upgrade",  label: "⚡ Upgrades",   icon: Zap, color: "from-cyan-400 to-blue-700" },
+  { id: "accessory",label: "✨ Acessórios", icon: Zap, color: "from-cyan-400 to-blue-700" },
+  { id: "upgrade",  label: "⚡ Upgrades",   icon: Sparkles, color: "from-blue-400 to-indigo-600" },
 ];
 
 export default function GringottsStore() {
