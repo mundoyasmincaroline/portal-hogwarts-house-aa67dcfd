@@ -1,22 +1,7 @@
-import { House } from "@/types";
+import { House, HOUSES, getLevelFromXP, UserProfile, HouseData } from "@/types";
 
-export interface UserProfile {
-  id: string;
-  fullName: string;
-  username: string;
-  age: number;
-  house: House;
-  level: number;
-  xp: number;
-  xpToNext: number;
-  bio: string;
-  avatar: string | null;
-  role: "member" | "moderator" | "admin";
-  badges: string[];
-  joinedAt: string;
-  approved: boolean;
-  online: boolean;
-}
+export { HOUSES, getLevelFromXP };
+export type { UserProfile, HouseData };
 
 export interface Post {
   id: string;
