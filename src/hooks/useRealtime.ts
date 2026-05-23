@@ -15,7 +15,7 @@ export function useRealtime<T>(
   callbackRef.current = callback;
 
   useEffect(() => {
-    const channelName = `realtime-${table}-${event}-${filter || 'all'}-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const channelName = `realtime-${table}:${event}:${filter || 'all'}`;
     const channel = supabase.channel(channelName);
     
     channel

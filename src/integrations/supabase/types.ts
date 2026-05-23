@@ -139,6 +139,71 @@ export type Database = {
         }
         Relationships: []
       }
+      battle_pass_rewards: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_premium: boolean | null
+          level_required: number
+          pass_id: string | null
+          reward_type: string
+          reward_value: Json
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_premium?: boolean | null
+          level_required: number
+          pass_id?: string | null
+          reward_type: string
+          reward_value: Json
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_premium?: boolean | null
+          level_required?: number
+          pass_id?: string | null
+          reward_type?: string
+          reward_value?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "battle_pass_rewards_pass_id_fkey"
+            columns: ["pass_id"]
+            isOneToOne: false
+            referencedRelation: "battle_passes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      battle_passes: {
+        Row: {
+          active: boolean | null
+          created_at: string | null
+          end_date: string
+          id: string
+          season_name: string
+          start_date: string
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string | null
+          end_date: string
+          id?: string
+          season_name: string
+          start_date: string
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string | null
+          end_date?: string
+          id?: string
+          season_name?: string
+          start_date?: string
+        }
+        Relationships: []
+      }
       canon_claims: {
         Row: {
           canon_name: string
@@ -753,6 +818,105 @@ export type Database = {
           },
         ]
       }
+      creatures: {
+        Row: {
+          active: boolean | null
+          created_at: string | null
+          danger_level: number | null
+          description: string | null
+          drops: Json | null
+          habitat: string | null
+          id: string
+          image_url: string | null
+          name: string
+          rarity: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string | null
+          danger_level?: number | null
+          description?: string | null
+          drops?: Json | null
+          habitat?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          rarity?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string | null
+          danger_level?: number | null
+          description?: string | null
+          drops?: Json | null
+          habitat?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          rarity?: string | null
+        }
+        Relationships: []
+      }
+      currency_ledger: {
+        Row: {
+          amount: number
+          created_at: string | null
+          currency_type: string
+          description: string | null
+          id: string
+          transaction_type: string
+          user_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          currency_type: string
+          description?: string | null
+          id?: string
+          transaction_type: string
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          currency_type?: string
+          description?: string | null
+          id?: string
+          transaction_type?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      daily_prophet_news: {
+        Row: {
+          category: string | null
+          content: string
+          created_at: string | null
+          id: string
+          image_url: string | null
+          is_ai_generated: boolean | null
+          title: string
+        }
+        Insert: {
+          category?: string | null
+          content: string
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          is_ai_generated?: boolean | null
+          title: string
+        }
+        Update: {
+          category?: string | null
+          content?: string
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          is_ai_generated?: boolean | null
+          title?: string
+        }
+        Relationships: []
+      }
       dm_messages: {
         Row: {
           content: string
@@ -1088,6 +1252,48 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      insta_comments: {
+        Row: {
+          character_id: string | null
+          content: string
+          created_at: string | null
+          id: string
+          post_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          character_id?: string | null
+          content: string
+          created_at?: string | null
+          id?: string
+          post_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          character_id?: string | null
+          content?: string
+          created_at?: string | null
+          id?: string
+          post_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "insta_comments_character_id_fkey"
+            columns: ["character_id"]
+            isOneToOne: false
+            referencedRelation: "characters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "insta_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "insta_posts"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1488,10 +1694,12 @@ export type Database = {
           has_seen_intro: boolean | null
           house: Database["public"]["Enums"]["house_type"]
           id: string
+          knuts: number | null
           last_seen: string | null
           level: number
           online: boolean
           role: string | null
+          sickles: number | null
           updated_at: string
           user_id: string
           username: string
@@ -1516,10 +1724,12 @@ export type Database = {
           has_seen_intro?: boolean | null
           house?: Database["public"]["Enums"]["house_type"]
           id?: string
+          knuts?: number | null
           last_seen?: string | null
           level?: number
           online?: boolean
           role?: string | null
+          sickles?: number | null
           updated_at?: string
           user_id: string
           username: string
@@ -1544,10 +1754,12 @@ export type Database = {
           has_seen_intro?: boolean | null
           house?: Database["public"]["Enums"]["house_type"]
           id?: string
+          knuts?: number | null
           last_seen?: string | null
           level?: number
           online?: boolean
           role?: string | null
+          sickles?: number | null
           updated_at?: string
           user_id?: string
           username?: string
@@ -1562,6 +1774,213 @@ export type Database = {
             columns: ["active_character_id"]
             isOneToOne: false
             referencedRelation: "characters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quest_choices: {
+        Row: {
+          choice_text: string
+          consequence_text: string | null
+          created_at: string | null
+          id: string
+          next_quest_id: string | null
+          quest_id: string | null
+          required_house: Database["public"]["Enums"]["house_type"] | null
+        }
+        Insert: {
+          choice_text: string
+          consequence_text?: string | null
+          created_at?: string | null
+          id?: string
+          next_quest_id?: string | null
+          quest_id?: string | null
+          required_house?: Database["public"]["Enums"]["house_type"] | null
+        }
+        Update: {
+          choice_text?: string
+          consequence_text?: string | null
+          created_at?: string | null
+          id?: string
+          next_quest_id?: string | null
+          quest_id?: string | null
+          required_house?: Database["public"]["Enums"]["house_type"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quest_choices_next_quest_id_fkey"
+            columns: ["next_quest_id"]
+            isOneToOne: false
+            referencedRelation: "quests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quest_choices_quest_id_fkey"
+            columns: ["quest_id"]
+            isOneToOne: false
+            referencedRelation: "quests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quests: {
+        Row: {
+          active: boolean | null
+          created_at: string | null
+          description: string | null
+          galeons_reward: number | null
+          id: string
+          min_level: number | null
+          title: string
+          xp_reward: number | null
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string | null
+          description?: string | null
+          galeons_reward?: number | null
+          id?: string
+          min_level?: number | null
+          title: string
+          xp_reward?: number | null
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string | null
+          description?: string | null
+          galeons_reward?: number | null
+          id?: string
+          min_level?: number | null
+          title?: string
+          xp_reward?: number | null
+        }
+        Relationships: []
+      }
+      quidditch_matches: {
+        Row: {
+          created_at: string | null
+          finished_at: string | null
+          id: string
+          scheduled_at: string
+          status: string | null
+          team1_id: string | null
+          team1_score: number | null
+          team2_id: string | null
+          team2_score: number | null
+          winner_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          finished_at?: string | null
+          id?: string
+          scheduled_at: string
+          status?: string | null
+          team1_id?: string | null
+          team1_score?: number | null
+          team2_id?: string | null
+          team2_score?: number | null
+          winner_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          finished_at?: string | null
+          id?: string
+          scheduled_at?: string
+          status?: string | null
+          team1_id?: string | null
+          team1_score?: number | null
+          team2_id?: string | null
+          team2_score?: number | null
+          winner_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quidditch_matches_team1_id_fkey"
+            columns: ["team1_id"]
+            isOneToOne: false
+            referencedRelation: "quidditch_teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quidditch_matches_team2_id_fkey"
+            columns: ["team2_id"]
+            isOneToOne: false
+            referencedRelation: "quidditch_teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quidditch_matches_winner_id_fkey"
+            columns: ["winner_id"]
+            isOneToOne: false
+            referencedRelation: "quidditch_teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quidditch_teams: {
+        Row: {
+          captain_id: string | null
+          draws: number | null
+          house: Database["public"]["Enums"]["house_type"]
+          id: string
+          losses: number | null
+          points: number | null
+          updated_at: string | null
+          wins: number | null
+        }
+        Insert: {
+          captain_id?: string | null
+          draws?: number | null
+          house: Database["public"]["Enums"]["house_type"]
+          id?: string
+          losses?: number | null
+          points?: number | null
+          updated_at?: string | null
+          wins?: number | null
+        }
+        Update: {
+          captain_id?: string | null
+          draws?: number | null
+          house?: Database["public"]["Enums"]["house_type"]
+          id?: string
+          losses?: number | null
+          points?: number | null
+          updated_at?: string | null
+          wins?: number | null
+        }
+        Relationships: []
+      }
+      referral_rewards: {
+        Row: {
+          amount: number | null
+          claimed: boolean | null
+          created_at: string | null
+          id: string
+          referral_id: string | null
+          reward_type: string | null
+        }
+        Insert: {
+          amount?: number | null
+          claimed?: boolean | null
+          created_at?: string | null
+          id?: string
+          referral_id?: string | null
+          reward_type?: string | null
+        }
+        Update: {
+          amount?: number | null
+          claimed?: boolean | null
+          created_at?: string | null
+          id?: string
+          referral_id?: string | null
+          reward_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_rewards_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
             referencedColumns: ["id"]
           },
         ]
@@ -1605,6 +2024,45 @@ export type Database = {
           },
         ]
       }
+      seasonal_events: {
+        Row: {
+          active: boolean | null
+          created_at: string | null
+          description: string | null
+          end_date: string
+          event_type: string | null
+          house_points_bonus: number | null
+          id: string
+          start_date: string
+          title: string
+          xp_multiplier: number | null
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string | null
+          description?: string | null
+          end_date: string
+          event_type?: string | null
+          house_points_bonus?: number | null
+          id?: string
+          start_date: string
+          title: string
+          xp_multiplier?: number | null
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string | null
+          description?: string | null
+          end_date?: string
+          event_type?: string | null
+          house_points_bonus?: number | null
+          id?: string
+          start_date?: string
+          title?: string
+          xp_multiplier?: number | null
+        }
+        Relationships: []
+      }
       site_settings: {
         Row: {
           id: string
@@ -1637,11 +2095,12 @@ export type Database = {
           effect: string
           icon: string | null
           id: string
-          incantation: string
+          incantation: string | null
           is_unforgivable: boolean | null
           min_year: number
           name: string
           taught_by: string | null
+          xp_required: number | null
         }
         Insert: {
           base_damage?: number | null
@@ -1653,11 +2112,12 @@ export type Database = {
           effect?: string
           icon?: string | null
           id?: string
-          incantation: string
+          incantation?: string | null
           is_unforgivable?: boolean | null
           min_year?: number
           name: string
           taught_by?: string | null
+          xp_required?: number | null
         }
         Update: {
           base_damage?: number | null
@@ -1669,11 +2129,12 @@ export type Database = {
           effect?: string
           icon?: string | null
           id?: string
-          incantation?: string
+          incantation?: string | null
           is_unforgivable?: boolean | null
           min_year?: number
           name?: string
           taught_by?: string | null
+          xp_required?: number | null
         }
         Relationships: []
       }
@@ -1757,6 +2218,7 @@ export type Database = {
       }
       store_items: {
         Row: {
+          active: boolean | null
           category: string
           created_at: string | null
           description: string | null
@@ -1769,6 +2231,7 @@ export type Database = {
           rarity: string | null
         }
         Insert: {
+          active?: boolean | null
           category: string
           created_at?: string | null
           description?: string | null
@@ -1781,6 +2244,7 @@ export type Database = {
           rarity?: string | null
         }
         Update: {
+          active?: boolean | null
           category?: string
           created_at?: string | null
           description?: string | null
@@ -1957,6 +2421,44 @@ export type Database = {
           },
         ]
       }
+      user_battle_pass_progress: {
+        Row: {
+          claimed_rewards: Json | null
+          current_level: number | null
+          current_xp: number | null
+          pass_id: string
+          premium_unlocked: boolean | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          claimed_rewards?: Json | null
+          current_level?: number | null
+          current_xp?: number | null
+          pass_id: string
+          premium_unlocked?: boolean | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          claimed_rewards?: Json | null
+          current_level?: number | null
+          current_xp?: number | null
+          pass_id?: string
+          premium_unlocked?: boolean | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_battle_pass_progress_pass_id_fkey"
+            columns: ["pass_id"]
+            isOneToOne: false
+            referencedRelation: "battle_passes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_challenges: {
         Row: {
           challenge_id: string
@@ -2083,6 +2585,75 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      user_notification_settings: {
+        Row: {
+          enable_email_digest: boolean | null
+          enable_quests: boolean | null
+          enable_social: boolean | null
+          enable_system: boolean | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          enable_email_digest?: boolean | null
+          enable_quests?: boolean | null
+          enable_social?: boolean | null
+          enable_system?: boolean | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          enable_email_digest?: boolean | null
+          enable_quests?: boolean | null
+          enable_social?: boolean | null
+          enable_system?: boolean | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_quest_progress: {
+        Row: {
+          id: string
+          last_choice_id: string | null
+          quest_id: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          id?: string
+          last_choice_id?: string | null
+          quest_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          id?: string
+          last_choice_id?: string | null
+          quest_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_quest_progress_last_choice_id_fkey"
+            columns: ["last_choice_id"]
+            isOneToOne: false
+            referencedRelation: "quest_choices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_quest_progress_quest_id_fkey"
+            columns: ["quest_id"]
+            isOneToOne: false
+            referencedRelation: "quests"
+            referencedColumns: ["id"]
           },
         ]
       }
