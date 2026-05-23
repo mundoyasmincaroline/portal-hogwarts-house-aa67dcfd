@@ -719,7 +719,16 @@ export default function GringottsStore() {
 
                     <div className="p-6 flex flex-col flex-1 relative">
                       <h4 className={`font-heading text-base leading-tight mb-2 transition-colors ${isLegendary ? 'text-yellow-400' : 'text-white'}`}>{item.name}</h4>
-                      <p className="text-[11px] text-white/50 flex-1 mb-5 leading-relaxed line-clamp-3 font-serif">{item.description}</p>
+                      
+                      {item.effects && Object.keys(item.effects).length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mb-2">
+                           {item.effects.xp_bonus && <Badge variant="secondary" className="bg-blue-500/20 text-blue-400 border-blue-500/30 text-[8px] py-0 px-1.5">+{item.effects.xp_bonus}% XP</Badge>}
+                           {item.effects.spell_power && <Badge variant="secondary" className="bg-purple-500/20 text-purple-400 border-purple-500/30 text-[8px] py-0 px-1.5">+{item.effects.spell_power} ATK</Badge>}
+                           {item.effects.xp_reward && <Badge variant="secondary" className="bg-green-500/20 text-green-400 border-green-500/30 text-[8px] py-0 px-1.5">+{item.effects.xp_reward} XP Instante</Badge>}
+                        </div>
+                      )}
+
+                      <p className="text-[11px] text-white/50 flex-1 mb-5 leading-relaxed line-clamp-2 font-serif">{item.description}</p>
                       
                       <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
                         <div className="flex flex-col">
