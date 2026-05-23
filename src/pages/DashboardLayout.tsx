@@ -60,6 +60,7 @@ export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [soundOn, setSoundOn] = useState(isSoundEnabled());
   const [dmUnread, setDmUnread] = useState(0);
+  const [hasCharacters, setHasCharacters] = useState<boolean | null>(null);
 
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
 
@@ -68,9 +69,23 @@ export default function DashboardLayout() {
   const house = useMemo(() => HOUSES[(profile?.house as House) || "gryffindor"] || HOUSES.gryffindor, [profile?.house]);
   const groups = useMemo(() => isAdmin ? [...NAV_GROUPS, ADMIN_GROUP] : NAV_GROUPS, [isAdmin]);
 
-  // Otimização: Usa o check de personagens em cache no perfil
-  // Se o perfil for nulo e não estiver carregando, assume false para evitar loop infinito
-  const hasCharacters = profile?._hasCharacters ?? (isLoading ? null : false);
+  // Busca personagens uma única vez quando o usuário muda
+  useEffect(() => {
+    if (!user) { setHasCharacters(null); return; }
+    let cancelled = false;
+    (async () => {
+      try {
+        const { count } = await supabase
+          .from("characters")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", user.id);
+        if (!cancelled) setHasCharacters((count ?? 0) > 0);
+      } catch {
+        if (!cancelled) setHasCharacters(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [user?.id]);
 
   useEffect(() => {
     if (!user) return;
@@ -104,7 +119,7 @@ export default function DashboardLayout() {
     return () => clearInterval(interval);
   }, [user, pingPresence]);
 
-  if (isLoading || hasCharacters === null) {
+  if (isLoading || !profile || hasCharacters === null) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <div className="text-center">
@@ -115,8 +130,8 @@ export default function DashboardLayout() {
     );
   }
 
-  if (profile && !profile.approved && !isAdmin) return <PendingApproval />;
-  if (profile && !isAdmin && !profile.has_accepted_rules) return <RulesAgreement />;
+  if (!profile.approved && !isAdmin) return <PendingApproval />;
+  if (!isAdmin && !profile.has_accepted_rules) return <RulesAgreement />;
 
   const adminSkipped = isAdmin && user && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
 
