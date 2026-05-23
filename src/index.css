@@ -98,8 +98,8 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 5px hsl(43 65% 54% / 0.3); }
-  50% { box-shadow: 0 0 20px hsl(43 65% 54% / 0.6); }
+  0%, 100% { box-shadow: 0 0 8px hsl(43 65% 54% / 0.3); transform: scale(1); }
+  50% { box-shadow: 0 0 25px hsl(43 65% 54% / 0.6); transform: scale(1.02); }
 }
 
 @keyframes torch-flicker {
@@ -172,16 +172,26 @@
 
 /* Custom button states */
 .btn-magical {
-  @apply relative overflow-hidden transition-all duration-300 active:scale-95;
+  @apply relative overflow-hidden transition-all duration-500 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  box-shadow: 0 4px 15px -1px rgba(0, 0, 0, 0.4);
+}
+
+.btn-magical::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 transition-opacity duration-500;
+}
+
+.btn-magical:hover::before {
+  @apply opacity-100;
 }
 
 .btn-magical::after {
   content: '';
-  @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full skew-x-12 transition-transform duration-500;
+  @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-[200%] skew-x-12 transition-transform duration-1000 ease-in-out;
 }
 
 .btn-magical:hover::after {
-  @apply translate-x-full;
+  @apply translate-x-[200%];
 }
 
 /* Custom container */
