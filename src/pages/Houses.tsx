@@ -58,9 +58,19 @@ export default function Houses() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 px-2 sm:px-0">
-      <div className="glass rounded-2xl p-5 sm:p-6 text-center">
-        <h1 className="font-heading text-2xl text-gold-gradient mb-2">As Quatro Casas</h1>
-        <p className="text-muted-foreground text-sm">Compita com sua casa e traga glória ao seu nome</p>
+      <div className="glass rounded-[2rem] sm:rounded-[3rem] p-8 sm:p-12 text-center relative overflow-hidden group border-white/5 shadow-2xl">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary/5 opacity-50" />
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+        <div className="relative z-10 space-y-4">
+          <div className="inline-flex items-center gap-3 bg-primary/10 border border-primary/20 rounded-full px-5 py-1.5 mb-2">
+            <Shield size={14} className="text-primary animate-pulse" />
+            <span className="text-[10px] font-heading uppercase tracking-[0.2em] text-primary">Ancestralidade & Glória</span>
+          </div>
+          <h1 className="font-heading text-4xl sm:text-6xl text-gold-gradient tracking-tighter drop-shadow-lg">As Quatro Casas</h1>
+          <p className="text-base sm:text-lg text-muted-foreground/80 font-serif italic max-w-xl mx-auto leading-relaxed">
+            "Não é o que você escolhe, mas o que você é. Descubra o poder que reside na união com seus semelhantes."
+          </p>
+        </div>
       </div>
 
       {loading ? (
