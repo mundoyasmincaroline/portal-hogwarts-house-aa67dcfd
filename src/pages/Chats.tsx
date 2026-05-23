@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { House } from "@/lib/store";
+import { House } from "@/types";
 import MagicAdBanner from "@/components/MagicAdBanner";
 import { 
   Lock, Zap, Coffee, Newspaper, MessageSquare, 

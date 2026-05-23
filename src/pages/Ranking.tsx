@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { HOUSES, getLevelFromXP, type House } from "@/lib/store";
+import { HOUSES, getLevelFromXP, type House } from "@/types";
 import { isUserOnline } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";
 import MedalBadge from "@/components/MedalBadge";

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo, useRef, memo } from "react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Sparkles, Trophy } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
-import { HOUSES, type House } from "@/lib/store";
+import { HOUSES, type House } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
 import HouseCrest from "@/components/HouseCrest";
 import { Button } from "@/components/ui/button";

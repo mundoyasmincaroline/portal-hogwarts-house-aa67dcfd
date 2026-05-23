@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth, isUserOnline } from "@/lib/auth";
-import { HOUSES, getLevelFromXP, type House } from "@/lib/store";
+import { HOUSES, getLevelFromXP, type House } from "@/types";
 import HouseCrest from "@/components/HouseCrest";
 import XPBar from "@/components/XPBar";
 import MedalBadge, { getMedalForXP } from "@/components/MedalBadge";

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import HouseCrest from "@/components/HouseCrest";
 import SafeImage from "@/components/SafeImage";
-import { House } from "@/lib/store";
+import { House } from "@/types";
 import { UserPlus, UserCheck, Heart, Users, Camera } from "lucide-react";
 
 interface Character {

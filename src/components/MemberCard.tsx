@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import HouseCrest from "@/components/HouseCrest";
 import SafeImage from "@/components/SafeImage";
 import { MessageCircle, UserPlus, UserCheck, Clock, MessageSquare, Crown } from "lucide-react";
-import { House } from "@/lib/store";
+import { House } from "@/types";
 
 interface Props {
   member: {

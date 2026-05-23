@@ -1,4 +1,4 @@
-import { getLevelFromXP } from "@/lib/store";
+import { getLevelFromXP } from "@/types";
 
 export default function XPBar({ xp, showLabel = true }: { xp: number; showLabel?: boolean }) {
   const info = getLevelFromXP(xp);

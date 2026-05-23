@@ -1,4 +1,4 @@
-import { type House } from "@/lib/store";
+import { type House } from "@/types";
 
 const crests: Record<House, { letter: string; bg: string }> = {
   gryffindor: { letter: "G", bg: "from-gryffindor to-gryffindor-gold" },

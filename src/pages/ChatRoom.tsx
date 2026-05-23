@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import HouseCrest from "@/components/HouseCrest";
-import { House } from "@/lib/store";
+import { House } from "@/types";
 import { addXP } from "@/services/core/xpService";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Badge } from "@/components/ui/badge";

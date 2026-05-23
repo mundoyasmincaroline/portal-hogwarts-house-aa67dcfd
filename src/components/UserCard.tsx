@@ -1,4 +1,4 @@
-import { type UserProfile, HOUSES } from "@/lib/store";
+import { type UserProfile, HOUSES } from "@/types";
 import HouseCrest from "./HouseCrest";
 import XPBar from "./XPBar";
 import { isUserOnline } from "@/lib/auth";
