@@ -14,13 +14,13 @@ export default function MagicalGaleon({ size = "md", className = "" }: MagicalGa
   };
 
   return (
-    <div className={`relative inline-flex items-center justify-center ${sizeMap[size]} ${className}`}>
+    <div className={`relative inline-flex items-center justify-center shrink-0 ${sizeMap[size]} ${className}`}>
       <img
         src="/monster_quality_galeon.png"
         alt="Galeon"
-        className="w-full h-full object-contain drop-shadow-[0_0_8px_rgba(234,179,8,0.5)] animate-float-subtle group-hover:drop-shadow-[0_0_15px_rgba(234,179,8,0.8)] transition-all"
+        className="w-full h-full object-contain drop-shadow-[0_0_10px_rgba(234,179,8,0.6)] group-hover:scale-110 group-hover:rotate-12 transition-all duration-500"
       />
-      <div className="absolute inset-0 bg-yellow-400/10 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="absolute inset-0 bg-yellow-400/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
     </div>
   );
 }
