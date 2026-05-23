@@ -69,8 +69,8 @@ export default function Register() {
     const e: Record<string, string> = {};
     if (!form.fullName.trim()) e.fullName = "Como devemos te chamar?";
     if (!form.username.trim()) e.username = "Escolha um @";
-    if (form.username.includes(" ")) e.username = "Sem espaços";
-    if (!form.email.trim()) e.email = "Email é obrigatório";
+    if (form.username && (form.username.includes(" ") || !/^[a-z0-9._]+$/.test(form.username))) e.username = "Apenas letras, números, pontos e underlines";
+    if (!form.email.trim() || !/^\S+@\S+\.\S+$/.test(form.email)) e.email = "Email inválido";
     if (!form.password || form.password.length < 6) e.password = "Mínimo 6 caracteres";
     const a = parseInt(form.age);
     if (!a || a < 13 || a > 17) e.age = "Apenas bruxos de 13 a 17 anos";
@@ -183,27 +183,27 @@ export default function Register() {
               </header>
 
               <Field label="Nome completo" error={errors.fullName}>
-                <Input value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} placeholder="Seu nome de batismo" className="bg-secondary/50" />
+                <Input value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} placeholder="Seu nome de batismo" className="bg-secondary/50 focus:ring-primary/20" />
               </Field>
               <Field label="@ Como te chamarão no castelo" error={errors.username}>
-                <Input value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value.toLowerCase().replace(/\s/g, "") })} placeholder="seu_username" className="bg-secondary/50" />
+                <Input value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value.toLowerCase().replace(/[^a-z0-9._]/g, "") })} placeholder="seu_username" className="bg-secondary/50 focus:ring-primary/20" />
               </Field>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Field label="Email" error={errors.email}>
-                  <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="seu@email.com" className="bg-secondary/50" />
+                  <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value.trim() })} placeholder="seu@email.com" className="bg-secondary/50 focus:ring-primary/20" />
                 </Field>
                 <Field label="Senha" error={errors.password}>
-                  <Input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="6+ caracteres" className="bg-secondary/50" />
+                  <Input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="6+ caracteres" className="bg-secondary/50 focus:ring-primary/20" />
                 </Field>
               </div>
               <Field label="Idade (13–17)" error={errors.age}>
-                <Input type="number" min={13} max={17} value={form.age} onChange={(e) => setForm({ ...form, age: e.target.value })} placeholder="Quantos anos você tem?" className="bg-secondary/50" />
+                <Input type="number" min={13} max={17} value={form.age} onChange={(e) => setForm({ ...form, age: e.target.value })} placeholder="Quantos anos você tem?" className="bg-secondary/50 focus:ring-primary/20" />
               </Field>
 
-              <div className="bg-primary/5 p-3 rounded-xl border border-primary/20">
-                <label className="text-xs text-primary/80 block mb-1.5">🛡️ Prove que não é um trasgo: {captcha.num1} + {captcha.num2} = ?</label>
-                <Input type="number" value={captchaAnswer} onChange={(e) => setCaptchaAnswer(e.target.value)} placeholder="…" className="bg-secondary/50 h-9" />
-                {errors.captcha && <p className="text-destructive text-xs mt-1">{errors.captcha}</p>}
+              <div className="bg-primary/5 p-4 rounded-xl border border-primary/20 shadow-inner">
+                <label className="text-xs text-primary/80 block mb-2 font-heading">🛡️ Prove que não é um trasgo: {captcha.num1} + {captcha.num2} = ?</label>
+                <Input type="number" value={captchaAnswer} onChange={(e) => setCaptchaAnswer(e.target.value)} placeholder="Sua resposta..." className="bg-secondary/50 h-10" />
+                {errors.captcha && <p className="text-destructive text-[10px] mt-1 font-bold animate-pulse">{errors.captcha}</p>}
               </div>
 
               <NavRow onBack={back} onNext={() => validateIdentity() && next()} />

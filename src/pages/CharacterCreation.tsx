@@ -9,14 +9,16 @@ import MagicalParticles from "@/components/MagicalParticles";
 
 interface Props { onComplete: () => void; onCancel?: () => void; canCancel?: boolean; }
 
-const FIELD = ({ label, name, value, onChange, placeholder, type = "text", rows }: any) => (
+const FIELD = ({ label, name, value, onChange, placeholder, type = "text", rows, required }: any) => (
   <div>
-    <label className="text-xs font-heading text-muted-foreground block mb-1">{label}</label>
+    <label className="text-xs font-heading text-muted-foreground block mb-1">
+      {label} {required && <span className="text-primary">*</span>}
+    </label>
     {rows ? (
       <textarea name={name} value={value} onChange={onChange} placeholder={placeholder} rows={rows}
         className="w-full bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground focus:outline-none resize-none border border-border focus:border-primary/50 transition-colors" />
     ) : (
-      <Input name={name} type={type} value={value} onChange={onChange} placeholder={placeholder} className="bg-secondary/50" />
+      <Input name={name} type={type} value={value} onChange={onChange} placeholder={placeholder} className="bg-secondary/50 focus:ring-primary/20" />
     )}
   </div>
 );
@@ -130,10 +132,6 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
       toast.error("Por favor, preencha o nome e selecione uma Casa.");
       return;
     }
-    if (!form.full_name || !form.house) {
-      toast.error("Por favor, preencha o nome e selecione uma Casa.");
-      return;
-    }
     
     // Verificação de campos obrigatórios (Rito é mais flexível no primeiro personagem)
     const isFirstCharacter = !profile?.active_character_id;
@@ -142,7 +140,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
     if (!isFirstCharacter) {
       const missing = requiredFields.filter(f => !form[f as keyof typeof form]);
       if (missing.length > 0 || (!form.avatar_url && !avatarFile)) {
-        toast.error("Preencha todos os campos obrigatórios da ficha!");
+        toast.error(`Preencha todos os campos obrigatórios: ${missing.join(", ")}`);
         return;
       }
     } else {
