@@ -1,4 +1,4 @@
-import SafeImage from "@/components/SafeImage";
+import { useState, useEffect } from "react";
 
 /**
  * StoreItemVisual — arte digital para itens da loja Gringotts
@@ -154,15 +154,38 @@ export default function StoreItemVisual({ imageUrl, name, category, isOwned }: P
     : getEpicPlaceholder(category, name);
     
   const theme = getTheme(name, category);
+  const [broken, setBroken] = useState(false);
+  useEffect(() => { setBroken(false); }, [finalImage]);
 
   return (
     <div className={`relative w-full h-full bg-black group overflow-hidden border-2 ${theme.border} rounded-[2rem] shadow-2xl`}>
-      <SafeImage 
-        src={finalImage} 
-        alt={name}
-        className="w-full h-full object-cover group-hover:scale-125 group-hover:rotate-2 transition-all duration-[2000ms] opacity-90"
-        fallbackEmoji="📦"
-      />
+      {!broken ? (
+        <img
+          src={finalImage}
+          alt={name}
+          loading="lazy"
+          decoding="async"
+          onError={() => setBroken(true)}
+          className="w-full h-full object-cover group-hover:scale-125 group-hover:rotate-2 transition-all duration-[2000ms] opacity-90"
+        />
+      ) : (
+        <div
+          className={`absolute inset-0 bg-gradient-to-br ${theme.bg} flex items-center justify-center`}
+        >
+          <div
+            className="absolute inset-0 opacity-40"
+            style={{
+              background: `radial-gradient(circle at 50% 45%, ${theme.glow}55, transparent 65%)`,
+            }}
+          />
+          <div className="relative z-10 transition-transform duration-700 group-hover:scale-110 drop-shadow-[0_8px_24px_rgba(0,0,0,0.6)]">
+            <theme.Icon size={120} color={theme.accent} />
+          </div>
+          <div className="absolute top-3 right-3 text-2xl opacity-80 drop-shadow-lg">
+            {theme.badge}
+          </div>
+        </div>
+      )}
       
       {/* Premium Cinematic Overlays */}
       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent pointer-events-none z-10" />

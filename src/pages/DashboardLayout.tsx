@@ -187,7 +187,7 @@ export default function DashboardLayout() {
         </div>
 
 
-        <nav className="flex-1 p-3 space-y-6 overflow-y-auto scrollbar-hide">
+        <nav className="flex-1 p-3 space-y-6 overflow-y-auto sidebar-scroll">
           {groups.map((group) => (
             <div key={group.title} className="space-y-1">
               <h4 className="px-3 text-[10px] font-heading font-bold uppercase tracking-[0.2em] text-muted-foreground/60 mb-2 flex items-center gap-2">
