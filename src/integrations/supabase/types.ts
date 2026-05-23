@@ -2791,9 +2791,22 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      award_xp_action: {
-        Args: { _action: string; _user_id: string; _xp: number }
+      award_galeons: {
+        Args: { _amount: number; _reason?: string; _user_id: string }
         Returns: undefined
+      }
+      award_xp_action:
+        | {
+            Args: { _action: string; _user_id: string; _xp: number }
+            Returns: undefined
+          }
+        | {
+            Args: { _action: string; _user_id: string; _xp: number }
+            Returns: undefined
+          }
+      buy_store_item: {
+        Args: { _item_id: string; _user_id: string }
+        Returns: Json
       }
       calc_blood_status: {
         Args: { _father_id: string; _mother_id: string }

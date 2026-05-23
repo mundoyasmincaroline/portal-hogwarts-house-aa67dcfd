@@ -18,10 +18,10 @@ export default function AmbientAudio() {
     (async () => {
       const { data } = await (supabase as any)
         .from("user_audio_prefs")
-        .select("enabled, volume")
+        .select("ambient_enabled, volume")
         .eq("user_id", user.id)
         .maybeSingle();
-      if (data?.enabled) setEnabled(true);
+      if (data?.ambient_enabled) setEnabled(true);
       setLoaded(true);
     })();
   }, [user?.id]);
@@ -51,7 +51,7 @@ export default function AmbientAudio() {
     if (user) {
       await (supabase as any)
         .from("user_audio_prefs")
-        .upsert({ user_id: user.id, enabled: next }, { onConflict: "user_id" });
+        .upsert({ user_id: user.id, ambient_enabled: next }, { onConflict: "user_id" });
     }
   };
 

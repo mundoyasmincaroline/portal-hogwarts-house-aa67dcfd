@@ -48,22 +48,10 @@ export function useStore() {
 
     setBuyingId(item.id);
     try {
-      // Logique de déduction de galions (à centraliser éventuellement dans storeService)
-      const { error: deduct } = await supabase
-        .from("profiles")
-        .update({ galeons: bal - item.price_galeons } as never)
-        .eq("user_id", user.id);
+      const result = await storeService.buyStoreItem(user.id, item.id);
       
-      if (deduct) throw deduct;
-
-      const { error: ins } = await supabase
-        .from("user_items")
-        .insert({ user_id: user.id, item_id: item.id } as never);
-      
-      if (ins) {
-        // Rollback galeons
-        await supabase.from("profiles").update({ galeons: bal } as never).eq("user_id", user.id);
-        throw ins;
+      if (!result.success) {
+        throw new Error(result.message);
       }
 
       setOwned(prev => [...prev, item.id]);

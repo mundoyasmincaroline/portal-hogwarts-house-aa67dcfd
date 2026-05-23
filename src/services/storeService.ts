@@ -42,5 +42,14 @@ export const storeService = {
     });
     if (error) throw error;
     return data as any;
+  },
+
+  async buyStoreItem(userId: string, itemId: string) {
+    const { data, error } = await supabase.rpc("buy_store_item", {
+      _user_id: userId,
+      _item_id: itemId,
+    });
+    if (error) throw error;
+    return data as { success: boolean; message: string };
   }
 };

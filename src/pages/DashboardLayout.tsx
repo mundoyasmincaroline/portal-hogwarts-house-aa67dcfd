@@ -165,7 +165,7 @@ export default function DashboardLayout() {
         <div className="fixed inset-0 bg-background/80 z-30 md:hidden" onClick={closeSidebar} />
       )}
 
-      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-72 md:w-64 bg-card border-r border-border flex flex-col transition-transform duration-300 md:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-72 md:w-64 bg-card border-r border-border flex flex-col transition-transform duration-500 ease-in-out md:translate-x-0 ${sidebarOpen ? "translate-x-0 shadow-[20px_0_60px_rgba(0,0,0,0.8)]" : "-translate-x-full"}`}>
         <div className="p-4 border-b border-border">
           <Link to="/dashboard" className="flex items-center gap-3">
             <div className="bg-primary/20 p-2 rounded-lg text-primary"><Castle size={24} /></div>

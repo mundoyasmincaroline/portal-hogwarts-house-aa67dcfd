@@ -30,6 +30,7 @@ export interface Profile {
   vip_plan: "premium" | "vip" | "founder" | null;
   vip_expires_at: string | null;
   blood_locked: boolean;
+  current_session_id: string | null;
 }
 
 export const isUserOnline = (profile: Partial<Profile> | null): boolean => {
@@ -75,20 +76,18 @@ export const useAuth = create<AuthState>((set, get) => ({
 
   init: async () => {
     try {
-      supabase.auth.onAuthStateChange((_event, session) => {
+      supabase.auth.onAuthStateChange(async (_event, session) => {
         if (session?.user) {
           set({ user: session.user, isAuthenticated: true });
-          setTimeout(async () => {
-            try {
-              await get().fetchProfile(session.user.id);
-              const admin = await get().checkAdmin(session.user.id);
-              set({ isAdmin: admin, isLoading: false });
-              get().pingPresence();
-            } catch (err) {
-              console.error("Erro ao carregar perfil no onAuthStateChange:", err);
-              set({ isLoading: false });
-            }
-          }, 0);
+          try {
+            await get().fetchProfile(session.user.id);
+            const admin = await get().checkAdmin(session.user.id);
+            set({ isAdmin: admin, isLoading: false });
+            get().pingPresence();
+          } catch (err) {
+            console.error("Erro ao carregar perfil no onAuthStateChange:", err);
+            set({ isLoading: false });
+          }
         } else {
           set({ user: null, profile: null, isAuthenticated: false, isAdmin: false, isLoading: false });
         }
@@ -223,6 +222,10 @@ export const useAuth = create<AuthState>((set, get) => ({
       sessionId = Math.random().toString(36).substring(2, 15);
       localStorage.setItem("hogwarts_session_id", sessionId);
       await supabase.from("profiles").update({ current_session_id: sessionId } as never).eq("user_id", userId);
+      set((state) => ({ profile: state.profile ? { ...state.profile, current_session_id: sessionId } : null }));
+    } else if (get().profile && get().profile?.current_session_id !== sessionId) {
+      // Re-sync if local storage has it but profile state doesn't
+      set((state) => ({ profile: state.profile ? { ...state.profile, current_session_id: sessionId } : null }));
     }
 
     await supabase
