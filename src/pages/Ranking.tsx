@@ -149,7 +149,7 @@ export default function Ranking() {
                         )}
                       </div>
                       <div className="text-center min-w-0">
-                        <p className="font-heading text-[10px] sm:text-xs text-foreground truncate w-full flex items-center gap-1 justify-center">
+                        <p className="font-heading text-[11px] sm:text-xs text-foreground truncate w-full flex items-center gap-1 justify-center">
                           {m.full_name.split(" ")[0]}
                           {vipBadge(m.vip_plan)}
                         </p>
