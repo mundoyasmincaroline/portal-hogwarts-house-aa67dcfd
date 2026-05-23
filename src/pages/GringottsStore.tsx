@@ -448,7 +448,7 @@ export default function GringottsStore() {
           </div>
 
           {/* GRID DE DESTAQUES SECUNDÁRIOS */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8">
             {featuredItems.map(item => {
               const isOwned = owned.includes(item.id);
               const canAfford = galeons >= item.price_galeons;
@@ -551,7 +551,7 @@ export default function GringottsStore() {
             <p className="text-muted-foreground text-lg font-serif italic">"Onde cada moeda conta uma história e cada baú guarda uma fortuna."</p>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-8">
             {GALEON_PACKAGES.map((pkg, i) => (
               <div key={pkg.id}
                 className={`group glass rounded-[2.5rem] p-1 border-2 ${pkg.border} bg-gradient-to-br ${pkg.color} relative transition-all duration-700 hover:-translate-y-4 ${pkg.glow} flex flex-col shadow-2xl`}>
@@ -596,7 +596,7 @@ export default function GringottsStore() {
             <p className="text-muted-foreground text-lg font-serif">A elite de Hogwarts. Desbloqueie prestígio, poder e exclusividade absoluta com nossos planos VIP.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-7xl mx-auto items-end">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10 max-w-7xl mx-auto items-end">
             {VIP_PLANS.map((plan, i) => (
               <div key={plan.id}
                 className={`group glass rounded-[3.5rem] p-1 border-2 ${plan.border} bg-gradient-to-br ${plan.color} relative flex flex-col transition-all duration-700 hover:-translate-y-4 ${plan.glow} ${i === 1 ? 'md:-translate-y-10 md:scale-110 shadow-[0_40px_100px_-20px_rgba(168,85,247,0.4)] z-10' : 'shadow-2xl'}`}>
