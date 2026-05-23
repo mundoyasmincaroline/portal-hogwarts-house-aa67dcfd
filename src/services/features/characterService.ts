@@ -1,13 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-
-export interface Character {
-  id: string;
-  full_name: string;
-  avatar_url: string | null;
-  house: string | null;
-  character_type: string | null;
-  level: number | null;
-}
+import { Character } from "@/types";
 
 export const characterService = {
   async getByUserId(userId: string): Promise<Character[]> {
@@ -24,7 +16,7 @@ export const characterService = {
   async setActiveCharacter(userId: string, characterId: string): Promise<void> {
     const { error } = await supabase
       .from("profiles")
-      .update({ active_character_id: characterId } as never)
+      .update({ active_character_id: characterId } as any)
       .eq("user_id", userId);
     
     if (error) throw error;

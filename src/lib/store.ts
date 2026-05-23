@@ -1,24 +1,7 @@
-// Simple in-memory store for the portal (will be replaced by Supabase later)
+import { House, HOUSES, getLevelFromXP, UserProfile, HouseData } from "@/types";
 
-export type House = "gryffindor" | "slytherin" | "ravenclaw" | "hufflepuff";
-
-export interface UserProfile {
-  id: string;
-  fullName: string;
-  username: string;
-  age: number;
-  house: House;
-  level: number;
-  xp: number;
-  xpToNext: number;
-  bio: string;
-  avatar: string | null;
-  role: "member" | "moderator" | "admin";
-  badges: string[];
-  joinedAt: string;
-  approved: boolean;
-  online: boolean;
-}
+export { HOUSES, getLevelFromXP };
+export type { UserProfile, HouseData };
 
 export interface Post {
   id: string;
@@ -46,76 +29,6 @@ export interface Challenge {
   createdAt: string;
 }
 
-export interface HouseData {
-  name: string;
-  id: House;
-  points: number;
-  motto: string;
-  description: string;
-  colors: { primary: string; secondary: string };
-  traits: string[];
-  members: number;
-}
-
-export const HOUSES: Record<House, HouseData> = {
-  gryffindor: {
-    name: "Grifinória",
-    id: "gryffindor",
-    points: 1250,
-    motto: "Coragem acima de tudo",
-    description: "A casa dos corajosos e destemidos. Valorizamos a bravura, a determinação e a nobreza de espírito.",
-    colors: { primary: "hsl(0, 70%, 45%)", secondary: "hsl(43, 80%, 55%)" },
-    traits: ["Coragem", "Bravura", "Determinação", "Nobreza"],
-    members: 24,
-  },
-  slytherin: {
-    name: "Sonserina",
-    id: "slytherin",
-    points: 1180,
-    motto: "A grandeza nos espera",
-    description: "A casa dos ambiciosos e astutos. Valorizamos a determinação, a liderança e a sagacidade.",
-    colors: { primary: "hsl(145, 45%, 30%)", secondary: "hsl(200, 10%, 70%)" },
-    traits: ["Ambição", "Astúcia", "Liderança", "Sagacidade"],
-    members: 22,
-  },
-  ravenclaw: {
-    name: "Corvinal",
-    id: "ravenclaw",
-    points: 1320,
-    motto: "Sabedoria sem limites é o maior tesouro",
-    description: "A casa dos sábios e criativos. Valorizamos o conhecimento, a inteligência e a originalidade.",
-    colors: { primary: "hsl(215, 60%, 40%)", secondary: "hsl(30, 50%, 50%)" },
-    traits: ["Sabedoria", "Criatividade", "Inteligência", "Originalidade"],
-    members: 20,
-  },
-  hufflepuff: {
-    name: "Lufa-Lufa",
-    id: "hufflepuff",
-    points: 1100,
-    motto: "Lealdade e trabalho árduo",
-    description: "A casa dos leais e justos. Valorizamos a dedicação, a paciência e a lealdade.",
-    colors: { primary: "hsl(48, 80%, 55%)", secondary: "hsl(0, 0%, 15%)" },
-    traits: ["Lealdade", "Dedicação", "Paciência", "Justiça"],
-    members: 18,
-  },
-};
-
-export const LEVEL_THRESHOLDS = [0, 100, 300, 600, 1000, 1500, 2200, 3000, 4000, 5500, 7500, 10000];
-export const LEVEL_NAMES = ["Trouxa", "Primeiro Ano", "Segundo Ano", "Terceiro Ano", "Quarto Ano", "Quinto Ano", "Sexto Ano", "Sétimo Ano", "Auror Iniciante", "Auror", "Auror Sênior", "Mestre das Artes"];
-
-export function getLevelFromXP(xp: number): { level: number; name: string; current: number; next: number; progress: number } {
-  let level = 0;
-  for (let i = 0; i < LEVEL_THRESHOLDS.length - 1; i++) {
-    if (xp >= LEVEL_THRESHOLDS[i]) level = i;
-    else break;
-  }
-  const current = LEVEL_THRESHOLDS[level] || 0;
-  const next = LEVEL_THRESHOLDS[level + 1] || LEVEL_THRESHOLDS[level] + 1000;
-  const progress = ((xp - current) / (next - current)) * 100;
-  return { level, name: LEVEL_NAMES[level], current, next, progress: Math.min(progress, 100) };
-}
-
-// Mock data
 export const MOCK_USER: UserProfile = {
   id: "1",
   fullName: "Yasmin Caroline",

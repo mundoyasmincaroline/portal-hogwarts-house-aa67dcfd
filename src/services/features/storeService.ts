@@ -1,16 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-
-export interface StoreItem {
-  id: string;
-  name: string;
-  description?: string;
-  category: string;
-  price_galeons: number;
-  image_url: string;
-  rarity?: string;
-  is_featured?: boolean;
-  effects?: Record<string, any>;
-}
+import { StoreItem } from "@/types";
 
 export const storeService = {
   async getActiveItems(): Promise<StoreItem[]> {

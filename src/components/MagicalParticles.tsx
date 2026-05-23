@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { getSeasonalEvent } from "@/lib/seasonal";
+import { getSeasonalEvent } from "@/constants/seasonal";
 
 export default function MagicalParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null);

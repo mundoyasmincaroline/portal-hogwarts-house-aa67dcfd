@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo, useRef, memo } from "react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Sparkles, Trophy } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
-import { HOUSES, type House } from "@/lib/store";
+import { HOUSES, type House } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
 import HouseCrest from "@/components/HouseCrest";
 import { Button } from "@/components/ui/button";
@@ -19,9 +19,10 @@ import MagicalIcon from "@/components/MagicalIcon";
 import MagicalEmoji from "@/components/MagicalEmoji";
 import MagicalGaleon from "@/components/MagicalGaleon";
 import MagicalMemories from "@/components/MagicalMemories";
-import { useFeed } from "@/hooks/useFeed";
-import { useRealtime } from "@/hooks/useRealtime";
-import { FeedPost } from "@/services/feedService";
+import { useFeed } from "@/hooks/features/useFeed";
+import { useRealtime } from "@/hooks/core/useRealtime";
+import { feedService } from "@/services/features/feedService";
+import { FeedPost } from "@/types";
 import PostCard from "@/components/PostCard";
 
 

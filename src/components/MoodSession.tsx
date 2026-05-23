@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
-import { addXP } from "@/lib/xpSystem";
+import { addXP } from "@/services/core/xpService";
 
 const MOODS = [
   { emoji: "⚡", label: "Animado(a)" },

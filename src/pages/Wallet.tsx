@@ -4,7 +4,7 @@ import { Coins, Crown, ShoppingBag, Zap, Star, Trophy, Calendar, ChevronRight, G
 import { Button } from "@/components/ui/button";
 import MagicalEmoji from "@/components/MagicalEmoji";
 import MagicalGaleon from "@/components/MagicalGaleon";
-import { useWallet } from "@/hooks/useWallet";
+import { useWallet } from "@/hooks/features/useWallet";
 
 const VIP_CONFIG: Record<string, { name: string; color: string; icon: string; galeons: number }> = {
   premium: { name: "Iniciante",  color: "from-slate-700 to-slate-600",   icon: "⭐", galeons: 0 },

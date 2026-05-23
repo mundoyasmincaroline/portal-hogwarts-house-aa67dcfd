@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import { characterService, Character } from "@/services/characterService";
+import { characterService } from "@/services/features/characterService";
 import { useAuth } from "@/lib/auth";
+import { Character } from "@/types";
 import { toast } from "sonner";
 
 export function useCharacters() {

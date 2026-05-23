@@ -1,14 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-
-export interface Order {
-  id: string;
-  package_id: string;
-  amount_brl: number;
-  galeons: number;
-  status: string;
-  created_at: string;
-  paid_at?: string;
-}
+import { Order } from "@/types";
 
 export const walletService = {
   async getUserOrders(userId: string, limit = 20): Promise<Order[]> {

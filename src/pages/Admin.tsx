@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth, isUserOnline } from "@/lib/auth";
-import { HOUSES, type House } from "@/lib/store";
+import { HOUSES, type House } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";

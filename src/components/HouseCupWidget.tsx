@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Trophy, Shield, Zap, Star, Sparkles } from "lucide-react";
-import { useRealtime } from "@/hooks/useRealtime";
+import { useRealtime } from "@/hooks/core/useRealtime";
 import HouseCrest from "./HouseCrest";
 import MagicalEmoji from "./MagicalEmoji";
-import { House } from "@/lib/store";
+import { House } from "@/types";
 
 interface HouseScore {
   house: House;

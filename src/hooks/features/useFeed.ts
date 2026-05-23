@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
-import { feedService, FeedPost, PostAuthor } from "@/services/feedService";
+import { useState, useEffect, useCallback } from "react";
+import { feedService } from "@/services/features/feedService";
 import { useAuth } from "@/lib/auth";
+import { FeedPost, PostAuthor } from "@/types";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 

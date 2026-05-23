@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { HOUSES, type House } from "@/lib/store";
+import { HOUSES, type House } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
 import HouseCrest from "@/components/HouseCrest";
 import { Shield } from "lucide-react";
