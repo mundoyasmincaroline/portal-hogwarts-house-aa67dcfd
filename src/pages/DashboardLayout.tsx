@@ -31,12 +31,13 @@ const NavItem = memo(({ item, isActive, dmUnread, onClick }: { item: any, isActi
   <Link
     to={item.path}
     onClick={onClick}
-    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group relative overflow-hidden ${
+    className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition-all group relative overflow-hidden ${
       isActive 
-        ? "bg-primary/10 text-primary font-bold border border-primary/20 shadow-[inset_0_0_20px_rgba(212,175,55,0.05)]" 
-        : "text-muted-foreground/80 hover:bg-secondary/40 hover:text-foreground"
+        ? "bg-primary/10 text-primary font-bold border border-primary/20 shadow-[inset_0_0_20px_rgba(212,175,55,0.08)] scale-[1.02]" 
+        : "text-muted-foreground/80 hover:bg-white/5 hover:text-foreground active:scale-95"
     }`}
   >
+
     {isActive && (
       <motion.div 
         layoutId="active-nav-glow"

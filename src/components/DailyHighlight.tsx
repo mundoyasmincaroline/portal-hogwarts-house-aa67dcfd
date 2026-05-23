@@ -47,25 +47,41 @@ export default function DailyHighlight() {
   const bgStyle = houseStyles[highlightedUser.house] || houseStyles.gryffindor;
 
   return (
-    <div className={`relative overflow-hidden rounded-2xl p-6 text-center my-6 group ${bgStyle}`}>
-      <div className="absolute inset-0 bg-black/40 transition-opacity duration-1000 group-hover:bg-black/20" />
+    <div className={`relative overflow-hidden rounded-[2.5rem] p-8 text-center my-8 group shadow-[0_20px_50px_rgba(0,0,0,0.4)] transition-all duration-700 hover:scale-[1.02] border border-white/5 ${bgStyle}`}>
+      {/* Cinematic Auras */}
+      <div className="absolute inset-0 bg-black/50 transition-colors duration-1000 group-hover:bg-black/30" />
+      <div className="absolute -top-24 -left-24 w-64 h-64 bg-white/5 rounded-full blur-[80px] group-hover:bg-white/10 transition-all duration-1000" />
+      <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-primary/10 rounded-full blur-[80px] group-hover:bg-primary/20 transition-all duration-1000" />
       
       <div className="relative z-10">
-        <h2 className="font-heading text-xl text-gold-gradient mb-4 drop-shadow-md">{highlightTitle}</h2>
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-20 h-20 rounded-full border-2 border-primary overflow-hidden shadow-[0_0_15px_rgba(var(--primary),0.5)]">
-            <img 
-              src={highlightedUser.avatar_url || `https://api.dicebear.com/7.x/adventurer/svg?seed=${highlightedUser.username}`} 
-              alt={highlightedUser.username}
-              className="w-full h-full object-cover"
-            />
+        <div className="inline-flex items-center gap-2 bg-black/40 border border-white/10 rounded-full px-4 py-1.5 mb-6 backdrop-blur-md">
+          <Sparkles size={12} className="text-yellow-400 animate-pulse" />
+          <h2 className="font-heading text-xs text-gold-gradient tracking-[0.2em] uppercase font-bold">{highlightTitle}</h2>
+        </div>
+        
+        <div className="flex flex-col items-center gap-5">
+          <div className="relative group/avatar">
+            <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl group-hover/avatar:bg-primary/40 transition-all duration-700 scale-125" />
+            <div className="relative w-28 h-28 rounded-full border-4 border-primary/30 overflow-hidden shadow-2xl transition-transform duration-700 group-hover/avatar:scale-110">
+              <SafeImage 
+                src={highlightedUser.avatar_url} 
+                alt={highlightedUser.username}
+                className="w-full h-full object-cover transition-transform duration-1000 group-hover/avatar:scale-125"
+                fallbackText={highlightedUser.username}
+              />
+            </div>
+            <div className="absolute -bottom-2 -right-2 bg-card border border-primary/40 p-1.5 rounded-xl shadow-xl transform rotate-12">
+               <HouseCrest house={highlightedUser.house} size="sm" />
+            </div>
           </div>
-          <div>
-            <p className="text-lg font-bold text-foreground">@{highlightedUser.username}</p>
-            <p className="text-sm text-primary capitalize">{highlightedUser.house}</p>
+
+          <div className="space-y-1">
+            <p className="text-2xl font-heading text-foreground drop-shadow-lg tracking-tighter">@{highlightedUser.username}</p>
+            <p className="text-[10px] text-primary/80 font-heading uppercase tracking-[0.4em] font-bold">Membro de Elite</p>
           </div>
-          <div className="px-4 py-1 bg-secondary/80 rounded-full text-xs font-bold text-foreground backdrop-blur-sm border border-primary/20">
-            {highlightedUser.xp} XP Acumulados
+
+          <div className="px-6 py-2 bg-black/40 rounded-2xl text-[11px] font-heading uppercase tracking-widest text-foreground backdrop-blur-md border border-white/5 shadow-inner">
+             <span className="text-primary font-bold">{highlightedUser.xp.toLocaleString('pt-BR')}</span> XP Acumulados
           </div>
         </div>
       </div>
