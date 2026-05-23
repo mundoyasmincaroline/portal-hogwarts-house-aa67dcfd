@@ -54,24 +54,36 @@ serve(async (req) => {
       );
     }
 
-    // 2. Evitar duplicação — se já foi pago, ignorar
-    if (order.status === "paid") {
-      console.log("Pedido já processado:", order_nsu);
-      return new Response(
-        JSON.stringify({ success: true, message: "Já processado." }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    // 3. Marcar pedido como pago
-    await supabase
+    // 2. Marcar pedido como pago de forma ATÔMICA — só processa créditos
+    // se este request foi o primeiro a mudar status='pending' -> 'paid'.
+    const { data: claimed, error: claimErr } = await supabase
       .from("galeon_orders")
       .update({
         status: "paid",
         paid_at: new Date().toISOString(),
         infinitepay_id: transaction_nsu ?? null,
       })
-      .eq("id", order_nsu);
+      .eq("id", order_nsu)
+      .neq("status", "paid")
+      .select("id")
+      .maybeSingle();
+
+    if (claimErr) {
+      console.error("Erro ao reivindicar pedido:", claimErr);
+      return new Response(
+        JSON.stringify({ success: false, message: "Erro ao processar pedido." }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (!claimed) {
+      // Já foi processado em outra requisição — idempotente
+      console.log("Pedido já processado (race-safe):", order_nsu);
+      return new Response(
+        JSON.stringify({ success: true, message: "Já processado." }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     // 4. Verificar se é VIP ou compra de Galeões
     const isVip = order.package_id?.startsWith("vip_");

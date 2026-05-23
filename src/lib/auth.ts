@@ -2,6 +2,9 @@ import { create } from "zustand";
 import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
 
+// Module-scoped debounce for presence pings (kept out of zustand state to avoid re-renders)
+let lastPingAt: Date | null = null;
+
 export type House = "gryffindor" | "slytherin" | "ravenclaw" | "hufflepuff";
 
 export interface Profile {
@@ -76,6 +79,12 @@ export const useAuth = create<AuthState>((set, get) => ({
 
   init: async () => {
     try {
+      // Prevent double-init in HMR
+      if ((globalThis as any).__hogwarts_auth_inited) {
+        return;
+      }
+      (globalThis as any).__hogwarts_auth_inited = true;
+
       // 1. Initial session check BEFORE setting up listener to avoid race conditions
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       if (sessionError) throw sessionError;
@@ -236,14 +245,15 @@ export const useAuth = create<AuthState>((set, get) => ({
   pingPresence: async () => {
     const userId = get().user?.id;
     if (!userId) return;
+    // Skip writes while the tab is hidden to avoid background churn
+    if (typeof document !== "undefined" && document.hidden) return;
 
-    // Use debouncing logic inside create to avoid too many writes
+    // Module-scoped debounce (avoid polluting zustand state and re-renders)
     const now = new Date();
-    const lastPing = (get() as any)._lastPingAt;
-    if (lastPing && (now.getTime() - lastPing.getTime()) < 45000) {
+    if (lastPingAt && (now.getTime() - lastPingAt.getTime()) < 45000) {
       return;
     }
-    set({ _lastPingAt: now } as any);
+    lastPingAt = now;
 
     let sessionId = localStorage.getItem("hogwarts_session_id");
     if (!sessionId) {

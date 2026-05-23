@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { useAuth } from "@/lib/auth";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
@@ -49,10 +48,17 @@ const LoadingFallback = () => (
   </div>
 );
 
+import { useAuth } from "@/lib/auth";
+
 function AuthInit({ children }: { children: React.ReactNode }) {
   const init = useAuth((s) => s.init);
   useEffect(() => { init(); }, [init]);
   return <>{children}</>;
+}
+
+function NotFoundRedirect() {
+  const isAuthenticated = useAuth((s) => s.isAuthenticated);
+  return <Navigate to={isAuthenticated ? "/dashboard" : "/"} replace />;
 }
 
 const App = () => {
@@ -127,7 +133,7 @@ const App = () => {
                   <Route path="wallet" element={<Wallet />} />
                 </Route>
                 
-                <Route path="*" element={<Navigate to="/" replace />} />
+                <Route path="*" element={<NotFoundRedirect />} />
               </Routes>
             </Suspense>
             </BrowserRouter>

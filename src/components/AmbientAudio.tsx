@@ -32,10 +32,26 @@ export default function AmbientAudio() {
     
     // Lazy initialize audio only if enabled to save initial bandwidth/memory
     if (enabled && !audioRef.current) {
-      const a = new Audio(AMBIENT_URL);
-      a.loop = true;
-      a.volume = 0.18;
-      audioRef.current = a;
+      try {
+        const a = new Audio();
+        // Verifica suporte antes de atribuir a src para evitar NotSupportedError silencioso
+        const canMp3 = a.canPlayType("audio/mpeg");
+        if (!canMp3) {
+          // Navegador sem suporte a MP3 — desliga silenciosamente
+          return;
+        }
+        a.src = AMBIENT_URL;
+        a.loop = true;
+        a.volume = 0.18;
+        a.preload = "none";
+        a.addEventListener("error", () => {
+          // Falha de rede/origem: pausa e libera
+          audioRef.current = null;
+        });
+        audioRef.current = a;
+      } catch {
+        return;
+      }
     }
 
     if (enabled && audioRef.current) {
@@ -44,6 +60,17 @@ export default function AmbientAudio() {
       audioRef.current.pause();
     }
   }, [enabled, loaded]);
+
+  // Cleanup on unmount to avoid memory leak
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = "";
+        audioRef.current = null;
+      }
+    };
+  }, []);
 
   const toggle = async () => {
     const next = !enabled;

@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 /**
  * useRealtime — Hook centralizado para lidar com assinaturas realtime de forma eficiente.
- * Gerencia o ciclo de vida e evita múltiplas conexões desnecessárias.
+ * Estabiliza o channelId para evitar reconexões desnecessárias e loga falhas.
  */
 export function useRealtime<T>(
   table: string,
@@ -15,7 +15,7 @@ export function useRealtime<T>(
   callbackRef.current = callback;
 
   useEffect(() => {
-    const channelId = `${table}-${event}-${filter || 'all'}-${Math.random().toString(36).slice(2, 9)}`;
+    const channelId = `rt:${table}:${event}:${filter || 'all'}`;
     const channel = supabase.channel(channelId);
     
     channel
@@ -32,8 +32,8 @@ export function useRealtime<T>(
         }
       )
       .subscribe((status) => {
-        if (status === 'SUBSCRIBED') {
-          console.debug(`Realtime subscribed to ${table}`);
+        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED') {
+          console.warn(`[realtime] ${table} status: ${status}`);
         }
       });
 
