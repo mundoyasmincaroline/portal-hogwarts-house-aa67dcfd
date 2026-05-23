@@ -197,28 +197,32 @@ export default function Feed() {
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2 space-y-4">
-          <div className="glass rounded-xl p-3 sm:p-4">
+          <div className="glass rounded-[2rem] p-4 sm:p-6 border-white/10 shadow-2xl relative overflow-hidden group">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
             <textarea
               value={newPost}
               onChange={(e) => setNewPost(e.target.value)}
-              placeholder="Compartilhe algo mágico... (Filch está vigiando 🧹)"
+              placeholder="O que está acontecendo no castelo?"
               maxLength={1000}
-              className="w-full bg-transparent resize-none text-sm text-foreground placeholder:text-muted-foreground focus:outline-none min-h-[80px]"
+              className="w-full bg-transparent resize-none text-base text-foreground placeholder:text-muted-foreground focus:outline-none min-h-[100px] font-serif italic"
             />
-            <div className="flex gap-2 mt-2 pt-2 border-t border-border">
-              <input 
-                type="text" 
-                value={newMusicUrl} 
-                onChange={(e) => setNewMusicUrl(e.target.value)} 
-                placeholder="🎵 Link de Música (Spotify ou MP3)..." 
-                className="flex-1 bg-secondary/50 rounded-lg px-3 py-1.5 text-xs text-foreground focus:outline-none" 
-              />
-            </div>
-            <div className="flex justify-between items-center mt-3">
-              <span className="text-xs text-muted-foreground">{newPost.length}/1000</span>
-              <Button variant="magical" size="sm" className="font-heading text-xs" disabled={!newPost.trim() || posting} onClick={submitPost}>
-                {posting ? "Publicando..." : "Publicar"}
-              </Button>
+            <div className="flex flex-col sm:flex-row gap-3 mt-4 pt-4 border-t border-white/5">
+              <div className="flex-1 relative group/input">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-primary opacity-50 group-focus-within/input:opacity-100 transition-opacity">🎵</div>
+                <input 
+                  type="text" 
+                  value={newMusicUrl} 
+                  onChange={(e) => setNewMusicUrl(e.target.value)} 
+                  placeholder="Link do Spotify ou MP3..." 
+                  className="w-full bg-black/40 rounded-xl pl-9 pr-4 py-2.5 text-xs text-foreground focus:outline-none border border-white/5 focus:border-primary/30 transition-all" 
+                />
+              </div>
+              <div className="flex justify-between items-center sm:justify-end gap-4">
+                <span className="text-[10px] text-muted-foreground/60 font-mono tracking-widest">{newPost.length}/1000</span>
+                <Button variant="magical" size="sm" className="font-heading text-xs px-8 h-10 rounded-xl shadow-lg" disabled={!newPost.trim() || posting} onClick={submitPost}>
+                  {posting ? "Conjurando..." : "Publicar"}
+                </Button>
+              </div>
             </div>
           </div>
 

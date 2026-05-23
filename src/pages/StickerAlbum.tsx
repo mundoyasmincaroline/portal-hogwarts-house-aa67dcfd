@@ -299,7 +299,7 @@ export default function StickerAlbum() {
       </div>
 
       {/* ── GRID MONSTER QUALITY ── */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-8">
         {filtered.map(s => {
           const unlocked = userStickers[s.id];
           const isGold = s.rarity === "gold";
@@ -314,7 +314,7 @@ export default function StickerAlbum() {
 
           return (
             <div key={s.id}
-              className={`relative aspect-[3/4.5] rounded-[2.5rem] flex flex-col overflow-hidden border-2 transition-all duration-700 group ${
+              className={`relative aspect-[3/4.5] rounded-2xl sm:rounded-[2.5rem] flex flex-col overflow-hidden border-2 transition-all duration-700 group ${
                 unlocked ? rarityStyle : "border-white/5 bg-secondary/5 hover:border-white/20"
               } ${unlocked && isGold ? 'hover:shadow-[0_0_40px_rgba(251,191,36,0.3)]' : ''}`}
             >
@@ -347,7 +347,7 @@ export default function StickerAlbum() {
                 } z-10`} />
               </div>
 
-              <div className="relative z-20 h-full flex flex-col justify-between p-6">
+              <div className="relative z-20 h-full flex flex-col justify-between p-4 sm:p-6">
                 <div className="flex justify-between items-start">
                   <div className={`text-[9px] uppercase font-bold tracking-[0.2em] px-3 py-1.5 rounded-full border backdrop-blur-xl shadow-lg ${
                     isGold ? "bg-yellow-400/20 text-yellow-400 border-yellow-400/50"
@@ -374,7 +374,7 @@ export default function StickerAlbum() {
                   </div>
 
                   {!unlocked && (
-                    <Button variant="plaque" className="w-full h-12 text-[10px] font-heading uppercase tracking-widest rounded-xl shadow-xl transition-all active:scale-95"
+                    <Button variant="plaque" className="w-full h-10 sm:h-12 text-[8px] sm:text-[10px] font-heading uppercase tracking-widest rounded-xl shadow-xl transition-all active:scale-95 px-2"
                       disabled={!levelOk || !xpOk || buyingId === s.id} onClick={() => buySticker(s)}>
                       {buyingId === s.id ? "..." : !levelOk ? `Bloqueado` : !xpOk ? `Faltam XP` : `Comprar ${cost} XP`}
                     </Button>

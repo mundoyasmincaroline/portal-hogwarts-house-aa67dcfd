@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
+import { Sparkles } from "lucide-react";
 
 export default function DynamicGreeting() {
   const { profile } = useAuth();
@@ -34,16 +35,20 @@ export default function DynamicGreeting() {
   if (!profile) return null;
 
   return (
-    <div className={`relative overflow-hidden rounded-2xl p-6 mb-6 glass bg-gradient-to-br ${greeting.bg}`}>
-      <div className="absolute inset-0 z-0">
-        <img src={greeting.img} alt="Hogwarts" className="w-full h-full object-cover opacity-20 mix-blend-overlay" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent" />
+    <div className={`relative overflow-hidden rounded-[2rem] p-8 mb-8 glass bg-gradient-to-br ${greeting.bg} border-primary/20 shadow-2xl group`}>
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <img src={greeting.img} alt="Hogwarts" className="w-full h-full object-cover opacity-30 mix-blend-overlay group-hover:scale-110 transition-transform duration-[3000ms]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/40 to-transparent" />
       </div>
-      <div className="relative z-10">
-        <h2 className="text-2xl font-heading text-gold-gradient mb-1">
+      <div className="relative z-10 space-y-2">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-md mb-2">
+          <Sparkles size={12} className="text-primary animate-pulse" />
+          <span className="text-[10px] font-heading uppercase tracking-widest text-primary">Mensagem do Dia</span>
+        </div>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading text-gold-gradient mb-1 tracking-tighter">
           {greeting.title}, {profile.full_name.split(' ')[0]}!
         </h2>
-        <p className="text-sm text-muted-foreground">{greeting.desc}</p>
+        <p className="text-base sm:text-lg text-muted-foreground/80 font-serif italic max-w-xl">"{greeting.desc}"</p>
       </div>
     </div>
   );

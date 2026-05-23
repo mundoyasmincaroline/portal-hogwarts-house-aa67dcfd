@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Newspaper, Sparkles, TrendingUp, Trophy } from "lucide-react";
+import { Newspaper, Sparkles, TrendingUp, Trophy, Zap } from "lucide-react";
 
 const NEWS_ITEMS = [
   "🗞️ EXTRA! Grifinória assume a liderança na Taça das Casas com um feito heroico!",
@@ -24,9 +24,9 @@ export default function DailyProphetTicker() {
   }, []);
 
   return (
-    <div className="w-full bg-black/80 backdrop-blur-md border-y border-yellow-500/20 py-2.5 overflow-hidden relative group">
-      <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
-      <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
+    <div className="w-full bg-black/90 backdrop-blur-xl border-y border-yellow-500/30 py-3 overflow-hidden relative group shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+      <div className="absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-black via-black/80 to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-40 bg-gradient-to-l from-black via-black/80 to-transparent z-10 pointer-events-none" />
       
       <div className="flex items-center whitespace-nowrap animate-marquee px-4">
         {/* We repeat the items to ensure a smooth infinite scroll feel if it was a true marquee, 

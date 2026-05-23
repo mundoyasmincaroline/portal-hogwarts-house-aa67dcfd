@@ -262,31 +262,33 @@ export default function DashboardLayout() {
             </div>
           )}
 
-          <div className="flex items-center justify-between gap-1 w-full">
-            <Link to="/dashboard/profile" className="flex items-center gap-2 max-w-[120px] hover:bg-secondary/50 p-1.5 rounded-lg transition-colors group">
-              <div className="relative shrink-0">
+          <div className="flex items-center justify-between gap-1 w-full pt-1">
+            <Link to="/dashboard/profile" className="flex items-center gap-2 min-w-0 max-w-[140px] hover:bg-primary/5 p-2 rounded-xl transition-all group border border-transparent hover:border-primary/10">
+              <div className="relative shrink-0 transition-transform group-hover:scale-105">
                 <HouseCrest house={profile.house} size="sm" />
-                <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-card ${isUserOnline(profile) ? "bg-green-500" : "bg-muted-foreground"}`} />
+                <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-card ${isUserOnline(profile) ? "bg-green-500 shadow-[0_0_8px_#22c55e]" : "bg-muted-foreground"}`} />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-[13px] leading-tight font-heading truncate text-foreground group-hover:text-primary" title={profile.full_name}>{profile.full_name}</p>
-                <p className="text-[10px] leading-tight text-muted-foreground truncate">{house.name}</p>
+                <p className="text-xs leading-tight font-heading truncate text-foreground group-hover:text-primary transition-colors" title={profile.full_name}>{profile.full_name}</p>
+                <p className="text-[10px] leading-tight text-muted-foreground/60 truncate uppercase tracking-tighter">{house.name}</p>
               </div>
             </Link>
 
-            <div className="flex items-center gap-1 shrink-0">
-              <TurnSwitcher />
+            <div className="flex items-center gap-0.5 shrink-0">
+              <div className="scale-90 origin-right transition-transform hover:scale-100">
+                <TurnSwitcher />
+              </div>
               <button
                 onClick={() => setSoundOn(toggleSound())}
-                className="p-1.5 text-muted-foreground hover:bg-secondary/80 hover:text-primary rounded-md"
+                className="touch-target w-9 h-9 text-muted-foreground hover:bg-primary/10 hover:text-primary rounded-xl transition-all active:scale-90"
                 title={soundOn ? "Desativar Som" : "Ativar Som"}
-              >{soundOn ? <Volume2 size={14} /> : <VolumeX size={14} />}</button>
+              >{soundOn ? <Volume2 size={16} /> : <VolumeX size={16} />}</button>
               <div className="scale-90 origin-center"><Notifications /></div>
               <button
                 onClick={async () => { await logout(); navigate("/"); }}
-                className="p-1.5 text-muted-foreground hover:bg-destructive/20 hover:text-destructive rounded-md"
+                className="touch-target w-9 h-9 text-muted-foreground hover:bg-destructive/20 hover:text-destructive rounded-xl transition-all active:scale-90"
                 title="Sair"
-              ><LogOut size={14} /></button>
+              ><LogOut size={16} /></button>
             </div>
           </div>
         </div>
@@ -294,16 +296,19 @@ export default function DashboardLayout() {
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <NotificationBanner />
-        <div className="md:hidden flex items-center justify-between p-3 border-b border-border bg-card/80 backdrop-blur-md sticky top-0 z-30">
-          <div className="flex items-center gap-3">
-            <button onClick={() => setSidebarOpen(true)} className="p-2 -ml-2 text-muted-foreground hover:text-foreground active:scale-95 transition-transform">
-              <Menu size={20} />
+        <div className="md:hidden flex items-center justify-between px-4 h-16 border-b border-white/5 bg-card/80 backdrop-blur-xl sticky top-0 z-30">
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setSidebarOpen(true)} 
+              className="touch-target w-10 h-10 -ml-2 text-muted-foreground hover:text-primary active:scale-90 transition-all rounded-xl hover:bg-primary/5"
+            >
+              <Menu size={22} />
             </button>
-            <span className="font-heading text-sm text-gold-gradient">Hogwarts House</span>
+            <span className="font-heading text-base text-gold-gradient tracking-tighter">Hogwarts House</span>
           </div>
-          <div className="flex items-center gap-2">
-             <div className="scale-90"><Notifications /></div>
-             <Link to="/dashboard/profile" className="w-8 h-8 rounded-full overflow-hidden border border-primary/30">
+          <div className="flex items-center gap-3">
+             <div className="scale-100"><Notifications /></div>
+             <Link to="/dashboard/profile" className="w-10 h-10 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_15px_rgba(212,175,55,0.2)] active:scale-90 transition-transform">
                 <SafeImage src={profile.avatar_url} alt={profile.full_name} className="w-full h-full object-cover" />
              </Link>
           </div>

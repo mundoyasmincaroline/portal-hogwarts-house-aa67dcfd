@@ -93,12 +93,9 @@ export default function Landing() {
           </div>
 
           {/* Title */}
-          <h1 className="text-4xl sm:text-7xl lg:text-9xl font-heading text-gold-gradient mb-4 tracking-tighter drop-shadow-[0_10px_30px_rgba(212,175,55,0.4)] animate-in fade-in zoom-in duration-1000">
+          <h1 className="text-4xl sm:text-7xl lg:text-9xl font-heading text-gold-gradient mb-8 tracking-tighter drop-shadow-[0_10px_30px_rgba(212,175,55,0.4)] animate-in fade-in zoom-in duration-1000">
             Hogwarts House
           </h1>
-
-
-          {/* Stats - Artifact Style */}
           <div className="flex items-center justify-center gap-4 sm:gap-10 mb-12 flex-wrap animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-500">
             <div className="relative group text-center">
               <p className="font-heading text-3xl sm:text-4xl text-gold-gradient">{memberCount !== null ? memberCount.toLocaleString("pt-BR") : "10"}</p>
@@ -127,20 +124,16 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* Mantendo o espaço para estética de jogo */}
-          <div className="h-28 md:h-32 mb-6" aria-hidden="true" />
-
           {/* CTA */}
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8 px-4">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 px-4 w-full max-w-lg mx-auto">
             <Button variant="magical" size="lg" onClick={() => navigate("/register")}
-              className="w-full sm:w-auto font-heading text-base px-10 py-4 h-auto shadow-lg shadow-primary/20 hover:shadow-primary/40">
-              <Sparkles size={16} className="mr-2" />
-              Solicitar minha vaga
-              <ChevronRight size={16} className="ml-1" />
+              className="w-full sm:flex-1 font-heading text-lg px-8 h-16 shadow-lg shadow-primary/20 hover:shadow-primary/40 active:scale-95 transition-all">
+              <Sparkles size={18} className="mr-2" />
+              Entrar agora
             </Button>
             <Button variant="outline" size="lg" onClick={() => navigate("/login")}
-              className="w-full sm:w-auto font-heading text-base px-8 py-4 h-auto border-border/50 hover:border-primary/40">
-              Já tenho conta
+              className="w-full sm:w-auto font-heading text-base px-8 h-16 border-white/20 bg-white/5 backdrop-blur-md hover:bg-white/10 active:scale-95 transition-all">
+              Já sou bruxo
             </Button>
           </div>
 
