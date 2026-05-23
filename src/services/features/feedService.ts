@@ -1,25 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import { House } from "@/lib/auth";
-
-export interface PostAuthor {
-  full_name: string;
-  username: string;
-  house: House;
-  avatar_url?: string | null;
-  vip_plan?: string | null;
-}
-
-export interface FeedPost {
-  id: string;
-  user_id: string;
-  content: string;
-  music_url?: string;
-  created_at: string;
-  author?: PostAuthor;
-  reactions: { emoji: string; count: number; mine: boolean }[];
-  comments: { id: string; user_id: string; content: string; created_at: string; author?: PostAuthor }[];
-  showComments?: boolean;
-}
+import { FeedPost } from "@/types";
 
 export const feedService = {
   /**
@@ -81,7 +61,7 @@ export const feedService = {
       user_id: userId,
       content,
       music_url: musicUrl || null,
-    }).select().single();
+    } as any).select().single();
     
     if (error) throw error;
     return data;

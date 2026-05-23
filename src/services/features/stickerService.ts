@@ -1,13 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import { House } from "@/lib/auth";
-
-export interface Sticker {
-  id: string;
-  character_name: string;
-  rarity: "bronze" | "silver" | "gold";
-  image_url: string;
-  level_required: number;
-}
+import { Sticker } from "@/types";
 
 export const stickerService = {
   async getAllStickers(): Promise<Sticker[]> {
@@ -40,7 +32,7 @@ export const stickerService = {
 
     const { error: insertErr } = await supabase
       .from("user_stickers")
-      .insert({ user_id: userId, sticker_id: stickerId } as never);
+      .insert({ user_id: userId, sticker_id: stickerId } as any);
     if (insertErr) throw insertErr;
   },
 
