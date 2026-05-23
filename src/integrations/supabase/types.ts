@@ -792,6 +792,36 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_prophet_news: {
+        Row: {
+          category: string | null
+          content: string
+          created_at: string | null
+          id: string
+          image_url: string | null
+          is_ai_generated: boolean | null
+          title: string
+        }
+        Insert: {
+          category?: string | null
+          content: string
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          is_ai_generated?: boolean | null
+          title: string
+        }
+        Update: {
+          category?: string | null
+          content?: string
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          is_ai_generated?: boolean | null
+          title?: string
+        }
+        Relationships: []
+      }
       dm_messages: {
         Row: {
           content: string
@@ -1127,6 +1157,48 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      insta_comments: {
+        Row: {
+          character_id: string | null
+          content: string
+          created_at: string | null
+          id: string
+          post_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          character_id?: string | null
+          content: string
+          created_at?: string | null
+          id?: string
+          post_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          character_id?: string | null
+          content?: string
+          created_at?: string | null
+          id?: string
+          post_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "insta_comments_character_id_fkey"
+            columns: ["character_id"]
+            isOneToOne: false
+            referencedRelation: "characters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "insta_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "insta_posts"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -2341,6 +2413,33 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
         ]
+      }
+      user_notification_settings: {
+        Row: {
+          enable_email_digest: boolean | null
+          enable_quests: boolean | null
+          enable_social: boolean | null
+          enable_system: boolean | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          enable_email_digest?: boolean | null
+          enable_quests?: boolean | null
+          enable_social?: boolean | null
+          enable_system?: boolean | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          enable_email_digest?: boolean | null
+          enable_quests?: boolean | null
+          enable_social?: boolean | null
+          enable_system?: boolean | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       user_quest_progress: {
         Row: {
