@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, memo } from "react";
 
 interface SafeImageProps {
   src?: string | null;
@@ -10,16 +10,18 @@ interface SafeImageProps {
 
 /**
  * SafeImage — exibe imagem com fallback mágico se quebrar ou não existir.
- * Também adiciona cache-busting automático para evitar imagens desatualizadas do Supabase.
+ * Adiciona cache-busting inteligente (10 min) para imagens do Supabase.
  */
-import React, { useState, memo } from "react";
-
-// ... (keep interface)
-
-const SafeImage = memo(function SafeImage({ src, alt, className = "", fallbackText, fallbackEmoji = "🧙" }: SafeImageProps) {
+const SafeImage = memo(function SafeImage({ 
+  src, 
+  alt, 
+  className = "", 
+  fallbackText, 
+  fallbackEmoji = "🧙" 
+}: SafeImageProps) {
   const [broken, setBroken] = useState(false);
 
-  // Cache-bust: se vier de Supabase storage, adiciona ?v= timestamp truncado a cada 10 minutos para ser mais eficiente
+  // Cache-bust: 10 minutos para garantir atualização sem comprometer excessivamente o cache do browser
   const bustedSrc = src
     ? src.includes("supabase") && !src.includes("?")
       ? `${src}?v=${Math.floor(Date.now() / 600000)}`
