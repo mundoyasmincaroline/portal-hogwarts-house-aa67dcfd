@@ -342,27 +342,33 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
           {/* Equipamentos e Vestuário - MONSTER QUALITY */}
           <div className="space-y-4 pt-4">
             <h4 className="font-heading text-xs uppercase tracking-widest text-primary border-b border-primary/20 pb-1 flex items-center gap-2">
-              <LinkIcon size={14} /> Vestuário & Equipamentos Mágicos
+              <LinkIcon size={14} /> Inventário de Relíquias & Vestuário
             </h4>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {userItems.filter(ui => ui.is_equipped).length === 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3">
+              {userItems.length === 0 ? (
                 <div className="col-span-full py-6 bg-black/20 rounded-2xl border border-dashed border-white/10 text-center">
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Nenhum item equipado</p>
-                  <p className="text-[8px] text-muted-foreground/50 mt-1 italic">Visite o Beco Diagonal para adquirir roupas e acessórios.</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Baú Vazio</p>
+                  <p className="text-[8px] text-muted-foreground/50 mt-1 italic">Visite a Loja Gringotts para adquirir itens e equipamentos.</p>
                 </div>
               ) : (
-                userItems.filter(ui => ui.is_equipped).map(ui => (
-                  <div key={ui.id} className="glass bg-white/5 border-white/10 p-3 rounded-2xl flex flex-col items-center text-center group hover:border-primary/50 transition-all">
+                userItems.map(ui => (
+                  <div key={ui.id} className={`glass bg-white/5 border border-white/10 p-3 rounded-2xl flex flex-col items-center text-center group hover:border-primary/50 transition-all ${ui.store_items?.rarity === 'legendary' ? 'shadow-[0_0_15px_rgba(251,191,36,0.2)]' : ''}`}>
                     <div className="w-12 h-12 mb-2 relative">
                       <SafeImage 
                         src={ui.store_items?.image_url} 
                         alt={ui.store_items?.name} 
                         className="w-full h-full object-contain group-hover:scale-110 transition-transform"
+                        fallbackEmoji="📦"
                       />
-                      <div className="absolute inset-0 bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity rounded-full" />
+                      {ui.store_items?.rarity === 'legendary' && (
+                        <div className="absolute inset-0 bg-yellow-500/20 blur-xl opacity-100 rounded-full animate-pulse" />
+                      )}
                     </div>
-                    <p className="text-[8px] uppercase font-heading text-primary leading-tight">{ui.store_items?.name}</p>
-                    <p className="text-[7px] text-muted-foreground mt-0.5">{ui.store_items?.category === 'robes' ? 'Vestimenta' : 'Acessório'}</p>
+                    <p className="text-[8px] uppercase font-heading text-primary leading-tight truncate w-full">{ui.store_items?.name}</p>
+                    {ui.store_items?.effects?.spell_power && (
+                       <p className="text-[7px] text-blue-400 mt-0.5 font-bold">+{ui.store_items.effects.spell_power} Poder</p>
+                    )}
+                    <p className="text-[7px] text-muted-foreground mt-0.5 capitalize">{ui.store_items?.rarity || 'Comum'}</p>
                   </div>
                 ))
               )}
