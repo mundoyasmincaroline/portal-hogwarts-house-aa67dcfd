@@ -173,13 +173,14 @@ export default function DashboardLayout() {
         )}
       </AnimatePresence>
 
-      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-72 md:w-64 bg-card border-r border-border flex flex-col transition-transform duration-500 ease-in-out md:translate-x-0 ${sidebarOpen ? "translate-x-0 shadow-[20px_0_60px_rgba(0,0,0,0.8)]" : "-translate-x-full"}`}>
-        <div className="p-4 border-b border-border">
-          <Link to="/dashboard" className="flex items-center gap-3">
-            <div className="bg-primary/20 p-2 rounded-lg text-primary"><Castle size={24} /></div>
-            <span className="font-heading text-lg text-gold-gradient leading-tight">Hogwarts<br/>House</span>
+      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-72 md:w-64 bg-card border-r border-border/40 flex flex-col transition-all duration-500 ease-in-out md:translate-x-0 ${sidebarOpen ? "translate-x-0 shadow-[20px_0_60px_rgba(0,0,0,0.9)]" : "-translate-x-full"}`}>
+        <div className="p-5 border-b border-border/30">
+          <Link to="/dashboard" className="flex items-center gap-3 group">
+            <div className="bg-primary/20 p-2.5 rounded-xl text-primary transition-transform group-hover:rotate-12 duration-300"><Castle size={24} /></div>
+            <span className="font-heading text-xl text-gold-gradient leading-tight tracking-tighter">Hogwarts<br/>House</span>
           </Link>
         </div>
+
 
         <nav className="flex-1 p-3 space-y-6 overflow-y-auto scrollbar-hide">
           {groups.map((group) => (
@@ -246,23 +247,24 @@ export default function DashboardLayout() {
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <NotificationBanner />
-        <header className="md:hidden flex items-center justify-between px-4 h-16 border-b border-white/5 bg-card/80 backdrop-blur-xl sticky top-0 z-30">
+        <header className="md:hidden flex items-center justify-between px-4 h-18 border-b border-white/5 bg-card/60 backdrop-blur-2xl sticky top-0 z-30">
           <div className="flex items-center gap-4">
             <button 
               onClick={() => setSidebarOpen(true)} 
-              className="touch-target w-10 h-10 -ml-2 text-muted-foreground hover:text-primary active:scale-90 transition-all rounded-xl hover:bg-primary/5"
+              className="touch-target w-12 h-12 -ml-2 text-muted-foreground hover:text-primary active:scale-90 transition-all rounded-2xl hover:bg-primary/10 border border-transparent active:border-primary/20"
             >
-              <Menu size={22} />
+              <Menu size={24} />
             </button>
-            <span className="font-heading text-base text-gold-gradient tracking-tighter">Hogwarts House</span>
+            <span className="font-heading text-lg text-gold-gradient tracking-tighter">Hogwarts House</span>
           </div>
           <div className="flex items-center gap-3">
              <Notifications />
-              <Link to="/dashboard/profile" className="w-10 h-10 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_15px_rgba(212,175,55,0.2)] active:scale-90 transition-transform">
+              <Link to="/dashboard/profile" className="w-11 h-11 rounded-2xl overflow-hidden border-2 border-primary/40 shadow-[0_0_20px_rgba(212,175,55,0.25)] active:scale-95 transition-all">
                 <SafeImage src={profile?.avatar_url} alt={profile?.full_name || "Avatar"} className="w-full h-full object-cover" />
               </Link>
           </div>
         </header>
+
 
         <div className="flex-1 overflow-y-auto relative scroll-smooth contain-strict">
           <DailyProphetTicker />
