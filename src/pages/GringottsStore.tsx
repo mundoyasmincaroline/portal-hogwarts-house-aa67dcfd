@@ -661,7 +661,7 @@ export default function GringottsStore() {
       )}
 
       {/* ── ABAS DE ITENS: MONSTER GRID ── */}
-      {["clothing","wand","spell","potion","upgrade"].includes(tab) && (
+      {["clothing","wand","potion","upgrade","pet","accessory"].includes(tab) && (
         <div className="animate-in fade-in slide-in-from-bottom-8 duration-700">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-4xl font-heading text-foreground mb-4 uppercase tracking-tighter">
