@@ -128,8 +128,7 @@ export default function Feed() {
     setNewMusicUrl("");
     toast.success("Publicado! ✨");
     // +2 Galeões por publicar
-    supabase.rpc("award_galeons" as any, { _user_id: user.id, _amount: 2, _reason: "post" })
-      .catch(err => console.error("Erro ao creditar galeões:", err));
+    await supabase.rpc("award_galeons" as any, { _user_id: user.id, _amount: 2, _reason: "post" });
   };
 
   const toggleReaction = async (postId: string, emoji: string, mine: boolean) => {
