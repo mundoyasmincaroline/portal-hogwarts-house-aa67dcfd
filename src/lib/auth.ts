@@ -31,6 +31,7 @@ export interface Profile {
   vip_expires_at: string | null;
   blood_locked: boolean;
   current_session_id: string | null;
+  _hasCharacters?: boolean;
 }
 
 export const isUserOnline = (profile: Partial<Profile> | null): boolean => {
@@ -124,14 +125,12 @@ export const useAuth = create<AuthState>((set, get) => ({
       
       if (profileRes.error) throw profileRes.error;
       
-      if (profileRes.data) {
-        set({ 
-          profile: { 
-            ...profileRes.data, 
-            _hasCharacters: (charRes.count ?? 0) > 0 
-          } as unknown as Profile & { _hasCharacters: boolean }
-        });
-      }
+      set({ 
+        profile: profileRes.data ? ({ 
+          ...profileRes.data, 
+          _hasCharacters: (charRes.count ?? 0) > 0 
+        } as any) : null
+      });
     } catch (err) {
       console.error("Erro ao buscar perfil:", err);
     }

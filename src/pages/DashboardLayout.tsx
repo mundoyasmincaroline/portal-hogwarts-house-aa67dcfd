@@ -68,8 +68,9 @@ export default function DashboardLayout() {
   const house = useMemo(() => HOUSES[(profile?.house as House) || "gryffindor"] || HOUSES.gryffindor, [profile?.house]);
   const groups = useMemo(() => isAdmin ? [...NAV_GROUPS, ADMIN_GROUP] : NAV_GROUPS, [isAdmin]);
 
-  // Optimize: Use cached character check from profile
-  const hasCharacters = (profile as any)?._hasCharacters ?? null;
+  // Otimização: Usa o check de personagens em cache no perfil
+  // Se o perfil for nulo e não estiver carregando, assume false para evitar loop infinito
+  const hasCharacters = profile?._hasCharacters ?? (isLoading ? null : false);
 
   useEffect(() => {
     if (!user) return;
@@ -176,18 +177,18 @@ export default function DashboardLayout() {
               <span className="text-[11px] text-yellow-400/90 font-heading uppercase tracking-wider">Galeões</span>
             </div>
             <span className="font-heading text-lg text-yellow-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]">
-              {(profile.galeons || 0).toLocaleString("pt-BR")}
+              {(profile?.galeons || 0).toLocaleString("pt-BR")}
             </span>
           </Link>
 
           <div className="flex items-center justify-between gap-1 w-full pt-1">
             <Link to="/dashboard/profile" className="flex items-center gap-2 min-w-0 max-w-[140px] hover:bg-primary/5 p-2 rounded-xl transition-all group border border-transparent hover:border-primary/10">
               <div className="relative shrink-0 transition-transform group-hover:scale-105">
-                <HouseCrest house={profile.house} size="sm" />
+                <HouseCrest house={profile?.house} size="sm" />
                 <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-card ${isUserOnline(profile) ? "bg-green-500 shadow-[0_0_8px_#22c55e]" : "bg-muted-foreground"}`} />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-xs leading-tight font-heading truncate text-foreground group-hover:text-primary transition-colors">{profile.full_name}</p>
+                <p className="text-xs leading-tight font-heading truncate text-foreground group-hover:text-primary transition-colors">{profile?.full_name || "Bruxo"}</p>
                 <p className="text-[10px] leading-tight text-muted-foreground/60 truncate uppercase tracking-tighter">{house.name}</p>
               </div>
             </Link>
@@ -224,9 +225,9 @@ export default function DashboardLayout() {
           </div>
           <div className="flex items-center gap-3">
              <Notifications />
-             <Link to="/dashboard/profile" className="w-10 h-10 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_15px_rgba(212,175,55,0.2)] active:scale-90 transition-transform">
-                <SafeImage src={profile.avatar_url} alt={profile.full_name} className="w-full h-full object-cover" />
-             </Link>
+              <Link to="/dashboard/profile" className="w-10 h-10 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_15px_rgba(212,175,55,0.2)] active:scale-90 transition-transform">
+                <SafeImage src={profile?.avatar_url} alt={profile?.full_name || "Avatar"} className="w-full h-full object-cover" />
+              </Link>
           </div>
         </header>
 
