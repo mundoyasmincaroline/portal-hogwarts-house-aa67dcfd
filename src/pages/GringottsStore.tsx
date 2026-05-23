@@ -698,8 +698,8 @@ export default function GringottsStore() {
                         <Button size="sm" variant={isOwned ? "outline" : "magical"}
                           disabled={isOwned || !!buyingId || !!buyingPackageId || (!canAfford && !isOwned)}
                           onClick={() => !isOwned && buyItem(item)}
-                          className={`text-[10px] px-5 h-9 rounded-xl font-bold uppercase tracking-widest transition-all ${isOwned ? 'border-green-500/40 text-green-400 bg-green-500/10' : ''}`}>
-                          {isOwned ? "No Baú" : !canAfford ? "Saldo Insuficiente" : buyingId === item.id ? "..." : "Comprar"}
+                          className={`text-[10px] px-3 h-9 rounded-xl font-bold uppercase tracking-wider whitespace-nowrap shrink-0 transition-all ${isOwned ? 'border-green-500/40 text-green-400 bg-green-500/10' : ''}`}>
+                          {isOwned ? "No Baú" : !canAfford ? "Sem 🪙" : buyingId === item.id ? "..." : "Comprar"}
                         </Button>
                       </div>
                       
