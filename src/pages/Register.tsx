@@ -345,19 +345,24 @@ export default function Register() {
                 </div>
               </div>
 
-              <Field label="Quem te chamou? (Código de convite)">
-                <Input value={form.referralCode} onChange={(e) => setForm({ ...form, referralCode: e.target.value })} placeholder="@harry" className="bg-secondary/50" />
+              <Field label="Quem te chamou? (Código de convite)" error={errors.referralCode}>
+                <Input value={form.referralCode} onChange={(e) => setForm({ ...form, referralCode: e.target.value })} placeholder="@username ou código" className="bg-secondary/50 focus:ring-primary/20" />
               </Field>
 
-              {errors.general && <p className="text-destructive text-sm font-bold bg-destructive/10 p-2 rounded-lg border border-destructive/20">{errors.general}</p>}
+              {errors.general && <p className="text-destructive text-sm font-bold bg-destructive/10 p-3 rounded-xl border border-destructive/20 animate-pulse">{errors.general}</p>}
 
-              <div className="flex gap-3 pt-2">
-                <Button variant="outline" className="font-heading" onClick={back}><ArrowLeft className="w-4 h-4 mr-2" />Voltar</Button>
-                <Button variant="magical" className="flex-1 font-heading" onClick={() => setStep(7)} disabled={loading}>
-                  {loading ? "Preparando..." : "Ver Prévia da Carta"}
-                  <Sparkles className="ml-2 w-4 h-4" />
-                </Button>
+              <div className="pt-2">
+                <p className="text-[10px] text-muted-foreground/60 italic leading-relaxed text-center px-4">
+                  Ao continuar, você concorda com os <Link to="/terms" className="text-primary hover:underline">Termos de Uso</Link> e a <Link to="/privacy" className="text-primary hover:underline">Política de Privacidade</Link> do portal.
+                </p>
               </div>
+
+              <NavRow 
+                onBack={back} 
+                onNext={() => setStep(7)} 
+                disabled={loading} 
+                labelNext={loading ? "Tecendo..." : "Ver Prévia da Carta"} 
+              />
             </div>
           )}
 
