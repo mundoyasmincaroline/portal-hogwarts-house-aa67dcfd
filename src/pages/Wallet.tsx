@@ -37,30 +37,42 @@ export default function Wallet() {
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-16 px-2 sm:px-0">
 
-      {/* ── Header ── */}
-      <div className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 relative overflow-hidden border border-yellow-500/30">
-        <div className="absolute inset-0 bg-gradient-to-br from-yellow-900/20 via-transparent to-amber-900/10" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(251,191,36,0.08),transparent_60%)]" />
+      <div className="glass rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-10 relative overflow-hidden border border-yellow-500/30 shadow-2xl">
+        <div className="absolute inset-0 bg-gradient-to-br from-yellow-900/20 via-black/40 to-amber-900/10" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(251,191,36,0.1),transparent_60%)]" />
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-yellow-400/50 to-transparent" />
-        <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-2">
-            <Coins size={28} className="text-yellow-400" />
-            <h1 className="font-heading text-3xl text-gold-gradient">Carteira Mágica</h1>
+        <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center">
+          <div className="flex-1 text-center md:text-left space-y-4">
+            <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
+              <Coins size={32} className="text-yellow-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]" />
+              <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl text-gold-gradient tracking-tighter">Carteira Mágica</h1>
+            </div>
+            <p className="text-base sm:text-lg text-muted-foreground/80 font-serif italic">"Seu ouro está seguro no cofre mais protegido do mundo bruxo."</p>
+            <div className="flex flex-wrap justify-center md:justify-start gap-3 pt-2">
+               <div className="glass bg-white/5 px-4 py-2 rounded-xl flex items-center gap-2 border-white/10">
+                  <Trophy size={14} className="text-primary" />
+                  <span className="text-[10px] font-heading uppercase tracking-widest text-primary/80">Prestígio Financeiro</span>
+               </div>
+            </div>
           </div>
-          <p className="text-sm text-muted-foreground mb-6">Seu saldo, histórico e benefícios em um só lugar.</p>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {/* Saldo */}
-            <div className="md:col-span-2 glass rounded-2xl p-5 border border-yellow-400/30 bg-gradient-to-br from-yellow-900/20 to-transparent">
-              <p className="text-xs text-yellow-400/70 font-heading uppercase tracking-widest mb-1">Saldo Atual</p>
-              <p className="font-heading text-5xl text-yellow-400">{galeons.toLocaleString("pt-BR")}</p>
-              <p className="text-xs text-muted-foreground mt-1">🪙 Galeões</p>
-              <Link to="/dashboard/store">
-                <Button variant="plaque" size="sm" className="mt-3 text-[10px]">
-                  <ShoppingBag size={12} className="mr-1" /> Usar na Loja
+          <div className="w-full md:w-auto">
+            <div className="glass rounded-[2rem] p-8 border-yellow-400/30 bg-gradient-to-br from-yellow-900/30 to-black/60 shadow-2xl text-center relative group min-w-[280px]">
+              <div className="absolute inset-0 bg-yellow-400/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+              <p className="text-[10px] text-yellow-400/70 font-heading uppercase tracking-[0.2em] mb-4">Saldo Disponível</p>
+              <div className="flex items-center justify-center gap-3 mb-6">
+                <MagicalGaleon size="md" />
+                <p className="font-heading text-5xl sm:text-6xl text-yellow-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.6)]">{galeons.toLocaleString("pt-BR")}</p>
+              </div>
+              <Link to="/dashboard/store" className="block">
+                <Button variant="magical" size="lg" className="w-full h-14 rounded-2xl text-xs font-bold uppercase tracking-widest shadow-xl">
+                  <ShoppingBag size={14} className="mr-2" /> Visitar a Loja
                 </Button>
               </Link>
             </div>
+          </div>
+        </div>
+      </div>
 
             {/* Status VIP */}
             <div className={`glass rounded-2xl p-5 border ${vipConf ? "border-purple-400/40" : "border-border/30"} relative overflow-hidden`}>
