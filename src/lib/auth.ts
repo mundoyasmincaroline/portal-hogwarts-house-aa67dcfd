@@ -78,20 +78,25 @@ export const useAuth = create<AuthState>((set, get) => ({
     try {
       // 1. Listen for auth changes
       supabase.auth.onAuthStateChange(async (event, session) => {
-        if (session?.user) {
-          const userId = session.user.id;
-          set({ user: session.user, isAuthenticated: true });
-          
-          // Parallel fetch to speed up init
-          const [admin] = await Promise.all([
-            get().checkAdmin(userId),
-            get().fetchProfile(userId)
-          ]);
-          
-          set({ isAdmin: admin, isLoading: false });
-          get().pingPresence();
-        } else {
-          set({ user: null, profile: null, isAuthenticated: false, isAdmin: false, isLoading: false });
+        try {
+          if (session?.user) {
+            const userId = session.user.id;
+            set({ user: session.user, isAuthenticated: true });
+
+            const [admin] = await Promise.all([
+              get().checkAdmin(userId),
+              get().fetchProfile(userId),
+            ]);
+
+            set({ isAdmin: admin });
+            get().pingPresence();
+          } else {
+            set({ user: null, profile: null, isAuthenticated: false, isAdmin: false });
+          }
+        } catch (err) {
+          console.error("Erro no onAuthStateChange:", err);
+        } finally {
+          set({ isLoading: false });
         }
       });
 
@@ -136,13 +141,18 @@ export const useAuth = create<AuthState>((set, get) => ({
   },
 
   checkAdmin: async (userId: string) => {
-    const { data } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId)
-      .eq("role", "admin")
-      .maybeSingle();
-    return !!data;
+    try {
+      const { data } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId)
+        .eq("role", "admin")
+        .maybeSingle();
+      return !!data;
+    } catch (err) {
+      console.error("Erro ao verificar admin:", err);
+      return false;
+    }
   },
 
   login: async (email, password) => {
