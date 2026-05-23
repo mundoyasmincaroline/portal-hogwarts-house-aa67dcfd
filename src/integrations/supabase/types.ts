@@ -753,6 +753,45 @@ export type Database = {
           },
         ]
       }
+      creatures: {
+        Row: {
+          active: boolean | null
+          created_at: string | null
+          danger_level: number | null
+          description: string | null
+          drops: Json | null
+          habitat: string | null
+          id: string
+          image_url: string | null
+          name: string
+          rarity: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string | null
+          danger_level?: number | null
+          description?: string | null
+          drops?: Json | null
+          habitat?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          rarity?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string | null
+          danger_level?: number | null
+          description?: string | null
+          drops?: Json | null
+          habitat?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          rarity?: string | null
+        }
+        Relationships: []
+      }
       dm_messages: {
         Row: {
           content: string
@@ -1605,6 +1644,45 @@ export type Database = {
           },
         ]
       }
+      seasonal_events: {
+        Row: {
+          active: boolean | null
+          created_at: string | null
+          description: string | null
+          end_date: string
+          event_type: string | null
+          house_points_bonus: number | null
+          id: string
+          start_date: string
+          title: string
+          xp_multiplier: number | null
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string | null
+          description?: string | null
+          end_date: string
+          event_type?: string | null
+          house_points_bonus?: number | null
+          id?: string
+          start_date: string
+          title: string
+          xp_multiplier?: number | null
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string | null
+          description?: string | null
+          end_date?: string
+          event_type?: string | null
+          house_points_bonus?: number | null
+          id?: string
+          start_date?: string
+          title?: string
+          xp_multiplier?: number | null
+        }
+        Relationships: []
+      }
       site_settings: {
         Row: {
           id: string
@@ -1757,6 +1835,7 @@ export type Database = {
       }
       store_items: {
         Row: {
+          active: boolean | null
           category: string
           created_at: string | null
           description: string | null
@@ -1769,6 +1848,7 @@ export type Database = {
           rarity: string | null
         }
         Insert: {
+          active?: boolean | null
           category: string
           created_at?: string | null
           description?: string | null
@@ -1781,6 +1861,7 @@ export type Database = {
           rarity?: string | null
         }
         Update: {
+          active?: boolean | null
           category?: string
           created_at?: string | null
           description?: string | null
