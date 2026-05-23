@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { Sparkles } from "lucide-react";
+import SafeImage from "./SafeImage";
+import HouseCrest from "./HouseCrest";
+
 
 export default function DailyHighlight() {
   const [highlightedUser, setHighlightedUser] = useState<any>(null);
