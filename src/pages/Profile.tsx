@@ -906,9 +906,9 @@ export default function Profile() {
                 const item = ui.store_items;
                 if (!item) return null;
                 const isEquipped = (ui as any).is_equipped;
-                const stats = (item as any).stats;
+                const effects = (item as any).effects;
                 const rarityColor = item.rarity === 'legendary' ? 'border-yellow-400/50 shadow-yellow-400/20' : 
-                                  item.rarity === 'epic' ? 'border-purple-500/50 shadow-purple-500/20' : 
+                                  item.rarity === 'rare' ? 'border-blue-500/50 shadow-blue-500/20' : 
                                   'border-white/10 shadow-white/5';
 
                 return (
@@ -934,12 +934,10 @@ export default function Profile() {
                       )}
 
                       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col items-center justify-end p-5 gap-4 backdrop-blur-[2px]">
-                         {stats && (stats.atk > 0 || stats.def > 0 || stats.mana > 0 || stats.hp > 0) && (
-                             <div className="grid grid-cols-2 gap-2 w-full">
-                                 {stats.atk > 0 && <div className="text-[9px] font-bold text-red-400 bg-black/60 px-2 py-1 rounded-lg border border-red-400/30 text-center">⚔️ +{stats.atk}</div>}
-                                 {stats.def > 0 && <div className="text-[9px] font-bold text-blue-400 bg-black/60 px-2 py-1 rounded-lg border border-blue-400/30 text-center">🛡️ +{stats.def}</div>}
-                                 {stats.mana > 0 && <div className="text-[9px] font-bold text-indigo-400 bg-black/60 px-2 py-1 rounded-lg border border-indigo-400/30 text-center">✨ +{stats.mana}</div>}
-                                 {stats.hp > 0 && <div className="text-[9px] font-bold text-green-400 bg-black/60 px-2 py-1 rounded-lg border border-green-400/30 text-center">❤️ +{stats.hp}</div>}
+                         {effects && (effects.spell_power > 0 || effects.xp_bonus > 0) && (
+                             <div className="grid grid-cols-1 gap-1 w-full">
+                                 {effects.spell_power > 0 && <div className="text-[9px] font-bold text-blue-400 bg-black/60 px-2 py-1 rounded-lg border border-blue-400/30 text-center">🪄 +{effects.spell_power} Poder</div>}
+                                 {effects.xp_bonus > 0 && <div className="text-[9px] font-bold text-yellow-400 bg-black/60 px-2 py-1 rounded-lg border border-yellow-400/30 text-center">✨ +{effects.xp_bonus}% XP</div>}
                              </div>
                           )}
                          <Button 
