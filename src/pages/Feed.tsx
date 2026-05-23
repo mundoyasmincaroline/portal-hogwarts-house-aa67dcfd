@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef, memo } from "react";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Sparkles, Trophy } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import { HOUSES, type House } from "@/lib/store";
@@ -229,117 +230,25 @@ export default function Feed() {
           )}
 
           {posts.map((post, index) => (
-            <div key={post.id} className="min-h-[150px]" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 150px' }}>
+            <ErrorBoundary key={post.id} fallback={
+              <div className="glass rounded-xl p-4 min-h-[100px] flex items-center justify-center border-red-500/20">
+                <p className="text-xs text-red-400 font-heading">Erro ao carregar pergaminho 📜</p>
+              </div>
+            }>
+            <div key={post.id} className="min-h-[150px]">
               {index > 0 && index % 5 === 0 && <MagicAdBanner />}
               <div className="glass rounded-xl p-4 transition-all duration-300">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className={`w-10 h-10 rounded-full bg-secondary flex items-center justify-center font-heading text-primary overflow-hidden border-2 shrink-0 ${post.author?.house === 'gryffindor' ? 'border-red-500' : post.author?.house === 'slytherin' ? 'border-green-500' : post.author?.house === 'ravenclaw' ? 'border-blue-500' : 'border-yellow-500'}`}>
-                    <SafeImage 
-                      src={post.author?.avatar_url} 
-                      alt={post.author?.full_name || "Bruxo"} 
-                      className="w-full h-full object-cover" 
-                      fallbackText={post.author?.full_name}
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
-                      {post.author?.full_name || "Bruxo desconhecido"}
-                      {post.author?.vip_plan === "founder" && <span className="text-[10px] bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 px-1.5 py-0.5 rounded-full font-heading">👑 Fundador</span>}
-                      {post.author?.vip_plan === "vip" && <span className="text-[10px] bg-purple-500/20 text-purple-300 border border-purple-500/30 px-1.5 py-0.5 rounded-full font-heading">💜 VIP</span>}
-                      {post.author?.vip_plan === "premium" && <span className="text-[10px] bg-slate-500/20 text-slate-300 border border-slate-400/30 px-1.5 py-0.5 rounded-full font-heading">⭐ Premium</span>}
-                    </p>
-                    <p className="text-xs text-muted-foreground">@{post.author?.username} • {new Date(post.created_at).toLocaleString("pt-BR")}</p>
-                  </div>
-                  {post.author?.house && <HouseCrest house={post.author.house} size="sm" />}
-                </div>
-                <p className="text-sm text-foreground mb-3 whitespace-pre-wrap">{post.content}</p>
-                
-                {post.music_url && (
-                  <div className="mb-4">
-                    {post.music_url.includes("spotify.com/track/") ? (
-                      <iframe 
-                        src={post.music_url.replace("open.spotify.com/track/", "open.spotify.com/embed/track/")} 
-                        width="100%" 
-                        height="80" 
-                        frameBorder="0" 
-                        allow="encrypted-media" 
-                        loading="lazy"
-                        className="rounded-lg opacity-80 hover:opacity-100 transition-opacity"
-                      ></iframe>
-                    ) : (
-                      <audio controls src={post.music_url} className="w-full h-8" />
-                    )}
-                  </div>
-                )}
-
-                <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                  {post.reactions.map((r) => (
-                    <button
-                      key={r.emoji}
-                      onClick={() => toggleReaction(post.id, r.emoji, r.mine)}
-                      className={`px-3 py-1 rounded-full text-xs transition-colors ${r.mine ? "bg-primary/30 text-primary" : "glass hover:bg-secondary/80"}`}
-                    >
-                      {r.emoji} {r.count}
-                    </button>
-                  ))}
-                  <div className="flex gap-1 glass rounded-full px-2 py-1">
-                    {REACTIONS.map((emoji) => {
-                      const existing = post.reactions.find((r) => r.emoji === emoji);
-                      if (existing) return null;
-                      return (
-                        <button
-                          key={emoji}
-                          onClick={() => toggleReaction(post.id, emoji, false)}
-                          className="text-xs hover:scale-125 transition-transform"
-                        >
-                          {emoji}
-                        </button>
-                      );
-                    })}
-                  </div>
-                  <button
-                    onClick={() => toggleComments(post.id)}
-                    className="glass px-3 py-1 rounded-full text-xs text-muted-foreground hover:bg-secondary/80 transition-colors"
-                  >
-                    💬 {post.comments.length} {post.comments.length === 1 ? "comentário" : "comentários"}
-                  </button>
-                </div>
-
-                {post.showComments && (
-                  <div className="mt-3 pt-3 border-t border-border space-y-2">
-                    {post.comments.map((c) => (
-                      <div key={c.id} className="flex gap-2 items-start">
-                        <div className={`w-6 h-6 rounded-full bg-secondary flex items-center justify-center font-heading text-xs text-primary overflow-hidden shrink-0 border border-primary/30`}>
-                          <SafeImage 
-                            src={c.author?.avatar_url} 
-                            alt={c.author?.full_name || "Bruxo"} 
-                            className="w-full h-full object-cover" 
-                            fallbackText={c.author?.full_name}
-                          />
-                        </div>
-                        <div className="flex-1 bg-secondary/40 rounded-lg px-3 py-2">
-                          <p className="text-xs font-medium text-foreground">{c.author?.full_name}</p>
-                          <p className="text-xs text-foreground">{c.content}</p>
-                        </div>
-                      </div>
-                    ))}
-                    <div className="flex gap-2">
-                      <input
-                        value={commentDrafts[post.id] || ""}
-                        onChange={(e) => setCommentDrafts((d) => ({ ...d, [post.id]: e.target.value }))}
-                        onKeyDown={(e) => e.key === "Enter" && submitComment(post.id)}
-                        placeholder="Comente..."
-                        maxLength={500}
-                        className="flex-1 bg-secondary/50 rounded-lg px-3 py-2 text-xs focus:outline-none text-foreground"
-                      />
-                      <Button size="sm" variant="magical" className="text-xs" onClick={() => submitComment(post.id)}>
-                        Enviar
-                      </Button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
+                <PostCard 
+                  post={post} 
+                  user={user} 
+                  onToggleReaction={toggleReaction} 
+                  onToggleComments={toggleComments}
+                  onCommentDraftChange={(text) => setCommentDrafts(d => ({ ...d, [post.id]: text }))}
+                  commentDraft={commentDrafts[post.id] || ""}
+                  onSubmitComment={() => submitComment(post.id)}
+                  reactions={REACTIONS}
+                />
+            </ErrorBoundary>
           ))}
         </div>
 
