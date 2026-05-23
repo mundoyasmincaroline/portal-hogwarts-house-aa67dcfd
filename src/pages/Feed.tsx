@@ -79,6 +79,11 @@ export default function Feed() {
     });
   }, [loadFeed, loadSidebar]);
 
+  // Use centralized realtime hooks
+  useRealtime("posts", "*", loadFeed);
+  useRealtime("post_comments", "*", loadFeed);
+  useRealtime("post_reactions", "*", loadFeed);
+
   useEffect(() => {
     if (profile && (profile as any).has_seen_intro === false) {
       // Pequeno delay para não abrir instantaneamente no fade-in da página
