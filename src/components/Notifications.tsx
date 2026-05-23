@@ -72,11 +72,12 @@ export default function Notifications() {
     <div className="relative" ref={ref}>
       <button 
         onClick={() => setOpen(!open)}
-        className="relative p-2 text-muted-foreground hover:text-primary transition-colors rounded-full hover:bg-secondary"
+        className="relative touch-target text-muted-foreground hover:text-primary transition-all duration-300 rounded-xl hover:bg-primary/10 active:scale-90 group"
+        aria-label="Notificações"
       >
-        🔔
+        <div className="relative z-10 text-xl group-hover:rotate-12 transition-transform">🦉</div>
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 rounded-full text-[10px] text-white flex items-center justify-center font-bold">
+          <span className="absolute -top-1 -right-1 min-w-[20px] h-[20px] px-1 bg-primary text-primary-foreground rounded-full text-[10px] flex items-center justify-center font-bold shadow-[0_0_10px_hsl(var(--primary)/0.5)] border-2 border-background animate-bounce">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}

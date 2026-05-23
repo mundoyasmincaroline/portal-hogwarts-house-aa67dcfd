@@ -37,8 +37,10 @@ export default function MagicalEmoji({
       <div className="absolute inset-0 rounded-inherit border border-white/5 group-hover:border-white/20 transition-colors" />
       
       {/* The Emoji or Icon with "Monster" effects */}
-      <div className="relative z-10 filter drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] group-hover:drop-shadow-[0_0_15px_white] transition-all duration-500 animate-float-subtle flex items-center justify-center">
-        {Icon ? <Icon size={size === "xs" ? 14 : size === "sm" ? 20 : size === "md" ? 32 : size === "lg" ? 48 : 64} className="text-white" /> : emoji}
+      <div className="relative z-10 filter drop-shadow-[0_0_12px_rgba(255,255,255,0.6)] group-hover:drop-shadow-[0_0_20px_white] transition-all duration-500 animate-float-subtle flex items-center justify-center pointer-events-none">
+        {Icon ? <Icon size={size === "xs" ? 14 : size === "sm" ? 22 : size === "md" ? 34 : size === "lg" ? 52 : 72} className="text-white" /> : (
+          <span className="text-white drop-shadow-md select-none">{emoji}</span>
+        )}
       </div>
 
       {/* Plate Shine Effect */}
