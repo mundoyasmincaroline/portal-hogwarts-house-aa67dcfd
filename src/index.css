@@ -186,5 +186,22 @@
 
 /* Custom container */
 .page-container {
-  @apply max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8;
+  @apply max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-3 sm:py-8;
+}
+
+/* Responsiveness helpers */
+.touch-target {
+  @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+img {
+  @apply max-w-full h-auto;
 }
