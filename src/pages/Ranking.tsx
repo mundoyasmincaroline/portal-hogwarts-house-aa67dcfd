@@ -116,7 +116,7 @@ export default function Ranking() {
         <>
           {/* Pódio Top 3 */}
           {top3.length > 0 && (
-            <div className="flex flex-row items-end justify-center gap-2 sm:gap-4 px-2 sm:px-4">
+            <div className="flex flex-col sm:flex-row items-center sm:items-end justify-center gap-4 px-2 sm:px-4">
               {PODIUM_ORDER.map(idx => {
                 const m = top3[idx];
                 if (!m) return null;
@@ -130,7 +130,7 @@ export default function Ranking() {
                     className={`flex-1 min-w-0 glass rounded-2xl border cursor-pointer hover:-translate-y-1 transition-all bg-gradient-to-b ${colors.bg} ${
                       isGold ? `ring-2 ring-yellow-400/60 border-yellow-400/40 shadow-[0_0_30px_rgba(251,191,36,0.2)]` : `border-border/40`
                     }`}>
-                    <div className={`flex flex-col items-center p-2 sm:p-4 gap-1 sm:gap-2 ${heights[idx]}`}>
+                    <div className={`flex flex-col items-center p-4 gap-2 w-full sm:w-auto ${isGold ? "h-40 sm:h-44" : "h-32 sm:h-36"}`}>
                       <div className="relative w-12 h-12 mb-1 flex items-center justify-center">
                         <MagicalEmoji 
                           emoji={idx === 1 ? "🥇" : idx === 0 ? "🥈" : "🥉"} 
@@ -149,7 +149,7 @@ export default function Ranking() {
                         )}
                       </div>
                       <div className="text-center min-w-0">
-                        <p className="font-heading text-[10px] sm:text-xs text-foreground truncate w-full flex items-center gap-1 justify-center">
+                        <p className="font-heading text-[11px] sm:text-xs text-foreground truncate w-full flex items-center gap-1 justify-center">
                           {m.full_name.split(" ")[0]}
                           {vipBadge(m.vip_plan)}
                         </p>

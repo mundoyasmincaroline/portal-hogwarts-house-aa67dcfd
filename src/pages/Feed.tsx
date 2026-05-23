@@ -195,8 +195,8 @@ export default function Feed() {
       <DailyHighlight />
       <MoodSession />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-4">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div className="xl:col-span-2 space-y-4">
           <div className="glass rounded-xl p-3 sm:p-4">
             <textarea
               value={newPost}
@@ -272,7 +272,7 @@ export default function Feed() {
                   </div>
                 )}
 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5 sm:gap-2">
                   {post.reactions.map((r) => (
                     <button
                       key={r.emoji}

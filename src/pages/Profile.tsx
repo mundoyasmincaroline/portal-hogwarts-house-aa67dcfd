@@ -399,7 +399,7 @@ export default function Profile() {
       }`} />
       
       {/* Premium Navigation Tabs */}
-      <div className="flex gap-1 border-b border-white/5 mb-6 sm:mb-8 overflow-x-auto pb-px scrollbar-hide whitespace-nowrap relative z-10 p-1 bg-card/40 backdrop-blur-md rounded-2xl mx-1 sm:mx-0">
+      <div className="flex gap-1 border-b border-white/5 mb-4 sm:mb-8 overflow-x-auto pb-2 scrollbar-hide whitespace-nowrap relative z-10 p-1 bg-card/40 backdrop-blur-md rounded-2xl mx-1 sm:mx-0">
         {[
           { id: "about", label: "Sobre", icon: "👤" },
           { id: "friends", label: `Amigos (${friends.length})`, icon: "🤝" },

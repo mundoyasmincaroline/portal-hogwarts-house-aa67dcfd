@@ -210,8 +210,8 @@ export default function Duels() {
         </div>
       ) : (
         <div className="space-y-8">
-          <div className="grid grid-cols-2 gap-4 relative">
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative">
+             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 hidden sm:flex">
                 <div className="w-12 h-12 bg-zinc-900 border border-white/10 rounded-full flex items-center justify-center font-heading text-xl text-primary shadow-2xl">VS</div>
              </div>
 
@@ -247,7 +247,7 @@ export default function Duels() {
                 {myTurn && <div className="ml-auto bg-primary/20 px-4 py-1.5 rounded-full border border-primary/30 text-[10px] font-heading uppercase text-primary animate-pulse">Seu Turno</div>}
              </div>
 
-             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+             <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-4">
                 {userSpells.map((s) => (
                    <button key={s.id} disabled={!myTurn} onClick={() => castSpell(s)} className={`p-4 rounded-2xl border transition-all ${myTurn ? 'border-white/10 bg-white/5 hover:border-primary/50 hover:-translate-y-1' : 'opacity-40 border-white/5'}`}>
                       <div className="text-xl mb-1">{s.icon || '🪄'}</div>
