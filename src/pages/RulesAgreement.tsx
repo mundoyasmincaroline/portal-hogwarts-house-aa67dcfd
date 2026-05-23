@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useAuth } from "@/lib/auth";
+import { useState, useEffect } from "react";
+import { useAuth, House } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import MagicalParticles from "@/components/MagicalParticles";
@@ -27,6 +27,21 @@ export default function RulesAgreement() {
       toast.error("Erro ao assinar o pergaminho. Tente novamente.");
       setLoading(false);
     } else {
+      // Processar Referral pendente
+      const pendingReferral = localStorage.getItem("pending_referral");
+      if (pendingReferral && user) {
+        try {
+          // Busca o perfil do convidante
+          const { data: inviter } = await supabase.from("profiles").select("user_id").eq("username", pendingReferral).maybeSingle();
+          if (inviter) {
+            await supabase.from("referrals").insert({ inviter_id: inviter.user_id, invited_id: user.id } as never);
+            await supabase.rpc("award_xp_action", { _action: "referral_success", _user_id: inviter.user_id, _xp: 100 });
+            await supabase.rpc("award_galeons", { _user_id: inviter.user_id, _amount: 50 });
+            localStorage.removeItem("pending_referral");
+          }
+        } catch (e) { console.error("Referral processing error:", e); }
+      }
+
       // Force reload auth state
       useAuth.setState((state) => ({
         profile: state.profile ? { ...state.profile, has_accepted_rules: true } : null
