@@ -193,10 +193,18 @@ export default function StickerAlbum() {
                 )}
                 
                 <div className="absolute inset-0 z-0">
-                    {packReveal.image_url ? (
-                    <img src={packReveal.image_url} alt={packReveal.character_name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
-                    ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-secondary text-8xl font-heading opacity-20">{packReveal.character_name.charAt(0)}</div>
+                    <StickerVisual name={packReveal.character_name} rarity={packReveal.rarity} unlocked imageUrl={packReveal.image_url} failedImage={failedImages[packReveal.id]} />
+                    {packReveal.image_url && !failedImages[packReveal.id] && (
+                    <img
+                      src={packReveal.image_url}
+                      alt={packReveal.character_name}
+                      width={1024}
+                      height={1024}
+                      loading="eager"
+                      decoding="async"
+                      onError={() => setFailedImages(prev => ({ ...prev, [packReveal.id]: true }))}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+                    />
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
                 </div>
@@ -330,6 +338,10 @@ export default function StickerAlbum() {
                     />
                     {s.image_url && !failedImages[s.id] && (
                     <img src={s.image_url} alt={s.character_name} referrerPolicy="no-referrer"
+                        width={1024}
+                        height={1024}
+                        loading="lazy"
+                        decoding="async"
                         onError={() => setFailedImages(prev => ({ ...prev, [s.id]: true }))}
                         className={`w-full h-full object-cover object-top transition-all duration-1000 ${
                         unlocked ? "opacity-80" : "opacity-20 grayscale brightness-50"
