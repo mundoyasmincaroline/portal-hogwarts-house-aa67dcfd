@@ -1,15 +1,9 @@
-import React from "react";
+import React, { memo } from "react";
 import { LucideIcon } from "lucide-react";
 
-interface MagicalIconProps {
-  icon?: LucideIcon;
-  color?: string;
-  size?: "xs" | "sm" | "md" | "lg" | number;
-  className?: string;
-  children?: React.ReactNode;
-}
+// ... (keep interface)
 
-export default function MagicalIcon({ icon: Icon, color = "#d4af37", size = "md", className = "", children }: MagicalIconProps) {
+const MagicalIcon = memo(function MagicalIcon({ icon: Icon, color = "#d4af37", size = "md", className = "", children }: MagicalIconProps) {
   const sizeMap = {
     xs: "w-8 h-8",
     sm: "w-10 h-10",
@@ -60,4 +54,6 @@ export default function MagicalIcon({ icon: Icon, color = "#d4af37", size = "md"
       </div>
     </div>
   );
-}
+});
+
+export default MagicalIcon;
