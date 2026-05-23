@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import StickerVisual from "@/components/StickerVisual";
 
 interface Sticker {
   id: string;
@@ -117,23 +118,22 @@ export default function ProfileAlbum({ userId }: { userId: string }) {
           if (isGold)   rarityStyle = "border-yellow-400 from-yellow-600/40 to-background ring-1 ring-yellow-400/50 shadow-yellow-500/30";
 
           return (
-            <div key={s.id} className={`relative aspect-[3/4] rounded-xl overflow-hidden border-2 group transition-all duration-300 hover:scale-105 bg-gradient-to-b ${rarityStyle} shadow-lg`}>
+              <div key={s.id} className={`relative aspect-[3/4] rounded-xl overflow-hidden border-2 group transition-all duration-300 hover:scale-105 bg-gradient-to-b ${rarityStyle} shadow-lg`}>
               <div className="absolute inset-0 z-0">
+                  <StickerVisual name={s.character_name} rarity={s.rarity} unlocked imageUrl={s.image_url} failedImage={failed[s.id]} />
                 {s.image_url && !failed[s.id] ? (
                   <img
                     src={s.image_url}
                     alt={s.character_name}
                     referrerPolicy="no-referrer"
+                      width={1024}
+                      height={1024}
+                      loading="lazy"
+                      decoding="async"
                     onError={() => setFailed(p => ({ ...p, [s.id]: true }))}
                     className="w-full h-full object-cover object-top opacity-85 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700"
                   />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <span className={`font-heading text-4xl font-bold ${isGold ? "text-yellow-400/50" : isSilver ? "text-slate-300/50" : "text-amber-600/50"}`}>
-                      {s.character_name.charAt(0)}
-                    </span>
-                  </div>
-                )}
+                  ) : null}
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
               </div>
 
