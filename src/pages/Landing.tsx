@@ -371,14 +371,37 @@ export default function Landing() {
             </div>
           </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16 pt-12 border-t border-white/5">
+            <div className="space-y-4">
+              <h4 className="font-heading text-xs text-primary uppercase tracking-[0.2em] font-bold">Portal</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground/70">
+                <li><Link to="/register" className="hover:text-primary transition-colors">Solicitar Vaga</Link></li>
+                <li><Link to="/login" className="hover:text-primary transition-colors">Acessar Castelo</Link></li>
+                <li><Link to="/parents" className="hover:text-primary transition-colors">Guia para Pais</Link></li>
+              </ul>
+            </div>
+            
+            <div className="space-y-4">
+              <h4 className="font-heading text-xs text-primary uppercase tracking-[0.2em] font-bold">Jurídico</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground/70">
+                <li><Link to="/terms" className="hover:text-primary transition-colors">Termos de Uso</Link></li>
+                <li><Link to="/privacy" className="hover:text-primary transition-colors">Privacidade</Link></li>
+              </ul>
+            </div>
+
+            <div className="space-y-4">
+              <h4 className="font-heading text-xs text-primary uppercase tracking-[0.2em] font-bold">Suporte</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground/70">
+                <li><a href="mailto:mundoyasmincaroline@gmail.com" className="hover:text-primary transition-colors underline decoration-primary/30">mundoyasmincaroline@gmail.com</a></li>
+              </ul>
+            </div>
+          </div>
+
           <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
             <p className="text-[9px] text-muted-foreground/30 font-mono tracking-widest uppercase">
               ✦ Mundo Yasmin Caroline · 2026 · Todos os Direitos Mágicos Reservados ✦
             </p>
             <div className="flex items-center gap-6">
-               <div className="flex gap-1">
-                 {[1,2,3].map(i => <div key={i} className="w-1 h-1 rounded-full bg-primary/20" />)}
-               </div>
                <span className="text-[10px] text-white/20 font-bold uppercase tracking-widest">Monster Quality Build 4.2</span>
             </div>
           </div>
