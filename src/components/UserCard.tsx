@@ -31,8 +31,8 @@ export default function UserCard({ user, compact = false }: { user: UserProfile;
       <div className="flex items-start gap-5">
         <div className="relative shrink-0">
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 via-secondary to-black border border-white/10 flex items-center justify-center text-3xl font-heading text-primary shadow-xl group-hover:scale-105 transition-transform overflow-hidden relative">
-            {user.avatarUrl ? (
-              <img src={user.avatarUrl} alt={user.fullName} className="w-full h-full object-cover" />
+            {user.avatar ? (
+              <img src={user.avatar} alt={user.fullName} className="w-full h-full object-cover" />
             ) : user.fullName[0]}
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
           </div>
