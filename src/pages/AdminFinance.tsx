@@ -111,7 +111,7 @@ export default function AdminFinance() {
       </div>
 
       {/* ── KPI CARDS ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
         <KPIItem title="Receita Total" value={`R$ ${stats.totalRevenue.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`} icon={DollarSign} color="text-green-500" trend="+12%" />
         <KPIItem title="Galeões Vendidos" value={stats.totalGaleons.toLocaleString()} icon={Coins} color="text-yellow-500" trend="+8%" />
         <KPIItem title="Vendas Concluídas" value={stats.totalOrders.toString()} icon={TrendingUp} color="text-blue-500" trend="+15%" />
@@ -199,54 +199,54 @@ export default function AdminFinance() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-white/5 text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground">
-                <th className="px-8 py-5">Bruxo</th>
-                <th className="px-8 py-5">ID Ordem</th>
-                <th className="px-8 py-5">Produto</th>
-                <th className="px-8 py-5 text-right">Valor</th>
-                <th className="px-8 py-5 text-center">Galeões</th>
-                <th className="px-8 py-5">Status</th>
-                <th className="px-8 py-5 text-right">Data</th>
+                <th className="px-4 sm:px-8 py-5">Bruxo</th>
+                <th className="px-4 sm:px-8 py-5 hidden md:table-cell">ID Ordem</th>
+                <th className="px-4 sm:px-8 py-5">Produto</th>
+                <th className="px-4 sm:px-8 py-5 text-right">Valor</th>
+                <th className="px-4 sm:px-8 py-5 text-center hidden sm:table-cell">Galeões</th>
+                <th className="px-4 sm:px-8 py-5">Status</th>
+                <th className="px-4 sm:px-8 py-5 text-right hidden lg:table-cell">Data</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
               {orders.slice(0, 20).map(o => (
                 <tr key={o.id} className="hover:bg-white/5 transition-colors group">
-                  <td className="px-8 py-6">
+                  <td className="px-4 sm:px-8 py-6">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full border border-white/10 overflow-hidden">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-white/10 overflow-hidden shrink-0">
                         <SafeImage src={o.profiles?.avatar_url} alt={o.profiles?.full_name} className="w-full h-full object-cover" />
                       </div>
-                      <div>
-                        <p className="text-sm font-bold text-white group-hover:text-primary transition-colors">{o.profiles?.full_name || "Desconhecido"}</p>
-                        <p className="text-[10px] text-muted-foreground font-mono">{o.user_id.slice(0,8)}</p>
+                      <div className="min-w-0">
+                        <p className="text-xs sm:text-sm font-bold text-white group-hover:text-primary transition-colors truncate">{o.profiles?.full_name || "Desconhecido"}</p>
+                        <p className="text-[9px] sm:text-[10px] text-muted-foreground font-mono truncate">{o.user_id.slice(0,8)}</p>
                       </div>
                     </div>
                   </td>
-                  <td className="px-8 py-6">
+                  <td className="px-4 sm:px-8 py-6 hidden md:table-cell">
                     <span className="text-xs font-mono text-muted-foreground">{o.id.slice(0,12)}...</span>
                   </td>
-                  <td className="px-8 py-6">
+                  <td className="px-4 sm:px-8 py-6">
                     <div className="flex items-center gap-2">
-                       {o.package_id.includes("vip") ? <Crown size={14} className="text-purple-400" /> : <MagicalGaleon size="xs" />}
-                       <span className="text-sm font-serif">{o.package_id.replace("vip_", "VIP ").replace(/_/g, " ")}</span>
+                       {o.package_id.includes("vip") ? <Crown size={12} className="text-purple-400 shrink-0" /> : <MagicalGaleon size="xs" className="shrink-0" />}
+                       <span className="text-[11px] sm:text-sm font-serif truncate max-w-[80px] sm:max-w-none">{o.package_id.replace("vip_", "VIP ").replace(/_/g, " ")}</span>
                     </div>
                   </td>
-                  <td className="px-8 py-6 text-right">
-                    <span className="text-sm font-bold text-green-400 font-mono">R$ {o.amount_brl?.toFixed(2)}</span>
+                  <td className="px-4 sm:px-8 py-6 text-right">
+                    <span className="text-[11px] sm:text-sm font-bold text-green-400 font-mono">R$ {o.amount_brl?.toFixed(2)}</span>
                   </td>
-                  <td className="px-8 py-6 text-center">
+                  <td className="px-4 sm:px-8 py-6 text-center hidden sm:table-cell">
                     <span className="text-sm font-bold text-yellow-500">{o.galeons || "-"}</span>
                   </td>
-                  <td className="px-8 py-6">
-                    <span className={`text-[9px] font-bold uppercase px-3 py-1.5 rounded-full border ${
+                  <td className="px-4 sm:px-8 py-6">
+                    <span className={`text-[8px] sm:text-[9px] font-bold uppercase px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border ${
                       o.status === "completed" ? "bg-green-500/20 text-green-400 border-green-500/30" : 
                       o.status === "pending" ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" : 
                       "bg-red-500/20 text-red-400 border-red-500/30"
                     }`}>
-                      {o.status === "completed" ? "Confirmado" : o.status === "pending" ? "Pendente" : "Falhou"}
+                      {o.status === "completed" ? "OK" : o.status === "pending" ? "PEN" : "ERRO"}
                     </span>
                   </td>
-                  <td className="px-8 py-6 text-right">
+                  <td className="px-4 sm:px-8 py-6 text-right hidden lg:table-cell">
                     <p className="text-xs text-muted-foreground">{new Date(o.created_at).toLocaleDateString("pt-BR")}</p>
                     <p className="text-[10px] text-muted-foreground/50">{new Date(o.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</p>
                   </td>
