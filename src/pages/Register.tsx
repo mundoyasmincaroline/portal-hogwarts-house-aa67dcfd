@@ -398,22 +398,22 @@ export default function Register() {
 /* ── Helpers internos ── */
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (
-    <div>
-      <label className="text-xs uppercase tracking-widest text-muted-foreground block mb-1.5">{label}</label>
+    <div className="space-y-1.5">
+      <label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/70 font-heading block pl-1">{label}</label>
       {children}
-      {error && <p className="text-destructive text-xs mt-1">{error}</p>}
+      {error && <p className="text-destructive text-[10px] font-bold mt-1 pl-1 animate-in slide-in-from-left-2">{error}</p>}
     </div>
   );
 }
 
-function NavRow({ onBack, onNext, disabled }: { onBack: () => void; onNext: () => void; disabled?: boolean }) {
+function NavRow({ onBack, onNext, disabled, labelNext = "Continuar" }: { onBack: () => void; onNext: () => void; disabled?: boolean; labelNext?: string }) {
   return (
     <div className="flex gap-3 pt-3">
-      <Button variant="outline" className="font-heading" onClick={onBack}>
+      <Button variant="outline" className="font-heading hover:bg-white/5" onClick={onBack}>
         <ArrowLeft className="w-4 h-4 mr-2" />Voltar
       </Button>
-      <Button variant="magical" className="flex-1 font-heading" onClick={onNext} disabled={disabled}>
-        Continuar <Sparkles className="ml-2 w-4 h-4" />
+      <Button variant="magical" className="flex-1 font-heading shadow-[0_10px_30px_-10px_hsl(var(--primary))]" onClick={onNext} disabled={disabled}>
+        {labelNext} <Sparkles className="ml-2 w-4 h-4" />
       </Button>
     </div>
   );

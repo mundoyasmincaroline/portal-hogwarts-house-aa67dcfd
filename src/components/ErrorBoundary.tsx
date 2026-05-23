@@ -38,9 +38,17 @@ export class ErrorBoundary extends Component<Props, State> {
             <p className="text-muted-foreground text-sm font-serif italic max-w-md mx-auto leading-relaxed">
               "Parece que um feitiço de confusão atingiu esta parte do castelo. Os elfos domésticos já foram notificados para restaurar a ordem."
             </p>
+            {this.state.error && (
+              <p className="text-[10px] text-red-500/50 font-mono mt-4 truncate max-w-xs mx-auto">
+                {this.state.error.message}
+              </p>
+            )}
           </div>
           <button 
-            onClick={() => window.location.reload()}
+            onClick={() => {
+              this.setState({ hasError: false, error: null });
+              window.location.reload();
+            }}
             className="px-8 py-3 bg-red-500/20 hover:bg-red-500/40 border border-red-500/50 rounded-full text-xs font-heading font-bold uppercase tracking-widest text-red-400 transition-all hover:scale-105 active:scale-95"
           >
             Conjurar Restauração ⚡
