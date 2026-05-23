@@ -139,6 +139,71 @@ export type Database = {
         }
         Relationships: []
       }
+      battle_pass_rewards: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_premium: boolean | null
+          level_required: number
+          pass_id: string | null
+          reward_type: string
+          reward_value: Json
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_premium?: boolean | null
+          level_required: number
+          pass_id?: string | null
+          reward_type: string
+          reward_value: Json
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_premium?: boolean | null
+          level_required?: number
+          pass_id?: string | null
+          reward_type?: string
+          reward_value?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "battle_pass_rewards_pass_id_fkey"
+            columns: ["pass_id"]
+            isOneToOne: false
+            referencedRelation: "battle_passes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      battle_passes: {
+        Row: {
+          active: boolean | null
+          created_at: string | null
+          end_date: string
+          id: string
+          season_name: string
+          start_date: string
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string | null
+          end_date: string
+          id?: string
+          season_name: string
+          start_date: string
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string | null
+          end_date?: string
+          id?: string
+          season_name?: string
+          start_date?: string
+        }
+        Relationships: []
+      }
       canon_claims: {
         Row: {
           canon_name: string
@@ -789,6 +854,36 @@ export type Database = {
           image_url?: string | null
           name?: string
           rarity?: string | null
+        }
+        Relationships: []
+      }
+      currency_ledger: {
+        Row: {
+          amount: number
+          created_at: string | null
+          currency_type: string
+          description: string | null
+          id: string
+          transaction_type: string
+          user_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          currency_type: string
+          description?: string | null
+          id?: string
+          transaction_type: string
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          currency_type?: string
+          description?: string | null
+          id?: string
+          transaction_type?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -1599,10 +1694,12 @@ export type Database = {
           has_seen_intro: boolean | null
           house: Database["public"]["Enums"]["house_type"]
           id: string
+          knuts: number | null
           last_seen: string | null
           level: number
           online: boolean
           role: string | null
+          sickles: number | null
           updated_at: string
           user_id: string
           username: string
@@ -1627,10 +1724,12 @@ export type Database = {
           has_seen_intro?: boolean | null
           house?: Database["public"]["Enums"]["house_type"]
           id?: string
+          knuts?: number | null
           last_seen?: string | null
           level?: number
           online?: boolean
           role?: string | null
+          sickles?: number | null
           updated_at?: string
           user_id: string
           username: string
@@ -1655,10 +1754,12 @@ export type Database = {
           has_seen_intro?: boolean | null
           house?: Database["public"]["Enums"]["house_type"]
           id?: string
+          knuts?: number | null
           last_seen?: string | null
           level?: number
           online?: boolean
           role?: string | null
+          sickles?: number | null
           updated_at?: string
           user_id?: string
           username?: string
@@ -2281,6 +2382,44 @@ export type Database = {
             columns: ["badge_id"]
             isOneToOne: false
             referencedRelation: "badges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_battle_pass_progress: {
+        Row: {
+          claimed_rewards: Json | null
+          current_level: number | null
+          current_xp: number | null
+          pass_id: string
+          premium_unlocked: boolean | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          claimed_rewards?: Json | null
+          current_level?: number | null
+          current_xp?: number | null
+          pass_id: string
+          premium_unlocked?: boolean | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          claimed_rewards?: Json | null
+          current_level?: number | null
+          current_xp?: number | null
+          pass_id?: string
+          premium_unlocked?: boolean | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_battle_pass_progress_pass_id_fkey"
+            columns: ["pass_id"]
+            isOneToOne: false
+            referencedRelation: "battle_passes"
             referencedColumns: ["id"]
           },
         ]
