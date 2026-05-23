@@ -69,8 +69,8 @@ export default function Register() {
     const e: Record<string, string> = {};
     if (!form.fullName.trim()) e.fullName = "Como devemos te chamar?";
     if (!form.username.trim()) e.username = "Escolha um @";
-    if (form.username.includes(" ")) e.username = "Sem espaços";
-    if (!form.email.trim()) e.email = "Email é obrigatório";
+    if (form.username && (form.username.includes(" ") || !/^[a-z0-9._]+$/.test(form.username))) e.username = "Apenas letras, números, pontos e underlines";
+    if (!form.email.trim() || !/^\S+@\S+\.\S+$/.test(form.email)) e.email = "Email inválido";
     if (!form.password || form.password.length < 6) e.password = "Mínimo 6 caracteres";
     const a = parseInt(form.age);
     if (!a || a < 13 || a > 17) e.age = "Apenas bruxos de 13 a 17 anos";
@@ -135,6 +135,25 @@ export default function Register() {
     toast.success("Bruxo(a) registrado(a) com sucesso! ✨");
   };
 
+  const NavRow = ({ onBack, onNext, disabled = false, labelNext = "Continuar" }: { onBack: () => void; onNext: () => void; disabled?: boolean; labelNext?: string }) => (
+    <div className="flex gap-3 mt-6">
+      <Button variant="ghost" className="flex-1 font-heading text-muted-foreground hover:text-foreground border border-white/5" onClick={onBack}>
+        <ArrowLeft className="mr-2 w-4 h-4" /> Voltar
+      </Button>
+      <Button variant="magical" className="flex-[2] font-heading shadow-[0_0_20px_-5px_hsl(var(--primary))]" onClick={onNext} disabled={disabled}>
+        {labelNext}
+      </Button>
+    </div>
+  );
+
+  const Field = ({ label, children, error }: { label: string; children: React.ReactNode; error?: string }) => (
+    <div className="space-y-1">
+      <label className="text-xs font-heading text-muted-foreground block">{label}</label>
+      {children}
+      {error && <p className="text-destructive text-[10px] font-bold mt-1 animate-in slide-in-from-left-2">{error}</p>}
+    </div>
+  );
+
   /* ── moldura cinematográfica ── */
   return (
     <div className="relative min-h-screen flex items-center justify-center px-4 py-12 overflow-hidden">
@@ -183,27 +202,27 @@ export default function Register() {
               </header>
 
               <Field label="Nome completo" error={errors.fullName}>
-                <Input value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} placeholder="Seu nome de batismo" className="bg-secondary/50" />
+                <Input value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} placeholder="Seu nome de batismo" className="bg-secondary/50 focus:ring-primary/20" />
               </Field>
               <Field label="@ Como te chamarão no castelo" error={errors.username}>
-                <Input value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value.toLowerCase().replace(/\s/g, "") })} placeholder="seu_username" className="bg-secondary/50" />
+                <Input value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value.toLowerCase().replace(/[^a-z0-9._]/g, "") })} placeholder="seu_username" className="bg-secondary/50 focus:ring-primary/20" />
               </Field>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Field label="Email" error={errors.email}>
-                  <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="seu@email.com" className="bg-secondary/50" />
+                  <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value.trim() })} placeholder="seu@email.com" className="bg-secondary/50 focus:ring-primary/20" />
                 </Field>
                 <Field label="Senha" error={errors.password}>
-                  <Input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="6+ caracteres" className="bg-secondary/50" />
+                  <Input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="6+ caracteres" className="bg-secondary/50 focus:ring-primary/20" />
                 </Field>
               </div>
               <Field label="Idade (13–17)" error={errors.age}>
-                <Input type="number" min={13} max={17} value={form.age} onChange={(e) => setForm({ ...form, age: e.target.value })} placeholder="Quantos anos você tem?" className="bg-secondary/50" />
+                <Input type="number" min={13} max={17} value={form.age} onChange={(e) => setForm({ ...form, age: e.target.value })} placeholder="Quantos anos você tem?" className="bg-secondary/50 focus:ring-primary/20" />
               </Field>
 
-              <div className="bg-primary/5 p-3 rounded-xl border border-primary/20">
-                <label className="text-xs text-primary/80 block mb-1.5">🛡️ Prove que não é um trasgo: {captcha.num1} + {captcha.num2} = ?</label>
-                <Input type="number" value={captchaAnswer} onChange={(e) => setCaptchaAnswer(e.target.value)} placeholder="…" className="bg-secondary/50 h-9" />
-                {errors.captcha && <p className="text-destructive text-xs mt-1">{errors.captcha}</p>}
+              <div className="bg-primary/5 p-4 rounded-xl border border-primary/20 shadow-inner">
+                <label className="text-xs text-primary/80 block mb-2 font-heading">🛡️ Prove que não é um trasgo: {captcha.num1} + {captcha.num2} = ?</label>
+                <Input type="number" value={captchaAnswer} onChange={(e) => setCaptchaAnswer(e.target.value)} placeholder="Sua resposta..." className="bg-secondary/50 h-10" />
+                {errors.captcha && <p className="text-destructive text-[10px] mt-1 font-bold animate-pulse">{errors.captcha}</p>}
               </div>
 
               <NavRow onBack={back} onNext={() => validateIdentity() && next()} />
@@ -326,19 +345,24 @@ export default function Register() {
                 </div>
               </div>
 
-              <Field label="Quem te chamou? (Código de convite)">
-                <Input value={form.referralCode} onChange={(e) => setForm({ ...form, referralCode: e.target.value })} placeholder="@harry" className="bg-secondary/50" />
+              <Field label="Quem te chamou? (Código de convite)" error={errors.referralCode}>
+                <Input value={form.referralCode} onChange={(e) => setForm({ ...form, referralCode: e.target.value })} placeholder="@username ou código" className="bg-secondary/50 focus:ring-primary/20" />
               </Field>
 
-              {errors.general && <p className="text-destructive text-sm font-bold bg-destructive/10 p-2 rounded-lg border border-destructive/20">{errors.general}</p>}
+              {errors.general && <p className="text-destructive text-sm font-bold bg-destructive/10 p-3 rounded-xl border border-destructive/20 animate-pulse">{errors.general}</p>}
 
-              <div className="flex gap-3 pt-2">
-                <Button variant="outline" className="font-heading" onClick={back}><ArrowLeft className="w-4 h-4 mr-2" />Voltar</Button>
-                <Button variant="magical" className="flex-1 font-heading" onClick={() => setStep(7)} disabled={loading}>
-                  {loading ? "Preparando..." : "Ver Prévia da Carta"}
-                  <Sparkles className="ml-2 w-4 h-4" />
-                </Button>
+              <div className="pt-2">
+                <p className="text-[10px] text-muted-foreground/60 italic leading-relaxed text-center px-4">
+                  Ao continuar, você concorda com os <Link to="/terms" className="text-primary hover:underline">Termos de Uso</Link> e a <Link to="/privacy" className="text-primary hover:underline">Política de Privacidade</Link> do portal.
+                </p>
               </div>
+
+              <NavRow 
+                onBack={back} 
+                onNext={() => setStep(7)} 
+                disabled={loading} 
+                labelNext={loading ? "Tecendo..." : "Ver Prévia da Carta"} 
+              />
             </div>
           )}
 
@@ -379,22 +403,22 @@ export default function Register() {
 /* ── Helpers internos ── */
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (
-    <div>
-      <label className="text-xs uppercase tracking-widest text-muted-foreground block mb-1.5">{label}</label>
+    <div className="space-y-1.5">
+      <label className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/70 font-heading block pl-1">{label}</label>
       {children}
-      {error && <p className="text-destructive text-xs mt-1">{error}</p>}
+      {error && <p className="text-destructive text-[10px] font-bold mt-1 pl-1 animate-in slide-in-from-left-2">{error}</p>}
     </div>
   );
 }
 
-function NavRow({ onBack, onNext, disabled }: { onBack: () => void; onNext: () => void; disabled?: boolean }) {
+function NavRow({ onBack, onNext, disabled, labelNext = "Continuar" }: { onBack: () => void; onNext: () => void; disabled?: boolean; labelNext?: string }) {
   return (
     <div className="flex gap-3 pt-3">
-      <Button variant="outline" className="font-heading" onClick={onBack}>
+      <Button variant="outline" className="font-heading hover:bg-white/5" onClick={onBack}>
         <ArrowLeft className="w-4 h-4 mr-2" />Voltar
       </Button>
-      <Button variant="magical" className="flex-1 font-heading" onClick={onNext} disabled={disabled}>
-        Continuar <Sparkles className="ml-2 w-4 h-4" />
+      <Button variant="magical" className="flex-1 font-heading shadow-[0_10px_30px_-10px_hsl(var(--primary))]" onClick={onNext} disabled={disabled}>
+        {labelNext} <Sparkles className="ml-2 w-4 h-4" />
       </Button>
     </div>
   );

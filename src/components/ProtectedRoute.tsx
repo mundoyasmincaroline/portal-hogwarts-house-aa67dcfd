@@ -13,16 +13,18 @@ export default function ProtectedRoute({ children, adminOnly = false }: Protecte
   const location = useLocation();
 
   useEffect(() => {
+    let isMounted = true;
+    
     if (!isLoading) {
       if (!isAuthenticated) {
-        // Redirect to login but save the current location
-        navigate("/login", { state: { from: location.pathname } });
+        if (isMounted) navigate("/login", { state: { from: location.pathname }, replace: true });
       } else if (adminOnly && !isAdmin) {
-        // Redirect to dashboard if not admin
-        navigate("/dashboard");
+        if (isMounted) navigate("/dashboard", { replace: true });
       }
     }
-  }, [isLoading, isAuthenticated, isAdmin, adminOnly, navigate, location]);
+
+    return () => { isMounted = false; };
+  }, [isLoading, isAuthenticated, isAdmin, adminOnly, navigate, location.pathname]);
 
   if (isLoading) {
     return (

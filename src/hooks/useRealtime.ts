@@ -15,8 +15,8 @@ export function useRealtime<T>(
   callbackRef.current = callback;
 
   useEffect(() => {
-    const channelName = `realtime-${table}:${event}:${filter || 'all'}`;
-    const channel = supabase.channel(channelName);
+    const channelId = `${table}-${event}-${filter || 'all'}-${Math.random().toString(36).slice(2, 9)}`;
+    const channel = supabase.channel(channelId);
     
     channel
       .on(
@@ -31,7 +31,11 @@ export function useRealtime<T>(
           callbackRef.current(payload);
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          console.debug(`Realtime subscribed to ${table}`);
+        }
+      });
 
     return () => {
       supabase.removeChannel(channel);
