@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/lib/auth";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 // Critical Routes (Loaded on demand but prioritized)
 const Landing = lazy(() => import("./pages/Landing"));
@@ -72,7 +73,8 @@ const App = () => {
         <Toaster />
         <Sonner />
         <AuthInit>
-          <BrowserRouter>
+          <ErrorBoundary>
+            <BrowserRouter>
             <Suspense fallback={<LoadingFallback />}>
               <Routes>
                 <Route path="/" element={<Landing />} />
@@ -128,7 +130,8 @@ const App = () => {
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </Suspense>
-          </BrowserRouter>
+            </BrowserRouter>
+          </ErrorBoundary>
         </AuthInit>
       </TooltipProvider>
     </QueryClientProvider>

@@ -29,13 +29,14 @@ export default function Login() {
       if (event === "PASSWORD_RECOVERY") {
         setIsRecoveryMode(true);
       } else if (session?.user && !isRecoveryMode) {
-        navigate("/dashboard");
+        // Use replace to prevent back-button loops
+        navigate("/dashboard", { replace: true });
       }
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user && !window.location.hash.includes("recovery")) {
-        navigate("/dashboard");
+        navigate("/dashboard", { replace: true });
       }
     });
 

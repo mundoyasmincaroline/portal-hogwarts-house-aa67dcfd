@@ -39,7 +39,7 @@ export default function CharacterSelection({ adminMode }: Props) {
   const selectCharacter = async (charId: string) => {
     const { error } = await supabase
       .from("profiles")
-      .update({ active_character_id: charId } as never)
+      .update({ active_character_id: charId } as any)
       .eq("user_id", user?.id);
 
     if (error) {

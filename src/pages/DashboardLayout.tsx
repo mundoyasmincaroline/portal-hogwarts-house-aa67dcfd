@@ -119,24 +119,42 @@ export default function DashboardLayout() {
     return () => clearInterval(interval);
   }, [user, pingPresence]);
 
-  if (isLoading || !profile || hasCharacters === null) {
+  if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <div className="text-center">
           <div className="text-4xl animate-float mb-4">⚡</div>
-          <p className="font-heading text-muted-foreground">Carregando portal...</p>
+          <p className="font-heading text-muted-foreground uppercase tracking-widest text-xs">Carregando portal...</p>
         </div>
       </div>
     );
   }
 
+  // Se não carregou o perfil após o loading, algo deu errado (ou deslogou)
+  if (!profile) {
+    return null;
+  }
+
+  // Verificações de acesso e onboarding
   if (!profile.approved && !isAdmin) return <PendingApproval />;
   if (!isAdmin && !profile.has_accepted_rules) return <RulesAgreement />;
 
   const adminSkipped = isAdmin && user && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
 
-  if ((!profile.active_character_id || !hasCharacters) && !adminSkipped) {
+  // Só bloqueia se hasCharacters for explicitamente false (carregou e viu que não tem)
+  // E se não houver um personagem ativo no perfil
+  if (hasCharacters === false && !profile.active_character_id && !adminSkipped) {
     return <CharacterSelection adminMode={isAdmin} />;
+  }
+
+  // Se ainda está carregando os personagens (hasCharacters === null), mas já passou do isLoading do auth,
+  // mostra um loader menor para não dar flash de tela preta
+  if (hasCharacters === null && !profile.active_character_id && !adminSkipped) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="text-4xl animate-pulse text-primary/40">✨</div>
+      </div>
+    );
   }
 
   return (
