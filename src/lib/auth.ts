@@ -126,10 +126,10 @@ export const useAuth = create<AuthState>((set, get) => ({
       if (profileRes.error) throw profileRes.error;
       
       set({ 
-        profile: profileRes.data ? { 
+        profile: profileRes.data ? ({ 
           ...profileRes.data, 
           _hasCharacters: (charRes.count ?? 0) > 0 
-        } : null
+        } as any) : null
       });
     } catch (err) {
       console.error("Erro ao buscar perfil:", err);

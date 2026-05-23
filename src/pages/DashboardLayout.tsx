@@ -68,8 +68,9 @@ export default function DashboardLayout() {
   const house = useMemo(() => HOUSES[(profile?.house as House) || "gryffindor"] || HOUSES.gryffindor, [profile?.house]);
   const groups = useMemo(() => isAdmin ? [...NAV_GROUPS, ADMIN_GROUP] : NAV_GROUPS, [isAdmin]);
 
-  // Optimize: Use cached character check from profile
-  const hasCharacters = (profile as any)?._hasCharacters ?? null;
+  // Otimização: Usa o check de personagens em cache no perfil
+  // Se o perfil for nulo e não estiver carregando, assume false para evitar loop infinito
+  const hasCharacters = profile?._hasCharacters ?? (isLoading ? null : false);
 
   useEffect(() => {
     if (!user) return;
