@@ -3,14 +3,14 @@ export const PACK_COST = 80;
 export const ALBUM_COMPLETE_REWARD = 500;
 
 export const CATEGORY_LABELS: Record<string, string> = {
-  clothing: "👗 Roupas",
-  wand: "🪄 Varinhas",
-  accessory: "💎 Acessórios",
-  skin: "🎨 Skins",
-  decoration: "🏠 Decorações",
+  olivaras_wand: "🪄 Olivaras (Varinhas)",
+  malkin_clothing: "👗 Madame Malkin (Vestes)",
+  floreios_books: "📚 Floreios e Borrões (Livros)",
+  weasley_jokes: "🎆 Sortilégios Weasley",
+  borgin_rarities: "💀 Borgin & Burkes (Raridades)",
+  potion: "🧪 Poções",
   pack: "📦 Pacotes",
   spell: "📜 Feitiços",
-  potion: "🧪 Poções",
   upgrade: "⚡ Upgrades"
 };
 
