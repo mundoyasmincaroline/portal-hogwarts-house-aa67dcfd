@@ -25,12 +25,18 @@ export const feedService = {
   async getPosts(limit = 20): Promise<any[]> {
     const { data, error } = await supabase
       .from("posts")
-      .select("*, author:profiles!posts_user_id_fkey(user_id, full_name, username, house, avatar_url, vip_plan)")
+      .select("*")
       .order("created_at", { ascending: false })
       .limit(limit);
-    
+
     if (error) throw error;
-    return data || [];
+    const posts = data || [];
+    if (posts.length === 0) return posts;
+
+    const userIds = [...new Set(posts.map((p: any) => p.user_id))];
+    const authors = await this.getProfiles(userIds);
+    const authorMap = new Map(authors.map((a: any) => [a.user_id, a]));
+    return posts.map((p: any) => ({ ...p, author: authorMap.get(p.user_id) }));
   },
 
   async getProfiles(userIds: string[]) {
