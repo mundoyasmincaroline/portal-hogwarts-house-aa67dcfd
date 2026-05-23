@@ -300,7 +300,7 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
                 <div className="space-y-1">
                   <p className="text-[10px] uppercase tracking-widest text-muted-foreground/70 font-heading">Mãe (Portal)</p>
                   <div className="flex items-center gap-2 bg-secondary/30 p-2 rounded-lg border border-border/40">
-                    <img src={char.mother.avatar_url || "/placeholder.svg"} className="w-8 h-8 rounded-full object-cover border border-primary/20" />
+                    <SafeImage src={char.mother.avatar_url} alt={char.mother.full_name} className="w-8 h-8 rounded-full object-cover border border-primary/20" fallbackEmoji="🧙" fallbackText={char.mother.full_name} />
                     <div className="flex-1 overflow-hidden">
                       <p className="text-xs font-heading truncate">{char.mother.full_name}</p>
                       <p className="text-[9px] text-primary/60">{HOUSE_LABELS[char.mother.house] || char.mother.house}</p>
@@ -315,7 +315,7 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
                 <div className="space-y-1">
                   <p className="text-[10px] uppercase tracking-widest text-muted-foreground/70 font-heading">Pai (Portal)</p>
                   <div className="flex items-center gap-2 bg-secondary/30 p-2 rounded-lg border border-border/40">
-                    <img src={char.father.avatar_url || "/placeholder.svg"} className="w-8 h-8 rounded-full object-cover border border-primary/20" />
+                    <SafeImage src={char.father.avatar_url} alt={char.father.full_name} className="w-8 h-8 rounded-full object-cover border border-primary/20" fallbackEmoji="🧙" fallbackText={char.father.full_name} />
                     <div className="flex-1 overflow-hidden">
                       <p className="text-xs font-heading truncate">{char.father.full_name}</p>
                       <p className="text-[9px] text-primary/60">{HOUSE_LABELS[char.father.house] || char.father.house}</p>
