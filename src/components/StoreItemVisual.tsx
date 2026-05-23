@@ -102,13 +102,17 @@ function getTheme(name: string, category: string): VisualTheme {
     return { bg: "from-blue-950 via-blue-900/70 to-slate-950", accent: "#60A5FA", glow: "#3B82F6", border: "border-blue-500/50", Icon: (p) => <RobeIcon color="#93C5FD" {...p} />, badge: "🦅", particles: STARS(7) };
   if (n.includes("lufa") || n.includes("hufflep"))
     return { bg: "from-yellow-900 via-amber-800/60 to-stone-950", accent: "#FBBF24", glow: "#D97706", border: "border-yellow-500/50", Icon: (p) => <RobeIcon color="#FDE68A" {...p} />, badge: "🦡", particles: STARS(7) };
+  if (category === "pet" || n.includes("coruja") || n.includes("sapo") || n.includes("gato"))
+    return { bg: "from-emerald-900 via-teal-800/60 to-slate-900", accent: "#2DD4BF", glow: "#0D9488", border: "border-teal-500/40", Icon: (p) => <StarIcon color="#99F6E4" {...p} />, badge: "🐾", particles: STARS(8) };
   if (n.includes("manto") || category === "clothing")
     return { bg: "from-purple-950 via-violet-900/70 to-slate-950", accent: "#C084FC", glow: "#9333EA", border: "border-purple-500/50", Icon: (p) => <RobeIcon color="#E9D5FF" {...p} />, badge: "✨", particles: STARS(6) };
   if (n.includes("varinha") || category === "wand")
-    return { bg: "from-violet-950 via-purple-900/80 to-indigo-950", accent: "#A855F7", glow: "#7C3AED", border: "border-purple-400/50", Icon: (p) => <WandIcon color="#DDD6FE" {...p} />, badge: "⚡", particles: STARS(10) };
-  if (n.includes("vassoura") || n.includes("nimbus") || n.includes("saeta"))
-    return { bg: "from-amber-950 via-orange-900/70 to-stone-950", accent: "#F59E0B", glow: "#D97706", border: "border-orange-500/50", Icon: (p) => <BroomIcon color="#FDE68A" {...p} />, badge: "🔮", particles: STARS(5) };
-  if (n.includes("amuleto") || n.includes("anel") || n.includes("colar") || n.includes("galeon"))
+    return { bg: "from-violet-950 via-purple-900/80 to-indigo-950", accent: "#A855F7", glow: "#7C3AED", border: "border-purple-400/50", Icon: (p) => <WandIcon color="#DDD6FE" {...p} />, badge: "🪄", particles: STARS(10) };
+  if (n.includes("vassoura") || category === "accessory" && (n.includes("nimbus") || n.includes("firebolt") || n.includes("saeta")))
+    return { bg: "from-amber-950 via-orange-900/70 to-stone-950", accent: "#F59E0B", glow: "#D97706", border: "border-orange-500/50", Icon: (p) => <BroomIcon color="#FDE68A" {...p} />, badge: "🧹", particles: STARS(5) };
+  if (n.includes("poção") || category === "potion")
+    return { bg: "from-emerald-950 via-green-900/60 to-slate-950", accent: "#10B981", glow: "#059669", border: "border-emerald-500/40", Icon: (p) => <GemIcon color="#6EE7B7" {...p} />, badge: "🧪", particles: STARS(7) };
+  if (n.includes("amuleto") || n.includes("anel") || n.includes("colar") || n.includes("galeon") || category === "accessory")
     return { bg: "from-amber-950 via-yellow-900/70 to-stone-950", accent: "#FBBF24", glow: "#B45309", border: "border-yellow-500/50", Icon: (p) => <GemIcon color="#FEF08A" {...p} />, badge: "💎", particles: STARS(9) };
   if (n.includes("vip") || n.includes("coroa") || n.includes("titulo"))
     return { bg: "from-yellow-900 via-amber-800/60 to-orange-950", accent: "#F59E0B", glow: "#B45309", border: "border-yellow-400/60", Icon: (p) => <CrownIcon color="#FDE68A" {...p} />, badge: "👑", particles: STARS(8) };

@@ -2222,6 +2222,7 @@ export type Database = {
           category: string
           created_at: string | null
           description: string | null
+          effects: Json | null
           id: string
           image_url: string | null
           is_active: boolean | null
@@ -2235,6 +2236,7 @@ export type Database = {
           category: string
           created_at?: string | null
           description?: string | null
+          effects?: Json | null
           id?: string
           image_url?: string | null
           is_active?: boolean | null
@@ -2248,6 +2250,7 @@ export type Database = {
           category?: string
           created_at?: string | null
           description?: string | null
+          effects?: Json | null
           id?: string
           image_url?: string | null
           is_active?: boolean | null

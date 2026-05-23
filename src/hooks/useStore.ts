@@ -67,7 +67,11 @@ export function useStore() {
       }
 
       setOwned(prev => [...prev, item.id]);
-      toast.success(`✅ "${item.name}" adicionado ao inventário!`);
+      if (item.effects?.xp_reward) {
+        toast.success(`✅ "${item.name}" adicionado! Você recebeu ${item.effects.xp_reward} XP!`);
+      } else {
+        toast.success(`✅ "${item.name}" adicionado ao inventário!`);
+      }
       return true;
     } catch (error: any) {
       toast.error("Erro na compra: " + error.message);
