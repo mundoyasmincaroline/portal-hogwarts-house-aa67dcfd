@@ -119,24 +119,38 @@ export default function DashboardLayout() {
     return () => clearInterval(interval);
   }, [user, pingPresence]);
 
-  if (isLoading || !profile || hasCharacters === null) {
+  if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <div className="text-center">
           <div className="text-4xl animate-float mb-4">⚡</div>
-          <p className="font-heading text-muted-foreground">Carregando portal...</p>
+          <p className="font-heading text-muted-foreground uppercase tracking-widest text-xs">Carregando portal...</p>
         </div>
       </div>
     );
   }
 
+  // Se não carregou o perfil após o loading, algo deu errado (ou deslogou)
+  if (!profile) {
+    return null;
+  }
+
+  // Verificações de acesso e onboarding
   if (!profile.approved && !isAdmin) return <PendingApproval />;
   if (!isAdmin && !profile.has_accepted_rules) return <RulesAgreement />;
 
   const adminSkipped = isAdmin && user && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
 
-  if ((!profile.active_character_id || !hasCharacters) && !adminSkipped) {
+  if (hasCharacters === false && !adminSkipped) {
     return <CharacterSelection adminMode={isAdmin} />;
+  }
+
+  if (hasCharacters === null) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="text-4xl animate-pulse text-primary/40">✨</div>
+      </div>
+    );
   }
 
   return (

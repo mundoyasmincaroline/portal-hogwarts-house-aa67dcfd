@@ -76,40 +76,44 @@ export const useAuth = create<AuthState>((set, get) => ({
 
   init: async () => {
     try {
-      supabase.auth.onAuthStateChange(async (_event, session) => {
+      // 1. Listen for auth changes
+      supabase.auth.onAuthStateChange(async (event, session) => {
         if (session?.user) {
+          const userId = session.user.id;
           set({ user: session.user, isAuthenticated: true });
-          try {
-            await get().fetchProfile(session.user.id);
-            const admin = await get().checkAdmin(session.user.id);
-            set({ isAdmin: admin, isLoading: false });
-            get().pingPresence();
-          } catch (err) {
-            console.error("Erro ao carregar perfil no onAuthStateChange:", err);
-            set({ isLoading: false });
-          }
+          
+          // Parallel fetch to speed up init
+          const [admin] = await Promise.all([
+            get().checkAdmin(userId),
+            get().fetchProfile(userId)
+          ]);
+          
+          set({ isAdmin: admin, isLoading: false });
+          get().pingPresence();
         } else {
           set({ user: null, profile: null, isAuthenticated: false, isAdmin: false, isLoading: false });
         }
       });
 
-      const { data: { session } } = await supabase.auth.getSession();
+      // 2. Initial session check
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error) throw error;
+
       if (session?.user) {
+        const userId = session.user.id;
         set({ user: session.user, isAuthenticated: true });
-        try {
-          await get().fetchProfile(session.user.id);
-          const admin = await get().checkAdmin(session.user.id);
-          set({ isAdmin: admin });
-        } catch (err) {
-          console.error("Erro ao carregar dados iniciais:", err);
-        }
-        set({ isLoading: false });
+        
+        const [admin] = await Promise.all([
+          get().checkAdmin(userId),
+          get().fetchProfile(userId)
+        ]);
+        
+        set({ isAdmin: admin });
         get().pingPresence();
-      } else {
-        set({ isLoading: false });
       }
     } catch (globalErr) {
       console.error("Erro global no Auth Init:", globalErr);
+    } finally {
       set({ isLoading: false });
     }
   },

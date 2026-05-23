@@ -72,7 +72,8 @@ const App = () => {
         <Toaster />
         <Sonner />
         <AuthInit>
-          <BrowserRouter>
+          <ErrorBoundary>
+            <BrowserRouter>
             <Suspense fallback={<LoadingFallback />}>
               <Routes>
                 <Route path="/" element={<Landing />} />
@@ -128,7 +129,8 @@ const App = () => {
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </Suspense>
-          </BrowserRouter>
+            </BrowserRouter>
+          </ErrorBoundary>
         </AuthInit>
       </TooltipProvider>
     </QueryClientProvider>
