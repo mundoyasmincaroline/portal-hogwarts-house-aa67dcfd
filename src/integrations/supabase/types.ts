@@ -1715,11 +1715,12 @@ export type Database = {
           effect: string
           icon: string | null
           id: string
-          incantation: string
+          incantation: string | null
           is_unforgivable: boolean | null
           min_year: number
           name: string
           taught_by: string | null
+          xp_required: number | null
         }
         Insert: {
           base_damage?: number | null
@@ -1731,11 +1732,12 @@ export type Database = {
           effect?: string
           icon?: string | null
           id?: string
-          incantation: string
+          incantation?: string | null
           is_unforgivable?: boolean | null
           min_year?: number
           name: string
           taught_by?: string | null
+          xp_required?: number | null
         }
         Update: {
           base_damage?: number | null
@@ -1747,11 +1749,12 @@ export type Database = {
           effect?: string
           icon?: string | null
           id?: string
-          incantation?: string
+          incantation?: string | null
           is_unforgivable?: boolean | null
           min_year?: number
           name?: string
           taught_by?: string | null
+          xp_required?: number | null
         }
         Relationships: []
       }
