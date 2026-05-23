@@ -119,7 +119,7 @@ export default function DashboardLayout() {
     return () => clearInterval(interval);
   }, [user, pingPresence]);
 
-  if (isLoading || hasCharacters === null) {
+  if (isLoading || !profile || hasCharacters === null) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <div className="text-center">
@@ -130,8 +130,8 @@ export default function DashboardLayout() {
     );
   }
 
-  if (profile && !profile.approved && !isAdmin) return <PendingApproval />;
-  if (profile && !isAdmin && !profile.has_accepted_rules) return <RulesAgreement />;
+  if (!profile.approved && !isAdmin) return <PendingApproval />;
+  if (!isAdmin && !profile.has_accepted_rules) return <RulesAgreement />;
 
   const adminSkipped = isAdmin && user && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
 
