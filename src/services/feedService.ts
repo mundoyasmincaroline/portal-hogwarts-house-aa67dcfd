@@ -22,6 +22,9 @@ export interface FeedPost {
 }
 
 export const feedService = {
+  /**
+   * getPosts — Busca posts e já tenta resolver autores básicos para reduzir requests subsequentes.
+   */
   async getPosts(limit = 20): Promise<any[]> {
     const { data, error } = await supabase
       .from("posts")
@@ -33,30 +36,44 @@ export const feedService = {
     const posts = data || [];
     if (posts.length === 0) return posts;
 
+    // Otimização: Busca autores em lote
     const userIds = [...new Set(posts.map((p: any) => p.user_id))];
     const authors = await this.getProfiles(userIds);
     const authorMap = new Map(authors.map((a: any) => [a.user_id, a]));
+    
     return posts.map((p: any) => ({ ...p, author: authorMap.get(p.user_id) }));
   },
 
+  /**
+   * getProfiles — Busca perfis em lote de forma otimizada.
+   */
   async getProfiles(userIds: string[]) {
+    if (!userIds.length) return [];
+    
     const { data, error } = await supabase
       .from("profiles")
       .select("user_id, full_name, username, house, avatar_url, vip_plan")
-      .in("user_id", userIds.length ? userIds : ["00000000-0000-0000-0000-000000000000"]);
+      .in("user_id", userIds);
     
     if (error) throw error;
     return data || [];
   },
 
+  /**
+   * getReactionsAndComments — Busca todas as interações dos posts visíveis em apenas 2 queries.
+   */
   async getReactionsAndComments(postIds: string[]) {
-    const safeIds = postIds.length ? postIds : ["00000000-0000-0000-0000-000000000000"];
-    const [{ data: reactions }, { data: comments }] = await Promise.all([
-      supabase.from("post_reactions").select("post_id, emoji, user_id").in("post_id", safeIds),
-      supabase.from("post_comments").select("*").in("post_id", safeIds).order("created_at", { ascending: true }),
+    if (!postIds.length) return { reactions: [], comments: [] };
+
+    const [reactionsRes, commentsRes] = await Promise.all([
+      supabase.from("post_reactions").select("post_id, emoji, user_id").in("post_id", postIds),
+      supabase.from("post_comments").select("*").in("post_id", postIds).order("created_at", { ascending: true }),
     ]);
 
-    return { reactions: reactions || [], comments: comments || [] };
+    return { 
+      reactions: reactionsRes.data || [], 
+      comments: commentsRes.data || [] 
+    };
   },
 
   async createPost(userId: string, content: string, musicUrl?: string) {

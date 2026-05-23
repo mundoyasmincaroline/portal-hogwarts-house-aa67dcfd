@@ -1,11 +1,11 @@
-import React from "react";
+import React, { memo } from "react";
 
 interface MagicalGaleonProps {
   size?: "xs" | "sm" | "md" | "lg";
   className?: string;
 }
 
-export default function MagicalGaleon({ size = "md", className = "" }: MagicalGaleonProps) {
+const MagicalGaleon = memo(function MagicalGaleon({ size = "md", className = "" }: MagicalGaleonProps) {
   const sizeMap = {
     xs: "w-4 h-4",
     sm: "w-6 h-6",
@@ -23,4 +23,6 @@ export default function MagicalGaleon({ size = "md", className = "" }: MagicalGa
       <div className="absolute inset-0 bg-yellow-400/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
     </div>
   );
-}
+});
+
+export default MagicalGaleon;

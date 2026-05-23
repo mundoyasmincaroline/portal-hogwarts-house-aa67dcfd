@@ -8,7 +8,11 @@ interface MagicalEmojiProps {
   glowColor?: string;
 }
 
-export default function MagicalEmoji({ 
+import React, { memo } from "react";
+
+// ... (keep props interface)
+
+const MagicalEmoji = memo(function MagicalEmoji({ 
   emoji, 
   icon: Icon,
   size = "md", 
@@ -54,4 +58,6 @@ export default function MagicalEmoji({
       />
     </div>
   );
-}
+});
+
+export default MagicalEmoji;

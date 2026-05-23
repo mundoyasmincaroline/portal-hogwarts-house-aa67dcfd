@@ -116,14 +116,22 @@ export const useAuth = create<AuthState>((set, get) => ({
 
   fetchProfile: async (userId: string) => {
     try {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("user_id", userId)
-        .maybeSingle();
+      // Otimização: Busca perfil e conta personagens em paralelo
+      const [profileRes, charRes] = await Promise.all([
+        supabase.from("profiles").select("*").eq("user_id", userId).maybeSingle(),
+        supabase.from("characters").select("*", { count: "exact", head: true }).eq("user_id", userId)
+      ]);
       
-      if (error) throw error;
-      if (data) set({ profile: data as unknown as Profile });
+      if (profileRes.error) throw profileRes.error;
+      
+      if (profileRes.data) {
+        set({ 
+          profile: { 
+            ...profileRes.data, 
+            _hasCharacters: (charRes.count ?? 0) > 0 
+          } as unknown as Profile & { _hasCharacters: boolean }
+        });
+      }
     } catch (err) {
       console.error("Erro ao buscar perfil:", err);
     }

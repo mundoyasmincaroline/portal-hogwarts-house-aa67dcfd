@@ -1,17 +1,11 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Castle, BookOpen, User, MessageCircle, Camera, Trophy,
-  Shield, Swords, Library, ShoppingBag, ScrollText,
-  LogOut, Volume2, VolumeX, Menu, Users,
-  Lock, Wallet, Sparkles, Zap, Image as ImageIcon,
-  GraduationCap
+  LogOut, Volume2, VolumeX, Menu, Castle
 } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";
-import MagicalIcon from "@/components/MagicalIcon";
-import MagicalEmoji from "@/components/MagicalEmoji";
 import MagicalGaleon from "@/components/MagicalGaleon";
 import { HOUSES, type House } from "@/lib/store";
 import { supabase } from "@/integrations/supabase/client";
@@ -30,80 +24,52 @@ import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import AmbientAudio from "@/components/AmbientAudio";
 import TurnSwitcher from "@/components/TurnSwitcher";
 import SafeImage from "@/components/SafeImage";
+import { NAV_GROUPS, ADMIN_GROUP } from "@/constants/navigation";
 
-const NAV_GROUPS = [
-  {
-    title: "Mundo Bruxo",
-    items: [
-      { icon: <MagicalIcon icon={Castle} size="xs" color="#60a5fa" />, label: "O Castelo", path: "/dashboard" },
-      { icon: <MagicalIcon icon={BookOpen} size="xs" color="#10b981" />, label: "Guia do Maroto", path: "/dashboard/guide" },
-      { icon: <MagicalIcon icon={Users} size="xs" color="#ec4899" />, label: "Amigos", path: "/dashboard/friends" },
-      { icon: <MagicalIcon icon={Library} size="xs" color="#94a3b8" />, label: "Membros", path: "/dashboard/members" },
-    ]
-  },
-  {
-    title: "Atividades",
-    items: [
-      { icon: <MagicalIcon icon={Swords} size="xs" color="#ef4444" />, label: "Duelos", path: "/dashboard/duels" },
-      { icon: <MagicalIcon icon={MessageCircle} size="xs" color="#3b82f6" />, label: "Chats RPG", path: "/dashboard/chats" },
-      { icon: <MagicalIcon icon={Camera} size="xs" color="#f43f5e" />, label: "InstaHogwarts", path: "/dashboard/instahogwarts" },
-      { icon: <MagicalIcon icon={Zap} size="xs" color="#a855f7" />, label: "Desafios", path: "/dashboard/challenges" },
-      { icon: <MagicalIcon icon={Sparkles} size="xs" color="#f472b6" />, label: "Eventos", path: "/dashboard/events" },
-      { icon: <MagicalIcon icon={GraduationCap} size="xs" color="#3b82f6" />, label: "Aulas", path: "/dashboard/classes" },
-    ]
-  },
-  {
-    title: "Economia & Itens",
-    items: [
-      { icon: <MagicalIcon icon={ImageIcon} size="xs" color="#94a3b8" />, label: "Álbum", path: "/dashboard/album" },
-      { icon: <MagicalIcon icon={ShoppingBag} size="xs" color="#f59e0b" />, label: "Loja", path: "/dashboard/store" },
-      { icon: <MagicalIcon icon={Wallet} size="xs" color="#10b981" />, label: "Carteira", path: "/dashboard/wallet" },
-    ]
-  },
-  {
-    title: "Hogwarts",
-    items: [
-      { icon: <MagicalIcon icon={Trophy} size="xs" color="#fbbf24" />, label: "Ranking", path: "/dashboard/ranking" },
-      { icon: <MagicalIcon icon={Shield} size="xs" color="#10b981" />, label: "Casas", path: "/dashboard/houses" },
-      { icon: <MagicalIcon icon={ScrollText} size="xs" color="#94a3b8" />, label: "Regras", path: "/dashboard/rules" },
-      { icon: <MagicalIcon icon={Lock} size="xs" color="#ef4444" />, label: "Azkaban", path: "/dashboard/azkaban" },
-    ]
-  }
-];
-
-const ADMIN_GROUP = {
-  title: "Administração",
-  items: [
-    { icon: <MagicalEmoji emoji="⚙️" size="xs" />, label: "Painel Admin", path: "/dashboard/admin" },
-    { icon: <MagicalEmoji emoji="💰" size="xs" />, label: "Gestão Financeira", path: "/dashboard/admin/finance" },
-  ]
-};
+// Memoized Nav Item for performance
+const NavItem = memo(({ item, isActive, dmUnread, onClick }: { item: any, isActive: boolean, dmUnread: number, onClick: () => void }) => (
+  <Link
+    to={item.path}
+    onClick={onClick}
+    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group relative overflow-hidden ${
+      isActive 
+        ? "bg-primary/10 text-primary font-bold border border-primary/20 shadow-[inset_0_0_20px_rgba(212,175,55,0.05)]" 
+        : "text-muted-foreground/80 hover:bg-secondary/40 hover:text-foreground"
+    }`}
+  >
+    {isActive && (
+      <motion.div 
+        layoutId="active-nav-glow"
+        className="absolute inset-0 bg-primary/5 blur-sm"
+      />
+    )}
+    <span className={`relative z-10 transition-transform group-hover:scale-110 duration-300 ${isActive ? "scale-110" : ""}`}>{item.icon}</span>
+    <span className="font-heading text-xs relative z-10">{item.label}</span>
+    {item.label === "Mensagens" && dmUnread > 0 && (
+      <span className="ml-auto min-w-[18px] h-[18px] px-1 bg-primary text-primary-foreground rounded-full text-[9px] flex items-center justify-center font-bold relative z-10 animate-pulse">
+        {dmUnread > 9 ? "9+" : dmUnread}
+      </span>
+    )}
+  </Link>
+));
 
 export default function DashboardLayout() {
   const { user, profile, isAdmin, isLoading, logout, pingPresence } = useAuth();
-  // Optimize: skip character check if not logged in yet
-  const authReady = !isLoading && user && profile;
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const closeSidebar = useCallback(() => setSidebarOpen(false), []);
   const [soundOn, setSoundOn] = useState(isSoundEnabled());
   const [dmUnread, setDmUnread] = useState(0);
-  const [hasCharacters, setHasCharacters] = useState<boolean | null>(null);
+
+  const closeSidebar = useCallback(() => setSidebarOpen(false), []);
 
   useAchievements(user?.id, profile?.xp ?? 0, profile?.level ?? 1);
 
-  // Hooks must be called unconditionally - keep above any early returns
   const house = useMemo(() => HOUSES[(profile?.house as House) || "gryffindor"] || HOUSES.gryffindor, [profile?.house]);
   const groups = useMemo(() => isAdmin ? [...NAV_GROUPS, ADMIN_GROUP] : NAV_GROUPS, [isAdmin]);
 
-  useEffect(() => {
-    if (!user) return;
-    (async () => {
-      const { count } = await supabase.from("characters").select("*", { count: "exact", head: true }).eq("user_id", user.id);
-      setHasCharacters((count ?? 0) > 0);
-    })();
-  }, [user?.id]);
+  // Optimize: Use cached character check from profile
+  const hasCharacters = (profile as any)?._hasCharacters ?? null;
 
   useEffect(() => {
     if (!user) return;
@@ -112,9 +78,10 @@ export default function DashboardLayout() {
       setDmUnread(count || 0);
     };
     countUnread();
-    const channelId = `dm_unread_badge:${user.id}:${Date.now()}:${Math.random().toString(36).slice(2)}`;
-    const ch = (supabase.channel(channelId) as any)
-      .on("postgres_changes", { event: "*", schema: "public", table: "dm_messages" }, countUnread)
+    
+    const channelId = `dm_unread:${user.id}`;
+    const ch = supabase.channel(channelId)
+      .on("postgres_changes", { event: "*", schema: "public", table: "dm_messages", filter: `receiver_id=eq.${user.id}` }, countUnread)
       .subscribe();
     return () => { supabase.removeChannel(ch); };
   }, [user]);
@@ -152,7 +119,6 @@ export default function DashboardLayout() {
 
   const adminSkipped = isAdmin && user && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
 
-
   if ((!profile.active_character_id || !hasCharacters) && !adminSkipped) {
     return <CharacterSelection adminMode={isAdmin} />;
   }
@@ -161,9 +127,17 @@ export default function DashboardLayout() {
     <div className="flex h-screen bg-background overflow-hidden relative">
       <AmbientAudio />
 
-      {sidebarOpen && (
-        <div className="fixed inset-0 bg-background/80 z-30 md:hidden" onClick={closeSidebar} />
-      )}
+      <AnimatePresence>
+        {sidebarOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-background/80 z-30 md:hidden backdrop-blur-sm" 
+            onClick={closeSidebar} 
+          />
+        )}
+      </AnimatePresence>
 
       <aside className={`fixed md:static inset-y-0 left-0 z-40 w-72 md:w-64 bg-card border-r border-border flex flex-col transition-transform duration-500 ease-in-out md:translate-x-0 ${sidebarOpen ? "translate-x-0 shadow-[20px_0_60px_rgba(0,0,0,0.8)]" : "-translate-x-full"}`}>
         <div className="p-4 border-b border-border">
@@ -181,67 +155,18 @@ export default function DashboardLayout() {
                 {group.title}
               </h4>
               <div className="space-y-1">
-                {group.items.map((item) => {
-                  const isActive = location.pathname === item.path;
-                  return (
-                    <Link
-                      key={item.path}
-                      to={item.path}
-                      onClick={closeSidebar}
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group relative overflow-hidden ${
-                        isActive 
-                          ? "bg-primary/10 text-primary font-bold border border-primary/20 shadow-[inset_0_0_20px_rgba(212,175,55,0.05)]" 
-                          : "text-muted-foreground/80 hover:bg-secondary/40 hover:text-foreground"
-                      }`}
-                    >
-                      {isActive && (
-                        <motion.div 
-                          layoutId="active-nav-glow"
-                          className="absolute inset-0 bg-primary/5 blur-sm"
-                        />
-                      )}
-                      <span className={`relative z-10 transition-transform group-hover:scale-110 duration-300 ${isActive ? "scale-110" : ""}`}>{item.icon}</span>
-                      <span className="font-heading text-xs relative z-10">{item.label}</span>
-                      {item.label === "Mensagens" && dmUnread > 0 && (
-                        <span className="ml-auto min-w-[18px] h-[18px] px-1 bg-primary text-primary-foreground rounded-full text-[9px] flex items-center justify-center font-bold relative z-10 animate-pulse">
-                          {dmUnread > 9 ? "9+" : dmUnread}
-                        </span>
-                      )}
-                    </Link>
-                  );
-                })}
+                {group.items.map((item: any) => (
+                  <NavItem 
+                    key={item.path} 
+                    item={item} 
+                    isActive={location.pathname === item.path} 
+                    dmUnread={dmUnread}
+                    onClick={closeSidebar}
+                  />
+                ))}
               </div>
             </div>
           ))}
-          
-          {/* Mobile Profile & DM shortcuts in sidebar if needed, but they are already at the bottom */}
-          <div className="pt-2">
-            <Link
-              to="/dashboard/profile"
-              onClick={() => setSidebarOpen(false)}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group ${
-                location.pathname === "/dashboard/profile" ? "bg-primary/10 text-primary border border-primary/20" : "text-muted-foreground/80 hover:bg-secondary/40 hover:text-foreground"
-              }`}
-            >
-              <MagicalIcon icon={User} size="xs" color="#a855f7" />
-              <span className="font-heading text-xs">Meu Perfil</span>
-            </Link>
-            <Link
-              to="/dashboard/dm"
-              onClick={() => setSidebarOpen(false)}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group mt-1 ${
-                location.pathname === "/dashboard/dm" ? "bg-primary/10 text-primary border border-primary/20" : "text-muted-foreground/80 hover:bg-secondary/40 hover:text-foreground"
-              }`}
-            >
-              <MagicalIcon icon={MessageCircle} size="xs" color="#3b82f6" />
-              <span className="font-heading text-xs">Mensagens</span>
-              {dmUnread > 0 && (
-                <span className="ml-auto min-w-[18px] h-[18px] px-1 bg-primary text-primary-foreground rounded-full text-[9px] flex items-center justify-center font-bold animate-pulse">
-                  {dmUnread}
-                </span>
-              )}
-            </Link>
-          </div>
         </nav>
 
         <div className="p-3 border-t border-border bg-card/80 backdrop-blur-sm">
@@ -255,13 +180,6 @@ export default function DashboardLayout() {
             </span>
           </Link>
 
-          {profile.vip_plan && (
-            <div className="flex items-center gap-2 px-3 py-2 mb-2 rounded-xl border border-yellow-500/40 bg-gradient-to-r from-yellow-900/20 to-amber-900/10">
-              <span className="text-base">✨</span>
-              <span className="text-[11px] text-yellow-400 font-heading capitalize">{profile.vip_plan} Ativo</span>
-            </div>
-          )}
-
           <div className="flex items-center justify-between gap-1 w-full pt-1">
             <Link to="/dashboard/profile" className="flex items-center gap-2 min-w-0 max-w-[140px] hover:bg-primary/5 p-2 rounded-xl transition-all group border border-transparent hover:border-primary/10">
               <div className="relative shrink-0 transition-transform group-hover:scale-105">
@@ -269,21 +187,19 @@ export default function DashboardLayout() {
                 <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-card ${isUserOnline(profile) ? "bg-green-500 shadow-[0_0_8px_#22c55e]" : "bg-muted-foreground"}`} />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-xs leading-tight font-heading truncate text-foreground group-hover:text-primary transition-colors" title={profile.full_name}>{profile.full_name}</p>
+                <p className="text-xs leading-tight font-heading truncate text-foreground group-hover:text-primary transition-colors">{profile.full_name}</p>
                 <p className="text-[10px] leading-tight text-muted-foreground/60 truncate uppercase tracking-tighter">{house.name}</p>
               </div>
             </Link>
 
             <div className="flex items-center gap-0.5 shrink-0">
-              <div className="scale-90 origin-right transition-transform hover:scale-100">
-                <TurnSwitcher />
-              </div>
+              <TurnSwitcher />
               <button
                 onClick={() => setSoundOn(toggleSound())}
                 className="touch-target w-9 h-9 text-muted-foreground hover:bg-primary/10 hover:text-primary rounded-xl transition-all active:scale-90"
                 title={soundOn ? "Desativar Som" : "Ativar Som"}
               >{soundOn ? <Volume2 size={16} /> : <VolumeX size={16} />}</button>
-              <div className="scale-90 origin-center"><Notifications /></div>
+              <Notifications />
               <button
                 onClick={async () => { await logout(); navigate("/"); }}
                 className="touch-target w-9 h-9 text-muted-foreground hover:bg-destructive/20 hover:text-destructive rounded-xl transition-all active:scale-90"
@@ -296,7 +212,7 @@ export default function DashboardLayout() {
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <NotificationBanner />
-        <div className="md:hidden flex items-center justify-between px-4 h-16 border-b border-white/5 bg-card/80 backdrop-blur-xl sticky top-0 z-30">
+        <header className="md:hidden flex items-center justify-between px-4 h-16 border-b border-white/5 bg-card/80 backdrop-blur-xl sticky top-0 z-30">
           <div className="flex items-center gap-4">
             <button 
               onClick={() => setSidebarOpen(true)} 
@@ -307,14 +223,14 @@ export default function DashboardLayout() {
             <span className="font-heading text-base text-gold-gradient tracking-tighter">Hogwarts House</span>
           </div>
           <div className="flex items-center gap-3">
-             <div className="scale-100"><Notifications /></div>
+             <Notifications />
              <Link to="/dashboard/profile" className="w-10 h-10 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_15px_rgba(212,175,55,0.2)] active:scale-90 transition-transform">
                 <SafeImage src={profile.avatar_url} alt={profile.full_name} className="w-full h-full object-cover" />
              </Link>
           </div>
-        </div>
+        </header>
 
-        <div className="flex-1 overflow-y-auto relative scroll-smooth">
+        <div className="flex-1 overflow-y-auto relative scroll-smooth contain-strict">
           <DailyProphetTicker />
           <div className="page-container">
             <div className="mb-8">
@@ -324,10 +240,10 @@ export default function DashboardLayout() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
-                initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -10, filter: "blur(8px)" }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
                 className="pb-24 md:pb-20"
               >
                 <Outlet />

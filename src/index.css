@@ -63,6 +63,7 @@
     height: 100%;
     /* Previne bounce/scroll da página em PWA iOS */
     overscroll-behavior: none;
+    scroll-behavior: smooth;
   }
   body {
     @apply bg-background text-foreground font-body antialiased;
@@ -158,10 +159,12 @@
   background-size: 200% auto;
   animation: shimmer 3s linear infinite; 
   will-change: background-position;
+  transform: translateZ(0);
 }
 .animate-pulse-glow { 
   animation: pulse-glow 2s ease-in-out infinite; 
   will-change: box-shadow;
+  transform: translateZ(0);
 }
 
 /* Parchment style */
