@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import SafeImage from "@/components/SafeImage";
 import MagicalEmoji from "@/components/MagicalEmoji";
+import StickerVisual from "@/components/StickerVisual";
 
 interface Sticker {
   id: string;
@@ -264,13 +265,13 @@ export default function StickerTrades() {
             <div key={trade.id} className="glass rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center gap-6 sm:gap-10 border border-white/5 hover:border-primary/20 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 group animate-in slide-in-from-left-4 duration-700">
               {/* Figurinha oferecida */}
               <div className="flex items-center gap-6 flex-1">
-                <div className={`w-20 h-28 rounded-2xl overflow-hidden border-2 flex-shrink-0 transition-transform group-hover:scale-105 duration-500 ${RARITY_COLOR[trade.offered_sticker?.rarity || "bronze"]}`}>
-                  <SafeImage
-                    src={trade.offered_sticker?.image_url}
-                    alt={trade.offered_sticker?.character_name || "?"}
-                    className="w-full h-full object-cover object-top"
-                    fallbackText={trade.offered_sticker?.character_name}
-                  />
+                <div className={`relative w-20 h-28 rounded-2xl overflow-hidden border-2 flex-shrink-0 transition-transform group-hover:scale-105 duration-500 ${RARITY_COLOR[trade.offered_sticker?.rarity || "bronze"]}`}>
+                  {trade.offered_sticker ? (
+                    <>
+                      <StickerVisual name={trade.offered_sticker.character_name} rarity={trade.offered_sticker.rarity as "bronze" | "silver" | "gold"} unlocked imageUrl={trade.offered_sticker.image_url} />
+                      <SafeImage src={trade.offered_sticker.image_url} alt={trade.offered_sticker.character_name || "?"} className="relative z-10 w-full h-full object-cover object-top" fallbackText={trade.offered_sticker.character_name} />
+                    </>
+                  ) : null}
                   {trade.offered_sticker?.rarity === 'gold' && <div className="absolute inset-0 bg-yellow-400/10 animate-pulse pointer-events-none" />}
                 </div>
                 <div>
@@ -288,13 +289,9 @@ export default function StickerTrades() {
               <div className="flex items-center gap-6 flex-1">
                 {trade.wanted_sticker ? (
                   <>
-                    <div className={`w-20 h-28 rounded-2xl overflow-hidden border-2 flex-shrink-0 transition-transform group-hover:scale-105 duration-500 ${RARITY_COLOR[trade.wanted_sticker.rarity]}`}>
-                      <SafeImage
-                        src={trade.wanted_sticker.image_url}
-                        alt={trade.wanted_sticker.character_name}
-                        className="w-full h-full object-cover object-top"
-                        fallbackText={trade.wanted_sticker.character_name}
-                      />
+                    <div className={`relative w-20 h-28 rounded-2xl overflow-hidden border-2 flex-shrink-0 transition-transform group-hover:scale-105 duration-500 ${RARITY_COLOR[trade.wanted_sticker.rarity]}`}>
+                      <StickerVisual name={trade.wanted_sticker.character_name} rarity={trade.wanted_sticker.rarity as "bronze" | "silver" | "gold"} unlocked imageUrl={trade.wanted_sticker.image_url} />
+                      <SafeImage src={trade.wanted_sticker.image_url} alt={trade.wanted_sticker.character_name} className="relative z-10 w-full h-full object-cover object-top" fallbackText={trade.wanted_sticker.character_name} />
                     </div>
                     <div>
                       <p className="text-[10px] text-muted-foreground uppercase tracking-[0.3em] font-bold mb-1">Desejo</p>

@@ -168,13 +168,7 @@ export default function AdminMemberModal({ memberId, memberName, onClose, onSave
 
               {/* Avatar atual */}
               <div className="flex items-center gap-4 mb-4 p-3 bg-secondary/30 rounded-xl border border-border">
-                {profile.avatar_url ? (
-                  <img src={profile.avatar_url} alt={profile.full_name} className="w-16 h-16 rounded-full object-cover border-2 border-primary/30" onError={e => (e.currentTarget.style.display = "none")} />
-                ) : (
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-secondary flex items-center justify-center text-2xl font-heading text-primary">
-                    {profile.full_name?.[0] || "?"}
-                  </div>
-                )}
+                <SafeImage src={profile.avatar_url} alt={profile.full_name} className="w-16 h-16 rounded-full object-cover border-2 border-primary/30" fallbackEmoji="🧙" fallbackText={profile.full_name} />
                 <div className="flex-1 min-w-0">
                   <p className="text-xs text-muted-foreground mb-1">Avatar URL</p>
                   <input

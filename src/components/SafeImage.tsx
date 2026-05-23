@@ -31,14 +31,19 @@ const SafeImage = memo(function SafeImage({
   if (!bustedSrc || broken) {
     return (
       <div
-        className={`flex items-center justify-center bg-gradient-to-br from-primary/20 to-secondary font-heading text-primary select-none ${className}`}
+        className={`relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary/20 via-background to-secondary font-heading text-primary select-none ${className}`}
         title={alt}
       >
-        {fallbackText ? (
-          <span className="text-lg font-bold">{fallbackText[0]?.toUpperCase()}</span>
-        ) : (
-          <span>{fallbackEmoji}</span>
-        )}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,hsl(var(--primary)/0.28),transparent_62%)]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-primary/10" />
+        <div className="relative z-10 flex flex-col items-center justify-center gap-1 drop-shadow-[0_6px_18px_hsl(var(--background)/0.8)]">
+          <span className="text-[1.65em] leading-none">{fallbackEmoji}</span>
+          {fallbackText && (
+            <span className="font-heading text-[0.7em] font-bold uppercase tracking-widest text-primary/80 leading-none">
+              {fallbackText[0]?.toUpperCase()}
+            </span>
+          )}
+        </div>
       </div>
     );
   }
