@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
+import { Sparkles } from "lucide-react";
 
 export default function DynamicGreeting() {
   const { profile } = useAuth();

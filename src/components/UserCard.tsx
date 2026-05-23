@@ -2,6 +2,7 @@ import { type UserProfile, HOUSES } from "@/lib/store";
 import HouseCrest from "./HouseCrest";
 import XPBar from "./XPBar";
 import { isUserOnline } from "@/lib/auth";
+import { Badge } from "@/components/ui/badge";
 
 export default function UserCard({ user, compact = false }: { user: UserProfile; compact?: boolean }) {
   const house = HOUSES[user.house];
