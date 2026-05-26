@@ -3,7 +3,7 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Trophy, Sparkles, Gift, RefreshCw } from "lucide-react";
+import { Trophy, Sparkles, Gift, RefreshCw, Share2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import StickerVisual from "@/components/StickerVisual";
 import MagicalEmoji from "@/components/MagicalEmoji";
@@ -11,6 +11,7 @@ import { useStickers } from "@/hooks/features/useStickers";
 import { stickerService } from "@/services/features/stickerService";
 import { Sticker } from "@/types";
 import { RARITY_COST, PACK_COST } from "@/constants/gameConstants";
+import { shareContent, buildStickerShareText, buildAlbumShareText } from "@/lib/share";
 
 const RARITY_ORDER = { bronze: 0, silver: 1, gold: 2 };
 
@@ -24,6 +25,20 @@ export default function StickerAlbum() {
   const [packReveal, setPackReveal] = useState<Sticker | null>(null);
   const [packPhase, setPackPhase] = useState<"idle" | "shaking" | "reveal">("idle");
   const navigate = useNavigate();
+
+  const handleShareSticker = async (s: Sticker) => {
+    const text = buildStickerShareText(s.character_name, s.rarity, (s as any).house);
+    const res = await shareContent({ title: `Figurinha: ${s.character_name}`, text });
+    if (res === "copied") toast.success("✨ Link copiado! Cole nas redes sociais.");
+    else if (res === "failed") toast.error("Não foi possível compartilhar.");
+  };
+
+  const handleShareAlbum = async () => {
+    const text = buildAlbumShareText(owned, total, goldOwned);
+    const res = await shareContent({ title: "Meu Álbum Mágico", text });
+    if (res === "copied") toast.success("✨ Progresso do álbum copiado!");
+    else if (res === "failed") toast.error("Não foi possível compartilhar.");
+  };
 
   const completedBanner = useMemo(() => {
     return stickers.length > 0 && Object.keys(userStickers).length >= stickers.length;
@@ -220,9 +235,14 @@ export default function StickerAlbum() {
                     <h2 className="font-heading text-4xl text-white drop-shadow-lg">¡Nova Figurinha!</h2>
                     <p className="text-muted-foreground font-serif italic text-lg">"Uma adição magnífica ao seu álbum."</p>
                 </div>
-                <Button variant="plaque" size="lg" className="w-full h-16 text-xl rounded-2xl shadow-2xl" onClick={closePack}>
+                <div className="flex flex-col gap-3 w-full">
+                  <Button variant="plaque" size="lg" className="w-full h-14 text-base rounded-2xl shadow-2xl" onClick={(e) => { e.stopPropagation(); handleShareSticker(packReveal); }}>
+                    <Share2 className="mr-2" /> Compartilhar Figurinha
+                  </Button>
+                  <Button variant="plaque" size="lg" className="w-full h-14 text-base rounded-2xl shadow-2xl opacity-90" onClick={closePack}>
                     Adicionar à Coleção
-                </Button>
+                  </Button>
+                </div>
               </div>
             </div>
           )}
@@ -280,6 +300,9 @@ export default function StickerAlbum() {
             </div>
             <Button variant="plaque" className="w-full h-14 rounded-2xl border-white/10" onClick={() => navigate("/dashboard/trades")}>
                 Acessar Mercado 🏪
+            </Button>
+            <Button variant="outline" className="w-full h-12 rounded-2xl border-yellow-500/30 text-yellow-300 hover:bg-yellow-500/10" onClick={handleShareAlbum}>
+                <Share2 size={16} className="mr-2" /> Compartilhar Álbum
             </Button>
             <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Trocas seguras auditadas por Gringotts</p>
         </div>
@@ -394,11 +417,13 @@ export default function StickerAlbum() {
                   )}
                   
                   {unlocked && (
-                    <div className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                         <div className="h-1 w-8 bg-current opacity-20 rounded-full" style={{ color: isGold ? '#facc15' : isSilver ? '#e2e8f0' : '#b45309' }} />
-                         <span className="text-[10px] text-white/40 font-heading uppercase tracking-widest">Coletado</span>
-                         <div className="h-1 w-8 bg-current opacity-20 rounded-full" style={{ color: isGold ? '#facc15' : isSilver ? '#e2e8f0' : '#b45309' }} />
-                    </div>
+                    <Button
+                      variant="outline"
+                      className="w-full h-9 sm:h-10 text-[9px] sm:text-[10px] font-heading uppercase tracking-widest rounded-xl border-white/15 bg-black/40 backdrop-blur-md hover:bg-white/10 hover:text-white"
+                      onClick={(e) => { e.stopPropagation(); handleShareSticker(s); }}
+                    >
+                      <Share2 size={12} className="mr-1.5" /> Compartilhar
+                    </Button>
                   )}
                 </div>
               </div>
@@ -417,8 +442,11 @@ export default function StickerAlbum() {
             <p className="text-xl text-yellow-100/70 font-serif italic max-w-2xl mx-auto leading-relaxed">
                 "Você reuniu todos os fragmentos da história. Seu nome agora ecoa pelos corredores do castelo como o maior colecionador de todos os tempos."
             </p>
-            <div className="mt-8 flex justify-center gap-4">
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
                 <div className="bg-yellow-400 text-black px-8 py-3 rounded-full font-heading font-bold uppercase tracking-widest shadow-2xl">Título Desbloqueado</div>
+                <Button variant="plaque" className="h-12 px-8 rounded-full" onClick={handleShareAlbum}>
+                    <Share2 size={16} className="mr-2" /> Compartilhar Conquista
+                </Button>
             </div>
         </div>
       )}
