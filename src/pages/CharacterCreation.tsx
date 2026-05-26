@@ -32,7 +32,7 @@ const SECTION = ({ title, icon, children }: any) => (
 
 const EMPTY = { full_name:"", avatar_url:"", age:"", blood_status:"", gender:"male", house:"gryffindor",
   actor_faceclaim:"", wand:"", patronus:"", pet:"", favorite_class:"", favorite_spell:"",
-  personality:"", strength:"", weakness:"", fears:"", dreams:"", quote:"", instagram:"",
+  personality:"", strength:"", weakness:"", fears:"", dreams:"", quotes:"", instagram:"",
   background:"", physical_description:"", canon_era:"", canon_portrayed_by:"", canon_notes:"",
   mother_id: null as string | null, father_id: null as string | null };
 
