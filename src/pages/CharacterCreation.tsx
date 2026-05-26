@@ -198,7 +198,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
         weakness: form.weakness,
         fears: form.fears,
         dreams: form.dreams,
-        quote: form.quote,
+        quotes: form.quotes,
         instagram: form.instagram,
         background: form.background,
         physical_description: form.physical_description,
@@ -429,7 +429,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
             )}
             <FIELD label="Descrição Física" name="physical_description" value={form.physical_description} onChange={handleChange}
               placeholder="Cor dos olhos, cabelo, altura, traços marcantes..." rows={2} />
-            <FIELD label="Frase / Quote do personagem" name="quote" value={form.quote} onChange={handleChange}
+            <FIELD label="Frase / Quote do personagem" name="quotes" value={form.quotes} onChange={handleChange}
               placeholder="Uma frase que representa este personagem..." />
             <FIELD label="Instagram do Personagem (@ opcional)" name="instagram" value={form.instagram} onChange={handleChange}
               placeholder="@nome_do_personagem" />
