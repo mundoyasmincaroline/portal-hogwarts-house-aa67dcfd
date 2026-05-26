@@ -32,7 +32,7 @@ const SECTION = ({ title, icon, children }: any) => (
 
 const EMPTY = { full_name:"", avatar_url:"", age:"", blood_status:"", gender:"male", house:"gryffindor",
   actor_faceclaim:"", wand:"", patronus:"", pet:"", favorite_class:"", favorite_spell:"",
-  personality:"", strength:"", weakness:"", fears:"", dreams:"", quote:"", instagram:"",
+  personality:"", strength:"", weakness:"", fears:"", dreams:"", quotes:"", instagram:"",
   background:"", physical_description:"", canon_era:"", canon_portrayed_by:"", canon_notes:"",
   mother_id: null as string | null, father_id: null as string | null };
 
@@ -198,7 +198,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
         weakness: form.weakness,
         fears: form.fears,
         dreams: form.dreams,
-        quote: form.quote,
+        quotes: form.quotes,
         instagram: form.instagram,
         background: form.background,
         physical_description: form.physical_description,
@@ -213,7 +213,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
       if (error) throw error;
 
       if (type === "canon") {
-        await supabase.from("canon_claims").insert({ canon_name: form.full_name, user_id: user.id } as never).select();
+        await supabase.from("canon_claims").insert({ canon_name: form.full_name, user_id: user.id, claimed_by: user.id } as never).select();
       }
 
       await supabase.from("profiles").update({ active_character_id: char!.id, has_seen_intro: false } as any).eq("user_id", user.id);
@@ -382,10 +382,10 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
                   className={`w-full bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground border border-border focus:border-primary/50 focus:outline-none ${ (form.mother_id || form.father_id || profile?.blood_locked) ? "opacity-50 cursor-not-allowed" : "" }`}
                 >
                   <option value="">Selecione...</option>
-                  <option value="puro-sangue">Puro-Sangue</option>
-                  <option value="mestiço">Mestiço</option>
-                  <option value="trouxa-nato">Trouxa-Nato</option>
-                  <option value="trouxa">Trouxa</option>
+                  <option value="pure-blood">Puro-Sangue</option>
+                  <option value="half-blood">Mestiço(a)</option>
+                  <option value="muggle-born">Nascido(a)-Trouxa</option>
+                  <option value="muggle">Trouxa</option>
                 </select>
               </div>
             </div>
@@ -429,7 +429,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
             )}
             <FIELD label="Descrição Física" name="physical_description" value={form.physical_description} onChange={handleChange}
               placeholder="Cor dos olhos, cabelo, altura, traços marcantes..." rows={2} />
-            <FIELD label="Frase / Quote do personagem" name="quote" value={form.quote} onChange={handleChange}
+            <FIELD label="Frase / Quote do personagem" name="quotes" value={form.quotes} onChange={handleChange}
               placeholder="Uma frase que representa este personagem..." />
             <FIELD label="Instagram do Personagem (@ opcional)" name="instagram" value={form.instagram} onChange={handleChange}
               placeholder="@nome_do_personagem" />
