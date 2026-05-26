@@ -20,6 +20,17 @@ const HOUSE_LABELS: Record<string, string> = {
   hufflepuff: "🦡 Hufflepuff",
 };
 
+const BLOOD_LABELS: Record<string, string> = {
+  "pure-blood": "Puro-Sangue",
+  "half-blood": "Mestiço(a)",
+  "muggle-born": "Nascido(a)-Trouxa",
+  "muggle": "Trouxa",
+};
+const formatBlood = (b?: string | null) => {
+  if (!b) return b;
+  return BLOOD_LABELS[b.toLowerCase()] || b;
+};
+
 function Field({ label, value }: { label: string; value?: string | number | null }) {
   if (!value && value !== 0) return null;
   return (
@@ -244,7 +255,7 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
 
           {/* Dados Básicos */}
           <Section title="📋 Dados Básicos">
-            <Field label="Status Sanguíneo" value={char.blood_status} />
+            <Field label="Status Sanguíneo" value={formatBlood(char.blood_status)} />
             <Field label="Faceclaim (Ator / Atriz)" value={char.actor_faceclaim} />
             <Field label="Instagram do Personagem" value={char.instagram} />
           </Section>
