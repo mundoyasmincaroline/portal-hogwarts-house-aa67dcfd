@@ -213,7 +213,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
       if (error) throw error;
 
       if (type === "canon") {
-        await supabase.from("canon_claims").insert({ canon_name: form.full_name, user_id: user.id } as never).select();
+        await supabase.from("canon_claims").insert({ canon_name: form.full_name, user_id: user.id, claimed_by: user.id } as never).select();
       }
 
       await supabase.from("profiles").update({ active_character_id: char!.id, has_seen_intro: false } as any).eq("user_id", user.id);
