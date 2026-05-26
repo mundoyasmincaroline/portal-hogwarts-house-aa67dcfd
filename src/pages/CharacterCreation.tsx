@@ -382,10 +382,10 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
                   className={`w-full bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground border border-border focus:border-primary/50 focus:outline-none ${ (form.mother_id || form.father_id || profile?.blood_locked) ? "opacity-50 cursor-not-allowed" : "" }`}
                 >
                   <option value="">Selecione...</option>
-                  <option value="puro-sangue">Puro-Sangue</option>
-                  <option value="mestiço">Mestiço</option>
-                  <option value="trouxa-nato">Trouxa-Nato</option>
-                  <option value="trouxa">Trouxa</option>
+                  <option value="pure-blood">Puro-Sangue</option>
+                  <option value="half-blood">Mestiço(a)</option>
+                  <option value="muggle-born">Nascido(a)-Trouxa</option>
+                  <option value="muggle">Trouxa</option>
                 </select>
               </div>
             </div>
