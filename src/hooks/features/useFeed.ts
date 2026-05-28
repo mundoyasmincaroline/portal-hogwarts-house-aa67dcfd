@@ -72,13 +72,18 @@ export function useFeed() {
 
   // Realtime simples para novos posts (opcional, mas melhora UX)
   useEffect(() => {
+    let debounceTimer: ReturnType<typeof setTimeout> | null = null;
     const channel = supabase.channel('feed-updates')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, () => {
-        // Notifica ou recarrega silenciosamente
-        // loadFeed(); // Pode ser pesado, melhor deixar o usuário atualizar ou usar um botão "novos posts"
+        // Debounce para evitar recarregar várias vezes em rajadas
+        if (debounceTimer) clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => { loadFeed(); }, 1500);
       })
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      if (debounceTimer) clearTimeout(debounceTimer);
+      supabase.removeChannel(channel);
+    };
   }, [loadFeed]);
 
   return {

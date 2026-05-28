@@ -37,11 +37,11 @@ export default function Events() {
         // Buscar aniversários de OCs no banco
         const { data: ocBirthdays } = await supabase
             .from("characters")
-            .select("full_name")
-            .filter("birth_date", "not.is", null);
+            .select("full_name, birthday")
+            .filter("birthday", "not.is", null);
 
         const activeCelebrations = (ocBirthdays || []).filter(c => {
-            const d = new Date((c as any).birth_date);
+            const d = new Date((c as any).birthday);
             return d.getDate() === day && (d.getMonth() + 1) === month;
         }).map(c => ({ name: c.full_name, type: "oc_birthday" }));
 

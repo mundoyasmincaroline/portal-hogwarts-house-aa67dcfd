@@ -10,28 +10,29 @@ export default function DailyHighlight() {
   const [highlightTitle, setHighlightTitle] = useState("✨ Aluno Destaque do Dia ✨");
 
   useEffect(() => {
-    // In a real app, this would be computed by a cron job or complex query.
-    // We mock the top user for the day.
+    // Destaca de verdade o #1 da categoria escolhida, sem mockar.
     const fetchTopUser = async () => {
       const categories = [
-        { title: "🏆 O Mais Rico de Hogwarts 🏆", orderBy: "xp", asc: false },
-        { title: "🌱 Novato Promissor 🌱", orderBy: "created_at", asc: false },
-        { title: "⚡ Veterano do Castelo ⚡", orderBy: "xp", asc: false },
-        { title: "🔮 Monitor Ativo 🔮", orderBy: "last_seen", asc: false },
+        { title: "🏆 Mais Rico de Hogwarts 🏆",     orderBy: "galeons",    asc: false },
+        { title: "⚡ Veterano do Castelo ⚡",        orderBy: "xp",         asc: false },
+        { title: "🔮 Mais Ativo da Semana 🔮",      orderBy: "last_seen",  asc: false },
+        { title: "🌱 Recém-chegado em Destaque 🌱", orderBy: "created_at", asc: false },
       ];
-      
-      const selectedCat = categories[Math.floor(Math.random() * categories.length)];
+
+      // Categoria do dia (estável por dia, não aleatória a cada render)
+      const dayKey = Math.floor(Date.now() / 86_400_000);
+      const selectedCat = categories[dayKey % categories.length];
       setHighlightTitle(selectedCat.title);
-      
+
       const { data } = await supabase
         .from('profiles')
-        .select('*')
+        .select('user_id, username, avatar_url, house, xp, galeons')
         .eq('approved', true)
         .order(selectedCat.orderBy, { ascending: selectedCat.asc })
-        .limit(10);
-      
+        .limit(1);
+
       if (data && data.length > 0) {
-        setHighlightedUser(data[Math.floor(Math.random() * data.length)]);
+        setHighlightedUser(data[0]);
       }
     };
 
@@ -85,7 +86,7 @@ export default function DailyHighlight() {
           </div>
 
           <div className="px-6 py-2 bg-black/40 rounded-2xl text-[11px] font-heading uppercase tracking-widest text-foreground backdrop-blur-md border border-white/5 shadow-inner">
-             <span className="text-primary font-bold">{highlightedUser.xp.toLocaleString('pt-BR')}</span> XP Acumulados
+             <span className="text-primary font-bold">{(highlightedUser.xp ?? 0).toLocaleString('pt-BR')}</span> XP Acumulados
           </div>
         </div>
       </div>

@@ -77,13 +77,19 @@ export default function DashboardLayout() {
     let cancelled = false;
     (async () => {
       try {
-        const { count } = await supabase
+        const { count, error } = await supabase
           .from("characters")
           .select("*", { count: "exact", head: true })
           .eq("user_id", user.id);
+        if (error) {
+          console.error("[DashboardLayout] character count failed:", error);
+          if (!cancelled) setHasCharacters(null); // não bloqueia o dashboard em caso de erro
+          return;
+        }
         if (!cancelled) setHasCharacters((count ?? 0) > 0);
-      } catch {
-        if (!cancelled) setHasCharacters(false);
+      } catch (err) {
+        console.error("[DashboardLayout] character count threw:", err);
+        if (!cancelled) setHasCharacters(null);
       }
     })();
     return () => { cancelled = true; };

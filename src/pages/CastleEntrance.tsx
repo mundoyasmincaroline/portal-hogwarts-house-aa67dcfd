@@ -32,10 +32,13 @@ export default function CastleEntrance() {
       }));
     } catch (e) {
       console.error(e);
+      // Não recarrega em caso de erro para evitar loop infinito de reload
+      setLoading(false);
+      return;
     } finally {
       setLoading(false);
-      window.location.reload(); // Força o recarregamento limpo para o dashboard
     }
+    window.location.reload(); // Força o recarregamento limpo para o dashboard (só após sucesso)
   };
 
   let welcomeText = "As pesadas portas de carvalho do castelo se abrem lentamente, revelando o imponente Grande Salão iluminado por milhares de velas flutuantes.";
