@@ -326,6 +326,7 @@ export type Database = {
           is_premium: boolean | null
           meet_link: string | null
           name: string
+          pinned_message_id: string | null
           type: string
         }
         Insert: {
@@ -341,6 +342,7 @@ export type Database = {
           is_premium?: boolean | null
           meet_link?: string | null
           name: string
+          pinned_message_id?: string | null
           type?: string
         }
         Update: {
@@ -356,9 +358,18 @@ export type Database = {
           is_premium?: boolean | null
           meet_link?: string | null
           name?: string
+          pinned_message_id?: string | null
           type?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "channels_pinned_message_id_fkey"
+            columns: ["pinned_message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       character_infractions: {
         Row: {
