@@ -13,6 +13,8 @@ export default function Profile() {
   const { userId } = useParams<{ userId: string }>();
   const { profile: currentUserProfile, user } = useAuth();
   const [targetProfile, setTargetProfile] = useState<any>(null);
+  const [userBadges, setUserBadges] = useState<any[]>([]);
+  const [userItems, setUserItems] = useState<any[]>([]);
   const isMe = !userId || userId === user?.id;
   const profile = isMe ? currentUserProfile : targetProfile;
 
@@ -22,9 +24,21 @@ export default function Profile() {
     }
   }, [userId, isMe]);
 
-  if (!profile) return null;
+  const profileUserId = (isMe ? user?.id : userId) as string | undefined;
 
-  const profileUserId = (isMe ? user?.id : userId) as string;
+  useEffect(() => {
+    if (!profileUserId) return;
+    (async () => {
+      const [badgesRes, itemsRes] = await Promise.all([
+        supabase.from("user_badges").select("*, badges(*)").eq("user_id", profileUserId),
+        supabase.from("user_items").select("*, store_items(*)").eq("user_id", profileUserId),
+      ]);
+      setUserBadges(badgesRes.data || []);
+      setUserItems(itemsRes.data || []);
+    })();
+  }, [profileUserId]);
+
+  if (!profile) return null;
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-10">
@@ -34,14 +48,19 @@ export default function Profile() {
         </div>
         <h1 className="font-heading text-2xl text-foreground">{profile.full_name}</h1>
         <p className="text-muted-foreground text-sm">@{profile.username}</p>
+        {profile.bio && (
+          <p className="text-sm text-muted-foreground/90 mt-4 max-w-md mx-auto whitespace-pre-line italic">
+            {profile.bio}
+          </p>
+        )}
       </div>
 
-      <ProfileAboutTab profile={profile} userBadges={[]} userItems={[]} />
+      <ProfileAboutTab profile={profile} userBadges={userBadges} userItems={userItems} />
 
       {profileUserId && (
         <div className="space-y-4">
           <h2 className="font-heading text-xl text-primary px-1">📜 Fichas de Personagem</h2>
-          <CharacterSheetView userId={profileUserId} isOwner={isMe} />
+          <CharacterSheetView userId={profileUserId} isOwner={isMe} userItems={userItems} />
         </div>
       )}
 
