@@ -404,9 +404,12 @@ export default function StickerAlbum() {
                     <h3 className={`font-heading text-lg leading-tight transition-colors duration-500 ${
                         unlocked ? isGold ? "text-yellow-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]" : "text-white" : "text-white/20 group-hover:text-white/40"
                     }`}>
-                        {unlocked ? s.character_name : "Desconhecido"}
+                        {s.character_name}
                     </h3>
                     {unlocked && isGold && <div className="text-[8px] text-yellow-500/60 uppercase tracking-[0.4em] font-bold mt-1">Artefato Lendário</div>}
+                    {!unlocked && (
+                      <div className="text-[8px] text-white/30 uppercase tracking-[0.3em] font-bold mt-1">A Conquistar</div>
+                    )}
                   </div>
 
                   {!unlocked && (

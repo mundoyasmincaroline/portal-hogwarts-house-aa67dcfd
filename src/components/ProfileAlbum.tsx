@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import StickerVisual from "@/components/StickerVisual";
+import { Button } from "@/components/ui/button";
+import { Share2 } from "lucide-react";
+import { toast } from "sonner";
+import { shareContent, buildAlbumShareText } from "@/lib/share";
+import { Link } from "react-router-dom";
+import { useAuth } from "@/lib/auth";
 
 interface Sticker {
   id: string;
@@ -11,51 +17,60 @@ interface Sticker {
 }
 
 export default function ProfileAlbum({ userId }: { userId: string }) {
-  const [stickers, setStickers] = useState<Sticker[]>([]);
-  const [totalStickers, setTotalStickers] = useState(0);
+  const { user } = useAuth();
+  const isMe = user?.id === userId;
+  const [allStickers, setAllStickers] = useState<Sticker[]>([]);
+  const [ownedIds, setOwnedIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState<Record<string, boolean>>({});
+  const [filter, setFilter] = useState<"all" | "owned" | "missing">("all");
 
   useEffect(() => { loadMyStickers(); }, [userId]);
 
   const loadMyStickers = async () => {
     setLoading(true);
-    const [{ data }, { count }] = await Promise.all([
+    const [ownedRes, allRes] = await Promise.all([
       supabase.from("user_stickers").select("*, stickers(*)").eq("user_id", userId),
-      supabase.from("stickers").select("*", { count: "exact", head: true }),
+      supabase.from("stickers").select("*").order("rarity", { ascending: false }).order("character_name"),
     ]);
-
-    if (data) {
-      const myStickers = data.map(d => d.stickers as unknown as Sticker).filter(Boolean);
-      setStickers(myStickers);
-    }
-    setTotalStickers(count || 0);
+    const owned = new Set<string>((ownedRes.data || []).map((d: any) => d.sticker_id));
+    setOwnedIds(owned);
+    setAllStickers((allRes.data as Sticker[]) || []);
     setLoading(false);
+  };
+
+  const handleShare = async () => {
+    const text = buildAlbumShareText(ownedIds.size, allStickers.length, allStickers.filter(s => s.rarity === "gold" && ownedIds.has(s.id)).length);
+    const res = await shareContent({ title: "Meu Álbum Mágico de Hogwarts", text });
+    if (res === "copied") toast.success("✨ Progresso do álbum copiado!");
+    else if (res === "failed") toast.error("Não foi possível compartilhar.");
   };
 
   if (loading) return <div className="text-center py-10 text-muted-foreground animate-pulse">Lendo as páginas do álbum...</div>;
 
-  if (stickers.length === 0) {
+  if (allStickers.length === 0) {
     return (
       <div className="glass rounded-xl p-8 text-center border border-border/50">
         <div className="text-4xl mb-4 opacity-50">📖</div>
-        <p className="text-muted-foreground text-sm">Nenhuma figurinha mágica na coleção ainda.</p>
-        <p className="text-xs text-muted-foreground mt-1">Compre figurinhas no Álbum usando XP!</p>
+        <p className="text-muted-foreground text-sm">O álbum mágico ainda está sendo encadernado...</p>
       </div>
     );
   }
 
-  const goldCount   = stickers.filter(s => s.rarity === "gold").length;
-  const silverCount = stickers.filter(s => s.rarity === "silver").length;
-  const bronzeCount = stickers.filter(s => s.rarity === "bronze").length;
-  const isComplete  = totalStickers > 0 && stickers.length >= totalStickers;
-  const pct = totalStickers > 0 ? Math.round((stickers.length / totalStickers) * 100) : 0;
+  const ownedCount = ownedIds.size;
+  const total = allStickers.length;
+  const isComplete = ownedCount >= total;
+  const pct = total > 0 ? Math.round((ownedCount / total) * 100) : 0;
 
-  // Sort: gold first, then silver, then bronze
-  const sorted = [...stickers].sort((a, b) => {
-    const order = { gold: 0, silver: 1, bronze: 2 };
-    return order[a.rarity] - order[b.rarity];
-  });
+  const ownedList = allStickers.filter(s => ownedIds.has(s.id));
+  const goldCount   = ownedList.filter(s => s.rarity === "gold").length;
+  const silverCount = ownedList.filter(s => s.rarity === "silver").length;
+  const bronzeCount = ownedList.filter(s => s.rarity === "bronze").length;
+
+  const order = { gold: 0, silver: 1, bronze: 2 };
+  const visible = [...allStickers]
+    .filter(s => filter === "all" || (filter === "owned" ? ownedIds.has(s.id) : !ownedIds.has(s.id)))
+    .sort((a, b) => order[a.rarity] - order[b.rarity] || a.character_name.localeCompare(b.character_name));
 
   return (
     <div className="space-y-5">
@@ -72,7 +87,7 @@ export default function ProfileAlbum({ userId }: { userId: string }) {
             <span className="font-heading text-foreground">Coleção</span>
             {isComplete && <span className="text-xs bg-yellow-400/20 text-yellow-400 border border-yellow-400/50 px-2 py-0.5 rounded-full font-heading">COMPLETO ✨</span>}
           </div>
-          <span className="font-heading text-primary">{stickers.length}/{totalStickers} ({pct}%)</span>
+          <span className="font-heading text-primary">{ownedCount}/{total} ({pct}%)</span>
         </div>
 
         {/* Barra de progresso */}
@@ -88,7 +103,7 @@ export default function ProfileAlbum({ userId }: { userId: string }) {
         </div>
 
         {/* Raridade badges */}
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap mb-3">
           {goldCount > 0 && (
             <span className="text-xs bg-yellow-400/20 text-yellow-400 border border-yellow-400/50 px-2 py-1 rounded-full font-heading">
               🥇 {goldCount} Ouro
@@ -105,23 +120,51 @@ export default function ProfileAlbum({ userId }: { userId: string }) {
             </span>
           )}
         </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          {(["all","owned","missing"] as const).map(f => (
+            <button key={f} onClick={() => setFilter(f)}
+              className={`text-[10px] font-heading uppercase tracking-widest px-3 py-1.5 rounded-full border transition-all ${
+                filter === f ? "bg-primary text-primary-foreground border-primary" : "bg-background/40 text-muted-foreground border-border hover:border-primary/40"
+              }`}>
+              {f === "all" ? `Todas (${total})` : f === "owned" ? `Conquistadas (${ownedCount})` : `Faltando (${total - ownedCount})`}
+            </button>
+          ))}
+          <div className="ml-auto flex gap-2">
+            <Button size="sm" variant="outline" className="h-8 text-[10px] rounded-full" onClick={handleShare}>
+              <Share2 size={12} className="mr-1.5" /> Compartilhar
+            </Button>
+            {isMe && (
+              <Link to="/dashboard/album">
+                <Button size="sm" variant="plaque" className="h-8 text-[10px] rounded-full">Abrir Álbum</Button>
+              </Link>
+            )}
+            {!isMe && (
+              <Link to="/dashboard/trades">
+                <Button size="sm" variant="plaque" className="h-8 text-[10px] rounded-full">Trocar</Button>
+              </Link>
+            )}
+          </div>
+        </div>
       </div>
 
-      {/* Grid de figurinhas */}
+      {/* Grid de figurinhas — álbum estilo Copa, mostra TUDO */}
       <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-        {sorted.map(s => {
+        {visible.map(s => {
+          const unlocked = ownedIds.has(s.id);
           const isGold = s.rarity === "gold";
           const isSilver = s.rarity === "silver";
 
           let rarityStyle = "border-amber-700/50 from-amber-900/40 to-background";
           if (isSilver) rarityStyle = "border-slate-300/80 from-slate-700/40 to-background shadow-white/10";
           if (isGold)   rarityStyle = "border-yellow-400 from-yellow-600/40 to-background ring-1 ring-yellow-400/50 shadow-yellow-500/30";
+          if (!unlocked) rarityStyle = "border-dashed border-white/10 from-black/60 to-background/40";
 
           return (
-              <div key={s.id} className={`relative aspect-[3/4] rounded-xl overflow-hidden border-2 group transition-all duration-300 hover:scale-105 bg-gradient-to-b ${rarityStyle} shadow-lg`}>
+              <div key={s.id} className={`relative aspect-[3/4] rounded-xl overflow-hidden border-2 group transition-all duration-300 hover:scale-105 bg-gradient-to-b ${rarityStyle} shadow-lg ${!unlocked ? "opacity-60 hover:opacity-90" : ""}`}>
               <div className="absolute inset-0 z-0">
-                  <StickerVisual name={s.character_name} rarity={s.rarity} unlocked imageUrl={s.image_url} failedImage={failed[s.id]} />
-                {s.image_url && !failed[s.id] ? (
+                  <StickerVisual name={s.character_name} rarity={s.rarity} unlocked={unlocked} imageUrl={s.image_url} failedImage={failed[s.id]} />
+                {s.image_url && !failed[s.id] && unlocked ? (
                   <img
                     src={s.image_url}
                     alt={s.character_name}
@@ -134,6 +177,20 @@ export default function ProfileAlbum({ userId }: { userId: string }) {
                     className="w-full h-full object-cover object-top opacity-85 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700"
                   />
                   ) : null}
+                {s.image_url && !failed[s.id] && !unlocked && (
+                  <img
+                    src={s.image_url}
+                    alt=""
+                    aria-hidden
+                    referrerPolicy="no-referrer"
+                    width={1024}
+                    height={1024}
+                    loading="lazy"
+                    decoding="async"
+                    onError={() => setFailed(p => ({ ...p, [s.id]: true }))}
+                    className="w-full h-full object-cover object-top opacity-20 grayscale brightness-50"
+                  />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
               </div>
 
@@ -143,12 +200,19 @@ export default function ProfileAlbum({ userId }: { userId: string }) {
                 }`}>
                   {s.rarity === "gold" ? "🥇" : s.rarity === "silver" ? "🥈" : "🥉"}
                 </span>
-                <h3 className={`font-heading text-[11px] text-center drop-shadow-md leading-tight ${isGold ? "text-yellow-400" : "text-foreground"}`}>
-                  {s.character_name}
-                </h3>
+                <div className="text-center space-y-0.5">
+                  <h3 className={`font-heading text-[11px] drop-shadow-md leading-tight ${
+                    !unlocked ? "text-white/40" : isGold ? "text-yellow-400" : "text-foreground"
+                  }`}>
+                    {s.character_name}
+                  </h3>
+                  {!unlocked && (
+                    <p className="text-[7px] uppercase tracking-widest text-white/30 font-heading">Faltando</p>
+                  )}
+                </div>
               </div>
 
-              {isGold && (
+              {isGold && unlocked && (
                 <div className="absolute inset-0 z-20 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(255,215,0,0.15),transparent_60%)] animate-pulse" />
               )}
             </div>
