@@ -234,7 +234,7 @@ export default function Feed() {
 
           {posts.map((post, index) => (
             <div key={post.id} className="min-h-[150px]">
-              {index > 0 && index % 5 === 0 && <MagicAdBanner />}
+              {index > 0 && index % 10 === 0 && <MagicAdBanner />}
               <ErrorBoundary fallback={
                 <div className="glass rounded-xl p-4 min-h-[100px] flex items-center justify-center border-red-500/20">
                   <p className="text-xs text-red-400 font-heading">Erro ao carregar pergaminho 📜</p>

@@ -29,31 +29,33 @@ export default function MagicAdBanner() {
   const ad = ads[currentAdIndex];
 
   return (
-    <div className="relative overflow-hidden glass rounded-xl border border-primary/30 p-1 group animate-pulse-glow mb-4">
-      <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-[10px] uppercase font-bold px-2 py-0.5 rounded-bl-lg z-10">
-        Recomendação Oficial
+    <div className="relative overflow-hidden glass rounded-2xl border border-primary/10 p-0.5 group mb-4">
+      <div className="absolute top-2 right-2 bg-primary/20 text-primary text-[8px] uppercase font-bold px-1.5 py-0.5 rounded-full z-10 backdrop-blur-sm border border-primary/10">
+        Recomendado
       </div>
       
       <a 
         href={ad.link} 
         target="_blank" 
         rel="noopener noreferrer"
-        className="flex flex-col md:flex-row items-center gap-4 bg-card/40 hover:bg-card/60 transition-colors rounded-lg p-3"
+        className="flex items-center gap-3 bg-card/20 hover:bg-card/40 transition-all rounded-[1.4rem] p-2"
       >
         {ad.image_url && (
-          <div className="w-full md:w-24 h-24 rounded-md overflow-hidden shrink-0 border border-primary/20">
-            <img src={ad.image_url} alt={ad.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+          <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 border border-primary/10">
+            <img src={ad.image_url} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
           </div>
         )}
         
-        <div className="flex-1 min-w-0 text-center md:text-left">
-          <h4 className="font-heading text-primary text-sm line-clamp-2 leading-tight mb-1">{ad.title}</h4>
-          <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
-            Disponível no Beco Diagonal (TikTok Shop). Estoque limitado!
+        <div className="flex-1 min-w-0">
+          <h4 className="font-heading text-primary text-xs line-clamp-1 leading-tight mb-0.5">{ad.title}</h4>
+          <p className="text-[10px] text-muted-foreground/80 line-clamp-1 mb-1.5 font-serif italic">
+            Oferta exclusiva no Beco Diagonal
           </p>
-          <Button variant="magical" size="sm" className="w-full md:w-auto h-7 text-xs">
-            Ver Oferta 🪄
-          </Button>
+          <div className="flex items-center gap-2">
+            <span className="text-[9px] font-bold text-primary uppercase tracking-tighter group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+              Ver Detalhes 🪄
+            </span>
+          </div>
         </div>
       </a>
     </div>
