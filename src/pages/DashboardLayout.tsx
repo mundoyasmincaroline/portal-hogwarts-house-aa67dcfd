@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  LogOut, Volume2, VolumeX, Menu, Castle
+  LogOut, Volume2, VolumeX, Menu, Castle, Wallet
 } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import HouseCrest from "@/components/HouseCrest";
@@ -171,8 +171,6 @@ export default function DashboardLayout() {
 
   return (
     <div className="flex h-screen bg-background overflow-hidden relative">
-      <AmbientAudio />
-
       <AnimatePresence>
         {sidebarOpen && (
           <motion.div 
@@ -245,6 +243,7 @@ export default function DashboardLayout() {
 
             <div className="flex items-center gap-0.5 shrink-0">
               <TurnSwitcher />
+              <AmbientAudio />
               <button
                 onClick={() => setSoundOn(toggleSound())}
                 className="touch-target w-9 h-9 text-muted-foreground hover:bg-primary/10 hover:text-primary rounded-xl transition-all active:scale-90"
@@ -263,7 +262,7 @@ export default function DashboardLayout() {
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <NotificationBanner />
-        <header className="md:hidden flex items-center justify-between px-4 h-18 border-b border-white/5 bg-card/60 backdrop-blur-2xl sticky top-0 z-30">
+        <header className="md:hidden flex items-center justify-between px-4 h-16 border-b border-white/5 bg-card/60 backdrop-blur-2xl sticky top-0 z-30">
           <div className="flex items-center gap-4">
             <button 
               onClick={() => setSidebarOpen(true)} 
@@ -274,6 +273,10 @@ export default function DashboardLayout() {
             <span className="font-heading text-lg text-gold-gradient tracking-tighter">Hogwarts House</span>
           </div>
           <div className="flex items-center gap-3">
+              <Link to="/dashboard/wallet" className="min-h-11 px-3 rounded-2xl border border-primary/20 bg-primary/10 text-primary flex items-center gap-1.5 active:scale-95 transition-all">
+                <Wallet size={15} />
+                <span className="font-heading text-xs">{(profile?.galeons || 0).toLocaleString("pt-BR")}</span>
+              </Link>
              <Notifications />
               <Link to="/dashboard/profile" className="w-11 h-11 rounded-2xl overflow-hidden border-2 border-primary/40 shadow-[0_0_20px_rgba(212,175,55,0.25)] active:scale-95 transition-all">
                 <SafeImage src={profile?.avatar_url} alt={profile?.full_name || "Avatar"} className="w-full h-full object-cover" />
@@ -282,7 +285,7 @@ export default function DashboardLayout() {
         </header>
 
 
-        <div className="flex-1 overflow-y-auto relative scroll-smooth contain-strict">
+        <div className="flex-1 overflow-y-auto relative scroll-smooth contain-strict portal-cinematic-bg">
           <div className="page-container">
             {location.pathname === "/dashboard" && (
               <div className="space-y-6 mb-8">
