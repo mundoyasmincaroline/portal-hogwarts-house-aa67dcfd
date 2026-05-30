@@ -14,7 +14,7 @@ export default function BottomNav() {
   const location = useLocation();
 
   return (
-    <nav className="md:hidden fixed bottom-4 left-4 right-4 z-[100] bg-card/60 backdrop-blur-3xl border border-white/10 rounded-3xl px-2 pb-1 pt-1.5 shadow-[0_15px_40px_rgba(0,0,0,0.8)]">
+    <nav className="md:hidden fixed bottom-6 left-6 right-6 z-[100] bg-black/40 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] px-2 py-1 shadow-[0_20px_50px_rgba(0,0,0,0.6)] animate-in slide-in-from-bottom-10 duration-1000">
       <div className="flex items-center justify-around max-w-md mx-auto">
         {MOBILE_NAV.map((item) => {
           const isActive = location.pathname === item.path;
