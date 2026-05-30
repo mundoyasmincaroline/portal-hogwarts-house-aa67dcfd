@@ -71,6 +71,11 @@ export default function DashboardLayout() {
   const house = useMemo(() => HOUSES[(profile?.house as House) || "gryffindor"] || HOUSES.gryffindor, [profile?.house]);
   const groups = useMemo(() => isAdmin ? [...NAV_GROUPS, ADMIN_GROUP] : NAV_GROUPS, [isAdmin]);
 
+  const adminSkipped = useMemo(() => {
+    if (!isAdmin || !user) return false;
+    return localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
+  }, [isAdmin, user]);
+
   // Busca personagens uma única vez quando o usuário muda
   useEffect(() => {
     if (!user) { setHasCharacters(null); return; }
@@ -146,11 +151,6 @@ export default function DashboardLayout() {
   // Verificações de acesso e onboarding
   if (!profile.approved && !isAdmin) return <PendingApproval />;
   if (!isAdmin && !profile.has_accepted_rules) return <RulesAgreement />;
-
-  const adminSkipped = useMemo(() => {
-    if (!isAdmin || !user) return false;
-    return localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
-  }, [isAdmin, user]);
 
   // Só bloqueia se hasCharacters for explicitamente false (carregou e viu que não tem)
   // E se não houver um personagem ativo no perfil
