@@ -309,7 +309,7 @@ export default function GringottsStore() {
 
       {/* ── CATEGORY NAVIGATION: MONSTER STYLE ── */}
       <div className="relative z-40 flex justify-center py-6 mb-8">
-        <div className="glass p-1.5 sm:p-2.5 rounded-full border border-white/10 inline-flex flex-wrap justify-center gap-1 sm:gap-2 bg-black/60 backdrop-blur-3xl shadow-2xl overflow-x-auto max-w-full no-scrollbar">
+        <div className="glass p-1.5 sm:p-2.5 rounded-full border border-white/10 inline-flex flex-wrap justify-center gap-1 sm:gap-2 bg-black/60 backdrop-blur-3xl shadow-2xl overflow-x-auto max-w-[calc(100vw-2rem)] no-scrollbar">
           {TABS.map(t => {
             const isActive = tab === t.id;
             const Icon = t.icon;
