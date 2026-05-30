@@ -80,7 +80,7 @@ const PostCard = memo(({
           <button
             key={r.emoji}
             onClick={() => onToggleReaction(post.id, r.emoji, r.mine)}
-            className={`px-3 sm:px-4 py-1.5 rounded-2xl text-[10px] sm:text-xs transition-all duration-300 flex items-center gap-1 sm:gap-1.5 active:scale-90 ${r.mine ? "bg-primary/20 text-primary border border-primary/30 shadow-[0_0_15px_rgba(212,175,55,0.1)]" : "glass hover:bg-white/5 border-white/5"}`}
+            className={`px-3 sm:px-4 py-1.5 rounded-2xl text-[10px] sm:text-xs transition-all duration-300 flex items-center gap-1 sm:gap-1.5 active:scale-90 ${r.mine ? "bg-primary/20 text-primary border border-primary/40 shadow-[0_5px_15px_rgba(212,175,55,0.2)]" : "glass hover:bg-white/5 border-white/5"}`}
           >
             <span className="text-sm">{r.emoji}</span>
             <span className="font-bold">{r.count}</span>
@@ -106,9 +106,9 @@ const PostCard = memo(({
 
       <button
         onClick={() => onToggleComments(post.id)}
-        className="glass px-3 sm:px-4 py-1.5 rounded-2xl text-[10px] sm:text-[11px] font-heading uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/30 transition-all active:scale-95 ml-auto sm:ml-0"
+        className="glass px-3 sm:px-4 py-1.5 rounded-2xl text-[10px] sm:text-[11px] font-heading uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-all active:scale-95 ml-auto sm:ml-0 flex items-center gap-2"
       >
-        💬 {post.comments.length}
+        <span className="text-sm">💬</span> {post.comments.length}
       </button>
     </div>
 
