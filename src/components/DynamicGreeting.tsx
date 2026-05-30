@@ -53,4 +53,6 @@ export default function DynamicGreeting() {
       </div>
     </div>
   );
-}
+});
+
+export default DynamicGreeting;
