@@ -14,16 +14,16 @@ export default function BottomNav() {
   const location = useLocation();
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-[100] bg-card/60 backdrop-blur-3xl border-t border-white/5 px-2 pb-safe pt-2 shadow-[0_-20px_50px_rgba(0,0,0,0.8)]">
-      <div className="flex items-center justify-around">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-[100] bg-card/80 backdrop-blur-3xl border-t border-white/5 px-1 pb-safe pt-1.5 shadow-[0_-10px_40px_rgba(0,0,0,0.6)]">
+      <div className="flex items-center justify-around max-w-md mx-auto">
         {MOBILE_NAV.map((item) => {
           const isActive = location.pathname === item.path;
           return (
             <Link
               key={item.path}
               to={item.path}
-              className={`relative flex flex-col items-center gap-1 p-2 transition-all duration-300 ${
-                isActive ? "text-primary" : "text-muted-foreground/60 hover:text-foreground"
+              className={`relative flex flex-col items-center gap-0.5 p-2 transition-all duration-300 min-w-[60px] ${
+                isActive ? "text-primary" : "text-muted-foreground/60 active:text-foreground"
               }`}
             >
               {isActive && (
