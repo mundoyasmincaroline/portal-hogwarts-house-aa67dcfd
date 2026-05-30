@@ -5,6 +5,7 @@ import {
   LogOut, Volume2, VolumeX, Menu, Castle, Wallet
 } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import HouseCrest from "@/components/HouseCrest";
 import MagicalGaleon from "@/components/MagicalGaleon";
 import { HOUSES } from "@/types";
@@ -58,7 +59,7 @@ const NavItem = memo(({ item, isActive, dmUnread, onClick }: { item: any, isActi
 ));
 
 export default function DashboardLayout() {
-  const { user, profile, isAdmin, isLoading, logout, pingPresence } = useAuth();
+  const { user, profile, isAdmin, isLoading, isAuthenticated, logout, pingPresence } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -128,11 +129,25 @@ export default function DashboardLayout() {
   }, [user, profile]);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || !isAuthenticated) return;
+    
+    // Ping immediately
     pingPresence();
-    const interval = setInterval(pingPresence, 60000); 
-    return () => clearInterval(interval);
-  }, [user, pingPresence]);
+    
+    // Presence interval (every 45s, matching pingPresence debounce)
+    const interval = setInterval(pingPresence, 45000); 
+    
+    // Visibility change listener to ping when coming back to tab
+    const handleVisibilityChange = () => {
+      if (!document.hidden) pingPresence();
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [user, isAuthenticated, pingPresence]);
 
   if (isLoading) {
     return (
@@ -146,18 +161,18 @@ export default function DashboardLayout() {
   }
 
   // Se não carregou o perfil após o loading, algo deu errado (ou deslogou)
-  if (!profile) {
+  if (!profile || !isAuthenticated) {
     return null;
   }
 
   // Verificações de acesso e onboarding
-  if (!profile.approved && !isAdmin) return <PendingApproval />;
-  if (!isAdmin && !profile.has_accepted_rules) return <RulesAgreement />;
+  if (!profile.approved && !isAdmin) return <ProtectedRoute adminOnly={false}><PendingApproval /></ProtectedRoute>;
+  if (!isAdmin && !profile.has_accepted_rules) return <ProtectedRoute adminOnly={false}><RulesAgreement /></ProtectedRoute>;
 
   // Só bloqueia se hasCharacters for explicitamente false (carregou e viu que não tem)
   // E se não houver um personagem ativo no perfil
   if (hasCharacters === false && !profile.active_character_id && !adminSkipped) {
-    return <CharacterSelection adminMode={isAdmin} />;
+    return <ProtectedRoute adminOnly={false}><CharacterSelection adminMode={isAdmin} /></ProtectedRoute>;
   }
 
   // Se ainda está carregando os personagens (hasCharacters === null), mas já passou do isLoading do auth,

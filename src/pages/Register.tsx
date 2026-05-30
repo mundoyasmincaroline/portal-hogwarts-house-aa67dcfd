@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, memo } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,7 +39,7 @@ const BLOODS = [
 
 export default function Register() {
   const navigate = useNavigate();
-  const register = useAuth((s) => s.register);
+  const { register } = useAuth();
 
   const [step, setStep] = useState(0); // 0=convocação ... 6=carta
   const [loading, setLoading] = useState(false);

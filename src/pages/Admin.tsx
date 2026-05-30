@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { useAuth } from "@/lib/auth";
+import { useAuth, isUserOnline } from "@/lib/auth";
 import { HOUSES, type House } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,7 @@ export default function Admin() {
   const { isAdmin, user } = useAuth();
   const [tab, setTab] = useState<Tab>("members");
   const [members, setMembers] = useState<MemberProfile[]>([]);
+  const [onlineFilter, setOnlineFilter] = useState<"all" | "online">("all");
   const [loading, setLoading] = useState(true);
 
   const fetchAll = useCallback(async () => {
@@ -48,8 +49,23 @@ export default function Admin() {
       {loading ? <p>Carregando...</p> : (
         <div className="mt-6">
           {tab === "members" && (
-            <div className="grid gap-4">
-              {members.map(m => <AdminMemberCard key={m.user_id} member={m} onClick={() => {}} />)}
+            <div className="space-y-4">
+              <div className="flex justify-end gap-2 mb-4">
+                <Button size="sm" variant={onlineFilter === "all" ? "magical" : "ghost"} onClick={() => setOnlineFilter("all")} className="text-[10px] h-8 px-4 rounded-full">
+                  TODOS
+                </Button>
+                <Button size="sm" variant={onlineFilter === "online" ? "magical" : "ghost"} onClick={() => setOnlineFilter("online")} className="text-[10px] h-8 px-4 rounded-full">
+                  ONLINE AGORA
+                </Button>
+              </div>
+              <div className="grid gap-4">
+                {members
+                  .filter(m => onlineFilter === "all" || isUserOnline(m as any))
+                  .map(m => <AdminMemberCard key={m.user_id} member={m} onClick={() => {}} />)}
+                {members.filter(m => onlineFilter === "all" || isUserOnline(m as any)).length === 0 && (
+                  <p className="text-center py-10 text-muted-foreground text-sm italic">Nenhum bruxo encontrado nesta categoria.</p>
+                )}
+              </div>
             </div>
           )}
           {tab === "monetization" && <AdminMonetizationTab members={members} fetchAll={fetchAll} />}
