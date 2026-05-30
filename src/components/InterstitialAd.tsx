@@ -37,11 +37,11 @@ export default function InterstitialAd() {
     if (lastShownStr) {
       const last = parseInt(lastShownStr);
       const diffMinutes = (Date.now() - last) / 1000 / 60;
-      if (diffMinutes < (config.interval_minutes || 5)) return; // Too soon
+      if (diffMinutes < (config.interval_minutes || 15)) return; // Too soon
     }
 
-    // 30% chance to show on navigation if interval has passed
-    if (Math.random() > 0.3) return;
+    // 10% chance to show on navigation if interval has passed
+    if (Math.random() > 0.1) return;
 
     // Fetch an active interstitial ad
     const { data: adsData } = await supabase.from("ads").select("*").eq("active", true).eq("ad_type", "interstitial");
