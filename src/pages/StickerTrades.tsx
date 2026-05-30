@@ -262,55 +262,42 @@ export default function StickerTrades() {
           )}
 
           {(tab === "mercado" ? otherTrades : myTrades).map(trade => (
-            <div key={trade.id} className="glass rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center gap-6 sm:gap-10 border border-white/5 hover:border-primary/20 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 group animate-in slide-in-from-left-4 duration-700">
-              {/* Figurinha oferecida */}
-              <div className="flex items-center gap-6 flex-1">
-                <div className={`relative w-20 h-28 rounded-2xl overflow-hidden border-2 flex-shrink-0 transition-transform group-hover:scale-105 duration-500 ${RARITY_COLOR[trade.offered_sticker?.rarity || "bronze"]}`}>
+            <div key={trade.id} className="glass rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-10 flex flex-col lg:flex-row items-center gap-8 border border-white/5 hover:border-primary/20 hover:shadow-[0_0_50px_rgba(234,179,8,0.1)] transition-all duration-700 group animate-in slide-in-from-left-4 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              
+              <div className="flex flex-col items-center gap-4 flex-1 w-full">
+                <p className="text-[10px] text-primary uppercase tracking-[0.4em] font-black">Eu Ofereço</p>
+                <div className={`relative w-32 h-44 rounded-2xl overflow-hidden border-4 shadow-2xl transition-transform group-hover:scale-105 duration-500 ${RARITY_COLOR[trade.offered_sticker?.rarity || "bronze"]}`}>
                   {trade.offered_sticker ? (
-                    <>
-                      <StickerVisual name={trade.offered_sticker.character_name} rarity={trade.offered_sticker.rarity as "bronze" | "silver" | "gold"} unlocked imageUrl={trade.offered_sticker.image_url} />
-                      <SafeImage src={trade.offered_sticker.image_url} alt={trade.offered_sticker.character_name || "?"} className="relative z-10 w-full h-full object-cover object-top" fallbackText={trade.offered_sticker.character_name} />
-                    </>
+                    <StickerVisual name={trade.offered_sticker.character_name} rarity={trade.offered_sticker.rarity as any} unlocked imageUrl={trade.offered_sticker.image_url} />
                   ) : null}
-                  {trade.offered_sticker?.rarity === 'gold' && <div className="absolute inset-0 bg-yellow-400/10 animate-pulse pointer-events-none" />}
                 </div>
-                <div>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-[0.3em] font-bold mb-1">Oferta</p>
-                  <p className="font-heading text-xl text-foreground mb-1">{trade.offered_sticker?.character_name}</p>
-                  <div className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] font-bold ${RARITY_COLOR[trade.offered_sticker?.rarity || "bronze"]}`}>
-                    {RARITY_EMOJI[trade.offered_sticker?.rarity]} {trade.offered_sticker?.rarity}
-                  </div>
-                </div>
+                <p className="font-heading text-xl text-white text-center">{trade.offered_sticker?.character_name}</p>
               </div>
 
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white/5 border border-white/10 text-2xl self-center animate-pulse">⇄</div>
+              <div className="flex flex-col items-center justify-center gap-2">
+                <div className="w-16 h-16 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center text-3xl shadow-[0_0_20px_rgba(234,179,8,0.2)] group-hover:rotate-180 transition-transform duration-700">
+                  ⚡
+                </div>
+                <span className="text-[10px] text-primary/40 font-bold tracking-widest uppercase">Pacto</span>
+              </div>
 
-              {/* Figurinha desejada */}
-              <div className="flex items-center gap-6 flex-1">
+              <div className="flex flex-col items-center gap-4 flex-1 w-full">
+                <p className="text-[10px] text-primary uppercase tracking-[0.4em] font-black">Eu Desejo</p>
                 {trade.wanted_sticker ? (
                   <>
-                    <div className={`relative w-20 h-28 rounded-2xl overflow-hidden border-2 flex-shrink-0 transition-transform group-hover:scale-105 duration-500 ${RARITY_COLOR[trade.wanted_sticker.rarity]}`}>
-                      <StickerVisual name={trade.wanted_sticker.character_name} rarity={trade.wanted_sticker.rarity as "bronze" | "silver" | "gold"} unlocked imageUrl={trade.wanted_sticker.image_url} />
-                      <SafeImage src={trade.wanted_sticker.image_url} alt={trade.wanted_sticker.character_name} className="relative z-10 w-full h-full object-cover object-top" fallbackText={trade.wanted_sticker.character_name} />
+                    <div className={`relative w-32 h-44 rounded-2xl overflow-hidden border-4 shadow-2xl transition-transform group-hover:scale-105 duration-500 ${RARITY_COLOR[trade.wanted_sticker.rarity]}`}>
+                      <StickerVisual name={trade.wanted_sticker.character_name} rarity={trade.wanted_sticker.rarity as any} unlocked imageUrl={trade.wanted_sticker.image_url} />
                     </div>
-                    <div>
-                      <p className="text-[10px] text-muted-foreground uppercase tracking-[0.3em] font-bold mb-1">Desejo</p>
-                      <p className="font-heading text-xl text-foreground mb-1">{trade.wanted_sticker.character_name}</p>
-                      <div className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border text-[10px] font-bold ${RARITY_COLOR[trade.wanted_sticker.rarity]}`}>
-                        {RARITY_EMOJI[trade.wanted_sticker.rarity]} {trade.wanted_sticker.rarity}
-                      </div>
-                    </div>
+                    <p className="font-heading text-xl text-white text-center">{trade.wanted_sticker.character_name}</p>
                   </>
                 ) : (
-                  <div className="flex items-center gap-5">
-                    <div className="w-20 h-28 rounded-2xl border-2 border-dashed border-white/10 flex items-center justify-center text-4xl text-white/10 flex-shrink-0 bg-white/5">
-                      🎲
+                  <>
+                    <div className="w-32 h-44 rounded-2xl border-4 border-dashed border-white/10 flex items-center justify-center text-5xl text-white/5 flex-shrink-0 bg-white/5 shadow-inner">
+                      ❓
                     </div>
-                    <div>
-                      <p className="text-[10px] text-muted-foreground uppercase tracking-[0.3em] font-bold mb-1">Desejo</p>
-                      <p className="font-heading text-sm text-muted-foreground italic">Qualquer Relíquia</p>
-                    </div>
-                  </div>
+                    <p className="font-heading text-lg text-muted-foreground italic">Qualquer Relíquia</p>
+                  </>
                 )}
               </div>
 
