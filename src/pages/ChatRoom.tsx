@@ -33,6 +33,7 @@ interface Message {
     username: string;
     house: House;
     avatar_url: string | null;
+    vip_plan: string | null;
   };
   characters?: {
     full_name: string;
@@ -349,8 +350,8 @@ export default function ChatRoom() {
     const { error } = await supabase.from("messages").insert({
       channel_id: channel.id,
       user_id: user.id,
-      character_id: profile?.active_character_id ?? null,
-      content
+      character_id: profile?.active_character_id || null,
+      content: content.trim()
     });
 
     if (error) {
