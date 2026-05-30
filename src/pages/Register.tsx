@@ -39,7 +39,7 @@ const BLOODS = [
 
 export default function Register() {
   const navigate = useNavigate();
-  const register = useAuth((s) => s.register);
+  const { register } = useAuth();
 
   const [step, setStep] = useState(0); // 0=convocação ... 6=carta
   const [loading, setLoading] = useState(false);

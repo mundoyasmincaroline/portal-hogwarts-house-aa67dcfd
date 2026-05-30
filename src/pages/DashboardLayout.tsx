@@ -58,7 +58,7 @@ const NavItem = memo(({ item, isActive, dmUnread, onClick }: { item: any, isActi
 ));
 
 export default function DashboardLayout() {
-  const { user, profile, isAdmin, isLoading, logout, pingPresence } = useAuth();
+  const { user, profile, isAdmin, isLoading, isAuthenticated, logout, pingPresence } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -160,7 +160,7 @@ export default function DashboardLayout() {
   }
 
   // Se não carregou o perfil após o loading, algo deu errado (ou deslogou)
-  if (!profile) {
+  if (!profile || !isAuthenticated) {
     return null;
   }
 
