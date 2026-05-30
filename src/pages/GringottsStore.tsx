@@ -200,7 +200,7 @@ export default function GringottsStore() {
     <div className="max-w-7xl mx-auto space-y-12 pb-24 px-4 sm:px-6">
       
       {/* ── SUPER HERO BANNER: MONSTER QUALITY ── */}
-      <div className="relative overflow-hidden rounded-2xl sm:rounded-[3rem] border border-yellow-500/30 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)] group min-h-[320px] sm:min-h-[420px] flex items-center mb-8">
+      <div className="relative overflow-hidden rounded-2xl sm:rounded-[3rem] border border-yellow-500/30 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)] group min-h-[280px] sm:min-h-[420px] flex items-center mb-8">
         <div className="absolute inset-0 bg-gradient-to-br from-amber-950 via-black to-blue-950 z-0 pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-yellow-500/25 via-transparent to-transparent pointer-events-none animate-pulse" />
         
@@ -218,9 +218,9 @@ export default function GringottsStore() {
 
         <div className="absolute inset-0 opacity-25 mix-blend-overlay pointer-events-none" style={{ backgroundImage: "url('/hogwarts-castle-bg.jpg')" }} />
         
-        <div className="relative z-10 p-8 sm:p-14 lg:p-20 flex flex-col md:flex-row items-center justify-between w-full gap-10">
-          <div className="flex-1 text-left space-y-8 animate-in fade-in slide-in-from-left-8 duration-1000">
-            <div className="inline-flex items-center gap-3 bg-black/40 backdrop-blur-md border border-yellow-500/40 rounded-full px-5 py-2">
+        <div className="relative z-10 p-5 sm:p-14 lg:p-20 flex flex-col md:flex-row items-center justify-between w-full gap-6 sm:gap-10">
+          <div className="flex-1 text-center md:text-left space-y-4 sm:space-y-8 animate-in fade-in slide-in-from-left-8 duration-1000">
+            <div className="inline-flex items-center gap-2 sm:gap-3 bg-black/40 backdrop-blur-md border border-yellow-500/40 rounded-full px-4 sm:px-5 py-1.5 sm:py-2 mx-auto md:mx-0">
               <Sparkles size={14} className="text-yellow-500 animate-spin-slow" />
               <span className="text-xs font-heading text-yellow-500 uppercase tracking-[0.2em] font-bold">Mercado de Relíquias Ancestrais</span>
             </div>
@@ -229,7 +229,7 @@ export default function GringottsStore() {
               GRINGOTTS<br/><span className="text-white/90">VAULT</span>
             </h1>
             
-            <p className="text-yellow-100/70 text-lg md:text-xl max-w-xl leading-relaxed font-serif italic border-l-2 border-yellow-500/50 pl-6">
+            <p className="text-yellow-100/70 text-base sm:text-xl max-w-xl leading-relaxed font-serif italic border-l-2 border-yellow-500/50 pl-4 sm:pl-6 mx-auto md:mx-0">
               "Onde o ouro brilha mais que o sol e a magia sussurra segredos ancestrais. Somente para os bruxos mais ambiciosos de Hogwarts."
             </p>
             
@@ -240,7 +240,7 @@ export default function GringottsStore() {
             </div>
           </div>
           
-          <div className="w-full md:w-96 glass bg-black/60 border border-yellow-500/30 rounded-[3rem] p-10 text-center backdrop-blur-xl shadow-2xl animate-in fade-in slide-in-from-right-8 duration-1000">
+          <div className="w-full md:w-96 glass bg-black/60 border border-yellow-500/30 rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-10 text-center backdrop-blur-xl shadow-2xl animate-in fade-in slide-in-from-right-8 duration-1000">
             <div className="absolute inset-0 bg-yellow-500/5 blur-3xl rounded-full" />
             <p className="text-yellow-500/80 text-[11px] font-heading uppercase tracking-[0.3em] mb-8 font-bold">Chave do Cofre Ativa</p>
             

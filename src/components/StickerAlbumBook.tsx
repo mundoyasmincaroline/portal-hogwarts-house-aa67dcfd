@@ -53,7 +53,7 @@ export default function StickerAlbumBook({ stickers, userStickers, onBuy, buying
   return (
     <div className="relative w-full max-w-5xl mx-auto py-10">
       {/* Book Container */}
-      <div className="relative aspect-[16/10] bg-[#1a1a1a] rounded-[2rem] p-4 sm:p-8 shadow-[0_50px_100px_rgba(0,0,0,0.8)] border border-white/5 overflow-hidden">
+      <div className="relative aspect-[4/5] sm:aspect-[16/10] bg-[#1a1a1a] rounded-[1.5rem] sm:rounded-[2rem] p-3 sm:p-8 shadow-[0_50px_100px_rgba(0,0,0,0.8)] border border-white/5 overflow-hidden">
         {/* Book Spine */}
         <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-1 sm:w-2 bg-black/40 shadow-inner z-20 border-x border-white/5" />
         
@@ -73,10 +73,10 @@ export default function StickerAlbumBook({ stickers, userStickers, onBuy, buying
               opacity: { duration: 0.2 },
               rotateY: { duration: 0.4 }
             }}
-            className="absolute inset-0 grid grid-cols-2 gap-0"
+            className="absolute inset-0 flex flex-col sm:grid sm:grid-cols-2 gap-0 overflow-y-auto sm:overflow-hidden scrollbar-none"
           >
             {/* Left Page */}
-            <div className="p-4 sm:p-8 flex flex-col items-center border-r border-white/5">
+            <div className="p-3 sm:p-8 flex flex-col items-center border-b sm:border-b-0 sm:border-r border-white/5">
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full">
                 {currentItems.slice(0, 3).map((s) => (
                   <StickerSlot key={s.id} sticker={s} owned={!!userStickers[s.id]} onBuy={onBuy} buying={buyingId === s.id} profileLevel={profileLevel} profileXp={profileXp} />
@@ -85,7 +85,7 @@ export default function StickerAlbumBook({ stickers, userStickers, onBuy, buying
             </div>
 
             {/* Right Page */}
-            <div className="p-4 sm:p-8 flex flex-col items-center border-l border-white/5">
+            <div className="p-3 sm:p-8 flex flex-col items-center border-t sm:border-t-0 sm:border-l border-white/5 pb-20 sm:pb-8">
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full">
                 {currentItems.slice(3, 6).map((s) => (
                   <StickerSlot key={s.id} sticker={s} owned={!!userStickers[s.id]} onBuy={onBuy} buying={buyingId === s.id} profileLevel={profileLevel} profileXp={profileXp} />
@@ -96,23 +96,23 @@ export default function StickerAlbumBook({ stickers, userStickers, onBuy, buying
         </AnimatePresence>
 
         {/* Page Indicators */}
-        <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-10 items-center z-30">
+        <div className="absolute bottom-4 sm:bottom-6 left-0 right-0 flex justify-center gap-4 sm:gap-10 items-center z-30">
           <button 
             onClick={() => paginate(-1)} 
             disabled={page === 0}
-            className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary/20 hover:border-primary/50 transition-all disabled:opacity-20 disabled:cursor-not-allowed group"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 sm:bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary/20 hover:border-primary/50 transition-all disabled:opacity-20 disabled:cursor-not-allowed group backdrop-blur-md"
           >
             <ChevronLeft className="group-hover:-translate-x-1 transition-transform" />
           </button>
           
-          <div className="px-6 py-2 rounded-full bg-black/40 border border-white/10 font-heading text-xs tracking-widest text-muted-foreground">
+          <div className="px-4 py-1.5 sm:px-6 sm:py-2 rounded-full bg-black/60 border border-white/10 font-heading text-[10px] sm:text-xs tracking-widest text-muted-foreground backdrop-blur-md">
             PÁGINA <span className="text-white">{page + 1}</span> DE {totalPages}
           </div>
 
           <button 
             onClick={() => paginate(1)} 
             disabled={page === totalPages - 1}
-            className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary/20 hover:border-primary/50 transition-all disabled:opacity-20 disabled:cursor-not-allowed group"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 sm:bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary/20 hover:border-primary/50 transition-all disabled:opacity-20 disabled:cursor-not-allowed group backdrop-blur-md"
           >
             <ChevronRight className="group-hover:translate-x-1 transition-transform" />
           </button>
