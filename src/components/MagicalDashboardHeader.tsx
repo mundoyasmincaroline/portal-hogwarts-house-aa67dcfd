@@ -8,7 +8,7 @@ import DailyHighlight from "./DailyHighlight";
 import MoodSession from "./MoodSession";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Sparkles, Trophy } from "lucide-react";
+import { ChevronDown, ChevronUp, Sparkles } from "lucide-react";
 import DailyProphetTicker from "./DailyProphetTicker";
 import HouseCupWidget from "./HouseCupWidget";
 
@@ -17,29 +17,37 @@ export default function MagicalDashboardHeader() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="space-y-6 w-full max-w-4xl mx-auto">
+    <div className="space-y-6 w-full max-w-4xl mx-auto animate-in fade-in duration-1000">
+      {/* Real-time Section */}
       <div className="space-y-4">
         <DailyProphetTicker />
+        <StoriesBar />
+      </div>
+
+      {/* Greeting & Main Stats */}
+      <div className="space-y-4">
         <DynamicGreeting />
         <HouseCupWidget />
       </div>
-
-      <StoriesBar />
       
+      {/* Interactive Utilities */}
       <div className="relative">
         <div className="flex items-center justify-between px-4 mb-4">
-          <h3 className="text-[10px] font-heading font-black uppercase tracking-[0.4em] text-primary/40 flex items-center gap-2">
-            <Sparkles size={12} />
-            Secretaria do Castelo
-          </h3>
+          <div className="flex flex-col">
+            <h3 className="text-[10px] font-heading font-black uppercase tracking-[0.4em] text-primary/40 flex items-center gap-2">
+              <Sparkles size={12} className="animate-pulse" />
+              Secretaria do Castelo
+            </h3>
+            <p className="text-[9px] text-muted-foreground/40 font-serif italic">Informações e registros oficiais</p>
+          </div>
           <button 
             onClick={() => setIsExpanded(!isExpanded)}
-            className="text-[10px] font-heading font-bold uppercase tracking-widest text-primary/60 hover:text-primary transition-colors flex items-center gap-1 bg-primary/5 px-3 py-1 rounded-full border border-primary/10 shadow-inner"
+            className="text-[10px] font-heading font-bold uppercase tracking-widest text-primary/60 hover:text-primary transition-all flex items-center gap-1.5 bg-primary/5 px-4 py-2 rounded-full border border-primary/10 shadow-lg active:scale-95"
           >
             {isExpanded ? (
               <>Recolher <ChevronUp size={12} /></>
             ) : (
-              <>Ver Atividades <ChevronDown size={12} /></>
+              <>Explorar Atividades <ChevronDown size={12} /></>
             )}
           </button>
         </div>
@@ -52,11 +60,11 @@ export default function MagicalDashboardHeader() {
               opacity: isExpanded ? 1 : 0,
               marginBottom: isExpanded ? "24px" : "0px"
             }}
-            className="overflow-hidden space-y-4"
+            className="overflow-hidden space-y-6"
           >
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 gap-6 pt-2">
               <MagicalMemories />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <BirthdayBanner />
                 <VipUpsellBanner
                   currentVip={(profile as any)?.vip_plan}
@@ -70,6 +78,8 @@ export default function MagicalDashboardHeader() {
           </motion.div>
         </AnimatePresence>
       </div>
+
+      <div className="h-px w-full bg-gradient-to-r from-transparent via-white/5 to-transparent my-10" />
     </div>
   );
 }
