@@ -55,9 +55,12 @@ const PostCard = memo(({
       {post.author?.house && <div className="hidden sm:block shrink-0 opacity-80 hover:opacity-100 transition-opacity"><HouseCrest house={post.author.house} size="sm" /></div>}
     </div>
 
-    <p className="text-sm sm:text-[15px] leading-relaxed text-foreground/90 mb-5 whitespace-pre-wrap font-serif italic border-l-2 border-primary/20 pl-4 py-1">
-      {post.content}
-    </p>
+    <div className="relative mb-6">
+      <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-primary/40 via-primary/10 to-transparent rounded-full" />
+      <p className="text-base sm:text-lg leading-relaxed text-foreground/90 whitespace-pre-wrap font-serif italic pl-2">
+        {post.content}
+      </p>
+    </div>
     
     {post.music_url && (
       <div className="mb-5 overflow-hidden rounded-2xl shadow-xl border border-white/5">
