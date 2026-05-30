@@ -157,13 +157,19 @@ export default function Members() {
                 Online agora ({onlineMembers.length})
               </h2>
               <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-                {onlineMembers.map(m => (
-                  <MemberCard
+                {onlineMembers.map((m, idx) => (
+                  <motion.div
                     key={m.user_id}
-                    member={m}
-                    friendshipStatus={friendships[m.user_id] || "none"}
-                    onFriendshipChange={loadMembers}
-                  />
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                  >
+                    <MemberCard
+                      member={m}
+                      friendshipStatus={friendships[m.user_id] || "none"}
+                      onFriendshipChange={loadMembers}
+                    />
+                  </motion.div>
                 ))}
               </div>
             </div>
@@ -177,13 +183,19 @@ export default function Members() {
                 {onlineMembers.length > 0 ? "Outros membros" : "Todos os membros"} ({offlineMembers.length})
               </h2>
               <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-                {offlineMembers.map(m => (
-                  <MemberCard
+                {offlineMembers.map((m, idx) => (
+                  <motion.div
                     key={m.user_id}
-                    member={m}
-                    friendshipStatus={friendships[m.user_id] || "none"}
-                    onFriendshipChange={loadMembers}
-                  />
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: (idx + onlineMembers.length) * 0.02 }}
+                  >
+                    <MemberCard
+                      member={m}
+                      friendshipStatus={friendships[m.user_id] || "none"}
+                      onFriendshipChange={loadMembers}
+                    />
+                  </motion.div>
                 ))}
               </div>
             </div>
