@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";

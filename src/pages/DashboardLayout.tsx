@@ -187,7 +187,7 @@ export default function DashboardLayout() {
         <div className="p-5 border-b border-border/30">
           <Link to="/dashboard" className="flex items-center gap-3 group">
             <div className="bg-primary/20 p-2.5 rounded-xl text-primary transition-transform group-hover:rotate-12 duration-300"><Castle size={24} /></div>
-            <span className="font-heading text-xl text-gold-gradient leading-tight tracking-tighter">Hogwarts<br/>House</span>
+            <span className="font-heading text-xl text-gold-gradient leading-tight tracking-tighter drop-shadow-[0_0_10px_rgba(212,175,55,0.3)] group-hover:scale-105 transition-transform duration-500">Hogwarts<br/>House</span>
           </Link>
         </div>
 
@@ -297,9 +297,9 @@ export default function DashboardLayout() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
+                initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: -20, filter: "blur(10px)" }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
                 className="pb-24 md:pb-20"
               >
