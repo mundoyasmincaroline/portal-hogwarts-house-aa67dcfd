@@ -27,9 +27,12 @@ const PostCard = memo(({
 }: PostCardProps) => (
   <motion.div 
     initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    className="glass rounded-2xl sm:rounded-[2.5rem] p-4 sm:p-6 transition-all duration-500 border-white/5 hover:border-primary/20"
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.5, ease: "easeOut" }}
+    className="glass rounded-3xl p-5 sm:p-7 border-white/5 hover:border-primary/20 shadow-[0_15px_35px_rgba(0,0,0,0.3)] group/card relative"
   >
+    <div className="absolute top-0 right-10 w-20 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity" />
     <div className="flex items-center gap-4 mb-4">
       <div className={`w-12 h-12 rounded-full bg-secondary/50 flex items-center justify-center font-heading text-primary overflow-hidden border-2 shrink-0 ${post.author?.house === 'gryffindor' ? 'border-red-500/50' : post.author?.house === 'slytherin' ? 'border-green-500/50' : post.author?.house === 'ravenclaw' ? 'border-blue-500/50' : 'border-yellow-500/50'}`}>
         <SafeImage 
