@@ -133,37 +133,37 @@ export default function StickerAlbum() {
         <div className="absolute inset-0 bg-gradient-to-br from-[#1a0f02] via-[#2a1b0a] to-[#0a121a] z-0" />
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2070')] bg-cover bg-center opacity-20 group-hover:scale-105 transition-transform duration-[2000ms]" />
         
-        <div className="relative z-10 p-8 sm:p-16 md:p-24 text-center space-y-8">
-          <div className="inline-flex items-center gap-4 bg-black/60 backdrop-blur-xl border border-yellow-500/30 rounded-full px-8 py-3 shadow-2xl animate-float">
+        <div className="relative z-10 p-6 sm:p-10 md:p-14 text-center space-y-6">
+          <div className="inline-flex items-center gap-3 bg-black/60 backdrop-blur-xl border border-yellow-500/30 rounded-full px-6 py-2 shadow-2xl">
             <MagicalEmoji emoji="📜" size="xs" glowColor="rgba(234, 179, 8, 0.5)" />
             <span className="text-[10px] font-heading text-yellow-500 uppercase tracking-[0.5em] font-bold">Biblioteca Proibida</span>
           </div>
           
-          <div className="space-y-4">
-            <h1 className="font-heading text-4xl sm:text-6xl md:text-8xl text-gold-gradient mb-3 drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] tracking-tighter">
+          <div className="space-y-3">
+            <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl text-gold-gradient mb-2 drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] tracking-tight leading-[1.1]">
               {completedBanner ? "🏆 ÁLBUM LENDÁRIO 🏆" : "Coleção de Relíquias"}
             </h1>
-            <p className="text-yellow-100/60 text-sm sm:text-xl max-w-3xl mx-auto font-serif italic leading-relaxed">
+            <p className="text-yellow-100/60 text-sm sm:text-base max-w-2xl mx-auto font-serif italic leading-relaxed">
               "As memórias de Hogwarts estão gravadas nestas páginas. Encontre cada fragmento e restaure o equilíbrio da magia."
             </p>
           </div>
 
-          <div className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-8">
-            <div className="inline-flex items-center gap-6 bg-zinc-900/80 backdrop-blur-2xl px-10 py-5 rounded-[2rem] border border-yellow-500/20 shadow-2xl group/xp hover:border-yellow-500/50 transition-colors">
+          <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="inline-flex items-center gap-4 bg-zinc-900/80 backdrop-blur-xl px-6 py-3 rounded-2xl border border-yellow-500/20 shadow-xl hover:border-yellow-500/50 transition-colors">
               <div className="relative">
                 <div className="absolute inset-0 bg-yellow-500/20 blur-xl rounded-full" />
-                <MagicalEmoji emoji="⚡" size="sm" glowColor="rgba(234, 179, 8, 0.6)" className="group-hover/xp:rotate-12 transition-transform relative z-10" />
+                <MagicalEmoji emoji="⚡" size="sm" glowColor="rgba(234, 179, 8, 0.6)" className="relative z-10" />
               </div>
               <div className="text-left">
                 <p className="text-[10px] text-yellow-500/60 uppercase font-bold tracking-[0.2em]">Poder Mágico</p>
-                <p className="font-heading text-2xl sm:text-4xl text-yellow-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.4)]">{profile?.xp || 0} XP</p>
+                <p className="font-heading text-2xl sm:text-3xl text-yellow-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.4)]">{profile?.xp || 0} XP</p>
               </div>
             </div>
             
             <Button 
               variant="plaque" 
               size="lg" 
-              className="h-16 sm:h-24 px-10 sm:px-16 rounded-[2rem] shadow-[0_20px_50px_-10px_rgba(234,179,8,0.5)] w-full sm:w-auto text-base sm:text-xl group/btn overflow-hidden relative" 
+              className="h-14 sm:h-16 px-8 sm:px-10 rounded-2xl shadow-[0_15px_40px_-10px_rgba(234,179,8,0.5)] w-full sm:w-auto text-sm sm:text-base group/btn overflow-hidden relative" 
               onClick={openSurprisePack} 
               disabled={openingPack || (profile?.xp ?? 0) < 80}
             >
