@@ -307,9 +307,9 @@ export default function DashboardLayout() {
               </motion.div>
             </AnimatePresence>
           </div>
-          <PWAInstallPrompt />
-          <BottomNav />
         </div>
+        <BottomNav />
+        <PWAInstallPrompt />
       </main>
     </div>
   );
