@@ -183,7 +183,7 @@ export default function DashboardLayout() {
         )}
       </AnimatePresence>
 
-      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-72 md:w-64 bg-card border-r border-border/40 flex flex-col transition-all duration-500 ease-in-out md:translate-x-0 ${sidebarOpen ? "translate-x-0 shadow-[20px_0_60px_rgba(0,0,0,0.9)]" : "-translate-x-full"}`}>
+      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-[85vw] max-w-72 md:w-64 bg-card border-r border-border/40 flex flex-col transition-all duration-500 ease-in-out md:translate-x-0 ${sidebarOpen ? "translate-x-0 shadow-[20px_0_60px_rgba(0,0,0,0.9)]" : "-translate-x-full"}`}>
         <div className="p-5 border-b border-border/30">
           <Link to="/dashboard" className="flex items-center gap-3 group">
             <div className="bg-primary/20 p-2.5 rounded-xl text-primary transition-transform group-hover:rotate-12 duration-300"><Castle size={24} /></div>
@@ -262,31 +262,31 @@ export default function DashboardLayout() {
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <NotificationBanner />
-        <header className="md:hidden flex items-center justify-between px-4 h-16 border-b border-white/5 bg-card/60 backdrop-blur-2xl sticky top-0 z-30">
-          <div className="flex items-center gap-4">
+        <header className="md:hidden flex items-center justify-between px-3 sm:px-4 h-14 sm:h-16 border-b border-white/5 bg-card/60 backdrop-blur-2xl sticky top-0 z-30">
+          <div className="flex items-center gap-2 sm:gap-4">
             <button 
               onClick={() => setSidebarOpen(true)} 
-              className="touch-target w-12 h-12 -ml-2 text-muted-foreground hover:text-primary active:scale-90 transition-all rounded-2xl hover:bg-primary/10 border border-transparent active:border-primary/20"
+              className="touch-target w-10 h-10 sm:w-12 sm:h-12 -ml-1 sm:-ml-2 text-muted-foreground hover:text-primary active:scale-90 transition-all rounded-2xl hover:bg-primary/10 border border-transparent active:border-primary/20 flex items-center justify-center"
             >
-              <Menu size={24} />
+              <Menu size={20} className="sm:w-6 sm:h-6" />
             </button>
-            <span className="font-heading text-lg text-gold-gradient tracking-tighter">Hogwarts House</span>
+            <span className="font-heading text-base sm:text-lg text-gold-gradient tracking-tighter truncate max-w-[120px] sm:max-w-none">Hogwarts House</span>
           </div>
-          <div className="flex items-center gap-3">
-              <Link to="/dashboard/wallet" className="min-h-11 px-3 rounded-2xl border border-primary/20 bg-primary/10 text-primary flex items-center gap-1.5 active:scale-95 transition-all">
-                <Wallet size={15} />
-                <span className="font-heading text-xs">{(profile?.galeons || 0).toLocaleString("pt-BR")}</span>
+          <div className="flex items-center gap-1.5 sm:gap-3">
+              <Link to="/dashboard/wallet" className="min-h-[36px] sm:min-h-11 px-2 sm:px-3 rounded-xl sm:rounded-2xl border border-primary/20 bg-primary/10 text-primary flex items-center gap-1 sm:gap-1.5 active:scale-95 transition-all">
+                <Wallet size={12} className="sm:w-[15px] sm:h-[15px]" />
+                <span className="font-heading text-[10px] sm:text-xs">{(profile?.galeons || 0).toLocaleString("pt-BR")}</span>
               </Link>
              <Notifications />
-              <Link to="/dashboard/profile" className="w-11 h-11 rounded-2xl overflow-hidden border-2 border-primary/40 shadow-[0_0_20px_rgba(212,175,55,0.25)] active:scale-95 transition-all">
+              <Link to="/dashboard/profile" className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl overflow-hidden border-2 border-primary/40 shadow-[0_0_20px_rgba(212,175,55,0.25)] active:scale-95 transition-all">
                 <SafeImage src={profile?.avatar_url} alt={profile?.full_name || "Avatar"} className="w-full h-full object-cover" />
               </Link>
           </div>
         </header>
 
 
-        <div className="flex-1 overflow-y-auto relative scroll-smooth contain-strict portal-cinematic-bg">
-          <div className="page-container">
+        <div className="flex-1 overflow-y-auto relative scroll-smooth contain-strict portal-cinematic-bg pb-safe">
+          <div className="page-container px-3 sm:px-6">
             {location.pathname === "/dashboard" && (
               <div className="space-y-6 mb-8">
                 <DailyProphetTicker />

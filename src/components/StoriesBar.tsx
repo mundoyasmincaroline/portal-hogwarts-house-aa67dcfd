@@ -190,10 +190,10 @@ export default function StoriesBar() {
         {/* Adicionar Story */}
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex flex-col items-center gap-3 shrink-0 group relative"
+          className="flex flex-col items-center gap-2 sm:gap-3 shrink-0 group relative"
         >
-          <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-3xl bg-secondary/30 border-2 border-dashed border-primary/40 flex items-center justify-center transition-all duration-500 group-hover:border-primary group-hover:scale-105 active:scale-95 group-hover:rotate-3 shadow-lg">
-            <span className="text-3xl text-primary font-light">+</span>
+          <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-secondary/30 border-2 border-dashed border-primary/40 flex items-center justify-center transition-all duration-500 group-hover:border-primary group-hover:scale-105 active:scale-95 group-hover:rotate-3 shadow-lg">
+            <span className="text-2xl sm:text-3xl text-primary font-light">+</span>
           </div>
           <span className="text-[10px] font-heading text-muted-foreground uppercase tracking-widest group-hover:text-primary transition-colors">Seu Story</span>
         </button>
@@ -206,10 +206,10 @@ export default function StoriesBar() {
             <button
               key={userId}
               onClick={() => openStory(userId)}
-              className="flex flex-col items-center gap-3 shrink-0 group relative"
+              className="flex flex-col items-center gap-2 sm:gap-3 shrink-0 group relative"
             >
-              <div className={`w-18 h-18 sm:w-20 sm:h-20 rounded-3xl p-1 transition-all duration-500 group-hover:scale-110 active:scale-95 group-hover:-rotate-3 shadow-xl ${isMe ? "bg-gradient-to-tr from-primary/20 to-transparent border border-dashed border-primary/50" : "bg-gradient-to-tr from-primary via-primary/40 to-primary border-2 border-transparent shadow-[0_0_20px_rgba(212,175,55,0.3)]"}`}>
-                <div className="w-full h-full rounded-[1.25rem] bg-card overflow-hidden relative border border-black/20">
+              <div className={`w-14 h-14 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl p-0.5 sm:p-1 transition-all duration-500 group-hover:scale-110 active:scale-95 group-hover:-rotate-3 shadow-xl ${isMe ? "bg-gradient-to-tr from-primary/20 to-transparent border border-dashed border-primary/50" : "bg-gradient-to-tr from-primary via-primary/40 to-primary border-2 border-transparent shadow-[0_0_20px_rgba(212,175,55,0.3)]"}`}>
+                <div className="w-full h-full rounded-xl sm:rounded-[1.25rem] bg-card overflow-hidden relative border border-black/20">
                   <SafeImage
                     src={prof?.avatar_url}
                     alt={prof?.full_name || ""}

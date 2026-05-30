@@ -98,10 +98,10 @@ export default function Members() {
   return (
     <div className="max-w-6xl mx-auto space-y-6 pb-10 px-2 sm:px-0">
       {/* Header */}
-      <div className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 relative overflow-hidden border border-primary/20">
+      <div className="glass rounded-2xl sm:rounded-3xl p-4 sm:p-8 relative overflow-hidden border border-primary/20">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2070')] bg-cover bg-center opacity-10" />
         <div className="relative z-10">
-          <h1 className="font-heading text-4xl text-gold-gradient flex items-center gap-3">
+          <h1 className="font-heading text-2xl sm:text-4xl text-gold-gradient flex items-center gap-2 sm:gap-3">
             <Users size={36} /> Membros do Portal
           </h1>
           <p className="text-muted-foreground text-sm mt-2">
@@ -156,7 +156,7 @@ export default function Members() {
                 <span className="w-2 h-2 rounded-full bg-green-500 inline-block animate-pulse" />
                 Online agora ({onlineMembers.length})
               </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
                 {onlineMembers.map(m => (
                   <MemberCard
                     key={m.user_id}
@@ -176,7 +176,7 @@ export default function Members() {
                 <span className="w-2 h-2 rounded-full bg-muted-foreground/40 inline-block" />
                 {onlineMembers.length > 0 ? "Outros membros" : "Todos os membros"} ({offlineMembers.length})
               </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
                 {offlineMembers.map(m => (
                   <MemberCard
                     key={m.user_id}
