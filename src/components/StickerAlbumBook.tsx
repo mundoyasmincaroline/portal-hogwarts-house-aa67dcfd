@@ -15,7 +15,7 @@ interface Props {
   profileXp: number;
 }
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 8;
 
 export default function StickerAlbumBook({ stickers, userStickers, onBuy, buyingId, profileLevel, profileXp }: Props) {
   const [page, setPage] = useState(0);
@@ -131,8 +131,8 @@ export default function StickerAlbumBook({ stickers, userStickers, onBuy, buying
                   {/* Left Page */}
                   <div className="p-4 sm:p-12 flex flex-col items-center border-b sm:border-b-0 sm:border-r border-black/5 relative">
                     <div className="absolute inset-0 bg-gradient-to-l from-black/5 to-transparent pointer-events-none" />
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full relative z-10">
-                      {currentItems.slice(0, 3).map((s) => (
+                    <div className="grid grid-cols-2 gap-3 w-full relative z-10">
+                      {currentItems.slice(0, 4).map((s) => (
                         <StickerSlot key={s.id} sticker={s} owned={!!userStickers[s.id]} onBuy={onBuy} buying={buyingId === s.id} profileLevel={profileLevel} profileXp={profileXp} />
                       ))}
                     </div>
@@ -141,8 +141,8 @@ export default function StickerAlbumBook({ stickers, userStickers, onBuy, buying
                   {/* Right Page */}
                   <div className="p-4 sm:p-12 flex flex-col items-center border-t sm:border-t-0 sm:border-l border-black/5 relative">
                     <div className="absolute inset-0 bg-gradient-to-r from-black/5 to-transparent pointer-events-none" />
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full relative z-10">
-                      {currentItems.slice(3, 6).map((s) => (
+                    <div className="grid grid-cols-2 gap-3 w-full relative z-10">
+                      {currentItems.slice(4, 8).map((s) => (
                         <StickerSlot key={s.id} sticker={s} owned={!!userStickers[s.id]} onBuy={onBuy} buying={buyingId === s.id} profileLevel={profileLevel} profileXp={profileXp} />
                       ))}
                     </div>
