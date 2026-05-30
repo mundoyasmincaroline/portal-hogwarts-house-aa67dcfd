@@ -87,16 +87,66 @@ export default function HouseCupWidget({ isLanding = false }: { isLanding?: bool
   const leaderColor = leader?.house === 'slytherin' ? 'rgba(16, 185, 129, 0.4)' : leader?.house === 'gryffindor' ? 'rgba(220, 38, 38, 0.4)' : leader?.house === 'ravenclaw' ? 'rgba(37, 99, 235, 0.4)' : 'rgba(217, 119, 6, 0.4)';
 
   return (
-    <div className={`relative group ${isLanding ? 'max-w-6xl mx-auto py-8 sm:py-16' : 'w-full px-1 sm:px-2 py-4'}`}>
+    <div className={`relative group ${isLanding ? 'max-w-4xl mx-auto' : 'w-full px-1 sm:px-2 py-2'}`}>
       {/* ── CINEMATIC AURA (THE "FACE" OF THE HOUSE) ── */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <div 
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] blur-[120px] opacity-20 transition-all duration-1000 animate-pulse-glow"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] blur-[100px] opacity-15 transition-all duration-1000 animate-pulse-glow"
           style={{ backgroundColor: leaderColor }}
         />
       </div>
 
-      <div className={`relative z-10 glass rounded-2xl sm:rounded-[3rem] p-5 sm:p-8 md:p-12 border border-white/10 bg-gradient-to-br from-black/90 via-zinc-900/40 to-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-700 ${isLanding ? 'hover:scale-[1.01]' : ''}`}>
+      {/* ── COMPACT MODE (default everywhere) ── */}
+      <div className="relative z-10 glass rounded-2xl sm:rounded-3xl p-3 sm:p-5 border border-white/10 bg-gradient-to-br from-black/80 via-zinc-900/30 to-white/[0.03] shadow-[0_10px_30px_rgba(0,0,0,0.4)] overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-yellow-500/30 to-transparent" />
+        <div className="flex items-center gap-3 sm:gap-5">
+          {/* Leader badge */}
+          <div className="shrink-0 flex items-center gap-2 sm:gap-3 pr-3 sm:pr-5 border-r border-white/10">
+            <div className="relative">
+              <div className="absolute inset-0 rounded-full blur-xl opacity-60" style={{ backgroundColor: leaderColor }} />
+              <div className="relative scale-75 sm:scale-90 origin-center">
+                <HouseCrest house={leader?.house || 'gryffindor'} size="sm" />
+              </div>
+            </div>
+            <div className="hidden sm:block">
+              <p className="text-[8px] font-heading text-yellow-500/80 uppercase tracking-[0.3em] font-bold leading-none mb-1">Liderando</p>
+              <p className={`text-xs font-heading uppercase tracking-tight ${leader?.color.replace('bg-', 'text-')} font-bold leading-none`}>
+                {leader?.label}
+              </p>
+            </div>
+          </div>
+
+          {/* Mini bars */}
+          <div className="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 min-w-0">
+            {scores.map((s) => (
+              <div key={s.house} className="flex items-center gap-1.5 min-w-0">
+                <span className="text-sm shrink-0" aria-hidden>{s.icon}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-1 mb-0.5">
+                    <span className={`text-[9px] font-heading uppercase tracking-wider ${s.color.replace('bg-', 'text-')} font-bold truncate`}>{s.label.slice(0,3)}</span>
+                    <span className="text-[9px] font-mono text-white/50 shrink-0">{s.percentage}%</span>
+                  </div>
+                  <div className="h-1.5 bg-black/60 rounded-full overflow-hidden border border-white/5">
+                    <div
+                      className={`h-full ${s.color} transition-all duration-[2000ms] ease-out rounded-full`}
+                      style={{ width: `${loading ? 0 : s.percentage}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Trophy */}
+          <div className="hidden md:flex shrink-0 w-9 h-9 rounded-xl bg-yellow-500/10 border border-yellow-500/30 items-center justify-center">
+            <Trophy size={14} className="text-yellow-400" />
+          </div>
+        </div>
+      </div>
+
+      {/* legacy expanded layout removed for performance & cleaner navigation */}
+      {false && (
+      <div className={`relative z-10 glass rounded-2xl sm:rounded-[3rem] p-5 sm:p-8 md:p-12 border border-white/10 bg-gradient-to-br from-black/90 via-zinc-900/40 to-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-700`}>
         {/* Background Textures */}
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none" />
         <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
@@ -184,6 +234,7 @@ export default function HouseCupWidget({ isLanding = false }: { isLanding?: bool
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 }
