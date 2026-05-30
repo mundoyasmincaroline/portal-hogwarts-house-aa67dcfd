@@ -14,13 +14,14 @@ const MagicalGaleon = memo(function MagicalGaleon({ size = "md", className = "" 
   };
 
   return (
-    <div className={`relative inline-flex items-center justify-center shrink-0 ${sizeMap[size]} ${className}`}>
+    <div className={`relative inline-flex items-center justify-center shrink-0 ${sizeMap[size]} ${className} group/galeon`}>
       <img
         src="/monster_quality_galeon.png"
         alt="Galeon"
-        className="w-full h-full object-contain drop-shadow-[0_0_10px_rgba(234,179,8,0.6)] group-hover:scale-110 group-hover:rotate-12 transition-all duration-500"
+        className="w-full h-full object-contain drop-shadow-[0_0_15px_rgba(234,179,8,0.7)] group-hover/galeon:scale-110 group-hover/galeon:rotate-[15deg] transition-all duration-500 animate-float"
       />
-      <div className="absolute inset-0 bg-yellow-400/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+      <div className="absolute inset-0 bg-yellow-400/20 blur-xl rounded-full opacity-0 group-hover/galeon:opacity-100 transition-opacity duration-700" />
+      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/40 to-transparent opacity-0 group-hover/galeon:opacity-100 -translate-x-full group-hover/galeon:translate-x-full transition-all duration-1000 skew-x-[25deg]" />
     </div>
   );
 });
