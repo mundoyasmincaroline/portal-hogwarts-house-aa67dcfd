@@ -196,14 +196,14 @@ export default function Feed() {
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2 space-y-4">
-          <div className="glass rounded-[2rem] p-4 sm:p-6 border-white/10 shadow-2xl relative overflow-hidden group">
+          <div className="glass rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 border-white/10 shadow-2xl relative overflow-hidden group">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
             <textarea
               value={newPost}
               onChange={(e) => setNewPost(e.target.value)}
               placeholder="O que está acontecendo no castelo?"
               maxLength={1000}
-              className="w-full bg-transparent resize-none text-base text-foreground placeholder:text-muted-foreground focus:outline-none min-h-[100px] font-serif italic"
+              className="w-full bg-transparent resize-none text-sm sm:text-base text-foreground placeholder:text-muted-foreground focus:outline-none min-h-[80px] sm:min-h-[100px] font-serif italic"
             />
             <div className="flex flex-col sm:flex-row gap-3 mt-4 pt-4 border-t border-white/5">
               <div className="flex-1 relative group/input">

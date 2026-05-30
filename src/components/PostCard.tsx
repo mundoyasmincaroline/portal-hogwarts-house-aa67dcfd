@@ -28,7 +28,7 @@ const PostCard = memo(({
   <motion.div 
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
-    className="glass rounded-[2rem] p-5 sm:p-6 transition-all duration-500 border-white/5 hover:border-white/10"
+    className="glass rounded-2xl sm:rounded-[2.5rem] p-4 sm:p-6 transition-all duration-500 border-white/5 hover:border-white/10"
   >
     <div className="flex items-center gap-4 mb-4">
       <div className={`w-12 h-12 rounded-full bg-secondary/50 flex items-center justify-center font-heading text-primary overflow-hidden border-2 shrink-0 ${post.author?.house === 'gryffindor' ? 'border-red-500/50' : post.author?.house === 'slytherin' ? 'border-green-500/50' : post.author?.house === 'ravenclaw' ? 'border-blue-500/50' : 'border-yellow-500/50'}`}>
@@ -52,7 +52,7 @@ const PostCard = memo(({
       {post.author?.house && <div className="hidden sm:block shrink-0 opacity-80 hover:opacity-100 transition-opacity"><HouseCrest house={post.author.house} size="sm" /></div>}
     </div>
 
-    <p className="text-[15px] leading-relaxed text-foreground/90 mb-5 whitespace-pre-wrap font-serif italic border-l-2 border-primary/20 pl-4 py-1">
+    <p className="text-sm sm:text-[15px] leading-relaxed text-foreground/90 mb-5 whitespace-pre-wrap font-serif italic border-l-2 border-primary/20 pl-4 py-1">
       {post.content}
     </p>
     
@@ -80,7 +80,7 @@ const PostCard = memo(({
           <button
             key={r.emoji}
             onClick={() => onToggleReaction(post.id, r.emoji, r.mine)}
-            className={`px-4 py-1.5 rounded-2xl text-xs transition-all duration-300 flex items-center gap-1.5 active:scale-90 ${r.mine ? "bg-primary/20 text-primary border border-primary/30 shadow-[0_0_15px_rgba(212,175,55,0.1)]" : "glass hover:bg-white/5 border-white/5"}`}
+            className={`px-3 sm:px-4 py-1.5 rounded-2xl text-[10px] sm:text-xs transition-all duration-300 flex items-center gap-1 sm:gap-1.5 active:scale-90 ${r.mine ? "bg-primary/20 text-primary border border-primary/30 shadow-[0_0_15px_rgba(212,175,55,0.1)]" : "glass hover:bg-white/5 border-white/5"}`}
           >
             <span className="text-sm">{r.emoji}</span>
             <span className="font-bold">{r.count}</span>
@@ -106,7 +106,7 @@ const PostCard = memo(({
 
       <button
         onClick={() => onToggleComments(post.id)}
-        className="glass px-4 py-1.5 rounded-2xl text-[11px] font-heading uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/30 transition-all active:scale-95 ml-auto sm:ml-0"
+        className="glass px-3 sm:px-4 py-1.5 rounded-2xl text-[10px] sm:text-[11px] font-heading uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/30 transition-all active:scale-95 ml-auto sm:ml-0"
       >
         💬 {post.comments.length}
       </button>
