@@ -154,10 +154,10 @@ export default function ProfileAlbum({ userId }: { userId: string }) {
         <StickerAlbumBook 
           stickers={visible} 
           userStickers={Object.fromEntries(Array.from(ownedIds).map(id => [id, true]))}
-          onBuy={() => {}} // No buying directly from profile for others, maybe?
+          onBuy={() => {}} 
           buyingId={null}
-          profileLevel={100} // Dummy for display
-          profileXp={1000} // Dummy for display
+          profileLevel={100} 
+          profileXp={1000} 
         />
         
         <div className="flex justify-center mt-4">
@@ -168,9 +168,6 @@ export default function ProfileAlbum({ userId }: { userId: string }) {
           </Link>
         </div>
       </div>
-    </div>
-  );
-}
     </div>
   );
 }
