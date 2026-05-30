@@ -22,8 +22,8 @@ export default function BottomNav() {
             <Link
               key={item.path}
               to={item.path}
-              className={`relative flex flex-col items-center gap-0.5 p-2 transition-all duration-300 min-w-[60px] ${
-                isActive ? "text-primary" : "text-muted-foreground/60 active:text-foreground"
+              className={`relative flex flex-col items-center gap-1 p-2 transition-all duration-300 min-w-[50px] ${
+                isActive ? "text-primary scale-110" : "text-muted-foreground/60 active:scale-90"
               }`}
             >
               {isActive && (
