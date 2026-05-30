@@ -1,127 +1,92 @@
-/**
- * StickerVisual — arte gerada em código para figurinhas do álbum
- * Detecta tema pelo nome e renderiza arte SVG única por raridade
- */
+import React from "react";
+import { motion } from "framer-motion";
+import { Sparkles, Lock } from "lucide-react";
 
-type Rarity = "bronze" | "silver" | "gold";
-
-function detect(name: string) {
-  const n = name.toLowerCase();
-  if (n.includes("grifin") || n.includes("gryffin") || n.includes("leão") || n.includes("lion")) return "gryffindor";
-  if (n.includes("sonser") || n.includes("slyther") || n.includes("serp") || n.includes("snake")) return "slytherin";
-  if (n.includes("corvin") || n.includes("raven") || n.includes("águia")) return "ravenclaw";
-  if (n.includes("lufa") || n.includes("hufflep") || n.includes("texugo")) return "hufflepuff";
-  if (n.includes("vassoura") || n.includes("nimbus") || n.includes("firebolt") || n.includes("saeta")) return "broom";
-  if (n.includes("varinha") || n.includes("wand") || n.includes("bacinha")) return "wand";
-  if (n.includes("coruja") || n.includes("edwiges") || n.includes("owl")) return "owl";
-  if (n.includes("dragão") || n.includes("dragon")) return "dragon";
-  if (n.includes("pomo") || n.includes("snitch")) return "snitch";
-  if (n.includes("caldeirão") || n.includes("poção") || n.includes("cauldron")) return "cauldron";
-  if (n.includes("mapa") || n.includes("maroto")) return "map";
-  if (n.includes("chapéu") || n.includes("sorting") || n.includes("hat")) return "hat";
-  if (n.includes("troll") || n.includes("dement") || n.includes("basilisco") || n.includes("werewolf")) return "creature";
-  return "wizard";
-}
-
-const RARITY_STYLE: Record<Rarity, { border: string; glow: string; bg: string; shine: string }> = {
-  bronze: { border: "#92400e", glow: "rgba(180,83,9,0.5)", bg: "from-amber-950 via-amber-900/60 to-stone-950", shine: "#D97706" },
-  silver: { border: "#94a3b8", glow: "rgba(148,163,184,0.4)", bg: "from-slate-800 via-slate-700/60 to-slate-900", shine: "#CBD5E1" },
-  gold:   { border: "#FBBF24", glow: "rgba(251,191,36,0.6)", bg: "from-yellow-900 via-amber-800/60 to-stone-950", shine: "#FDE68A" },
-};
-
-const THEME_MAP: Record<string, { emoji: string; color: string; label: string }> = {
-  gryffindor: { emoji: "🦁", color: "#EF4444", label: "Grifinória" },
-  slytherin:  { emoji: "🐍", color: "#10B981", label: "Sonserina" },
-  ravenclaw:  { emoji: "🦅", color: "#60A5FA", label: "Corvinal" },
-  hufflepuff: { emoji: "🦡", color: "#FBBF24", label: "Lufa-Lufa" },
-  broom:      { emoji: "🧹", color: "#F59E0B", label: "Vassoura" },
-  wand:       { emoji: "🪄", color: "#A855F7", label: "Varinha" },
-  owl:        { emoji: "🦉", color: "#94a3b8", label: "Coruja" },
-  dragon:     { emoji: "🐉", color: "#EF4444", label: "Dragão" },
-  snitch:     { emoji: "✨", color: "#FBBF24", label: "Pomo" },
-  cauldron:   { emoji: "🧪", color: "#6EE7B7", label: "Caldeirão" },
-  map:        { emoji: "🗺️", color: "#C084FC", label: "Mapa" },
-  hat:        { emoji: "🎩", color: "#a16207", label: "Chapéu" },
-  creature:   { emoji: "👁️", color: "#7C3AED", label: "Criatura" },
-  wizard:     { emoji: "🧙", color: "#818CF8", label: "Mago(a)" },
-};
-
-interface Props {
+interface StickerVisualProps {
   name: string;
-  rarity: Rarity;
-  unlocked: boolean;
+  rarity: "bronze" | "silver" | "gold";
+  unlocked?: boolean;
   imageUrl?: string | null;
   failedImage?: boolean;
 }
 
-export default function StickerVisual({ name, rarity, unlocked, imageUrl, failedImage }: Props) {
-  const style = RARITY_STYLE[rarity];
-  const theme = THEME_MAP[detect(name)] || THEME_MAP.wizard;
+const StickerVisual = ({ name, rarity, unlocked = false, imageUrl, failedImage }: StickerVisualProps) => {
+  const getRarityStyles = () => {
+    switch (rarity) {
+      case "gold":
+        return {
+          border: "border-yellow-400/50",
+          glow: "shadow-[0_0_20px_rgba(251,191,36,0.3)]",
+          bg: "bg-gradient-to-br from-yellow-900/40 via-yellow-600/20 to-black",
+          text: "text-yellow-400"
+        };
+      case "silver":
+        return {
+          border: "border-slate-300/40",
+          glow: "shadow-[0_0_15px_rgba(203,213,225,0.2)]",
+          bg: "bg-gradient-to-br from-slate-800/40 via-slate-500/10 to-black",
+          text: "text-slate-200"
+        };
+      default:
+        return {
+          border: "border-amber-800/40",
+          glow: "shadow-[0_0_10px_rgba(146,64,14,0.15)]",
+          bg: "bg-gradient-to-br from-amber-950/40 via-amber-800/10 to-black",
+          text: "text-amber-600"
+        };
+    }
+  };
 
-  // Se tem imagem real e carregou, apenas renderiza o fundo se for gold
-  if (imageUrl && !failedImage && rarity !== 'gold') return null;
-
-  const stars = Array.from({ length: 6 }, (_, i) => ({
-    x: 10 + (i * 73) % 85,
-    y: 5 + (i * 57) % 85,
-    size: 1.5 + (i % 3) * 0.8,
-    delay: i * 0.4,
-  }));
+  const styles = getRarityStyles();
 
   return (
-    <div className={`absolute inset-0 bg-gradient-to-br ${style.bg} flex items-center justify-center overflow-hidden`}>
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
-
-      {/* Stars */}
-      {stars.map((s, i) => (
-        <div key={i} className="absolute rounded-full animate-pulse"
-          style={{ left: `${s.x}%`, top: `${s.y}%`, width: s.size * 2, height: s.size * 2,
-            background: style.shine, opacity: unlocked ? 0.5 : 0.15,
-            animationDelay: `${s.delay}s`, animationDuration: "2s" }} />
-      ))}
-
-      {/* Glow circle */}
-      <div className="absolute" style={{
-        width: 150, height: 150,
-        background: `radial-gradient(circle, ${theme.color}20 0%, transparent 70%)`,
-        borderRadius: "50%", filter: "blur(24px)",
-      }} />
-
-      {/* Holographic Effect for Gold */}
-      {rarity === "gold" && unlocked && (
-        <div className="absolute inset-0 z-20 bg-gradient-to-tr from-yellow-400/20 via-transparent to-white/30 mix-blend-overlay animate-pulse pointer-events-none" />
-      )}
-
-      {/* Main content - only show emoji if no image or if image failed */}
-      {(!imageUrl || failedImage) && (
-        <div className="relative z-10 flex flex-col items-center gap-1"
-          style={{ filter: unlocked ? `drop-shadow(0 0 14px ${theme.color}80)` : "none" }}>
-          <span className={`text-6xl select-none transition-all ${unlocked ? "scale-110" : "grayscale opacity-30 scale-90"}`}>
-            {theme.emoji}
-          </span>
-          {rarity === "gold" && unlocked && (
-            <div className="flex flex-col items-center">
-              <span className="text-[8px] font-heading text-yellow-400 tracking-[0.3em] uppercase font-bold drop-shadow-md">Relíquia</span>
-              <div className="h-0.5 w-8 bg-yellow-400/50 rounded-full mt-0.5" />
+    <motion.div 
+      whileHover={unlocked ? { scale: 1.05, rotate: 1 } : {}}
+      className={`relative w-full aspect-[3/4] rounded-2xl overflow-hidden border-2 ${styles.border} ${styles.glow} ${styles.bg} group transition-all duration-500`}
+    >
+      {!unlocked ? (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 backdrop-blur-[2px]">
+          <Lock className="w-8 h-8 text-white/20 mb-2" />
+          <p className="text-[10px] font-heading uppercase tracking-widest text-white/30 px-2 text-center">{name}</p>
+        </div>
+      ) : (
+        <>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10" />
+          {imageUrl && !failedImage ? (
+            <motion.img 
+              initial={{ scale: 1.2, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              src={imageUrl} 
+              alt={name} 
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Sparkles className={`w-10 h-10 ${styles.text} opacity-30`} />
             </div>
           )}
-        </div>
-      )}
-
-      {/* Shimmer overlay on hover */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 -translate-x-full group-hover:translate-x-full transition-transform" />
-
-      {/* Locked overlay */}
-      {!unlocked && (
-        <div className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-[2px]">
-          <div className="flex flex-col items-center gap-1">
-            <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center bg-white/5">
-               <span className="text-xl opacity-40">🔮</span>
-            </div>
+          <div className="absolute bottom-2 inset-x-0 text-center z-20 px-2">
+            <p className="font-heading text-xs text-white truncate drop-shadow-lg">{name}</p>
           </div>
-        </div>
+          {rarity === "gold" && (
+             <div className="absolute inset-0 z-15 pointer-events-none overflow-hidden">
+                <motion.div 
+                  animate={{ 
+                    x: ["-100%", "200%"],
+                  }}
+                  transition={{ 
+                    repeat: Infinity, 
+                    duration: 3,
+                    ease: "linear"
+                  }}
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12"
+                />
+             </div>
+          )}
+        </>
       )}
-    </div>
+    </motion.div>
   );
-}
+};
+
+export default StickerVisual;

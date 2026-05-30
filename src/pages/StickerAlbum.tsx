@@ -180,19 +180,40 @@ export default function StickerAlbum() {
         <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-2xl flex flex-col items-center justify-center gap-10 p-4" onClick={packPhase === "reveal" ? closePack : undefined}>
           {packPhase === "shaking" && (
             <div className="relative group cursor-pointer animate-float flex flex-col items-center">
-              <div className="absolute inset-0 bg-purple-500/30 blur-[100px] rounded-full animate-pulse" />
-              <MagicalEmoji emoji="🎁" size="2xl" glowColor="rgba(168, 85, 247, 0.6)" className="animate-bounce" />
+              <div className="absolute inset-0 bg-purple-500/30 blur-[120px] rounded-full animate-pulse" />
+              <motion.div
+                animate={{ 
+                  rotate: [0, -10, 10, -10, 10, 0],
+                  scale: [1, 1.1, 1]
+                }}
+                transition={{ repeat: Infinity, duration: 0.5 }}
+              >
+                <MagicalEmoji emoji="🎁" size="2xl" glowColor="rgba(168, 85, 247, 0.6)" />
+              </motion.div>
               <div className="mt-8 text-center space-y-2">
-                <p className="font-heading text-3xl text-purple-400 animate-pulse uppercase tracking-widest">Invocando Magia...</p>
-                <p className="text-sm text-purple-200/40 font-serif italic">O destino está sendo escrito nas estrelas</p>
+                <p className="font-heading text-4xl text-purple-400 animate-pulse uppercase tracking-[0.5em]">Invocando Magia...</p>
+                <p className="text-lg text-purple-200/60 font-serif italic">"O destino está sendo escrito nas estrelas"</p>
               </div>
-              {/* Magic Particles */}
               <div className="absolute inset-0 z-0 pointer-events-none">
-                 {[...Array(12)].map((_, i) => (
-                    <div key={i} className="absolute w-2 h-2 bg-yellow-400 rounded-full animate-ping" style={{
-                        top: `${Math.random() * 100}%`,
-                        left: `${Math.random() * 100}%`,
-                        animationDelay: `${Math.random() * 2}s`
+                 {[...Array(20)].map((_, i) => (
+                    <motion.div 
+                      key={i} 
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ 
+                        opacity: [0, 1, 0], 
+                        scale: [0, 1.5, 0],
+                        y: [0, -100 - Math.random() * 200],
+                        x: [0, (Math.random() - 0.5) * 300]
+                      }}
+                      transition={{ 
+                        repeat: Infinity, 
+                        duration: 1.5 + Math.random(),
+                        delay: Math.random() * 2
+                      }}
+                      className="absolute w-2 h-2 bg-yellow-400 rounded-full blur-[1px]" 
+                      style={{
+                        top: "50%",
+                        left: "50%",
                     }} />
                  ))}
               </div>
