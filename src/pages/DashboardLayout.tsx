@@ -165,13 +165,13 @@ export default function DashboardLayout() {
   }
 
   // Verificações de acesso e onboarding
-  if (!profile.approved && !isAdmin) return <PendingApproval />;
-  if (!isAdmin && !profile.has_accepted_rules) return <RulesAgreement />;
+  if (!profile.approved && !isAdmin) return <ProtectedRoute adminOnly={false}><PendingApproval /></ProtectedRoute>;
+  if (!isAdmin && !profile.has_accepted_rules) return <ProtectedRoute adminOnly={false}><RulesAgreement /></ProtectedRoute>;
 
   // Só bloqueia se hasCharacters for explicitamente false (carregou e viu que não tem)
   // E se não houver um personagem ativo no perfil
   if (hasCharacters === false && !profile.active_character_id && !adminSkipped) {
-    return <CharacterSelection adminMode={isAdmin} />;
+    return <ProtectedRoute adminOnly={false}><CharacterSelection adminMode={isAdmin} /></ProtectedRoute>;
   }
 
   // Se ainda está carregando os personagens (hasCharacters === null), mas já passou do isLoading do auth,
