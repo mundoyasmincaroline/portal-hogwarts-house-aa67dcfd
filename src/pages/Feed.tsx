@@ -24,6 +24,7 @@ import { useRealtime } from "@/hooks/core/useRealtime";
 import { feedService } from "@/services/features/feedService";
 import { FeedPost } from "@/types";
 import PostCard from "@/components/PostCard";
+import MagicalDashboardHeader from "@/components/MagicalDashboardHeader";
 
 
 const REACTIONS = ["⚡", "❤️", "🔥", "🦁", "🦅", "🐍", "🦡"];
@@ -180,19 +181,7 @@ export default function Feed() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <MagicalMemories />
-      <StoriesBar />
-      <DynamicGreeting />
-
-      
-      <BirthdayBanner />
-      <VipUpsellBanner
-        currentVip={(profile as any)?.vip_plan}
-        galeons={(profile as any)?.galeons ?? 0}
-        username={profile?.full_name}
-      />
-      <DailyHighlight />
-      <MoodSession />
+      <MagicalDashboardHeader />
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2 space-y-4">

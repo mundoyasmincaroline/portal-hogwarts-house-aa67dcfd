@@ -4,7 +4,7 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Trophy, Sparkles, Gift, RefreshCw, Share2 } from "lucide-react";
+import { Trophy, Sparkles, Gift, RefreshCw, Share2, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import StickerVisual from "@/components/StickerVisual";
 import MagicalEmoji from "@/components/MagicalEmoji";
@@ -129,48 +129,48 @@ export default function StickerAlbum() {
   return (
     <div className="max-w-7xl mx-auto space-y-12 pb-20 px-4">
       {/* ── HEADER MONSTER QUALITY ── */}
-      <div className="relative overflow-hidden rounded-[2rem] sm:rounded-[4rem] border border-yellow-500/20 shadow-2xl group">
+      <div className="relative overflow-hidden rounded-[2rem] sm:rounded-[4rem] border border-yellow-500/20 shadow-2xl group min-h-[300px] flex items-center justify-center">
         <div className="absolute inset-0 bg-gradient-to-br from-[#1a0f02] via-[#2a1b0a] to-[#0a121a] z-0" />
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2070')] bg-cover bg-center opacity-20 group-hover:scale-105 transition-transform duration-[2000ms]" />
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2070')] bg-cover bg-center opacity-20 group-hover:scale-105 transition-transform duration-[4000ms] mix-blend-overlay" />
         
-        <div className="relative z-10 p-6 sm:p-10 md:p-14 text-center space-y-6">
-          <div className="inline-flex items-center gap-3 bg-black/60 backdrop-blur-xl border border-yellow-500/30 rounded-full px-6 py-2 shadow-2xl">
-            <MagicalEmoji emoji="📜" size="xs" glowColor="rgba(234, 179, 8, 0.5)" />
-            <span className="text-[10px] font-heading text-yellow-500 uppercase tracking-[0.5em] font-bold">Biblioteca Proibida</span>
-          </div>
-          
-          <div className="space-y-3">
-            <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl text-gold-gradient mb-2 drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] tracking-tight leading-[1.1]">
-              {completedBanner ? "🏆 ÁLBUM LENDÁRIO 🏆" : "Coleção de Relíquias"}
+        <div className="relative z-10 p-6 sm:p-12 md:p-16 text-center space-y-8 w-full">
+          <div className="flex flex-col items-center gap-4">
+            <div className="inline-flex items-center gap-3 bg-black/60 backdrop-blur-xl border border-yellow-500/30 rounded-full px-5 py-2 shadow-2xl animate-in slide-in-from-top-4 duration-700">
+              <Sparkles size={14} className="text-yellow-500 animate-pulse" />
+              <span className="text-[10px] font-heading text-yellow-500 uppercase tracking-[0.4em] font-bold">Biblioteca Proibida de Hogwarts</span>
+            </div>
+            
+            <h1 className="font-heading text-4xl sm:text-6xl md:text-8xl text-gold-gradient drop-shadow-[0_15px_35px_rgba(0,0,0,0.8)] tracking-tighter leading-none">
+              {completedBanner ? "🏆 ÁLBUM LENDÁRIO 🏆" : "Álbum de Magia"}
             </h1>
-            <p className="text-yellow-100/60 text-sm sm:text-base max-w-2xl mx-auto font-serif italic leading-relaxed">
+            
+            <p className="text-yellow-100/60 text-sm sm:text-lg max-w-2xl mx-auto font-serif italic leading-relaxed">
               "As memórias de Hogwarts estão gravadas nestas páginas. Encontre cada fragmento e restaure o equilíbrio da magia."
             </p>
           </div>
 
-          <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <div className="inline-flex items-center gap-4 bg-zinc-900/80 backdrop-blur-xl px-6 py-3 rounded-2xl border border-yellow-500/20 shadow-xl hover:border-yellow-500/50 transition-colors">
-              <div className="relative">
-                <div className="absolute inset-0 bg-yellow-500/20 blur-xl rounded-full" />
-                <MagicalEmoji emoji="⚡" size="sm" glowColor="rgba(234, 179, 8, 0.6)" className="relative z-10" />
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4">
+            <div className="glass bg-white/5 border-primary/20 px-6 py-4 rounded-[2rem] flex items-center gap-4 shadow-2xl hover:border-primary/40 transition-all group/xp">
+              <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover/xp:rotate-12 transition-transform">
+                <Zap size={24} />
               </div>
               <div className="text-left">
-                <p className="text-[10px] text-yellow-500/60 uppercase font-bold tracking-[0.2em]">Poder Mágico</p>
-                <p className="font-heading text-2xl sm:text-3xl text-yellow-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.4)]">{profile?.xp || 0} XP</p>
+                <p className="text-[10px] text-primary/60 uppercase font-black tracking-widest">Poder Mágico</p>
+                <p className="font-heading text-2xl sm:text-3xl text-primary drop-shadow-[0_0_10px_rgba(212,175,55,0.4)]">{profile?.xp || 0} XP</p>
               </div>
             </div>
             
             <Button 
-              variant="plaque" 
+              variant="magical" 
               size="lg" 
-              className="h-14 sm:h-16 px-8 sm:px-10 rounded-2xl shadow-[0_15px_40px_-10px_rgba(234,179,8,0.5)] w-full sm:w-auto text-sm sm:text-base group/btn overflow-hidden relative" 
+              className="h-20 px-12 rounded-[2rem] shadow-[0_20px_50px_-10px_rgba(212,175,55,0.4)] w-full sm:w-auto text-xl font-heading group/btn relative overflow-hidden" 
               onClick={openSurprisePack} 
               disabled={openingPack || (profile?.xp ?? 0) < 80}
             >
                <span className="relative z-10 flex items-center gap-3">
-                 Invocação Mística <Gift className="group-hover/btn:rotate-12 transition-transform" />
+                 Invocação Mística <Gift className="group-hover/btn:scale-110 transition-transform" />
                </span>
-               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
             </Button>
           </div>
         </div>

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
+import { Sparkles, RefreshCw } from "lucide-react";
 
 export default function CastleEntrance() {
   const [step, setStep] = useState(0);
@@ -75,28 +76,49 @@ export default function CastleEntrance() {
   else if (timeOfDay === "afternoon") bgUrl = "https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2000"; // Afternoon castle
 
   return (
-    <div className="fixed inset-0 bg-background/95 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay" style={{ backgroundImage: `url('${bgUrl}')` }}></div>
-      <div className="max-w-2xl w-full bg-secondary/80 border border-primary/20 rounded-2xl p-8 shadow-2xl relative overflow-hidden animate-in fade-in zoom-in duration-700">
+    <div className="fixed inset-0 bg-background/98 backdrop-blur-xl z-50 flex items-center justify-center p-4 overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <img src={bgUrl} alt="Castle" className="w-full h-full object-cover opacity-40 mix-blend-overlay animate-float" style={{ animationDuration: '30s' }} />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-background/20 to-background" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,175,55,0.1),transparent_70%)]" />
+      </div>
+      
+      <div className="max-w-2xl w-full glass border-primary/20 rounded-[3rem] p-8 sm:p-12 shadow-[0_0_100px_rgba(0,0,0,0.8)] relative overflow-hidden animate-in fade-in zoom-in-95 duration-1000">
+        <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+        <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 blur-[80px] rounded-full" />
         
-        <div className="relative z-10 space-y-8 text-center">
-          <h1 className="font-heading text-3xl text-gold-gradient mb-6">O Retorno a Hogwarts</h1>
+        <div className="relative z-10 space-y-10 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-md mb-2">
+            <Sparkles size={14} className="text-primary animate-pulse" />
+            <span className="text-[10px] font-heading uppercase tracking-[0.3em] text-primary">Iniciando Jornada</span>
+          </div>
           
-          <p className="text-lg md:text-xl text-foreground leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
-            {current.text}
-          </p>
+          <h1 className="font-heading text-4xl sm:text-6xl text-gold-gradient drop-shadow-2xl leading-none">
+            Hogwarts House
+          </h1>
+          
+          <div className="min-h-[120px] flex items-center justify-center">
+            <p className="text-xl md:text-2xl text-foreground/90 leading-relaxed font-serif italic animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
+              "{current.text}"
+            </p>
+          </div>
 
-          <div className="flex flex-col gap-3 mt-8 pt-4">
+          <div className="flex flex-col gap-4 mt-8">
             {current.options.map((opt, i) => (
               <Button 
                 key={i} 
                 variant="magical" 
                 size="lg" 
-                className="w-full text-md font-heading animate-in fade-in duration-500 delay-500"
+                className="w-full h-16 text-lg font-heading rounded-2xl shadow-xl hover:scale-[1.02] active:scale-95 transition-all duration-300 animate-in fade-in slide-in-from-bottom-2"
+                style={{ animationDelay: `${500 + i * 200}ms` }}
                 onClick={() => opt.next === -1 ? handleFinish() : setStep(opt.next)}
                 disabled={opt.next === -1 ? loading : false}
               >
-                {opt.next === -1 && loading ? "Iniciando..." : opt.text}
+                {opt.next === -1 && loading ? (
+                  <span className="flex items-center gap-2">
+                    <RefreshCw className="animate-spin" size={18} /> Transgredindo Espaço...
+                  </span>
+                ) : opt.text}
               </Button>
             ))}
           </div>

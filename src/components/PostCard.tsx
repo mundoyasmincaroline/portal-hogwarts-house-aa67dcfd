@@ -27,9 +27,12 @@ const PostCard = memo(({
 }: PostCardProps) => (
   <motion.div 
     initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    className="glass rounded-2xl sm:rounded-[2.5rem] p-4 sm:p-6 transition-all duration-500 border-white/5 hover:border-primary/20"
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.5, ease: "easeOut" }}
+    className="glass rounded-3xl p-5 sm:p-7 border-white/5 hover:border-primary/20 shadow-[0_15px_35px_rgba(0,0,0,0.3)] group/card relative"
   >
+    <div className="absolute top-0 right-10 w-20 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity" />
     <div className="flex items-center gap-4 mb-4">
       <div className={`w-12 h-12 rounded-full bg-secondary/50 flex items-center justify-center font-heading text-primary overflow-hidden border-2 shrink-0 ${post.author?.house === 'gryffindor' ? 'border-red-500/50' : post.author?.house === 'slytherin' ? 'border-green-500/50' : post.author?.house === 'ravenclaw' ? 'border-blue-500/50' : 'border-yellow-500/50'}`}>
         <SafeImage 
@@ -52,9 +55,12 @@ const PostCard = memo(({
       {post.author?.house && <div className="hidden sm:block shrink-0 opacity-80 hover:opacity-100 transition-opacity"><HouseCrest house={post.author.house} size="sm" /></div>}
     </div>
 
-    <p className="text-sm sm:text-[15px] leading-relaxed text-foreground/90 mb-5 whitespace-pre-wrap font-serif italic border-l-2 border-primary/20 pl-4 py-1">
-      {post.content}
-    </p>
+    <div className="relative mb-6">
+      <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-primary/40 via-primary/10 to-transparent rounded-full" />
+      <p className="text-base sm:text-lg leading-relaxed text-foreground/90 whitespace-pre-wrap font-serif italic pl-2">
+        {post.content}
+      </p>
+    </div>
     
     {post.music_url && (
       <div className="mb-5 overflow-hidden rounded-2xl shadow-xl border border-white/5">
