@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import StickerVisual from "@/components/StickerVisual";
+import StickerAlbumBook from "@/components/StickerAlbumBook";
 import { Button } from "@/components/ui/button";
-import { Share2 } from "lucide-react";
+import { Share2, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { shareContent, buildAlbumShareText } from "@/lib/share";
 import { Link } from "react-router-dom";
@@ -149,75 +150,23 @@ export default function ProfileAlbum({ userId }: { userId: string }) {
       </div>
 
       {/* Grid de figurinhas — álbum estilo Copa, mostra TUDO */}
-      <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-        {visible.map(s => {
-          const unlocked = ownedIds.has(s.id);
-          const isGold = s.rarity === "gold";
-          const isSilver = s.rarity === "silver";
-
-          let rarityStyle = "border-amber-700/50 from-amber-900/40 to-background";
-          if (isSilver) rarityStyle = "border-slate-300/80 from-slate-700/40 to-background shadow-white/10";
-          if (isGold)   rarityStyle = "border-yellow-400 from-yellow-600/40 to-background ring-1 ring-yellow-400/50 shadow-yellow-500/30";
-          if (!unlocked) rarityStyle = "border-dashed border-white/10 from-black/60 to-background/40";
-
-          return (
-              <div key={s.id} className={`relative aspect-[3/4] rounded-xl overflow-hidden border-2 group transition-all duration-300 hover:scale-105 bg-gradient-to-b ${rarityStyle} shadow-lg ${!unlocked ? "opacity-60 hover:opacity-90" : ""}`}>
-              <div className="absolute inset-0 z-0">
-                  <StickerVisual name={s.character_name} rarity={s.rarity} unlocked={unlocked} imageUrl={s.image_url} failedImage={failed[s.id]} />
-                {s.image_url && !failed[s.id] && unlocked ? (
-                  <img
-                    src={s.image_url}
-                    alt={s.character_name}
-                    referrerPolicy="no-referrer"
-                      width={1024}
-                      height={1024}
-                      loading="lazy"
-                      decoding="async"
-                    onError={() => setFailed(p => ({ ...p, [s.id]: true }))}
-                    className="w-full h-full object-cover object-top opacity-85 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700"
-                  />
-                  ) : null}
-                {s.image_url && !failed[s.id] && !unlocked && (
-                  <img
-                    src={s.image_url}
-                    alt=""
-                    aria-hidden
-                    referrerPolicy="no-referrer"
-                    width={1024}
-                    height={1024}
-                    loading="lazy"
-                    decoding="async"
-                    onError={() => setFailed(p => ({ ...p, [s.id]: true }))}
-                    className="w-full h-full object-cover object-top opacity-20 grayscale brightness-50"
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
-              </div>
-
-              <div className="relative z-10 h-full flex flex-col justify-between p-2">
-                <span className={`self-start text-[8px] uppercase font-bold tracking-widest px-1.5 py-0.5 rounded-full ${
-                  isGold ? "bg-yellow-400/20 text-yellow-400" : isSilver ? "bg-slate-300/20 text-slate-300" : "bg-amber-700/20 text-amber-600"
-                }`}>
-                  {s.rarity === "gold" ? "🥇" : s.rarity === "silver" ? "🥈" : "🥉"}
-                </span>
-                <div className="text-center space-y-0.5">
-                  <h3 className={`font-heading text-[11px] drop-shadow-md leading-tight ${
-                    !unlocked ? "text-white/40" : isGold ? "text-yellow-400" : "text-foreground"
-                  }`}>
-                    {s.character_name}
-                  </h3>
-                  {!unlocked && (
-                    <p className="text-[7px] uppercase tracking-widest text-white/30 font-heading">Faltando</p>
-                  )}
-                </div>
-              </div>
-
-              {isGold && unlocked && (
-                <div className="absolute inset-0 z-20 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(255,215,0,0.15),transparent_60%)] animate-pulse" />
-              )}
-            </div>
-          );
-        })}
+      <div className="bg-black/20 rounded-3xl p-4 border border-white/5">
+        <StickerAlbumBook 
+          stickers={visible} 
+          userStickers={Object.fromEntries(Array.from(ownedIds).map(id => [id, true]))}
+          onBuy={() => {}} 
+          buyingId={null}
+          profileLevel={100} 
+          profileXp={1000} 
+        />
+        
+        <div className="flex justify-center mt-4">
+          <Link to="/dashboard/album">
+            <Button variant="ghost" className="text-primary hover:text-primary/80 group">
+              Ver álbum completo no modo imersivo <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </Link>
+        </div>
       </div>
     </div>
   );

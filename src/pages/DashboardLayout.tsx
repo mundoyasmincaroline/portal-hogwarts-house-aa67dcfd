@@ -25,6 +25,7 @@ import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import AmbientAudio from "@/components/AmbientAudio";
 import TurnSwitcher from "@/components/TurnSwitcher";
 import SafeImage from "@/components/SafeImage";
+import BottomNav from "@/components/BottomNav";
 import { NAV_GROUPS, ADMIN_GROUP } from "@/constants/navigation";
 
 // Memoized Nav Item for performance
@@ -282,10 +283,10 @@ export default function DashboardLayout() {
 
 
         <div className="flex-1 overflow-y-auto relative scroll-smooth contain-strict">
-          <DailyProphetTicker />
           <div className="page-container">
             {location.pathname === "/dashboard" && (
-              <div className="mb-8">
+              <div className="space-y-6 mb-8">
+                <DailyProphetTicker />
                 <HouseCupWidget />
               </div>
             )}
@@ -304,6 +305,7 @@ export default function DashboardLayout() {
             </AnimatePresence>
           </div>
           <PWAInstallPrompt />
+          <BottomNav />
         </div>
       </main>
     </div>

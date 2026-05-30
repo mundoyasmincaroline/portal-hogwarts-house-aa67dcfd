@@ -7,6 +7,7 @@ import { Trophy, Sparkles, Gift, RefreshCw, Share2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import StickerVisual from "@/components/StickerVisual";
 import MagicalEmoji from "@/components/MagicalEmoji";
+import StickerAlbumBook from "@/components/StickerAlbumBook";
 import { useStickers } from "@/hooks/features/useStickers";
 import { stickerService } from "@/services/features/stickerService";
 import { Sticker } from "@/types";
@@ -308,6 +309,16 @@ export default function StickerAlbum() {
         </div>
       </div>
 
+      {/* ── THE BOOK EXPERIENCE ── */}
+      <StickerAlbumBook 
+        stickers={filtered} 
+        userStickers={userStickers} 
+        onBuy={buySticker} 
+        buyingId={buyingId} 
+        profileLevel={profile?.level || 1}
+        profileXp={profile?.xp || 0}
+      />
+
       {/* ── FILTERS ── */}
       <div className="flex justify-center py-4">
           <div className="glass p-1.5 sm:p-2 rounded-full border border-white/5 bg-black/40 backdrop-blur-2xl inline-flex flex-wrap justify-center gap-1.5 sm:gap-3">
@@ -328,115 +339,6 @@ export default function StickerAlbum() {
             </button>
             ))}
           </div>
-      </div>
-
-      {/* ── GRID MONSTER QUALITY ── */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-8">
-        {filtered.map(s => {
-          const unlocked = userStickers[s.id];
-          const isGold = s.rarity === "gold";
-          const isSilver = s.rarity === "silver";
-          const cost = RARITY_COST[s.rarity];
-          const levelOk = profile ? profile.level >= s.level_required : false;
-          const xpOk = profile ? profile.xp >= cost : false;
-
-          let rarityStyle = "border-amber-900/40 bg-gradient-to-b from-amber-950/20 to-black";
-          if (isSilver) rarityStyle = "border-slate-300/20 bg-gradient-to-b from-slate-900/40 to-black shadow-[0_0_20px_rgba(255,255,255,0.05)]";
-          if (isGold) rarityStyle = "border-yellow-400/30 bg-gradient-to-b from-yellow-900/20 to-black shadow-[0_0_30px_rgba(251,191,36,0.15)] ring-1 ring-yellow-400/20";
-
-          return (
-            <div key={s.id}
-              className={`relative aspect-[3/4.5] rounded-2xl sm:rounded-[2.5rem] flex flex-col overflow-hidden border-2 transition-all duration-700 group ${
-                unlocked ? rarityStyle : "border-white/5 bg-secondary/5 hover:border-white/20"
-              } ${unlocked && isGold ? 'hover:shadow-[0_0_40px_rgba(251,191,36,0.3)]' : ''}`}
-            >
-              <div className="absolute inset-0 z-0 overflow-hidden">
-                <div className={`absolute inset-0 transition-transform duration-1000 ${unlocked ? 'group-hover:scale-110' : ''}`}>
-                    <StickerVisual
-                    name={s.character_name}
-                    rarity={s.rarity}
-                    unlocked={unlocked}
-                    imageUrl={s.image_url}
-                    failedImage={failedImages[s.id]}
-                    />
-                    {s.image_url && !failedImages[s.id] && (
-                    <img src={s.image_url} alt={s.character_name} referrerPolicy="no-referrer"
-                        width={1024}
-                        height={1024}
-                        loading="lazy"
-                        decoding="async"
-                        onError={() => setFailedImages(prev => ({ ...prev, [s.id]: true }))}
-                        className={`w-full h-full object-cover object-top transition-all duration-1000 ${
-                        unlocked ? "opacity-80" : "opacity-20 grayscale brightness-50"
-                        }`}
-                    />
-                    )}
-                </div>
-                
-                {/* Holographic Flash for Unlocked Cards */}
-                {unlocked && (
-                    <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none z-10" />
-                )}
-                
-                <div className={`absolute inset-0 bg-gradient-to-t ${
-                  unlocked ? "from-black via-black/40 to-transparent" : "from-black/90 via-black/60 to-transparent"
-                } z-10`} />
-              </div>
-
-              <div className="relative z-20 h-full flex flex-col justify-between p-4 sm:p-6">
-                <div className="flex justify-between items-start">
-                  <div className={`text-[9px] uppercase font-bold tracking-[0.2em] px-3 py-1.5 rounded-full border backdrop-blur-xl shadow-lg ${
-                    isGold ? "bg-yellow-400/20 text-yellow-400 border-yellow-400/50"
-                    : isSilver ? "bg-slate-300/20 text-slate-200 border-slate-300/50"
-                    : "bg-amber-900/40 text-amber-500 border-amber-800/50"
-                  }`}>
-                    {s.rarity}
-                  </div>
-                  {!unlocked && (
-                    <div className={`px-2.5 py-1 rounded-lg text-[9px] font-bold border ${levelOk ? 'bg-primary/20 text-primary border-primary/30' : 'bg-red-500/20 text-red-400 border-red-500/30'}`}>
-                        NV.{s.level_required}
-                    </div>
-                  )}
-                </div>
-
-                <div className="mt-auto space-y-4">
-                  <div className="text-center">
-                    <h3 className={`font-heading text-lg leading-tight transition-colors duration-500 ${
-                        unlocked ? isGold ? "text-yellow-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]" : "text-white" : "text-white/20 group-hover:text-white/40"
-                    }`}>
-                        {s.character_name}
-                    </h3>
-                    {unlocked && isGold && <div className="text-[8px] text-yellow-500/60 uppercase tracking-[0.4em] font-bold mt-1">Artefato Lendário</div>}
-                    {!unlocked && (
-                      <div className="text-[8px] text-white/30 uppercase tracking-[0.3em] font-bold mt-1">A Conquistar</div>
-                    )}
-                  </div>
-
-                  {!unlocked && (
-                    <Button variant="plaque" className="w-full h-10 sm:h-12 text-[8px] sm:text-[10px] font-heading uppercase tracking-widest rounded-xl shadow-xl transition-all active:scale-95 px-2"
-                      disabled={!levelOk || !xpOk || buyingId === s.id} onClick={() => buySticker(s)}>
-                      {buyingId === s.id ? "..." : !levelOk ? `Bloqueado` : !xpOk ? `Faltam XP` : `Comprar ${cost} XP`}
-                    </Button>
-                  )}
-                  
-                  {unlocked && (
-                    <Button
-                      variant="outline"
-                      className="w-full h-9 sm:h-10 text-[9px] sm:text-[10px] font-heading uppercase tracking-widest rounded-xl border-white/15 bg-black/40 backdrop-blur-md hover:bg-white/10 hover:text-white"
-                      onClick={(e) => { e.stopPropagation(); handleShareSticker(s); }}
-                    >
-                      <Share2 size={12} className="mr-1.5" /> Compartilhar
-                    </Button>
-                  )}
-                </div>
-              </div>
-
-              {unlocked && isGold && (
-                <div className="absolute inset-0 z-30 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(255,215,0,0.1),transparent_70%)] animate-pulse" />
-              )}
-            </div>
-          );
-        })}
       </div>
 
       {completedBanner && (
