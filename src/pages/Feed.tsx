@@ -196,30 +196,30 @@ export default function Feed() {
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2 space-y-4">
-          <div className="glass rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 border-white/10 shadow-2xl relative overflow-hidden group hover:border-primary/30 transition-all">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+          <div className="glass rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-8 border-white/5 shadow-2xl relative overflow-hidden group hover:border-primary/20 transition-all duration-500">
+            <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-50 group-hover:opacity-100 transition-opacity" />
             <textarea
               value={newPost}
               onChange={(e) => setNewPost(e.target.value)}
               placeholder="O que está acontecendo no castelo?"
               maxLength={1000}
-              className="w-full bg-black/20 rounded-xl p-4 border border-white/5 focus:border-primary/20 transition-all resize-none text-sm sm:text-base text-foreground placeholder:text-muted-foreground/50 focus:outline-none min-h-[80px] sm:min-h-[100px] font-serif italic shadow-inner"
+              className="w-full bg-white/[0.03] rounded-2xl p-5 border border-white/5 focus:border-primary/20 transition-all resize-none text-base sm:text-lg text-foreground placeholder:text-muted-foreground/30 focus:outline-none min-h-[100px] sm:min-h-[120px] font-serif italic shadow-inner"
             />
-            <div className="flex flex-col sm:flex-row gap-3 mt-4 pt-4 border-t border-white/5">
+            <div className="flex flex-col sm:flex-row gap-4 mt-5 pt-5 border-t border-white/5">
               <div className="flex-1 relative group/input">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-primary opacity-50 group-focus-within/input:opacity-100 transition-opacity">🎵</div>
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-primary opacity-40 group-focus-within/input:opacity-100 transition-opacity">🎵</div>
                 <input 
                   type="text" 
                   value={newMusicUrl} 
                   onChange={(e) => setNewMusicUrl(e.target.value)} 
                   placeholder="Link do Spotify ou MP3..." 
-                  className="w-full bg-black/40 rounded-xl pl-9 pr-4 py-2.5 text-xs text-foreground focus:outline-none border border-white/5 focus:border-primary/30 transition-all" 
+                  className="w-full bg-white/[0.02] rounded-xl pl-10 pr-4 py-3 text-xs text-foreground focus:outline-none border border-white/5 focus:border-primary/20 transition-all" 
                 />
               </div>
-              <div className="flex justify-between items-center sm:justify-end gap-4">
-                <span className="text-[10px] text-muted-foreground/60 font-mono tracking-widest">{newPost.length}/1000</span>
-                <Button variant="magical" size="sm" className="font-heading text-xs px-8 h-10 rounded-xl shadow-lg" disabled={!newPost.trim() || posting} onClick={submitPost}>
-                  {posting ? "Conjurando..." : "Publicar"}
+              <div className="flex justify-between items-center sm:justify-end gap-6">
+                <span className="text-[10px] text-muted-foreground/40 font-mono tracking-[0.2em]">{newPost.length}/1000</span>
+                <Button variant="magical" size="lg" className="font-heading text-xs px-10 h-12 rounded-2xl shadow-xl hover:scale-105 active:scale-95 transition-all" disabled={!newPost.trim() || posting} onClick={submitPost}>
+                  {posting ? "Conjurando..." : "Publicar ✨"}
                 </Button>
               </div>
             </div>
