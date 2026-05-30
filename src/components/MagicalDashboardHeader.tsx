@@ -14,7 +14,7 @@ import HouseCupWidget from "./HouseCupWidget";
 
 export default function MagicalDashboardHeader() {
   const { profile } = useAuth();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true); // Default to expanded for immediate impact, user can collapse if they want
 
   return (
     <div className="space-y-6 w-full max-w-4xl mx-auto animate-in fade-in duration-1000">
@@ -79,7 +79,7 @@ export default function MagicalDashboardHeader() {
         </AnimatePresence>
       </div>
 
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-white/5 to-transparent my-10" />
+      <div className="h-px w-full bg-gradient-to-r from-transparent via-primary/20 to-transparent my-10 opacity-50" />
     </div>
   );
 }

@@ -33,11 +33,13 @@ interface Message {
     username: string;
     house: House;
     avatar_url: string | null;
+    vip_plan: string | null;
   };
   characters?: {
     full_name: string;
     house: House;
     avatar_url: string | null;
+    vip_plan: string | null;
   };
 }
 
@@ -51,6 +53,7 @@ export default function ChatRoom() {
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toLocaleDateString('en-CA'));
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [isSending, setIsSending] = useState(false);
   const [loading, setLoading] = useState(true);
   const [bannedWords, setBannedWords] = useState<string[]>([]);
   const [cooldown, setCooldown] = useState(0);
@@ -208,7 +211,7 @@ export default function ChatRoom() {
       
       // Fetch profiles and roles separately to avoid RLS join issues
       const [{ data: profilesData }, { data: rolesData }] = await Promise.all([
-        supabase.from("profiles").select("user_id, full_name, username, house, avatar_url").in("user_id", userIds),
+        supabase.from("profiles").select("user_id, full_name, username, house, avatar_url, vip_plan").in("user_id", userIds),
         supabase.from("user_roles").select("user_id, role").in("user_id", userIds)
       ]);
 
@@ -248,11 +251,18 @@ export default function ChatRoom() {
         const todayStr = new Date().toLocaleDateString('en-CA');
         if (selectedDate !== todayStr) return;
 
-        const { data: userData } = await supabase.from("profiles").select("full_name, username, house, avatar_url").eq("user_id", payload.new.user_id).single();
-        const { data: charData } = payload.new.character_id ? await supabase.from("characters").select("full_name, house, avatar_url").eq("id", payload.new.character_id).single() : { data: null };
-        const { data: roleData } = await supabase.from("user_roles").select("role").eq("user_id", payload.new.user_id).maybeSingle();
-        if (userData) {
-          setMessages(prev => [...prev, { ...payload.new, profiles: userData, characters: charData, user_role: roleData?.role } as unknown as Message]);
+        try {
+          const [{ data: userData }, { data: charData }, { data: roleData }] = await Promise.all([
+            supabase.from("profiles").select("full_name, username, house, avatar_url, vip_plan").eq("user_id", payload.new.user_id).maybeSingle(),
+            payload.new.character_id ? supabase.from("characters").select("full_name, house, avatar_url").eq("id", payload.new.character_id).maybeSingle() : Promise.resolve({ data: null }),
+            supabase.from("user_roles").select("role").eq("user_id", payload.new.user_id).maybeSingle()
+          ]);
+          
+          if (userData) {
+            setMessages(prev => [...prev, { ...payload.new, profiles: userData, characters: charData, user_role: roleData?.role } as unknown as Message]);
+          }
+        } catch (err) {
+          console.error("Error processing realtime message:", err);
         }
       })
       .subscribe();
@@ -268,7 +278,8 @@ export default function ChatRoom() {
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || !channel || !user || cooldown > 0) return;
+    if (!input.trim() || !channel || !user || cooldown > 0 || isSending) return;
+    setIsSending(true);
     
     const content = input;
     
@@ -334,13 +345,14 @@ export default function ChatRoom() {
 
     setInput("");
     setShowMentionMenu(false);
-    setCooldown(30); // 30 segundos de Anti-Spam
+    setCooldown(2); // Reduced from 30 to 2 for better UX, but keeping a small buffer
+    // Note: Database triggers/RLS might handle the real anti-spam logic
 
     const { error } = await supabase.from("messages").insert({
       channel_id: channel.id,
       user_id: user.id,
-      character_id: profile?.active_character_id ?? null,
-      content
+      character_id: profile?.active_character_id || null,
+      content: content.trim()
     });
 
     if (error) {
@@ -388,6 +400,7 @@ export default function ChatRoom() {
         }
       }
     }
+    setIsSending(false);
   };
 
   const deleteMessage = async (messageId: string) => {
@@ -585,19 +598,23 @@ export default function ChatRoom() {
                     </div>
 
                     {/* Conteúdo da Mensagem */}
-                    <div className={`flex flex-col max-w-[75%] ${isMe ? 'items-end' : ''}`}>
-                      <div className="flex items-center gap-3 mb-1.5 px-1">
-                        <span className={`text-[11px] font-heading font-bold uppercase tracking-wider ${nameColor}`}>
-                          {isMorpheus ? "MORPHEUS [ARQUITETO]" : isYasmin ? "YASMIN [FUNDADORA]" : isCarolina ? "CAROLINA [GUARDIÃ]" : profileName}
-                        </span>
-                        <span className="text-[9px] text-white/20 font-serif italic">{formatDate(m.created_at)}</span>
+                    <div className={`flex flex-col max-w-[85%] sm:max-w-[75%] ${isMe ? 'items-end' : ''}`}>
+                      <div className={`flex items-center gap-3 mb-1.5 px-1 ${isMe ? 'flex-row-reverse' : ''}`}>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className={`text-[10px] sm:text-[11px] font-heading font-bold uppercase tracking-wider ${nameColor}`}>
+                            {isMorpheus ? "MORPHEUS [ARQUITETO]" : isYasmin ? "YASMIN [FUNDADORA]" : isCarolina ? "CAROLINA [GUARDIÃ]" : profileName}
+                          </span>
+                          {m.profiles?.vip_plan === "founder" && <span className="text-[7px] text-yellow-500 font-bold bg-yellow-500/10 px-1 rounded-sm border border-yellow-500/20">👑</span>}
+                          {m.profiles?.vip_plan === "vip" && <span className="text-[7px] text-purple-400 font-bold bg-purple-500/10 px-1 rounded-sm border border-purple-500/20">💜</span>}
+                        </div>
+                        <span className="text-[8px] text-white/20 font-serif italic">{formatDate(m.created_at)}</span>
                         {isAdmin && !isMe && (
-                          <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
-                            <button onClick={() => pinMessage(m)} className="text-primary hover:text-primary/80 text-[10px] font-bold uppercase">
-                               Fixar 📌
+                          <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all ml-2">
+                            <button onClick={() => pinMessage(m)} className="text-primary hover:text-primary/80 text-[10px] font-bold uppercase" title="Fixar">
+                               📌
                             </button>
-                            <button onClick={() => deleteMessage(m.id)} className="text-red-500 hover:text-red-400 text-[10px] font-bold uppercase">
-                               Banir 🚫
+                            <button onClick={() => deleteMessage(m.id)} className="text-red-500 hover:text-red-400 text-[10px] font-bold uppercase" title="Remover">
+                               🚫
                             </button>
                           </div>
                         )}

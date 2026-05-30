@@ -9,6 +9,7 @@ export function useStickers() {
   const { user, profile, fetchProfile } = useAuth();
   const [stickers, setStickers] = useState<Sticker[]>([]);
   const [userStickers, setUserStickers] = useState<Record<string, boolean>>({});
+  const [buyingIdInternal, setBuyingIdInternal] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   const loadAlbum = useCallback(async () => {
@@ -36,7 +37,9 @@ export function useStickers() {
   }, [loadAlbum]);
 
   const buySticker = async (sticker: Sticker) => {
-    if (!user || !profile) return;
+    if (!user || !profile || userStickers[sticker.id] || buyingIdInternal) return;
+    setBuyingIdInternal(sticker.id);
+    if (!user || !profile || userStickers[sticker.id]) return;
     const cost = RARITY_COST[sticker.rarity];
     if (profile.xp < cost) {
       toast.error(`Você precisa de ${cost} XP para esta figurinha! Você tem ${profile.xp} XP.`);
@@ -59,6 +62,8 @@ export function useStickers() {
     } catch (error: any) {
       toast.error("Erro ao comprar figurinha: " + error.message);
       return false;
+    } finally {
+      setBuyingIdInternal(null);
     }
   };
 
@@ -67,6 +72,7 @@ export function useStickers() {
     userStickers,
     loading,
     loadAlbum,
-    buySticker
+    buySticker,
+    buyingId: buyingIdInternal
   };
 }

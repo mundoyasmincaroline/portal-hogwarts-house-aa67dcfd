@@ -29,7 +29,12 @@ export default function DMInbox() {
     const channelId = `dm_inbox:${user.id}:${Date.now()}:${Math.random().toString(36).slice(2)}`;
     const channel = supabase
       .channel(channelId)
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "dm_messages" }, () => loadThreads())
+      .on("postgres_changes", { 
+        event: "INSERT", 
+        schema: "public", 
+        table: "dm_messages",
+        filter: `receiver_id=eq.${user.id}`
+      }, () => loadThreads())
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };

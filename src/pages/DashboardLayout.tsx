@@ -199,7 +199,7 @@ export default function DashboardLayout() {
         )}
       </AnimatePresence>
 
-      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-[85vw] max-w-72 md:w-64 bg-card/98 backdrop-blur-2xl border-r border-border/60 flex flex-col transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] md:translate-x-0 ${sidebarOpen ? "translate-x-0 shadow-[20px_0_60px_rgba(0,0,0,0.9)]" : "-translate-x-full"}`}>
+      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-[85vw] max-w-[280px] md:w-64 bg-card/98 backdrop-blur-2xl border-r border-border/60 flex flex-col transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] md:translate-x-0 ${sidebarOpen ? "translate-x-0 shadow-[20px_0_60px_rgba(0,0,0,0.9)]" : "-translate-x-full"}`}>
         <div className="p-5 border-b border-border/30">
           <Link to="/dashboard" className="flex items-center gap-3 group">
             <div className="bg-primary/20 p-2.5 rounded-xl text-primary transition-transform group-hover:rotate-12 duration-300"><Castle size={24} /></div>
@@ -292,9 +292,9 @@ export default function DashboardLayout() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-              <Link to="/dashboard/wallet" className="h-8 px-3 rounded-lg border border-primary/20 bg-primary/10 text-primary flex items-center gap-1.5 active:scale-95 transition-all">
-                <Wallet size={10} />
-                <span className="font-heading text-[10px] tracking-tight">{(profile?.galeons || 0).toLocaleString("pt-BR")}</span>
+              <Link to="/dashboard/wallet" className="h-9 px-4 rounded-xl border border-primary/20 bg-primary/10 text-primary flex items-center gap-2 active:scale-95 transition-all shadow-[0_0_15px_rgba(212,175,55,0.1)]">
+                <MagicalGaleon size="xs" />
+                <span className="font-heading text-xs tracking-tight">{(profile?.galeons || 0).toLocaleString("pt-BR")}</span>
               </Link>
              <Notifications />
               <Link to="/dashboard/profile" className="w-9 h-9 rounded-lg overflow-hidden border border-primary/30 active:scale-95 transition-all">

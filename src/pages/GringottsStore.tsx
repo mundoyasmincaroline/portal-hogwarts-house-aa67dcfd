@@ -81,6 +81,7 @@ const TABS = [
 export default function GringottsStore() {
   const { user, profile } = useAuth();
   const { items, owned, loading, buyingId, loadStore, buyItem: handleBuyItem, galeons } = useStore();
+  const [buyingIdLocal, setBuyingIdLocal] = useState<string | null>(null);
   const [tab, setTab] = useState("featured");
   const [pendingOrderId, setPendingOrderId] = useState<string|null>(null);
   const [buyingPackageId, setBuyingPackageId] = useState<string|null>(null);
@@ -170,8 +171,11 @@ export default function GringottsStore() {
   };
 
   const buyItem = async (item: StoreItem) => {
+    if (buyingIdLocal || buyingId) return;
+    setBuyingIdLocal(item.id);
     const success = await handleBuyItem(item);
     if (success) playMagicSound();
+    setBuyingIdLocal(null);
   };
 
   // ── Assinar VIP ───────────────────────────────────────────
@@ -305,19 +309,19 @@ export default function GringottsStore() {
 
       {/* ── CATEGORY NAVIGATION: MONSTER STYLE ── */}
       <div className="relative z-40 flex justify-center py-6 mb-8">
-        <div className="glass p-2 sm:p-2.5 rounded-full border border-white/10 inline-flex flex-wrap justify-center gap-1 sm:gap-2 bg-black/60 backdrop-blur-3xl shadow-2xl">
+        <div className="glass p-1.5 sm:p-2.5 rounded-full border border-white/10 inline-flex flex-wrap justify-center gap-1 sm:gap-2 bg-black/60 backdrop-blur-3xl shadow-2xl overflow-x-auto max-w-[calc(100vw-2rem)] no-scrollbar">
           {TABS.map(t => {
             const isActive = tab === t.id;
             const Icon = t.icon;
             return (
               <button key={t.id} onClick={() => { playMagicSound(); setTab(t.id); }}
-                className={`flex items-center gap-1.5 sm:gap-2.5 px-3 sm:px-6 py-2 sm:py-3 rounded-full text-[10px] sm:text-xs font-bold font-heading transition-all duration-500 relative overflow-hidden group ${
+                className={`flex items-center gap-1.5 sm:gap-2.5 px-3 sm:px-6 py-2 sm:py-3 rounded-full text-[9px] sm:text-xs font-bold font-heading transition-all duration-500 relative overflow-hidden group whitespace-nowrap ${
                   isActive 
                     ? `bg-gradient-to-r ${t.color} text-white shadow-[0_10px_25px_-5px_rgba(0,0,0,0.5)] border-t border-white/20` 
                     : "bg-transparent text-muted-foreground hover:bg-white/5 hover:text-white border border-transparent"
                 }`}>
                 {isActive && <div className="absolute inset-0 bg-white/20 animate-pulse" />}
-                <Icon size={18} className={`${isActive ? "animate-pulse" : "group-hover:scale-110 transition-transform"}`} />
+                <Icon size={14} className={`sm:w-[18px] sm:h-[18px] ${isActive ? "animate-pulse" : "group-hover:scale-110 transition-transform"}`} />
                 <span className="tracking-widest uppercase">{t.label.split(' ')[1] || t.label}</span>
               </button>
             )
@@ -347,7 +351,7 @@ export default function GringottsStore() {
 
           {/* FEATURED MEGA CARD */}
           <div className="relative group rounded-3xl sm:rounded-[3.5rem] overflow-hidden border-2 border-yellow-500/30 bg-gradient-to-br from-amber-950 via-black to-blue-900/40 p-1 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.8)]">
-            <div className="absolute inset-0 bg-[url('/hogwarts-castle-bg.jpg')] bg-cover opacity-10 mix-blend-overlay group-hover:scale-110 transition-transform duration-1000" />
+            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1514894780037-d2ef692277bb?q=80&w=2000')] bg-cover opacity-10 mix-blend-overlay group-hover:scale-110 transition-transform duration-1000" />
             <div className="relative glass rounded-2xl sm:rounded-[3.2rem] p-6 sm:p-10 md:p-16 flex flex-col lg:flex-row items-center gap-10 sm:gap-14 backdrop-blur-md">
               
               <div className="relative shrink-0 w-full max-w-sm">

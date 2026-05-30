@@ -82,10 +82,17 @@ export default function Chats() {
       let roomId = roomDef.id;
 
       if (!roomId) {
-        const { data: existingChannel } = await supabase.from("channels").select("id").eq("name", roomDef.name).maybeSingle();
+        // Double check by name if ID was missing from props (mergedRooms)
+        const { data: existingChannel } = await supabase
+          .from("channels")
+          .select("id")
+          .eq("name", roomDef.name)
+          .maybeSingle();
+        
         if (existingChannel) {
           roomId = existingChannel.id;
-        } else {
+        } else if (isAdmin) {
+          // Automatic room creation only for admins to prevent race conditions or messy DB
           const { data: newChannel, error: insertError } = await supabase.from("channels").insert({
             name: roomDef.name,
             description: roomDef.description,
@@ -95,6 +102,8 @@ export default function Chats() {
           }).select("id").single();
           if (insertError) throw insertError;
           roomId = newChannel?.id;
+        } else {
+          throw new Error("Sala não inicializada. Peça a um administrador para abrir este salão.");
         }
       }
 

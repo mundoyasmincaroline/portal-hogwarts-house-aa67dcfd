@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { useAuth } from "@/lib/auth";
 import { Sparkles } from "lucide-react";
 
-export default function DynamicGreeting() {
+const DynamicGreeting = memo(() => {
   const { profile } = useAuth();
   const [greeting, setGreeting] = useState({ title: "", desc: "", img: "", bg: "" });
 
@@ -52,4 +52,6 @@ export default function DynamicGreeting() {
       </div>
     </div>
   );
-}
+});
+
+export default DynamicGreeting;

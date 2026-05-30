@@ -30,6 +30,7 @@ const BADGES: Badge[] = [
 
 export function useAchievements(userId: string | undefined, xp: number, level: number) {
   const grantedRef = useRef<Set<string>>(new Set());
+  const isCheckingRef = useRef(false);
 
   useEffect(() => {
     if (!userId || xp === undefined) return;
@@ -39,6 +40,8 @@ export function useAchievements(userId: string | undefined, xp: number, level: n
     grantedRef.current = new Set(stored);
 
     const check = async () => {
+      if (isCheckingRef.current) return;
+      isCheckingRef.current = true;
       const newGrants: string[] = [];
 
       for (const badge of BADGES) {
@@ -78,6 +81,7 @@ export function useAchievements(userId: string | undefined, xp: number, level: n
       if (newGrants.length > 0) {
         localStorage.setItem(storageKey, JSON.stringify([...grantedRef.current]));
       }
+      isCheckingRef.current = false;
     };
 
     check();

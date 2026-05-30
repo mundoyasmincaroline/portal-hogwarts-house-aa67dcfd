@@ -47,6 +47,7 @@ export default function StickerAlbum() {
   }, [stickers, userStickers]);
 
   const buySticker = async (sticker: Sticker) => {
+    if (buyingId) return;
     setBuyingId(sticker.id);
     const success = await handleBuySticker(sticker);
     setBuyingId(null);
@@ -66,7 +67,7 @@ export default function StickerAlbum() {
   };
 
   const openSurprisePack = async () => {
-    if (!user || !profile) return;
+    if (!user || !profile || openingPack) return;
 
     if (profile.xp < PACK_COST) {
       toast.error(`Você precisa de ${PACK_COST} XP para abrir um pacote! Você tem apenas ${profile.xp} XP.`);

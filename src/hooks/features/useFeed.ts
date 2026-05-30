@@ -14,7 +14,8 @@ export function useFeed() {
   const [posts, setPosts] = useState<FeedPost[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadFeed = useCallback(async () => {
+  const loadFeed = useCallback(async (isSilent = false) => {
+    if (!isSilent) setLoading(true);
     try {
       const postsData = await feedService.getPosts();
       if (postsData.length === 0) {
@@ -67,7 +68,7 @@ export function useFeed() {
   }, [user?.id]);
 
   useEffect(() => {
-    loadFeed();
+    loadFeed(false);
   }, [loadFeed]);
 
   // Realtime simples para novos posts (opcional, mas melhora UX)
@@ -77,7 +78,7 @@ export function useFeed() {
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, () => {
         // Debounce para evitar recarregar várias vezes em rajadas
         if (debounceTimer) clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => { loadFeed(); }, 1500);
+        debounceTimer = setTimeout(() => { loadFeed(true); }, 2000);
       })
       .subscribe();
     return () => {

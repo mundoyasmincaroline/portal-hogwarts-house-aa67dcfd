@@ -116,7 +116,7 @@ const PostCard = memo(({
         onClick={() => onToggleComments(post.id)}
         className="glass px-3 sm:px-4 py-1.5 rounded-2xl text-[10px] sm:text-[11px] font-heading uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-all active:scale-95 ml-auto sm:ml-0 flex items-center gap-2"
       >
-        <span className="text-sm">💬</span> {post.comments.length}
+        <span className="text-sm">💬</span> {post.comments?.length || 0}
       </button>
     </div>
 
@@ -124,10 +124,11 @@ const PostCard = memo(({
       <motion.div 
         initial={{ opacity: 0, height: 0 }}
         animate={{ opacity: 1, height: 'auto' }}
-        className="mt-5 pt-5 border-t border-white/5 space-y-4"
+        exit={{ opacity: 0, height: 0 }}
+        className="mt-5 pt-5 border-t border-white/5 space-y-4 overflow-hidden"
       >
         <div className="max-h-[300px] overflow-y-auto pr-2 custom-scrollbar space-y-3">
-          {post.comments.map((c: any) => (
+          {post.comments?.map((c: any) => (
             <div key={c.id} className="flex gap-3 items-start group">
               <div className={`w-8 h-8 rounded-full bg-secondary/50 flex items-center justify-center overflow-hidden shrink-0 border border-primary/20 transition-transform group-hover:scale-110`}>
                 <SafeImage 
