@@ -126,7 +126,6 @@ export default function StickerAlbum() {
   if (loading) return <div className="text-center py-20 text-muted-foreground animate-pulse font-heading text-xl">Revelando o Álbum Encantado...</div>;
 
   return (
-  return (
     <div className="max-w-7xl mx-auto space-y-12 pb-20 px-4">
       {/* ── HEADER MONSTER QUALITY ── */}
       <div className="relative overflow-hidden rounded-[2rem] sm:rounded-[4rem] border border-yellow-500/20 shadow-2xl group">
