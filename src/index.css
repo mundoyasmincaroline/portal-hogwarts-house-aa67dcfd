@@ -220,6 +220,38 @@
   @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-10;
 }
 
+.portal-cinematic-bg {
+  background:
+    radial-gradient(circle at 18% 10%, hsl(var(--primary) / 0.13), transparent 24rem),
+    radial-gradient(circle at 86% 4%, hsl(var(--ravenclaw) / 0.12), transparent 28rem),
+    radial-gradient(circle at 72% 88%, hsl(var(--gryffindor) / 0.09), transparent 30rem),
+    linear-gradient(145deg, hsl(var(--background)) 0%, hsl(252 38% 7%) 48%, hsl(230 30% 5%) 100%);
+}
+
+.portal-cinematic-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.42;
+  background-image:
+    radial-gradient(circle, hsl(var(--primary) / 0.55) 0 1px, transparent 2px),
+    radial-gradient(circle, hsl(var(--foreground) / 0.18) 0 1px, transparent 2px);
+  background-size: 120px 120px, 210px 210px;
+  background-position: 18px 28px, 80px 120px;
+  mask-image: linear-gradient(to bottom, transparent, black 14%, black 86%, transparent);
+}
+
+.portal-cinematic-bg::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, hsl(var(--background) / 0.18), transparent 22%, transparent 72%, hsl(var(--background) / 0.72)),
+    radial-gradient(ellipse at center, transparent 42%, hsl(var(--background) / 0.54) 100%);
+}
+
 /* Responsiveness helpers */
 .touch-target {
   @apply min-h-[48px] min-w-[48px] flex items-center justify-center;
