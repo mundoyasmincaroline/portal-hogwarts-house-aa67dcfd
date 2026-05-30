@@ -695,7 +695,7 @@ export default function ChatRoom() {
                 onChange={handleInputChange}
                 onKeyDown={(e) => { if (e.key === 'Escape') setShowMentionMenu(false); }}
                 placeholder={cooldown > 0 ? `Silêncio! Aguarde ${cooldown}s...` : `Escreva sua mensagem... (use @ para mencionar)`}
-                className="w-full h-14 bg-white/5 border-white/10 rounded-2xl px-6 focus:ring-2 focus:ring-primary/20 transition-all text-sm font-serif italic"
+                className="w-full h-14 bg-black/40 border-white/10 rounded-2xl px-6 focus:ring-2 focus:ring-primary/20 transition-all text-sm font-serif italic shadow-2xl"
                 disabled={cooldown > 0}
                 autoComplete="off"
               />
