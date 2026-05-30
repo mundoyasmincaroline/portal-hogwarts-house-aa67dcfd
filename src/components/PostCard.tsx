@@ -28,7 +28,7 @@ const PostCard = memo(({
   <motion.div 
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
-    className="glass rounded-2xl sm:rounded-[2.5rem] p-4 sm:p-6 transition-all duration-500 border-white/5 hover:border-white/10"
+    className="glass rounded-2xl sm:rounded-[2.5rem] p-4 sm:p-6 transition-all duration-500 border-white/5 hover:border-primary/20"
   >
     <div className="flex items-center gap-4 mb-4">
       <div className={`w-12 h-12 rounded-full bg-secondary/50 flex items-center justify-center font-heading text-primary overflow-hidden border-2 shrink-0 ${post.author?.house === 'gryffindor' ? 'border-red-500/50' : post.author?.house === 'slytherin' ? 'border-green-500/50' : post.author?.house === 'ravenclaw' ? 'border-blue-500/50' : 'border-yellow-500/50'}`}>
@@ -129,7 +129,7 @@ const PostCard = memo(({
                   fallbackText={c.author?.full_name}
                 />
               </div>
-              <div className="flex-1 bg-white/5 rounded-2xl rounded-tl-none px-4 py-3 border border-white/5 group-hover:border-white/10 transition-colors">
+              <div className="flex-1 bg-white/5 rounded-2xl rounded-tl-none px-4 py-3 border border-white/5 group-hover:border-primary/10 transition-colors shadow-inner">
                 <p className="text-xs font-bold text-primary mb-1 uppercase tracking-tighter">{c.author?.full_name}</p>
                 <p className="text-sm text-foreground/80 leading-relaxed font-serif italic">{c.content}</p>
               </div>
@@ -137,7 +137,7 @@ const PostCard = memo(({
           ))}
         </div>
         
-        <div className="flex gap-3 bg-black/20 p-2 rounded-2xl border border-white/5 focus-within:border-primary/30 transition-all">
+        <div className="flex gap-3 bg-black/40 p-2 rounded-2xl border border-white/10 focus-within:border-primary/40 focus-within:ring-1 focus-within:ring-primary/20 transition-all shadow-2xl">
           <input
             value={commentDraft}
             onChange={(e) => onCommentDraftChange(e.target.value)}
