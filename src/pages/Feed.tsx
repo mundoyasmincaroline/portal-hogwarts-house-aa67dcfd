@@ -24,6 +24,7 @@ import { useRealtime } from "@/hooks/core/useRealtime";
 import { feedService } from "@/services/features/feedService";
 import { FeedPost } from "@/types";
 import PostCard from "@/components/PostCard";
+import MagicalDashboardHeader from "@/components/MagicalDashboardHeader";
 
 
 const REACTIONS = ["⚡", "❤️", "🔥", "🦁", "🦅", "🐍", "🦡"];
