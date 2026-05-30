@@ -45,9 +45,16 @@ const StickerVisual = ({ name, rarity, unlocked = false, imageUrl, failedImage }
       className={`relative w-full aspect-[3/4] rounded-2xl overflow-hidden border-2 ${styles.border} ${styles.glow} ${styles.bg} group transition-all duration-500`}
     >
       {!unlocked ? (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 backdrop-blur-[2px]">
-          <Lock className="w-8 h-8 text-white/20 mb-2" />
-          <p className="text-[10px] font-heading uppercase tracking-widest text-white/30 px-2 text-center">{name}</p>
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          {imageUrl && (
+            <img 
+              src={imageUrl} 
+              alt={name} 
+              className="w-full h-full object-cover opacity-20 grayscale transition-all duration-700 group-hover:opacity-40"
+            />
+          )}
+          <div className="absolute inset-0 bg-black/40" />
+          <Lock className="absolute w-6 h-6 text-white/20" />
         </div>
       ) : (
         <>
