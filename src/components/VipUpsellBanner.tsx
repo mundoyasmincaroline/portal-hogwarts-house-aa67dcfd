@@ -45,7 +45,7 @@ export default function VipUpsellBanner({ currentVip, galeons = 0, username }: P
   };
 
   return (
-    <div className="relative overflow-hidden rounded-[2.5rem] border border-primary/20 bg-gradient-to-br from-slate-900 via-purple-950/30 to-black mb-8 shadow-2xl group/banner hover:border-primary/40 transition-all duration-700">
+    <div className="@container relative overflow-hidden rounded-[2rem] border border-primary/20 bg-gradient-to-br from-slate-900 via-purple-950/30 to-black mb-8 shadow-2xl group/banner hover:border-primary/40 transition-all duration-700 h-full flex flex-col">
 
       {/* Background glow effects */}
       <div className="absolute -top-20 -right-20 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -57,55 +57,55 @@ export default function VipUpsellBanner({ currentVip, galeons = 0, username }: P
         <X size={16} />
       </button>
 
-      <div className="p-6 md:p-8">
+      <div className="p-4 @[420px]:p-6 @[640px]:p-8 flex-1 flex flex-col">
 
         {/* Header */}
-        <div className="flex items-start gap-4 mb-8">
-          <div className="p-4 bg-gradient-to-br from-yellow-500/20 to-amber-500/10 rounded-3xl border border-yellow-500/20 shadow-inner shrink-0">
-            <Crown size={32} className="text-yellow-400" />
+        <div className="flex items-start gap-3 @[420px]:gap-4 mb-5 @[420px]:mb-8">
+          <div className="p-2.5 @[420px]:p-4 bg-gradient-to-br from-yellow-500/20 to-amber-500/10 rounded-2xl @[420px]:rounded-3xl border border-yellow-500/20 shadow-inner shrink-0">
+            <Crown className="text-yellow-400 w-5 h-5 @[420px]:w-8 @[420px]:h-8" />
           </div>
-          <div>
+          <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-[10px] font-bold tracking-widest text-yellow-500 uppercase">Poder Mágico Supremo</span>
+              <span className="text-[9px] @[420px]:text-[10px] font-bold tracking-widest text-yellow-500 uppercase">Poder Mágico Supremo</span>
             </div>
-            <h2 className="font-heading text-2xl text-white leading-tight">
-              {username ? `${username.split(" ")[0]}, ` : ""}Desbloqueie o <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-amber-500">VIP Hogwarts</span>
+            <h2 className="font-heading text-base @[360px]:text-lg @[420px]:text-2xl text-white leading-tight break-words">
+              {username ? `${username.split(" ")[0]}, ` : ""}Desbloqueie o <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-amber-500 whitespace-nowrap">VIP Hogwarts</span>
             </h2>
-            <p className="text-sm text-slate-400 mt-1">
+            <p className="text-xs @[420px]:text-sm text-slate-400 mt-1">
               Junte-se aos bruxos de elite com benefícios exclusivos.
             </p>
           </div>
         </div>
 
         {/* Benefits grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
+        <div className="grid grid-cols-2 @[520px]:grid-cols-3 gap-2 @[420px]:gap-3 mb-6 @[420px]:mb-8">
           {VIP_BENEFITS.map((b, i) => (
-            <div key={i} className="flex items-center gap-3 text-xs text-slate-300 bg-white/5 rounded-2xl px-4 py-3 border border-white/5">
+            <div key={i} className="flex items-center gap-2 @[420px]:gap-3 text-xs text-slate-300 bg-white/5 rounded-xl @[420px]:rounded-2xl px-2.5 @[420px]:px-4 py-2 @[420px]:py-3 border border-white/5 min-w-0">
               <MagicalIcon size="sm">
                 <MagicalEmoji emoji={b.emoji} size="sm" />
               </MagicalIcon>
-              <span className="text-[10px] uppercase tracking-wider">{b.text}</span>
+              <span className="text-[9px] @[420px]:text-[10px] uppercase tracking-wider leading-tight">{b.text}</span>
             </div>
           ))}
         </div>
 
         {/* Plan cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 @[480px]:grid-cols-3 gap-3 @[420px]:gap-4 mb-6 @[420px]:mb-8">
           {PLANS.map(plan => (
             <div key={plan.id}
-              className={`relative rounded-[2rem] border ${plan.border} bg-gradient-to-br ${plan.color} p-6 text-center shadow-lg transition-all duration-500 hover:scale-[1.05] hover:shadow-primary/20 group/plan`}>
+              className={`relative rounded-2xl @[420px]:rounded-[2rem] border ${plan.border} bg-gradient-to-br ${plan.color} p-4 @[420px]:p-6 text-center shadow-lg transition-all duration-500 hover:scale-[1.02] hover:shadow-primary/20 group/plan`}>
               {plan.highlight && (
                 <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-400 text-slate-900 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
                   Popular
                 </span>
               )}
-              <div className="mb-4">
+              <div className="mb-3 @[420px]:mb-4">
                  <MagicalIcon size="md" className="mx-auto">
                     <MagicalEmoji emoji={plan.id === 'founder' ? '👑' : plan.id === 'vip' ? '🥇' : '✨'} size="md" />
                  </MagicalIcon>
               </div>
               <p className="text-white/60 text-[10px] uppercase tracking-[0.2em] mb-1">{plan.name}</p>
-              <p className="text-xl font-bold text-white mb-2">{plan.price}</p>
+              <p className="text-lg @[420px]:text-xl font-bold text-white mb-2">{plan.price}</p>
               {plan.galeons > 0 && (
                 <div className="inline-flex items-center gap-1.5 bg-black/30 px-3 py-1 rounded-full border border-white/10">
                   <span className="text-[10px] font-bold text-yellow-400">+{plan.galeons}</span>
@@ -117,9 +117,9 @@ export default function VipUpsellBanner({ currentVip, galeons = 0, username }: P
         </div>
 
         {/* CTA */}
-        <div className="flex flex-col sm:flex-row items-center gap-3">
+        <div className="flex flex-col @[420px]:flex-row items-center gap-3 mt-auto">
           <Link to="/dashboard/store"
-            className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-600 hover:from-yellow-300 hover:to-amber-500 text-slate-950 font-bold transition-all hover:scale-[1.01]">
+            className="w-full flex items-center justify-center gap-2 py-3 @[420px]:py-4 px-4 @[420px]:px-6 rounded-xl @[420px]:rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-600 hover:from-yellow-300 hover:to-amber-500 text-slate-950 font-bold text-sm @[420px]:text-base transition-all hover:scale-[1.01]">
             <Sparkles size={18} />
             Assinar VIP agora
           </Link>
