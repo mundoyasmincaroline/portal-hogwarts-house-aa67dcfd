@@ -164,45 +164,57 @@ export default function Chats() {
                   <div 
                     key={room.name}
                     onClick={() => !isLocked && !isDisabled && handleEnterRoom(room)}
-                    className={`relative glass rounded-2xl p-5 border transition-all duration-300
+                    className={`relative glass rounded-[2rem] p-6 border transition-all duration-500
                       ${isLocked || isDisabled ? "opacity-60 cursor-not-allowed grayscale-[30%] border-border/50" : 
-                        room.is_premium ? "border-primary/80 shadow-[0_0_15px_rgba(212,175,55,0.4)] hover:shadow-[0_0_25px_rgba(212,175,55,0.6)] cursor-pointer group bg-primary/5" : 
-                        "border-border/50 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(212,175,55,0.15)] hover:-translate-y-1 cursor-pointer group"}
+                        room.is_premium ? "border-primary/80 shadow-[0_0_25px_rgba(212,175,55,0.3)] hover:shadow-[0_0_40px_rgba(212,175,55,0.5)] cursor-pointer group bg-primary/10 -translate-y-1" : 
+                        "border-white/5 hover:border-primary/40 hover:shadow-[0_15px_30px_rgba(0,0,0,0.4)] hover:-translate-y-2 cursor-pointer group bg-white/5"}
                     `}
                   >
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem]" />
+                    
                     {room.is_premium && (
-                      <div className="absolute -top-2 -right-2 text-2xl animate-bounce">✨</div>
+                      <div className="absolute -top-3 -right-3 w-12 h-12 flex items-center justify-center text-3xl animate-bounce drop-shadow-[0_0_10px_rgba(234,179,8,0.6)]">✨</div>
                     )}
+                    
                     {isDisabled && (
-                      <div className="absolute top-2 right-2 bg-destructive/20 text-destructive text-[10px] px-2 py-1 rounded-full font-heading flex items-center gap-1">
-                        <Lock size={10} /> Fechada
+                      <div className="absolute top-4 right-4 bg-destructive/20 text-destructive text-[10px] px-3 py-1 rounded-full font-heading flex items-center gap-1.5 backdrop-blur-md border border-destructive/30">
+                        <Lock size={12} /> FECHADA
                       </div>
                     )}
-                    {room.name === "Hogwarts Meet" && !isDisabled && (
-                      <div className="absolute top-2 right-2 bg-primary/20 text-primary text-[10px] px-2 py-1 rounded-full font-heading flex items-center gap-1 animate-pulse">
-                        <Zap size={10} /> Novo!
+
+                    <div className="flex justify-between items-start mb-8 relative z-10">
+                      <div className={`p-4 rounded-2xl bg-white/5 border border-white/10 group-hover:border-primary/40 group-hover:bg-primary/5 transition-all duration-500 transform group-hover:rotate-6 ${isLocked ? "opacity-40" : ""}`}>
+                        <room.icon size={28} className={`transition-colors duration-500 ${room.is_premium ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
                       </div>
-                    )}
-                    <div className="flex justify-between items-start mb-6">
-                      <MagicalEmoji 
-                        icon={room.icon} 
-                        size="sm" 
-                        glowColor={room.is_premium ? "rgba(234, 179, 8, 0.4)" : "rgba(255, 255, 255, 0.1)"}
-                        className={isLocked ? "opacity-40" : ""}
-                      />
-                      {isLocked && <div className="text-xl text-muted-foreground bg-black/40 p-2 rounded-full border border-white/5" title="Acesso Negado">🔒</div>}
+                      {isLocked && (
+                        <div className="w-10 h-10 flex items-center justify-center text-xl text-muted-foreground bg-black/60 rounded-xl border border-white/10 shadow-inner" title="Acesso Negado">
+                          🔒
+                        </div>
+                      )}
                     </div>
                     
-                    <h3 className={`font-heading text-lg mb-1 transition-colors ${room.is_premium ? 'text-primary drop-shadow-md' : 'text-foreground group-hover:text-primary'}`}>
-                      {room.name}
-                    </h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
-                      {room.description}
-                    </p>
+                    <div className="relative z-10">
+                      <h3 className={`font-heading text-xl mb-2 transition-colors duration-500 ${room.is_premium ? 'text-primary drop-shadow-md' : 'text-foreground group-hover:text-primary'}`}>
+                        {room.name}
+                      </h3>
+                      <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2 font-body group-hover:text-foreground/80 transition-colors">
+                        {room.description}
+                      </p>
+                    </div>
+
+                    <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between relative z-10">
+                      <span className="text-[9px] uppercase tracking-widest text-muted-foreground/40 font-bold group-hover:text-primary/40 transition-colors">
+                        Explorar Salão
+                      </span>
+                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500">
+                        <Zap size={14} className="text-primary" />
+                      </div>
+                    </div>
 
                     {loadingRoom === room.name && (
-                      <div className="absolute inset-0 bg-background/80 rounded-2xl flex items-center justify-center backdrop-blur-sm z-10">
-                        <span className="text-2xl animate-pulse">✨</span>
+                      <div className="absolute inset-0 bg-background/90 rounded-[2rem] flex flex-col items-center justify-center backdrop-blur-md z-50 animate-in fade-in duration-300">
+                        <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-3"></div>
+                        <p className="text-[10px] font-heading text-primary uppercase tracking-[0.2em] animate-pulse">Abrindo Portais...</p>
                       </div>
                     )}
                   </div>
