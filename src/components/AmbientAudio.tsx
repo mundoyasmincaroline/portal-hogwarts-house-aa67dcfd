@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { Music, Music2 } from "lucide-react";
+import { Volume2, VolumeX } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
+import { cn } from "@/lib/core-utils";
 
 // Trilha contínua suave (Archive.org — Hogwarts ambient long-form, CC)
 const AMBIENT_URL = "https://archive.org/download/hogwartsambience/Hogwarts%20Ambience.mp3";
 
-export default function AmbientAudio() {
+export default function AmbientAudio({ className }: { className?: string }) {
   const { user } = useAuth();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [enabled, setEnabled] = useState(false);
@@ -85,10 +86,15 @@ export default function AmbientAudio() {
   return (
     <button
       onClick={toggle}
+      aria-label={enabled ? "Desligar trilha mágica" : "Ligar trilha mágica do castelo"}
       title={enabled ? "Desligar trilha mágica" : "Ligar trilha mágica do castelo"}
-      className="fixed top-3 right-3 z-50 w-10 h-10 rounded-full glass border border-primary/30 hover:border-primary/60 flex items-center justify-center text-primary transition-all hover:scale-110 hover:shadow-[0_0_20px_rgba(201,168,76,0.4)]"
+      className={cn(
+        "touch-target w-9 h-9 text-muted-foreground hover:bg-primary/10 hover:text-primary rounded-xl border border-transparent hover:border-primary/20 transition-all active:scale-90",
+        enabled && "text-primary bg-primary/10 border-primary/20",
+        className
+      )}
     >
-      {enabled ? <Music2 size={16} className="animate-pulse" /> : <Music size={16} className="opacity-60" />}
+      {enabled ? <Volume2 size={16} className="animate-pulse" /> : <VolumeX size={16} className="opacity-70" />}
     </button>
   );
 }
