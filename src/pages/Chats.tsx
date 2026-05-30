@@ -124,14 +124,23 @@ export default function Chats() {
   if (loading) return <div className="text-center py-20">Carregando salões...</div>;
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6 sm:space-y-8 pb-10 px-2 sm:px-0">
-      <div className="glass rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2070')] bg-cover bg-center opacity-10 mix-blend-overlay"></div>
-        <div className="relative z-10">
-          <h1 className="font-heading text-4xl md:text-5xl text-gold-gradient mb-3 drop-shadow-lg">Salões do Castelo</h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Explore os corredores, salas comunais e espaços do castelo. Cada porta leva a uma nova aventura.
+    <div className="max-w-6xl mx-auto space-y-8 sm:space-y-12 pb-20 px-4 sm:px-6">
+      <div className="glass rounded-[2rem] sm:rounded-[3rem] p-8 sm:p-12 text-center relative overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-primary/20 group">
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2070')] bg-cover bg-center opacity-10 group-hover:scale-105 transition-transform duration-1000 mix-blend-overlay"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-black/40"></div>
+        <div className="relative z-10 space-y-4">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 border border-primary/30 mb-2 animate-float">
+            <Castle size={40} className="text-primary drop-shadow-[0_0_10px_rgba(212,175,55,0.5)]" />
+          </div>
+          <h1 className="font-heading text-5xl md:text-7xl text-gold-gradient mb-2 drop-shadow-2xl tracking-tighter">Salões do Castelo</h1>
+          <p className="text-muted-foreground/80 text-sm sm:text-lg max-w-2xl mx-auto font-serif italic">
+            "Não é apenas um castelo, é o nosso lar. Explore cada corredor, desvende cada segredo e escreva sua própria história."
           </p>
+          <div className="flex items-center justify-center gap-2 pt-4">
+            <span className="h-px w-12 bg-primary/30"></span>
+            <span className="text-[10px] uppercase tracking-[0.4em] text-primary/60 font-bold">Hogwarts House</span>
+            <span className="h-px w-12 bg-primary/30"></span>
+          </div>
         </div>
       </div>
 
