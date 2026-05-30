@@ -185,30 +185,30 @@ export default function Feed() {
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2 space-y-4">
-          <div className="glass rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-8 border-white/5 shadow-2xl relative overflow-hidden group hover:border-primary/20 transition-all duration-500">
-            <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-50 group-hover:opacity-100 transition-opacity" />
+          <div className="glass rounded-[2rem] p-6 sm:p-8 border-white/5 bg-gradient-to-br from-white/[0.03] to-transparent shadow-2xl relative overflow-hidden group/compose">
+            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-30" />
             <textarea
               value={newPost}
               onChange={(e) => setNewPost(e.target.value)}
               placeholder="O que está acontecendo no castelo?"
               maxLength={1000}
-              className="w-full bg-white/[0.03] rounded-2xl p-5 border border-white/5 focus:border-primary/20 transition-all resize-none text-base sm:text-lg text-foreground placeholder:text-muted-foreground/30 focus:outline-none min-h-[100px] sm:min-h-[120px] font-serif italic shadow-inner"
+              className="w-full bg-black/20 rounded-2xl p-6 border border-white/5 focus:border-primary/30 transition-all resize-none text-base sm:text-lg text-foreground placeholder:text-muted-foreground/20 focus:outline-none min-h-[120px] font-serif italic shadow-inner"
             />
-            <div className="flex flex-col sm:flex-row gap-4 mt-5 pt-5 border-t border-white/5">
+            <div className="flex flex-col sm:flex-row gap-4 mt-6 pt-6 border-t border-white/5">
               <div className="flex-1 relative group/input">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-primary opacity-40 group-focus-within/input:opacity-100 transition-opacity">🎵</div>
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/40 group-focus-within/input:text-primary transition-colors duration-300">🎵</div>
                 <input 
                   type="text" 
                   value={newMusicUrl} 
                   onChange={(e) => setNewMusicUrl(e.target.value)} 
                   placeholder="Link do Spotify ou MP3..." 
-                  className="w-full bg-white/[0.02] rounded-xl pl-10 pr-4 py-3 text-xs text-foreground focus:outline-none border border-white/5 focus:border-primary/20 transition-all" 
+                  className="w-full bg-black/20 rounded-xl pl-11 pr-4 py-3.5 text-xs text-foreground focus:outline-none border border-white/5 focus:border-primary/20 transition-all" 
                 />
               </div>
               <div className="flex justify-between items-center sm:justify-end gap-6">
-                <span className="text-[10px] text-muted-foreground/40 font-mono tracking-[0.2em]">{newPost.length}/1000</span>
-                <Button variant="magical" size="lg" className="font-heading text-xs px-10 h-12 rounded-2xl shadow-xl hover:scale-105 active:scale-95 transition-all" disabled={!newPost.trim() || posting} onClick={submitPost}>
-                  {posting ? "Conjurando..." : "Publicar ✨"}
+                <span className="text-[10px] text-muted-foreground/30 font-mono tracking-widest">{newPost.length}/1000</span>
+                <Button variant="magical" size="lg" className="font-heading text-[11px] uppercase tracking-[0.2em] px-10 h-12 rounded-xl shadow-[0_10px_20px_-5px_rgba(212,175,55,0.3)] hover:shadow-[0_15px_30px_-5px_rgba(212,175,55,0.4)]" disabled={!newPost.trim() || posting} onClick={submitPost}>
+                  {posting ? "Conjurando..." : "Publicar"}
                 </Button>
               </div>
             </div>
@@ -245,61 +245,52 @@ export default function Feed() {
         </div>
 
         <div className="space-y-4">
-          <div className="glass rounded-xl p-4">
-            <h3 className="font-heading text-sm text-primary mb-3">🏰 Bruxos no Castelo</h3>
+          <div className="glass rounded-[2rem] p-6 border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent shadow-2xl">
+            <h3 className="font-heading text-xs uppercase tracking-[0.3em] text-primary/60 mb-6 flex items-center gap-3">
+              <span className="w-8 h-[1px] bg-primary/20" />
+              Bruxos Ativos
+            </h3>
             
-            {/* Morpheus - Arquiteto */}
-            <div className="flex items-center gap-2 mb-2 p-2 bg-black border border-green-500/50 rounded-lg group shadow-[0_0_10px_rgba(34,197,94,0.2)]">
-              <div className="w-8 h-8 rounded-none shrink-0 border border-green-500 relative bg-black flex items-center justify-center">
-                <div className="absolute inset-0 bg-green-500/10 z-10"></div>
-                <span className="text-green-500 font-mono text-xs font-bold animate-pulse">M</span>
+            <div className="space-y-4 mb-8">
+              {/* Morpheus - Arquiteto */}
+              <div className="flex items-center gap-3 p-3 bg-black/40 border border-green-500/20 rounded-2xl group transition-all hover:border-green-500/40">
+                <div className="w-10 h-10 rounded-xl shrink-0 border border-green-500/30 relative bg-black flex items-center justify-center overflow-hidden">
+                  <div className="absolute inset-0 bg-green-500/5 animate-pulse" />
+                  <span className="text-green-500 font-mono text-sm font-bold">M</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[11px] text-green-500 font-bold font-mono tracking-widest uppercase">Morpheus</p>
+                  <p className="text-[8px] font-mono text-green-500/40 uppercase">System Architect</p>
+                </div>
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)] animate-pulse" />
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-green-500 font-bold font-mono truncate tracking-widest">&gt; MORPHEUS</p>
-                <p className="text-[9px] font-mono text-green-500/70 truncate">SYSTEM_ARCHITECT</p>
+
+              {/* Yasmin Caroline - A Fundadora */}
+              <div className="flex items-center gap-3 p-3 bg-white/5 border border-yellow-500/20 rounded-2xl group transition-all hover:border-yellow-500/40 hover:scale-[1.02]">
+                <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 border border-yellow-500/30 relative">
+                  <SafeImage src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Yasmin" className="w-full h-full object-cover" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[11px] text-yellow-500 font-bold font-heading uppercase tracking-wider">Yasmin Caroline</p>
+                  <p className="text-[8px] text-yellow-500/40 font-black uppercase tracking-[0.2em]">A Fundadora</p>
+                </div>
+                <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.8)] animate-bounce" />
               </div>
-              <div className="w-2 h-2 rounded-none bg-green-500 animate-[ping_3s_linear_infinite]"></div>
+
+              {/* Filch - O Vigilante */}
+              <div className="flex items-center gap-3 p-3 bg-white/5 border border-red-500/10 rounded-2xl group opacity-60 hover:opacity-100 transition-all">
+                <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 border border-red-500/20 grayscale group-hover:grayscale-0 transition-all">
+                  <SafeImage src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Filch" className="w-full h-full object-cover" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[11px] text-red-500 font-bold font-heading uppercase tracking-wider">Argus Filch</p>
+                  <p className="text-[8px] text-red-500/30 font-black uppercase tracking-[0.2em]">O Vigilante</p>
+                </div>
+                <div className="w-1.5 h-1.5 rounded-full bg-red-900 shadow-[0_0_8px_rgba(153,27,27,0.8)]" />
+              </div>
             </div>
 
-            {/* Yasmin Caroline - A Fundadora */}
-            <div className="flex items-center gap-2 mb-2 p-2 bg-yellow-500/10 border border-yellow-400/50 rounded-lg group shadow-[0_0_15px_rgba(250,204,21,0.3)] hover:scale-105 transition-transform cursor-default">
-              <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border-2 border-yellow-400 relative">
-                <div className="absolute inset-0 bg-yellow-400/30 mix-blend-overlay z-10 animate-pulse"></div>
-                <img src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Yasmin Caroline" className="w-full h-full object-cover" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-yellow-400 font-bold truncate">✨ Yasmin Caroline</p>
-                <p className="text-[9px] text-yellow-500/80 truncate font-bold">A FUNDADORA GENIAL</p>
-              </div>
-              <div className="w-2 h-2 rounded-full bg-yellow-400 animate-bounce"></div>
-            </div>
-
-            {/* Carolina Assis - A Guardiã */}
-            <div className="flex items-center gap-2 mb-2 p-2 bg-blue-500/10 border border-blue-400/50 rounded-lg group shadow-[0_0_10px_rgba(96,165,250,0.2)]">
-              <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-blue-400 relative">
-                <div className="absolute inset-0 bg-blue-400/20 mix-blend-overlay z-10 animate-pulse"></div>
-                <img src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Carolina Assis" className="w-full h-full object-cover" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-blue-400 font-bold truncate">🛡️ Carolina Assis</p>
-                <p className="text-[9px] text-blue-400/80 truncate font-bold">MÃE ZELOSA • VIGIANDO</p>
-              </div>
-              <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></div>
-            </div>
-
-            {/* Argus Filch - Sempre Online */}
-            <div className="flex items-center gap-2 mb-4 p-2 bg-red-950/30 border border-red-900/50 rounded-lg group">
-              <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-red-500/50">
-                <img src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Argus Filch" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-red-500 font-bold truncate">Argus Filch</p>
-                <p className="text-[10px] text-muted-foreground truncate">Vigiando os corredores...</p>
-              </div>
-              <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
-            </div>
-
-            <div className="space-y-2 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
+            <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar border-t border-white/5 pt-6">
               {onlineUsers.length === 0 && (
                 <p className="text-xs text-muted-foreground">Ninguém à vista.</p>
               )}
@@ -322,21 +313,23 @@ export default function Feed() {
             </div>
           </div>
 
-          <div className="glass rounded-[2rem] p-6 border-white/5 bg-gradient-to-br from-black/40 to-transparent shadow-2xl">
-            <h3 className="font-heading text-sm text-primary mb-5 flex items-center gap-2">
-              <Sparkles size={16} /> Desafios Ativos
+          <div className="glass rounded-[2rem] p-7 border-white/5 bg-gradient-to-tr from-primary/10 via-transparent to-transparent shadow-2xl overflow-hidden relative group/challenges">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-[60px] group-hover/challenges:bg-primary/10 transition-colors" />
+            <h3 className="font-heading text-xs uppercase tracking-[0.3em] text-primary/60 mb-6 flex items-center gap-3 relative z-10">
+              <span className="w-8 h-[1px] bg-primary/20" />
+              Desafios Ativos
             </h3>
-            <div className="space-y-4">
+            <div className="space-y-4 relative z-10">
               {activeChallenges.length === 0 && (
-                <p className="text-[10px] text-muted-foreground uppercase text-center py-4 tracking-widest opacity-50">Nenhum desafio ativo agora.</p>
+                <p className="text-[10px] text-muted-foreground uppercase text-center py-6 tracking-[0.4em] opacity-30">Vazio por enquanto</p>
               )}
               {activeChallenges.map((c) => (
-                <div key={c.id} className="group relative glass rounded-2xl p-4 border border-white/5 bg-white/5 hover:bg-white/10 transition-all cursor-pointer overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="flex items-center gap-3 relative z-10">
-                    <MagicalIcon size="sm">
+                <div key={c.id} className="group/item relative glass rounded-2xl p-5 border border-white/5 bg-white/[0.03] hover:bg-white/[0.06] transition-all cursor-pointer overflow-hidden hover:-translate-y-1">
+                  <div className="absolute inset-y-0 left-0 w-[2px] bg-primary opacity-0 group-hover/item:opacity-100 transition-opacity" />
+                  <div className="flex items-center gap-4 relative z-10">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover/item:scale-110 transition-transform">
                        <MagicalEmoji emoji={c.type === 'daily' ? '⚡' : '🔥'} size="sm" />
-                    </MagicalIcon>
+                    </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">{c.title}</p>
                       <div className="flex items-center gap-2 mt-1">
