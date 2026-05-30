@@ -5,6 +5,7 @@ import {
   LogOut, Volume2, VolumeX, Menu, Castle, Wallet
 } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import HouseCrest from "@/components/HouseCrest";
 import MagicalGaleon from "@/components/MagicalGaleon";
 import { HOUSES } from "@/types";
