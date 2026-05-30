@@ -81,6 +81,7 @@ const TABS = [
 export default function GringottsStore() {
   const { user, profile } = useAuth();
   const { items, owned, loading, buyingId, loadStore, buyItem: handleBuyItem, galeons } = useStore();
+  const [buyingIdLocal, setBuyingIdLocal] = useState<string | null>(null);
   const [tab, setTab] = useState("featured");
   const [pendingOrderId, setPendingOrderId] = useState<string|null>(null);
   const [buyingPackageId, setBuyingPackageId] = useState<string|null>(null);
@@ -170,8 +171,11 @@ export default function GringottsStore() {
   };
 
   const buyItem = async (item: StoreItem) => {
+    if (buyingIdLocal || buyingId) return;
+    setBuyingIdLocal(item.id);
     const success = await handleBuyItem(item);
     if (success) playMagicSound();
+    setBuyingIdLocal(null);
   };
 
   // ── Assinar VIP ───────────────────────────────────────────

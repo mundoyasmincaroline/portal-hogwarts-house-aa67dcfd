@@ -37,7 +37,7 @@ export default function Notifications() {
     const sub = supabase
       .channel(channelId)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` }, (payload) => {
-        setNotifications((prev) => [payload.new as Notification, ...prev]);
+        setNotifications((prev) => [payload.new as Notification, ...prev.slice(0, 19)]); // Limit locally too
       })
       .subscribe();
 
@@ -109,9 +109,14 @@ export default function Notifications() {
                     <div className="flex gap-4">
                       <div className="text-2xl mt-1 group-hover:scale-110 transition-transform duration-500">🦉</div>
                       <div className="flex-1 min-w-0">
-                        <h4 className={`text-sm leading-tight mb-1 ${!n.read ? "font-bold text-foreground" : "font-medium text-foreground/70"}`}>
-                          {n.title}
-                        </h4>
+                        <div className="flex justify-between items-start gap-2">
+                          <h4 className={`text-sm leading-tight mb-1 ${!n.read ? "font-bold text-foreground" : "font-medium text-foreground/70"}`}>
+                            {n.title === 'mention' ? '🦉 Menção' : n.title === 'system' ? '📜 Aviso' : n.title}
+                          </h4>
+                          <span className="text-[8px] text-muted-foreground/30 font-mono shrink-0 whitespace-nowrap">
+                             {new Date(n.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                          </span>
+                        </div>
                         <p className="text-xs text-muted-foreground/80 leading-relaxed italic font-serif">{n.message}</p>
                         
                         {n.link && (

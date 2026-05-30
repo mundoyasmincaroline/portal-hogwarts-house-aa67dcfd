@@ -51,6 +51,7 @@ export default function ChatRoom() {
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toLocaleDateString('en-CA'));
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [isSending, setIsSending] = useState(false);
   const [loading, setLoading] = useState(true);
   const [bannedWords, setBannedWords] = useState<string[]>([]);
   const [cooldown, setCooldown] = useState(0);
@@ -208,7 +209,7 @@ export default function ChatRoom() {
       
       // Fetch profiles and roles separately to avoid RLS join issues
       const [{ data: profilesData }, { data: rolesData }] = await Promise.all([
-        supabase.from("profiles").select("user_id, full_name, username, house, avatar_url").in("user_id", userIds),
+        supabase.from("profiles").select("user_id, full_name, username, house, avatar_url, vip_plan").in("user_id", userIds),
         supabase.from("user_roles").select("user_id, role").in("user_id", userIds)
       ]);
 
@@ -248,11 +249,18 @@ export default function ChatRoom() {
         const todayStr = new Date().toLocaleDateString('en-CA');
         if (selectedDate !== todayStr) return;
 
-        const { data: userData } = await supabase.from("profiles").select("full_name, username, house, avatar_url").eq("user_id", payload.new.user_id).single();
-        const { data: charData } = payload.new.character_id ? await supabase.from("characters").select("full_name, house, avatar_url").eq("id", payload.new.character_id).single() : { data: null };
-        const { data: roleData } = await supabase.from("user_roles").select("role").eq("user_id", payload.new.user_id).maybeSingle();
-        if (userData) {
-          setMessages(prev => [...prev, { ...payload.new, profiles: userData, characters: charData, user_role: roleData?.role } as unknown as Message]);
+        try {
+          const [{ data: userData }, { data: charData }, { data: roleData }] = await Promise.all([
+            supabase.from("profiles").select("full_name, username, house, avatar_url, vip_plan").eq("user_id", payload.new.user_id).maybeSingle(),
+            payload.new.character_id ? supabase.from("characters").select("full_name, house, avatar_url").eq("id", payload.new.character_id).maybeSingle() : Promise.resolve({ data: null }),
+            supabase.from("user_roles").select("role").eq("user_id", payload.new.user_id).maybeSingle()
+          ]);
+          
+          if (userData) {
+            setMessages(prev => [...prev, { ...payload.new, profiles: userData, characters: charData, user_role: roleData?.role } as unknown as Message]);
+          }
+        } catch (err) {
+          console.error("Error processing realtime message:", err);
         }
       })
       .subscribe();
@@ -268,7 +276,8 @@ export default function ChatRoom() {
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || !channel || !user || cooldown > 0) return;
+    if (!input.trim() || !channel || !user || cooldown > 0 || isSending) return;
+    setIsSending(true);
     
     const content = input;
     
@@ -334,7 +343,8 @@ export default function ChatRoom() {
 
     setInput("");
     setShowMentionMenu(false);
-    setCooldown(30); // 30 segundos de Anti-Spam
+    setCooldown(2); // Reduced from 30 to 2 for better UX, but keeping a small buffer
+    // Note: Database triggers/RLS might handle the real anti-spam logic
 
     const { error } = await supabase.from("messages").insert({
       channel_id: channel.id,
@@ -388,6 +398,7 @@ export default function ChatRoom() {
         }
       }
     }
+    setIsSending(false);
   };
 
   const deleteMessage = async (messageId: string) => {
