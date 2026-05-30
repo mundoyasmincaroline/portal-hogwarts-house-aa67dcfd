@@ -283,10 +283,10 @@ export default function DashboardLayout() {
 
 
         <div className="flex-1 overflow-y-auto relative scroll-smooth contain-strict">
-          <DailyProphetTicker />
           <div className="page-container">
             {location.pathname === "/dashboard" && (
-              <div className="mb-8">
+              <div className="space-y-6 mb-8">
+                <DailyProphetTicker />
                 <HouseCupWidget />
               </div>
             )}
