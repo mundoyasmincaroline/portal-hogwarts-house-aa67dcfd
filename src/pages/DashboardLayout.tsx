@@ -183,7 +183,7 @@ export default function DashboardLayout() {
         )}
       </AnimatePresence>
 
-      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-[85vw] max-w-72 md:w-64 bg-card/95 backdrop-blur-xl border-r border-border/40 flex flex-col transition-all duration-500 ease-in-out md:translate-x-0 ${sidebarOpen ? "translate-x-0 shadow-[20px_0_60px_rgba(0,0,0,0.9)]" : "-translate-x-full"}`}>
+      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-[85vw] max-w-72 md:w-64 bg-card/98 backdrop-blur-2xl border-r border-border/60 flex flex-col transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] md:translate-x-0 ${sidebarOpen ? "translate-x-0 shadow-[20px_0_60px_rgba(0,0,0,0.9)]" : "-translate-x-full"}`}>
         <div className="p-5 border-b border-border/30">
           <Link to="/dashboard" className="flex items-center gap-3 group">
             <div className="bg-primary/20 p-2.5 rounded-xl text-primary transition-transform group-hover:rotate-12 duration-300"><Castle size={24} /></div>
@@ -301,7 +301,7 @@ export default function DashboardLayout() {
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 exit={{ opacity: 0, y: -20, filter: "blur(10px)" }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
-                className="pb-24 md:pb-20"
+                className="pb-32 md:pb-24"
               >
                 <Outlet />
               </motion.div>
