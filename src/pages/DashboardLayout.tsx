@@ -33,23 +33,24 @@ const NavItem = memo(({ item, isActive, dmUnread, onClick }: { item: any, isActi
   <Link
     to={item.path}
     onClick={onClick}
-    className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition-all group relative overflow-hidden border border-transparent ${
+    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group relative overflow-hidden border ${
       isActive 
-        ? "bg-primary/10 text-primary font-bold border-primary/20 shadow-[inset_0_0_20px_rgba(212,175,55,0.08)] scale-[1.02]" 
-        : "text-muted-foreground/80 hover:bg-white/5 hover:text-foreground hover:border-white/5 active:scale-95"
+        ? "bg-primary/10 text-primary font-bold border-primary/20 shadow-[0_0_20px_rgba(212,175,55,0.1)]" 
+        : "text-muted-foreground/70 hover:bg-white/5 hover:text-foreground border-transparent active:scale-95"
     }`}
   >
-
     {isActive && (
       <motion.div 
-        layoutId="active-nav-glow"
-        className="absolute inset-0 bg-primary/5 blur-sm"
+        layoutId="active-nav-indicator"
+        className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-full shadow-[0_0_10px_rgba(212,175,55,0.8)]"
       />
     )}
-    <span className={`relative z-10 transition-transform group-hover:scale-110 duration-300 ${isActive ? "scale-110" : ""}`}>{item.icon}</span>
-    <span className="font-heading text-xs relative z-10">{item.label}</span>
+    <span className={`relative z-10 transition-all duration-300 ${isActive ? "scale-110 drop-shadow-[0_0_5px_rgba(212,175,55,0.5)]" : "group-hover:scale-110"}`}>
+      {item.icon}
+    </span>
+    <span className="font-heading text-[11px] uppercase tracking-wider relative z-10">{item.label}</span>
     {item.label === "Mensagens" && dmUnread > 0 && (
-      <span className="ml-auto min-w-[18px] h-[18px] px-1 bg-primary text-primary-foreground rounded-full text-[9px] flex items-center justify-center font-bold relative z-10 animate-pulse">
+      <span className="ml-auto min-w-[20px] h-[20px] px-1 bg-primary text-primary-foreground rounded-full text-[10px] flex items-center justify-center font-bold relative z-10 shadow-[0_0_10px_rgba(212,175,55,0.4)]">
         {dmUnread > 9 ? "9+" : dmUnread}
       </span>
     )}
@@ -262,26 +263,26 @@ export default function DashboardLayout() {
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <NotificationBanner />
-        <header className="md:hidden flex items-center justify-between px-4 h-16 border-b border-white/5 bg-card/40 backdrop-blur-3xl sticky top-0 z-[60] shadow-lg">
+        <header className="md:hidden flex items-center justify-between px-5 h-14 border-b border-white/5 bg-card/60 backdrop-blur-3xl sticky top-0 z-[60] shadow-xl">
           <div className="flex items-center gap-3">
             <button 
               onClick={() => setSidebarOpen(true)} 
-              className="touch-target w-11 h-11 text-muted-foreground hover:text-primary active:scale-90 transition-all rounded-xl hover:bg-primary/10 border border-transparent active:border-primary/20 flex items-center justify-center"
+              className="w-10 h-10 flex items-center justify-center text-muted-foreground hover:text-primary active:scale-90 transition-all rounded-xl bg-white/5 border border-white/5"
             >
-              <Menu size={22} />
+              <Menu size={20} />
             </button>
             <div className="flex flex-col">
-              <span className="font-heading text-base text-gold-gradient tracking-tighter leading-none">Hogwarts</span>
-              <span className="text-[9px] text-primary/60 uppercase tracking-widest font-bold">House Portal</span>
+              <span className="font-heading text-sm text-gold-gradient tracking-tight leading-none">Hogwarts</span>
+              <span className="text-[8px] text-primary/60 uppercase tracking-[0.2em] font-black">Portal</span>
             </div>
           </div>
           <div className="flex items-center gap-2">
-              <Link to="/dashboard/wallet" className="h-9 px-3 rounded-xl border border-primary/20 bg-primary/10 text-primary flex items-center gap-1.5 active:scale-95 transition-all shadow-inner">
-                <Wallet size={12} />
+              <Link to="/dashboard/wallet" className="h-8 px-3 rounded-lg border border-primary/20 bg-primary/10 text-primary flex items-center gap-1.5 active:scale-95 transition-all">
+                <Wallet size={10} />
                 <span className="font-heading text-[10px] tracking-tight">{(profile?.galeons || 0).toLocaleString("pt-BR")}</span>
               </Link>
              <Notifications />
-              <Link to="/dashboard/profile" className="w-10 h-10 rounded-xl overflow-hidden border border-primary/40 shadow-[0_0_15px_rgba(212,175,55,0.2)] active:scale-95 transition-all">
+              <Link to="/dashboard/profile" className="w-9 h-9 rounded-lg overflow-hidden border border-primary/30 active:scale-95 transition-all">
                 <SafeImage src={profile?.avatar_url} alt={profile?.full_name || "Avatar"} className="w-full h-full object-cover" />
               </Link>
           </div>
