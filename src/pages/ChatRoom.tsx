@@ -39,6 +39,7 @@ interface Message {
     full_name: string;
     house: House;
     avatar_url: string | null;
+    vip_plan: string | null;
   };
 }
 
@@ -597,19 +598,23 @@ export default function ChatRoom() {
                     </div>
 
                     {/* Conteúdo da Mensagem */}
-                    <div className={`flex flex-col max-w-[75%] ${isMe ? 'items-end' : ''}`}>
-                      <div className="flex items-center gap-3 mb-1.5 px-1">
-                        <span className={`text-[11px] font-heading font-bold uppercase tracking-wider ${nameColor}`}>
-                          {isMorpheus ? "MORPHEUS [ARQUITETO]" : isYasmin ? "YASMIN [FUNDADORA]" : isCarolina ? "CAROLINA [GUARDIÃ]" : profileName}
-                        </span>
-                        <span className="text-[9px] text-white/20 font-serif italic">{formatDate(m.created_at)}</span>
+                    <div className={`flex flex-col max-w-[85%] sm:max-w-[75%] ${isMe ? 'items-end' : ''}`}>
+                      <div className={`flex items-center gap-3 mb-1.5 px-1 ${isMe ? 'flex-row-reverse' : ''}`}>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className={`text-[10px] sm:text-[11px] font-heading font-bold uppercase tracking-wider ${nameColor}`}>
+                            {isMorpheus ? "MORPHEUS [ARQUITETO]" : isYasmin ? "YASMIN [FUNDADORA]" : isCarolina ? "CAROLINA [GUARDIÃ]" : profileName}
+                          </span>
+                          {m.profiles?.vip_plan === "founder" && <span className="text-[7px] text-yellow-500 font-bold bg-yellow-500/10 px-1 rounded-sm border border-yellow-500/20">👑</span>}
+                          {m.profiles?.vip_plan === "vip" && <span className="text-[7px] text-purple-400 font-bold bg-purple-500/10 px-1 rounded-sm border border-purple-500/20">💜</span>}
+                        </div>
+                        <span className="text-[8px] text-white/20 font-serif italic">{formatDate(m.created_at)}</span>
                         {isAdmin && !isMe && (
-                          <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
-                            <button onClick={() => pinMessage(m)} className="text-primary hover:text-primary/80 text-[10px] font-bold uppercase">
-                               Fixar 📌
+                          <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all ml-2">
+                            <button onClick={() => pinMessage(m)} className="text-primary hover:text-primary/80 text-[10px] font-bold uppercase" title="Fixar">
+                               📌
                             </button>
-                            <button onClick={() => deleteMessage(m.id)} className="text-red-500 hover:text-red-400 text-[10px] font-bold uppercase">
-                               Banir 🚫
+                            <button onClick={() => deleteMessage(m.id)} className="text-red-500 hover:text-red-400 text-[10px] font-bold uppercase" title="Remover">
+                               🚫
                             </button>
                           </div>
                         )}

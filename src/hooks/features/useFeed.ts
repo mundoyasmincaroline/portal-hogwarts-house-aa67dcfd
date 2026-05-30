@@ -12,9 +12,10 @@ import { supabase } from "@/integrations/supabase/client";
 export function useFeed() {
   const { user } = useAuth();
   const [posts, setPosts] = useState<FeedPost[]>([]);
-  const [loading, setLoading] = useState(false); // Start false if data is likely cached or secondary
+  const [loading, setLoading] = useState(true);
 
-  const loadFeed = useCallback(async () => {
+  const loadFeed = useCallback(async (isSilent = false) => {
+    if (!isSilent) setLoading(true);
     try {
       const postsData = await feedService.getPosts();
       if (postsData.length === 0) {
@@ -75,8 +76,9 @@ export function useFeed() {
     let debounceTimer: ReturnType<typeof setTimeout> | null = null;
     const channel = supabase.channel('feed-updates')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, () => {
+        // Debounce para evitar recarregar várias vezes em rajadas
         if (debounceTimer) clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => { loadFeed(true); }, 2000); // Silent reload for background updates
+        debounceTimer = setTimeout(() => { loadFeed(true); }, 2000);
       })
       .subscribe();
     return () => {
