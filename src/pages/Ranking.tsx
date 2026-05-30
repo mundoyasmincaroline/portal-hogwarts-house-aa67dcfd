@@ -51,6 +51,8 @@ export default function Ranking() {
       .eq("approved", true)
       .order("xp", { ascending: false })
       .limit(50);
+    
+    // Sort logic handled by SQL, but ensure we have valid objects
     setMembers((data || []) as RankMember[]);
     setLoading(false);
   };
@@ -116,7 +118,7 @@ export default function Ranking() {
         <>
           {/* Pódio Top 3 */}
           {top3.length > 0 && (
-            <div className="flex flex-col sm:flex-row items-center sm:items-end justify-center gap-4 px-2 sm:px-4">
+            <div className="flex flex-col sm:flex-row items-center sm:items-end justify-center gap-4 px-2 sm:px-4 mb-8">
               {PODIUM_ORDER.map(idx => {
                 const m = top3[idx];
                 if (!m) return null;
@@ -179,9 +181,9 @@ export default function Ranking() {
               return (
                 <div key={m.user_id}
                   onClick={() => navigate(`/dashboard/profile/${m.user_id}`)}
-                  className={`flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-secondary/30 transition-colors ${
-                    i !== members.length - 1 ? "border-b border-border/30" : ""
-                  } ${i < 3 ? `bg-gradient-to-r ${colors.bg}` : ""}`}>
+                  className={`flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-white/[0.03] transition-colors border-b border-white/[0.05] last:border-0 ${
+                    i < 3 ? `bg-gradient-to-r ${colors.bg}` : ""
+                  }`}>
 
                   {/* Posição */}
                   <div className="w-8 text-center shrink-0">

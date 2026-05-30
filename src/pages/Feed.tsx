@@ -58,7 +58,11 @@ export default function Feed() {
     const [{ data: hp }, { data: ch }, { data: users }] = await Promise.all([
       supabase.from("house_points").select("house, points"),
       supabase.from("challenges").select("id, title, xp_reward, type").eq("active", true).limit(5),
-      supabase.from("profiles").select("id, user_id, full_name, username, house, avatar_url, online, last_seen").eq("approved", true).order("online", { ascending: false }).limit(10)
+      supabase.from("profiles")
+        .select("id, user_id, full_name, username, house, avatar_url, online, last_seen")
+        .eq("approved", true)
+        .order("last_seen", { ascending: false }) // Prioritize recent activity
+        .limit(15)
     ]);
 
     const stats: Record<House, number> = { gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0 };
@@ -68,7 +72,10 @@ export default function Feed() {
     });
     setHouseStats(stats);
     setActiveChallenges(ch || []);
-    setOnlineUsers(users || []);
+    
+    // Filtro agressivo para mostrar apenas quem está REALMENTE online no momento
+    const realOnlineUsers = (users || []).filter(u => isUserOnline(u));
+    setOnlineUsers(realOnlineUsers);
   }, []);
 
   useEffect(() => {
