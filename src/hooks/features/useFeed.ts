@@ -12,7 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 export function useFeed() {
   const { user } = useAuth();
   const [posts, setPosts] = useState<FeedPost[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Start false if data is likely cached or secondary
 
   const loadFeed = useCallback(async () => {
     try {
@@ -67,7 +67,7 @@ export function useFeed() {
   }, [user?.id]);
 
   useEffect(() => {
-    loadFeed();
+    loadFeed(false);
   }, [loadFeed]);
 
   // Realtime simples para novos posts (opcional, mas melhora UX)
@@ -75,9 +75,8 @@ export function useFeed() {
     let debounceTimer: ReturnType<typeof setTimeout> | null = null;
     const channel = supabase.channel('feed-updates')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, () => {
-        // Debounce para evitar recarregar várias vezes em rajadas
         if (debounceTimer) clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => { loadFeed(); }, 1500);
+        debounceTimer = setTimeout(() => { loadFeed(true); }, 2000); // Silent reload for background updates
       })
       .subscribe();
     return () => {
