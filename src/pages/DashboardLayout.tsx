@@ -273,7 +273,6 @@ export default function DashboardLayout() {
             <span className="font-heading text-lg text-gold-gradient tracking-tighter">Hogwarts House</span>
           </div>
           <div className="flex items-center gap-3">
-              <AmbientAudio className="w-11 h-11" />
               <Link to="/dashboard/wallet" className="min-h-11 px-3 rounded-2xl border border-primary/20 bg-primary/10 text-primary flex items-center gap-1.5 active:scale-95 transition-all">
                 <Wallet size={15} />
                 <span className="font-heading text-xs">{(profile?.galeons || 0).toLocaleString("pt-BR")}</span>
