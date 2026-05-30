@@ -4,7 +4,7 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Trophy, Sparkles, Gift, RefreshCw, Share2 } from "lucide-react";
+import { Trophy, Sparkles, Gift, RefreshCw, Share2, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import StickerVisual from "@/components/StickerVisual";
 import MagicalEmoji from "@/components/MagicalEmoji";
