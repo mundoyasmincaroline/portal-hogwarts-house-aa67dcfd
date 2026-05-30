@@ -1,9 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Trophy, Shield, Zap, Star, Sparkles } from "lucide-react";
+import { Trophy } from "lucide-react";
 import { useRealtime } from "@/hooks/core/useRealtime";
 import HouseCrest from "./HouseCrest";
-import MagicalEmoji from "./MagicalEmoji";
 import { House } from "@/types";
 
 interface HouseScore {
@@ -16,13 +15,15 @@ interface HouseScore {
   label: string;
 }
 
+const BASE_SCORES: HouseScore[] = [
+  { house: 'gryffindor', points: 0, percentage: 0, color: 'bg-red-600', glow: 'shadow-[0_0_20px_rgba(220,38,38,0.4)]', icon: '🦁', label: 'Grifinória' },
+  { house: 'slytherin',  points: 0, percentage: 0, color: 'bg-emerald-600', glow: 'shadow-[0_0_20px_rgba(5,150,105,0.4)]', icon: '🐍', label: 'Sonserina' },
+  { house: 'ravenclaw',  points: 0, percentage: 0, color: 'bg-blue-600', glow: 'shadow-[0_0_20px_rgba(37,99,235,0.4)]', icon: '🦅', label: 'Corvinal' },
+  { house: 'hufflepuff', points: 0, percentage: 0, color: 'bg-yellow-600', glow: 'shadow-[0_0_20px_rgba(202,138,4,0.4)]', icon: '🦡', label: 'Lufa-Lufa' },
+];
+
 export default function HouseCupWidget({ isLanding = false }: { isLanding?: boolean }) {
-  const [scores, setScores] = useState<HouseScore[]>([
-    { house: 'gryffindor', points: 0, percentage: 0, color: 'bg-red-600', glow: 'shadow-[0_0_20px_rgba(220,38,38,0.4)]', icon: '🦁', label: 'Grifinória' },
-    { house: 'slytherin',  points: 0, percentage: 0, color: 'bg-emerald-600', glow: 'shadow-[0_0_20px_rgba(5,150,105,0.4)]', icon: '🐍', label: 'Sonserina' },
-    { house: 'ravenclaw',  points: 0, percentage: 0, color: 'bg-blue-600', glow: 'shadow-[0_0_20px_rgba(37,99,235,0.4)]', icon: '🦅', label: 'Corvinal' },
-    { house: 'hufflepuff', points: 0, percentage: 0, color: 'bg-yellow-600', glow: 'shadow-[0_0_20px_rgba(202,138,4,0.4)]', icon: '🦡', label: 'Lufa-Lufa' },
-  ]);
+  const [scores, setScores] = useState<HouseScore[]>(BASE_SCORES);
   const [loading, setLoading] = useState(true);
   const [leader, setLeader] = useState<HouseScore | null>(null);
 
@@ -46,7 +47,7 @@ export default function HouseCupWidget({ isLanding = false }: { isLanding?: bool
           hufflepuff: 9840
         };
         const maxSim = 12450;
-        const simScores = scores.map(s => ({
+        const simScores = BASE_SCORES.map(s => ({
           ...s,
           points: simulatedPoints[s.house as keyof typeof simulatedPoints],
           percentage: Math.round((simulatedPoints[s.house as keyof typeof simulatedPoints] / maxSim) * 100)
@@ -58,7 +59,7 @@ export default function HouseCupWidget({ isLanding = false }: { isLanding?: bool
       }
 
       const maxPoints = Math.max(...Object.values(totals) as number[]) || 1000;
-      const newScores = scores.map(s => {
+      const newScores = BASE_SCORES.map(s => {
         const points = totals[s.house] || 0;
         return {
           ...s,
@@ -73,10 +74,10 @@ export default function HouseCupWidget({ isLanding = false }: { isLanding?: bool
       setLoading(false);
     } catch (e) {
       console.warn("Erro ao buscar pontos das casas:", e);
-      setScores(scores.map(s => ({ ...s, points: 100, percentage: 30 })));
+      setScores(BASE_SCORES.map(s => ({ ...s, points: 100, percentage: 30 })));
       setLoading(false);
     }
-  }, [scores]);
+  }, []);
 
   useEffect(() => {
     fetchScores();
