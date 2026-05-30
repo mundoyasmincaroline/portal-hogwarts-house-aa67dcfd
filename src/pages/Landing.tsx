@@ -185,10 +185,10 @@ export default function Landing() {
       </div>
 
       {/* ── HOUSE CUP LANDING ── */}
-      <div className="relative z-10 px-4 py-8">
-        <div className="max-w-5xl mx-auto text-center mb-8">
-             <p className="text-xs font-heading text-primary uppercase tracking-widest mb-2">A Competição de Sangue-Puro</p>
-             <h2 className="font-heading text-3xl md:text-4xl text-foreground">Disputa pela Taça das Casas</h2>
+      <div className="relative z-10 px-4 py-6 max-w-5xl mx-auto">
+        <div className="flex items-center justify-between gap-3 mb-3 px-1">
+          <p className="text-[10px] font-heading text-primary/80 uppercase tracking-[0.3em]">Taça das Casas · ao vivo</p>
+          <span className="text-[10px] font-mono text-white/40">tempo real</span>
         </div>
         <HouseCupWidget isLanding={true} />
       </div>
