@@ -67,8 +67,15 @@ export default function Landing() {
       {/* ── HERO ── */}
       <div className="relative min-h-screen flex flex-col items-center justify-center px-4 text-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img src={bgUrl} alt="Hogwarts Castle" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-background" />
+          <img src={bgUrl} alt="Hogwarts Castle" className="w-full h-full object-cover scale-105 animate-[float_20s_ease-in-out_infinite]" />
+          {/* Cinematic depth: vignette + atmospheric tint + gold rim */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/55 to-background" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_0%,_transparent_45%,_rgba(0,0,0,0.85)_100%)]" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-amber-900/15 via-transparent to-blue-900/20 mix-blend-overlay" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(212,175,55,0.10),_transparent_55%)]" />
+          <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-background to-transparent" />
+          {/* Subtle star field */}
+          <div className="absolute inset-0 opacity-[0.18] mix-blend-screen" style={{ backgroundImage: "radial-gradient(1px 1px at 20% 30%, white, transparent), radial-gradient(1px 1px at 70% 60%, white, transparent), radial-gradient(1px 1px at 40% 80%, white, transparent), radial-gradient(1px 1px at 85% 20%, white, transparent), radial-gradient(1px 1px at 10% 65%, white, transparent), radial-gradient(1px 1px at 55% 15%, white, transparent)", backgroundSize: "800px 800px" }} />
         </div>
 
         <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-6 py-4">
@@ -178,10 +185,10 @@ export default function Landing() {
       </div>
 
       {/* ── HOUSE CUP LANDING ── */}
-      <div className="relative z-10 px-4 py-8">
-        <div className="max-w-5xl mx-auto text-center mb-8">
-             <p className="text-xs font-heading text-primary uppercase tracking-widest mb-2">A Competição de Sangue-Puro</p>
-             <h2 className="font-heading text-3xl md:text-4xl text-foreground">Disputa pela Taça das Casas</h2>
+      <div className="relative z-10 px-4 py-6 max-w-5xl mx-auto">
+        <div className="flex items-center justify-between gap-3 mb-3 px-1">
+          <p className="text-[10px] font-heading text-primary/80 uppercase tracking-[0.3em]">Taça das Casas · ao vivo</p>
+          <span className="text-[10px] font-mono text-white/40">tempo real</span>
         </div>
         <HouseCupWidget isLanding={true} />
       </div>
