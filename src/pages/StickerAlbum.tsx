@@ -297,10 +297,11 @@ export default function StickerAlbum() {
                     { label: "Prata", owned: silverOwned, total: silverTotal, color: "text-slate-200", bg: "bg-slate-800/20 border-slate-400/20", icon: "🥈" },
                     { label: "Ouro", owned: goldOwned, total: goldTotal, color: "text-yellow-400", bg: "bg-yellow-950/20 border-yellow-500/30", icon: "🥇" },
                 ].map(r => (
-                    <div key={r.label} className={`rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 text-center border-2 backdrop-blur-sm transition-transform hover:scale-105 ${r.bg}`}>
-                        <div className="text-3xl mb-3">{r.icon}</div>
-                        <p className={`font-heading text-3xl mb-1 ${r.color}`}>{r.owned}<span className="text-lg opacity-40">/{r.total}</span></p>
-                        <p className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-bold">{r.label}</p>
+                    <div key={r.label} className={`rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-8 text-center border-2 backdrop-blur-md transition-all duration-500 hover:scale-[1.05] hover:shadow-2xl group/card relative overflow-hidden ${r.bg}`}>
+                        <div className="absolute inset-0 bg-white/[0.02] opacity-0 group-hover/card:opacity-100 transition-opacity" />
+                        <div className="text-4xl mb-4 relative z-10 transition-transform group-hover/card:scale-125 duration-500">{r.icon}</div>
+                        <p className={`font-heading text-3xl sm:text-4xl mb-1 relative z-10 ${r.color}`}>{r.owned}<span className="text-xl opacity-40">/{r.total}</span></p>
+                        <p className="text-[10px] text-muted-foreground uppercase tracking-[0.3em] font-bold relative z-10">{r.label}</p>
                     </div>
                 ))}
             </div>
