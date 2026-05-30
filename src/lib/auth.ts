@@ -38,10 +38,12 @@ export interface Profile {
 
 export const isUserOnline = (profile: Partial<Profile> | null): boolean => {
   if (!profile) return false;
-  if (profile.online === true) return true;
   if (!profile.last_seen) return false;
   const lastSeenDate = new Date(profile.last_seen).getTime();
-  return (Date.now() - lastSeenDate) < 180000; // 3 minutes buffer
+  // Consider online only if last_seen is recent (within 2 minutes).
+  // The `online` flag alone is unreliable because browsers don't always fire
+  // unload events, leaving stale `online=true` rows in the database.
+  return (Date.now() - lastSeenDate) < 120000;
 };
 
 interface AuthState {
