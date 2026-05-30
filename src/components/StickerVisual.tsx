@@ -58,8 +58,8 @@ export default function StickerVisual({ name, rarity, unlocked, imageUrl, failed
   const style = RARITY_STYLE[rarity];
   const theme = THEME_MAP[detect(name)] || THEME_MAP.wizard;
 
-  // Se tem imagem real e carregou
-  if (imageUrl && !failedImage) return null; // let parent render the <img>
+  // Se tem imagem real e carregou, apenas renderiza o fundo se for gold
+  if (imageUrl && !failedImage && rarity !== 'gold') return null;
 
   const stars = Array.from({ length: 6 }, (_, i) => ({
     x: 10 + (i * 73) % 85,
@@ -70,6 +70,8 @@ export default function StickerVisual({ name, rarity, unlocked, imageUrl, failed
 
   return (
     <div className={`absolute inset-0 bg-gradient-to-br ${style.bg} flex items-center justify-center overflow-hidden`}>
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
 
       {/* Stars */}
       {stars.map((s, i) => (
@@ -81,34 +83,42 @@ export default function StickerVisual({ name, rarity, unlocked, imageUrl, failed
 
       {/* Glow circle */}
       <div className="absolute" style={{
-        width: 100, height: 100,
-        background: `radial-gradient(circle, ${theme.color}30 0%, transparent 70%)`,
-        borderRadius: "50%", filter: "blur(16px)",
+        width: 150, height: 150,
+        background: `radial-gradient(circle, ${theme.color}20 0%, transparent 70%)`,
+        borderRadius: "50%", filter: "blur(24px)",
       }} />
 
-      {/* Main emoji — big and glowing */}
-      <div className="relative z-10 flex flex-col items-center gap-1"
-        style={{ filter: unlocked ? `drop-shadow(0 0 14px ${theme.color}80)` : "none" }}>
-        <span className={`text-6xl select-none transition-all ${unlocked ? "" : "grayscale opacity-30"}`}>
-          {theme.emoji}
-        </span>
-        {rarity === "gold" && unlocked && (
-          <span className="text-[8px] sm:text-[10px] font-heading text-yellow-400 tracking-widest uppercase opacity-80">✦ Raro ✦</span>
-        )}
-      </div>
+      {/* Holographic Effect for Gold */}
+      {rarity === "gold" && unlocked && (
+        <div className="absolute inset-0 z-20 bg-gradient-to-tr from-yellow-400/20 via-transparent to-white/30 mix-blend-overlay animate-pulse pointer-events-none" />
+      )}
+
+      {/* Main content - only show emoji if no image or if image failed */}
+      {(!imageUrl || failedImage) && (
+        <div className="relative z-10 flex flex-col items-center gap-1"
+          style={{ filter: unlocked ? `drop-shadow(0 0 14px ${theme.color}80)` : "none" }}>
+          <span className={`text-6xl select-none transition-all ${unlocked ? "scale-110" : "grayscale opacity-30 scale-90"}`}>
+            {theme.emoji}
+          </span>
+          {rarity === "gold" && unlocked && (
+            <div className="flex flex-col items-center">
+              <span className="text-[8px] font-heading text-yellow-400 tracking-[0.3em] uppercase font-bold drop-shadow-md">Relíquia</span>
+              <div className="h-0.5 w-8 bg-yellow-400/50 rounded-full mt-0.5" />
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Shimmer overlay on hover */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-
-      {/* Rarity top line */}
-      <div className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: `linear-gradient(90deg, transparent, ${style.shine}80, transparent)` }} />
+      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 -translate-x-full group-hover:translate-x-full transition-transform" />
 
       {/* Locked overlay */}
       {!unlocked && (
-        <div className="absolute inset-0 bg-background/40 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-[2px]">
           <div className="flex flex-col items-center gap-1">
-            <span className="text-2xl opacity-60">🔮</span>
+            <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center bg-white/5">
+               <span className="text-xl opacity-40">🔮</span>
+            </div>
           </div>
         </div>
       )}
