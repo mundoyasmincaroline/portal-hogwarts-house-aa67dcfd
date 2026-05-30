@@ -25,6 +25,7 @@ import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import AmbientAudio from "@/components/AmbientAudio";
 import TurnSwitcher from "@/components/TurnSwitcher";
 import SafeImage from "@/components/SafeImage";
+import BottomNav from "@/components/BottomNav";
 import { NAV_GROUPS, ADMIN_GROUP } from "@/constants/navigation";
 
 // Memoized Nav Item for performance
@@ -304,6 +305,7 @@ export default function DashboardLayout() {
             </AnimatePresence>
           </div>
           <PWAInstallPrompt />
+          <BottomNav />
         </div>
       </main>
     </div>
