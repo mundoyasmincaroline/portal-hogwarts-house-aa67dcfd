@@ -157,8 +157,12 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
     }
     setLoading(true);
     try {
-      const { count } = await supabase.from("characters").select("*", { count:"exact", head:true }).eq("user_id", user.id);
+      const { count, data: charList } = await supabase.from("characters").select("*", { count:"exact" }).eq("user_id", user.id);
       if ((count ?? 0) >= 2) { toast.error("Limite de 2 personagens por conta atingido!"); setLoading(false); return; }
+
+      // Se for a primeira ficha, vamos dar uma recompensa especial
+      const isFirstChar = (count ?? 0) === 0;
+
 
       let avatarUrl = form.avatar_url;
       if (avatarFile) {
@@ -217,9 +221,17 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
       }
 
       await supabase.from("profiles").update({ active_character_id: char!.id, has_seen_intro: false } as any).eq("user_id", user.id);
-      localStorage.removeItem("pending_character_draft"); // Remove o rascunho apenas após salvar com sucesso
-      toast.success(`Ficha ${type === "oc" ? "OC" : "Canon"} criada com sucesso! ✨`);
+      localStorage.removeItem("pending_character_draft"); 
+      
+      if (isFirstChar) {
+        await supabase.rpc("award_galeons", { _user_id: user.id, _amount: 5, _reason: "first_character" });
+        await supabase.rpc("award_xp_action", { _action: "first_character", _user_id: user.id, _xp: 20 });
+        toast.success(`Sua jornada começa agora! +5 Galeões e +20 XP pela sua primeira ficha! ✨`);
+      } else {
+        toast.success(`Ficha ${type === "oc" ? "OC" : "Canon"} criada com sucesso! ✨`);
+      }
       onComplete();
+
     } catch (e: any) {
       console.error("Erro na criação:", e);
       toast.error("Erro ao salvar ficha: " + (e.message || "Tente novamente"));

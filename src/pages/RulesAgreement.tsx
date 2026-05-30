@@ -36,17 +36,29 @@ export default function RulesAgreement() {
           if (inviter) {
             await supabase.from("referrals").insert({ inviter_id: inviter.user_id, invited_id: user.id } as never);
             await supabase.rpc("award_xp_action", { _action: "referral_success", _user_id: inviter.user_id, _xp: 100 });
-            await supabase.rpc("award_galeons", { _user_id: inviter.user_id, _amount: 50 });
+            await supabase.rpc("award_galeons", { _user_id: inviter.user_id, _amount: 50, _reason: "referral" });
+            
+            // Recompensa para o novo bruxo também
+            await supabase.rpc("award_galeons", { _user_id: user.id, _amount: 10, _reason: "welcome" });
+            await supabase.rpc("award_xp_action", { _action: "welcome_bonus", _user_id: user.id, _xp: 50 });
+
             localStorage.removeItem("pending_referral");
           }
         } catch (e) { console.error("Referral processing error:", e); }
+      }
+
+      // Recompensa de boas-vindas padrão (mesmo sem referral)
+      if (!localStorage.getItem("pending_referral") && user) {
+        await supabase.rpc("award_galeons", { _user_id: user.id, _amount: 10, _reason: "welcome" });
+        await supabase.rpc("award_xp_action", { _action: "welcome_bonus", _user_id: user.id, _xp: 50 });
       }
 
       // Force reload auth state
       useAuth.setState((state) => ({
         profile: state.profile ? { ...state.profile, has_accepted_rules: true } : null
       }));
-      toast.success("Regras aceitas! Seja bem-vindo(a) a Hogwarts.");
+      toast.success("Regras aceitas! Você recebeu 10 Galeões e 50 XP de boas-vindas! ✨");
+
     }
   };
 
