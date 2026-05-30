@@ -26,38 +26,40 @@ const PostCard = memo(({
   reactions 
 }: PostCardProps) => (
   <motion.div 
-    initial={{ opacity: 0, y: 20 }}
+    initial={{ opacity: 0, y: 15 }}
     whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.5, ease: "easeOut" }}
-    className="glass rounded-3xl p-5 sm:p-7 border-white/5 hover:border-primary/20 shadow-[0_15px_35px_rgba(0,0,0,0.3)] group/card relative"
+    viewport={{ once: true, margin: "-50px" }}
+    transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+    className="glass rounded-3xl p-5 sm:p-7 border-white/5 hover:border-primary/25 shadow-2xl group/card relative mb-4"
   >
-    <div className="absolute top-0 right-10 w-20 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity" />
-    <div className="flex items-center gap-4 mb-4">
-      <div className={`w-12 h-12 rounded-full bg-secondary/50 flex items-center justify-center font-heading text-primary overflow-hidden border-2 shrink-0 ${post.author?.house === 'gryffindor' ? 'border-red-500/50' : post.author?.house === 'slytherin' ? 'border-green-500/50' : post.author?.house === 'ravenclaw' ? 'border-blue-500/50' : 'border-yellow-500/50'}`}>
+    <div className="flex items-center gap-4 mb-5">
+      <div className={`w-14 h-14 rounded-2xl bg-secondary/30 flex items-center justify-center overflow-hidden border-2 shrink-0 transition-all duration-500 group-hover/card:scale-105 ${post.author?.house === 'gryffindor' ? 'border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.2)]' : post.author?.house === 'slytherin' ? 'border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.2)]' : post.author?.house === 'ravenclaw' ? 'border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.2)]' : 'border-yellow-500/30 shadow-[0_0_15px_rgba(234,179,8,0.2)]'}`}>
         <SafeImage 
           src={post.author?.avatar_url} 
           alt={post.author?.full_name || "Bruxo"} 
-          className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" 
+          className="w-full h-full object-cover" 
           fallbackText={post.author?.full_name}
         />
       </div>
       <div className="flex-1 min-w-0">
-        <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm font-bold text-foreground truncate">
+        <div className="flex flex-wrap items-center gap-2 mb-0.5">
+          <p className="text-base font-heading text-foreground tracking-tight">
             {post.author?.full_name || "Bruxo desconhecido"}
           </p>
-          {post.author?.vip_plan === "founder" && <span className="text-[9px] bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 px-2 py-0.5 rounded-full font-heading tracking-widest uppercase">👑 Fundador</span>}
-          {post.author?.vip_plan === "vip" && <span className="text-[9px] bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-full font-heading tracking-widest uppercase">💜 VIP</span>}
+          {post.author?.vip_plan === "founder" && <span className="text-[8px] bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 px-2 py-0.5 rounded-full font-heading tracking-widest uppercase shadow-[0_0_10px_rgba(234,179,8,0.1)]">👑 Fundador</span>}
+          {post.author?.vip_plan === "vip" && <span className="text-[8px] bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2 py-0.5 rounded-full font-heading tracking-widest uppercase">💜 VIP</span>}
         </div>
-        <p className="text-[10px] text-muted-foreground/60 uppercase tracking-tighter">@{post.author?.username} • {new Date(post.created_at).toLocaleDateString("pt-BR")} às {new Date(post.created_at).toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' })}</p>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] text-primary/70 font-medium uppercase tracking-wider">@{post.author?.username}</span>
+          <span className="w-1 h-1 rounded-full bg-white/10" />
+          <span className="text-[10px] text-muted-foreground/50">{new Date(post.created_at).toLocaleDateString("pt-BR")}</span>
+        </div>
       </div>
-      {post.author?.house && <div className="hidden sm:block shrink-0 opacity-80 hover:opacity-100 transition-opacity"><HouseCrest house={post.author.house} size="sm" /></div>}
+      {post.author?.house && <div className="shrink-0 scale-75 sm:scale-90 origin-right transition-transform group-hover/card:scale-100 duration-500"><HouseCrest house={post.author.house} size="sm" /></div>}
     </div>
 
-    <div className="relative mb-6">
-      <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-primary/40 via-primary/10 to-transparent rounded-full" />
-      <p className="text-base sm:text-lg leading-relaxed text-foreground/90 whitespace-pre-wrap font-serif italic pl-2">
+    <div className="relative mb-6 group/content">
+      <p className="text-base sm:text-lg leading-relaxed text-foreground/90 whitespace-pre-wrap font-serif italic border-l-2 border-primary/20 pl-4 py-1 transition-colors group-hover/content:border-primary/50 duration-500">
         {post.content}
       </p>
     </div>

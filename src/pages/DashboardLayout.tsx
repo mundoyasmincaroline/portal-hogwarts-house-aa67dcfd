@@ -33,23 +33,24 @@ const NavItem = memo(({ item, isActive, dmUnread, onClick }: { item: any, isActi
   <Link
     to={item.path}
     onClick={onClick}
-    className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition-all group relative overflow-hidden border border-transparent ${
+    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group relative overflow-hidden border ${
       isActive 
-        ? "bg-primary/10 text-primary font-bold border-primary/20 shadow-[inset_0_0_20px_rgba(212,175,55,0.08)] scale-[1.02]" 
-        : "text-muted-foreground/80 hover:bg-white/5 hover:text-foreground hover:border-white/5 active:scale-95"
+        ? "bg-primary/10 text-primary font-bold border-primary/20 shadow-[0_0_20px_rgba(212,175,55,0.1)]" 
+        : "text-muted-foreground/70 hover:bg-white/5 hover:text-foreground border-transparent active:scale-95"
     }`}
   >
-
     {isActive && (
       <motion.div 
-        layoutId="active-nav-glow"
-        className="absolute inset-0 bg-primary/5 blur-sm"
+        layoutId="active-nav-indicator"
+        className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-full shadow-[0_0_10px_rgba(212,175,55,0.8)]"
       />
     )}
-    <span className={`relative z-10 transition-transform group-hover:scale-110 duration-300 ${isActive ? "scale-110" : ""}`}>{item.icon}</span>
-    <span className="font-heading text-xs relative z-10">{item.label}</span>
+    <span className={`relative z-10 transition-all duration-300 ${isActive ? "scale-110 drop-shadow-[0_0_5px_rgba(212,175,55,0.5)]" : "group-hover:scale-110"}`}>
+      {item.icon}
+    </span>
+    <span className="font-heading text-[11px] uppercase tracking-wider relative z-10">{item.label}</span>
     {item.label === "Mensagens" && dmUnread > 0 && (
-      <span className="ml-auto min-w-[18px] h-[18px] px-1 bg-primary text-primary-foreground rounded-full text-[9px] flex items-center justify-center font-bold relative z-10 animate-pulse">
+      <span className="ml-auto min-w-[20px] h-[20px] px-1 bg-primary text-primary-foreground rounded-full text-[10px] flex items-center justify-center font-bold relative z-10 shadow-[0_0_10px_rgba(212,175,55,0.4)]">
         {dmUnread > 9 ? "9+" : dmUnread}
       </span>
     )}
