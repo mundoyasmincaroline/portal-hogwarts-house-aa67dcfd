@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
+import { Sparkles, RefreshCw } from "lucide-react";
 
 export default function CastleEntrance() {
   const [step, setStep] = useState(0);
