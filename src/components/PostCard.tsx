@@ -124,7 +124,8 @@ const PostCard = memo(({
       <motion.div 
         initial={{ opacity: 0, height: 0 }}
         animate={{ opacity: 1, height: 'auto' }}
-        className="mt-5 pt-5 border-t border-white/5 space-y-4"
+        exit={{ opacity: 0, height: 0 }}
+        className="mt-5 pt-5 border-t border-white/5 space-y-4 overflow-hidden"
       >
         <div className="max-h-[300px] overflow-y-auto pr-2 custom-scrollbar space-y-3">
           {post.comments?.map((c: any) => (
