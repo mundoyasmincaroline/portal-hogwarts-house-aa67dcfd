@@ -192,7 +192,7 @@ export default function StoriesBar() {
           onClick={() => setShowAddModal(true)}
           className="flex flex-col items-center gap-2 sm:gap-3 shrink-0 group relative"
         >
-          <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-secondary/30 border-2 border-dashed border-primary/40 flex items-center justify-center transition-all duration-500 group-hover:border-primary group-hover:scale-105 active:scale-95 group-hover:rotate-3 shadow-lg">
+          <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl bg-secondary/30 border-2 border-dashed border-primary/40 flex items-center justify-center transition-all duration-500 group-hover:border-primary group-hover:scale-105 active:scale-95 group-hover:rotate-3 shadow-lg group-hover:shadow-primary/20">
             <span className="text-2xl sm:text-3xl text-primary font-light">+</span>
           </div>
           <span className="text-[10px] font-heading text-muted-foreground uppercase tracking-widest group-hover:text-primary transition-colors">Seu Story</span>

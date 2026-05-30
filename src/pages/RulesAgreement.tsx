@@ -67,7 +67,7 @@ export default function RulesAgreement() {
       <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-0" />
       <MagicalParticles />
       
-      <div className="glass max-w-2xl w-full p-6 sm:p-8 rounded-2xl z-10 border border-border/50 shadow-2xl relative overflow-hidden animate-fade-in-up mx-2">
+      <div className="glass max-w-2xl w-full p-6 sm:p-8 rounded-[2.5rem] z-10 border-primary/20 shadow-[0_30px_100px_rgba(0,0,0,0.8)] relative overflow-hidden animate-fade-in-up mx-2 hover:border-primary/40 transition-all duration-700">
         {/* Decorative elements */}
         <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50" />
         
@@ -79,7 +79,7 @@ export default function RulesAgreement() {
           </p>
         </div>
 
-        <div className="space-y-6 text-sm text-foreground/90 max-h-[40vh] overflow-y-auto pr-4 mb-8 custom-scrollbar">
+        <div className="space-y-6 text-sm text-foreground/90 max-h-[40vh] overflow-y-auto pr-4 mb-8 custom-scrollbar border-y border-white/5 py-6">
           <div className="space-y-2">
             <h3 className="font-heading text-lg text-primary">1. Respeito Mútuo</h3>
             <p className="text-muted-foreground">Trate todos os alunos, professores e fantasmas com respeito. Não toleramos discurso de ódio, assédio ou qualquer forma de preconceito.</p>

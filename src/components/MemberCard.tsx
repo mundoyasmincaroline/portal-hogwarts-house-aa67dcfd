@@ -172,7 +172,7 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
       className={`relative glass rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 border transition-all duration-500 cursor-pointer group flex flex-col items-center text-center overflow-hidden ${
         isVip 
-          ? "border-yellow-500/30 bg-gradient-to-br from-yellow-950/20 via-card to-black shadow-[0_20px_50px_rgba(250,204,21,0.1)] hover:border-yellow-400" 
+          ? "border-primary/40 bg-gradient-to-br from-primary/10 via-card to-black shadow-[0_20px_50px_rgba(250,204,21,0.15)] hover:border-primary" 
           : "border-white/5 bg-card/60 hover:border-primary/30 shadow-2xl"
       }`}
     >

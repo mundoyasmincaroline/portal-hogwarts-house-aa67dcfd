@@ -24,7 +24,7 @@ export default function DailyProphetTicker() {
   }, []);
 
   return (
-    <div className="w-full bg-black/90 backdrop-blur-xl border-y border-yellow-500/30 py-2 sm:py-3 overflow-hidden relative group shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+    <div className="w-full bg-black/90 backdrop-blur-xl border-y border-yellow-500/20 py-2 sm:py-3 overflow-hidden relative group shadow-[0_0_30px_rgba(0,0,0,0.8)]">
       <div className="absolute inset-y-0 left-0 w-16 sm:w-40 bg-gradient-to-r from-black via-black/80 to-transparent z-10 pointer-events-none" />
       <div className="absolute inset-y-0 right-0 w-16 sm:w-40 bg-gradient-to-l from-black via-black/80 to-transparent z-10 pointer-events-none" />
       
@@ -36,7 +36,7 @@ export default function DailyProphetTicker() {
           {NEWS_ITEMS.map((item, i) => (
             <div key={i} className="flex items-center gap-3">
               <span className="text-yellow-500/50"><Sparkles size={12} className="sm:w-[14px] sm:h-[14px]" /></span>
-              <span className="font-heading text-[10px] sm:text-xs uppercase tracking-widest text-yellow-100/80 hover:text-yellow-400 transition-colors cursor-default">
+              <span className="font-heading text-[10px] sm:text-xs uppercase tracking-[0.25em] text-yellow-100/80 hover:text-yellow-400 transition-colors cursor-default drop-shadow-[0_0_5px_rgba(251,191,36,0.2)]">
                 {item}
               </span>
             </div>

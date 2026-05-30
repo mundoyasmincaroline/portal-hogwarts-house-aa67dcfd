@@ -240,7 +240,7 @@ export default function GringottsStore() {
             </div>
           </div>
           
-          <div className="w-full md:w-96 glass bg-black/60 border border-yellow-500/30 rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-10 text-center backdrop-blur-xl shadow-2xl animate-in fade-in slide-in-from-right-8 duration-1000">
+          <div className="w-full md:w-96 glass bg-black/60 border border-primary/30 rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-10 text-center backdrop-blur-xl shadow-2xl animate-in fade-in slide-in-from-right-8 duration-1000 hover:border-primary/50">
             <div className="absolute inset-0 bg-yellow-500/5 blur-3xl rounded-full" />
             <p className="text-yellow-500/80 text-[11px] font-heading uppercase tracking-[0.3em] mb-8 font-bold">Chave do Cofre Ativa</p>
             
@@ -260,7 +260,7 @@ export default function GringottsStore() {
       </div>
 
       {/* ── FLASH SALE COUNTDOWN ── */}
-      <div className="glass rounded-2xl sm:rounded-[2rem] p-5 sm:p-8 border-2 border-red-500/30 bg-gradient-to-r from-red-950/40 via-black to-red-950/40 flex flex-col md:flex-row items-center justify-between gap-8 animate-in fade-in zoom-in duration-700 shadow-[0_0_50px_rgba(220,38,38,0.2)]">
+      <div className="glass rounded-2xl sm:rounded-[2rem] p-5 sm:p-8 border-2 border-red-500/30 bg-gradient-to-r from-red-950/40 via-black to-red-950/40 flex flex-col md:flex-row items-center justify-between gap-8 animate-in fade-in zoom-in duration-700 shadow-[0_20px_50px_rgba(220,38,38,0.3)] hover:border-red-500/50">
         <div className="flex items-center gap-5">
           <div className="w-16 h-16 bg-red-500/20 rounded-2xl flex items-center justify-center border border-red-500/30 shadow-inner animate-pulse">
             <Flame size={32} className="text-red-500" />

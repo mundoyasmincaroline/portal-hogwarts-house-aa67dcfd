@@ -107,7 +107,7 @@ export default function Login() {
       </div>
 
       <MagicalParticles />
-      <div className="glass rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-10 w-[95%] max-w-md z-20 animate-fade-in-up border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.8)] mx-auto">
+      <div className="glass rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-10 w-[95%] max-w-md z-20 animate-fade-in-up border-primary/20 shadow-[0_30px_100px_rgba(0,0,0,0.8)] mx-auto hover:border-primary/40 transition-all duration-700">
         <div className="text-center mb-8">
           <h1 className="font-heading text-3xl text-gold-gradient mb-2">
             {isRecoveryMode ? "Nova Senha" : "Entrar"}

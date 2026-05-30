@@ -33,10 +33,10 @@ const NavItem = memo(({ item, isActive, dmUnread, onClick }: { item: any, isActi
   <Link
     to={item.path}
     onClick={onClick}
-    className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition-all group relative overflow-hidden ${
+    className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition-all group relative overflow-hidden border border-transparent ${
       isActive 
-        ? "bg-primary/10 text-primary font-bold border border-primary/20 shadow-[inset_0_0_20px_rgba(212,175,55,0.08)] scale-[1.02]" 
-        : "text-muted-foreground/80 hover:bg-white/5 hover:text-foreground active:scale-95"
+        ? "bg-primary/10 text-primary font-bold border-primary/20 shadow-[inset_0_0_20px_rgba(212,175,55,0.08)] scale-[1.02]" 
+        : "text-muted-foreground/80 hover:bg-white/5 hover:text-foreground hover:border-white/5 active:scale-95"
     }`}
   >
 
@@ -183,11 +183,11 @@ export default function DashboardLayout() {
         )}
       </AnimatePresence>
 
-      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-[85vw] max-w-72 md:w-64 bg-card border-r border-border/40 flex flex-col transition-all duration-500 ease-in-out md:translate-x-0 ${sidebarOpen ? "translate-x-0 shadow-[20px_0_60px_rgba(0,0,0,0.9)]" : "-translate-x-full"}`}>
+      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-[85vw] max-w-72 md:w-64 bg-card/95 backdrop-blur-xl border-r border-border/40 flex flex-col transition-all duration-500 ease-in-out md:translate-x-0 ${sidebarOpen ? "translate-x-0 shadow-[20px_0_60px_rgba(0,0,0,0.9)]" : "-translate-x-full"}`}>
         <div className="p-5 border-b border-border/30">
           <Link to="/dashboard" className="flex items-center gap-3 group">
             <div className="bg-primary/20 p-2.5 rounded-xl text-primary transition-transform group-hover:rotate-12 duration-300"><Castle size={24} /></div>
-            <span className="font-heading text-xl text-gold-gradient leading-tight tracking-tighter">Hogwarts<br/>House</span>
+            <span className="font-heading text-xl text-gold-gradient leading-tight tracking-tighter drop-shadow-[0_0_10px_rgba(212,175,55,0.3)] group-hover:scale-105 transition-transform duration-500">Hogwarts<br/>House</span>
           </Link>
         </div>
 
@@ -195,8 +195,8 @@ export default function DashboardLayout() {
         <nav className="flex-1 p-3 space-y-6 overflow-y-auto sidebar-scroll">
           {groups.map((group) => (
             <div key={group.title} className="space-y-1">
-              <h4 className="px-3 text-[10px] font-heading font-bold uppercase tracking-[0.2em] text-muted-foreground/60 mb-2 flex items-center gap-2">
-                <span className="w-4 h-[1px] bg-border" />
+              <h4 className="px-3 text-[9px] font-heading font-black uppercase tracking-[0.3em] text-primary/40 mb-3 flex items-center gap-3">
+                <span className="w-6 h-[1px] bg-gradient-to-r from-primary/30 to-transparent" />
                 {group.title}
               </h4>
               <div className="space-y-1">
@@ -214,7 +214,7 @@ export default function DashboardLayout() {
           ))}
         </nav>
 
-        <div className="p-3 border-t border-border bg-card/80 backdrop-blur-sm">
+        <div className="p-4 border-t border-border/40 bg-card/80 backdrop-blur-sm">
           <Link 
             to="/dashboard/store" 
             className="flex items-center justify-between px-4 py-3 mb-2 rounded-2xl border border-yellow-500/40 bg-gradient-to-br from-amber-600/20 via-yellow-900/40 to-black hover:border-yellow-300 transition-all group overflow-hidden relative"
@@ -297,9 +297,9 @@ export default function DashboardLayout() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
+                initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: -20, filter: "blur(10px)" }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
                 className="pb-24 md:pb-20"
               >

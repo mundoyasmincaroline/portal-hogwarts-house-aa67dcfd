@@ -174,7 +174,7 @@ export default function Register() {
           </div>
         )}
 
-        <div className="glass rounded-2xl sm:rounded-[2rem] p-5 sm:p-8 md:p-10 border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.8)] mx-2 sm:mx-0">
+        <div className="glass rounded-2xl sm:rounded-[2.5rem] p-5 sm:p-8 md:p-10 border-primary/20 shadow-[0_30px_100px_rgba(0,0,0,0.8)] mx-2 sm:mx-0 hover:border-primary/40 transition-all duration-700">
 
           {/* ─── STEP 0 — CONVOCAÇÃO ─── */}
           {step === 0 && (

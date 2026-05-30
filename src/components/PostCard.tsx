@@ -28,7 +28,7 @@ const PostCard = memo(({
   <motion.div 
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
-    className="glass rounded-2xl sm:rounded-[2.5rem] p-4 sm:p-6 transition-all duration-500 border-white/5 hover:border-white/10"
+    className="glass rounded-2xl sm:rounded-[2.5rem] p-4 sm:p-6 transition-all duration-500 border-white/5 hover:border-primary/20"
   >
     <div className="flex items-center gap-4 mb-4">
       <div className={`w-12 h-12 rounded-full bg-secondary/50 flex items-center justify-center font-heading text-primary overflow-hidden border-2 shrink-0 ${post.author?.house === 'gryffindor' ? 'border-red-500/50' : post.author?.house === 'slytherin' ? 'border-green-500/50' : post.author?.house === 'ravenclaw' ? 'border-blue-500/50' : 'border-yellow-500/50'}`}>
@@ -80,7 +80,7 @@ const PostCard = memo(({
           <button
             key={r.emoji}
             onClick={() => onToggleReaction(post.id, r.emoji, r.mine)}
-            className={`px-3 sm:px-4 py-1.5 rounded-2xl text-[10px] sm:text-xs transition-all duration-300 flex items-center gap-1 sm:gap-1.5 active:scale-90 ${r.mine ? "bg-primary/20 text-primary border border-primary/30 shadow-[0_0_15px_rgba(212,175,55,0.1)]" : "glass hover:bg-white/5 border-white/5"}`}
+            className={`px-3 sm:px-4 py-1.5 rounded-2xl text-[10px] sm:text-xs transition-all duration-300 flex items-center gap-1 sm:gap-1.5 active:scale-90 ${r.mine ? "bg-primary/20 text-primary border border-primary/40 shadow-[0_5px_15px_rgba(212,175,55,0.2)]" : "glass hover:bg-white/5 border-white/5"}`}
           >
             <span className="text-sm">{r.emoji}</span>
             <span className="font-bold">{r.count}</span>
@@ -106,9 +106,9 @@ const PostCard = memo(({
 
       <button
         onClick={() => onToggleComments(post.id)}
-        className="glass px-3 sm:px-4 py-1.5 rounded-2xl text-[10px] sm:text-[11px] font-heading uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/30 transition-all active:scale-95 ml-auto sm:ml-0"
+        className="glass px-3 sm:px-4 py-1.5 rounded-2xl text-[10px] sm:text-[11px] font-heading uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-all active:scale-95 ml-auto sm:ml-0 flex items-center gap-2"
       >
-        💬 {post.comments.length}
+        <span className="text-sm">💬</span> {post.comments.length}
       </button>
     </div>
 
@@ -129,7 +129,7 @@ const PostCard = memo(({
                   fallbackText={c.author?.full_name}
                 />
               </div>
-              <div className="flex-1 bg-white/5 rounded-2xl rounded-tl-none px-4 py-3 border border-white/5 group-hover:border-white/10 transition-colors">
+              <div className="flex-1 bg-white/5 rounded-2xl rounded-tl-none px-4 py-3 border border-white/5 group-hover:border-primary/10 transition-colors shadow-inner">
                 <p className="text-xs font-bold text-primary mb-1 uppercase tracking-tighter">{c.author?.full_name}</p>
                 <p className="text-sm text-foreground/80 leading-relaxed font-serif italic">{c.content}</p>
               </div>
@@ -137,7 +137,7 @@ const PostCard = memo(({
           ))}
         </div>
         
-        <div className="flex gap-3 bg-black/20 p-2 rounded-2xl border border-white/5 focus-within:border-primary/30 transition-all">
+        <div className="flex gap-3 bg-black/40 p-2 rounded-2xl border border-white/10 focus-within:border-primary/40 focus-within:ring-1 focus-within:ring-primary/20 transition-all shadow-2xl">
           <input
             value={commentDraft}
             onChange={(e) => onCommentDraftChange(e.target.value)}
