@@ -285,10 +285,10 @@ export default function DashboardLayout() {
         </header>
 
 
-        <div className="flex-1 overflow-y-auto relative scroll-smooth contain-strict portal-cinematic-bg pb-safe">
-          <div className="page-container px-3 sm:px-6">
-            {location.pathname === "/dashboard" && (
-              <div className="space-y-6 mb-8">
+        <div className=\"flex-1 overflow-y-auto relative scroll-smooth contain-strict portal-cinematic-bg pb-safe custom-scrollbar\">
+          <div className=\"page-container px-3 sm:px-6 pt-2 sm:pt-6\">
+            {location.pathname === \"/dashboard\" && (
+              <div className=\"flex flex-col gap-4 mb-6 animate-in fade-in slide-in-from-top-4 duration-700\">
                 <DailyProphetTicker />
                 <HouseCupWidget />
               </div>
