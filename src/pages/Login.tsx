@@ -55,7 +55,8 @@ export default function Login() {
     setLoading(false);
     if (result.success) {
       playDoorSound();
-      navigate("/dashboard");
+      // Wait for AuthInit/init to catch up if needed, though session is set
+      navigate("/dashboard", { replace: true });
     } else {
       setError(result.error || "Credenciais inválidas. Tente novamente.");
     }

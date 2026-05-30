@@ -117,21 +117,18 @@ export const useAuth = create<AuthState>((set, get) => ({
             const userId = session.user.id;
             const currentUser = get().user;
             
-            // Avoid re-fetching if it's the same user and profile exists
-            if (currentUser?.id === userId && get().profile) {
-              set({ isLoading: false });
-              return;
+            // Re-fetch profile and check admin if user changed or profile is missing
+            if (currentUser?.id !== userId || !get().profile) {
+              set({ user: session.user, isAuthenticated: true, isLoading: true });
+              const [admin] = await Promise.all([
+                get().checkAdmin(userId),
+                get().fetchProfile(userId),
+              ]);
+              set({ isAdmin: admin, isLoading: false });
+              get().pingPresence();
+            } else {
+              set({ user: session.user, isAuthenticated: true, isLoading: false });
             }
-
-            set({ user: session.user, isAuthenticated: true, isLoading: true });
-
-            const [admin] = await Promise.all([
-              get().checkAdmin(userId),
-              get().fetchProfile(userId),
-            ]);
-
-            set({ isAdmin: admin, isLoading: false });
-            get().pingPresence();
           } else {
             set({ user: null, profile: null, isAuthenticated: false, isAdmin: false, isLoading: false });
           }

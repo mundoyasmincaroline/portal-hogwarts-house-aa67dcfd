@@ -128,11 +128,25 @@ export default function DashboardLayout() {
   }, [user, profile]);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || !isAuthenticated) return;
+    
+    // Ping immediately
     pingPresence();
-    const interval = setInterval(pingPresence, 60000); 
-    return () => clearInterval(interval);
-  }, [user, pingPresence]);
+    
+    // Presence interval (every 45s, matching pingPresence debounce)
+    const interval = setInterval(pingPresence, 45000); 
+    
+    // Visibility change listener to ping when coming back to tab
+    const handleVisibilityChange = () => {
+      if (!document.hidden) pingPresence();
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [user, isAuthenticated, pingPresence]);
 
   if (isLoading) {
     return (
