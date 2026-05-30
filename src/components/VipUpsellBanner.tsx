@@ -45,7 +45,7 @@ export default function VipUpsellBanner({ currentVip, galeons = 0, username }: P
   };
 
   return (
-    <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-slate-900 via-purple-950/20 to-slate-900 mb-6 shadow-2xl">
+    <div className="relative overflow-hidden rounded-[2.5rem] border border-primary/20 bg-gradient-to-br from-slate-900 via-purple-950/30 to-black mb-8 shadow-2xl group/banner hover:border-primary/40 transition-all duration-700">
 
       {/* Background glow effects */}
       <div className="absolute -top-20 -right-20 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -93,7 +93,7 @@ export default function VipUpsellBanner({ currentVip, galeons = 0, username }: P
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           {PLANS.map(plan => (
             <div key={plan.id}
-              className={`relative rounded-3xl border ${plan.border} bg-gradient-to-br ${plan.color} p-5 text-center shadow-lg transition-transform hover:scale-[1.02]`}>
+              className={`relative rounded-[2rem] border ${plan.border} bg-gradient-to-br ${plan.color} p-6 text-center shadow-lg transition-all duration-500 hover:scale-[1.05] hover:shadow-primary/20 group/plan`}>
               {plan.highlight && (
                 <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-400 text-slate-900 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
                   Popular

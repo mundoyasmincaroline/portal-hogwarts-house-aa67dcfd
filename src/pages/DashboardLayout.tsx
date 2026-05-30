@@ -195,8 +195,8 @@ export default function DashboardLayout() {
         <nav className="flex-1 p-3 space-y-6 overflow-y-auto sidebar-scroll">
           {groups.map((group) => (
             <div key={group.title} className="space-y-1">
-              <h4 className="px-3 text-[10px] font-heading font-bold uppercase tracking-[0.2em] text-muted-foreground/60 mb-2 flex items-center gap-2">
-                <span className="w-4 h-[1px] bg-border" />
+              <h4 className="px-3 text-[9px] font-heading font-black uppercase tracking-[0.3em] text-primary/40 mb-3 flex items-center gap-3">
+                <span className="w-6 h-[1px] bg-gradient-to-r from-primary/30 to-transparent" />
                 {group.title}
               </h4>
               <div className="space-y-1">
