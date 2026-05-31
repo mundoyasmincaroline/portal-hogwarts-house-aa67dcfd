@@ -4,8 +4,8 @@ import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import HouseCrest from "@/components/rpg/HouseCrest";
-import { Input } from "./ui/input";
-import SafeImage from "./SafeImage";
+import { Input } from "@/components/ui/input";
+import SafeImage from "@/components/SafeImage";
 import { Eye } from "lucide-react";
 
 export default function StoriesBar() {
