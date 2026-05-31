@@ -136,17 +136,17 @@
 .glass {
   background: linear-gradient(
     135deg, 
-    rgba(20, 25, 35, 0.7) 0%, 
-    rgba(15, 20, 30, 0.85) 100%
+    rgba(20, 25, 35, 0.4) 0%, 
+    rgba(15, 20, 30, 0.6) 100%
   );
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(212, 175, 55, 0.12);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border: 1px solid rgba(212, 175, 55, 0.08);
   box-shadow: 
     0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 10px 30px -5px rgba(0, 0, 0, 0.5),
-    inset 0 1px 1px rgba(255, 255, 255, 0.05);
-  transition: var(--transition-magic);
+    0 10px 30px -5px rgba(0, 0, 0, 0.4),
+    inset 0 1px 1px rgba(255, 255, 255, 0.03);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
 }
@@ -157,11 +157,11 @@
   inset: 0;
   background: radial-gradient(
     circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
-    rgba(212, 175, 55, 0.08) 0%, 
-    transparent 60%
+    rgba(212, 175, 55, 0.05) 0%, 
+    transparent 70%
   );
   opacity: 0;
-  transition: opacity 0.5s;
+  transition: opacity 0.5s ease;
   pointer-events: none;
 }
 
@@ -170,12 +170,14 @@
 }
 
 .glass:hover {
-  border-color: rgba(212, 175, 55, 0.3);
+  border-color: rgba(212, 175, 55, 0.25);
   box-shadow: 
-    0 20px 40px -12px rgba(0, 0, 0, 0.7),
-    inset 0 1px 2px rgba(255, 255, 255, 0.1);
-  transform: translateY(-4px);
+    0 20px 40px -12px rgba(0, 0, 0, 0.6),
+    0 0 15px rgba(212, 175, 55, 0.1),
+    inset 0 1px 2px rgba(255, 255, 255, 0.05);
+  transform: translateY(-2px);
 }
+
 
 .animate-float { 
   animation: float 4s ease-in-out infinite;

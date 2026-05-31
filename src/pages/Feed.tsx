@@ -104,8 +104,12 @@ export default function Feed() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <MagicalDashboardHeader />
+    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="space-y-2">
+        <h1 className="text-3xl sm:text-4xl font-heading text-gold-gradient tracking-tight">Salão Principal</h1>
+        <p className="text-muted-foreground text-xs sm:text-sm italic uppercase tracking-widest">Acompanhe os pergaminhos da comunidade</p>
+      </div>
+
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2 space-y-4">
