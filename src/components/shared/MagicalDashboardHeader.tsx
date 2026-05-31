@@ -9,8 +9,8 @@ import MoodSession from "@/components/MoodSession";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Sparkles } from "lucide-react";
-import DailyProphetTicker from "./DailyProphetTicker";
-import HouseCupWidget from "./HouseCupWidget";
+import DailyProphetTicker from "@/components/shared/DailyProphetTicker";
+import HouseCupWidget from "@/components/rpg/HouseCupWidget";
 
 export default function MagicalDashboardHeader() {
   const { profile } = useAuth();
