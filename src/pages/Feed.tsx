@@ -104,15 +104,15 @@ export default function Feed() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="space-y-2">
-        <h1 className="text-3xl sm:text-4xl font-heading text-gold-gradient tracking-tight">Salão Principal</h1>
-        <p className="text-muted-foreground text-xs sm:text-sm italic uppercase tracking-widest">Acompanhe os pergaminhos da comunidade</p>
+    <div className="max-w-6xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-6 duration-1000">
+      <div className="space-y-4 text-center sm:text-left">
+        <h1 className="text-4xl sm:text-6xl font-heading text-gold-gradient tracking-tighter drop-shadow-[0_10px_20px_rgba(212,175,55,0.3)]">Salão Principal</h1>
+        <p className="text-muted-foreground text-sm sm:text-base italic uppercase tracking-[0.3em] font-light">Os pergaminhos que narram a história do castelo</p>
       </div>
 
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        <div className="xl:col-span-2 space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="lg:col-span-8 space-y-8">
           <PostComposer bannedWords={bannedWords} />
 
           {loading && <p className="text-center text-muted-foreground text-sm py-6">Carregando feed...</p>}
@@ -145,7 +145,7 @@ export default function Feed() {
           ))}
         </div>
 
-        <div className="space-y-4">
+        <div className="lg:col-span-4 space-y-8 sticky top-8 h-fit">
           <ActiveWizardsSidebar onlineUsers={onlineUsers} />
           <ChallengesSidebar activeChallenges={activeChallenges} />
         </div>
