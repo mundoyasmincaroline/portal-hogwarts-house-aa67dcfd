@@ -455,21 +455,21 @@ export default function ChatRoom() {
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-20 pointer-events-none" />
       
       {/* ── HEADER MONSTER QUALITY ── */}
-      <div className="relative z-10 p-6 border-b border-white/5 bg-white/5 backdrop-blur-2xl flex items-center justify-between shadow-lg">
-        <div className="flex items-center gap-5">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard/chats")} className="shrink-0 hover:bg-white/5 rounded-2xl w-12 h-12">
-            <ExternalLink size={20} className="rotate-180" />
+      <div className="relative z-10 p-4 sm:p-6 border-b border-white/5 bg-white/5 backdrop-blur-2xl flex items-center justify-between shadow-lg">
+        <div className="flex items-center gap-3 sm:gap-5">
+          <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard/chats")} className="shrink-0 hover:bg-white/5 rounded-xl sm:rounded-2xl w-10 h-10 sm:w-12 sm:h-12">
+            <ExternalLink size={18} className="rotate-180 sm:w-5 sm:h-5" />
           </Button>
-          <div>
-            <div className="flex items-center gap-3">
-              <h2 className="font-heading text-2xl text-foreground flex items-center gap-2 tracking-tight">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <h2 className="font-heading text-lg sm:text-2xl text-foreground flex items-center gap-2 tracking-tight truncate">
                 {channel.name}
               </h2>
               {channel.is_premium && (
-                <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/40 animate-pulse-glow">PREMIUM ⭐</Badge>
+                <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/40 animate-pulse-glow text-[8px] sm:text-xs">PREMIUM ⭐</Badge>
               )}
             </div>
-            <p className="text-xs text-muted-foreground font-serif italic mt-0.5">{channel.description}</p>
+            <p className="text-[10px] sm:text-xs text-muted-foreground font-serif italic mt-0.5 truncate">{channel.description}</p>
           </div>
         </div>
         
