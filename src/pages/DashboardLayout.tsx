@@ -2,9 +2,7 @@ import { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { useImmersion } from "@/hooks/core/useImmersion";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  LogOut, Volume2, VolumeX, Menu, Castle, Wallet
-} from "lucide-react";
+import { LogOut, Volume2, VolumeX, Menu, Castle } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import HouseCrest from "@/components/rpg/HouseCrest";
@@ -13,28 +11,20 @@ import { HOUSES } from "@/types/house";
 import { type House } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
 import { isSoundEnabled, toggleSound } from "@/services/core/soundService";
-import { toast } from "sonner";
-
 import Notifications from "@/components/Notifications";
 import PendingApproval from "@/pages/PendingApproval";
 import RulesAgreement from "@/pages/RulesAgreement";
 import CharacterSelection from "@/pages/CharacterSelection";
 import NotificationBanner from "@/components/NotificationBanner";
 import { useAchievements } from "@/hooks/features/useAchievements";
-import HouseCupWidget from "@/components/rpg/HouseCupWidget";
-import DailyProphetTicker from "@/components/shared/DailyProphetTicker";
-import PWAInstallPrompt from "@/components/PWAInstallPrompt";
-import AmbientAudio from "@/components/AmbientAudio";
-import { reward } from "@/services/core/rewardService";
 import TurnSwitcher from "@/components/TurnSwitcher";
 import SafeImage from "@/components/SafeImage";
 import BottomNav from "@/components/BottomNav";
 import { NAV_GROUPS, ADMIN_GROUP } from "@/constants/navigation";
 import { AtmosphericBackground } from "@/components/shared/AtmosphericBackground";
 import { MagicalClock } from "@/components/shared/MagicalClock";
+import AmbientAudio from "@/components/AmbientAudio";
 
-
-// Memoized Nav Item for performance
 const NavItem = memo(({ item, isActive, dmUnread, onClick }: { item: any, isActive: boolean, dmUnread: number, onClick: () => void }) => (
   <Link
     to={item.path}
@@ -71,29 +61,19 @@ export default function DashboardLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  
-  // Som de porta ao abrir/fechar sidebar
-  useEffect(() => {
-    if (sidebarOpen) cast('door');
-  }, [sidebarOpen, cast]);
-
   const [soundOn, setSoundOn] = useState(isSoundEnabled());
   const [dmUnread, setDmUnread] = useState(0);
   const [hasCharacters, setHasCharacters] = useState<boolean | null>(null);
 
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
-
   useAchievements(user?.id, profile?.xp ?? 0, profile?.level ?? 1);
-
   const house = useMemo(() => HOUSES[(profile?.house as House) || "gryffindor"] || HOUSES.gryffindor, [profile?.house]);
   const groups = useMemo(() => isAdmin ? [...NAV_GROUPS, ADMIN_GROUP] : NAV_GROUPS, [isAdmin]);
 
-  const adminSkipped = useMemo(() => {
-    if (!isAdmin || !user) return false;
-    return localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
-  }, [isAdmin, user]);
+  useEffect(() => {
+    if (sidebarOpen) cast('door');
+  }, [sidebarOpen, cast]);
 
-  // Busca personagens uma única vez quando o usuário muda
   useEffect(() => {
     if (!user) { setHasCharacters(null); return; }
     let cancelled = false;
@@ -105,7 +85,7 @@ export default function DashboardLayout() {
           .eq("user_id", user.id);
         if (error) {
           console.error("[DashboardLayout] character count failed:", error);
-          if (!cancelled) setHasCharacters(null); // não bloqueia o dashboard em caso de erro
+          if (!cancelled) setHasCharacters(null);
           return;
         }
         if (!cancelled) setHasCharacters((count ?? 0) > 0);
@@ -133,29 +113,13 @@ export default function DashboardLayout() {
   }, [user]);
 
   useEffect(() => {
-    if (!user || !profile) return;
-    const key = `daily_login_${user.id}`;
-    const today = new Date().toDateString();
-    if (localStorage.getItem(key) === today) return;
-    localStorage.setItem(key, today);
-    reward(user.id, 'daily_login');
-  }, [user, profile]);
-
-  useEffect(() => {
     if (!user || !isAuthenticated) return;
-    
-    // Ping immediately
     pingPresence();
-    
-    // Presence interval (every 45s, matching pingPresence debounce)
     const interval = setInterval(pingPresence, 45000); 
-    
-    // Visibility change listener to ping when coming back to tab
     const handleVisibilityChange = () => {
       if (!document.hidden) pingPresence();
     };
     document.addEventListener("visibilitychange", handleVisibilityChange);
-
     return () => {
       clearInterval(interval);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
@@ -173,33 +137,13 @@ export default function DashboardLayout() {
     );
   }
 
-  // Se não carregou o perfil após o loading, algo deu errado (ou deslogou)
-  if (!profile || !isAuthenticated) {
-    return null;
-  }
-
-  // Verificações de acesso e onboarding
+  if (!profile || !isAuthenticated) return null;
   if (!profile.approved && !isAdmin) return <ProtectedRoute adminOnly={false}><PendingApproval /></ProtectedRoute>;
   if (!isAdmin && !profile.has_accepted_rules) return <ProtectedRoute adminOnly={false}><RulesAgreement /></ProtectedRoute>;
-
-  // Só bloqueia se hasCharacters for explicitamente false (carregou e viu que não tem)
-  // E se não houver um personagem ativo no perfil
-  if (hasCharacters === false && !profile.active_character_id && !adminSkipped) {
-    return <ProtectedRoute adminOnly={false}><CharacterSelection adminMode={isAdmin} /></ProtectedRoute>;
-  }
-
-  // Se ainda está carregando os personagens (hasCharacters === null), mas já passou do isLoading do auth,
-  // mostra um loader menor para não dar flash de tela preta
-  if (hasCharacters === null && !profile.active_character_id && !adminSkipped) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <div className="text-4xl animate-pulse text-primary/40">✨</div>
-      </div>
-    );
-  }
+  if (hasCharacters === false && !profile.active_character_id) return <ProtectedRoute adminOnly={false}><CharacterSelection adminMode={isAdmin} /></ProtectedRoute>;
 
   return (
-    <div className="flex h-screen overflow-hidden relative">
+    <div className="flex h-screen overflow-hidden relative bg-black">
       <AtmosphericBackground />
 
       <AnimatePresence>
@@ -214,14 +158,13 @@ export default function DashboardLayout() {
         )}
       </AnimatePresence>
 
-      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-[85vw] max-w-[280px] md:w-64 bg-card/60 backdrop-blur-2xl border-r border-primary/15 flex flex-col transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] md:translate-x-0 ${sidebarOpen ? "translate-x-0 shadow-[20px_0_60px_rgba(0,0,0,0.9)]" : "-translate-x-full"}`}>
-        <div className="p-5 border-b border-border/30">
-          <Link to="/dashboard" className="flex items-center gap-3 group">
-            <div className="bg-primary/20 p-2.5 rounded-xl text-primary transition-transform group-hover:rotate-12 duration-300"><Castle size={24} /></div>
-            <span className="font-heading text-xl text-gold-gradient leading-tight tracking-tighter drop-shadow-[0_0_10px_rgba(212,175,55,0.3)] group-hover:scale-105 transition-transform duration-500">Hogwarts<br/>House</span>
+      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-[85vw] max-w-[280px] md:w-64 bg-card/45 backdrop-blur-3xl border-r border-primary/15 flex flex-col transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] md:translate-x-0 ${sidebarOpen ? "translate-x-0 shadow-[20px_0_80px_rgba(0,0,0,0.95)]" : "-translate-x-full"}`}>
+        <div className="p-6 border-b border-primary/10">
+          <Link to="/dashboard" className="flex items-center gap-4 group">
+            <div className="bg-primary/20 p-3 rounded-2xl text-primary transition-all group-hover:rotate-[360deg] group-hover:scale-110 duration-1000 shadow-[0_0_20px_rgba(212,175,55,0.2)]"><Castle size={28} /></div>
+            <span className="font-heading text-2xl text-gold-gradient leading-tight tracking-tighter drop-shadow-[0_0_15px_rgba(212,175,55,0.4)] group-hover:scale-105 transition-transform duration-700">Hogwarts<br/><span className="text-sm tracking-[0.3em] font-black uppercase opacity-70">House</span></span>
           </Link>
         </div>
-
 
         <nav className="flex-1 p-3 space-y-6 overflow-y-auto sidebar-scroll">
           {groups.map((group) => (
@@ -271,7 +214,6 @@ export default function DashboardLayout() {
                 <p className="text-[10px] leading-tight text-muted-foreground/60 truncate uppercase tracking-tighter">{house.name}</p>
               </div>
             </Link>
-
             <div className="flex items-center gap-0.5 shrink-0">
               <TurnSwitcher />
               <AmbientAudio />
@@ -293,39 +235,13 @@ export default function DashboardLayout() {
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative z-10">
         <NotificationBanner />
-        <header className="md:hidden flex items-center justify-between px-3 sm:px-5 h-16 border-b border-white/5 bg-card/40 backdrop-blur-3xl sticky top-0 z-[60] shadow-xl">
-          <div className="flex items-center gap-2 sm:gap-3">
-            <button 
-              onClick={() => setSidebarOpen(true)} 
-              className="w-10 h-10 flex items-center justify-center text-muted-foreground hover:text-primary active:scale-90 transition-all rounded-xl bg-white/5 border border-white/5"
-            >
-              <Menu size={20} />
-            </button>
-            <div className="flex flex-col">
-              <span className="font-heading text-xs sm:text-sm text-gold-gradient tracking-tight leading-none">Hogwarts</span>
-              <span className="text-[7px] sm:text-[8px] text-primary/60 uppercase tracking-[0.2em] font-black">Portal</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-1.5 sm:gap-2">
-              <Link to="/dashboard/wallet" className="h-9 px-3 sm:px-4 rounded-xl border border-primary/20 bg-primary/10 text-primary flex items-center gap-1.5 sm:gap-2 active:scale-95 transition-all shadow-[0_0_15px_rgba(212,175,55,0.1)]">
-                <MagicalGaleon size="xs" />
-                <span className="font-heading text-[10px] sm:text-xs tracking-tight">{(profile?.galeons || 0).toLocaleString("pt-BR")}</span>
-              </Link>
-             <Notifications />
-              <Link to="/dashboard/profile" className="w-9 h-9 rounded-lg overflow-hidden border border-primary/30 active:scale-95 transition-all">
-                <SafeImage src={profile?.avatar_url} alt={profile?.full_name || "Avatar"} className="w-full h-full object-cover" />
-              </Link>
-          </div>
-        </header>
-
-
+        
         <div className="flex-1 overflow-y-auto relative scroll-smooth contain-strict pb-safe custom-scrollbar">
           <div className="page-container px-3 sm:px-6 pt-4 sm:pt-8">
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                <MagicalClock />
             </div>
 
-            
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
@@ -342,7 +258,6 @@ export default function DashboardLayout() {
           </div>
         </div>
         <BottomNav />
-        <PWAInstallPrompt />
       </main>
     </div>
   );
