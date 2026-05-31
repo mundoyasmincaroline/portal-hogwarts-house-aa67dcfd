@@ -15,6 +15,7 @@ export default {
         heading: ["Cinzel", "serif"],
         body: ["Inter", "sans-serif"],
         serif: ["Crimson Text", "serif"],
+        magical: ["Cinzel Decorative", "Cinzel", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",

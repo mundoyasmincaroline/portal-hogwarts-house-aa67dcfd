@@ -72,19 +72,19 @@ export default function CharacterSelection({ adminMode }: Props) {
   }
 
   return (
-    <div className="relative min-h-screen p-4 flex flex-col items-center justify-center">
-      <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-0" />
+    <div className="relative min-h-screen p-6 flex flex-col items-center justify-center bg-black/40">
+      <div className="absolute inset-0 bg-background/50 backdrop-blur-xl z-0" />
       <MagicalParticles />
       
       <div className="relative z-10 max-w-4xl w-full">
         <div className="text-center mb-6 sm:mb-8 px-2">
-          <h1 className="font-heading text-3xl sm:text-4xl text-gold-gradient mb-2">Quem você será hoje?</h1>
-          <p className="text-muted-foreground">Escolha qual personagem vai assumir neste turno ou crie um novo.</p>
+          <h1 className="font-heading text-4xl sm:text-6xl text-gold-gradient mb-4 drop-shadow-[0_10px_30px_rgba(212,175,55,0.4)] tracking-tighter">Quem você será hoje?</h1>
+          <p className="text-muted-foreground text-base sm:text-lg font-serif italic">"Não são nossas habilidades que mostram o que somos, mas nossas escolhas."</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {characters.map(char => (
-            <div key={char.id} className="glass p-6 rounded-2xl border border-border/50 text-center hover:border-primary/50 transition-colors">
+            <div key={char.id} className="glass p-8 rounded-[2.5rem] border-primary/20 text-center hover:border-primary/60 transition-all hover:scale-[1.03] shadow-2xl">
               <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-2 border-primary/20">
                 {char.avatar_url ? (
                   <img src={char.avatar_url} alt={char.full_name} className="w-full h-full object-cover" />
@@ -112,7 +112,7 @@ export default function CharacterSelection({ adminMode }: Props) {
           {characters.length < 2 && (
             <div 
               onClick={() => setShowCreation(true)}
-              className="glass p-6 rounded-2xl border border-dashed border-border/50 text-center flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all min-h-[300px]"
+              className="glass p-8 rounded-[2.5rem] border border-dashed border-primary/20 text-center flex flex-col items-center justify-center cursor-pointer hover:border-primary/60 hover:bg-primary/5 transition-all min-h-[350px] shadow-2xl hover:scale-[1.03]"
             >
               <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center text-2xl mb-4">
                 ✨
