@@ -100,34 +100,34 @@ export default function Landing() {
           </div>
 
           {/* Title */}
-          <h1 className="text-5xl sm:text-8xl lg:text-[10rem] font-heading text-gold-gradient mb-6 sm:mb-8 tracking-tighter drop-shadow-[0_15px_45px_rgba(212,175,55,0.5)] animate-in fade-in zoom-in duration-1000 break-words leading-[0.85] active:scale-95 transition-transform cursor-default">
+          <h1 className="text-4xl sm:text-7xl md:text-8xl lg:text-[10rem] font-heading text-gold-gradient mb-4 sm:mb-8 tracking-tighter drop-shadow-[0_15px_45px_rgba(212,175,55,0.5)] animate-in fade-in zoom-in duration-1000 break-words leading-[0.85] active:scale-95 transition-transform cursor-default">
             Hogwarts House
           </h1>
-          <div className="grid grid-cols-2 sm:flex sm:items-center sm:justify-center gap-6 sm:gap-10 mb-10 sm:mb-12 max-w-xs sm:max-w-none mx-auto animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-500">
+          <div className="grid grid-cols-2 sm:flex sm:items-center sm:justify-center gap-4 sm:gap-10 mb-8 sm:mb-12 max-w-[280px] sm:max-w-none mx-auto animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-500">
             <div className="relative group text-center">
-              <p className="font-heading text-2xl sm:text-4xl text-gold-gradient">{memberCount !== null ? memberCount.toLocaleString("pt-BR") : "10"}</p>
-              <p className="text-[9px] sm:text-[10px] text-primary/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Bruxos</p>
+              <p className="font-heading text-xl sm:text-4xl text-gold-gradient">{memberCount !== null ? memberCount.toLocaleString("pt-BR") : "10"}</p>
+              <p className="text-[8px] sm:text-[10px] text-primary/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Bruxos</p>
             </div>
             
-            <div className="w-px h-8 sm:h-10 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden sm:block" />
+            <div className="w-px h-6 sm:h-10 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden sm:block" />
             
-            <div className="relative group text-center border-l border-primary/10 sm:border-none pl-6 sm:pl-0">
-              <p className="font-heading text-2xl sm:text-4xl text-gold-gradient">4</p>
-              <p className="text-[9px] sm:text-[10px] text-primary/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Casas</p>
+            <div className="relative group text-center border-l border-primary/10 sm:border-none pl-4 sm:pl-0">
+              <p className="font-heading text-xl sm:text-4xl text-gold-gradient">4</p>
+              <p className="text-[8px] sm:text-[10px] text-primary/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Casas</p>
             </div>
 
-            <div className="w-px h-8 sm:h-10 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden sm:block" />
+            <div className="w-px h-6 sm:h-10 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden sm:block" />
 
             <div className="relative group text-center">
-              <p className="font-heading text-2xl sm:text-4xl text-gold-gradient">80+</p>
-              <p className="text-[9px] sm:text-[10px] text-primary/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Itens</p>
+              <p className="font-heading text-xl sm:text-4xl text-gold-gradient">80+</p>
+              <p className="text-[8px] sm:text-[10px] text-primary/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Itens</p>
             </div>
 
-            <div className="w-px h-8 sm:h-10 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden sm:block" />
+            <div className="w-px h-6 sm:h-10 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden sm:block" />
 
-            <div className="relative group text-center border-l border-primary/10 sm:border-none pl-6 sm:pl-0">
-              <p className="font-heading text-2xl sm:text-4xl text-gold-gradient">∞</p>
-              <p className="text-[9px] sm:text-[10px] text-primary/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Magia</p>
+            <div className="relative group text-center border-l border-primary/10 sm:border-none pl-4 sm:pl-0">
+              <p className="font-heading text-xl sm:text-4xl text-gold-gradient">∞</p>
+              <p className="text-[8px] sm:text-[10px] text-primary/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Magia</p>
             </div>
           </div>
 
