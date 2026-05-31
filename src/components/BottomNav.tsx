@@ -15,7 +15,7 @@ export default function BottomNav() {
 
   return (
     <nav className="md:hidden fixed bottom-6 left-4 right-4 z-[100]">
-      <div className="glass !bg-card/80 backdrop-blur-3xl border border-white/10 rounded-2xl px-1 h-16 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in slide-in-from-bottom-10 duration-1000">
+      <div className="glass !bg-card/50 backdrop-blur-3xl border border-primary/15 rounded-2xl px-1 h-16 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in slide-in-from-bottom-10 duration-1000">
         {MOBILE_NAV.map((item) => {
           const isActive = location.pathname === item.path;
           return (
