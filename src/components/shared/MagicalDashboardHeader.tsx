@@ -32,7 +32,7 @@ export default function MagicalDashboardHeader() {
       
       {/* Interactive Utilities */}
       <div className="relative">
-        <div className="flex items-center justify-between px-4 mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-4 mb-4">
           <div className="flex flex-col">
             <h3 className="text-[10px] font-heading font-black uppercase tracking-[0.4em] text-primary/40 flex items-center gap-2">
               <Sparkles size={12} className="animate-pulse" />
@@ -42,7 +42,7 @@ export default function MagicalDashboardHeader() {
           </div>
           <button 
             onClick={() => setIsExpanded(!isExpanded)}
-            className="text-[10px] font-heading font-bold uppercase tracking-widest text-primary/60 hover:text-primary transition-all flex items-center gap-1.5 bg-primary/5 px-4 py-2 rounded-full border border-primary/10 shadow-lg active:scale-95"
+            className="text-[9px] sm:text-[10px] font-heading font-bold uppercase tracking-widest text-primary/60 hover:text-primary transition-all flex items-center justify-center gap-1.5 bg-primary/5 px-4 py-2 sm:py-2.5 rounded-full border border-primary/10 shadow-lg active:scale-95 w-fit sm:w-auto"
           >
             {isExpanded ? (
               <>Recolher <ChevronUp size={12} /></>
