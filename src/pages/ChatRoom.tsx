@@ -449,7 +449,7 @@ export default function ChatRoom() {
   );
 
   return (
-    <div className="max-w-5xl mx-auto h-[calc(100dvh-130px)] md:h-[calc(100vh-120px)] flex flex-col glass rounded-xl sm:rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl relative">
+    <div className="max-w-5xl mx-auto h-[calc(100dvh-130px)] md:h-[calc(100vh-120px)] flex flex-col glass rounded-xl sm:rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl relative mb-4">
       {/* ── BACKGROUND DE IMERSÃO ── */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60 z-0 pointer-events-none" />
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-20 pointer-events-none" />
