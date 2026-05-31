@@ -449,27 +449,27 @@ export default function ChatRoom() {
   );
 
   return (
-    <div className="max-w-5xl mx-auto h-[calc(100dvh-130px)] md:h-[calc(100vh-120px)] flex flex-col glass rounded-xl sm:rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl relative">
+    <div className="max-w-5xl mx-auto h-[calc(100dvh-130px)] md:h-[calc(100vh-120px)] flex flex-col glass rounded-xl sm:rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl relative mb-4">
       {/* ── BACKGROUND DE IMERSÃO ── */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60 z-0 pointer-events-none" />
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-20 pointer-events-none" />
       
       {/* ── HEADER MONSTER QUALITY ── */}
-      <div className="relative z-10 p-6 border-b border-white/5 bg-white/5 backdrop-blur-2xl flex items-center justify-between shadow-lg">
-        <div className="flex items-center gap-5">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard/chats")} className="shrink-0 hover:bg-white/5 rounded-2xl w-12 h-12">
-            <ExternalLink size={20} className="rotate-180" />
+      <div className="relative z-10 p-4 sm:p-6 border-b border-white/5 bg-white/5 backdrop-blur-2xl flex items-center justify-between shadow-lg">
+        <div className="flex items-center gap-3 sm:gap-5">
+          <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard/chats")} className="shrink-0 hover:bg-white/5 rounded-xl sm:rounded-2xl w-10 h-10 sm:w-12 sm:h-12">
+            <ExternalLink size={18} className="rotate-180 sm:w-5 sm:h-5" />
           </Button>
-          <div>
-            <div className="flex items-center gap-3">
-              <h2 className="font-heading text-2xl text-foreground flex items-center gap-2 tracking-tight">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <h2 className="font-heading text-lg sm:text-2xl text-foreground flex items-center gap-2 tracking-tight truncate">
                 {channel.name}
               </h2>
               {channel.is_premium && (
-                <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/40 animate-pulse-glow">PREMIUM ⭐</Badge>
+                <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/40 animate-pulse-glow text-[8px] sm:text-xs">PREMIUM ⭐</Badge>
               )}
             </div>
-            <p className="text-xs text-muted-foreground font-serif italic mt-0.5">{channel.description}</p>
+            <p className="text-[10px] sm:text-xs text-muted-foreground font-serif italic mt-0.5 truncate">{channel.description}</p>
           </div>
         </div>
         
@@ -578,7 +578,7 @@ export default function ChatRoom() {
                   <div key={m.id} className={`flex gap-4 group ${isMe ? 'flex-row-reverse' : ''}`}>
                     {/* Avatar */}
                     <div className="shrink-0 relative">
-                      <Link to={`/dashboard/profile/${m.user_id}`} className={`block w-12 h-12 rounded-2xl overflow-hidden border-2 transition-all duration-500 hover:scale-110 shadow-xl ${
+                      <Link to={`/dashboard/profile/${m.user_id}`} className={`block w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl overflow-hidden border-2 transition-all duration-500 hover:scale-110 shadow-xl ${
                         isMorpheus ? 'border-green-500/50 rounded-lg animate-pulse' 
                         : isYasmin ? 'border-yellow-500/50 shadow-yellow-500/20' 
                         : isCarolina ? 'border-blue-500/50 shadow-blue-500/20'
@@ -620,7 +620,7 @@ export default function ChatRoom() {
                         )}
                       </div>
 
-                      <div className={`relative px-5 py-3.5 rounded-[1.8rem] border backdrop-blur-xl transition-all duration-500 ${houseColor} ${glowColor} ${
+                      <div className={`relative px-4 sm:px-5 py-2.5 sm:py-3.5 rounded-[1.4rem] sm:rounded-[1.8rem] border backdrop-blur-xl transition-all duration-500 ${houseColor} ${glowColor} ${
                         isMe ? 'rounded-tr-none' : 'rounded-tl-none'
                       }`}>
                         {/* Hero Effects */}
@@ -647,9 +647,9 @@ export default function ChatRoom() {
       </div>
 
       {/* ── INPUT MONSTER QUALITY ── */}
-      <div className="relative z-10 p-5 bg-black/40 backdrop-blur-3xl border-t border-white/5">
+      <div className="relative z-10 p-3 sm:p-5 bg-black/40 backdrop-blur-3xl border-t border-white/5">
         {/* RP TOOLBAR - MONSTER QUALITY */}
-        <div className="flex flex-wrap gap-2 mb-4 scrollbar-hide overflow-x-auto pb-1">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4 scrollbar-hide overflow-x-auto pb-1">
           <Button size="sm" variant="outline" className="text-[9px] h-7 bg-primary/5 border-primary/20 rounded-xl hover:bg-primary/10" onClick={() => setInput(input + "*ação*")}>
             ⚔️ Ação
           </Button>

@@ -107,12 +107,12 @@ export default function StickerAlbumBook({ stickers, userStickers, onBuy, buying
             className="relative"
           >
             {/* Open Book Container */}
-            <div className="relative aspect-[4/5] sm:aspect-[16/10] bg-[#f4e4bc] rounded-[0.5rem] shadow-[0_50px_100px_rgba(0,0,0,0.8)] border border-[#d4c39a] overflow-hidden">
+            <div className="relative aspect-[4/6] sm:aspect-[16/10] bg-[#f4e4bc] rounded-[0.5rem] shadow-[0_50px_100px_rgba(0,0,0,0.8)] border border-[#d4c39a] overflow-hidden">
               {/* Parchment Texture Overlay */}
               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/old-map.png')] opacity-30 pointer-events-none" />
               
               {/* Book Spine (Open) */}
-              <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-4 sm:w-8 bg-gradient-to-r from-black/20 via-black/40 to-black/20 z-20 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]" />
+              <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-4 sm:w-8 bg-gradient-to-r from-black/20 via-black/40 to-black/20 z-20 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] hidden sm:block" />
 
               <AnimatePresence initial={false} custom={direction} mode="wait">
                 <motion.div
@@ -126,12 +126,12 @@ export default function StickerAlbumBook({ stickers, userStickers, onBuy, buying
                     rotateY: { type: "spring", stiffness: 100, damping: 20 },
                     opacity: { duration: 0.3 }
                   }}
-                  className="absolute inset-0 flex flex-col sm:grid sm:grid-cols-2 gap-0 overflow-y-auto sm:overflow-hidden preserve-3d"
+                  className="absolute inset-0 flex flex-col sm:grid sm:grid-cols-2 gap-0 overflow-y-auto sm:overflow-hidden preserve-3d pb-24 sm:pb-0"
                 >
                   {/* Left Page */}
-                  <div className="p-4 sm:p-12 flex flex-col items-center border-b sm:border-b-0 sm:border-r border-black/5 relative">
+                  <div className="p-4 sm:p-12 flex flex-col items-center border-b sm:border-b-0 sm:border-r border-black/5 relative shrink-0">
                     <div className="absolute inset-0 bg-gradient-to-l from-black/5 to-transparent pointer-events-none" />
-                    <div className="grid grid-cols-2 gap-3 w-full relative z-10">
+                    <div className="grid grid-cols-2 gap-2 sm:gap-3 w-full relative z-10">
                       {currentItems.slice(0, 4).map((s) => (
                         <StickerSlot key={s.id} sticker={s} owned={!!userStickers[s.id]} onBuy={onBuy} buying={buyingId === s.id} profileLevel={profileLevel} profileXp={profileXp} />
                       ))}
@@ -139,9 +139,9 @@ export default function StickerAlbumBook({ stickers, userStickers, onBuy, buying
                   </div>
 
                   {/* Right Page */}
-                  <div className="p-4 sm:p-12 flex flex-col items-center border-t sm:border-t-0 sm:border-l border-black/5 relative">
+                  <div className="p-4 sm:p-12 flex flex-col items-center border-t sm:border-t-0 sm:border-l border-black/5 relative shrink-0">
                     <div className="absolute inset-0 bg-gradient-to-r from-black/5 to-transparent pointer-events-none" />
-                    <div className="grid grid-cols-2 gap-3 w-full relative z-10">
+                    <div className="grid grid-cols-2 gap-2 sm:gap-3 w-full relative z-10">
                       {currentItems.slice(4, 8).map((s) => (
                         <StickerSlot key={s.id} sticker={s} owned={!!userStickers[s.id]} onBuy={onBuy} buying={buyingId === s.id} profileLevel={profileLevel} profileXp={profileXp} />
                       ))}

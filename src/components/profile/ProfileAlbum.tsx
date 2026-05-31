@@ -131,18 +131,17 @@ export default function ProfileAlbum({ userId }: { userId: string }) {
               {f === "all" ? `Todas (${total})` : f === "owned" ? `Conquistadas (${ownedCount})` : `Faltando (${total - ownedCount})`}
             </button>
           ))}
-          <div className="ml-auto flex gap-2">
-            <Button size="sm" variant="outline" className="h-8 text-[10px] rounded-full" onClick={handleShare}>
-              <Share2 size={12} className="mr-1.5" /> Compartilhar
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-2 sm:mt-0 ml-auto w-full sm:w-auto justify-end">
+            <Button size="sm" variant="outline" className="h-8 text-[9px] sm:text-[10px] rounded-full px-3" onClick={handleShare}>
+              <Share2 size={12} className="mr-1 sm:mr-1.5" /> <span className="hidden xs:inline">Compartilhar</span>
             </Button>
-            {isMe && (
+            {isMe ? (
               <Link to="/dashboard/album">
-                <Button size="sm" variant="plaque" className="h-8 text-[10px] rounded-full">Abrir Álbum</Button>
+                <Button size="sm" variant="plaque" className="h-8 text-[9px] sm:text-[10px] rounded-full px-3">Abrir Álbum</Button>
               </Link>
-            )}
-            {!isMe && (
+            ) : (
               <Link to="/dashboard/trades">
-                <Button size="sm" variant="plaque" className="h-8 text-[10px] rounded-full">Trocar</Button>
+                <Button size="sm" variant="plaque" className="h-8 text-[9px] sm:text-[10px] rounded-full px-3">Trocar</Button>
               </Link>
             )}
           </div>

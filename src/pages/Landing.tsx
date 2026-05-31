@@ -100,34 +100,34 @@ export default function Landing() {
           </div>
 
           {/* Title */}
-          <h1 className="text-5xl sm:text-8xl lg:text-[10rem] font-heading text-gold-gradient mb-6 sm:mb-8 tracking-tighter drop-shadow-[0_15px_45px_rgba(212,175,55,0.5)] animate-in fade-in zoom-in duration-1000 break-words leading-[0.85] active:scale-95 transition-transform cursor-default">
+          <h1 className="text-4xl sm:text-7xl md:text-8xl lg:text-[10rem] font-heading text-gold-gradient mb-4 sm:mb-8 tracking-tighter drop-shadow-[0_15px_45px_rgba(212,175,55,0.5)] animate-in fade-in zoom-in duration-1000 break-words leading-[0.85] active:scale-95 transition-transform cursor-default">
             Hogwarts House
           </h1>
-          <div className="grid grid-cols-2 sm:flex sm:items-center sm:justify-center gap-6 sm:gap-10 mb-10 sm:mb-12 max-w-xs sm:max-w-none mx-auto animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-500">
+          <div className="grid grid-cols-2 sm:flex sm:items-center sm:justify-center gap-4 sm:gap-10 mb-8 sm:mb-12 max-w-[280px] sm:max-w-none mx-auto animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-500">
             <div className="relative group text-center">
-              <p className="font-heading text-2xl sm:text-4xl text-gold-gradient">{memberCount !== null ? memberCount.toLocaleString("pt-BR") : "10"}</p>
-              <p className="text-[9px] sm:text-[10px] text-primary/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Bruxos</p>
+              <p className="font-heading text-xl sm:text-4xl text-gold-gradient">{memberCount !== null ? memberCount.toLocaleString("pt-BR") : "10"}</p>
+              <p className="text-[8px] sm:text-[10px] text-primary/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Bruxos</p>
             </div>
             
-            <div className="w-px h-8 sm:h-10 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden sm:block" />
+            <div className="w-px h-6 sm:h-10 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden sm:block" />
             
-            <div className="relative group text-center border-l border-primary/10 sm:border-none pl-6 sm:pl-0">
-              <p className="font-heading text-2xl sm:text-4xl text-gold-gradient">4</p>
-              <p className="text-[9px] sm:text-[10px] text-primary/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Casas</p>
+            <div className="relative group text-center border-l border-primary/10 sm:border-none pl-4 sm:pl-0">
+              <p className="font-heading text-xl sm:text-4xl text-gold-gradient">4</p>
+              <p className="text-[8px] sm:text-[10px] text-primary/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Casas</p>
             </div>
 
-            <div className="w-px h-8 sm:h-10 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden sm:block" />
+            <div className="w-px h-6 sm:h-10 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden sm:block" />
 
             <div className="relative group text-center">
-              <p className="font-heading text-2xl sm:text-4xl text-gold-gradient">80+</p>
-              <p className="text-[9px] sm:text-[10px] text-primary/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Itens</p>
+              <p className="font-heading text-xl sm:text-4xl text-gold-gradient">80+</p>
+              <p className="text-[8px] sm:text-[10px] text-primary/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Itens</p>
             </div>
 
-            <div className="w-px h-8 sm:h-10 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden sm:block" />
+            <div className="w-px h-6 sm:h-10 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden sm:block" />
 
-            <div className="relative group text-center border-l border-primary/10 sm:border-none pl-6 sm:pl-0">
-              <p className="font-heading text-2xl sm:text-4xl text-gold-gradient">∞</p>
-              <p className="text-[9px] sm:text-[10px] text-primary/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Magia</p>
+            <div className="relative group text-center border-l border-primary/10 sm:border-none pl-4 sm:pl-0">
+              <p className="font-heading text-xl sm:text-4xl text-gold-gradient">∞</p>
+              <p className="text-[8px] sm:text-[10px] text-primary/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Magia</p>
             </div>
           </div>
 
@@ -151,34 +151,33 @@ export default function Landing() {
       </div>
 
       {/* ── CASAS ── */}
-      <div className="relative z-10 px-4 py-16 max-w-5xl mx-auto">
-        <div className="text-center mb-10">
-          <p className="text-xs font-heading text-primary uppercase tracking-widest mb-2">Escolha seu destino</p>
-          <h2 className="font-heading text-3xl md:text-4xl text-foreground">Qual é a sua casa?</h2>
-          <p className="text-muted-foreground text-sm mt-2 max-w-md mx-auto">
+      <div className="relative z-10 px-4 py-12 sm:py-16 max-w-5xl mx-auto">
+        <div className="text-center mb-8 sm:mb-10">
+          <p className="text-[10px] sm:text-xs font-heading text-primary uppercase tracking-widest mb-2">Escolha seu destino</p>
+          <h2 className="font-heading text-2xl sm:text-4xl text-foreground">Qual é a sua casa?</h2>
+          <p className="text-muted-foreground text-xs sm:text-sm mt-2 max-w-md mx-auto px-4">
             O Chapéu Seletor aguarda. Entre no portal e descubra onde você pertence.
           </p>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {HOUSES_INFO.map(h => (
             <div key={h.id} onClick={() => navigate("/register")}
-              className={`relative glass rounded-[2.5rem] sm:rounded-[3.5rem] p-6 sm:p-10 border-2 bg-gradient-to-br ${h.color} text-center cursor-pointer hover:-translate-y-3 sm:hover:-translate-y-5 hover:shadow-[0_40px_100px_rgba(0,0,0,0.8)] transition-all duration-700 group flex flex-col items-center gap-4 sm:gap-6 overflow-hidden`}>
+              className={`relative glass rounded-[1.5rem] sm:rounded-[3.5rem] p-4 sm:p-10 border-2 bg-gradient-to-br ${h.color} text-center cursor-pointer hover:-translate-y-2 sm:hover:-translate-y-5 hover:shadow-[0_20px_60px_rgba(0,0,0,0.8)] transition-all duration-700 group flex flex-col items-center gap-3 sm:gap-6 overflow-hidden`}>
               
               {/* Inner Glow Artifact */}
               <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               
-              <div className="relative z-10 w-24 h-24 flex items-center justify-center rounded-3xl bg-black/40 border border-white/10 shadow-inner group-hover:scale-110 transition-transform duration-700">
-                <img src={`/houses/${h.id}.png`} alt={h.name} className="w-20 h-20 object-contain group-hover:rotate-6 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" />
+              <div className="relative z-10 w-16 h-16 sm:w-24 sm:h-24 flex items-center justify-center rounded-2xl sm:rounded-3xl bg-black/40 border border-white/10 shadow-inner group-hover:scale-110 transition-transform duration-700">
+                <img src={`/houses/${h.id}.png`} alt={h.name} className="w-12 h-12 sm:w-20 sm:h-20 object-contain group-hover:rotate-6 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" />
               </div>
 
-              
               <div className="relative z-10">
-                <h3 className="font-heading text-2xl text-foreground mb-2 drop-shadow-md">{h.name}</h3>
-                <p className="text-[10px] text-white/60 uppercase tracking-[0.3em] font-bold px-3 py-1 bg-black/30 rounded-full border border-white/5">{h.trait}</p>
+                <h3 className="font-heading text-lg sm:text-2xl text-foreground mb-1 sm:mb-2 drop-shadow-md">{h.name}</h3>
+                <p className="text-[8px] sm:text-[10px] text-white/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold px-2 sm:px-3 py-0.5 sm:py-1 bg-black/30 rounded-full border border-white/5 whitespace-nowrap">{h.trait}</p>
               </div>
               
               {/* Luxury Accent */}
-              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 h-1 sm:h-1.5 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
             </div>
           ))}
         </div>
@@ -194,21 +193,21 @@ export default function Landing() {
       </div>
 
       {/* ── FEATURES ── */}
-      <div className="relative z-10 px-4 py-16 bg-gradient-to-b from-transparent via-secondary/20 to-transparent">
+      <div className="relative z-10 px-4 py-12 sm:py-16 bg-gradient-to-b from-transparent via-secondary/20 to-transparent">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10">
-            <p className="text-xs font-heading text-primary uppercase tracking-widest mb-2">Tudo que você precisa</p>
-            <h2 className="font-heading text-3xl md:text-4xl text-foreground">O portal mais completo do fandom</h2>
+          <div className="text-center mb-8 sm:mb-10">
+            <p className="text-[10px] sm:text-xs font-heading text-primary uppercase tracking-widest mb-2">Tudo que você precisa</p>
+            <h2 className="font-heading text-2xl sm:text-4xl text-foreground px-4">O portal mais completo do fandom</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
             {FEATURES.map((f, i) => (
-              <div key={i} className={`group/feat glass rounded-[2.5rem] p-8 border ${f.cardColor} hover:-translate-y-2 transition-all duration-500 relative overflow-hidden`}>
+              <div key={i} className={`group/feat glass rounded-[1.5rem] sm:rounded-[2.5rem] p-6 sm:p-8 border ${f.cardColor} hover:-translate-y-1 transition-all duration-500 relative overflow-hidden`}>
                 <div className="absolute inset-0 bg-white/5 opacity-0 group-hover/feat:opacity-100 transition-opacity" />
-                <div className="mb-6">
-                   <MagicalIcon icon={f.icon} color={f.color} size={24} />
+                <div className="mb-4 sm:mb-6">
+                   <MagicalIcon icon={f.icon} color={f.color} size={20} className="sm:w-[24px] sm:h-[24px]" />
                 </div>
-                <h3 className="font-heading text-xl text-foreground mb-2 group-hover/feat:text-primary transition-colors">{f.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed italic">{f.desc}</p>
+                <h3 className="font-heading text-lg sm:text-xl text-foreground mb-1.5 sm:mb-2 group-hover/feat:text-primary transition-colors">{f.title}</h3>
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed italic">{f.desc}</p>
                 
                 {/* Luxury Bottom Accent */}
                 <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
@@ -219,43 +218,43 @@ export default function Landing() {
       </div>
 
       {/* ── MONETIZAÇÃO FLASH SALE (URGÊNCIA MÁXIMA) ── */}
-      <div className="relative z-10 px-4 py-16 max-w-5xl mx-auto">
-        <div className="glass rounded-[2.5rem] sm:rounded-[3rem] p-6 sm:p-10 md:p-16 border-2 border-red-500/40 bg-gradient-to-br from-red-950/60 via-black to-amber-950/40 relative overflow-hidden shadow-[0_0_80px_rgba(220,38,38,0.3)] group">
+      <div className="relative z-10 px-4 py-12 sm:py-16 max-w-5xl mx-auto">
+        <div className="glass rounded-[1.5rem] sm:rounded-[3rem] p-5 sm:p-10 md:p-16 border-2 border-red-500/40 bg-gradient-to-br from-red-950/60 via-black to-amber-950/40 relative overflow-hidden shadow-[0_0_80px_rgba(220,38,38,0.3)] group">
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-400/80 to-transparent animate-shimmer" />
-          <div className="absolute -top-20 -right-20 w-96 h-96 bg-red-500/10 rounded-full blur-[100px] animate-pulse" />
+          <div className="absolute -top-20 -right-20 w-64 sm:w-96 h-64 sm:h-96 bg-red-500/10 rounded-full blur-[100px] animate-pulse" />
           
-          <div className="relative z-10 flex flex-col md:flex-row items-center gap-12">
-            <div className="flex-1 text-center md:text-left space-y-6">
-              <div className="inline-flex items-center gap-3 bg-red-500/20 border border-red-500/40 rounded-full px-5 py-1.5 mb-2">
-                <Flame size={14} className="text-red-500 animate-pulse" />
-                <span className="text-xs font-heading text-red-100 uppercase tracking-[0.2em] font-bold">OFERTA DE LANÇAMENTO · LIMITADA</span>
+          <div className="relative z-10 flex flex-col lg:flex-row items-center gap-8 sm:gap-12">
+            <div className="flex-1 text-center lg:text-left space-y-4 sm:space-y-6">
+              <div className="inline-flex items-center gap-2 sm:gap-3 bg-red-500/20 border border-red-500/40 rounded-full px-4 sm:px-5 py-1.5 mb-2">
+                <Flame size={12} className="text-red-500 animate-pulse sm:w-[14px] sm:h-[14px]" />
+                <span className="text-[9px] sm:text-xs font-heading text-red-100 uppercase tracking-[0.2em] font-bold">OFERTA DE LANÇAMENTO · LIMITADA</span>
               </div>
               
-              <h2 className="font-heading text-4xl md:text-6xl text-white tracking-tighter leading-none">
+              <h2 className="font-heading text-3xl sm:text-4xl md:text-6xl text-white tracking-tighter leading-none">
                 ESTA SEMANA É <br/><span className="text-red-500">GRÁTIS?</span> QUASE ISSO.
               </h2>
               
-              <p className="text-lg text-red-100/70 font-serif italic max-w-xl">
+              <p className="text-sm sm:text-lg text-red-100/70 font-serif italic max-w-xl mx-auto lg:mx-0">
                 "Itens lendários por 1 Galeão e pacotes VIP com 50% de desconto. O Ministério da Magia enlouqueceu por apenas 72 horas."
               </p>
 
-              <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto md:mx-0">
-                <div className="glass bg-white/5 border border-white/10 p-4 rounded-2xl text-center">
-                  <p className="text-[10px] text-muted-foreground uppercase mb-1">Itens a partir de</p>
-                  <p className="text-3xl font-heading text-yellow-400">R$ 1,90</p>
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 max-w-[280px] sm:max-w-sm mx-auto lg:mx-0">
+                <div className="glass bg-white/5 border border-white/10 p-3 sm:p-4 rounded-2xl text-center">
+                  <p className="text-[8px] sm:text-[10px] text-muted-foreground uppercase mb-1">Itens a partir de</p>
+                  <p className="text-xl sm:text-3xl font-heading text-yellow-400">R$ 1,90</p>
                 </div>
-                <div className="glass bg-white/5 border border-white/10 p-4 rounded-2xl text-center">
-                  <p className="text-[10px] text-muted-foreground uppercase mb-1">VIP Founders</p>
-                  <p className="text-3xl font-heading text-purple-400">-50%</p>
+                <div className="glass bg-white/5 border border-white/10 p-3 sm:p-4 rounded-2xl text-center">
+                  <p className="text-[8px] sm:text-[10px] text-muted-foreground uppercase mb-1">VIP Founders</p>
+                  <p className="text-xl sm:text-3xl font-heading text-purple-400">-50%</p>
                 </div>
               </div>
               
-              <Button size="lg" variant="magical" onClick={() => navigate("/register")} className="h-20 px-12 rounded-2xl bg-gradient-to-r from-red-600 via-orange-600 to-red-600 border-none font-bold text-2xl shadow-[0_15px_40px_rgba(220,38,38,0.4)] hover:scale-105 active:scale-95 transition-all w-full sm:w-auto">
-                ENTRAR E PEGAR AGORA <ChevronRight size={24} className="ml-2" />
+              <Button size="lg" variant="magical" onClick={() => navigate("/register")} className="h-16 sm:h-20 px-6 sm:px-12 rounded-2xl bg-gradient-to-r from-red-600 via-orange-600 to-red-600 border-none font-bold text-lg sm:text-2xl shadow-[0_15px_40px_rgba(220,38,38,0.4)] hover:scale-105 active:scale-95 transition-all w-full sm:w-auto">
+                ENTRAR E PEGAR AGORA <ChevronRight size={20} className="ml-2 sm:w-[24px] sm:h-[24px]" />
               </Button>
             </div>
             
-            <div className="shrink-0 relative">
+            <div className="shrink-0 relative hidden lg:block">
                <div className="absolute inset-0 bg-yellow-500/20 blur-[60px] animate-bounce" />
                <img src="/legendary_chest_3d_v2.png" alt="Chest" className="w-64 h-64 md:w-80 md:h-80 object-contain relative z-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] animate-float" />
             </div>
