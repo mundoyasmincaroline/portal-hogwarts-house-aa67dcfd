@@ -3,7 +3,7 @@ import * as React from "react";
 import { cn } from "@/lib/core-utils";
 
 const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("rounded-2xl border bg-card text-card-foreground shadow-lg transition-all duration-300 hover:shadow-xl hover:border-primary/20", className)} {...props} />
+  <div ref={ref} className={cn("rounded-2xl border border-white/10 bg-card/60 backdrop-blur-xl text-card-foreground shadow-lg transition-all duration-500 hover:shadow-2xl hover:border-primary/30 hover:translate-y-[-2px]", className)} {...props} />
 ));
 
 Card.displayName = "Card";
@@ -17,14 +17,14 @@ CardHeader.displayName = "CardHeader";
 
 const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
-    <h3 ref={ref} className={cn("text-2xl font-semibold leading-none tracking-tight", className)} {...props} />
+    <h3 ref={ref} className={cn("text-2xl font-heading font-bold leading-tight tracking-tight text-gold-gradient", className)} {...props} />
   ),
 );
 CardTitle.displayName = "CardTitle";
 
 const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => (
-    <p ref={ref} className={cn("text-sm text-muted-foreground", className)} {...props} />
+    <p ref={ref} className={cn("text-sm text-muted-foreground font-serif italic", className)} {...props} />
   ),
 );
 CardDescription.displayName = "CardDescription";
