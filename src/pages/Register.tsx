@@ -1,10 +1,10 @@
-import { useState, useRef, useEffect, memo } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/lib/auth";
-import { HOUSES } from "@/types";
-import { House } from "@/types";
+import { type House } from "@/types";
+import { HOUSES } from "@/types/house";
 import { toast } from "sonner";
 import HouseCrest from "@/components/rpg/HouseCrest";
 import MagicalParticles from "@/components/MagicalParticles";
