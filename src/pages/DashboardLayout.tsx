@@ -197,7 +197,7 @@ export default function DashboardLayout() {
   }
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden relative">
+    <div className="flex h-screen overflow-hidden relative">
       <AtmosphericBackground />
 
       <AnimatePresence>
