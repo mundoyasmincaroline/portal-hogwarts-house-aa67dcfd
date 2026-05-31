@@ -222,7 +222,7 @@ export default function AdminFinance() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-4 sm:px-8 py-6 hidden md:table-cell">
+                  <td className="px-4 sm:px-8 py-6 hidden xl:table-cell">
                     <span className="text-xs font-mono text-muted-foreground">{o.id.slice(0,12)}...</span>
                   </td>
                   <td className="px-4 sm:px-8 py-6">
