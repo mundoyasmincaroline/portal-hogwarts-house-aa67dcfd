@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, memo } from "react";
+import { useImmersion } from "@/hooks/core/useImmersion";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -24,6 +25,7 @@ import HouseCupWidget from "@/components/rpg/HouseCupWidget";
 import DailyProphetTicker from "@/components/shared/DailyProphetTicker";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import AmbientAudio from "@/components/AmbientAudio";
+import { reward } from "@/services/core/rewardService";
 import TurnSwitcher from "@/components/TurnSwitcher";
 import SafeImage from "@/components/SafeImage";
 import BottomNav from "@/components/BottomNav";
@@ -63,9 +65,16 @@ const NavItem = memo(({ item, isActive, dmUnread, onClick }: { item: any, isActi
 
 export default function DashboardLayout() {
   const { user, profile, isAdmin, isLoading, isAuthenticated, logout, pingPresence } = useAuth();
+  const { cast } = useImmersion();
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  
+  // Som de porta ao abrir/fechar sidebar
+  useEffect(() => {
+    if (sidebarOpen) cast('door');
+  }, [sidebarOpen, cast]);
+
   const [soundOn, setSoundOn] = useState(isSoundEnabled());
   const [dmUnread, setDmUnread] = useState(0);
   const [hasCharacters, setHasCharacters] = useState<boolean | null>(null);
@@ -127,8 +136,7 @@ export default function DashboardLayout() {
     const today = new Date().toDateString();
     if (localStorage.getItem(key) === today) return;
     localStorage.setItem(key, today);
-    supabase.rpc("award_xp_action", { _action: "daily_login", _user_id: user.id, _xp: 25 });
-    toast.success(`☀️ Bom dia, ${profile.full_name?.split(" ")[0]}! +25 XP pela sua presença diária!`, { duration: 3500 });
+    reward(user.id, 'daily_login');
   }, [user, profile]);
 
   useEffect(() => {
@@ -319,6 +327,7 @@ export default function DashboardLayout() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
+                onViewportEnter={() => cast('whoosh', { haptic: false, volume: 0.3 })}
                 initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 exit={{ opacity: 0, y: -20, filter: "blur(10px)" }}

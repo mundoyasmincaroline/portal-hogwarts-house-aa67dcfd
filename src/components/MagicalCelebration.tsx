@@ -1,26 +1,46 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
+import { useImmersion } from "@/hooks/core/useImmersion";
 
 export default function MagicalCelebration() {
-  const { profile } = useAuth();
+  const { user, profile } = useAuth();
+  const { cast } = useImmersion();
   const [show, setShow] = useState(false);
   const [lastXp, setLastXp] = useState(profile?.xp || 0);
   const [lastGaleons, setLastGaleons] = useState(profile?.galeons || 0);
 
   useEffect(() => {
+    if (!user) return;
+
+    const channelId = `celebs:${user.id}:${Math.random()}`;
+    const sub = supabase
+      .channel(channelId)
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` }, (payload) => {
+        const title = (payload.new as any).title?.toLowerCase() || "";
+        if (title.includes("medalha") || title.includes("desafio") || title.includes("nível") || title.includes("conquistada")) {
+          setShow(true);
+          cast('levelUp');
+          setTimeout(() => setShow(false), 5000);
+        }
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(sub); };
+  }, [user, cast]);
+
+  useEffect(() => {
     if (!profile) return;
-
-    const hasGainedXp = profile.xp > lastXp;
     const hasGainedGaleons = profile.galeons > lastGaleons;
-
-    if (hasGainedXp || hasGainedGaleons) {
-      setShow(true);
-      const timer = setTimeout(() => setShow(false), 3000);
-      setLastXp(profile.xp);
+    if (hasGainedGaleons) {
       setLastGaleons(profile.galeons);
-      return () => clearTimeout(timer);
+      cast('coin');
     }
-  }, [profile?.xp, profile?.galeons]);
+    if (profile.xp > lastXp) {
+      setLastXp(profile.xp);
+      // cast('tap'); // XP up is too frequent for loud sound
+    }
+  }, [profile?.xp, profile?.galeons, cast]);
 
   if (!show) return null;
 

@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import MagicalParticles from "@/components/MagicalParticles";
 import { toast } from "sonner";
+import { reward } from "@/services/core/rewardService";
 import { Checkbox } from "@/components/ui/checkbox";
 
 export default function RulesAgreement() {
@@ -35,12 +36,8 @@ export default function RulesAgreement() {
           const { data: inviter } = await supabase.from("profiles").select("user_id").eq("username", pendingReferral).maybeSingle();
           if (inviter) {
             await supabase.from("referrals").insert({ inviter_id: inviter.user_id, invited_id: user.id } as never);
-            await supabase.rpc("award_xp_action", { _action: "referral_success", _user_id: inviter.user_id, _xp: 100 });
-            await supabase.rpc("award_galeons", { _user_id: inviter.user_id, _amount: 50, _reason: "referral" });
-            
-            // Recompensa para o novo bruxo também
-            await supabase.rpc("award_galeons", { _user_id: user.id, _amount: 10, _reason: "welcome" });
-            await supabase.rpc("award_xp_action", { _action: "welcome_bonus", _user_id: user.id, _xp: 50 });
+            await reward(inviter.user_id, 'referral');
+            await reward(user.id, 'welcome_bonus');
 
             localStorage.removeItem("pending_referral");
           }
@@ -49,8 +46,7 @@ export default function RulesAgreement() {
 
       // Recompensa de boas-vindas padrão (mesmo sem referral)
       if (!localStorage.getItem("pending_referral") && user) {
-        await supabase.rpc("award_galeons", { _user_id: user.id, _amount: 10, _reason: "welcome" });
-        await supabase.rpc("award_xp_action", { _action: "welcome_bonus", _user_id: user.id, _xp: 50 });
+        await reward(user.id, 'welcome_bonus');
       }
 
       // Force reload auth state
