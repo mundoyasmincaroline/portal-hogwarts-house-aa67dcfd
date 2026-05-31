@@ -218,43 +218,43 @@ export default function Landing() {
       </div>
 
       {/* ── MONETIZAÇÃO FLASH SALE (URGÊNCIA MÁXIMA) ── */}
-      <div className="relative z-10 px-4 py-16 max-w-5xl mx-auto">
-        <div className="glass rounded-[2.5rem] sm:rounded-[3rem] p-6 sm:p-10 md:p-16 border-2 border-red-500/40 bg-gradient-to-br from-red-950/60 via-black to-amber-950/40 relative overflow-hidden shadow-[0_0_80px_rgba(220,38,38,0.3)] group">
+      <div className="relative z-10 px-4 py-12 sm:py-16 max-w-5xl mx-auto">
+        <div className="glass rounded-[1.5rem] sm:rounded-[3rem] p-5 sm:p-10 md:p-16 border-2 border-red-500/40 bg-gradient-to-br from-red-950/60 via-black to-amber-950/40 relative overflow-hidden shadow-[0_0_80px_rgba(220,38,38,0.3)] group">
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-400/80 to-transparent animate-shimmer" />
-          <div className="absolute -top-20 -right-20 w-96 h-96 bg-red-500/10 rounded-full blur-[100px] animate-pulse" />
+          <div className="absolute -top-20 -right-20 w-64 sm:w-96 h-64 sm:h-96 bg-red-500/10 rounded-full blur-[100px] animate-pulse" />
           
-          <div className="relative z-10 flex flex-col md:flex-row items-center gap-12">
-            <div className="flex-1 text-center md:text-left space-y-6">
-              <div className="inline-flex items-center gap-3 bg-red-500/20 border border-red-500/40 rounded-full px-5 py-1.5 mb-2">
-                <Flame size={14} className="text-red-500 animate-pulse" />
-                <span className="text-xs font-heading text-red-100 uppercase tracking-[0.2em] font-bold">OFERTA DE LANÇAMENTO · LIMITADA</span>
+          <div className="relative z-10 flex flex-col lg:flex-row items-center gap-8 sm:gap-12">
+            <div className="flex-1 text-center lg:text-left space-y-4 sm:space-y-6">
+              <div className="inline-flex items-center gap-2 sm:gap-3 bg-red-500/20 border border-red-500/40 rounded-full px-4 sm:px-5 py-1.5 mb-2">
+                <Flame size={12} className="text-red-500 animate-pulse sm:w-[14px] sm:h-[14px]" />
+                <span className="text-[9px] sm:text-xs font-heading text-red-100 uppercase tracking-[0.2em] font-bold">OFERTA DE LANÇAMENTO · LIMITADA</span>
               </div>
               
-              <h2 className="font-heading text-4xl md:text-6xl text-white tracking-tighter leading-none">
+              <h2 className="font-heading text-3xl sm:text-4xl md:text-6xl text-white tracking-tighter leading-none">
                 ESTA SEMANA É <br/><span className="text-red-500">GRÁTIS?</span> QUASE ISSO.
               </h2>
               
-              <p className="text-lg text-red-100/70 font-serif italic max-w-xl">
+              <p className="text-sm sm:text-lg text-red-100/70 font-serif italic max-w-xl mx-auto lg:mx-0">
                 "Itens lendários por 1 Galeão e pacotes VIP com 50% de desconto. O Ministério da Magia enlouqueceu por apenas 72 horas."
               </p>
 
-              <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto md:mx-0">
-                <div className="glass bg-white/5 border border-white/10 p-4 rounded-2xl text-center">
-                  <p className="text-[10px] text-muted-foreground uppercase mb-1">Itens a partir de</p>
-                  <p className="text-3xl font-heading text-yellow-400">R$ 1,90</p>
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 max-w-[280px] sm:max-w-sm mx-auto lg:mx-0">
+                <div className="glass bg-white/5 border border-white/10 p-3 sm:p-4 rounded-2xl text-center">
+                  <p className="text-[8px] sm:text-[10px] text-muted-foreground uppercase mb-1">Itens a partir de</p>
+                  <p className="text-xl sm:text-3xl font-heading text-yellow-400">R$ 1,90</p>
                 </div>
-                <div className="glass bg-white/5 border border-white/10 p-4 rounded-2xl text-center">
-                  <p className="text-[10px] text-muted-foreground uppercase mb-1">VIP Founders</p>
-                  <p className="text-3xl font-heading text-purple-400">-50%</p>
+                <div className="glass bg-white/5 border border-white/10 p-3 sm:p-4 rounded-2xl text-center">
+                  <p className="text-[8px] sm:text-[10px] text-muted-foreground uppercase mb-1">VIP Founders</p>
+                  <p className="text-xl sm:text-3xl font-heading text-purple-400">-50%</p>
                 </div>
               </div>
               
-              <Button size="lg" variant="magical" onClick={() => navigate("/register")} className="h-20 px-12 rounded-2xl bg-gradient-to-r from-red-600 via-orange-600 to-red-600 border-none font-bold text-2xl shadow-[0_15px_40px_rgba(220,38,38,0.4)] hover:scale-105 active:scale-95 transition-all w-full sm:w-auto">
-                ENTRAR E PEGAR AGORA <ChevronRight size={24} className="ml-2" />
+              <Button size="lg" variant="magical" onClick={() => navigate("/register")} className="h-16 sm:h-20 px-6 sm:px-12 rounded-2xl bg-gradient-to-r from-red-600 via-orange-600 to-red-600 border-none font-bold text-lg sm:text-2xl shadow-[0_15px_40px_rgba(220,38,38,0.4)] hover:scale-105 active:scale-95 transition-all w-full sm:w-auto">
+                ENTRAR E PEGAR AGORA <ChevronRight size={20} className="ml-2 sm:w-[24px] sm:h-[24px]" />
               </Button>
             </div>
             
-            <div className="shrink-0 relative">
+            <div className="shrink-0 relative hidden lg:block">
                <div className="absolute inset-0 bg-yellow-500/20 blur-[60px] animate-bounce" />
                <img src="/legendary_chest_3d_v2.png" alt="Chest" className="w-64 h-64 md:w-80 md:h-80 object-contain relative z-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] animate-float" />
             </div>
