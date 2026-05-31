@@ -24,6 +24,7 @@ import HouseCupWidget from "@/components/rpg/HouseCupWidget";
 import DailyProphetTicker from "@/components/shared/DailyProphetTicker";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import AmbientAudio from "@/components/AmbientAudio";
+import { reward } from "@/services/core/rewardService";
 import TurnSwitcher from "@/components/TurnSwitcher";
 import SafeImage from "@/components/SafeImage";
 import BottomNav from "@/components/BottomNav";
@@ -127,8 +128,7 @@ export default function DashboardLayout() {
     const today = new Date().toDateString();
     if (localStorage.getItem(key) === today) return;
     localStorage.setItem(key, today);
-    supabase.rpc("award_xp_action", { _action: "daily_login", _user_id: user.id, _xp: 25 });
-    toast.success(`☀️ Bom dia, ${profile.full_name?.split(" ")[0]}! +25 XP pela sua presença diária!`, { duration: 3500 });
+    reward(user.id, 'daily_login');
   }, [user, profile]);
 
   useEffect(() => {
