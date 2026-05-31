@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import HouseCrest from "./HouseCrest";
+import HouseCrest from "@/components/rpg/HouseCrest";
 import { Input } from "./ui/input";
 import SafeImage from "./SafeImage";
 import { Eye } from "lucide-react";

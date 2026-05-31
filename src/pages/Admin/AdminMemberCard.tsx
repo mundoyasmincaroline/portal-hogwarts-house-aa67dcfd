@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import HouseCrest from "@/components/HouseCrest";
+import HouseCrest from "@/components/rpg/HouseCrest";
 import { Badge } from "@/components/ui/badge";
 import { isUserOnline } from "@/lib/auth";
 

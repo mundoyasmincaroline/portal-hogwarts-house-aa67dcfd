@@ -5,9 +5,9 @@ import {
   LogOut, Volume2, VolumeX, Menu, Castle, Wallet
 } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import HouseCrest from "@/components/HouseCrest";
-import MagicalGaleon from "@/components/MagicalGaleon";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import HouseCrest from "@/components/rpg/HouseCrest";
+import MagicalGaleon from "@/components/shared/MagicalGaleon";
 import { HOUSES } from "@/types";
 import { House } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,8 +20,8 @@ import RulesAgreement from "@/pages/RulesAgreement";
 import CharacterSelection from "@/pages/CharacterSelection";
 import NotificationBanner from "@/components/NotificationBanner";
 import { useAchievements } from "@/hooks/features/useAchievements";
-import HouseCupWidget from "@/components/HouseCupWidget";
-import DailyProphetTicker from "@/components/DailyProphetTicker";
+import HouseCupWidget from "@/components/rpg/HouseCupWidget";
+import DailyProphetTicker from "@/components/shared/DailyProphetTicker";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import AmbientAudio from "@/components/AmbientAudio";
 import TurnSwitcher from "@/components/TurnSwitcher";

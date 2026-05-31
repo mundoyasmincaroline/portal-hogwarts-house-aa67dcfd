@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Scroll, ShieldAlert, Zap, Sparkles, Feather } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import MagicalEmoji from "@/components/MagicalEmoji";
+import MagicalEmoji from "@/components/shared/MagicalEmoji";
 
 export default function Rules() {
   const [revealed, setRevealed] = useState(false);

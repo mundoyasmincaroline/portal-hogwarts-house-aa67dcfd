@@ -2,8 +2,8 @@ import { useAuth } from "@/lib/auth";
 import { Link } from "react-router-dom";
 import { Coins, Crown, ShoppingBag, Zap, Star, Trophy, Calendar, ChevronRight, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import MagicalEmoji from "@/components/MagicalEmoji";
-import MagicalGaleon from "@/components/MagicalGaleon";
+import MagicalEmoji from "@/components/shared/MagicalEmoji";
+import MagicalGaleon from "@/components/shared/MagicalGaleon";
 import { useWallet } from "@/hooks/features/useWallet";
 
 const VIP_CONFIG: Record<string, { name: string; color: string; icon: string; galeons: number }> = {

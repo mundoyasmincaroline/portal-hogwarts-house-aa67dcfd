@@ -10,7 +10,7 @@ import {
   Castle, Train, Sparkles, GraduationCap, Flame,
   Trophy, Shield, Ghost, LucideIcon
 } from "lucide-react";
-import MagicalEmoji from "@/components/MagicalEmoji";
+import MagicalEmoji from "@/components/shared/MagicalEmoji";
 
 interface RoomDefinition {
   name: string;

@@ -5,8 +5,8 @@ import {
   GraduationCap
 } from "lucide-react";
 import React from "react";
-import MagicalIcon from "@/components/MagicalIcon";
-import MagicalEmoji from "@/components/MagicalEmoji";
+import MagicalIcon from "@/components/shared/MagicalIcon";
+import MagicalEmoji from "@/components/shared/MagicalEmoji";
 
 export const NAV_GROUPS = [
   {

@@ -1,6 +1,6 @@
 import React, { memo } from "react";
-import XPBar from "@/components/XPBar";
-import HouseCrest from "@/components/HouseCrest";
+import XPBar from "@/components/rpg/XPBar";
+import HouseCrest from "@/components/rpg/HouseCrest";
 import { getLevelFromXP, HOUSES, type House } from "@/types";
 
 export const ProfileAboutTab = memo(({ profile, userBadges, userItems }: { profile: any, userBadges: any[], userItems: any[] }) => {

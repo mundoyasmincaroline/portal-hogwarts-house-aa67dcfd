@@ -3,7 +3,7 @@ import { Share2, Users, Gift, Copy, CheckCircle2, Sparkles, Youtube, Instagram, 
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
-import MagicalEmoji from "./MagicalEmoji";
+import MagicalEmoji from "@/components/shared/MagicalEmoji";
 
 export default function RecruitmentWidget() {
   const { profile } = useAuth();

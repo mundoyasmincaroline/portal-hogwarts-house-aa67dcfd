@@ -6,7 +6,7 @@ import { useAuth } from "@/lib/auth";
 import { HOUSES } from "@/types";
 import { House } from "@/types";
 import { toast } from "sonner";
-import HouseCrest from "@/components/HouseCrest";
+import HouseCrest from "@/components/rpg/HouseCrest";
 import MagicalParticles from "@/components/MagicalParticles";
 import { supabase } from "@/integrations/supabase/client";
 import AcceptanceLetter from "@/components/AcceptanceLetter";

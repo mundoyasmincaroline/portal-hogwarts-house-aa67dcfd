@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Trophy } from "lucide-react";
 import { useRealtime } from "@/hooks/core/useRealtime";
-import HouseCrest from "./HouseCrest";
+import HouseCrest from "@/components/rpg/HouseCrest";
 import { House } from "@/types";
 
 interface HouseScore {

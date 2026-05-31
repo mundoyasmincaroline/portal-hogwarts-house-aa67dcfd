@@ -4,8 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Swords, Shield, Zap, Sparkles, User } from "lucide-react";
-import MagicalEmoji from "@/components/MagicalEmoji";
-import HouseCrest from "@/components/HouseCrest";
+import MagicalEmoji from "@/components/shared/MagicalEmoji";
+import HouseCrest from "@/components/rpg/HouseCrest";
 import { motion } from "framer-motion";
 
 interface Spell {

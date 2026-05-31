@@ -6,9 +6,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Crown, Star, Zap, X, ChevronRight, Sparkles } from "lucide-react";
-import MagicalIcon from "./MagicalIcon";
-import MagicalEmoji from "./MagicalEmoji";
-import MagicalGaleon from "./MagicalGaleon";
+import MagicalIcon from "@/components/shared/MagicalIcon";
+import MagicalEmoji from "@/components/shared/MagicalEmoji";
+import MagicalGaleon from "@/components/shared/MagicalGaleon";
 
 interface Props {
   currentVip?: string | null;

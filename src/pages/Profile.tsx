@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { ProfileAboutTab } from "./Profile/ProfileAboutTab";
 import SafeImage from "@/components/SafeImage";
-import CharacterSheetView from "@/components/CharacterSheetView";
-import ProfileAlbum from "@/components/ProfileAlbum";
+import CharacterSheetView from "@/components/profile/CharacterSheetView";
+import ProfileAlbum from "@/components/profile/ProfileAlbum";
 
 export default function Profile() {
   const { userId } = useParams<{ userId: string }>();

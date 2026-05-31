@@ -1,5 +1,5 @@
 import { memo } from "react";
-import HouseCrest from "@/components/HouseCrest";
+import HouseCrest from "@/components/rpg/HouseCrest";
 import { Button } from "@/components/ui/button";
 import SafeImage from "@/components/SafeImage";
 import { motion } from "framer-motion";
