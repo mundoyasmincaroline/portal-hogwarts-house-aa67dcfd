@@ -39,6 +39,8 @@ export default function Landing() {
   const [showContent, setShowContent] = useState(false);
   const [memberCount, setMemberCount] = useState<number | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const hour = currentTime.getHours();
+
 
   useEffect(() => {
     const t = setTimeout(() => setShowContent(true), 600);
@@ -51,14 +53,17 @@ export default function Landing() {
       .then(({ count }) => setMemberCount(Math.max(count ?? 0, 10)));
   }, []);
 
-  const hour = new Date().getHours();
   let timeOfDay = "night";
-  if (hour >= 5 && hour < 12) timeOfDay = "morning";
-  else if (hour >= 12 && hour < 18) timeOfDay = "afternoon";
+  if (hour >= 5 && hour < 7) timeOfDay = "dawn";
+  else if (hour >= 7 && hour < 12) timeOfDay = "morning";
+  else if (hour >= 12 && hour < 17) timeOfDay = "afternoon";
+  else if (hour >= 17 && hour < 19) timeOfDay = "dusk";
 
   let bgUrl = new URL('../assets/hogwarts_night.png', import.meta.url).href;
   if (timeOfDay === "morning") bgUrl = new URL('../assets/hogwarts_morning.png', import.meta.url).href;
   else if (timeOfDay === "afternoon") bgUrl = new URL('../assets/hogwarts_afternoon.png', import.meta.url).href;
+  else if (timeOfDay === "dawn" || timeOfDay === "dusk") bgUrl = new URL('../assets/hogwarts_castle.jpg', import.meta.url).href;
+
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-background">
