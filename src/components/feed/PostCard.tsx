@@ -32,8 +32,8 @@ const PostCard = memo(({
     transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
     className="glass rounded-3xl p-5 sm:p-7 border-white/5 hover:border-primary/25 shadow-2xl group/card relative mb-4"
   >
-    <div className="flex items-center gap-4 mb-5">
-      <div className={`w-14 h-14 rounded-2xl bg-secondary/30 flex items-center justify-center overflow-hidden border-2 shrink-0 transition-all duration-500 group-hover/card:scale-105 ${post.author?.house === 'gryffindor' ? 'border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.2)]' : post.author?.house === 'slytherin' ? 'border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.2)]' : post.author?.house === 'ravenclaw' ? 'border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.2)]' : 'border-yellow-500/30 shadow-[0_0_15px_rgba(234,179,8,0.2)]'}`}>
+    <div className="flex items-start sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-5">
+      <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-secondary/30 flex items-center justify-center overflow-hidden border-2 shrink-0 transition-all duration-500 group-hover/card:scale-105 ${post.author?.house === 'gryffindor' ? 'border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.2)]' : post.author?.house === 'slytherin' ? 'border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.2)]' : post.author?.house === 'ravenclaw' ? 'border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.2)]' : 'border-yellow-500/30 shadow-[0_0_15px_rgba(234,179,8,0.2)]'}`}>
         <SafeImage 
           src={post.author?.avatar_url} 
           alt={post.author?.full_name || "Bruxo"} 
@@ -41,21 +41,23 @@ const PostCard = memo(({
           fallbackText={post.author?.full_name}
         />
       </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex flex-wrap items-center gap-2 mb-0.5">
-          <p className="text-base font-heading text-foreground tracking-tight">
+      <div className="flex-1 min-w-0 py-0.5 sm:py-0">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-0.5 sm:mb-0">
+          <p className="text-sm sm:text-base font-heading text-foreground tracking-tight truncate">
             {post.author?.full_name || "Bruxo desconhecido"}
           </p>
-          {post.author?.vip_plan === "founder" && <span className="text-[8px] bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 px-2 py-0.5 rounded-full font-heading tracking-widest uppercase shadow-[0_0_10px_rgba(234,179,8,0.1)]">👑 Fundador</span>}
-          {post.author?.vip_plan === "vip" && <span className="text-[8px] bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2 py-0.5 rounded-full font-heading tracking-widest uppercase">💜 VIP</span>}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {post.author?.vip_plan === "founder" && <span className="text-[7px] sm:text-[8px] bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 px-1.5 sm:px-2 py-0.5 rounded-full font-heading tracking-widest uppercase shadow-[0_0_10px_rgba(234,179,8,0.1)]">👑 Fundador</span>}
+            {post.author?.vip_plan === "vip" && <span className="text-[7px] sm:text-[8px] bg-purple-500/10 text-purple-400 border border-purple-500/20 px-1.5 sm:px-2 py-0.5 rounded-full font-heading tracking-widest uppercase">💜 VIP</span>}
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] text-primary/70 font-medium uppercase tracking-wider">@{post.author?.username}</span>
-          <span className="w-1 h-1 rounded-full bg-white/10" />
-          <span className="text-[10px] text-muted-foreground/50">{new Date(post.created_at).toLocaleDateString("pt-BR")}</span>
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+          <span className="text-[9px] sm:text-[10px] text-primary/70 font-medium uppercase tracking-wider truncate max-w-[100px] sm:max-w-none">@{post.author?.username}</span>
+          <span className="w-0.5 h-0.5 sm:w-1 sm:h-1 rounded-full bg-white/10" />
+          <span className="text-[9px] sm:text-[10px] text-muted-foreground/50">{new Date(post.created_at).toLocaleDateString("pt-BR")}</span>
         </div>
       </div>
-      {post.author?.house && <div className="shrink-0 scale-75 sm:scale-90 origin-right transition-transform group-hover/card:scale-100 duration-500"><HouseCrest house={post.author.house} size="sm" /></div>}
+      {post.author?.house && <div className="shrink-0 scale-75 sm:scale-90 origin-right transition-transform group-hover/card:scale-100 duration-500 ml-auto sm:ml-0"><HouseCrest house={post.author.house} size="sm" /></div>}
     </div>
 
     <div className="relative mb-6 group/content">
