@@ -169,27 +169,100 @@ export default function GringottsStore() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-12 pb-24 px-4 sm:px-6">
-      <div className="glass rounded-[2rem] p-8 border border-white/10">
-        <h1 className="font-heading text-4xl text-gold-gradient mb-4">Loja Gringotes</h1>
-        <p className="text-muted-foreground">O sistema de pagamentos foi consolidado.</p>
-        
-        <div className="flex flex-wrap gap-2 mt-8">
-          {TABS.map(t => (
-            <Button 
-              key={t.id} 
-              variant={tab === t.id ? "magical" : "outline"} 
-              onClick={() => setTab(t.id)}
-            >
-              <t.icon size={16} /> {t.label}
-            </Button>
+      <div className="text-center space-y-4 mb-12">
+        <h1 className="text-5xl md:text-7xl font-heading text-gold-gradient tracking-tighter drop-shadow-[0_10px_30px_rgba(212,175,55,0.4)]">Gringotts Store</h1>
+        <p className="text-muted-foreground/60 text-lg font-serif italic max-w-2xl mx-auto">"O lugar mais seguro do mundo para o que você mais valoriza."</p>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
+        {TABS.map(t => (
+          <Button
+            key={t.id}
+            variant={tab === t.id ? "magical" : "outline"}
+            className="rounded-full px-6 py-6 h-auto"
+            onClick={() => {
+              playMagicSound();
+              setTab(t.id);
+            }}
+          >
+            <t.icon size={18} className="mr-2" />
+            {t.label}
+          </Button>
+        ))}
+      </div>
+
+      {tab === "featured" && (
+        <div className="animate-in fade-in slide-in-from-bottom-8 duration-700">
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {items.filter(i => i.is_featured).map(item => (
+                <div key={item.id} className="glass p-6 rounded-3xl border-primary/20 group hover:border-primary/50 transition-all">
+                   <div className="aspect-square rounded-2xl overflow-hidden mb-4 border border-white/10">
+                      <SafeImage src={item.image_url} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                   </div>
+                   <h3 className="font-heading text-xl text-primary">{item.name}</h3>
+                   <div className="flex items-center justify-between mt-4">
+                      <div className="flex items-center gap-2">
+                        <MagicalGaleon size="xs" />
+                        <span className="font-heading text-yellow-400">{item.price_galeons}</span>
+                      </div>
+                      <Button variant="outline" size="sm" onClick={() => buyItem(item)} disabled={owned.includes(item.id)}>
+                        {owned.includes(item.id) ? "Já é seu" : "Adquirir"}
+                      </Button>
+                   </div>
+                </div>
+              ))}
+           </div>
+        </div>
+      )}
+
+      {tab === "galeons" && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 animate-in fade-in slide-in-from-bottom-8">
+          {GALEON_PACKAGES.map(pkg => (
+            <div key={pkg.id} className="glass p-8 rounded-[3rem] border-yellow-500/20 text-center flex flex-col items-center">
+              <div className="text-6xl mb-4">{pkg.icon}</div>
+              <h3 className="font-heading text-2xl text-yellow-400">{pkg.name}</h3>
+              <p className="text-4xl font-heading my-4">{pkg.galeons} 🪙</p>
+              <Button 
+                variant="magical" 
+                className="w-full h-14 rounded-2xl"
+                disabled={!!buyingPackageId}
+                onClick={() => buyGaleons(pkg)}
+              >
+                {buyingPackageId === pkg.id ? "⏳ ..." : `R$ ${pkg.price_brl.toFixed(2)}`}
+              </Button>
+            </div>
           ))}
         </div>
+      )}
+      
+      {tab === "vip" && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-in fade-in slide-in-from-bottom-8">
+           {VIP_PLANS.map(plan => (
+             <div key={plan.id} className="glass p-8 rounded-[3rem] border-purple-500/20 text-center">
+                <div className="text-6xl mb-4">{plan.icon}</div>
+                <h3 className="font-heading text-2xl text-purple-400">{plan.name}</h3>
+                <p className="text-3xl font-heading my-4">R$ {plan.price_brl.toFixed(2)}</p>
+                <Button 
+                  variant="magical" 
+                  className="w-full h-14 rounded-2xl bg-purple-600 hover:bg-purple-500"
+                  disabled={!!buyingPackageId}
+                  onClick={() => buyVip(plan)}
+                >
+                  {buyingPackageId === plan.id ? "⏳ ..." : "Assinar VIP"}
+                </Button>
+             </div>
+           ))}
+        </div>
+      )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
+      {(tab !== "featured" && tab !== "galeons" && tab !== "vip") && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-8">
           {filteredItems.map(item => (
             <div key={item.id} className="glass p-4 rounded-xl border border-white/5">
-              <StoreItemVisual imageUrl={item.image_url} name={item.name} category={item.category} isOwned={owned.includes(item.id)} />
-              <h3 className="font-heading text-lg mt-4">{item.name}</h3>
+              <div className="aspect-square rounded-lg overflow-hidden border border-white/5 mb-4">
+                 <SafeImage src={item.image_url} className="w-full h-full object-cover" />
+              </div>
+              <h3 className="font-heading text-lg">{item.name}</h3>
               <p className="text-sm text-muted-foreground">{item.price_galeons} Galeões</p>
               <Button 
                 className="w-full mt-4" 
@@ -201,7 +274,7 @@ export default function GringottsStore() {
             </div>
           ))}
         </div>
-      </div>
+      )}
     </div>
   );
 }
