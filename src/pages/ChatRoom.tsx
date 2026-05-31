@@ -647,9 +647,9 @@ export default function ChatRoom() {
       </div>
 
       {/* ── INPUT MONSTER QUALITY ── */}
-      <div className="relative z-10 p-5 bg-black/40 backdrop-blur-3xl border-t border-white/5">
+      <div className="relative z-10 p-3 sm:p-5 bg-black/40 backdrop-blur-3xl border-t border-white/5">
         {/* RP TOOLBAR - MONSTER QUALITY */}
-        <div className="flex flex-wrap gap-2 mb-4 scrollbar-hide overflow-x-auto pb-1">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4 scrollbar-hide overflow-x-auto pb-1">
           <Button size="sm" variant="outline" className="text-[9px] h-7 bg-primary/5 border-primary/20 rounded-xl hover:bg-primary/10" onClick={() => setInput(input + "*ação*")}>
             ⚔️ Ação
           </Button>
