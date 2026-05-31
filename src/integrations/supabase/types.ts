@@ -2829,6 +2829,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_grant_vip: {
+        Args: { _months?: number; _plan: string; _user_id: string }
+        Returns: undefined
+      }
       award_galeons: {
         Args: { _amount: number; _reason?: string; _user_id: string }
         Returns: undefined
