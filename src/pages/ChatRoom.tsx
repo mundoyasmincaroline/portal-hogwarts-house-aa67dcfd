@@ -578,7 +578,7 @@ export default function ChatRoom() {
                   <div key={m.id} className={`flex gap-4 group ${isMe ? 'flex-row-reverse' : ''}`}>
                     {/* Avatar */}
                     <div className="shrink-0 relative">
-                      <Link to={`/dashboard/profile/${m.user_id}`} className={`block w-12 h-12 rounded-2xl overflow-hidden border-2 transition-all duration-500 hover:scale-110 shadow-xl ${
+                      <Link to={`/dashboard/profile/${m.user_id}`} className={`block w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl overflow-hidden border-2 transition-all duration-500 hover:scale-110 shadow-xl ${
                         isMorpheus ? 'border-green-500/50 rounded-lg animate-pulse' 
                         : isYasmin ? 'border-yellow-500/50 shadow-yellow-500/20' 
                         : isCarolina ? 'border-blue-500/50 shadow-blue-500/20'
