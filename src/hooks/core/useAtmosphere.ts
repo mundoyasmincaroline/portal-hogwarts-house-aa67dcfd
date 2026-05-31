@@ -13,7 +13,14 @@ interface Atmosphere {
 
 export function useAtmosphere() {
   const [now, setNow] = useState(new Date());
-  const [weather, setWeather] = useState<WeatherCondition>("clear");
+  // Pre-set weather based on season/random for immersion
+  const [weather, setWeather] = useState<WeatherCondition>(() => {
+    const r = Math.random();
+    if (r > 0.95) return "snowy";
+    if (r > 0.85) return "rainy";
+    if (r > 0.75) return "foggy";
+    return "clear";
+  });
 
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 1000);
