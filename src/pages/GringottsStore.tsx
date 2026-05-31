@@ -101,52 +101,83 @@ export default function GringottsStore() {
   }, []);
 
   const verifyAndCreditPayment = async (orderNsu: string, transactionNsu: string, slug: string) => {
+    // Redirecionamento de volta após InfinitePay geralmente carrega o dashboard
+    // O webhook cuida da entrega, então apenas refrescamos
+    toast.info("🔍 Verificando seu pedido no sistema Gringotts...");
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
+  };
+
+  const buyGaleons = async (pkg: any) => {
+    if (!user || !profile) return;
+    setBuyingPackageId(pkg.id);
+    
     try {
-      toast.info("🔍 Verificando seu pagamento...");
-      const { data: rawData, error } = await supabase.rpc("verify_infinitepay_payment", {
-        p_order_nsu:       orderNsu,
-        p_transaction_nsu: transactionNsu,
-        p_slug:            slug,
+      // 1. Criar pedido no banco
+      const { data: order, error: orderErr } = await supabase.from("galeon_orders").insert({
+        user_id: user.id,
+        amount_brl: pkg.price_brl,
+        galeons: pkg.galeons,
+        package_id: pkg.id,
+        status: 'pending'
+      } as any).select("id").single();
+
+      if (orderErr) throw orderErr;
+
+      // 2. Chamar Edge Function para gerar link (Consolidado)
+      const { data, error } = await supabase.functions.invoke("create-payment-link", {
+        body: {
+          order_id: order.id,
+          amount_brl: pkg.price_brl,
+          galeons: pkg.galeons,
+          package_name: pkg.name,
+          user_id: user.id,
+          user_email: user.email,
+          user_name: profile.full_name,
+        }
       });
-      const data: any = rawData;
-      if (error) throw new Error(error.message);
-      if (data?.success) {
-        if (data.type === "vip") toast.success(`🎉 Plano ${data.plan?.toUpperCase()} ativado! Bem-vindo ao VIP!`, { duration: 6000 });
-        else toast.success(`🎉 ${data.galeons} Galeões adicionados à sua conta!`, { duration: 6000 });
-        setPendingOrderId(null);
-        setTimeout(() => window.location.reload(), 1500);
-      } else if (data?.message === "Já processado") {
-        toast.info("✅ Pagamento já confirmado anteriormente!");
-        setPendingOrderId(null);
-      } else {
-        setPendingOrderId(orderNsu);
-        toast.warning("⏳ Pagamento ainda sendo processado. Clique em 'Verificar novamente' em alguns instantes.", { duration: 10000 });
-      }
+
+      if (error || !data?.payment_url) throw error || new Error("Não foi possível gerar o link de pagamento.");
+
+      window.location.href = data.payment_url;
     } catch (err: any) {
-      console.warn("Erro na verificação:", err.message);
-      setPendingOrderId(orderNsu);
-      toast.info("✅ Pagamento recebido! Clique em 'Verificar novamente' para liberar seus Galeões.", { duration: 10000 });
+      toast.error(err.message || "Erro ao processar compra.");
+      setBuyingPackageId(null);
     }
   };
 
-  // ── Gerar Link (2 etapas) ───────────────────
-  const createInfinitePayLink = async (orderId: string, amountBrl: number, description: string, userEmail: string, userName: string): Promise<string | null> => {
+  const buyVip = async (plan: any) => {
+    if (!user || !profile) return;
+    setBuyingId(plan.id);
+    
     try {
-      const { data: startedRaw, error: startErr } = await supabase.rpc("start_payment_request", {
-        p_order_id: orderId, p_amount_brl: amountBrl, p_description: description, p_user_id: user?.id, p_user_email: userEmail, p_user_name: userName,
+      const { data: order, error: orderErr } = await supabase.from("galeon_orders").insert({
+        user_id: user.id,
+        amount_brl: parseFloat(plan.price.replace("R$ ", "").replace(",", ".")),
+        package_id: `vip_${plan.id}`,
+        status: 'pending'
+      } as any).select("id").single();
+
+      if (orderErr) throw orderErr;
+
+      const { data, error } = await supabase.functions.invoke("create-payment-link", {
+        body: {
+          order_id: order.id,
+          amount_brl: parseFloat(plan.price.replace("R$ ", "").replace(",", ".")),
+          package_name: plan.name,
+          user_id: user.id,
+          user_email: user.email,
+          user_name: profile.full_name,
+          vip_plan: plan.id
+        }
       });
-      const started: any = startedRaw;
-      if (startErr || !started?.success) return null;
-      const requestId: number = started.request_id;
-      for (let attempt = 1; attempt <= 4; attempt++) {
-        await new Promise(r => setTimeout(r, 2000));
-        const { data: resultRaw } = await supabase.rpc("get_payment_link", { p_request_id: requestId, p_order_id: orderId });
-        const result: any = resultRaw;
-        if (result?.ready && result?.payment_url) return result.payment_url;
-      }
-      return null;
-    } catch (e) {
-      return null;
+
+      if (error || !data?.payment_url) throw error || new Error("Não foi possível gerar o link.");
+      window.location.href = data.payment_url;
+    } catch (err: any) {
+      toast.error(err.message || "Erro ao processar VIP.");
+      setBuyingId(null);
     }
   };
 
