@@ -212,7 +212,7 @@ export default function DashboardLayout() {
         )}
       </AnimatePresence>
 
-      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-[85vw] max-w-[280px] md:w-64 bg-card/98 backdrop-blur-2xl border-r border-border/60 flex flex-col transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] md:translate-x-0 ${sidebarOpen ? "translate-x-0 shadow-[20px_0_60px_rgba(0,0,0,0.9)]" : "-translate-x-full"}`}>
+      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-[85vw] max-w-[280px] md:w-64 bg-card/60 backdrop-blur-2xl border-r border-primary/15 flex flex-col transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] md:translate-x-0 ${sidebarOpen ? "translate-x-0 shadow-[20px_0_60px_rgba(0,0,0,0.9)]" : "-translate-x-full"}`}>
         <div className="p-5 border-b border-border/30">
           <Link to="/dashboard" className="flex items-center gap-3 group">
             <div className="bg-primary/20 p-2.5 rounded-xl text-primary transition-transform group-hover:rotate-12 duration-300"><Castle size={24} /></div>
@@ -243,7 +243,7 @@ export default function DashboardLayout() {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-border/40 bg-card/80 backdrop-blur-sm">
+        <div className="p-4 border-t border-border/40 bg-card/40 backdrop-blur-md">
           <Link 
             to="/dashboard/store" 
             className="flex items-center justify-between px-4 py-3 mb-2 rounded-2xl border border-yellow-500/40 bg-gradient-to-br from-amber-600/20 via-yellow-900/40 to-black hover:border-yellow-300 transition-all group overflow-hidden relative"
@@ -291,7 +291,7 @@ export default function DashboardLayout() {
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative z-10">
         <NotificationBanner />
-        <header className="md:hidden flex items-center justify-between px-3 sm:px-5 h-16 border-b border-white/5 bg-card/60 backdrop-blur-3xl sticky top-0 z-[60] shadow-xl">
+        <header className="md:hidden flex items-center justify-between px-3 sm:px-5 h-16 border-b border-white/5 bg-card/40 backdrop-blur-3xl sticky top-0 z-[60] shadow-xl">
           <div className="flex items-center gap-2 sm:gap-3">
             <button 
               onClick={() => setSidebarOpen(true)} 
