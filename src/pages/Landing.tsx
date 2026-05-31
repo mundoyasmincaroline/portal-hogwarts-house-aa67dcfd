@@ -151,34 +151,33 @@ export default function Landing() {
       </div>
 
       {/* ── CASAS ── */}
-      <div className="relative z-10 px-4 py-16 max-w-5xl mx-auto">
-        <div className="text-center mb-10">
-          <p className="text-xs font-heading text-primary uppercase tracking-widest mb-2">Escolha seu destino</p>
-          <h2 className="font-heading text-3xl md:text-4xl text-foreground">Qual é a sua casa?</h2>
-          <p className="text-muted-foreground text-sm mt-2 max-w-md mx-auto">
+      <div className="relative z-10 px-4 py-12 sm:py-16 max-w-5xl mx-auto">
+        <div className="text-center mb-8 sm:mb-10">
+          <p className="text-[10px] sm:text-xs font-heading text-primary uppercase tracking-widest mb-2">Escolha seu destino</p>
+          <h2 className="font-heading text-2xl sm:text-4xl text-foreground">Qual é a sua casa?</h2>
+          <p className="text-muted-foreground text-xs sm:text-sm mt-2 max-w-md mx-auto px-4">
             O Chapéu Seletor aguarda. Entre no portal e descubra onde você pertence.
           </p>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {HOUSES_INFO.map(h => (
             <div key={h.id} onClick={() => navigate("/register")}
-              className={`relative glass rounded-[2.5rem] sm:rounded-[3.5rem] p-6 sm:p-10 border-2 bg-gradient-to-br ${h.color} text-center cursor-pointer hover:-translate-y-3 sm:hover:-translate-y-5 hover:shadow-[0_40px_100px_rgba(0,0,0,0.8)] transition-all duration-700 group flex flex-col items-center gap-4 sm:gap-6 overflow-hidden`}>
+              className={`relative glass rounded-[1.5rem] sm:rounded-[3.5rem] p-4 sm:p-10 border-2 bg-gradient-to-br ${h.color} text-center cursor-pointer hover:-translate-y-2 sm:hover:-translate-y-5 hover:shadow-[0_20px_60px_rgba(0,0,0,0.8)] transition-all duration-700 group flex flex-col items-center gap-3 sm:gap-6 overflow-hidden`}>
               
               {/* Inner Glow Artifact */}
               <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               
-              <div className="relative z-10 w-24 h-24 flex items-center justify-center rounded-3xl bg-black/40 border border-white/10 shadow-inner group-hover:scale-110 transition-transform duration-700">
-                <img src={`/houses/${h.id}.png`} alt={h.name} className="w-20 h-20 object-contain group-hover:rotate-6 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" />
+              <div className="relative z-10 w-16 h-16 sm:w-24 sm:h-24 flex items-center justify-center rounded-2xl sm:rounded-3xl bg-black/40 border border-white/10 shadow-inner group-hover:scale-110 transition-transform duration-700">
+                <img src={`/houses/${h.id}.png`} alt={h.name} className="w-12 h-12 sm:w-20 sm:h-20 object-contain group-hover:rotate-6 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" />
               </div>
 
-              
               <div className="relative z-10">
-                <h3 className="font-heading text-2xl text-foreground mb-2 drop-shadow-md">{h.name}</h3>
-                <p className="text-[10px] text-white/60 uppercase tracking-[0.3em] font-bold px-3 py-1 bg-black/30 rounded-full border border-white/5">{h.trait}</p>
+                <h3 className="font-heading text-lg sm:text-2xl text-foreground mb-1 sm:mb-2 drop-shadow-md">{h.name}</h3>
+                <p className="text-[8px] sm:text-[10px] text-white/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold px-2 sm:px-3 py-0.5 sm:py-1 bg-black/30 rounded-full border border-white/5 whitespace-nowrap">{h.trait}</p>
               </div>
               
               {/* Luxury Accent */}
-              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 h-1 sm:h-1.5 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
             </div>
           ))}
         </div>
