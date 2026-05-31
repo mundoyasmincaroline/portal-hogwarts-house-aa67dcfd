@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Link } from "react-router-dom";
+import { useImmersion } from "@/hooks/core/useImmersion";
 
 interface Notification {
   id: string;
@@ -14,6 +15,7 @@ interface Notification {
 
 export default function Notifications() {
   const { user } = useAuth();
+  const { cast } = useImmersion();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -38,6 +40,12 @@ export default function Notifications() {
       .channel(channelId)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` }, (payload) => {
         setNotifications((prev) => [payload.new as Notification, ...prev.slice(0, 19)]); // Limit locally too
+        const title = (payload.new as any).title?.toLowerCase() || "";
+        if (title.includes("medalha") || title.includes("desafio") || title.includes("nível") || title.includes("vip")) {
+          cast('levelUp');
+        } else {
+          cast('owlHoot');
+        }
       })
       .subscribe();
 
@@ -71,7 +79,10 @@ export default function Notifications() {
   return (
     <div className="relative" ref={ref}>
       <button 
-        onClick={() => setOpen(!open)}
+        onClick={() => {
+          setOpen(!open);
+          if (!open) cast('whoosh', { volume: 0.2 });
+        }}
         className="relative touch-target text-muted-foreground hover:text-primary transition-all duration-300 rounded-xl hover:bg-primary/10 active:scale-90 group"
         aria-label="Notificações"
       >
