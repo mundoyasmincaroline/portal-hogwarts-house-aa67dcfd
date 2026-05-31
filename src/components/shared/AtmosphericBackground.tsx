@@ -54,9 +54,9 @@ export const AtmosphericBackground: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-tr from-amber-900/15 via-transparent to-blue-900/20 mix-blend-overlay" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(212,175,55,0.12),_transparent_55%)]" />
           
-          {/* Vignette + readability layer (lighter so scene shows through) */}
-          <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/40 to-background/10" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,hsl(var(--background)/0.6)_95%)]" />
+          {/* Vignette + readability layer (subtle so scene stays vivid) */}
+          <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/20 to-background/5" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,hsl(var(--background)/0.45)_100%)]" />
           
           {/* Weather Particles Layer */}
           <WeatherParticles weather={weather} />
