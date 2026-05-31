@@ -107,12 +107,12 @@ export default function StickerAlbumBook({ stickers, userStickers, onBuy, buying
             className="relative"
           >
             {/* Open Book Container */}
-            <div className="relative aspect-[4/5] sm:aspect-[16/10] bg-[#f4e4bc] rounded-[0.5rem] shadow-[0_50px_100px_rgba(0,0,0,0.8)] border border-[#d4c39a] overflow-hidden">
+            <div className="relative aspect-[4/6] sm:aspect-[16/10] bg-[#f4e4bc] rounded-[0.5rem] shadow-[0_50px_100px_rgba(0,0,0,0.8)] border border-[#d4c39a] overflow-hidden">
               {/* Parchment Texture Overlay */}
               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/old-map.png')] opacity-30 pointer-events-none" />
               
               {/* Book Spine (Open) */}
-              <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-4 sm:w-8 bg-gradient-to-r from-black/20 via-black/40 to-black/20 z-20 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]" />
+              <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-4 sm:w-8 bg-gradient-to-r from-black/20 via-black/40 to-black/20 z-20 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] hidden sm:block" />
 
               <AnimatePresence initial={false} custom={direction} mode="wait">
                 <motion.div
