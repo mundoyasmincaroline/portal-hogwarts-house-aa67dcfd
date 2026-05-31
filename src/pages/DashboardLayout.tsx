@@ -289,7 +289,7 @@ export default function DashboardLayout() {
         </div>
       </aside>
 
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative z-10">
         <NotificationBanner />
         <header className="md:hidden flex items-center justify-between px-3 sm:px-5 h-16 border-b border-white/5 bg-card/60 backdrop-blur-3xl sticky top-0 z-[60] shadow-xl">
           <div className="flex items-center gap-2 sm:gap-3">
