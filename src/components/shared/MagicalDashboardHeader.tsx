@@ -1,11 +1,11 @@
 import { useAuth } from "@/lib/auth";
 import DynamicGreeting from "./DynamicGreeting";
-import StoriesBar from "./StoriesBar";
-import MagicalMemories from "./MagicalMemories";
-import BirthdayBanner from "./BirthdayBanner";
-import VipUpsellBanner from "./VipUpsellBanner";
-import DailyHighlight from "./DailyHighlight";
-import MoodSession from "./MoodSession";
+import StoriesBar from "@/components/feed/StoriesBar";
+import MagicalMemories from "@/components/MagicalMemories";
+import BirthdayBanner from "@/components/BirthdayBanner";
+import VipUpsellBanner from "@/components/VipUpsellBanner";
+import DailyHighlight from "@/components/DailyHighlight";
+import MoodSession from "@/components/MoodSession";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Sparkles } from "lucide-react";
