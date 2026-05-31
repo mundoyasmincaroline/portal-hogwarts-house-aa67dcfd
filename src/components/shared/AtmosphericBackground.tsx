@@ -1,51 +1,66 @@
 import React from "react";
 import { useAtmosphere, TimeOfDay } from "@/hooks/core/useAtmosphere";
 import { motion, AnimatePresence } from "framer-motion";
+import dawnImg from "@/assets/hogwarts_dawn.jpg";
+import morningImg from "@/assets/hogwarts_morning.png";
+import afternoonImg from "@/assets/hogwarts_afternoon.png";
+import duskImg from "@/assets/hogwarts_dusk.jpg";
+import nightImg from "@/assets/hogwarts_night.png";
 
 export const AtmosphericBackground: React.FC = () => {
   const { timeOfDay, weather } = useAtmosphere();
 
-  const getGradient = (time: TimeOfDay) => {
-    switch (time) {
-      case "dawn":
-        return "from-indigo-950 via-purple-900/40 to-orange-900/20";
-      case "morning":
-        return "from-blue-900/30 via-sky-900/20 to-transparent";
-      case "afternoon":
-        return "from-amber-900/10 via-transparent to-transparent";
-      case "dusk":
-        return "from-orange-950/40 via-purple-950/40 to-indigo-950/40";
-      case "night":
-      default:
-        return "from-slate-950 via-blue-950/20 to-slate-950";
-    }
+  const scenes: Record<TimeOfDay, { img: string; overlay: string; tint: string }> = {
+    dawn:      { img: dawnImg,      overlay: "from-indigo-950/70 via-purple-900/40 to-rose-900/30", tint: "hue-rotate-[-5deg]" },
+    morning:   { img: morningImg,   overlay: "from-sky-950/60 via-blue-900/30 to-amber-900/20",    tint: "" },
+    afternoon: { img: afternoonImg, overlay: "from-amber-900/30 via-orange-900/20 to-yellow-900/10", tint: "" },
+    dusk:      { img: duskImg,      overlay: "from-orange-950/60 via-rose-950/50 to-indigo-950/60", tint: "" },
+    night:     { img: nightImg,     overlay: "from-slate-950/80 via-indigo-950/60 to-slate-950/90", tint: "" },
   };
+
+  const scene = scenes[timeOfDay];
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[-1] overflow-hidden bg-background">
       <AnimatePresence mode="wait">
         <motion.div
           key={timeOfDay}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ opacity: 0, scale: 1.05 }}
+          animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 2 }}
-          className={`absolute inset-0 bg-gradient-to-br ${getGradient(timeOfDay)}`}
-        />
+          transition={{ duration: 2.4, ease: "easeInOut" }}
+          className="absolute inset-0"
+        >
+          {/* Hogwarts scene image */}
+          <div
+            className={`absolute inset-0 bg-cover bg-center ${scene.tint}`}
+            style={{ backgroundImage: `url(${scene.img})` }}
+          />
+          {/* Atmospheric color wash */}
+          <div className={`absolute inset-0 bg-gradient-to-b ${scene.overlay}`} />
+          {/* Vignette + readability layer */}
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/40" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,hsl(var(--background))_85%)]" />
+        </motion.div>
       </AnimatePresence>
-      
-      {/* Dynamic Overlay Textures */}
-      <div className="absolute inset-0 opacity-30 mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]" />
-      
+
+      {/* Starfield only at night/dawn */}
+      {(timeOfDay === "night" || timeOfDay === "dawn") && (
+        <div className="absolute inset-0 opacity-40 mix-blend-screen bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] animate-pulse" />
+      )}
+
       {/* Weather Effects */}
       {weather === "rainy" && (
-        <div className="absolute inset-0 opacity-20 pointer-events-none animate-pulse">
-           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-400/10 to-transparent translate-y-full animate-[slideDown_1s_linear_infinite]" />
+        <div className="absolute inset-0 opacity-30 pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-sky-300/10 to-transparent animate-[slideDown_1.2s_linear_infinite]" />
+          <div className="absolute inset-0 bg-slate-900/20" />
         </div>
       )}
-      
       {weather === "foggy" && (
-        <div className="absolute inset-0 opacity-40 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent blur-3xl animate-pulse" />
+        <div className="absolute inset-0 opacity-60 bg-gradient-to-t from-slate-800/70 via-slate-700/20 to-transparent blur-2xl animate-pulse" />
+      )}
+      {weather === "snowy" && (
+        <div className="absolute inset-0 opacity-40 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] mix-blend-screen" />
       )}
     </div>
   );
