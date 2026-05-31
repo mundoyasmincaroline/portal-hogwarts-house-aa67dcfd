@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { X, Search, ChevronLeft } from "lucide-react";
 import MagicalParticles from "@/components/MagicalParticles";
+import { reward } from "@/services/core/rewardService";
 
 interface Props { onComplete: () => void; onCancel?: () => void; canCancel?: boolean; }
 
@@ -224,9 +225,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
       localStorage.removeItem("pending_character_draft"); 
       
       if (isFirstChar) {
-        await supabase.rpc("award_galeons", { _user_id: user.id, _amount: 5, _reason: "first_character" });
-        await supabase.rpc("award_xp_action", { _action: "first_character", _user_id: user.id, _xp: 20 });
-        toast.success(`Sua jornada começa agora! +5 Galeões e +20 XP pela sua primeira ficha! ✨`);
+        await reward(user.id, 'first_character');
       } else {
         toast.success(`Ficha ${type === "oc" ? "OC" : "Canon"} criada com sucesso! ✨`);
       }

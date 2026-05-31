@@ -3,6 +3,7 @@ import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { reward } from "@/services/core/rewardService";
 
 interface PostComposerProps {
   bannedWords: string[];
@@ -55,7 +56,7 @@ export function PostComposer({ bannedWords }: PostComposerProps) {
     setNewPost("");
     setNewMusicUrl("");
     toast.success("Publicado! ✨");
-    await supabase.rpc("award_galeons" as any, { _user_id: user.id, _amount: 2, _reason: "post" });
+    await reward(user.id, 'post');
   };
 
   return (
