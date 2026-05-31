@@ -1,42 +1,27 @@
-import { useState, useEffect, useMemo } from "react";
-import { motion } from "framer-motion";
+import { useEffect } from "react";
 import { useAuth } from "@/lib/auth";
-import { useParams, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
+import { useParams } from "react-router-dom";
 import { ProfileAboutTab } from "./Profile/ProfileAboutTab";
 import SafeImage from "@/components/SafeImage";
 import CharacterSheetView from "@/components/profile/CharacterSheetView";
 import ProfileAlbum from "@/components/profile/ProfileAlbum";
+import { useProfile } from "@/hooks/features/useProfile";
 
 export default function Profile() {
   const { userId } = useParams<{ userId: string }>();
   const { profile: currentUserProfile, user } = useAuth();
-  const [targetProfile, setTargetProfile] = useState<any>(null);
-  const [userBadges, setUserBadges] = useState<any[]>([]);
-  const [userItems, setUserItems] = useState<any[]>([]);
   const isMe = !userId || userId === user?.id;
+  
+  const { targetProfile, userBadges, userItems, fetchProfileData } = useProfile(userId, isMe);
+  
   const profile = isMe ? currentUserProfile : targetProfile;
-
-  useEffect(() => {
-    if (!isMe && userId) {
-      supabase.from("profiles").select("*").eq("user_id", userId).single().then(({ data }) => setTargetProfile(data));
-    }
-  }, [userId, isMe]);
-
   const profileUserId = (isMe ? user?.id : userId) as string | undefined;
 
   useEffect(() => {
-    if (!profileUserId) return;
-    (async () => {
-      const [badgesRes, itemsRes] = await Promise.all([
-        supabase.from("user_badges").select("*, badges(*)").eq("user_id", profileUserId),
-        supabase.from("user_items").select("*, store_items(*)").eq("user_id", profileUserId),
-      ]);
-      setUserBadges(badgesRes.data || []);
-      setUserItems(itemsRes.data || []);
-    })();
-  }, [profileUserId]);
+    if (isMe && user?.id) {
+        fetchProfileData(user.id);
+    }
+  }, [isMe, user?.id, fetchProfileData]);
 
   if (!profile) return null;
 
