@@ -12,7 +12,8 @@ export type AudioPreset =
   | 'bookFlip' 
   | 'wandSwish' 
   | 'owlHoot' 
-  | 'cauldron';
+  | 'cauldron'
+  | 'tap';
 
 const AUDIO_URLS: Record<AudioPreset, string> = {
   magic: "https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3?filename=magic-wand-6214.mp3",
@@ -26,7 +27,8 @@ const AUDIO_URLS: Record<AudioPreset, string> = {
   bookFlip: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_book.mp3",
   wandSwish: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_wand.mp3",
   owlHoot: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_owl.mp3",
-  cauldron: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_cauldron.mp3"
+  cauldron: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_cauldron.mp3",
+  tap: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_tap.mp3"
 };
 
 // Simplified AudioEngine using HTMLAudioElement for better caching
