@@ -193,21 +193,21 @@ export default function Landing() {
       </div>
 
       {/* ── FEATURES ── */}
-      <div className="relative z-10 px-4 py-16 bg-gradient-to-b from-transparent via-secondary/20 to-transparent">
+      <div className="relative z-10 px-4 py-12 sm:py-16 bg-gradient-to-b from-transparent via-secondary/20 to-transparent">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10">
-            <p className="text-xs font-heading text-primary uppercase tracking-widest mb-2">Tudo que você precisa</p>
-            <h2 className="font-heading text-3xl md:text-4xl text-foreground">O portal mais completo do fandom</h2>
+          <div className="text-center mb-8 sm:mb-10">
+            <p className="text-[10px] sm:text-xs font-heading text-primary uppercase tracking-widest mb-2">Tudo que você precisa</p>
+            <h2 className="font-heading text-2xl sm:text-4xl text-foreground px-4">O portal mais completo do fandom</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
             {FEATURES.map((f, i) => (
-              <div key={i} className={`group/feat glass rounded-[2.5rem] p-8 border ${f.cardColor} hover:-translate-y-2 transition-all duration-500 relative overflow-hidden`}>
+              <div key={i} className={`group/feat glass rounded-[1.5rem] sm:rounded-[2.5rem] p-6 sm:p-8 border ${f.cardColor} hover:-translate-y-1 transition-all duration-500 relative overflow-hidden`}>
                 <div className="absolute inset-0 bg-white/5 opacity-0 group-hover/feat:opacity-100 transition-opacity" />
-                <div className="mb-6">
-                   <MagicalIcon icon={f.icon} color={f.color} size={24} />
+                <div className="mb-4 sm:mb-6">
+                   <MagicalIcon icon={f.icon} color={f.color} size={20} className="sm:w-[24px] sm:h-[24px]" />
                 </div>
-                <h3 className="font-heading text-xl text-foreground mb-2 group-hover/feat:text-primary transition-colors">{f.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed italic">{f.desc}</p>
+                <h3 className="font-heading text-lg sm:text-xl text-foreground mb-1.5 sm:mb-2 group-hover/feat:text-primary transition-colors">{f.title}</h3>
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed italic">{f.desc}</p>
                 
                 {/* Luxury Bottom Accent */}
                 <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
