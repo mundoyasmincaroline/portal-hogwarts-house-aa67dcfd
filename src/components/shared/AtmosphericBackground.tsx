@@ -7,6 +7,17 @@ import afternoonImg from "@/assets/hogwarts_afternoon.png";
 import duskImg from "@/assets/hogwarts_dusk.jpg";
 import nightImg from "@/assets/hogwarts_night.png";
 
+const WeatherParticles: React.FC<{ weather: string }> = ({ weather }) => {
+  if (weather === "clear") {
+    return (
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(1px_1px_at_20%_30%,_#d4af37,_transparent),_radial-gradient(1px_1px_at_70%_60%,_#d4af37,_transparent)] opacity-20 animate-pulse" />
+      </div>
+    );
+  }
+  return null;
+};
+
 export const AtmosphericBackground: React.FC = () => {
   const { timeOfDay, weather } = useAtmosphere();
 
@@ -38,11 +49,20 @@ export const AtmosphericBackground: React.FC = () => {
           />
           {/* Atmospheric color wash */}
           <div className={`absolute inset-0 bg-gradient-to-b ${scene.overlay}`} />
+          
+          {/* Landing page style glass/rim layers */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-amber-900/15 via-transparent to-blue-900/20 mix-blend-overlay" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(212,175,55,0.12),_transparent_55%)]" />
+          
           {/* Vignette + readability layer */}
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/40" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,hsl(var(--background))_85%)]" />
+          
+          {/* Weather Particles Layer */}
+          <WeatherParticles weather={weather} />
         </motion.div>
       </AnimatePresence>
+
 
       {/* Starfield only at night/dawn */}
       {(timeOfDay === "night" || timeOfDay === "dawn") && (
