@@ -197,7 +197,7 @@ export default function GringottsStore() {
               {items.filter(i => i.is_featured).map(item => (
                 <div key={item.id} className="glass p-6 rounded-3xl border-primary/20 group hover:border-primary/50 transition-all">
                    <div className="aspect-square rounded-2xl overflow-hidden mb-4 border border-white/10">
-                      <SafeImage src={item.image_url} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                      <SafeImage src={item.image_url} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                    </div>
                    <h3 className="font-heading text-xl text-primary">{item.name}</h3>
                    <div className="flex items-center justify-between mt-4">
@@ -260,7 +260,7 @@ export default function GringottsStore() {
           {filteredItems.map(item => (
             <div key={item.id} className="glass p-4 rounded-xl border border-white/5">
               <div className="aspect-square rounded-lg overflow-hidden border border-white/5 mb-4">
-                 <SafeImage src={item.image_url} className="w-full h-full object-cover" />
+                 <SafeImage src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
               </div>
               <h3 className="font-heading text-lg">{item.name}</h3>
               <p className="text-sm text-muted-foreground">{item.price_galeons} Galeões</p>
