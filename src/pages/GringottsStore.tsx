@@ -168,10 +168,10 @@ export default function GringottsStore() {
   const filteredItems = useMemo(() => items.filter(i => i.category === tab), [items, tab]);
 
   return (
-    <div className="max-w-7xl mx-auto space-y-12 pb-24 px-4 sm:px-6">
-      <div className="text-center space-y-4 mb-12">
-        <h1 className="text-5xl md:text-7xl font-heading text-gold-gradient tracking-tighter drop-shadow-[0_10px_30px_rgba(212,175,55,0.4)]">Gringotts Store</h1>
-        <p className="text-muted-foreground/60 text-lg font-serif italic max-w-2xl mx-auto">"O lugar mais seguro do mundo para o que você mais valoriza."</p>
+    <div className="max-w-7xl mx-auto space-y-16 pb-24 px-4 sm:px-6">
+      <div className="text-center space-y-6 mb-16">
+        <h1 className="text-6xl md:text-8xl font-heading text-gold-gradient tracking-tighter drop-shadow-[0_15px_40px_rgba(212,175,55,0.5)]">Gringotts Bank</h1>
+        <p className="text-muted-foreground/60 text-xl font-serif italic max-w-2xl mx-auto leading-relaxed">"Fortius Quo Fidelius" — Mais forte quanto mais fiel.</p>
       </div>
 
       <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
@@ -195,7 +195,7 @@ export default function GringottsStore() {
         <div className="animate-in fade-in slide-in-from-bottom-8 duration-700">
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {items.filter(i => i.is_featured).map(item => (
-                <div key={item.id} className="glass p-6 rounded-3xl border-primary/20 group hover:border-primary/50 transition-all">
+                <div key={item.id} className="glass p-8 rounded-[2.5rem] border-primary/20 group hover:border-primary/50 transition-all">
                    <div className="aspect-square rounded-2xl overflow-hidden mb-4 border border-white/10">
                       <SafeImage src={item.image_url} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                    </div>
@@ -218,7 +218,7 @@ export default function GringottsStore() {
       {tab === "galeons" && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 animate-in fade-in slide-in-from-bottom-8">
           {GALEON_PACKAGES.map(pkg => (
-            <div key={pkg.id} className="glass p-8 rounded-[3rem] border-yellow-500/20 text-center flex flex-col items-center">
+            <div key={pkg.id} className="glass p-10 rounded-[3.5rem] border-yellow-500/20 text-center flex flex-col items-center hover:scale-[1.02] transition-transform">
               <div className="text-6xl mb-4">{pkg.icon}</div>
               <h3 className="font-heading text-2xl text-yellow-400">{pkg.name}</h3>
               <p className="text-4xl font-heading my-4">{pkg.galeons} 🪙</p>
