@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import MagicalParticles from "@/components/MagicalParticles";
-import { House } from "@/types";
+import { type House } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronRight, Star, Zap, Crown, BookOpen, Users, ShoppingBag, Trophy, MessageCircle, Sparkles, Flame } from "lucide-react";
+import { ChevronRight, Zap, Crown, Users, ShoppingBag, Trophy, MessageCircle, Sparkles, Flame } from "lucide-react";
 import HouseCupWidget from "@/components/rpg/HouseCupWidget";
 import MagicalEmoji from "@/components/shared/MagicalEmoji";
 import MagicalIcon from "@/components/shared/MagicalIcon";
