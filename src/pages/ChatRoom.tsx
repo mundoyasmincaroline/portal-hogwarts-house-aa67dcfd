@@ -620,7 +620,7 @@ export default function ChatRoom() {
                         )}
                       </div>
 
-                      <div className={`relative px-5 py-3.5 rounded-[1.8rem] border backdrop-blur-xl transition-all duration-500 ${houseColor} ${glowColor} ${
+                      <div className={`relative px-4 sm:px-5 py-2.5 sm:py-3.5 rounded-[1.4rem] sm:rounded-[1.8rem] border backdrop-blur-xl transition-all duration-500 ${houseColor} ${glowColor} ${
                         isMe ? 'rounded-tr-none' : 'rounded-tl-none'
                       }`}>
                         {/* Hero Effects */}
