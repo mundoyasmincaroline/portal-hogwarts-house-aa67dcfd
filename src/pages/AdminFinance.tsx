@@ -196,11 +196,11 @@ export default function AdminFinance() {
         </div>
         
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full text-left border-collapse min-w-[600px] sm:min-w-0">
             <thead>
               <tr className="bg-white/5 text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground">
                 <th className="px-4 sm:px-8 py-5">Bruxo</th>
-                <th className="px-4 sm:px-8 py-5 hidden md:table-cell">ID Ordem</th>
+                <th className="px-4 sm:px-8 py-5 hidden xl:table-cell">ID Ordem</th>
                 <th className="px-4 sm:px-8 py-5">Produto</th>
                 <th className="px-4 sm:px-8 py-5 text-right">Valor</th>
                 <th className="px-4 sm:px-8 py-5 text-center hidden sm:table-cell">Galeões</th>
