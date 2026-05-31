@@ -41,22 +41,24 @@ const NavItem = memo(({ item, isActive, dmUnread, onClick }: { item: any, isActi
     onClick={onClick}
     className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group relative overflow-hidden border ${
       isActive 
-        ? "bg-primary/10 text-primary font-bold border-primary/20 shadow-[0_0_20px_rgba(212,175,55,0.1)]" 
-        : "text-muted-foreground/70 hover:bg-white/5 hover:text-foreground border-transparent active:scale-95"
+        ? "bg-primary/10 text-primary font-bold border-primary/30 shadow-[0_0_25px_rgba(212,175,55,0.15)]" 
+        : "text-muted-foreground/60 hover:bg-white/5 hover:text-foreground border-transparent active:scale-95"
     }`}
   >
     {isActive && (
       <motion.div 
         layoutId="active-nav-indicator"
-        className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-full shadow-[0_0_10px_rgba(212,175,55,0.8)]"
+        className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-7 bg-primary rounded-r-full shadow-[0_0_15px_rgba(212,175,55,0.9)]"
       />
     )}
-    <span className={`relative z-10 transition-all duration-300 ${isActive ? "scale-110 drop-shadow-[0_0_5px_rgba(212,175,55,0.5)]" : "group-hover:scale-110"}`}>
+    <span className={`relative z-10 transition-all duration-500 ${isActive ? "scale-110 drop-shadow-[0_0_8px_rgba(212,175,55,0.6)]" : "group-hover:scale-110 group-hover:text-primary/80"}`}>
       {item.icon}
     </span>
-    <span className="font-heading text-[11px] uppercase tracking-wider relative z-10">{item.label}</span>
+    <span className={`font-heading text-[10px] uppercase tracking-[0.15em] relative z-10 transition-all duration-300 ${isActive ? "text-primary" : "group-hover:translate-x-1"}`}>
+      {item.label}
+    </span>
     {item.label === "Mensagens" && dmUnread > 0 && (
-      <span className="ml-auto min-w-[20px] h-[20px] px-1 bg-primary text-primary-foreground rounded-full text-[10px] flex items-center justify-center font-bold relative z-10 shadow-[0_0_10px_rgba(212,175,55,0.4)]">
+      <span className="ml-auto min-w-[20px] h-[20px] px-1 bg-primary text-primary-foreground rounded-full text-[9px] flex items-center justify-center font-black relative z-10 shadow-[0_0_15px_rgba(212,175,55,0.5)] animate-pulse">
         {dmUnread > 9 ? "9+" : dmUnread}
       </span>
     )}
@@ -224,8 +226,8 @@ export default function DashboardLayout() {
         <nav className="flex-1 p-3 space-y-6 overflow-y-auto sidebar-scroll">
           {groups.map((group) => (
             <div key={group.title} className="space-y-1">
-              <h4 className="px-3 text-[9px] font-heading font-black uppercase tracking-[0.3em] text-primary/40 mb-3 flex items-center gap-3">
-                <span className="w-6 h-[1px] bg-gradient-to-r from-primary/30 to-transparent" />
+              <h4 className="px-4 text-[9px] font-heading font-black uppercase tracking-[0.4em] text-primary/30 mb-4 flex items-center gap-4">
+                <span className="w-8 h-[1px] bg-gradient-to-r from-primary/40 to-transparent" />
                 {group.title}
               </h4>
               <div className="space-y-1">
@@ -243,17 +245,17 @@ export default function DashboardLayout() {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-border/40 bg-card/40 backdrop-blur-md">
+        <div className="p-5 border-t border-primary/10 bg-black/20 backdrop-blur-2xl">
           <Link 
             to="/dashboard/store" 
-            className="flex items-center justify-between px-4 py-3 mb-2 rounded-2xl border border-yellow-500/40 bg-gradient-to-br from-amber-600/20 via-yellow-900/40 to-black hover:border-yellow-300 transition-all group overflow-hidden relative"
+            className="flex items-center justify-between px-5 py-4 mb-4 rounded-2xl border border-yellow-500/30 bg-gradient-to-br from-amber-600/10 via-yellow-900/30 to-black/80 hover:border-yellow-400/60 hover:-translate-y-1 transition-all group overflow-hidden relative shadow-2xl"
           >
             <div className="absolute inset-0 bg-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="flex items-center gap-2 relative z-10">
-              <MagicalGaleon size="xs" />
-              <span className="text-[11px] text-yellow-400/90 font-heading uppercase tracking-wider">Galeões</span>
+            <div className="flex items-center gap-3 relative z-10">
+              <MagicalGaleon size="xs" className="animate-pulse" />
+              <span className="text-[10px] text-yellow-400/80 font-heading uppercase tracking-[0.2em]">Tesouro</span>
             </div>
-            <span className="font-heading text-lg text-yellow-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] relative z-10">
+            <span className="font-heading text-xl text-yellow-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.6)] relative z-10">
               {(profile?.galeons || 0).toLocaleString("pt-BR")}
             </span>
           </Link>
@@ -328,10 +330,10 @@ export default function DashboardLayout() {
               <motion.div
                 key={location.pathname}
                 onViewportEnter={() => cast('whoosh', { haptic: false, volume: 0.3 })}
-                initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -20, filter: "blur(10px)" }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
+                initial={{ opacity: 0, y: 15, scale: 0.98, filter: "blur(12px)" }}
+                animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: -15, scale: 0.98, filter: "blur(12px)" }}
+                transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
                 className="pb-32 md:pb-24"
               >
                 <Outlet />
