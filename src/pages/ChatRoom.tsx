@@ -5,13 +5,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import HouseCrest from "@/components/HouseCrest";
+import HouseCrest from "@/components/rpg/HouseCrest";
 import { House } from "@/types";
 import { addXP } from "@/services/core/xpService";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink, Zap, Flame, Sparkles, MessageCircle, Users } from "lucide-react";
-import MagicalEmoji from "@/components/MagicalEmoji";
+import MagicalEmoji from "@/components/shared/MagicalEmoji";
 
 interface MemberSuggestion {
   user_id: string;

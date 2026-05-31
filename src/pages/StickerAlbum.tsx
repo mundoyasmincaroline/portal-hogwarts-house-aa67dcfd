@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { Trophy, Sparkles, Gift, RefreshCw, Share2, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import StickerVisual from "@/components/StickerVisual";
-import MagicalEmoji from "@/components/MagicalEmoji";
+import MagicalEmoji from "@/components/shared/MagicalEmoji";
 import StickerAlbumBook from "@/components/StickerAlbumBook";
 import { useStickers } from "@/hooks/features/useStickers";
 import { stickerService } from "@/services/features/stickerService";

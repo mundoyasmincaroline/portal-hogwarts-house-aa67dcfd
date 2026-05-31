@@ -1,16 +1,16 @@
 import { useAuth } from "@/lib/auth";
 import DynamicGreeting from "./DynamicGreeting";
-import StoriesBar from "./StoriesBar";
-import MagicalMemories from "./MagicalMemories";
-import BirthdayBanner from "./BirthdayBanner";
-import VipUpsellBanner from "./VipUpsellBanner";
-import DailyHighlight from "./DailyHighlight";
-import MoodSession from "./MoodSession";
+import StoriesBar from "@/components/feed/StoriesBar";
+import MagicalMemories from "@/components/MagicalMemories";
+import BirthdayBanner from "@/components/BirthdayBanner";
+import VipUpsellBanner from "@/components/VipUpsellBanner";
+import DailyHighlight from "@/components/DailyHighlight";
+import MoodSession from "@/components/MoodSession";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Sparkles } from "lucide-react";
-import DailyProphetTicker from "./DailyProphetTicker";
-import HouseCupWidget from "./HouseCupWidget";
+import DailyProphetTicker from "@/components/shared/DailyProphetTicker";
+import HouseCupWidget from "@/components/rpg/HouseCupWidget";
 
 export default function MagicalDashboardHeader() {
   const { profile } = useAuth();

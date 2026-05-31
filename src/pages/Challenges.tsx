@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import EnigmaModal from "@/components/EnigmaModal";
-import MagicalEmoji from "@/components/MagicalEmoji";
+import MagicalEmoji from "@/components/shared/MagicalEmoji";
 
 interface Challenge {
   id: string;

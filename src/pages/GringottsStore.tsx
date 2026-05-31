@@ -9,10 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import StoreItemVisual from "@/components/StoreItemVisual";
 import SafeImage from "@/components/SafeImage";
-import MagicalGaleon from "@/components/MagicalGaleon";
+import MagicalGaleon from "@/components/shared/MagicalGaleon";
 import { useStore } from "@/hooks/features/useStore";
-import { storeService } from "@/services/features/storeService";
-import { StoreItem } from "@/types";
+import { type StoreItem } from "@/types";
 import { CATEGORY_LABELS, RARITY_LABELS } from "@/constants/gameConstants";
 
 // ─── Config ────────────────────────────────────────────────────────────

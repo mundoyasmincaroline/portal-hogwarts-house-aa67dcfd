@@ -3,9 +3,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import HouseCrest from "./HouseCrest";
-import { Input } from "./ui/input";
-import SafeImage from "./SafeImage";
+import HouseCrest from "@/components/rpg/HouseCrest";
+import { Input } from "@/components/ui/input";
+import SafeImage from "@/components/SafeImage";
 import { Eye } from "lucide-react";
 
 export default function StoriesBar() {

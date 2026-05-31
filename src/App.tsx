@@ -4,8 +4,8 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
 
 // Critical Routes (Loaded on demand but prioritized)
 const Landing = lazy(() => import("./pages/Landing"));

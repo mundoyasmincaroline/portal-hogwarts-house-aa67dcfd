@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import MemberCard from "@/components/MemberCard";
 import { Search, Users } from "lucide-react";
-import { House } from "@/types";
+import { type House } from "@/types";
 
 interface Member {
   user_id: string;

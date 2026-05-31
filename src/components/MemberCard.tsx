@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import HouseCrest from "@/components/HouseCrest";
+import HouseCrest from "@/components/rpg/HouseCrest";
 import SafeImage from "@/components/SafeImage";
 import { MessageCircle, UserPlus, UserCheck, Clock, MessageSquare, Crown } from "lucide-react";
 import { House } from "@/types";

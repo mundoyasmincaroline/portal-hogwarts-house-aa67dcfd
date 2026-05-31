@@ -5,7 +5,7 @@ import { Sparkles, Timer, CheckCircle2, Lock, Clock, Trophy, ChevronRight, Zap }
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import MagicalEmoji from "@/components/MagicalEmoji";
+import MagicalEmoji from "@/components/shared/MagicalEmoji";
 
 type MagicalEvent = {
   id: string;

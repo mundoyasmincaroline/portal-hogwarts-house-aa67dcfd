@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import SafeImage from "@/components/SafeImage";
-import MagicalEmoji from "@/components/MagicalEmoji";
+import MagicalEmoji from "@/components/shared/MagicalEmoji";
 import StickerVisual from "@/components/StickerVisual";
 
 interface Sticker {

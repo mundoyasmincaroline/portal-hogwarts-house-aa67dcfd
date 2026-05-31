@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { HOUSES, getLevelFromXP, type House } from "@/types";
+import { getLevelFromXP, type House } from "@/types";
+import { HOUSES } from "@/types/house";
 import { isUserOnline } from "@/lib/auth";
-import HouseCrest from "@/components/HouseCrest";
+import HouseCrest from "@/components/rpg/HouseCrest";
 import MedalBadge from "@/components/MedalBadge";
 import SafeImage from "@/components/SafeImage";
-import MagicalEmoji from "@/components/MagicalEmoji";
-import MagicalGaleon from "@/components/MagicalGaleon";
+import MagicalEmoji from "@/components/shared/MagicalEmoji";
+import MagicalGaleon from "@/components/shared/MagicalGaleon";
 import { useNavigate } from "react-router-dom";
 import { Trophy, Zap, Crown } from "lucide-react";
 

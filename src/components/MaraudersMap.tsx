@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { X, Map as MapIcon, Castle, BookOpen, User, ShoppingBag, Trophy, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import MagicalIcon from "./MagicalIcon";
-import MagicalEmoji from "./MagicalEmoji";
+import MagicalIcon from "@/components/shared/MagicalIcon";
+import MagicalEmoji from "@/components/shared/MagicalEmoji";
 import SafeImage from "./SafeImage";
 
 const MAP_LOCATIONS = [

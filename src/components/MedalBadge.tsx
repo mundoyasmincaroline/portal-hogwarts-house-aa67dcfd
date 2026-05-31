@@ -1,5 +1,5 @@
 import React from 'react';
-import MagicalEmoji from './MagicalEmoji';
+import MagicalEmoji from "@/components/shared/MagicalEmoji";
 
 export function getMedalForXP(xp: number) {
   if (xp >= 2000) return { type: 'gold', name: 'Lendário', emoji: '🥇', glow: 'rgba(234, 179, 8, 0.4)' };

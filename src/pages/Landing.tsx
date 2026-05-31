@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import MagicalParticles from "@/components/MagicalParticles";
-import { House } from "@/types";
+import { type House } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronRight, Star, Zap, Crown, BookOpen, Users, ShoppingBag, Trophy, MessageCircle, Sparkles, Flame } from "lucide-react";
-import HouseCupWidget from "@/components/HouseCupWidget";
-import MagicalEmoji from "@/components/MagicalEmoji";
-import MagicalIcon from "@/components/MagicalIcon";
+import { ChevronRight, Zap, Crown, Users, ShoppingBag, Trophy, MessageCircle, Sparkles, Flame } from "lucide-react";
+import HouseCupWidget from "@/components/rpg/HouseCupWidget";
+import MagicalEmoji from "@/components/shared/MagicalEmoji";
+import MagicalIcon from "@/components/shared/MagicalIcon";
 
 const HOUSES_INFO: { id: House; name: string; color: string; animal: string; trait: string }[] = [
   { id: "gryffindor", name: "Grifinória", color: "from-red-900/80 to-yellow-900/60 border-red-500/50", animal: "🦁", trait: "Coragem & Bravura" },

@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import MagicalGaleon from "@/components/MagicalGaleon";
+import MagicalGaleon from "@/components/shared/MagicalGaleon";
 import SafeImage from "@/components/SafeImage";
 
 export const AdminMonetizationTab = memo(({ members, fetchAll }: { members: any[], fetchAll: () => void }) => {

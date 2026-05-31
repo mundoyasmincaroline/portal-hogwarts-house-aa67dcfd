@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import MagicalGaleon from "@/components/MagicalGaleon";
+import MagicalGaleon from "@/components/shared/MagicalGaleon";
 import SafeImage from "@/components/SafeImage";
 
 interface FinanceStats {

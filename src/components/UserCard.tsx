@@ -1,6 +1,6 @@
 import { type UserProfile, HOUSES } from "@/types";
-import HouseCrest from "./HouseCrest";
-import XPBar from "./XPBar";
+import HouseCrest from "@/components/rpg/HouseCrest";
+import XPBar from "@/components/rpg/XPBar";
 import { isUserOnline } from "@/lib/auth";
 import { Badge } from "@/components/ui/badge";
 
