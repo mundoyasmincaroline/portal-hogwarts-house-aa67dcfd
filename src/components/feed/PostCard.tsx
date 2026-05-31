@@ -30,7 +30,7 @@ const PostCard = memo(({
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true, margin: "-50px" }}
     transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-    className="glass rounded-3xl p-5 sm:p-7 border-white/5 hover:border-primary/25 shadow-2xl group/card relative mb-4"
+    className="glass rounded-[2rem] p-6 sm:p-8 border-white/5 hover:border-primary/25 shadow-2xl group/card relative mb-6 transition-all duration-700 hover:shadow-primary/10"
   >
     <div className="flex items-start sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-5">
       <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-secondary/30 flex items-center justify-center overflow-hidden border-2 shrink-0 transition-all duration-500 group-hover/card:scale-105 ${post.author?.house === 'gryffindor' ? 'border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.2)]' : post.author?.house === 'slytherin' ? 'border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.2)]' : post.author?.house === 'ravenclaw' ? 'border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.2)]' : 'border-yellow-500/30 shadow-[0_0_15px_rgba(234,179,8,0.2)]'}`}>
@@ -61,10 +61,12 @@ const PostCard = memo(({
     </div>
 
     <div className="relative mb-6 group/content">
-      <p className="text-base sm:text-lg leading-relaxed text-foreground/90 whitespace-pre-wrap font-serif italic border-l-2 border-primary/20 pl-4 py-1 transition-colors group-hover/content:border-primary/50 duration-500">
+      <p className="text-base sm:text-lg leading-relaxed text-foreground/90 whitespace-pre-wrap font-serif italic border-l-2 border-primary/20 pl-5 py-2 transition-all group-hover/content:border-primary group-hover/content:pl-7 duration-500 bg-gradient-to-r from-primary/5 to-transparent rounded-r-xl">
         {post.content}
       </p>
+      <div className="absolute -left-1 top-0 bottom-0 w-0.5 bg-primary/30 blur-sm opacity-0 group-hover/content:opacity-100 transition-opacity" />
     </div>
+
     
     {post.music_url && (
       <div className="mb-5 overflow-hidden rounded-2xl shadow-xl border border-white/5">

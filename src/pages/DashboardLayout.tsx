@@ -28,6 +28,9 @@ import TurnSwitcher from "@/components/TurnSwitcher";
 import SafeImage from "@/components/SafeImage";
 import BottomNav from "@/components/BottomNav";
 import { NAV_GROUPS, ADMIN_GROUP } from "@/constants/navigation";
+import { AtmosphericBackground } from "@/components/shared/AtmosphericBackground";
+import { MagicalClock } from "@/components/shared/MagicalClock";
+
 
 // Memoized Nav Item for performance
 const NavItem = memo(({ item, isActive, dmUnread, onClick }: { item: any, isActive: boolean, dmUnread: number, onClick: () => void }) => (
@@ -187,6 +190,8 @@ export default function DashboardLayout() {
 
   return (
     <div className="flex h-screen bg-background overflow-hidden relative">
+      <AtmosphericBackground />
+
       <AnimatePresence>
         {sidebarOpen && (
           <motion.div 
@@ -304,9 +309,12 @@ export default function DashboardLayout() {
         </header>
 
 
-        <div className="flex-1 overflow-y-auto relative scroll-smooth contain-strict portal-cinematic-bg pb-safe custom-scrollbar">
-          <div className="page-container px-3 sm:px-6 pt-2 sm:pt-6">
-            {/* Widgets moved to Feed header for better integration */}
+        <div className="flex-1 overflow-y-auto relative scroll-smooth contain-strict pb-safe custom-scrollbar">
+          <div className="page-container px-3 sm:px-6 pt-4 sm:pt-8">
+            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+               <MagicalClock />
+            </div>
+
             
             <AnimatePresence mode="wait">
               <motion.div
