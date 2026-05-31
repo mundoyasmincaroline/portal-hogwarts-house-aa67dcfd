@@ -32,7 +32,7 @@ export const AtmosphericBackground: React.FC = () => {
   const scene = scenes[timeOfDay];
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[-1] overflow-hidden bg-background">
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-background">
       <AnimatePresence mode="wait">
         <motion.div
           key={timeOfDay}
@@ -54,9 +54,9 @@ export const AtmosphericBackground: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-tr from-amber-900/15 via-transparent to-blue-900/20 mix-blend-overlay" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(212,175,55,0.12),_transparent_55%)]" />
           
-          {/* Vignette + readability layer */}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/40" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,hsl(var(--background))_85%)]" />
+          {/* Vignette + readability layer (lighter so scene shows through) */}
+          <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/40 to-background/10" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,hsl(var(--background)/0.6)_95%)]" />
           
           {/* Weather Particles Layer */}
           <WeatherParticles weather={weather} />
