@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { useImmersion } from "@/hooks/core/useImmersion";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { LogOut, Volume2, VolumeX, Menu, Castle } from "lucide-react";
+import { LogOut, Menu, Castle } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import HouseCrest from "@/components/rpg/HouseCrest";
@@ -10,7 +10,6 @@ import MagicalGaleon from "@/components/shared/MagicalGaleon";
 import { HOUSES } from "@/types/house";
 import { type House } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
-import { isSoundEnabled, toggleSound } from "@/services/core/soundService";
 import Notifications from "@/components/Notifications";
 import PendingApproval from "@/pages/PendingApproval";
 import RulesAgreement from "@/pages/RulesAgreement";
@@ -62,7 +61,6 @@ export default function DashboardLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [soundOn, setSoundOn] = useState(isSoundEnabled());
   const [dmUnread, setDmUnread] = useState(0);
   const [hasCharacters, setHasCharacters] = useState<boolean | null>(null);
 
@@ -220,11 +218,6 @@ export default function DashboardLayout() {
             <div className="flex items-center gap-0.5 shrink-0">
               <TurnSwitcher />
               <AmbientAudio />
-              <button
-                onClick={() => setSoundOn(toggleSound())}
-                className="touch-target w-10 h-10 text-foreground/85 hover:bg-primary/15 hover:text-primary rounded-xl transition-all active:scale-90"
-                title={soundOn ? "Desativar Som" : "Ativar Som"}
-              >{soundOn ? <Volume2 size={16} /> : <VolumeX size={16} />}</button>
               <Notifications />
               <button
                 onClick={async () => { await logout(); navigate("/"); }}
