@@ -142,7 +142,8 @@ export default function Classes() {
     }
 
     // Award XP via RPC
-    await supabase.rpc("award_xp_action", { _action: "class", _user_id: user.id, _xp: cls.xp_reward });
+    const { error: xpErr } = await supabase.rpc("award_xp_action", { _action: "class", _user_id: user.id, _xp: cls.xp_reward });
+    if (xpErr) { toast.error("Erro ao ganhar XP: " + xpErr.message); return; }
     
     setAttendedMap(prev => ({ ...prev, [cls.id]: true }));
     toast.success(`✨ Mais ${cls.xp_reward} XP! Você assistiu à aula de ${cls.title} com sucesso!`);

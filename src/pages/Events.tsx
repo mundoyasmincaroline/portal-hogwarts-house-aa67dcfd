@@ -20,7 +20,17 @@ type MagicalEvent = {
   riddles?: { q: string; a: string }[];
   isSpecial?: boolean;
 };
-const getEventsForToday = (_celebrations: any[]): MagicalEvent[] => [];
+const getEventsForToday = (celebrations: any[]): MagicalEvent[] => celebrations.map((c, i) => ({
+  id: `bday_${i}`,
+  name: `🎂 Festa de ${c.name}`,
+  start: "00:00",
+  end: "23:59",
+  type: "social",
+  xp: 100,
+  galeons: 20,
+  audience: "all",
+  description: `Hoje é o dia de celebrar a vida de ${c.name}! Dê os parabéns no Salão Principal!`
+}));
 
 export default function Events() {
   const { user, profile } = useAuth();
@@ -177,7 +187,7 @@ export default function Events() {
                       <CheckCircle2 size={16} /> Concluído
                     </div>
                   ) : isActive ? (
-                    <Button variant="magical" className="w-full py-6 rounded-xl group">
+                    <Button variant="magical" className="w-full py-6 rounded-xl group" onClick={() => toast.success("✨ Você se inscreveu no evento! Participe no Salão Principal.")}>
                       Participar do Evento <ChevronRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   ) : isUpcoming ? (

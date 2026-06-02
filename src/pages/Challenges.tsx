@@ -110,7 +110,8 @@ export default function Challenges() {
       .insert({ user_id: user.id, challenge_id: c.id, completed: true, status: 'approved', completed_at: new Date().toISOString() } as never);
     if (ucErr) { toast.error("Erro: " + ucErr.message); return; }
 
-    await supabase.rpc("award_xp_action", { _action: "challenge", _user_id: user.id, _xp: c.xp_reward });
+    const { error: xpErr } = await supabase.rpc("award_xp_action", { _action: "challenge", _user_id: user.id, _xp: c.xp_reward });
+    if (xpErr) { toast.error("Erro ao ganhar XP: " + xpErr.message); return; }
     await supabase.from("house_points").insert({ house: profile.house, points: c.xp_reward, reason: `Desafio: ${c.title}`, awarded_by: user.id } as never);
     await fetchProfile(user.id);
 
