@@ -89,6 +89,9 @@ const Ministry = lazy(() => import("./pages/Ministry"));
 const Creatures = lazy(() => import("./pages/Creatures"));
 const Greenhouse = lazy(() => import("./pages/Greenhouse"));
 const PotionsLab = lazy(() => import("./pages/PotionsLab"));
+const WorldMap = lazy(() => import("./pages/WorldMap"));
+const MagicalTravel = lazy(() => import("./pages/MagicalTravel"));
+const TravelJournal = lazy(() => import("./pages/TravelJournal"));
 
 const LoadingFallback = () => (
   <div className="relative flex h-screen flex-col items-center justify-center bg-background overflow-hidden">
@@ -258,6 +261,9 @@ const App = () => {
                   <Route path="creatures" element={<Creatures />} />
                   <Route path="greenhouse" element={<Greenhouse />} />
                   <Route path="potions" element={<PotionsLab />} />
+                  <Route path="world-map" element={<WorldMap />} />
+                  <Route path="travel" element={<MagicalTravel />} />
+                  <Route path="journal" element={<TravelJournal />} />
                   <Route path="admin/analytics" element={
                     <ProtectedRoute adminOnly>
                       <AdminAnalytics />
