@@ -150,13 +150,19 @@ export default function Challenges() {
           </div>
         ) : (
           <div className="mb-4 space-y-1">
-            <div className="flex justify-between text-xs text-muted-foreground mb-1">
-              <span>Progresso</span>
-              <span>{userProgress[c.id] || 0}%</span>
-            </div>
-            <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
-              <div className="h-full bg-primary transition-all duration-500 ease-out" style={{ width: `${userProgress[c.id] || 0}%` }} />
-            </div>
+            {userProgress[c.id] > 0 ? (
+              <>
+                <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                  <span>Progresso</span>
+                  <span>{userProgress[c.id]}%</span>
+                </div>
+                <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
+                  <div className="h-full bg-primary transition-all duration-500 ease-out" style={{ width: `${userProgress[c.id]}%` }} />
+                </div>
+              </>
+            ) : (
+              <p className="text-[10px] text-muted-foreground/70 italic text-center">⚙️ Avaliação automática — concluído ao realizar a ação no portal.</p>
+            )}
           </div>
         )}
 

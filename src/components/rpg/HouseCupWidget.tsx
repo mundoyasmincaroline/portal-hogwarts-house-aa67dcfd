@@ -38,22 +38,10 @@ export default function HouseCupWidget({ isLanding = false }: { isLanding?: bool
       }, { gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0 });
 
       const allZeros = Object.values(totals).every(v => v === 0);
-      
+
       if (allZeros) {
-        const simulatedPoints = {
-          gryffindor: 12450,
-          slytherin: 11820,
-          ravenclaw: 10950,
-          hufflepuff: 9840
-        };
-        const maxSim = 12450;
-        const simScores = BASE_SCORES.map(s => ({
-          ...s,
-          points: simulatedPoints[s.house as keyof typeof simulatedPoints],
-          percentage: Math.round((simulatedPoints[s.house as keyof typeof simulatedPoints] / maxSim) * 100)
-        }));
-        setScores(simScores);
-        setLeader(simScores[0]);
+        setScores(BASE_SCORES);
+        setLeader(null);
         setLoading(false);
         return;
       }

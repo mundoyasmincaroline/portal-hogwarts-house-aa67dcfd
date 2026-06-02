@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import { HOUSES, type House } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,6 +14,7 @@ type Tab = "members" | "pending_members" | "challenges" | "monetization" | "pedi
 
 export default function Admin() {
   const { isAdmin, user } = useAuth();
+  const navigate = useNavigate();
   const [tab, setTab] = useState<Tab>("members");
   const [members, setMembers] = useState<MemberProfile[]>([]);
   const [onlineFilter, setOnlineFilter] = useState<"all" | "online">("all");
@@ -61,7 +63,7 @@ export default function Admin() {
               <div className="grid gap-4">
                 {members
                   .filter(m => onlineFilter === "all" || isUserOnline(m as any))
-                  .map(m => <AdminMemberCard key={m.user_id} member={m} onClick={() => {}} />)}
+                  .map(m => <AdminMemberCard key={m.user_id} member={m} onClick={() => navigate(`/dashboard/profile/${m.user_id}`)} />)}
                 {members.filter(m => onlineFilter === "all" || isUserOnline(m as any)).length === 0 && (
                   <p className="text-center py-10 text-muted-foreground text-sm italic">Nenhum bruxo encontrado nesta categoria.</p>
                 )}

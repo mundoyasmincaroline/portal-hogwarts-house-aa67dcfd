@@ -117,8 +117,12 @@ export default function Feed() {
 
           {loading && <p className="text-center text-muted-foreground text-sm py-6">Carregando feed...</p>}
           {!loading && posts.length === 0 && (
-            <div className="glass rounded-xl p-6 text-center">
-              <p className="text-muted-foreground text-sm">Ainda não há publicações. Seja o primeiro! ✨</p>
+            <div className="glass rounded-2xl p-10 text-center space-y-3 border border-white/5">
+              <div className="text-5xl">📜</div>
+              <p className="font-heading text-foreground">O Salão Principal está em silêncio...</p>
+              <p className="text-sm text-muted-foreground italic font-serif max-w-md mx-auto">
+                "Seja o primeiro bruxo a inscrever suas palavras neste pergaminho — toda lenda começa com uma linha."
+              </p>
             </div>
           )}
 

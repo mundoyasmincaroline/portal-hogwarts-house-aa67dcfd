@@ -242,7 +242,17 @@ export default function StoriesBar() {
             <div className="absolute top-2 left-2 right-2 flex gap-1 z-20">
               {groupedStories[activeStoryUser!].map((_, idx) => (
                 <div key={idx} className="h-1 flex-1 bg-white/30 rounded-full overflow-hidden">
-                  <div className={`h-full bg-white ${idx < activeStoryIndex ? "w-full" : idx === activeStoryIndex ? "w-full animate-[progress_5s_linear]" : "w-0"}`} />
+                  <div
+                    key={idx === activeStoryIndex ? `active-${activeStoryIndex}` : `idle-${idx}`}
+                    className="h-full bg-white"
+                    style={
+                      idx < activeStoryIndex
+                        ? { width: "100%" }
+                        : idx === activeStoryIndex
+                          ? { width: "100%", animation: "progress 5s linear forwards" }
+                          : { width: "0%" }
+                    }
+                  />
                 </div>
               ))}
             </div>

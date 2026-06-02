@@ -108,6 +108,32 @@ export default function Events() {
     return "past";
   };
 
+  const handleJoinEvent = async (event: MagicalEvent) => {
+    if (!user) return;
+    const today = new Date().toISOString().split('T')[0];
+    const challengeId = `event_${today}_${event.id}`;
+    try {
+      const { error } = await supabase.from("user_challenges").insert({
+        user_id: user.id,
+        challenge_id: challengeId,
+        status: 'approved',
+        completed: true,
+        completed_at: new Date().toISOString(),
+      } as never);
+      if (error && !String(error.message || "").toLowerCase().includes("duplicate")) {
+        toast.error("Não foi possível registrar sua participação.");
+        return;
+      }
+      try {
+        await (supabase.rpc as any)("award_xp_action", { _action: "event", _user_id: user.id, _xp: event.xp });
+      } catch { /* RPC opcional */ }
+      setCompletedToday(prev => prev.includes(event.id) ? prev : [...prev, event.id]);
+      toast.success(`🎉 +${event.xp} XP & +${event.galeons} Galeões! Participação registrada!`);
+    } catch (e: any) {
+      toast.error("Erro: " + e.message);
+    }
+  };
+
   return (
     <div className="max-w-5xl mx-auto space-y-8 sm:space-y-10 pb-20 px-2 sm:px-0">
       {/* Header */}
@@ -187,7 +213,7 @@ export default function Events() {
                       <CheckCircle2 size={16} /> Concluído
                     </div>
                   ) : isActive ? (
-                    <Button variant="magical" className="w-full py-6 rounded-xl group" onClick={() => toast.success("✨ Você se inscreveu no evento! Participe no Salão Principal.")}>
+                    <Button variant="magical" className="w-full py-6 rounded-xl group" onClick={() => handleJoinEvent(event)}>
                       Participar do Evento <ChevronRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   ) : isUpcoming ? (
@@ -204,6 +230,15 @@ export default function Events() {
             </div>
           );
         })}
+        {!loading && dailyEvents.length === 0 && (
+          <div className="col-span-full glass rounded-2xl sm:rounded-[2rem] p-12 sm:p-16 text-center border border-white/5">
+            <div className="text-6xl mb-4">🌙</div>
+            <p className="font-heading text-xl text-foreground">Nenhum evento mágico hoje</p>
+            <p className="text-sm text-muted-foreground italic font-serif mt-2 max-w-md mx-auto">
+              "Até os dementadores precisam de um dia de folga. Volte amanhã para novas celebrações em Hogwarts!"
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Info Adicional */}

@@ -340,6 +340,7 @@ export default function ChatRoom() {
       });
       // Punição extra de XP para spam no chat
       await supabase.rpc("award_xp_action", { _action: "spam_penalty", _user_id: user.id, _xp: -10 });
+      setIsSending(false);
       return;
     }
 
