@@ -67,7 +67,12 @@ export function PostComposer({ bannedWords }: PostComposerProps) {
       <textarea
         value={newPost}
         onChange={(e) => setNewPost(e.target.value)}
-        placeholder="O que está acontecendo no castelo?"
+        placeholder={[
+          "O que os corredores de Hogwarts estão sussurrando hoje?",
+          "Qual feitiço você praticou esta manhã?",
+          "Alguma fofoca do Profeta Diário para compartilhar?",
+          "O que o Chapéu Seletor diria sobre seu dia?",
+        ][new Date().getMinutes() % 4]}
         maxLength={1000}
         className="w-full bg-black/40 rounded-2xl p-6 border border-white/5 focus:border-primary/40 transition-all resize-none text-base sm:text-lg text-foreground placeholder:text-muted-foreground/30 focus:outline-none min-h-[140px] font-serif italic shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)] leading-relaxed"
       />
