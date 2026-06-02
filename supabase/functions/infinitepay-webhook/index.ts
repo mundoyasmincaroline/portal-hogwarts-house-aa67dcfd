@@ -24,12 +24,45 @@ serve(async (req) => {
       paid_amount,      // valor pago em centavos
       capture_method,   // "credit_card" | "pix"
       transaction_nsu,  // ID único da transação InfinitePay
+      slug,             // slug do checkout (para verificação)
     } = body;
 
     if (!order_nsu) {
       return new Response(
         JSON.stringify({ success: false, message: "order_nsu ausente." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // 0. Verificar autenticidade do pagamento direto na InfinitePay
+    //    Protege contra webhooks forjados (não confiamos no body cru).
+    try {
+      const verifyRes = await fetch(
+        "https://api.infinitepay.io/invoices/public/checkout/payment_check",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            handle: "portal-matrix",
+            order_nsu,
+            transaction_nsu: transaction_nsu ?? "",
+            slug: slug ?? "",
+          }),
+        }
+      );
+      const verifyData = await verifyRes.json().catch(() => ({}));
+      if (!verifyRes.ok || verifyData?.paid !== true) {
+        console.warn("Webhook rejeitado — pagamento não confirmado:", verifyData);
+        return new Response(
+          JSON.stringify({ success: false, message: "Pagamento não confirmado." }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    } catch (vErr) {
+      console.error("Falha ao verificar pagamento:", vErr);
+      return new Response(
+        JSON.stringify({ success: false, message: "Falha na verificação." }),
+        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
@@ -137,6 +170,13 @@ serve(async (req) => {
 
       console.log(`✅ VIP ${planId} ativado para ${order.user_id}`);
 
+      await supabase.from("notifications").insert({
+        user_id: order.user_id,
+        title: "👑 Plano VIP ativado!",
+        message: `Seu plano ${planId.toUpperCase()} está ativo até ${expiresAt.toLocaleDateString("pt-BR")}.`,
+        link: "/dashboard/wallet",
+      });
+
     } else {
       // ── Creditar Galeões ───────────────────────────────────
       const galeons = order.galeons ?? 0;
@@ -154,6 +194,13 @@ serve(async (req) => {
           .eq("user_id", order.user_id);
 
         console.log(`✅ ${galeons} Galeões creditados para ${order.user_id}`);
+
+        await supabase.from("notifications").insert({
+          user_id: order.user_id,
+          title: "🪙 Galeões creditados!",
+          message: `${galeons} Galeões foram adicionados ao seu cofre em Gringotts.`,
+          link: "/dashboard/wallet",
+        });
       }
     }
 

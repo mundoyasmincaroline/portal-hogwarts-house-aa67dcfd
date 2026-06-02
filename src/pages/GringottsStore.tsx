@@ -79,11 +79,41 @@ export default function GringottsStore() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const orderNsu = params.get("order_nsu");
-    if (orderNsu) {
-      window.history.replaceState({}, "", window.location.pathname);
-      toast.info("🔍 Verificando seu pedido no sistema Gringotts...");
-      setTimeout(() => window.location.reload(), 2000);
-    }
+    const transactionNsu = params.get("transaction_nsu") ?? "";
+    const slug = params.get("slug") ?? "";
+    if (!orderNsu) return;
+
+    window.history.replaceState({}, "", window.location.pathname);
+    const verify = async () => {
+      toast.info("🔍 Verificando pagamento em Gringotts...");
+      try {
+        const { data, error } = await supabase.rpc("verify_infinitepay_payment", {
+          p_order_nsu: orderNsu,
+          p_transaction_nsu: transactionNsu,
+          p_slug: slug,
+        });
+        if (error) throw error;
+        const result = data as any;
+        if (result?.success) {
+          if (result.type === "vip") {
+            toast.success(`👑 Plano ${String(result.plan).toUpperCase()} ativado!`);
+          } else if (result.type === "galeons") {
+            toast.success(`🪙 ${result.galeons} Galeões creditados!`);
+          } else {
+            toast.success("✅ Pagamento confirmado!");
+          }
+          playMagicSound();
+          setTimeout(() => window.location.reload(), 1500);
+        } else if (result?.paid === false) {
+          toast.warning("⏳ Pagamento ainda não confirmado. Aguarde alguns segundos e atualize.");
+        } else {
+          toast.error(result?.message || "Não foi possível confirmar agora.");
+        }
+      } catch (e: any) {
+        toast.error(e.message || "Erro ao verificar pagamento.");
+      }
+    };
+    verify();
   }, []);
 
   const buyGaleons = async (pkg: typeof GALEON_PACKAGES[0]) => {
