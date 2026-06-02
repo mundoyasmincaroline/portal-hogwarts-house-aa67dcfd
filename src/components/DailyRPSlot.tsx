@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { Sparkles, CalendarCheck2, History, Loader2 } from "lucide-react";
+import { Sparkles, CalendarCheck2, History, Loader2, Flame, Trophy } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { useCharacters } from "@/hooks/features/useCharacters";
@@ -15,6 +15,20 @@ type Claim = {
   messages_count: number;
   xp_earned: number;
 };
+
+type StreakInfo = {
+  current: number;
+  best: number;
+  lastDate: string | null;
+};
+
+type LatestReward = {
+  xp_bonus: number;
+  galeons_bonus: number;
+  label: string | null;
+  milestone: number | null;
+  streak_day: number;
+} | null;
 
 function todayInSP(): string {
   // YYYY-MM-DD em America/Sao_Paulo
@@ -33,17 +47,39 @@ export default function DailyRPSlot() {
   const [claim, setClaim] = useState<Claim | null>(null);
   const [loading, setLoading] = useState(true);
   const [claiming, setClaiming] = useState(false);
+  const [streak, setStreak] = useState<StreakInfo>({ current: 0, best: 0, lastDate: null });
+  const [latestReward, setLatestReward] = useState<LatestReward>(null);
 
   const fetchToday = useCallback(async () => {
     if (!user?.id) return;
     setLoading(true);
-    const { data } = await (supabase as any)
-      .from("rp_daily_claims")
-      .select("*")
-      .eq("user_id", user.id)
-      .eq("claim_date", todayInSP())
-      .maybeSingle();
-    setClaim(data ?? null);
+    const today = todayInSP();
+    const [{ data: claimData }, { data: profileData }, { data: rewardData }] = await Promise.all([
+      (supabase as any)
+        .from("rp_daily_claims")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("claim_date", today)
+        .maybeSingle(),
+      (supabase as any)
+        .from("profiles")
+        .select("rp_streak_current, rp_streak_best, rp_last_claim_date")
+        .eq("user_id", user.id)
+        .maybeSingle(),
+      (supabase as any)
+        .from("rp_streak_rewards")
+        .select("xp_bonus, galeons_bonus, label, milestone, streak_day")
+        .eq("user_id", user.id)
+        .eq("claim_date", today)
+        .maybeSingle(),
+    ]);
+    setClaim(claimData ?? null);
+    setStreak({
+      current: profileData?.rp_streak_current ?? 0,
+      best: profileData?.rp_streak_best ?? 0,
+      lastDate: profileData?.rp_last_claim_date ?? null,
+    });
+    setLatestReward(rewardData ?? null);
     setLoading(false);
   }, [user?.id]);
 
@@ -64,6 +100,8 @@ export default function DailyRPSlot() {
     }
     setClaim(data as Claim);
     toast.success("Vaga de RP reivindicada para hoje! ✨");
+    // Refresh streak + reward
+    fetchToday();
   };
 
   if (loading) {
@@ -101,6 +139,31 @@ export default function DailyRPSlot() {
           <History size={14} /> Histórico
         </Link>
       </div>
+
+      {/* Streak banner */}
+      <div className="mb-3 flex items-center justify-between gap-2 rounded-xl border border-primary/15 bg-gradient-to-r from-primary/10 to-transparent px-3 py-2">
+        <div className="flex items-center gap-2">
+          <Flame size={16} className={streak.current > 0 ? "text-orange-400" : "text-muted-foreground"} />
+          <div>
+            <p className="text-[11px] uppercase tracking-widest text-muted-foreground">Sequência</p>
+            <p className="text-sm font-heading text-foreground">
+              {streak.current} {streak.current === 1 ? "dia" : "dias"}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+          <Trophy size={12} className="text-primary/80" />
+          Recorde: <span className="text-foreground/85">{streak.best}</span>
+        </div>
+      </div>
+
+      {latestReward && (latestReward.xp_bonus > 0 || latestReward.galeons_bonus > 0) && (
+        <div className="mb-3 rounded-xl border border-primary/20 bg-primary/5 px-3 py-2 text-[11px] text-foreground/85">
+          <span className="font-heading text-primary">{latestReward.label ?? "Recompensa diária"}</span>{" "}
+          — +{latestReward.xp_bonus} XP{latestReward.galeons_bonus ? ` e +${latestReward.galeons_bonus}🪙` : ""}
+          {latestReward.milestone ? ` · Marco de ${latestReward.milestone} dias!` : ""}
+        </div>
+      )}
 
       {claim && activeCharacter ? (
         <div className="flex items-center gap-3 bg-primary/5 border border-primary/15 rounded-xl px-3 py-2">
