@@ -28,6 +28,7 @@ export default function Friends() {
   const navigate = useNavigate();
   const [rows, setRows] = useState<FriendRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [processingId, setProcessingId] = useState<string | null>(null);
 
   const load = async () => {
     if (!user) return;
@@ -60,21 +61,27 @@ export default function Friends() {
   useEffect(() => { load(); }, [user?.id]);
 
   const accept = async (id: string) => {
+    setProcessingId(id);
     const { error } = await supabase.from("friendships").update({ status: "accepted" }).eq("id", id);
+    setProcessingId(null);
     if (error) return toast.error("Erro ao aceitar.");
     toast.success("Pedido aceito! ✨");
     load();
   };
 
   const reject = async (id: string) => {
+    setProcessingId(id);
     const { error } = await supabase.from("friendships").delete().eq("id", id);
+    setProcessingId(null);
     if (error) return toast.error("Erro ao recusar.");
     toast.success("Pedido recusado.");
     load();
   };
 
   const remove = async (id: string) => {
+    setProcessingId(id);
     const { error } = await supabase.from("friendships").delete().eq("id", id);
+    setProcessingId(null);
     if (error) return toast.error("Erro ao remover.");
     toast.success("Removido.");
     load();
