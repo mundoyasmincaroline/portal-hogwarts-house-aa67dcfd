@@ -131,6 +131,8 @@ const App = () => {
                   <Route path="store" element={<GringottsStore />} />
                   <Route path="duels" element={<Duels />} />
                   <Route path="wallet" element={<Wallet />} />
+                  {/* Wildcard dentro do dashboard: rota inválida → volta ao Salão Principal */}
+                  <Route path="*" element={<Feed />} />
                 </Route>
                 
                 <Route path="*" element={<NotFoundRedirect />} />
