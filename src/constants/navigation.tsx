@@ -2,7 +2,7 @@ import {
   Castle, BookOpen, User, MessageCircle, Camera, Trophy,
   Shield, Swords, Library, ShoppingBag, ScrollText,
   Users, Lock, Wallet, Sparkles, Zap, Image as ImageIcon,
-  GraduationCap
+  GraduationCap, Crown
 } from "lucide-react";
 import React from "react";
 import MagicalIcon from "@/components/shared/MagicalIcon";
@@ -36,6 +36,7 @@ export const NAV_GROUPS = [
       { icon: <MagicalIcon icon={ImageIcon} size="xs" color="#94a3b8" />, label: "Álbum", path: "/dashboard/album" },
       { icon: <MagicalIcon icon={ShoppingBag} size="xs" color="#f59e0b" />, label: "Loja", path: "/dashboard/store" },
       { icon: <MagicalIcon icon={Wallet} size="xs" color="#10b981" />, label: "Carteira", path: "/dashboard/wallet" },
+      { icon: <MagicalIcon icon={Crown} size="xs" color="#fbbf24" />, label: "Pacto Mágico", path: "/dashboard/battle-pass" },
     ]
   },
   {
