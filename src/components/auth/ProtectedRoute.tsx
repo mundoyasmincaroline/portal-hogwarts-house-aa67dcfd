@@ -28,7 +28,7 @@ export default function ProtectedRoute({ children, adminOnly = false }: Protecte
 
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background">
+      <div className="flex h-dvh items-center justify-center bg-background">
         <div className="text-center animate-fade-in">
           <div className="text-4xl animate-float mb-4">⚡</div>
           <p className="font-heading text-muted-foreground uppercase tracking-widest text-[10px]">Carregando portal...</p>

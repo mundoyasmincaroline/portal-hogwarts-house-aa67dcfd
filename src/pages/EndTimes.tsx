@@ -39,11 +39,11 @@ export default function EndTimes() {
   const canAscend = level >= 100;
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center gap-3">
+      <div className="p-4 sm:p-6 space-y-6">
+      <div className="flex items-center gap-3 flex-wrap">
         <Crown className="h-8 w-8 text-primary" />
         <div>
-          <h1 className="font-heading text-3xl">Final dos Tempos</h1>
+          <h1 className="font-heading text-2xl sm:text-3xl">Final dos Tempos</h1>
           <p className="text-sm text-foreground/60">Ao atingir o nível 100, ascenda como Lenda e recomece com glória.</p>
         </div>
       </div>
@@ -56,7 +56,7 @@ export default function EndTimes() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3">
             <Badge variant="secondary">Prestígio: {legend?.prestige || 0}</Badge>
             <Badge variant="secondary">Ascensões: {legend?.ascensions || 0}</Badge>
             <Badge>XP × {Number(legend?.bonus_xp_multiplier || 1).toFixed(2)}</Badge>

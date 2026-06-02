@@ -56,11 +56,11 @@ export default function DarkArts() {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center gap-3">
+    <div className="p-4 sm:p-6 space-y-6">
+      <div className="flex items-center gap-3 flex-wrap">
         <Skull className="h-8 w-8 text-primary" />
         <div>
-          <h1 className="font-heading text-3xl">Artes das Trevas</h1>
+          <h1 className="font-heading text-2xl sm:text-3xl">Artes das Trevas</h1>
           <p className="text-sm text-foreground/60">Praticar essas artes corrompe a alma. RP ficcional, com consequências narrativas.</p>
         </div>
       </div>

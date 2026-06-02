@@ -444,7 +444,7 @@ export default function ChatRoom() {
   };
 
   if (loading || !channel) return (
-    <div className="h-screen flex items-center justify-center bg-black">
+    <div className="h-dvh flex items-center justify-center bg-black">
       <div className="text-center space-y-4">
         <div className="w-16 h-16 border-4 border-yellow-500/20 border-t-yellow-500 rounded-full animate-spin mx-auto" />
         <p className="font-heading text-xl text-yellow-500/60 animate-pulse">Abrindo os portais do Salão Comunal...</p>

@@ -59,9 +59,9 @@ export default function Factions() {
   const currentFaction = factions.find((f) => f.id === membership?.faction_id);
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 sm:p-6 space-y-6">
       <div>
-        <h1 className="font-heading text-3xl">Facções da Guerra Bruxa</h1>
+        <h1 className="font-heading text-2xl sm:text-3xl">Facções da Guerra Bruxa</h1>
         <p className="text-sm text-foreground/60">Escolha um lado. Sua lealdade definirá seu destino.</p>
       </div>
 

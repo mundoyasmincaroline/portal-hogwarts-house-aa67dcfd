@@ -156,7 +156,7 @@ export default function DashboardLayout() {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background">
+      <div className="flex h-dvh items-center justify-center bg-background">
         <div className="text-center">
           <div className="text-4xl animate-float mb-4">⚡</div>
           <p className="font-heading text-muted-foreground uppercase tracking-widest text-xs">Carregando portal...</p>
