@@ -1,6 +1,7 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import SafeImage from "@/components/SafeImage";
+import Card3D from "@/components/Card3D";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -175,12 +176,14 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
           )}
           <div className="flex flex-col sm:flex-row gap-5 items-center sm:items-start">
             <div className="shrink-0 group relative">
-              <SafeImage
-                src={char.avatar_url}
-                alt={char.full_name}
-                fallbackEmoji="🧙"
-                className="w-28 h-28 rounded-2xl object-cover border-2 border-primary/30 shadow-xl"
-              />
+              <Card3D intensity={16} glare lift className="w-28 h-28 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-xl">
+                <SafeImage
+                  src={char.avatar_url}
+                  alt={char.full_name}
+                  fallbackEmoji="🧙"
+                  className="w-full h-full object-cover"
+                />
+              </Card3D>
               {isOwner && (
                 <button 
                   onClick={() => { setEditingPhoto(!editingPhoto); setTempUrl(char.avatar_url || ""); }}
