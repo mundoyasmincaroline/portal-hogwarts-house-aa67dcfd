@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, lazy, Suspense } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -15,7 +15,6 @@ import MagicalGaleon from "@/components/shared/MagicalGaleon";
 import Card3D from "@/components/Card3D";
 import { playMagicSound } from "@/services/core/soundService";
 
-const Wand3D = lazy(() => import("@/components/three/Wand3D"));
 import VipUpsellBanner from "@/components/VipUpsellBanner";
 import PedidosTab from "@/components/PedidosTab";
 import { useStore } from "@/hooks/features/useStore";
@@ -235,11 +234,7 @@ export default function GringottsStore() {
                 <Card3D key={item.id} intensity={10} className="glass p-8 rounded-[2.5rem] border border-primary/20 hover:border-primary/50 group">
                    <button type="button" onClick={() => setPreviewItem(item)} className="relative aspect-square rounded-2xl overflow-hidden mb-4 border border-white/10 w-full block cursor-pointer">
                       <SafeImage src={item.image_url} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                      {item.category === "wand" && (
-                        <Suspense fallback={null}>
-                          <Wand3D className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                        </Suspense>
-                      )}
+                       {item.category === "wand" && <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />}
                    </button>
                    <h3 className="font-heading text-xl text-primary">{item.name}</h3>
                    <div className="flex items-center justify-between mt-4">
