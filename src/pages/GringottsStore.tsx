@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, lazy, Suspense } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -14,6 +14,8 @@ import SafeImage from "@/components/SafeImage";
 import MagicalGaleon from "@/components/shared/MagicalGaleon";
 import Card3D from "@/components/Card3D";
 import { playMagicSound } from "@/services/core/soundService";
+
+const Wand3D = lazy(() => import("@/components/three/Wand3D"));
 import VipUpsellBanner from "@/components/VipUpsellBanner";
 import PedidosTab from "@/components/PedidosTab";
 import { useStore } from "@/hooks/features/useStore";
