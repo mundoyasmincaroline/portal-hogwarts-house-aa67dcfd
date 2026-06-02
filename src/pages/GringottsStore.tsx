@@ -203,6 +203,27 @@ export default function GringottsStore() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-16 pb-24 px-4 sm:px-6">
+      {/* ── Header com saldo persistente ── */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 -mb-8">
+        <Link to="/dashboard/wallet" className="glass rounded-2xl px-5 py-3 border border-yellow-500/30 flex items-center gap-3 hover:border-yellow-400/60 transition-all group">
+          <WalletIcon size={18} className="text-yellow-400" />
+          <div className="text-left">
+            <p className="text-[9px] uppercase tracking-widest text-yellow-300/80 font-heading leading-none">Saldo na Carteira</p>
+            <p className="font-heading text-lg text-yellow-400 leading-tight">{galeons.toLocaleString("pt-BR")} Galeões</p>
+          </div>
+          <ChevronRight size={14} className="text-yellow-400/60 group-hover:translate-x-1 transition-transform" />
+        </Link>
+        {profile?.vip_plan && (
+          <div className="glass rounded-2xl px-5 py-3 border border-purple-500/30 flex items-center gap-3">
+            <Crown size={18} className="text-purple-400" />
+            <div className="text-left">
+              <p className="text-[9px] uppercase tracking-widest text-purple-300/80 font-heading leading-none">Plano Ativo</p>
+              <p className="font-heading text-lg text-purple-400 leading-tight uppercase">{profile.vip_plan}</p>
+            </div>
+          </div>
+        )}
+      </div>
+
       <div className="text-center space-y-6 mb-16">
         <h1 className="text-4xl sm:text-6xl md:text-8xl font-heading text-gold-gradient tracking-tighter drop-shadow-[0_15px_40px_rgba(212,175,55,0.5)]">Gringotts Bank</h1>
         <p className="text-muted-foreground/90 text-xl font-serif italic max-w-2xl mx-auto leading-relaxed">"Fortius Quo Fidelius" — Mais forte quanto mais fiel.</p>
