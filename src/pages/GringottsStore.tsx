@@ -159,6 +159,7 @@ export default function GringottsStore() {
         user_id: user.id,
         amount_brl: plan.price_brl,
         package_id: `vip_${plan.id}`,
+        galeons: 0,
         status: 'pending'
       } as any).select("id").single();
 
