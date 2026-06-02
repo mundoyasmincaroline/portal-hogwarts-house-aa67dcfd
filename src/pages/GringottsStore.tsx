@@ -6,9 +6,10 @@ import EmojiIcon from "@/components/shared/EmojiIcon";
 import { 
   ShoppingBag, Sparkles, Coins, Crown, Gift, 
   Search, Filter, ChevronRight, Wand2, Shield, Heart, Zap, Star,
-  Flame, Shirt, Gem, ExternalLink, Check
+  Flame, Shirt, Gem, ExternalLink, Check, Smartphone, CreditCard, CheckCircle2, Wallet as WalletIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import SafeImage from "@/components/SafeImage";
@@ -76,10 +77,6 @@ export default function GringottsStore() {
   const [tab, setTab] = useState("featured");
   const [buyingPackageId, setBuyingPackageId] = useState<string | null>(null);
   const [previewItem, setPreviewItem] = useState<StoreItem | null>(null);
-
-  useEffect(() => { 
-    // loadStore logic handled by hook
-  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
