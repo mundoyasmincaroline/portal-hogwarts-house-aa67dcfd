@@ -92,6 +92,9 @@ const PotionsLab = lazy(() => import("./pages/PotionsLab"));
 const WorldMap = lazy(() => import("./pages/WorldMap"));
 const MagicalTravel = lazy(() => import("./pages/MagicalTravel"));
 const TravelJournal = lazy(() => import("./pages/TravelJournal"));
+const TriwizardTournament = lazy(() => import("./pages/TriwizardTournament"));
+const DuelLadder = lazy(() => import("./pages/DuelLadder"));
+const HallOfFame = lazy(() => import("./pages/HallOfFame"));
 
 const LoadingFallback = () => (
   <div className="relative flex h-screen flex-col items-center justify-center bg-background overflow-hidden">
@@ -264,6 +267,9 @@ const App = () => {
                   <Route path="world-map" element={<WorldMap />} />
                   <Route path="travel" element={<MagicalTravel />} />
                   <Route path="journal" element={<TravelJournal />} />
+                  <Route path="triwizard" element={<TriwizardTournament />} />
+                  <Route path="duel-ladder" element={<DuelLadder />} />
+                  <Route path="hall-of-fame" element={<HallOfFame />} />
                   <Route path="admin/analytics" element={
                     <ProtectedRoute adminOnly>
                       <AdminAnalytics />
