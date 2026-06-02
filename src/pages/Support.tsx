@@ -38,10 +38,10 @@ export default function Support() {
     }
     setLoading(true);
     const { data: { user } } = await supabase.auth.getUser();
-    const { error } = await supabase.from("support_tickets").insert({
+    const { error } = await supabase.from("support_tickets").insert([{
       ...parsed.data,
       user_id: user?.id ?? null,
-    });
+    }] as any);
     setLoading(false);
     if (error) {
       toast.error("Erro ao enviar chamado. Tente novamente.");
