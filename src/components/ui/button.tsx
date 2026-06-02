@@ -32,9 +32,9 @@ const buttonVariants = cva(
       },
       size: {
         // Tokens de tamanho — sempre ≥44px no mobile (touch-min)
-        default: "h-btn-md min-h-touch px-space-lg py-space-xs",
-        sm:      "h-btn-sm min-h-touch md:min-h-btn-sm rounded-lg px-space-md text-xs",
-        lg:      "h-btn-lg min-h-touch-lg rounded-2xl px-space-2xl text-base",
+        default: "h-btn-md min-h-touch px-space-md sm:px-space-lg py-space-xs text-xs sm:text-sm",
+        sm:      "h-btn-sm min-h-touch md:min-h-btn-sm rounded-lg px-space-sm sm:px-space-md text-[10px] sm:text-xs",
+        lg:      "h-btn-lg min-h-touch-lg rounded-2xl px-space-xl sm:px-space-2xl text-sm sm:text-base",
         icon:    "h-touch w-touch md:h-10 md:w-10",
       },
     },

@@ -152,18 +152,18 @@ export default function Wallet() {
             <p className="text-xs text-muted-foreground font-serif italic">Tudo que você pode fazer com seus Galeões.</p>
           </div>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
           {HUBS.map((h) => (
             <Link
               key={h.to}
               to={h.to}
-              className={`group glass rounded-2xl p-4 border ${h.ring} bg-white/[0.02] hover:bg-white/[0.05] hover:-translate-y-0.5 transition-all`}
+              className={`group glass rounded-2xl p-3 sm:p-4 border ${h.ring} bg-white/[0.02] hover:bg-white/[0.05] hover:-translate-y-0.5 transition-all flex flex-col items-center sm:items-start text-center sm:text-left h-full`}
             >
-              <div className={`w-9 h-9 rounded-lg bg-black/40 border border-white/5 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
-                <h.icon size={18} className={h.color} />
+              <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-black/40 border border-white/5 flex items-center justify-center mb-2 sm:mb-3 group-hover:scale-110 transition-transform shrink-0`}>
+                <h.icon size={16} className={`${h.color} sm:w-[18px] sm:h-[18px]`} />
               </div>
-              <p className="font-heading text-sm text-foreground leading-tight">{h.label}</p>
-              <p className="text-[10px] text-muted-foreground mt-1 line-clamp-2 leading-snug">{h.desc}</p>
+              <p className="font-heading text-[11px] sm:text-sm text-foreground leading-tight truncate w-full">{h.label}</p>
+              <p className="hidden sm:block text-[10px] text-muted-foreground mt-1 line-clamp-2 leading-snug">{h.desc}</p>
             </Link>
           ))}
         </div>

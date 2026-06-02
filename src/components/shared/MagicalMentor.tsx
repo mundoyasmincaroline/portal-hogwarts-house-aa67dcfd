@@ -109,16 +109,48 @@ export default function MagicalMentor() {
   const house = HOUSES[houseId];
   const houseGuide = HOUSE_GUIDES[houseId];
 
-  // Auto-open for new users (simple check)
+  // Lógica de visibilidade e persistência do mentor
   useEffect(() => {
-    const hasSeenGuide = localStorage.getItem(`has_seen_mentor_guide_${profile?.user_id}`);
-    if (!hasSeenGuide && profile?.user_id) {
-      setTimeout(() => setIsOpen(true), 2000);
+    if (!profile?.user_id) return;
+    
+    const mentorData = JSON.parse(localStorage.getItem(`mentor_state_${profile.user_id}`) || '{}');
+    const now = Date.now();
+    const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+    
+    // Se já passou o período de treinamento (7 dias) e já viu o guia, não abre sozinho
+    const isTrainingOver = mentorData.started_at && (now - mentorData.started_at > SEVEN_DAYS);
+    
+    if (!mentorData.has_seen_initial_guide) {
+      // Primeira vez: inicia contador e abre guia
+      localStorage.setItem(`mentor_state_${profile.user_id}`, JSON.stringify({
+        ...mentorData,
+        started_at: now,
+        has_seen_initial_guide: false
+      }));
+      setTimeout(() => setIsOpen(true), 2500);
+    } else if (!isTrainingOver) {
+      // Período de aprendizado: pode sugerir algo dependendo da página, 
+      // mas por enquanto apenas não abre sozinho se já viu o guia inicial hoje
+      const lastSeen = mentorData.last_auto_open || 0;
+      const ONE_DAY = 24 * 60 * 60 * 1000;
+      
+      if (now - lastSeen > ONE_DAY) {
+        // Abre uma vez por dia durante a primeira semana
+        setTimeout(() => setIsOpen(true), 3000);
+        localStorage.setItem(`mentor_state_${profile.user_id}`, JSON.stringify({
+          ...mentorData,
+          last_auto_open: now
+        }));
+      }
     }
   }, [profile?.user_id]);
 
   const handleClose = () => {
-    localStorage.setItem(`has_seen_mentor_guide_${profile?.user_id}`, "true");
+    const mentorData = JSON.parse(localStorage.getItem(`mentor_state_${profile?.user_id}`) || '{}');
+    localStorage.setItem(`mentor_state_${profile?.user_id}`, JSON.stringify({
+      ...mentorData,
+      has_seen_initial_guide: true
+    }));
     setIsOpen(false);
   };
 
