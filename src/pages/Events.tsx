@@ -214,7 +214,7 @@ export default function Events() {
                       <CheckCircle2 size={16} /> Concluído
                     </div>
                   ) : isActive ? (
-                    <Button variant="magical" className="w-full py-6 rounded-xl group" onClick={() => handleJoinEvent(event)}>
+                    <Button variant="magical" className="w-full min-h-12 h-auto py-3 sm:py-6 rounded-xl group" onClick={() => handleJoinEvent(event)}>
                       Participar do Evento <ChevronRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   ) : isUpcoming ? (
@@ -253,7 +253,7 @@ export default function Events() {
                 Ao participar de todos os eventos do dia, você aumenta suas chances de desbloquear conquistas ocultas no seu perfil. Bruxo VIPs recebem bônus de até 100% nas recompensas.
             </p>
         </div>
-        <Button variant="outline" className="border-primary/40 text-primary hover:bg-primary/10 rounded-xl px-8" onClick={() => window.location.href = '/dashboard/store'}>
+        <Button variant="outline" className="w-full md:w-auto border-primary/40 text-primary hover:bg-primary/10 rounded-xl px-5 sm:px-8" onClick={() => window.location.href = '/dashboard/store'}>
             Ver Benefícios VIP
         </Button>
       </div>
