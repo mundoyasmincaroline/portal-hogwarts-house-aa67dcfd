@@ -103,7 +103,7 @@ export default function Ranking() {
         {[{ id: "geral", label: "🏆 Ranking Geral" }, { id: "casas", label: "🏰 Pontuação das Casas" }].map(t => (
           <button key={t.id} onClick={() => setTab(t.id as any)}
             className={`px-4 py-2 rounded-full text-sm font-heading transition-all border ${
-              tab === t.id ? "bg-primary/20 border-primary text-primary" : "border-border text-muted-foreground hover:border-primary/50"
+              tab === t.id ? "bg-primary/20 border-primary text-primary" : "bg-background/70 backdrop-blur-md border-primary/30 text-foreground hover:border-primary/50"
             }`}>
             {t.label}
           </button>

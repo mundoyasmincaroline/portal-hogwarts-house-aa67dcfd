@@ -125,7 +125,7 @@ export default function Members() {
         <div className="flex gap-1.5 sm:gap-2 flex-wrap">
           <button
             onClick={() => setHouseFilter("all")}
-            className={`px-3 py-2 rounded-full text-[10px] sm:text-xs font-heading transition-all border ${houseFilter === "all" ? "bg-primary/20 border-primary text-primary" : "border-border text-muted-foreground hover:border-primary/50"}`}
+            className={`px-3 py-2 rounded-full text-[10px] sm:text-xs font-heading transition-all border backdrop-blur-md ${houseFilter === "all" ? "bg-primary/25 border-primary text-primary shadow-[0_0_12px_rgba(212,175,55,0.35)]" : "bg-background/70 border-primary/30 text-foreground hover:border-primary/60 hover:text-primary"}`}
           >
             Todas
           </button>
@@ -133,7 +133,7 @@ export default function Members() {
             <button
               key={h.id}
               onClick={() => setHouseFilter(houseFilter === h.id ? "all" : h.id)}
-              className={`px-3 py-2 rounded-full text-[10px] sm:text-xs font-heading transition-all border ${houseFilter === h.id ? "bg-primary/20 border-primary text-primary" : "border-border text-muted-foreground hover:border-primary/50"}`}
+              className={`px-3 py-2 rounded-full text-[10px] sm:text-xs font-heading transition-all border backdrop-blur-md ${houseFilter === h.id ? "bg-primary/25 border-primary text-primary shadow-[0_0_12px_rgba(212,175,55,0.35)]" : "bg-background/70 border-primary/30 text-foreground hover:border-primary/60 hover:text-primary"}`}
             >
               {h.label}
             </button>

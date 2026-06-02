@@ -175,7 +175,7 @@ export default function StickerTrades() {
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`px-5 py-2 rounded-full text-sm font-heading border transition-all ${tab === t ? "bg-primary/20 border-primary text-primary" : "border-border text-muted-foreground hover:border-primary/40"}`}
+            className={`px-5 py-2 rounded-full text-sm font-heading border transition-all ${tab === t ? "bg-primary/20 border-primary text-primary" : "bg-background/70 backdrop-blur-md border-primary/30 text-foreground hover:border-primary/40"}`}
           >
             {t === "mercado" ? `🏪 Mercado (${otherTrades.length})` : `📦 Minhas Ofertas (${myTrades.length})`}
           </button>
