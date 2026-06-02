@@ -14,6 +14,7 @@ import Notifications from "@/components/Notifications";
 import PendingApproval from "@/pages/PendingApproval";
 import RulesAgreement from "@/pages/RulesAgreement";
 import CharacterSelection from "@/pages/CharacterSelection";
+import CastleEntrance from "@/pages/CastleEntrance";
 import NotificationBanner from "@/components/NotificationBanner";
 import { useAchievements } from "@/hooks/features/useAchievements";
 import TurnSwitcher from "@/components/TurnSwitcher";
@@ -166,6 +167,10 @@ export default function DashboardLayout() {
   // Admin pode pular a seleção de personagem via flag persistido em localStorage
   const adminSkippedCharacter = isAdmin && user && typeof window !== "undefined" && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
   if (hasCharacters === false && !profile.active_character_id && !adminSkippedCharacter) return <ProtectedRoute adminOnly={false}><CharacterSelection adminMode={isAdmin} /></ProtectedRoute>;
+  // Cena cinematográfica de entrada no castelo — exibida uma única vez após a primeira ficha
+  if (!isAdmin && profile.active_character_id && (profile as any).has_seen_intro === false) {
+    return <ProtectedRoute adminOnly={false}><CastleEntrance /></ProtectedRoute>;
+  }
 
   return (
     <div className="flex h-screen overflow-hidden relative bg-black">
