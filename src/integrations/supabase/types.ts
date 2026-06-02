@@ -2019,6 +2019,36 @@ export type Database = {
           },
         ]
       }
+      prophet_articles: {
+        Row: {
+          category: string
+          content: string
+          generated_at: string
+          id: string
+          image_url: string | null
+          published: boolean
+          title: string
+        }
+        Insert: {
+          category?: string
+          content: string
+          generated_at?: string
+          id?: string
+          image_url?: string | null
+          published?: boolean
+          title: string
+        }
+        Update: {
+          category?: string
+          content?: string
+          generated_at?: string
+          id?: string
+          image_url?: string | null
+          published?: boolean
+          title?: string
+        }
+        Relationships: []
+      }
       quest_choices: {
         Row: {
           choice_text: string
@@ -2064,34 +2094,93 @@ export type Database = {
           },
         ]
       }
+      quest_steps: {
+        Row: {
+          action_hint: string | null
+          description: string
+          galeon_reward: number
+          id: string
+          narrative: string
+          quest_id: string
+          step_order: number
+          title: string
+          xp_reward: number
+        }
+        Insert: {
+          action_hint?: string | null
+          description?: string
+          galeon_reward?: number
+          id?: string
+          narrative?: string
+          quest_id: string
+          step_order: number
+          title: string
+          xp_reward?: number
+        }
+        Update: {
+          action_hint?: string | null
+          description?: string
+          galeon_reward?: number
+          id?: string
+          narrative?: string
+          quest_id?: string
+          step_order?: number
+          title?: string
+          xp_reward?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quest_steps_quest_id_fkey"
+            columns: ["quest_id"]
+            isOneToOne: false
+            referencedRelation: "quests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       quests: {
         Row: {
           active: boolean | null
+          cover_url: string | null
           created_at: string | null
           description: string | null
+          difficulty: number
+          galeon_reward: number
           galeons_reward: number | null
           id: string
           min_level: number | null
+          region: string
+          slug: string | null
           title: string
           xp_reward: number | null
         }
         Insert: {
           active?: boolean | null
+          cover_url?: string | null
           created_at?: string | null
           description?: string | null
+          difficulty?: number
+          galeon_reward?: number
           galeons_reward?: number | null
           id?: string
           min_level?: number | null
+          region?: string
+          slug?: string | null
           title: string
           xp_reward?: number | null
         }
         Update: {
           active?: boolean | null
+          cover_url?: string | null
           created_at?: string | null
           description?: string | null
+          difficulty?: number
+          galeon_reward?: number
           galeons_reward?: number | null
           id?: string
           min_level?: number | null
+          region?: string
+          slug?: string | null
           title?: string
           xp_reward?: number | null
         }
@@ -3189,6 +3278,44 @@ export type Database = {
           },
         ]
       }
+      user_quests: {
+        Row: {
+          completed: boolean
+          completed_at: string | null
+          current_step: number
+          id: string
+          quest_id: string
+          started_at: string
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean
+          completed_at?: string | null
+          current_step?: number
+          id?: string
+          quest_id: string
+          started_at?: string
+          user_id: string
+        }
+        Update: {
+          completed?: boolean
+          completed_at?: string | null
+          current_step?: number
+          id?: string
+          quest_id?: string
+          started_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_quests_quest_id_fkey"
+            columns: ["quest_id"]
+            isOneToOne: false
+            referencedRelation: "quests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: string
@@ -3356,6 +3483,37 @@ export type Database = {
         }
         Relationships: []
       }
+      analytics_daily_active: {
+        Row: {
+          active_users: number | null
+          day: string | null
+        }
+        Relationships: []
+      }
+      analytics_house_distribution: {
+        Row: {
+          house: string | null
+          total: number | null
+        }
+        Relationships: []
+      }
+      analytics_retention_cohorts: {
+        Row: {
+          cohort_week: string | null
+          signups: number | null
+          still_active: number | null
+        }
+        Relationships: []
+      }
+      analytics_vip_funnel: {
+        Row: {
+          lifetime_revenue_brl: number | null
+          paid_orders: number | null
+          total_users: number | null
+          vip_users: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       accept_sticker_trade: { Args: { _trade_id: string }; Returns: Json }
@@ -3460,6 +3618,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      complete_quest_step: { Args: { p_quest_id: string }; Returns: Json }
       complete_referral_action: {
         Args: { _invited_id: string }
         Returns: undefined
@@ -3524,6 +3683,7 @@ export type Database = {
         }
         Returns: Json
       }
+      start_quest: { Args: { p_quest_id: string }; Returns: Json }
       toggle_insta_like: {
         Args: { p_post_id: string; p_user_id: string }
         Returns: undefined
