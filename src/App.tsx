@@ -100,6 +100,7 @@ const Factions = lazy(() => import("./pages/Factions"));
 const LegendaryProphecies = lazy(() => import("./pages/LegendaryProphecies"));
 const BattleOfHogwarts = lazy(() => import("./pages/BattleOfHogwarts"));
 const EndTimes = lazy(() => import("./pages/EndTimes"));
+const Lineages = lazy(() => import("./pages/Lineages"));
 
 const LoadingFallback = () => (
   <div className="relative flex h-screen flex-col items-center justify-center bg-background overflow-hidden">
@@ -280,6 +281,7 @@ const App = () => {
                   <Route path="legendary-prophecies" element={<LegendaryProphecies />} />
                   <Route path="battle-of-hogwarts" element={<BattleOfHogwarts />} />
                   <Route path="end-times" element={<EndTimes />} />
+                  <Route path="lineages" element={<Lineages />} />
                   <Route path="admin/analytics" element={
                     <ProtectedRoute adminOnly>
                       <AdminAnalytics />
