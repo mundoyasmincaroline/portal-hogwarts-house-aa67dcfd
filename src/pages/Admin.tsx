@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import { HOUSES, type House } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,6 +14,7 @@ type Tab = "members" | "pending_members" | "challenges" | "monetization" | "pedi
 
 export default function Admin() {
   const { isAdmin, user } = useAuth();
+  const navigate = useNavigate();
   const [tab, setTab] = useState<Tab>("members");
   const [members, setMembers] = useState<MemberProfile[]>([]);
   const [onlineFilter, setOnlineFilter] = useState<"all" | "online">("all");
