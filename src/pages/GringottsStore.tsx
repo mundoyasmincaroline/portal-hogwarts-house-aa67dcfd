@@ -160,9 +160,12 @@ export default function GringottsStore() {
   const buyItem = async (item: StoreItem) => {
     if (buyingIdLocal || buyingPackageId) return;
     setBuyingIdLocal(item.id);
-    const success = await handleBuyItem(item);
-    if (success) playMagicSound();
-    setBuyingIdLocal(null);
+    try {
+      const success = await handleBuyItem(item);
+      if (success) playMagicSound();
+    } finally {
+      setBuyingIdLocal(null);
+    }
   };
 
   const filteredItems = useMemo(() => items.filter(i => i.category === tab), [items, tab]);
@@ -256,6 +259,13 @@ export default function GringottsStore() {
       )}
 
       {(tab !== "featured" && tab !== "galeons" && tab !== "vip") && (
+        filteredItems.length === 0 ? (
+          <div className="text-center py-24 space-y-4 animate-in fade-in duration-700">
+            <div className="text-7xl opacity-30">🪄</div>
+            <p className="font-heading text-2xl text-muted-foreground">Os estoques de Gringotts estão sendo repostos...</p>
+            <p className="text-sm text-muted-foreground/50 font-serif italic">"Os goblins trabalham dia e noite. Volte em breve."</p>
+          </div>
+        ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-8">
           {filteredItems.map(item => (
             <div key={item.id} className="glass p-4 rounded-xl border border-white/5">
@@ -274,6 +284,7 @@ export default function GringottsStore() {
             </div>
           ))}
         </div>
+        )
       )}
     </div>
   );
