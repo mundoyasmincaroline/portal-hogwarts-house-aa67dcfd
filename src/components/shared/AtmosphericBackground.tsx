@@ -47,16 +47,16 @@ export const AtmosphericBackground: React.FC = () => {
             className={`absolute inset-0 bg-cover bg-center ${scene.tint}`}
             style={{ backgroundImage: `url(${scene.img})` }}
           />
-          {/* Atmospheric color wash */}
-          <div className={`absolute inset-0 bg-gradient-to-b ${scene.overlay}`} />
-          
-          {/* Landing page style glass/rim layers */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-amber-900/15 via-transparent to-blue-900/20 mix-blend-overlay" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(212,175,55,0.12),_transparent_55%)]" />
-          
-          {/* Vignette + readability layer — escurecido para garantir contraste do texto */}
-          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/55 to-background/40" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(var(--background)/0.35)_0%,hsl(var(--background)/0.75)_100%)]" />
+          {/* Atmospheric color wash — leve, mantém o cenário vivo */}
+          <div className={`absolute inset-0 bg-gradient-to-b ${scene.overlay} opacity-70`} />
+
+          {/* Glow dourado quente de Hogwarts (velas/lareira) */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-amber-700/25 via-transparent to-amber-900/10 mix-blend-soft-light" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(212,175,55,0.22),_transparent_60%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_rgba(180,90,30,0.18),_transparent_55%)]" />
+
+          {/* Vinheta dourada — escurece bordas sem chumbar o azul/cinza */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(20,12,5,0.7)_100%)]" />
           
           {/* Weather Particles Layer */}
           <WeatherParticles weather={weather} />
