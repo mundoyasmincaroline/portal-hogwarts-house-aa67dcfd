@@ -249,6 +249,71 @@ export type Database = {
         }
         Relationships: []
       }
+      battle_contributions: {
+        Row: {
+          attacks: number
+          battle_id: string
+          id: string
+          last_attack_at: string
+          total_damage: number
+          user_id: string
+        }
+        Insert: {
+          attacks?: number
+          battle_id: string
+          id?: string
+          last_attack_at?: string
+          total_damage?: number
+          user_id: string
+        }
+        Update: {
+          attacks?: number
+          battle_id?: string
+          id?: string
+          last_attack_at?: string
+          total_damage?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "battle_contributions_battle_id_fkey"
+            columns: ["battle_id"]
+            isOneToOne: false
+            referencedRelation: "battle_of_hogwarts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      battle_of_hogwarts: {
+        Row: {
+          ended_at: string | null
+          id: string
+          name: string
+          started_at: string
+          status: string
+          voldemort_hp: number
+          voldemort_max_hp: number
+        }
+        Insert: {
+          ended_at?: string | null
+          id?: string
+          name?: string
+          started_at?: string
+          status?: string
+          voldemort_hp?: number
+          voldemort_max_hp?: number
+        }
+        Update: {
+          ended_at?: string | null
+          id?: string
+          name?: string
+          started_at?: string
+          status?: string
+          voldemort_hp?: number
+          voldemort_max_hp?: number
+        }
+        Relationships: []
+      }
       battle_pass_rewards: {
         Row: {
           created_at: string | null
@@ -2813,6 +2878,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      legendary_prophecies: {
+        Row: {
+          body: string
+          condition_hint: string | null
+          created_at: string
+          fulfilled: boolean
+          fulfilled_at: string | null
+          id: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          condition_hint?: string | null
+          created_at?: string
+          fulfilled?: boolean
+          fulfilled_at?: string | null
+          id?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          condition_hint?: string | null
+          created_at?: string
+          fulfilled?: boolean
+          fulfilled_at?: string | null
+          id?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       lesson_attendance: {
         Row: {
@@ -6311,6 +6409,33 @@ export type Database = {
           },
         ]
       }
+      user_legend: {
+        Row: {
+          ascensions: number
+          bonus_xp_multiplier: number
+          last_ascended_at: string | null
+          legend_title: string
+          prestige: number
+          user_id: string
+        }
+        Insert: {
+          ascensions?: number
+          bonus_xp_multiplier?: number
+          last_ascended_at?: string | null
+          legend_title?: string
+          prestige?: number
+          user_id: string
+        }
+        Update: {
+          ascensions?: number
+          bonus_xp_multiplier?: number
+          last_ascended_at?: string | null
+          legend_title?: string
+          prestige?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_notification_settings: {
         Row: {
           enable_email_digest: boolean | null
@@ -6865,6 +6990,23 @@ export type Database = {
         Args: { p_position_id: string }
         Returns: Json
       }
+      ascend_to_legend: {
+        Args: never
+        Returns: {
+          ascensions: number
+          bonus_xp_multiplier: number
+          last_ascended_at: string | null
+          legend_title: string
+          prestige: number
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "user_legend"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       assign_daily_missions: {
         Args: never
         Returns: {
@@ -6893,6 +7035,10 @@ export type Database = {
           p_task?: string
           p_user_id: string
         }
+        Returns: Json
+      }
+      attack_voldemort: {
+        Args: { p_battle: string; p_spell?: string }
         Returns: Json
       }
       attempt_trial: {
