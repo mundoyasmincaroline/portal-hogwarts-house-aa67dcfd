@@ -157,7 +157,7 @@ export default function Members() {
                 <span className="w-2 h-2 rounded-full bg-green-500 inline-block animate-pulse" />
                 Online agora ({onlineMembers.length + 1})
               </h2>
-              <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+              <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
                 {onlineMembers.map((m, idx) => (
                   <motion.div
                     key={m.user_id}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Swords, Trophy, X, ChevronRight, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,10 +9,11 @@ export default function GlobalChallengeWatcher() {
   const { user } = useAuth();
   const [latestChallenge, setLatestChallenge] = useState<any>(null);
   const [showInvite, setShowInvite] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    // Escutar por novos desafios criados
-    const channelId = `challenges_channel:${Date.now()}:${Math.random().toString(36).slice(2)}`;
+    // Escutar por novos desafios criados (channelId estável)
+    const channelId = `challenges_channel:global`;
     const channel = supabase
       .channel(channelId)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "challenges" }, (payload) => {
@@ -28,10 +29,13 @@ export default function GlobalChallengeWatcher() {
   const handleNewChallenge = (challenge: any) => {
     setLatestChallenge(challenge);
     setShowInvite(true);
-    // Tocar som de duelo ou fanfarra
-    const audio = new Audio("https://cdn.pixabay.com/audio/2022/03/10/audio_c9c8a0e2a2.mp3"); // Fanfarra curta
-    audio.volume = 0.3;
-    audio.play().catch(() => {});
+    // Reutiliza instância única para evitar vazamento de memória
+    if (!audioRef.current) {
+      audioRef.current = new Audio("https://cdn.pixabay.com/audio/2022/03/10/audio_c9c8a0e2a2.mp3");
+      audioRef.current.volume = 0.3;
+    }
+    audioRef.current.currentTime = 0;
+    audioRef.current.play().catch(() => {});
   };
 
   if (!showInvite || !latestChallenge) return null;

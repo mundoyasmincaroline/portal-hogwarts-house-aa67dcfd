@@ -72,7 +72,7 @@ export default function PedidosTab() {
     <div className="space-y-4">
 
       {/* ── Revenue Dashboard ── */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-3">
         {[
           { icon: <TrendingUp size={16} className="text-green-400" />, label: "Receita Total",  value: `R$ ${totalRevenue.toFixed(2).replace(".",",")}`, color: "border-green-500/30 bg-green-900/10" },
           { icon: <Coins size={16} className="text-yellow-400" />,    label: "Este Mês (MRR)", value: `R$ ${mrr.toFixed(2).replace(".",",")}`,          color: "border-yellow-500/30 bg-yellow-900/10" },
