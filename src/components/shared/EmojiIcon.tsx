@@ -1,6 +1,6 @@
 import { memo } from "react";
 import {
-  Sun, Mars, Swords, Scale, Settings, Crown, AlertTriangle, Zap, Circle, Link2,
+  Sun, Venus, Swords, Scale, Settings, Crown, AlertTriangle, Zap, Circle, Link2,
   Tent, CheckCircle2, Plane, Mail, PenLine, Pencil, Check, X, Ban, Sparkles, Star,
   Snowflake, XCircle, HelpCircle, Heart, Plus, Tornado, Rainbow, Stars, Globe, Moon,
   Sprout, Trees, Wheat, Leaf, Drumstick, Candy, Cookie, Gift, Cake, Ghost, PartyPopper,
@@ -11,7 +11,7 @@ import {
   DollarSign, Folder, Calendar, BarChart3, ClipboardList, Pin, MapPin, Notebook,
   BookOpen, Book, Scroll, FileText, Phone, Megaphone, Send, Inbox, Package, Mailbox,
   Newspaper, Smartphone, Camera, RefreshCw, Search, KeyRound, Lock, Link, Hammer,
-  Sparkle, Bird, Candle, Trash2, Key, ScrollText, MessageSquare, Map, Smile, SmilePlus,
+  Sparkle, Bird, Flame as CandleIcon, Trash2, Key, ScrollText, MessageSquare, Map, Smile, SmilePlus,
   Meh, Frown, AlertCircle, Bed, Rocket, DoorOpen, ShoppingBag, LifeBuoy, Wrench, Shield,
   Award, Handshake, Cat, Squirrel, Brain, FlaskConical, Compass, Briefcase, Receipt,
   Wand2, type LucideIcon,
@@ -34,7 +34,7 @@ const SILVER = "#cbd5e1";
 
 const MAP: Record<string, IconSpec> = {
   // Símbolos / status
-  "☀": { I: Sun, c: YELLOW }, "♂": { I: Mars, c: BLUE },
+  "☀": { I: Sun, c: YELLOW }, "♂": { I: Venus, c: BLUE },
   "⚔": { I: Swords, c: SILVER }, "⚖": { I: Scale, c: GOLD },
   "⚙": { I: Settings, c: SILVER }, "⚜": { I: Crown, c: GOLD },
   "⚠": { I: AlertTriangle, c: YELLOW }, "⚡": { I: Zap, c: YELLOW },
@@ -121,7 +121,7 @@ const MAP: Record<string, IconSpec> = {
   "🔨": { I: Hammer, c: GOLD }, "🔮": { I: Sparkle, c: PURPLE },
 
   // Esotérico
-  "🕊": { I: Bird, c: SILVER }, "🕯": { I: Candle, c: GOLD },
+  "🕊": { I: Bird, c: SILVER }, "🕯": { I: CandleIcon, c: GOLD },
   "🗑": { I: Trash2, c: RED }, "🗝": { I: Key, c: GOLD },
   "🗞": { I: Newspaper, c: SILVER }, "🗣": { I: Megaphone, c: ORANGE },
   "🗺": { I: Map, c: GOLD },
