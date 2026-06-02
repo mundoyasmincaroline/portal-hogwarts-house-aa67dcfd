@@ -159,7 +159,7 @@ export default function StickerTrades() {
           <h1 className="font-heading text-3xl sm:text-5xl md:text-7xl text-gold-gradient mb-3 drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
             Trocas de Figurinhas
           </h1>
-          <p className="text-yellow-100/70 text-lg max-w-2xl mx-auto font-serif italic">
+          <p className="text-yellow-100/95 text-lg max-w-2xl mx-auto font-serif italic">
             "No Beco Diagonal dos Colecionadores, cada troca é um pacto de honra. Encontre o que falta em seu destino."
           </p>
 
@@ -275,7 +275,7 @@ export default function StickerTrades() {
                 <div className="w-16 h-16 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center text-3xl shadow-[0_0_20px_rgba(234,179,8,0.2)] group-hover:rotate-180 transition-transform duration-700">
                   ⚡
                 </div>
-                <span className="text-[10px] text-primary/40 font-bold tracking-widest uppercase">Pacto</span>
+                <span className="text-[10px] text-primary/85 font-bold tracking-widest uppercase">Pacto</span>
               </div>
 
               <div className="flex flex-col items-center gap-4 flex-1 w-full">

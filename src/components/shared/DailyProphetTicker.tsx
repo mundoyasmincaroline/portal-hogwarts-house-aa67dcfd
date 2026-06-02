@@ -36,7 +36,7 @@ export default function DailyProphetTicker() {
           {NEWS_ITEMS.map((item, i) => (
             <div key={i} className="flex items-center gap-3">
               <span className="text-yellow-500/50"><Sparkles size={12} className="sm:w-[14px] sm:h-[14px]" /></span>
-              <span className="font-heading text-[10px] sm:text-xs uppercase tracking-[0.25em] text-yellow-100/80 hover:text-yellow-400 transition-colors cursor-default drop-shadow-[0_0_5px_rgba(251,191,36,0.2)]">
+              <span className="font-heading text-[10px] sm:text-xs uppercase tracking-[0.25em] text-yellow-100 hover:text-yellow-400 transition-colors cursor-default drop-shadow-[0_0_5px_rgba(251,191,36,0.2)]">
                 {item}
               </span>
             </div>
@@ -45,7 +45,7 @@ export default function DailyProphetTicker() {
           {NEWS_ITEMS.map((item, i) => (
             <div key={`dup-${i}`} className="flex items-center gap-3">
               <span className="text-yellow-500/50"><Sparkles size={14} /></span>
-              <span className="font-heading text-xs uppercase tracking-widest text-yellow-100/80 hover:text-yellow-400 transition-colors cursor-default">
+              <span className="font-heading text-xs uppercase tracking-widest text-yellow-100 hover:text-yellow-400 transition-colors cursor-default">
                 {item}
               </span>
             </div>

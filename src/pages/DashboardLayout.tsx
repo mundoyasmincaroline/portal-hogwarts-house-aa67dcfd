@@ -214,7 +214,7 @@ export default function DashboardLayout() {
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-xs leading-tight font-heading truncate text-foreground group-hover:text-primary transition-colors">{profile?.full_name || "Bruxo"}</p>
-                <p className="text-[10px] leading-tight text-muted-foreground/60 truncate uppercase tracking-tighter">{house.name}</p>
+                <p className="text-[10px] leading-tight text-foreground/65 truncate uppercase tracking-tighter">{house.name}</p>
               </div>
             </Link>
             <div className="flex items-center gap-0.5 shrink-0">
@@ -222,13 +222,13 @@ export default function DashboardLayout() {
               <AmbientAudio />
               <button
                 onClick={() => setSoundOn(toggleSound())}
-                className="touch-target w-9 h-9 text-muted-foreground hover:bg-primary/10 hover:text-primary rounded-xl transition-all active:scale-90"
+                className="touch-target w-10 h-10 text-foreground/85 hover:bg-primary/15 hover:text-primary rounded-xl transition-all active:scale-90"
                 title={soundOn ? "Desativar Som" : "Ativar Som"}
               >{soundOn ? <Volume2 size={16} /> : <VolumeX size={16} />}</button>
               <Notifications />
               <button
                 onClick={async () => { await logout(); navigate("/"); }}
-                className="touch-target w-9 h-9 text-muted-foreground hover:bg-destructive/20 hover:text-destructive rounded-xl transition-all active:scale-90"
+                className="touch-target w-10 h-10 text-foreground/85 hover:bg-destructive/25 hover:text-destructive rounded-xl transition-all active:scale-90"
                 title="Sair"
               ><LogOut size={16} /></button>
             </div>

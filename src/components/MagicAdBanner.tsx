@@ -48,7 +48,7 @@ export default function MagicAdBanner() {
         
         <div className="flex-1 min-w-0">
           <h4 className="font-heading text-primary text-xs line-clamp-1 leading-tight mb-0.5">{ad.title}</h4>
-          <p className="text-[10px] text-muted-foreground/80 line-clamp-1 mb-1.5 font-serif italic">
+          <p className="text-[10px] text-foreground/75 line-clamp-1 mb-1.5 font-serif italic">
             Oferta exclusiva no Beco Diagonal
           </p>
           <div className="flex items-center gap-2">

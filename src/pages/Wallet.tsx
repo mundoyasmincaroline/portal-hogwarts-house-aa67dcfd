@@ -51,7 +51,7 @@ export default function Wallet() {
           <div className="w-full md:w-auto">
             <div className="glass rounded-[2rem] p-6 sm:p-8 border-yellow-400/30 bg-gradient-to-br from-yellow-900/30 to-black/60 shadow-2xl text-center relative group w-full md:min-w-[280px]">
               <div className="absolute inset-0 bg-yellow-400/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-              <p className="text-[10px] text-yellow-400/70 font-heading uppercase tracking-[0.2em] mb-4">Saldo Disponível</p>
+              <p className="text-[10px] text-yellow-400/95 font-heading uppercase tracking-[0.2em] mb-4">Saldo Disponível</p>
               <div className="flex items-center justify-center gap-3 mb-6 flex-wrap">
                 <MagicalGaleon size="md" />
                 <p className="font-heading text-4xl sm:text-5xl md:text-6xl text-yellow-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.6)] break-words max-w-full leading-none">{galeons.toLocaleString("pt-BR")}</p>
@@ -184,7 +184,7 @@ export default function Wallet() {
                 </div>
                 <div className="text-right">
                   <p className="text-yellow-400 font-heading text-base">R$ {o.amount_brl?.toFixed(2).replace(".", ",")}</p>
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-yellow-500/60">Processando</span>
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-yellow-500/95">Processando</span>
                 </div>
               </div>
             ))}

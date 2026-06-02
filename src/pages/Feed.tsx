@@ -107,7 +107,7 @@ export default function Feed() {
     <div className="max-w-6xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-6 duration-1000">
       <div className="space-y-4 text-center sm:text-left">
         <h1 className="text-4xl sm:text-6xl font-heading text-gold-gradient tracking-tighter drop-shadow-[0_10px_20px_rgba(212,175,55,0.3)]">Salão Principal</h1>
-        <p className="text-foreground/75 text-sm sm:text-base italic uppercase tracking-[0.28em] font-light">Os pergaminhos que narram a história do castelo</p>
+        <p className="text-foreground/85 text-sm sm:text-base italic uppercase tracking-[0.28em] font-light">Os pergaminhos que narram a história do castelo</p>
       </div>
 
 
@@ -115,12 +115,12 @@ export default function Feed() {
         <div className="lg:col-span-8 space-y-8">
           <PostComposer bannedWords={bannedWords} />
 
-          {loading && <p className="text-center text-foreground/70 text-sm py-6">Carregando feed...</p>}
+          {loading && <p className="text-center text-foreground/80 text-sm py-6">Carregando feed...</p>}
           {!loading && posts.length === 0 && (
             <div className="glass rounded-2xl p-10 text-center space-y-3 border border-white/5">
               <div className="text-5xl">📜</div>
               <p className="font-heading text-foreground">O Salão Principal está em silêncio...</p>
-              <p className="text-sm text-muted-foreground italic font-serif max-w-md mx-auto">
+              <p className="text-sm text-foreground/65 italic font-serif max-w-md mx-auto">
                 "Seja o primeiro bruxo a inscrever suas palavras neste pergaminho — toda lenda começa com uma linha."
               </p>
             </div>
