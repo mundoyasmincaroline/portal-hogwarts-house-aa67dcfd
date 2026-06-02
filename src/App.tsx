@@ -70,6 +70,8 @@ const NPCChat = lazy(() => import("./pages/NPCChat"));
 const Diary = lazy(() => import("./pages/Diary"));
 const Prophecy = lazy(() => import("./pages/Prophecy"));
 const CastleMap = lazy(() => import("./pages/CastleMap"));
+const Support = lazy(() => import("./pages/Support"));
+const AdminSupport = lazy(() => import("./pages/AdminSupport"));
 
 const LoadingFallback = () => (
   <div className="relative flex h-screen flex-col items-center justify-center bg-background overflow-hidden">
@@ -142,6 +144,7 @@ const App = () => {
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/parents" element={<ParentsGuide />} />
+                <Route path="/support" element={<Support />} />
                 
                 <Route path="/dashboard" element={
                   <ProtectedRoute>
@@ -178,6 +181,11 @@ const App = () => {
                   <Route path="admin/characters" element={
                     <ProtectedRoute adminOnly>
                       <AdminCharacters />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="admin/support" element={
+                    <ProtectedRoute adminOnly>
+                      <AdminSupport />
                     </ProtectedRoute>
                   } />
                   

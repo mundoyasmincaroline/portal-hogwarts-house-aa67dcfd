@@ -62,6 +62,7 @@ export default function Admin() {
           <Button variant="outline" onClick={() => navigate("/dashboard/admin/characters")}>🧾 Fichas & Canons</Button>
           <Button variant="outline" onClick={() => navigate("/dashboard/admin/analytics")}>📊 Analytics</Button>
           <Button variant="outline" onClick={() => navigate("/dashboard/admin/finance")}>💰 Financeiro</Button>
+          <Button variant="outline" onClick={() => navigate("/dashboard/admin/support")}>🛟 Suporte</Button>
         </div>
       </div>
 

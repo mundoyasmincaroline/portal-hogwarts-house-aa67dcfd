@@ -238,9 +238,11 @@ export default function Login() {
               Solicitar acesso
             </Link>
           </p>
-          <p className="text-xs text-muted-foreground mt-4 italic">
-            Problemas com o acesso? Contate o suporte:<br/>
-            <a href="mailto:mundoyasmincaroline@gmail.com" className="text-primary hover:underline">mundoyasmincaroline@gmail.com</a>
+          <p className="text-xs text-muted-foreground mt-4">
+            Problemas com o acesso?{" "}
+            <Link to="/support" className="text-primary hover:underline font-heading">
+              Falar com o Suporte
+            </Link>
           </p>
           <Link to="/" className="text-xs text-muted-foreground hover:text-primary mt-4 inline-block">
             ← Voltar ao início
