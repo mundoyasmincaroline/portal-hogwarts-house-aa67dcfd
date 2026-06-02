@@ -59,6 +59,9 @@ export const NAV_GROUPS = [
       { icon: <MagicalEmoji emoji="🌍" size="xs" />, label: "Mapa do Mundo", path: "/dashboard/world-map" },
       { icon: <MagicalEmoji emoji="✈️" size="xs" />, label: "Viagens Mágicas", path: "/dashboard/travel" },
       { icon: <MagicalEmoji emoji="📓" size="xs" />, label: "Diário de Viagem", path: "/dashboard/journal" },
+      { icon: <MagicalEmoji emoji="🏆" size="xs" />, label: "Torneio Tribruxo", path: "/dashboard/triwizard" },
+      { icon: <MagicalEmoji emoji="⚔️" size="xs" />, label: "Ranking de Duelistas", path: "/dashboard/duel-ladder" },
+      { icon: <MagicalIcon icon={Crown} size="xs" color="#fbbf24" />, label: "Hall da Fama", path: "/dashboard/hall-of-fame" },
     ]
   },
   {

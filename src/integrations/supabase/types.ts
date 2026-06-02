@@ -1499,6 +1499,33 @@ export type Database = {
           },
         ]
       }
+      duel_elo: {
+        Row: {
+          elo: number
+          losses: number
+          streak: number
+          updated_at: string
+          user_id: string
+          wins: number
+        }
+        Insert: {
+          elo?: number
+          losses?: number
+          streak?: number
+          updated_at?: string
+          user_id: string
+          wins?: number
+        }
+        Update: {
+          elo?: number
+          losses?: number
+          streak?: number
+          updated_at?: string
+          user_id?: string
+          wins?: number
+        }
+        Relationships: []
+      }
       duel_matches: {
         Row: {
           created_at: string | null
@@ -2283,6 +2310,36 @@ export type Database = {
           leader_id?: string
           name?: string
           total_xp?: number
+        }
+        Relationships: []
+      }
+      hall_of_fame: {
+        Row: {
+          awarded_at: string
+          category: string
+          id: string
+          score: number
+          season: number
+          title: string
+          user_id: string
+        }
+        Insert: {
+          awarded_at?: string
+          category: string
+          id?: string
+          score?: number
+          season?: number
+          title: string
+          user_id: string
+        }
+        Update: {
+          awarded_at?: string
+          category?: string
+          id?: string
+          score?: number
+          season?: number
+          title?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -5431,6 +5488,85 @@ export type Database = {
           },
         ]
       }
+      trial_attempts: {
+        Row: {
+          attempted_at: string
+          id: string
+          score: number
+          success: boolean
+          trial_id: string
+          user_id: string
+        }
+        Insert: {
+          attempted_at?: string
+          id?: string
+          score?: number
+          success?: boolean
+          trial_id: string
+          user_id: string
+        }
+        Update: {
+          attempted_at?: string
+          id?: string
+          score?: number
+          success?: boolean
+          trial_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trial_attempts_trial_id_fkey"
+            columns: ["trial_id"]
+            isOneToOne: false
+            referencedRelation: "triwizard_trials"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      triwizard_trials: {
+        Row: {
+          base_reward_galleons: number
+          base_reward_xp: number
+          description: string | null
+          difficulty: number
+          id: string
+          name: string
+          order_index: number
+          tournament_id: string
+          trial_type: string
+        }
+        Insert: {
+          base_reward_galleons?: number
+          base_reward_xp?: number
+          description?: string | null
+          difficulty?: number
+          id?: string
+          name: string
+          order_index?: number
+          tournament_id: string
+          trial_type: string
+        }
+        Update: {
+          base_reward_galleons?: number
+          base_reward_xp?: number
+          description?: string | null
+          difficulty?: number
+          id?: string
+          name?: string
+          order_index?: number
+          tournament_id?: string
+          trial_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "triwizard_trials_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: false
+            referencedRelation: "tournaments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ugc_missions: {
         Row: {
           created_at: string
@@ -6545,6 +6681,23 @@ export type Database = {
         }
         Returns: Json
       }
+      attempt_trial: {
+        Args: { p_trial: string }
+        Returns: {
+          attempted_at: string
+          id: string
+          score: number
+          success: boolean
+          trial_id: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "trial_attempts"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       award_galeons: {
         Args: { _amount: number; _reason?: string; _user_id: string }
         Returns: undefined
@@ -6703,6 +6856,10 @@ export type Database = {
       }
       feed_creature: { Args: { p_user_creature_id: string }; Returns: Json }
       finalize_auction: { Args: { p_auction_id: string }; Returns: Json }
+      finalize_duel_elo: {
+        Args: { p_loser: string; p_winner: string }
+        Returns: undefined
+      }
       forfeit_duel: { Args: { p_match: string }; Returns: undefined }
       get_payment_link: {
         Args: { p_order_id: string; p_request_id: number }
