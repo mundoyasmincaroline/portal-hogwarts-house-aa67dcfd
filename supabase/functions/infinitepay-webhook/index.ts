@@ -97,7 +97,7 @@ serve(async (req) => {
         infinitepay_id: transaction_nsu ?? null,
       })
       .eq("id", order_nsu)
-      .neq("status", "paid")
+      .eq("status", "pending")
       .select("id")
       .maybeSingle();
 
