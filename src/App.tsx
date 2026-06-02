@@ -52,6 +52,12 @@ const Quests = lazy(() => import("./pages/Quests"));
 const SortingHatAI = lazy(() => import("./pages/SortingHatAI"));
 const ProphetDaily = lazy(() => import("./pages/ProphetDaily"));
 const AdminAnalytics = lazy(() => import("./pages/AdminAnalytics"));
+const Guilds = lazy(() => import("./pages/Guilds"));
+const RaidBoss = lazy(() => import("./pages/RaidBoss"));
+const Auctions = lazy(() => import("./pages/Auctions"));
+const Gringotts = lazy(() => import("./pages/Gringotts"));
+const WorldEditor = lazy(() => import("./pages/WorldEditor"));
+const RankedLadder = lazy(() => import("./pages/RankedLadder"));
 
 const LoadingFallback = () => (
   <div className="relative flex h-screen flex-col items-center justify-center bg-background overflow-hidden">
@@ -176,6 +182,12 @@ const App = () => {
                   <Route path="quests" element={<Quests />} />
                   <Route path="sorting-hat" element={<SortingHatAI />} />
                   <Route path="prophet" element={<ProphetDaily />} />
+                  <Route path="guilds" element={<Guilds />} />
+                  <Route path="raid" element={<RaidBoss />} />
+                  <Route path="auctions" element={<Auctions />} />
+                  <Route path="gringotts" element={<Gringotts />} />
+                  <Route path="world-editor" element={<WorldEditor />} />
+                  <Route path="ranked" element={<RankedLadder />} />
                   <Route path="admin/analytics" element={
                     <ProtectedRoute adminOnly>
                       <AdminAnalytics />
