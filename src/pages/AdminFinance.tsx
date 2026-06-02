@@ -127,10 +127,10 @@ export default function AdminFinance() {
 
       {/* ── KPI CARDS ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
-        <KPIItem title="Receita Total" value={`R$ ${stats.totalRevenue.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`} icon={DollarSign} color="text-green-500" trend="+12%" />
-        <KPIItem title="Galeões Vendidos" value={stats.totalGaleons.toLocaleString()} icon={Coins} color="text-yellow-500" trend="+8%" />
-        <KPIItem title="Vendas Concluídas" value={stats.totalOrders.toString()} icon={TrendingUp} color="text-blue-500" trend="+15%" />
-        <KPIItem title="VIPs Ativos" value={stats.activeVips.toString()} icon={Crown} color="text-purple-500" trend="+5%" />
+        <KPIItem title="Receita Total" value={`R$ ${stats.totalRevenue.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`} icon={DollarSign} color="text-green-500" />
+        <KPIItem title="Galeões Vendidos" value={stats.totalGaleons.toLocaleString()} icon={Coins} color="text-yellow-500" />
+        <KPIItem title="Vendas Concluídas" value={stats.totalOrders.toString()} icon={TrendingUp} color="text-blue-500" />
+        <KPIItem title="VIPs Ativos" value={stats.activeVips.toString()} icon={Crown} color="text-purple-500" />
       </div>
 
       {/* ── CHARTS SECTION ── */}
