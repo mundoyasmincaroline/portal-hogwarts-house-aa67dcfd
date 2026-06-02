@@ -72,7 +72,9 @@ export default function DMChat() {
         const msg = payload.new as DM;
         if (msg.sender_id !== partnerId) return;
         setMessages(prev => prev.some(m => m.id === msg.id) ? prev : [...prev, msg]);
-        supabase.from("dm_messages").update({ read: true } as never).eq("id", msg.id);
+        if (!msg.read) {
+          supabase.from("dm_messages").update({ read: true } as never).eq("id", msg.id);
+        }
       })
       .subscribe();
 
@@ -109,7 +111,7 @@ export default function DMChat() {
   }, {} as Record<string, DM[]>);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-80px)] sm:h-[calc(100vh-120px)] max-w-xl mx-auto px-1 sm:px-0 pb-20 md:pb-0">
+    <div className="flex flex-col h-[calc(100dvh-80px)] sm:h-[calc(100dvh-120px)] max-w-xl mx-auto px-1 sm:px-0 pb-20 md:pb-0">
       {/* Header */}
       <div className="glass rounded-[1.5rem] sm:rounded-2xl p-2 sm:p-4 mb-3 flex items-center gap-3 shrink-0 border-white/5">
         <button onClick={() => navigate("/dashboard/dm")} className="touch-target w-9 h-9 flex items-center justify-center rounded-xl hover:bg-white/5 text-muted-foreground hover:text-primary transition-all">

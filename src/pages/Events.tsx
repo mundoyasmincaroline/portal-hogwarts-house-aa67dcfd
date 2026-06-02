@@ -124,9 +124,8 @@ export default function Events() {
         toast.error("Não foi possível registrar sua participação.");
         return;
       }
-      try {
-        await (supabase.rpc as any)("award_xp_action", { _action: "event", _user_id: user.id, _xp: event.xp });
-      } catch { /* RPC opcional */ }
+      const { error: xpErr } = await (supabase.rpc as any)("award_xp_action", { _action: "event", _user_id: user.id, _xp: event.xp });
+      if (xpErr) console.warn("XP do evento não creditado:", xpErr.message);
       setCompletedToday(prev => prev.includes(event.id) ? prev : [...prev, event.id]);
       toast.success(`🎉 +${event.xp} XP & +${event.galeons} Galeões! Participação registrada!`);
     } catch (e: any) {

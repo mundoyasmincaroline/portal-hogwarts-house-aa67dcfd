@@ -2883,6 +2883,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      open_sticker_pack: { Args: { _user_id: string }; Returns: Json }
       start_payment_request: {
         Args: {
           p_amount_brl: number
