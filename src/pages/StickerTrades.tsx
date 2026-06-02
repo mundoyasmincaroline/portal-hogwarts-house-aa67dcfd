@@ -48,6 +48,7 @@ export default function StickerTrades() {
   const [offerStickerId, setOfferStickerId] = useState<string>("");
   const [wantStickerId, setWantStickerId] = useState<string>("");
   const [creating, setCreating] = useState(false);
+  const [acceptingId, setAcceptingId] = useState<string | null>(null);
 
   useEffect(() => { loadData(); }, [user]);
 
