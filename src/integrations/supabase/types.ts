@@ -898,6 +898,45 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_missions_catalog: {
+        Row: {
+          action_type: string
+          active: boolean
+          created_at: string
+          description: string
+          galeons_reward: number
+          goal: number
+          icon: string
+          id: string
+          title: string
+          xp_reward: number
+        }
+        Insert: {
+          action_type: string
+          active?: boolean
+          created_at?: string
+          description?: string
+          galeons_reward?: number
+          goal?: number
+          icon?: string
+          id?: string
+          title: string
+          xp_reward?: number
+        }
+        Update: {
+          action_type?: string
+          active?: boolean
+          created_at?: string
+          description?: string
+          galeons_reward?: number
+          goal?: number
+          icon?: string
+          id?: string
+          title?: string
+          xp_reward?: number
+        }
+        Relationships: []
+      }
       daily_prophet_news: {
         Row: {
           category: string | null
@@ -1714,6 +1753,7 @@ export type Database = {
           rp_streak_best: number
           rp_streak_current: number
           sickles: number | null
+          streak_freezes: number
           updated_at: string
           user_id: string
           username: string
@@ -1747,6 +1787,7 @@ export type Database = {
           rp_streak_best?: number
           rp_streak_current?: number
           sickles?: number | null
+          streak_freezes?: number
           updated_at?: string
           user_id: string
           username: string
@@ -1780,6 +1821,7 @@ export type Database = {
           rp_streak_best?: number
           rp_streak_current?: number
           sickles?: number | null
+          streak_freezes?: number
           updated_at?: string
           user_id?: string
           username?: string
@@ -2670,6 +2712,53 @@ export type Database = {
         }
         Relationships: []
       }
+      user_daily_missions: {
+        Row: {
+          assigned_date: string
+          completed: boolean
+          completed_at: string | null
+          created_at: string
+          galeons_awarded: number | null
+          id: string
+          mission_id: string
+          progress: number
+          user_id: string
+          xp_awarded: number | null
+        }
+        Insert: {
+          assigned_date?: string
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          galeons_awarded?: number | null
+          id?: string
+          mission_id: string
+          progress?: number
+          user_id: string
+          xp_awarded?: number | null
+        }
+        Update: {
+          assigned_date?: string
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          galeons_awarded?: number | null
+          id?: string
+          mission_id?: string
+          progress?: number
+          user_id?: string
+          xp_awarded?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_daily_missions_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "daily_missions_catalog"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_items: {
         Row: {
           character_id: string | null
@@ -2949,6 +3038,27 @@ export type Database = {
         Args: { _months?: number; _plan: string; _user_id: string }
         Returns: undefined
       }
+      assign_daily_missions: {
+        Args: never
+        Returns: {
+          assigned_date: string
+          completed: boolean
+          completed_at: string | null
+          created_at: string
+          galeons_awarded: number | null
+          id: string
+          mission_id: string
+          progress: number
+          user_id: string
+          xp_awarded: number | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "user_daily_missions"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       award_galeons: {
         Args: { _amount: number; _reason?: string; _user_id: string }
         Returns: undefined
@@ -2965,7 +3075,47 @@ export type Database = {
         Args: { _father_id: string; _mother_id: string }
         Returns: string
       }
-      claim_rp_slot: { Args: { p_character_id: string }; Returns: Json }
+      claim_rp_slot: {
+        Args: { p_character_id: string }
+        Returns: {
+          character_id: string
+          claim_date: string
+          claimed_at: string
+          ended_at: string | null
+          id: string
+          last_active_at: string
+          messages_count: number
+          user_id: string
+          xp_earned: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "rp_daily_claims"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      complete_daily_mission: {
+        Args: { p_mission_id: string }
+        Returns: {
+          assigned_date: string
+          completed: boolean
+          completed_at: string | null
+          created_at: string
+          galeons_awarded: number | null
+          id: string
+          mission_id: string
+          progress: number
+          user_id: string
+          xp_awarded: number | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "user_daily_missions"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       complete_referral_action: {
         Args: { _invited_id: string }
         Returns: undefined
