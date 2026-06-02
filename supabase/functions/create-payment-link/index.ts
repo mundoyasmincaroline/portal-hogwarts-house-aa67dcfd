@@ -79,7 +79,11 @@ serve(async (req) => {
 
     const data = await response.json();
 
-    if (!response.ok || !data.url) {
+    // InfinitePay pode retornar a URL em campos diferentes conforme a versão da API
+    const paymentUrl: string | undefined =
+      data?.url || data?.link || data?.checkout_url;
+
+    if (!response.ok || !paymentUrl) {
       console.error("Erro InfinitePay:", data);
       return new Response(
         JSON.stringify({ error: "Falha ao gerar link InfinitePay.", details: data }),
@@ -93,13 +97,14 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
 
-    await supabaseAdmin
+    const { error: updErr } = await supabaseAdmin
       .from("galeon_orders")
-      .update({ payment_link: data.url })
+      .update({ payment_link: paymentUrl })
       .eq("id", order_id);
+    if (updErr) console.error("Falha ao salvar payment_link:", updErr);
 
     return new Response(
-      JSON.stringify({ payment_url: data.url }),
+      JSON.stringify({ payment_url: paymentUrl }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
 
