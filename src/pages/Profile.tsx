@@ -5,6 +5,7 @@ import { ProfileAboutTab } from "./Profile/ProfileAboutTab";
 import SafeImage from "@/components/SafeImage";
 import CharacterSheetView from "@/components/profile/CharacterSheetView";
 import ProfileAlbum from "@/components/profile/ProfileAlbum";
+import EditProfileButton from "@/components/profile/EditProfileButton";
 import { useProfile } from "@/hooks/features/useProfile";
 
 export default function Profile() {
@@ -37,6 +38,9 @@ export default function Profile() {
           <p className="text-sm text-muted-foreground/90 mt-4 max-w-md mx-auto whitespace-pre-line italic">
             {profile.bio}
           </p>
+        )}
+        {isMe && profileUserId && (
+          <EditProfileButton profile={profile} onSaved={() => fetchProfileData(profileUserId)} />
         )}
       </div>
 
