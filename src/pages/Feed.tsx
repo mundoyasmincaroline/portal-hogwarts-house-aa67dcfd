@@ -15,6 +15,7 @@ import { ActiveWizardsSidebar } from "@/components/feed/ActiveWizardsSidebar";
 import { ChallengesSidebar } from "@/components/feed/ChallengesSidebar";
 import MonthlyCheckInCalendar from "@/components/MonthlyCheckInCalendar";
 import DailyMissionsPanel from "@/components/DailyMissionsPanel";
+import StreakFreezeCard from "@/components/StreakFreezeCard";
 
 const REACTIONS = ["⚡", "❤️", "🔥", "🦁", "🦅", "🐍", "🦡"];
 
@@ -155,6 +156,7 @@ export default function Feed() {
           <ActiveWizardsSidebar onlineUsers={onlineUsers} />
           <DailyMissionsPanel />
           <MonthlyCheckInCalendar />
+          <StreakFreezeCard />
           <ChallengesSidebar activeChallenges={activeChallenges} />
         </div>
       </div>
