@@ -62,7 +62,7 @@ export default function Azkaban() {
 
   if (loading) return <div className="text-center py-20 text-muted-foreground animate-pulse">Carregando...</div>;
 
-  const isInAzkaban = azkabanStatus && timeLeft > 0;
+  const isInAzkaban = !!azkabanStatus && (timeLeft > 0 || !azkabanStatus.release_at);
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
