@@ -2899,6 +2899,10 @@ export type Database = {
         Args: { p_post_id: string; p_user_id: string }
         Returns: undefined
       }
+      validate_enigma_answer: {
+        Args: { _answer: string; _challenge_id: string }
+        Returns: Json
+      }
       verify_infinitepay_payment: {
         Args: {
           p_order_nsu: string

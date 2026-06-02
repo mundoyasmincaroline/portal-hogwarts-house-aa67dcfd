@@ -1,6 +1,14 @@
 import MagicalEmoji from "@/components/shared/MagicalEmoji";
 import { useNavigate } from "react-router-dom";
 
+const TYPE_MAP: Record<string, { label: string; emoji: string }> = {
+  daily: { label: "Missão Diária", emoji: "⚡" },
+  weekly: { label: "Desafio Semanal", emoji: "🔥" },
+  enigma: { label: "Enigma de Hogwarts", emoji: "🦉" },
+  social: { label: "Embaixador Mágico", emoji: "📱" },
+  special: { label: "Evento Especial", emoji: "✨" },
+};
+
 interface ChallengesSidebarProps {
   activeChallenges: any[];
 }
@@ -18,7 +26,9 @@ export function ChallengesSidebar({ activeChallenges }: ChallengesSidebarProps) 
         {activeChallenges.length === 0 && (
           <p className="text-[10px] text-muted-foreground uppercase text-center py-6 tracking-[0.4em] opacity-30">Vazio por enquanto</p>
         )}
-        {activeChallenges.map((c) => (
+        {activeChallenges.map((c) => {
+          const meta = TYPE_MAP[c.type] ?? { label: "Missão", emoji: "🪄" };
+          return (
           <div
             key={c.id}
             onClick={() => navigate("/dashboard/challenges")}
@@ -30,19 +40,20 @@ export function ChallengesSidebar({ activeChallenges }: ChallengesSidebarProps) 
             <div className="absolute inset-y-0 left-0 w-[2px] bg-primary opacity-0 group-hover/item:opacity-100 transition-opacity" />
             <div className="flex items-center gap-4 relative z-10">
               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover/item:scale-110 transition-transform">
-                 <MagicalEmoji emoji={c.type === 'daily' ? '⚡' : '🔥'} size="sm" />
+                 <MagicalEmoji emoji={meta.emoji} size="sm" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">{c.title}</p>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{c.type === "daily" ? "Diário" : "Semanal"}</span>
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{meta.label}</span>
                   <div className="w-1 h-1 rounded-full bg-white/20" />
                   <span className="text-[10px] text-primary font-bold">{c.xp_reward} XP</span>
                 </div>
               </div>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

@@ -48,6 +48,7 @@ export default function StickerTrades() {
   const [offerStickerId, setOfferStickerId] = useState<string>("");
   const [wantStickerId, setWantStickerId] = useState<string>("");
   const [creating, setCreating] = useState(false);
+  const [acceptingId, setAcceptingId] = useState<string | null>(null);
 
   useEffect(() => { loadData(); }, [user]);
 
@@ -115,17 +116,22 @@ export default function StickerTrades() {
   };
 
   const acceptTrade = async (trade: Trade) => {
-    if (!user) return;
+    if (!user || acceptingId) return;
     if (trade.wanted_sticker_id && !myStickers.find(s => s.id === trade.wanted_sticker_id)) {
       toast.error("Você não possui a figurinha pedida pelo ofertante.");
       return;
     }
-    const { data, error } = await (supabase.rpc as any)("accept_sticker_trade", { _trade_id: trade.id });
-    if (error) { toast.error("Erro ao aceitar troca: " + error.message); return; }
-    const result = data as { success: boolean; message?: string };
-    if (!result?.success) { toast.error(result?.message || "Não foi possível concluir a troca."); loadData(); return; }
-    toast.success("🎉 Troca realizada com sucesso! Figurinha adicionada ao seu álbum.");
-    loadData();
+    setAcceptingId(trade.id);
+    try {
+      const { data, error } = await (supabase.rpc as any)("accept_sticker_trade", { _trade_id: trade.id });
+      if (error) { toast.error("Erro ao aceitar troca: " + error.message); return; }
+      const result = data as { success: boolean; message?: string };
+      if (!result?.success) { toast.error(result?.message || "Não foi possível concluir a troca."); return; }
+      toast.success("🎉 Troca realizada com sucesso! Figurinha adicionada ao seu álbum.");
+    } finally {
+      setAcceptingId(null);
+      loadData();
+    }
   };
 
   const cancelTrade = async (tradeId: string) => {
@@ -312,9 +318,10 @@ export default function StickerTrades() {
                     variant="plaque"
                     size="lg"
                     className="w-full md:w-auto h-12 px-8 text-xs font-heading shadow-xl"
+                    disabled={acceptingId === trade.id}
                     onClick={() => acceptTrade(trade)}
                   >
-                    ACEITAR TROCA ✨
+                    {acceptingId === trade.id ? "Processando..." : "ACEITAR TROCA ✨"}
                   </Button>
                 ) : (
                   <Button

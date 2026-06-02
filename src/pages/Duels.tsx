@@ -256,7 +256,7 @@ export default function Duels() {
                 {myTurn && <div className="ml-auto bg-primary/20 px-4 py-1.5 rounded-full border border-primary/30 text-[10px] font-heading uppercase text-primary animate-pulse">Seu Turno</div>}
              </div>
 
-             <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-4">
+             <div className="grid grid-cols-2 min-[480px]:grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-4">
                 {userSpells.map((s) => (
                    <button key={s.id} disabled={!myTurn} onClick={() => castSpell(s)} className={`p-4 rounded-2xl border transition-all ${myTurn ? 'border-white/10 bg-white/5 hover:border-primary/50 hover:-translate-y-1' : 'opacity-40 border-white/5'}`}>
                       <div className="text-xl mb-1">{s.icon || '🪄'}</div>

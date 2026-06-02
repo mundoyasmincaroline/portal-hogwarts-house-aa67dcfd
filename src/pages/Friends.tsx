@@ -161,7 +161,13 @@ export default function Friends() {
 
         <TabsContent value="friends" className="space-y-2 mt-4">
           {loading && <p className="text-center text-muted-foreground">Carregando...</p>}
-          {!loading && friends.length === 0 && <p className="text-center text-muted-foreground py-8">Nenhum amigo ainda.</p>}
+          {!loading && friends.length === 0 && (
+            <div className="text-center py-16 space-y-3">
+              <div className="text-6xl opacity-30">🦉</div>
+              <p className="font-heading text-xl text-muted-foreground">Nenhum aliado registrado ainda</p>
+              <p className="text-xs text-muted-foreground/50 font-serif italic">"Os melhores feiticeiros nunca enfrentam Voldemort sozinhos."</p>
+            </div>
+          )}
           {friends.map((r) => (
             <Card key={r.id} row={r} actions={
               <>
@@ -177,7 +183,13 @@ export default function Friends() {
         </TabsContent>
 
         <TabsContent value="incoming" className="space-y-2 mt-4">
-          {!loading && incoming.length === 0 && <p className="text-center text-muted-foreground py-8">Nenhum pedido recebido.</p>}
+          {!loading && incoming.length === 0 && (
+            <div className="text-center py-16 space-y-3">
+              <div className="text-6xl opacity-30">📜</div>
+              <p className="font-heading text-xl text-muted-foreground">Sua caixa de corujas está vazia</p>
+              <p className="text-xs text-muted-foreground/50 font-serif italic">"Nenhuma carta chegou hoje."</p>
+            </div>
+          )}
           {incoming.map((r) => (
             <Card key={r.id} row={r} actions={
               <>
@@ -196,7 +208,13 @@ export default function Friends() {
         </TabsContent>
 
         <TabsContent value="outgoing" className="space-y-2 mt-4">
-          {!loading && outgoing.length === 0 && <p className="text-center text-muted-foreground py-8">Nenhum pedido enviado.</p>}
+          {!loading && outgoing.length === 0 && (
+            <div className="text-center py-16 space-y-3">
+              <div className="text-6xl opacity-30">✉️</div>
+              <p className="font-heading text-xl text-muted-foreground">Nenhum convite enviado</p>
+              <p className="text-xs text-muted-foreground/50 font-serif italic">"Use o Mapa do Maroto para encontrar novos aliados."</p>
+            </div>
+          )}
           {outgoing.map((r) => (
             <Card key={r.id} row={r} actions={
               <Button size="sm" variant="outline" onClick={() => remove(r.id)}>
@@ -207,7 +225,13 @@ export default function Friends() {
         </TabsContent>
 
         <TabsContent value="blocked" className="space-y-2 mt-4">
-          {!loading && blocked.length === 0 && <p className="text-center text-muted-foreground py-8">Ninguém bloqueado.</p>}
+          {!loading && blocked.length === 0 && (
+            <div className="text-center py-16 space-y-3">
+              <div className="text-6xl opacity-30">🚫</div>
+              <p className="font-heading text-xl text-muted-foreground">Nenhum feitiço de bloqueio ativo</p>
+              <p className="text-xs text-muted-foreground/50 font-serif italic">"Paz reina em seu castelo."</p>
+            </div>
+          )}
           {blocked.map((r) => (
             <Card key={r.id} row={r} actions={
               <Button size="sm" variant="outline" onClick={() => unblock(r.id)}>
