@@ -170,6 +170,13 @@ serve(async (req) => {
 
       console.log(`✅ VIP ${planId} ativado para ${order.user_id}`);
 
+      await supabase.from("notifications").insert({
+        user_id: order.user_id,
+        title: "👑 Plano VIP ativado!",
+        message: `Seu plano ${planId.toUpperCase()} está ativo até ${expiresAt.toLocaleDateString("pt-BR")}.`,
+        link: "/dashboard/wallet",
+      });
+
     } else {
       // ── Creditar Galeões ───────────────────────────────────
       const galeons = order.galeons ?? 0;
@@ -187,6 +194,13 @@ serve(async (req) => {
           .eq("user_id", order.user_id);
 
         console.log(`✅ ${galeons} Galeões creditados para ${order.user_id}`);
+
+        await supabase.from("notifications").insert({
+          user_id: order.user_id,
+          title: "🪙 Galeões creditados!",
+          message: `${galeons} Galeões foram adicionados ao seu cofre em Gringotts.`,
+          link: "/dashboard/wallet",
+        });
       }
     }
 
