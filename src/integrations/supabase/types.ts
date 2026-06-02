@@ -1055,6 +1055,48 @@ export type Database = {
           },
         ]
       }
+      creature_catalog: {
+        Row: {
+          active: boolean | null
+          adopt_cost: number
+          description: string | null
+          food_preference: string | null
+          icon: string | null
+          id: string
+          max_bond: number
+          name: string
+          rarity: string | null
+          slug: string
+          species: string
+        }
+        Insert: {
+          active?: boolean | null
+          adopt_cost?: number
+          description?: string | null
+          food_preference?: string | null
+          icon?: string | null
+          id?: string
+          max_bond?: number
+          name: string
+          rarity?: string | null
+          slug: string
+          species: string
+        }
+        Update: {
+          active?: boolean | null
+          adopt_cost?: number
+          description?: string | null
+          food_preference?: string | null
+          icon?: string | null
+          id?: string
+          max_bond?: number
+          name?: string
+          rarity?: string | null
+          slug?: string
+          species?: string
+        }
+        Relationships: []
+      }
       creatures: {
         Row: {
           active: boolean | null
@@ -2034,6 +2076,44 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      greenhouse_plots: {
+        Row: {
+          id: string
+          plant_id: string | null
+          planted_at: string | null
+          ready_at: string | null
+          slot_number: number
+          user_id: string
+          watered_at: string | null
+        }
+        Insert: {
+          id?: string
+          plant_id?: string | null
+          planted_at?: string | null
+          ready_at?: string | null
+          slot_number: number
+          user_id: string
+          watered_at?: string | null
+        }
+        Update: {
+          id?: string
+          plant_id?: string | null
+          planted_at?: string | null
+          ready_at?: string | null
+          slot_number?: number
+          user_id?: string
+          watered_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "greenhouse_plots_plant_id_fkey"
+            columns: ["plant_id"]
+            isOneToOne: false
+            referencedRelation: "plant_catalog"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -3133,6 +3213,48 @@ export type Database = {
         }
         Relationships: []
       }
+      plant_catalog: {
+        Row: {
+          active: boolean | null
+          description: string | null
+          grow_hours: number
+          icon: string | null
+          id: string
+          name: string
+          rarity: string | null
+          seed_cost: number
+          slug: string
+          yield_max: number
+          yield_min: number
+        }
+        Insert: {
+          active?: boolean | null
+          description?: string | null
+          grow_hours?: number
+          icon?: string | null
+          id?: string
+          name: string
+          rarity?: string | null
+          seed_cost?: number
+          slug: string
+          yield_max?: number
+          yield_min?: number
+        }
+        Update: {
+          active?: boolean | null
+          description?: string | null
+          grow_hours?: number
+          icon?: string | null
+          id?: string
+          name?: string
+          rarity?: string | null
+          seed_cost?: number
+          slug?: string
+          yield_max?: number
+          yield_min?: number
+        }
+        Relationships: []
+      }
       post_comments: {
         Row: {
           character_id: string | null
@@ -3247,6 +3369,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      potion_recipes: {
+        Row: {
+          active: boolean | null
+          brew_minutes: number
+          description: string | null
+          difficulty: number
+          galeon_reward: number
+          icon: string | null
+          id: string
+          ingredients: Json
+          min_level: number
+          name: string
+          slug: string
+          xp_reward: number
+        }
+        Insert: {
+          active?: boolean | null
+          brew_minutes?: number
+          description?: string | null
+          difficulty?: number
+          galeon_reward?: number
+          icon?: string | null
+          id?: string
+          ingredients: Json
+          min_level?: number
+          name: string
+          slug: string
+          xp_reward?: number
+        }
+        Update: {
+          active?: boolean | null
+          brew_minutes?: number
+          description?: string | null
+          difficulty?: number
+          galeon_reward?: number
+          icon?: string | null
+          id?: string
+          ingredients?: Json
+          min_level?: number
+          name?: string
+          slug?: string
+          xp_reward?: number
+        }
+        Relationships: []
       }
       professor_lessons: {
         Row: {
@@ -5499,6 +5666,53 @@ export type Database = {
         }
         Relationships: []
       }
+      user_creatures: {
+        Row: {
+          adopted_at: string | null
+          bond: number
+          creature_id: string
+          hunger: number
+          id: string
+          last_fed_at: string | null
+          last_trained_at: string | null
+          nickname: string
+          training_level: number
+          user_id: string
+        }
+        Insert: {
+          adopted_at?: string | null
+          bond?: number
+          creature_id: string
+          hunger?: number
+          id?: string
+          last_fed_at?: string | null
+          last_trained_at?: string | null
+          nickname: string
+          training_level?: number
+          user_id: string
+        }
+        Update: {
+          adopted_at?: string | null
+          bond?: number
+          creature_id?: string
+          hunger?: number
+          id?: string
+          last_fed_at?: string | null
+          last_trained_at?: string | null
+          nickname?: string
+          training_level?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_creatures_creature_id_fkey"
+            columns: ["creature_id"]
+            isOneToOne: false
+            referencedRelation: "creature_catalog"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_daily_missions: {
         Row: {
           assigned_date: string
@@ -5545,6 +5759,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_ingredients: {
+        Row: {
+          id: string
+          ingredient_slug: string
+          quantity: number
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          ingredient_slug: string
+          quantity?: number
+          user_id: string
+        }
+        Update: {
+          id?: string
+          ingredient_slug?: string
+          quantity?: number
+          user_id?: string
+        }
+        Relationships: []
       }
       user_inventory: {
         Row: {
@@ -5653,6 +5888,47 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_potions: {
+        Row: {
+          collected_at: string | null
+          id: string
+          ready_at: string
+          recipe_id: string
+          started_at: string | null
+          status: string
+          success: boolean | null
+          user_id: string
+        }
+        Insert: {
+          collected_at?: string | null
+          id?: string
+          ready_at: string
+          recipe_id: string
+          started_at?: string | null
+          status?: string
+          success?: boolean | null
+          user_id: string
+        }
+        Update: {
+          collected_at?: string | null
+          id?: string
+          ready_at?: string
+          recipe_id?: string
+          started_at?: string | null
+          status?: string
+          success?: boolean | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_potions_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "potion_recipes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_quest_progress: {
         Row: {
@@ -6013,6 +6289,10 @@ export type Database = {
         Args: { _months?: number; _plan: string; _user_id: string }
         Returns: undefined
       }
+      adopt_creature: {
+        Args: { p_creature_id: string; p_nickname: string }
+        Returns: Json
+      }
       apply_ministry_position: {
         Args: { p_position_id: string }
         Returns: Json
@@ -6055,6 +6335,7 @@ export type Database = {
         Args: { _action: string; _user_id: string; _xp: number }
         Returns: undefined
       }
+      brew_potion: { Args: { p_recipe_id: string }; Returns: Json }
       buy_diagon_item: { Args: { p_item_id: string }; Returns: Json }
       buy_hogsmeade_item: {
         Args: { p_item_id: string; p_qty?: number }
@@ -6107,6 +6388,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      collect_potion: { Args: { p_potion_id: string }; Returns: Json }
       complete_canon_lesson: {
         Args: {
           p_character_id: string
@@ -6201,6 +6483,7 @@ export type Database = {
         Args: { p_boss_id: string; p_damage: number }
         Returns: Json
       }
+      feed_creature: { Args: { p_user_creature_id: string }; Returns: Json }
       finalize_auction: { Args: { p_auction_id: string }; Returns: Json }
       forfeit_duel: { Args: { p_match: string }; Returns: undefined }
       get_payment_link: {
@@ -6211,6 +6494,7 @@ export type Database = {
         Args: { p_points?: number; p_reason: string; p_user_id: string }
         Returns: Json
       }
+      harvest_plot: { Args: { p_slot: number }; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -6226,6 +6510,10 @@ export type Database = {
       open_vault: { Args: never; Returns: Json }
       place_auction_bid: {
         Args: { p_amount: number; p_auction_id: string }
+        Returns: Json
+      }
+      plant_seed: {
+        Args: { p_plant_id: string; p_slot: number }
         Returns: Json
       }
       practice_spell: { Args: { p_spell_id: string }; Returns: Json }
@@ -6301,6 +6589,7 @@ export type Database = {
         Args: { p_post_id: string; p_user_id: string }
         Returns: undefined
       }
+      train_creature: { Args: { p_user_creature_id: string }; Returns: Json }
       validate_enigma_answer: {
         Args: { _answer: string; _challenge_id: string }
         Returns: Json
@@ -6320,6 +6609,7 @@ export type Database = {
         Args: { p_target_id: string; p_target_type: string }
         Returns: Json
       }
+      water_plot: { Args: { p_slot: number }; Returns: Json }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
