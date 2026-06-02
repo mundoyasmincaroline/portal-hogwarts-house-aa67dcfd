@@ -15,6 +15,7 @@ export const NAV_GROUPS = [
       { icon: <MagicalIcon icon={Castle} size="xs" color="#60a5fa" />, label: "O Castelo", path: "/dashboard" },
       { icon: <MagicalIcon icon={BookOpen} size="xs" color="#10b981" />, label: "Guia do Maroto", path: "/dashboard/guide" },
       { icon: <MagicalIcon icon={Users} size="xs" color="#ec4899" />, label: "Amigos", path: "/dashboard/friends" },
+      { icon: <MagicalIcon icon={Shield} size="xs" color="#a855f7" />, label: "Clubes", path: "/dashboard/clubs" },
       { icon: <MagicalIcon icon={Library} size="xs" color="#94a3b8" />, label: "Membros", path: "/dashboard/members" },
     ]
   },
