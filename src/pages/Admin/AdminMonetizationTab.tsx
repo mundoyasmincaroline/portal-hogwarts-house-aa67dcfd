@@ -30,9 +30,10 @@ export const AdminMonetizationTab = memo(({ members, fetchAll }: { members: any[
 
   const creditGaleons = async () => {
     if (!galeonTarget || galeonAmount <= 0) return toast.error("Selecione um membro e um valor válido.");
-    setCrediting(true);
     const member = members.find(m => m.user_id === galeonTarget);
     if (!member) { toast.error("Membro não encontrado."); setCrediting(false); return; }
+    if (!confirm(`Creditar ${galeonAmount} Galeões para ${member.full_name}? Esta ação não pode ser desfeita.`)) return;
+    setCrediting(true);
     const current = (member as any).galeons || 0;
     const { error } = await supabase.from("profiles").update({ galeons: current + galeonAmount } as any).eq("user_id", galeonTarget);
     if (error) { toast.error("Erro ao creditar Galeões."); }
@@ -59,6 +60,7 @@ export const AdminMonetizationTab = memo(({ members, fetchAll }: { members: any[
   };
 
   const toggleItem = async (item: any) => {
+    if (item.is_active && !confirm(`Desativar "${item.name}"? Ele sumirá da loja para todos os usuários.`)) return;
     await supabase.from("store_items").update({ is_active: !item.is_active } as any).eq("id", item.id);
     loadStoreItems();
     toast.success(item.is_active ? "Item desativado." : "Item ativado.");
