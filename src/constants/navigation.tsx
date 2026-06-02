@@ -62,6 +62,8 @@ export const NAV_GROUPS = [
       { icon: <MagicalEmoji emoji="🏆" size="xs" />, label: "Torneio Tribruxo", path: "/dashboard/triwizard" },
       { icon: <MagicalEmoji emoji="⚔️" size="xs" />, label: "Ranking de Duelistas", path: "/dashboard/duel-ladder" },
       { icon: <MagicalIcon icon={Crown} size="xs" color="#fbbf24" />, label: "Hall da Fama", path: "/dashboard/hall-of-fame" },
+      { icon: <MagicalEmoji emoji="💀" size="xs" />, label: "Artes das Trevas", path: "/dashboard/dark-arts" },
+      { icon: <MagicalEmoji emoji="🦅" size="xs" />, label: "Facções", path: "/dashboard/factions" },
     ]
   },
   {

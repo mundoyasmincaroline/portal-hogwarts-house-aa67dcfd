@@ -1235,6 +1235,39 @@ export type Database = {
         }
         Relationships: []
       }
+      dark_spells: {
+        Row: {
+          corruption_cost: number
+          description: string | null
+          id: string
+          level_req: number
+          name: string
+          slug: string
+          unforgivable: boolean
+          xp_reward: number
+        }
+        Insert: {
+          corruption_cost?: number
+          description?: string | null
+          id?: string
+          level_req?: number
+          name: string
+          slug: string
+          unforgivable?: boolean
+          xp_reward?: number
+        }
+        Update: {
+          corruption_cost?: number
+          description?: string | null
+          id?: string
+          level_req?: number
+          name?: string
+          slug?: string
+          unforgivable?: boolean
+          xp_reward?: number
+        }
+        Relationships: []
+      }
       detentions: {
         Row: {
           assigned_by: string | null
@@ -1999,6 +2032,77 @@ export type Database = {
         }
         Relationships: []
       }
+      faction_missions: {
+        Row: {
+          briefing: string | null
+          difficulty: number
+          faction_id: string
+          galleon_reward: number
+          id: string
+          loyalty_reward: number
+          name: string
+          xp_reward: number
+        }
+        Insert: {
+          briefing?: string | null
+          difficulty?: number
+          faction_id: string
+          galleon_reward?: number
+          id?: string
+          loyalty_reward?: number
+          name: string
+          xp_reward?: number
+        }
+        Update: {
+          briefing?: string | null
+          difficulty?: number
+          faction_id?: string
+          galleon_reward?: number
+          id?: string
+          loyalty_reward?: number
+          name?: string
+          xp_reward?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "faction_missions_faction_id_fkey"
+            columns: ["faction_id"]
+            isOneToOne: false
+            referencedRelation: "factions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      factions: {
+        Row: {
+          alignment: string
+          description: string | null
+          hq_name: string | null
+          id: string
+          motto: string | null
+          name: string
+          slug: string
+        }
+        Insert: {
+          alignment: string
+          description?: string | null
+          hq_name?: string | null
+          id?: string
+          motto?: string | null
+          name: string
+          slug: string
+        }
+        Update: {
+          alignment?: string
+          description?: string | null
+          hq_name?: string | null
+          id?: string
+          motto?: string | null
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
       fichas: {
         Row: {
           age: number | null
@@ -2388,6 +2492,33 @@ export type Database = {
           rarity?: string
           stock_limit?: number | null
           tradable?: boolean
+        }
+        Relationships: []
+      }
+      horcruxes: {
+        Row: {
+          created_at: string
+          description: string | null
+          destroyed: boolean
+          id: string
+          user_id: string
+          vessel_name: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          destroyed?: boolean
+          id?: string
+          user_id: string
+          vessel_name: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          destroyed?: boolean
+          id?: string
+          user_id?: string
+          vessel_name?: string
         }
         Relationships: []
       }
@@ -5873,6 +6004,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_corruption: {
+        Row: {
+          alignment: string
+          corruption: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          alignment?: string
+          corruption?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          alignment?: string
+          corruption?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_creatures: {
         Row: {
           adopted_at: string | null
@@ -5992,6 +6144,67 @@ export type Database = {
             columns: ["achievement_id"]
             isOneToOne: false
             referencedRelation: "explorer_achievements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_faction_missions: {
+        Row: {
+          completed_at: string
+          id: string
+          mission_id: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          id?: string
+          mission_id: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          id?: string
+          mission_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_faction_missions_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "faction_missions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_factions: {
+        Row: {
+          faction_id: string
+          joined_at: string
+          loyalty: number
+          rank: string
+          user_id: string
+        }
+        Insert: {
+          faction_id: string
+          joined_at?: string
+          loyalty?: number
+          rank?: string
+          user_id: string
+        }
+        Update: {
+          faction_id?: string
+          joined_at?: string
+          loyalty?: number
+          rank?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_factions_faction_id_fkey"
+            columns: ["faction_id"]
+            isOneToOne: false
+            referencedRelation: "factions"
             referencedColumns: ["id"]
           },
         ]
@@ -6636,6 +6849,7 @@ export type Database = {
       }
     }
     Functions: {
+      _alignment_label: { Args: { c: number }; Returns: string }
       accept_duel: { Args: { p_match: string }; Returns: undefined }
       accept_sticker_trade: { Args: { _trade_id: string }; Returns: Json }
       admin_credit_order: { Args: { _order_id: string }; Returns: Json }
@@ -6731,6 +6945,21 @@ export type Database = {
         Args: { p_listing_id: string }
         Returns: Json
       }
+      cast_dark_spell: {
+        Args: { p_spell: string }
+        Returns: {
+          alignment: string
+          corruption: number
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "user_corruption"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       cast_duel_spell: {
         Args: { p_match: string; p_spell_code: string }
         Returns: Json
@@ -6794,6 +7023,21 @@ export type Database = {
         Args: { p_mission_id: string }
         Returns: Json
       }
+      complete_mission: {
+        Args: { p_mission: string }
+        Returns: {
+          completed_at: string
+          id: string
+          mission_id: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "user_faction_missions"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       complete_quest_step: { Args: { p_quest_id: string }; Returns: Json }
       complete_referral_action: {
         Args: { _invited_id: string }
@@ -6828,6 +7072,23 @@ export type Database = {
       create_guild: {
         Args: { p_description?: string; p_emblem?: string; p_name: string }
         Returns: Json
+      }
+      create_horcrux: {
+        Args: { p_description: string; p_vessel: string }
+        Returns: {
+          created_at: string
+          description: string | null
+          destroyed: boolean
+          id: string
+          user_id: string
+          vessel_name: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "horcruxes"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       create_infinitepay_link: {
         Args: {
@@ -6879,6 +7140,22 @@ export type Database = {
       }
       invoke_patronus: { Args: { p_focus: number }; Returns: Json }
       join_club: { Args: { p_club_id: string }; Returns: Json }
+      join_faction: {
+        Args: { p_faction: string }
+        Returns: {
+          faction_id: string
+          joined_at: string
+          loyalty: number
+          rank: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "user_factions"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       join_guild: { Args: { p_guild_id: string }; Returns: Json }
       join_tournament: { Args: { p_tournament_id: string }; Returns: Json }
       open_sticker_pack: { Args: { _user_id: string }; Returns: Json }
