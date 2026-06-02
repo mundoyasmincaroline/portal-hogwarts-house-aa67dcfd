@@ -24,7 +24,13 @@ export default function Profile() {
     }
   }, [isMe, user?.id, fetchProfileData]);
 
-  if (!profile) return null;
+  if (!profile) return (
+    <div className="min-h-[60vh] flex flex-col items-center justify-center gap-6 text-center px-4">
+      <div className="text-6xl animate-pulse">🔮</div>
+      <p className="font-heading text-2xl text-muted-foreground">Consultando os Arquivos de Hogwarts...</p>
+      <p className="text-sm text-muted-foreground/60 font-serif italic">"Nem todo bruxo pode ser encontrado nos registros."</p>
+    </div>
+  );
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-10">
