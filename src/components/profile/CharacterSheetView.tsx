@@ -165,6 +165,14 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
       <div className="glass rounded-2xl overflow-hidden border border-border/50">
         {/* Header com foto */}
         <div className="relative bg-gradient-to-br from-primary/10 via-background to-secondary/30 p-6">
+          {char.house && (
+            <Suspense fallback={null}>
+              <HouseCrest3D
+                house={char.house}
+                className="pointer-events-none absolute top-0 right-0 w-40 h-40 opacity-60 hidden sm:block"
+              />
+            </Suspense>
+          )}
           <div className="flex flex-col sm:flex-row gap-5 items-center sm:items-start">
             <div className="shrink-0 group relative">
               <SafeImage
