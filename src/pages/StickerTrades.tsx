@@ -116,24 +116,14 @@ export default function StickerTrades() {
 
   const acceptTrade = async (trade: Trade) => {
     if (!user) return;
-    // Verifica se o usuário tem a figurinha desejada (se especificada)
     if (trade.wanted_sticker_id && !myStickers.find(s => s.id === trade.wanted_sticker_id)) {
       toast.error("Você não possui a figurinha pedida pelo ofertante.");
       return;
     }
-    const { error } = await supabase.from("sticker_trades").update({
-      status: "accepted",
-      accepted_by_id: user.id,
-      accepted_at: new Date().toISOString(),
-    } as never).eq("id", trade.id);
-    if (error) { toast.error("Erro ao aceitar troca."); return; }
-
-    // Dar figurinha oferecida para quem aceitou
-    await supabase.from("user_stickers").upsert({ user_id: user.id, sticker_id: trade.offered_sticker_id } as never);
-    // Dar figurinha desejada para o ofertante (se especificada)
-    if (trade.wanted_sticker_id) {
-      await supabase.from("user_stickers").upsert({ user_id: trade.offerer_id, sticker_id: trade.wanted_sticker_id } as never);
-    }
+    const { data, error } = await (supabase.rpc as any)("accept_sticker_trade", { _trade_id: trade.id });
+    if (error) { toast.error("Erro ao aceitar troca: " + error.message); return; }
+    const result = data as { success: boolean; message?: string };
+    if (!result?.success) { toast.error(result?.message || "Não foi possível concluir a troca."); loadData(); return; }
     toast.success("🎉 Troca realizada com sucesso! Figurinha adicionada ao seu álbum.");
     loadData();
   };

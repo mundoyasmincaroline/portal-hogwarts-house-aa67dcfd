@@ -91,13 +91,16 @@ export default function Duels() {
 
   const findOpponent = async () => {
     setSearching(true);
-    const { data: opponent } = await supabase
+    const { data: potentialOpponents } = await supabase
       .from("profiles")
       .select("user_id, active_character_id")
       .neq("user_id", user?.id)
       .eq("approved", true)
-      .limit(1)
-      .maybeSingle();
+      .limit(20);
+
+    const opponent = potentialOpponents && potentialOpponents.length > 0 
+      ? potentialOpponents[Math.floor(Math.random() * potentialOpponents.length)]
+      : null;
 
     if (!opponent) {
       toast.error("Nenhum oponente disponível no momento.");
@@ -168,12 +171,17 @@ export default function Duels() {
     if (isGameOver) {
       updates.status = 'completed';
       updates.winner = isChallenger ? 'challenger' : 'opponent';
-      await supabase.rpc("award_xp_action", { _action: "duel_win", _user_id: user.id, _xp: 50 });
+      const { error: xpErr } = await supabase.rpc("award_xp_action", { _action: "duel_win", _user_id: user.id, _xp: 50 });
+      if (xpErr) toast.error("Erro ao conceder XP: " + xpErr.message);
     }
 
-    await supabase.from("duels").update(updates as never).eq("id", activeDuel.id);
+    const { error: updErr } = await supabase.from("duels").update(updates as never).eq("id", activeDuel.id);
+    if (updErr) {
+      toast.error("Erro ao atualizar duelo.");
+      return;
+    }
     
-    await supabase.from("duel_turns").insert({
+    const { error: turnErr } = await supabase.from("duel_turns").insert({
       duel_id: activeDuel.id,
       actor: isChallenger ? 'challenger' : 'opponent',
       spell_id: spell.id,
@@ -182,6 +190,7 @@ export default function Duels() {
       hit: true,
       narrative: `${profile.full_name} lançou ${spell.name}!`
     } as never);
+    if (turnErr) console.error("Erro ao registrar turno:", turnErr);
   };
 
   const myTurn = activeDuel && (

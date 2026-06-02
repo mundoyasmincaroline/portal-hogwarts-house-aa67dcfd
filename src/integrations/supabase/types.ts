@@ -2829,6 +2829,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_sticker_trade: { Args: { _trade_id: string }; Returns: Json }
       admin_grant_vip: {
         Args: { _months?: number; _plan: string; _user_id: string }
         Returns: undefined

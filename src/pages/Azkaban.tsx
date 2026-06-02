@@ -37,11 +37,22 @@ export default function Azkaban() {
   useEffect(() => {
     if (timeLeft <= 0) return;
     const t = setInterval(() => setTimeLeft(p => {
-      if (p <= 1) { clearInterval(t); return 0; }
+      if (p <= 1) {
+        clearInterval(t);
+        // Liberta automaticamente: marca registro como inativo e atualiza estado
+        if (user && azkabanStatus?.id) {
+          supabase.from("azkaban_status").update({ active: false } as never).eq("id", azkabanStatus.id).then(() => {
+            setAzkabanStatus(null);
+          });
+        } else {
+          setAzkabanStatus(null);
+        }
+        return 0;
+      }
       return p - 1;
     }), 1000);
     return () => clearInterval(t);
-  }, [timeLeft]);
+  }, [timeLeft, user, azkabanStatus?.id]);
 
   const formatTime = (s: number) => {
     const m = Math.floor(s / 60);
