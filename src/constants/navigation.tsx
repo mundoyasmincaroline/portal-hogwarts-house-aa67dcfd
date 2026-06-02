@@ -67,6 +67,7 @@ export const ADMIN_GROUP = {
   title: "Administração",
   items: [
     { icon: <MagicalEmoji emoji="⚙️" size="xs" />, label: "Painel Admin", path: "/dashboard/admin" },
+    { icon: <MagicalEmoji emoji="🧾" size="xs" />, label: "Fichas & Canons", path: "/dashboard/admin/characters" },
     { icon: <MagicalEmoji emoji="💰" size="xs" />, label: "Gestão Financeira", path: "/dashboard/admin/finance" },
     { icon: <MagicalEmoji emoji="📊" size="xs" />, label: "Analytics", path: "/dashboard/admin/analytics" },
   ]
