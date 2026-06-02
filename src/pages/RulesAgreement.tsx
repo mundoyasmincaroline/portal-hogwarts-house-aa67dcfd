@@ -17,7 +17,15 @@ export default function RulesAgreement() {
       toast.error("Você precisa concordar com as regras para entrar no castelo.");
       return;
     }
-    
+
+    // Idempotência: se já aceitou, apenas sincroniza estado e sai
+    if (profile?.has_accepted_rules) {
+      useAuth.setState((state) => ({
+        profile: state.profile ? { ...state.profile, has_accepted_rules: true } : null,
+      }));
+      return;
+    }
+
     setLoading(true);
     const { error } = await supabase
       .from("profiles")
