@@ -48,6 +48,7 @@ type CharacterRow = {
   fears: string | null;
   dreams: string | null;
   quotes: string | null;
+  history: string | null;
   background: string | null;
   physical_description: string | null;
   level: number | null;
@@ -121,6 +122,7 @@ const emptyCharacter: CharacterDraft = {
   fears: "",
   dreams: "",
   quotes: "",
+  history: "",
   background: "",
   physical_description: "",
   level: 1,
@@ -178,6 +180,7 @@ const characterSchema = z.object({
   fears: z.string().trim().max(1200).nullable().optional(),
   dreams: z.string().trim().max(1200).nullable().optional(),
   quotes: z.string().trim().max(1500).nullable().optional(),
+  history: z.string().trim().max(5000).nullable().optional(),
   background: z.string().trim().max(5000).nullable().optional(),
   physical_description: z.string().trim().max(3000).nullable().optional(),
   level: z.coerce.number().int().min(1).max(100).nullable().optional(),
