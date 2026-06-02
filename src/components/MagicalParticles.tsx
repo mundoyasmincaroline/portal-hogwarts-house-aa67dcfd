@@ -26,10 +26,10 @@ export default function MagicalParticles() {
     const isMobile = window.innerWidth < 768;
     const isUltraMobile = window.innerWidth < 400;
     const count = isUltraMobile
-      ? (theme === "snow" ? 15 : theme === "leaves" ? 5 : 8)
-      : isMobile 
-        ? (theme === "snow" ? 30 : theme === "leaves" ? 10 : 15) 
-        : (theme === "snow" ? 100 : theme === "leaves" ? 30 : 50);
+      ? (theme === "snow" ? 10 : theme === "leaves" ? 4 : 6)
+      : isMobile
+        ? (theme === "snow" ? 20 : theme === "leaves" ? 8 : 10)
+        : (theme === "snow" ? 60 : theme === "leaves" ? 20 : 28);
     
     for (let i = 0; i < count; i++) {
       particles.push({
@@ -45,7 +45,17 @@ export default function MagicalParticles() {
     }
 
 
+    let paused = document.hidden;
+    const onVisibility = () => {
+      paused = document.hidden;
+      if (!paused) {
+        animationId = requestAnimationFrame(animate);
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
     const animate = () => {
+      if (paused) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       particles.forEach((p) => {
@@ -115,6 +125,7 @@ export default function MagicalParticles() {
     return () => {
       cancelAnimationFrame(animationId);
       window.removeEventListener("resize", resize);
+      document.removeEventListener("visibilitychange", onVisibility);
     };
   }, []);
 
