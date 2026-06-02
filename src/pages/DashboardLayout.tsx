@@ -93,14 +93,21 @@ export default function DashboardLayout() {
         if (!dataUrl) { localStorage.removeItem("pending_avatar_upload"); return; }
         const res = await fetch(dataUrl);
         const blob = await res.blob();
-        const ext = (name?.split(".").pop() || "png").toLowerCase();
+        const mimeToExt: Record<string, string> = {
+          "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/gif": "gif",
+        };
+        const ext = mimeToExt[blob.type] || (name?.split(".").pop() || "jpg").toLowerCase();
         const path = `${user.id}/avatar.${ext}`;
-        const { error: upErr } = await supabase.storage.from("avatars").upload(path, blob, { upsert: true, contentType: blob.type });
-        if (!upErr) {
-          const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
-          await supabase.from("profiles").update({ avatar_url: `${publicUrl}?t=${Date.now()}` } as any).eq("user_id", user.id);
+        const { error: upErr } = await supabase.storage
+          .from("avatars")
+          .upload(path, blob, { upsert: true, contentType: blob.type || "image/jpeg", cacheControl: "3600" });
+        if (upErr) {
+          console.error("Pending avatar upload failed:", upErr);
+          return;
         }
-      } catch { /* ignore */ }
+        const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
+        await supabase.from("profiles").update({ avatar_url: `${publicUrl}?t=${Date.now()}` } as any).eq("user_id", user.id);
+      } catch (err) { console.error("Pending avatar processing error:", err); }
       finally { localStorage.removeItem("pending_avatar_upload"); }
     })();
   }, [user?.id]);
