@@ -23,6 +23,11 @@ export const NAV_GROUPS = [
     title: "Atividades",
     items: [
       { icon: <MagicalIcon icon={Swords} size="xs" color="#ef4444" />, label: "Duelos", path: "/dashboard/duels" },
+      { icon: <MagicalEmoji emoji="⚡" size="xs" />, label: "Duelos PvP", path: "/dashboard/duels-pvp" },
+      { icon: <MagicalEmoji emoji="🧹" size="xs" />, label: "Quadribol", path: "/dashboard/quidditch" },
+      { icon: <MagicalEmoji emoji="🚪" size="xs" />, label: "Sala Precisa", path: "/dashboard/room" },
+      { icon: <MagicalEmoji emoji="🪄" size="xs" />, label: "Olivaras", path: "/dashboard/wand" },
+      { icon: <MagicalEmoji emoji="✨" size="xs" />, label: "Patrono", path: "/dashboard/patronus" },
       { icon: <MagicalIcon icon={MessageCircle} size="xs" color="#3b82f6" />, label: "Chats RPG", path: "/dashboard/chats" },
       { icon: <MagicalIcon icon={Camera} size="xs" color="#f43f5e" />, label: "InstaHogwarts", path: "/dashboard/instahogwarts" },
       { icon: <MagicalIcon icon={Zap} size="xs" color="#a855f7" />, label: "Desafios", path: "/dashboard/challenges" },

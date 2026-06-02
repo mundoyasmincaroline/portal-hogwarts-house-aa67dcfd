@@ -59,6 +59,11 @@ const Auctions = lazy(() => import("./pages/Auctions"));
 const Gringotts = lazy(() => import("./pages/Gringotts"));
 const WorldEditor = lazy(() => import("./pages/WorldEditor"));
 const RankedLadder = lazy(() => import("./pages/RankedLadder"));
+const DuelsPvP = lazy(() => import("./pages/DuelsPvP"));
+const Quidditch = lazy(() => import("./pages/Quidditch"));
+const RoomOfRequirement = lazy(() => import("./pages/RoomOfRequirement"));
+const WandCrafting = lazy(() => import("./pages/WandCrafting"));
+const Patronus = lazy(() => import("./pages/Patronus"));
 
 const LoadingFallback = () => (
   <div className="relative flex h-screen flex-col items-center justify-center bg-background overflow-hidden">
@@ -194,6 +199,11 @@ const App = () => {
                   <Route path="gringotts" element={<Gringotts />} />
                   <Route path="world-editor" element={<WorldEditor />} />
                   <Route path="ranked" element={<RankedLadder />} />
+                  <Route path="duels-pvp" element={<DuelsPvP />} />
+                  <Route path="quidditch" element={<Quidditch />} />
+                  <Route path="room" element={<RoomOfRequirement />} />
+                  <Route path="wand" element={<WandCrafting />} />
+                  <Route path="patronus" element={<Patronus />} />
                   <Route path="admin/analytics" element={
                     <ProtectedRoute adminOnly>
                       <AdminAnalytics />
