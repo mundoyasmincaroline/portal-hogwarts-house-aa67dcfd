@@ -76,7 +76,7 @@ export function PostComposer({ bannedWords }: PostComposerProps) {
           "O que o Chapéu Seletor diria sobre seu dia?",
         ][new Date().getMinutes() % 4]}
         maxLength={1000}
-        className="w-full bg-black/40 rounded-2xl p-6 border border-white/5 focus:border-primary/40 transition-all resize-none text-base sm:text-lg text-foreground placeholder:text-muted-foreground/30 focus:outline-none min-h-[140px] font-serif italic shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)] leading-relaxed"
+        className="w-full bg-black/60 rounded-2xl p-6 border border-white/10 focus:border-primary/50 transition-all resize-none text-base sm:text-lg text-foreground placeholder:text-foreground/55 focus:outline-none min-h-[140px] font-serif italic shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)] leading-relaxed"
       />
       
       <div className="flex flex-col sm:flex-row gap-4 mt-6 pt-6 border-t border-white/10">
@@ -87,12 +87,12 @@ export function PostComposer({ bannedWords }: PostComposerProps) {
             value={newMusicUrl} 
             onChange={(e) => setNewMusicUrl(e.target.value)} 
             placeholder="Link do Spotify ou MP3..." 
-            className="w-full bg-black/40 rounded-xl pl-11 pr-4 py-4 text-xs text-foreground focus:outline-none border border-white/5 focus:border-primary/30 transition-all placeholder:text-muted-foreground/20" 
+            className="w-full bg-black/60 rounded-xl pl-11 pr-4 py-4 text-xs text-foreground focus:outline-none border border-white/10 focus:border-primary/40 transition-all placeholder:text-foreground/50" 
           />
         </div>
         <div className="flex items-center justify-between sm:justify-end gap-6">
           <div className="flex flex-col items-end">
-            <span className="text-[10px] text-muted-foreground/40 font-mono tracking-widest">{newPost.length}/1000</span>
+            <span className="text-[10px] text-foreground/60 font-mono tracking-widest">{newPost.length}/1000</span>
             <span className="text-[8px] text-primary/50 uppercase tracking-tighter font-bold">Encantamento de texto</span>
           </div>
           <Button 

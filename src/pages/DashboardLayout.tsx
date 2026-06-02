@@ -32,8 +32,8 @@ const NavItem = memo(({ item, isActive, dmUnread, onClick }: { item: any, isActi
     onClick={onClick}
     className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group relative overflow-hidden border ${
       isActive 
-        ? "bg-primary/10 text-primary font-bold border-primary/30 shadow-[0_0_25px_rgba(212,175,55,0.15)]" 
-        : "text-muted-foreground/60 hover:bg-white/5 hover:text-foreground border-transparent active:scale-95"
+        ? "bg-primary/15 text-primary font-bold border-primary/40 shadow-[0_0_25px_rgba(212,175,55,0.18)]" 
+        : "text-foreground/85 hover:bg-white/10 hover:text-foreground border-transparent active:scale-95"
     }`}
   >
     {isActive && (
@@ -45,7 +45,7 @@ const NavItem = memo(({ item, isActive, dmUnread, onClick }: { item: any, isActi
     <span className={`relative z-10 transition-all duration-500 ${isActive ? "scale-110 drop-shadow-[0_0_8px_rgba(212,175,55,0.6)]" : "group-hover:scale-110 group-hover:text-primary/80"}`}>
       {item.icon}
     </span>
-    <span className={`font-heading text-[10px] uppercase tracking-[0.15em] relative z-10 transition-all duration-300 ${isActive ? "text-primary" : "group-hover:translate-x-1"}`}>
+    <span className={`font-heading text-[11px] uppercase tracking-[0.14em] relative z-10 transition-all duration-300 ${isActive ? "text-primary" : "group-hover:translate-x-1"}`}>
       {item.label}
     </span>
     {item.label === "Mensagens" && dmUnread > 0 && (
@@ -161,7 +161,7 @@ export default function DashboardLayout() {
         )}
       </AnimatePresence>
 
-      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-[85vw] max-w-[280px] md:w-64 bg-card/45 backdrop-blur-3xl border-r border-primary/15 flex flex-col transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] md:translate-x-0 ${sidebarOpen ? "translate-x-0 shadow-[20px_0_80px_rgba(0,0,0,0.95)]" : "-translate-x-full"}`}>
+      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-[85vw] max-w-[280px] md:w-64 bg-card/85 backdrop-blur-3xl border-r border-primary/25 flex flex-col transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] md:translate-x-0 shadow-[8px_0_40px_rgba(0,0,0,0.5)] ${sidebarOpen ? "translate-x-0 shadow-[20px_0_80px_rgba(0,0,0,0.95)]" : "-translate-x-full"}`}>
         <div className="p-6 border-b border-primary/10">
           <Link to="/dashboard" className="flex items-center gap-4 group">
             <div className="bg-primary/20 p-3 rounded-2xl text-primary transition-all group-hover:rotate-[360deg] group-hover:scale-110 duration-1000 shadow-[0_0_20px_rgba(212,175,55,0.2)]"><Castle size={28} /></div>
@@ -172,8 +172,8 @@ export default function DashboardLayout() {
         <nav className="flex-1 p-3 space-y-6 overflow-y-auto sidebar-scroll">
           {groups.map((group) => (
             <div key={group.title} className="space-y-1">
-              <h4 className="px-4 text-[9px] font-heading font-black uppercase tracking-[0.4em] text-primary/30 mb-4 flex items-center gap-4">
-                <span className="w-8 h-[1px] bg-gradient-to-r from-primary/40 to-transparent" />
+              <h4 className="px-4 text-[10px] font-heading font-black uppercase tracking-[0.35em] text-primary/70 mb-4 flex items-center gap-3">
+                <span className="w-6 h-[1px] bg-gradient-to-r from-primary/60 to-transparent" />
                 {group.title}
               </h4>
               <div className="space-y-1">
