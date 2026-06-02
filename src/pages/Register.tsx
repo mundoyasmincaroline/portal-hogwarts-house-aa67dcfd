@@ -98,16 +98,18 @@ export default function Register() {
     // (RLS do storage exige sessão ativa). O blood_status já é gravado via metadata pelo trigger.
     if (result.success && avatarFile) {
       try {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          try {
-            localStorage.setItem("pending_avatar_upload", JSON.stringify({
-              dataUrl: reader.result,
-              name: avatarFile.name,
-            }));
-          } catch { /* quota */ }
-        };
-        reader.readAsDataURL(avatarFile);
+        // Comprime a imagem antes de salvar no localStorage (cota ~5MB).
+        // Original em base64 pode ser ~33% maior que o arquivo cru e estourar a cota.
+        const compressed = await compressImageToDataUrl(avatarFile, 800, 0.85);
+        try {
+          localStorage.setItem("pending_avatar_upload", JSON.stringify({
+            dataUrl: compressed,
+            name: avatarFile.name,
+          }));
+        } catch (quotaErr) {
+          console.warn("localStorage quota excedida ao salvar avatar pendente", quotaErr);
+          toast.warning("Não foi possível guardar sua foto agora. Você poderá enviá-la na ficha do personagem.");
+        }
       } catch { /* ignore */ }
     }
 
