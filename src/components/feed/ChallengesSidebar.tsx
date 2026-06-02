@@ -14,7 +14,7 @@ export function ChallengesSidebar({ activeChallenges }: ChallengesSidebarProps) 
         <span className="w-8 h-[1px] bg-primary/20" />
         Desafios Ativos
       </h3>
-      <div className="space-y-4 relative z-10">
+      <div className="space-y-4 relative z-10 max-h-[400px] overflow-y-auto pr-1 custom-scrollbar">
         {activeChallenges.length === 0 && (
           <p className="text-[10px] text-muted-foreground uppercase text-center py-6 tracking-[0.4em] opacity-30">Vazio por enquanto</p>
         )}

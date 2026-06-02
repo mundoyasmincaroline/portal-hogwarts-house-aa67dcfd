@@ -158,7 +158,7 @@ export default function GringottsStore() {
   };
 
   const buyItem = async (item: StoreItem) => {
-    if (buyingIdLocal) return;
+    if (buyingIdLocal || buyingPackageId) return;
     setBuyingIdLocal(item.id);
     const success = await handleBuyItem(item);
     if (success) playMagicSound();

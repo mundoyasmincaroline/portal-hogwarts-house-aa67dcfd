@@ -165,10 +165,10 @@ export default function Friends() {
           {friends.map((r) => (
             <Card key={r.id} row={r} actions={
               <>
-                <Button size="sm" variant="outline" onClick={() => remove(r.id)}>
+                <Button size="sm" variant="outline" onClick={() => { if (confirm("Remover amizade?")) remove(r.id); }}>
                   <Trash2 size={14} />
                 </Button>
-                <Button size="sm" variant="outline" className="text-destructive" onClick={() => r.other && block(r.other.user_id, r.id)}>
+                <Button size="sm" variant="outline" className="text-destructive" onClick={() => { if (r.other && confirm("Bloquear este usuário?")) block(r.other.user_id, r.id); }}>
                   <Ban size={14} />
                 </Button>
               </>
