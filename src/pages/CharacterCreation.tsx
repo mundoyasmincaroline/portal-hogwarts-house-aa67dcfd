@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { X, Search, ChevronLeft } from "lucide-react";
+import { X, Search, ChevronLeft, Upload, Loader2 } from "lucide-react";
 import MagicalParticles from "@/components/MagicalParticles";
 import { reward } from "@/services/core/rewardService";
 
@@ -45,6 +45,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
   const [form, setForm] = useState({ ...EMPTY });
   const [avatarFile, setAvatarFile] = useState<File|null>(null);
   const [avatarPreview, setAvatarPreview] = useState("");
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [loading, setLoading] = useState(false);
   const [pairSearch, setPairSearch] = useState("");
   const [pairResults, setPairResults] = useState<any[]>([]);
@@ -82,10 +83,32 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
     setForm(f => ({ ...f, [name]: value }));
   };
 
+  const ALLOWED_AVATAR_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+  const MAX_AVATAR_BYTES = 5 * 1024 * 1024;
+
   const handleAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]; if (!file) return;
+    const file = e.target.files?.[0];
+    // Reseta o input para permitir reescolher o mesmo arquivo após erro
+    if (e.target) e.target.value = "";
+    if (!file) return;
+    if (!ALLOWED_AVATAR_TYPES.includes(file.type)) {
+      toast.error("Formato inválido. Use JPG, PNG, WEBP ou GIF.");
+      return;
+    }
+    if (file.size > MAX_AVATAR_BYTES) {
+      toast.error(`Imagem muito grande (${(file.size / 1024 / 1024).toFixed(1)} MB). Limite: 5 MB.`);
+      return;
+    }
     setAvatarFile(file);
     setAvatarPreview(URL.createObjectURL(file));
+    // Limpa link manual quando há arquivo
+    setForm(f => ({ ...f, avatar_url: "" }));
+  };
+
+  const removeAvatar = () => {
+    setAvatarFile(null);
+    setAvatarPreview("");
+    setForm(f => ({ ...f, avatar_url: "" }));
   };
 
   useEffect(() => {
@@ -150,13 +173,24 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
 
       let avatarUrl = form.avatar_url;
       if (avatarFile) {
-        const ext = avatarFile.name.split(".").pop();
+        setUploadingAvatar(true);
+        const mimeToExt: Record<string, string> = {
+          "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/gif": "gif",
+        };
+        const ext = mimeToExt[avatarFile.type] || (avatarFile.name.split(".").pop() || "jpg").toLowerCase();
         const path = `${user.id}/characters/${Date.now()}.${ext}`;
-        const { error: upErr } = await supabase.storage.from("avatars").upload(path, avatarFile, { upsert: true });
-        if (!upErr) {
-          const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
-          avatarUrl = `${publicUrl}?t=${Date.now()}`;
+        const { error: upErr } = await supabase.storage
+          .from("avatars")
+          .upload(path, avatarFile, { upsert: true, contentType: avatarFile.type, cacheControl: "3600" });
+        setUploadingAvatar(false);
+        if (upErr) {
+          console.error("Avatar upload error:", upErr);
+          toast.error(`Falha ao enviar a foto: ${upErr.message}. Tente outra imagem ou cole um link.`);
+          setLoading(false);
+          return;
         }
+        const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
+        avatarUrl = `${publicUrl}?t=${Date.now()}`;
       }
 
       if (type === "canon") {
@@ -318,18 +352,40 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
           {/* FOTO */}
           <SECTION title="Foto do Personagem" icon="📷">
             <div className="flex flex-col sm:flex-row items-center gap-4">
-              <div className="w-24 h-24 rounded-full border-2 border-border overflow-hidden flex-shrink-0 bg-secondary flex items-center justify-center">
+              <div className="relative w-24 h-24 rounded-full border-2 border-border overflow-hidden flex-shrink-0 bg-secondary flex items-center justify-center">
                 {avatarPreview || form.avatar_url
-                  ? <img src={avatarPreview || form.avatar_url} className="w-full h-full object-cover" />
+                  ? <img src={avatarPreview || form.avatar_url} className="w-full h-full object-cover" alt="Avatar" />
                   : <span className="text-3xl"><EmojiIcon e="🧙" /></span>}
+                {(avatarPreview || form.avatar_url) && (
+                  <button
+                    type="button"
+                    onClick={removeAvatar}
+                    aria-label="Remover foto"
+                    className="absolute -top-1 -right-1 bg-background border border-border rounded-full p-1 hover:bg-destructive/20 hover:border-destructive transition-colors"
+                  >
+                    <X size={12} />
+                  </button>
+                )}
               </div>
-              <div className="flex-1 space-y-2">
+              <div className="flex-1 w-full space-y-2">
                 <label className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border-2 border-dashed border-primary/40 bg-primary/5 hover:bg-primary/10 cursor-pointer transition-colors text-sm font-heading text-primary">
-                  <EmojiIcon e="📁" /> Upload de foto
-                  <input type="file" accept="image/*" className="hidden" onChange={handleAvatar} />
+                  <Upload size={16} />
+                  <span>{avatarFile ? avatarFile.name.slice(0, 24) : "Enviar foto do personagem"}</span>
+                  <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="hidden" onChange={handleAvatar} />
                 </label>
-                <p className="text-[10px] text-muted-foreground text-center">ou cole o link abaixo</p>
-                <Input name="avatar_url" value={form.avatar_url} onChange={handleChange} placeholder="https://link-da-imagem.jpg" className="bg-secondary/50 text-xs" />
+                <p className="text-[10px] text-muted-foreground text-center">JPG, PNG, WEBP ou GIF — até 5 MB</p>
+                <div className="flex items-center gap-2">
+                  <div className="h-px flex-1 bg-border" />
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider">ou link</span>
+                  <div className="h-px flex-1 bg-border" />
+                </div>
+                <Input
+                  name="avatar_url"
+                  value={form.avatar_url}
+                  onChange={(e) => { handleChange(e); if (e.target.value) { setAvatarFile(null); setAvatarPreview(""); } }}
+                  placeholder="https://link-da-imagem.jpg"
+                  className="bg-secondary/50 text-xs"
+                />
               </div>
             </div>
           </SECTION>
@@ -606,8 +662,12 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
             {canCancel && onCancel && (
               <Button type="button" variant="outline" onClick={onCancel} className="flex-1">Cancelar</Button>
             )}
-            <Button type="submit" variant="magical" disabled={loading} className="flex-1">
-              {loading ? "Salvando ficha..." : `✨ Registrar Ficha ${isOC ? "OC" : "Canon"}`}
+            <Button type="submit" variant="magical" disabled={loading || uploadingAvatar} className="flex-1">
+              {uploadingAvatar
+                ? (<><Loader2 className="w-4 h-4 mr-2 animate-spin" />Enviando foto...</>)
+                : loading
+                  ? "Salvando ficha..."
+                  : `✨ Registrar Ficha ${isOC ? "OC" : "Canon"}`}
             </Button>
           </div>
         </form>
