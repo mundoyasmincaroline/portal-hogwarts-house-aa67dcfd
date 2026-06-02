@@ -344,11 +344,17 @@
 .section-pad   { padding-top: var(--space-xl); padding-bottom: var(--space-xl); }
 .section-pad-lg { padding-top: var(--space-2xl); padding-bottom: var(--space-2xl); }
 
-/* Mobile: força ícones-button a respeitarem touch target */
+/* Mobile: rede de segurança — qualquer <button> ou link clicável que NÃO declare
+   uma altura/min-height própria recebe automaticamente 44px (WCAG/Apple HIG).
+   Não afeta botões que já têm h-* ou min-h-* explícito. */
 @media (max-width: 767px) {
-  button[class*="size-icon"],
-  a[role="button"][class*="size-icon"] {
+  button:not([class*="h-"]):not([class*="min-h"]),
+  [role="button"]:not([class*="h-"]):not([class*="min-h"]),
+  a[class*="touch-target"] {
     min-height: var(--touch-min);
+  }
+  button:not([class*="w-"]):not([class*="min-w"]):not([class*="px-"]):not([class*="p-"]),
+  [role="button"]:not([class*="w-"]):not([class*="min-w"]):not([class*="px-"]):not([class*="p-"]) {
     min-width: var(--touch-min);
   }
 }
