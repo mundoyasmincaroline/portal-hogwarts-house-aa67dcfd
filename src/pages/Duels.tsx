@@ -38,11 +38,11 @@ export default function Duels() {
   const [searching, setSearching] = useState(false);
 
   useEffect(() => {
-    if (user) {
-      loadUserSpells();
-      subscribeToDuels();
-      checkActiveDuel();
-    }
+    if (!user) return;
+    loadUserSpells();
+    checkActiveDuel();
+    const cleanup = subscribeToDuels();
+    return cleanup;
   }, [user]);
 
   const loadUserSpells = async () => {
