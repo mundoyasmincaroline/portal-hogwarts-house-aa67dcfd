@@ -126,6 +126,49 @@ export interface Character {
   level: number | null;
   user_id?: string;
   xp?: number | null;
+  // Campos extras opcionais (ficha completa)
+  gender?: string | null;
+  age?: number | null;
+  age_category?: string | null;
+  blood_status?: string | null;
+  blood_locked?: boolean | null;
+  wand?: string | null;
+  patronus?: string | null;
+  pet?: string | null;
+  pet_name?: string | null;
+  pet_avatar?: string | null;
+  personality?: string | null;
+  strength?: string | null;
+  weakness?: string | null;
+  fears?: string | null;
+  dreams?: string | null;
+  secrets?: string | null;
+  quotes?: string | null;
+  instagram?: string | null;
+  background?: string | null;
+  history?: string | null;
+  physical_description?: string | null;
+  actor_faceclaim?: string | null;
+  favorite_class?: string | null;
+  favorite_spell?: string | null;
+  canon_era?: string | null;
+  canon_portrayed_by?: string | null;
+  canon_notes?: string | null;
+  pair_character_id?: string | null;
+  relationship_status?: string | null;
+  mother_id?: string | null;
+  father_id?: string | null;
+  family_mother?: string | null;
+  family_father?: string | null;
+  family_siblings?: string | null;
+  family_relatives?: string | null;
+  adult_job?: string | null;
+  hp?: number | null;
+  max_hp?: number | null;
+  faction?: string | null;
+  alignment?: string | null;
+  school_year?: number | null;
+  xp_to_next?: number | null;
 }
 
 export interface PostAuthor {

@@ -91,27 +91,23 @@ export default function Register() {
       age: parseInt(form.age),
       house: form.house as House,
       avatarUrl: form.avatarUrl || undefined,
+      bloodStatus: form.blood || undefined,
     });
 
-    if (result.success) {
+    // Se o usuário escolheu um arquivo de avatar, guardamos para upload após o primeiro login
+    // (RLS do storage exige sessão ativa). O blood_status já é gravado via metadata pelo trigger.
+    if (result.success && avatarFile) {
       try {
-        const { data: signInData } = await supabase.auth.signInWithPassword({ email: form.email, password: form.password });
-        if (signInData?.user) {
-          if (avatarFile) {
-            const ext = avatarFile.name.split(".").pop();
-            const path = `${signInData.user.id}/avatar.${ext}`;
-            const { error: upErr } = await supabase.storage.from("avatars").upload(path, avatarFile, { upsert: true });
-            if (!upErr) {
-              const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
-              await supabase.from("profiles").update({ avatar_url: `${publicUrl}?t=${Date.now()}`, blood_status: form.blood } as any).eq("user_id", signInData.user.id);
-            } else {
-              await supabase.from("profiles").update({ blood_status: form.blood } as any).eq("user_id", signInData.user.id);
-            }
-          } else {
-            await supabase.from("profiles").update({ blood_status: form.blood } as any).eq("user_id", signInData.user.id);
-          }
-          await supabase.auth.signOut();
-        }
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          try {
+            localStorage.setItem("pending_avatar_upload", JSON.stringify({
+              dataUrl: reader.result,
+              name: avatarFile.name,
+            }));
+          } catch { /* quota */ }
+        };
+        reader.readAsDataURL(avatarFile);
       } catch { /* ignore */ }
     }
 
