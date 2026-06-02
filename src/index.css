@@ -52,6 +52,28 @@
     --sidebar-accent-foreground: 40 20% 85%;
     --sidebar-border: 230 15% 18%;
     --sidebar-ring: 43 65% 54%;
+
+    /* ===== Sistema de espaçamento (escala 4px) =====
+       Use via tokens Tailwind: p-space-md, gap-space-sm, m-space-lg, etc.
+       Ou utilitários abaixo: .stack-*, .cluster-*, .btn-min-* */
+    --space-3xs: 0.125rem; /* 2px  - borders, hairlines */
+    --space-2xs: 0.25rem;  /* 4px  - tight inline */
+    --space-xs:  0.5rem;   /* 8px  - inline gap */
+    --space-sm:  0.75rem;  /* 12px - card padding compacto */
+    --space-md:  1rem;     /* 16px - padding/margin base */
+    --space-lg:  1.5rem;   /* 24px - separação entre seções */
+    --space-xl:  2rem;     /* 32px - blocos principais */
+    --space-2xl: 3rem;     /* 48px - seções grandes */
+    --space-3xl: 4rem;     /* 64px - hero / topo de página */
+
+    /* Alvos de toque (mobile-safe) */
+    --touch-min: 2.75rem;  /* 44px - mínimo WCAG/Apple HIG */
+    --touch-lg:  3rem;     /* 48px - confortável */
+
+    /* Alturas de botão consistentes */
+    --btn-h-sm:  2.25rem;  /* 36px - apenas desktop, secundário */
+    --btn-h-md:  2.75rem;  /* 44px - padrão (toca em mobile) */
+    --btn-h-lg:  3.5rem;   /* 56px - CTA principal */
   }
 }
 
@@ -297,7 +319,38 @@
 
 /* Responsiveness helpers */
 .touch-target {
-  @apply min-h-[48px] min-w-[48px] flex items-center justify-center;
+  @apply min-h-touch-lg min-w-touch-lg flex items-center justify-center;
+}
+
+/* ===== Utilitários de espaçamento Hogwarts ===== */
+
+/* Stack: pilha vertical com gap consistente (use .stack-sm, .stack-md, .stack-lg, .stack-xl) */
+.stack-xs > * + * { margin-top: var(--space-xs); }
+.stack-sm > * + * { margin-top: var(--space-sm); }
+.stack-md > * + * { margin-top: var(--space-md); }
+.stack-lg > * + * { margin-top: var(--space-lg); }
+.stack-xl > * + * { margin-top: var(--space-xl); }
+
+/* Cluster: flex inline com gap padronizado (botões, chips, tags) */
+.cluster-xs { display: flex; flex-wrap: wrap; gap: var(--space-xs); align-items: center; }
+.cluster-sm { display: flex; flex-wrap: wrap; gap: var(--space-sm); align-items: center; }
+.cluster-md { display: flex; flex-wrap: wrap; gap: var(--space-md); align-items: center; }
+
+/* Garantia de toque: aplica em qualquer botão sem alterar visual */
+.btn-min   { min-height: var(--touch-min); min-width: var(--touch-min); }
+.btn-min-lg { min-height: var(--touch-lg);  min-width: var(--touch-lg); }
+
+/* Padding de página padronizado (substitui hacks pontuais) */
+.section-pad   { padding-top: var(--space-xl); padding-bottom: var(--space-xl); }
+.section-pad-lg { padding-top: var(--space-2xl); padding-bottom: var(--space-2xl); }
+
+/* Mobile: força ícones-button a respeitarem touch target */
+@media (max-width: 767px) {
+  button[class*="size-icon"],
+  a[role="button"][class*="size-icon"] {
+    min-height: var(--touch-min);
+    min-width: var(--touch-min);
+  }
 }
 
 .scrollbar-hide::-webkit-scrollbar {

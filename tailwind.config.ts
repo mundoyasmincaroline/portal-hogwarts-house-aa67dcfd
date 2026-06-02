@@ -53,6 +53,44 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      spacing: {
+        // Sistema de espaçamento Hogwarts — escala 4px (mobile-first, consistente)
+        "space-3xs": "var(--space-3xs)", // 2px
+        "space-2xs": "var(--space-2xs)", // 4px
+        "space-xs":  "var(--space-xs)",  // 8px
+        "space-sm":  "var(--space-sm)",  // 12px
+        "space-md":  "var(--space-md)",  // 16px
+        "space-lg":  "var(--space-lg)",  // 24px
+        "space-xl":  "var(--space-xl)",  // 32px
+        "space-2xl": "var(--space-2xl)", // 48px
+        "space-3xl": "var(--space-3xl)", // 64px
+        // Alvos de toque (WCAG / Apple HIG)
+        "touch":     "var(--touch-min)",     // 44px
+        "touch-lg":  "var(--touch-lg)",      // 48px
+        // Alturas de botão padronizadas
+        "btn-sm":    "var(--btn-h-sm)",      // 36px
+        "btn-md":    "var(--btn-h-md)",      // 44px (default)
+        "btn-lg":    "var(--btn-h-lg)",      // 56px
+      },
+      minHeight: {
+        touch:     "var(--touch-min)",
+        "touch-lg": "var(--touch-lg)",
+        "btn-sm":  "var(--btn-h-sm)",
+        "btn-md":  "var(--btn-h-md)",
+        "btn-lg":  "var(--btn-h-lg)",
+      },
+      minWidth: {
+        touch:     "var(--touch-min)",
+        "touch-lg": "var(--touch-lg)",
+      },
+      gap: {
+        "space-2xs": "var(--space-2xs)",
+        "space-xs":  "var(--space-xs)",
+        "space-sm":  "var(--space-sm)",
+        "space-md":  "var(--space-md)",
+        "space-lg":  "var(--space-lg)",
+        "space-xl":  "var(--space-xl)",
+      },
       keyframes: {
         "accordion-down": { from: { height: "0" }, to: { height: "var(--radix-accordion-content-height)" } },
         "accordion-up": { from: { height: "var(--radix-accordion-content-height)" }, to: { height: "0" } },

@@ -31,10 +31,11 @@ const buttonVariants = cva(
         hufflepuff: "bg-hufflepuff text-primary-foreground hover:bg-hufflepuff/90 hover:-translate-y-1 transition-all shadow-[0_6px_20px_rgba(234,179,8,0.3)]",
       },
       size: {
-        default: "h-11 px-6 py-2",
-        sm: "h-9 rounded-lg px-4 text-xs",
-        lg: "h-14 rounded-2xl px-10 text-base",
-        icon: "h-10 w-10",
+        // Tokens de tamanho — sempre ≥44px no mobile (touch-min)
+        default: "h-btn-md min-h-touch px-space-lg py-space-xs",
+        sm:      "h-btn-sm min-h-touch md:min-h-btn-sm rounded-lg px-space-md text-xs",
+        lg:      "h-btn-lg min-h-touch-lg rounded-2xl px-space-2xl text-base",
+        icon:    "h-touch w-touch md:h-10 md:w-10",
       },
     },
     defaultVariants: {
