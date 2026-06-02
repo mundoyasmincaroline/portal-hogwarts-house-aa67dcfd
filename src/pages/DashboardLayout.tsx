@@ -160,7 +160,7 @@ export default function DashboardLayout() {
         )}
       </AnimatePresence>
 
-      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-[85vw] max-w-[280px] md:w-64 bg-card/45 backdrop-blur-3xl border-r border-primary/15 flex flex-col transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] md:translate-x-0 ${sidebarOpen ? "translate-x-0 shadow-[20px_0_80px_rgba(0,0,0,0.95)]" : "-translate-x-full"}`}>
+      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-[85vw] max-w-[280px] md:w-64 bg-card/45 backdrop-blur-3xl border-r border-primary/15 flex flex-col transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] md:translate-x-0 ${sidebarOpen ? "translate-x-0 shadow-[20px_0_80px_rgba(0,0,0,0.95)]" : "-translate-x-full"}`}>
         <div className="p-6 border-b border-primary/10">
           <Link to="/dashboard" className="flex items-center gap-4 group">
             <div className="bg-primary/20 p-3 rounded-2xl text-primary transition-all group-hover:rotate-[360deg] group-hover:scale-110 duration-1000 shadow-[0_0_20px_rgba(212,175,55,0.2)]"><Castle size={28} /></div>
@@ -237,7 +237,17 @@ export default function DashboardLayout() {
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative z-10">
         <NotificationBanner />
-        
+
+        {/* Hamburger mobile (visível somente em telas pequenas) */}
+        <button
+          type="button"
+          onClick={() => setSidebarOpen(true)}
+          aria-label="Abrir menu"
+          className="md:hidden fixed top-3 left-3 z-30 w-10 h-10 rounded-xl bg-card/70 backdrop-blur-md border border-primary/20 flex items-center justify-center text-primary shadow-lg active:scale-95 transition-transform"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+
         <div className="flex-1 overflow-y-auto relative scroll-smooth contain-strict pb-safe custom-scrollbar">
           <div className="page-container px-3 sm:px-6 pt-4 sm:pt-8">
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
