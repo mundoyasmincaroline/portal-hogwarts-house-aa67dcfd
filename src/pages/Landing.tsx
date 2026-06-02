@@ -142,12 +142,12 @@ export default function Landing() {
           {/* CTA */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 px-4 w-full max-w-lg mx-auto">
             <Button variant="magical" size="lg" onClick={() => navigate("/register")}
-              className="w-full sm:flex-1 font-heading text-lg px-8 h-16 shadow-lg shadow-primary/20 hover:shadow-primary/40 active:scale-95 transition-all">
+              className="w-full sm:flex-1 font-heading text-base sm:text-lg px-5 sm:px-8 min-h-16 h-auto shadow-lg shadow-primary/20 hover:shadow-primary/40 active:scale-95 transition-all">
               <Sparkles size={18} className="mr-2" />
               Entrar agora
             </Button>
             <Button variant="outline" size="lg" onClick={() => navigate("/login")}
-              className="w-full sm:w-auto font-heading text-base px-8 h-16 border-white/20 bg-white/5 backdrop-blur-md hover:bg-white/10 active:scale-95 transition-all">
+              className="w-full sm:w-auto font-heading text-sm sm:text-base px-5 sm:px-8 min-h-16 h-auto border-white/20 bg-white/5 backdrop-blur-md hover:bg-white/10 active:scale-95 transition-all">
               Já sou bruxo
             </Button>
           </div>
@@ -257,7 +257,7 @@ export default function Landing() {
                 </div>
               </div>
               
-              <Button size="lg" variant="magical" onClick={() => navigate("/register")} className="h-16 sm:h-20 px-6 sm:px-12 rounded-2xl bg-gradient-to-r from-red-600 via-orange-600 to-red-600 border-none font-bold text-lg sm:text-2xl shadow-[0_15px_40px_rgba(220,38,38,0.4)] hover:scale-105 active:scale-95 transition-all w-full sm:w-auto">
+              <Button size="lg" variant="magical" onClick={() => navigate("/register")} className="min-h-16 sm:min-h-20 h-auto px-5 sm:px-12 rounded-2xl bg-gradient-to-r from-red-600 via-orange-600 to-red-600 border-none font-bold text-base sm:text-2xl shadow-[0_15px_40px_rgba(220,38,38,0.4)] hover:scale-105 active:scale-95 transition-all w-full sm:w-auto">
                 ENTRAR E PEGAR AGORA <ChevronRight size={20} className="ml-2 sm:w-[24px] sm:h-[24px]" />
               </Button>
             </div>
