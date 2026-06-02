@@ -1178,6 +1178,161 @@ export type Database = {
         }
         Relationships: []
       }
+      duel_actions: {
+        Row: {
+          created_at: string | null
+          damage: number
+          healed: number
+          id: string
+          log_text: string | null
+          match_id: string
+          player: string
+          shielded: number
+          spell_code: string
+          turn: number
+        }
+        Insert: {
+          created_at?: string | null
+          damage?: number
+          healed?: number
+          id?: string
+          log_text?: string | null
+          match_id: string
+          player: string
+          shielded?: number
+          spell_code: string
+          turn: number
+        }
+        Update: {
+          created_at?: string | null
+          damage?: number
+          healed?: number
+          id?: string
+          log_text?: string | null
+          match_id?: string
+          player?: string
+          shielded?: number
+          spell_code?: string
+          turn?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "duel_actions_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "duel_matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      duel_matches: {
+        Row: {
+          created_at: string | null
+          current_turn: string | null
+          finished_at: string | null
+          galeon_reward: number
+          hp_a: number
+          hp_b: number
+          id: string
+          mp_a: number
+          mp_b: number
+          player_a: string
+          player_b: string
+          shield_a: number
+          shield_b: number
+          started_at: string | null
+          status: string
+          turn_number: number
+          winner: string | null
+          xp_reward: number
+        }
+        Insert: {
+          created_at?: string | null
+          current_turn?: string | null
+          finished_at?: string | null
+          galeon_reward?: number
+          hp_a?: number
+          hp_b?: number
+          id?: string
+          mp_a?: number
+          mp_b?: number
+          player_a: string
+          player_b: string
+          shield_a?: number
+          shield_b?: number
+          started_at?: string | null
+          status?: string
+          turn_number?: number
+          winner?: string | null
+          xp_reward?: number
+        }
+        Update: {
+          created_at?: string | null
+          current_turn?: string | null
+          finished_at?: string | null
+          galeon_reward?: number
+          hp_a?: number
+          hp_b?: number
+          id?: string
+          mp_a?: number
+          mp_b?: number
+          player_a?: string
+          player_b?: string
+          shield_a?: number
+          shield_b?: number
+          started_at?: string | null
+          status?: string
+          turn_number?: number
+          winner?: string | null
+          xp_reward?: number
+        }
+        Relationships: []
+      }
+      duel_spells: {
+        Row: {
+          code: string
+          created_at: string | null
+          damage: number
+          description: string | null
+          heal: number
+          icon: string | null
+          id: string
+          level_req: number
+          mp_cost: number
+          name: string
+          shield: number
+          type: string
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          damage?: number
+          description?: string | null
+          heal?: number
+          icon?: string | null
+          id?: string
+          level_req?: number
+          mp_cost?: number
+          name: string
+          shield?: number
+          type: string
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          damage?: number
+          description?: string | null
+          heal?: number
+          icon?: string | null
+          id?: string
+          level_req?: number
+          mp_cost?: number
+          name?: string
+          shield?: number
+          type?: string
+        }
+        Relationships: []
+      }
       duel_turns: {
         Row: {
           actor: string
@@ -1971,6 +2126,57 @@ export type Database = {
         }
         Relationships: []
       }
+      patronus_invocations: {
+        Row: {
+          created_at: string | null
+          id: string
+          strength: number
+          success: boolean
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          strength: number
+          success: boolean
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          strength?: number
+          success?: boolean
+          user_id?: string
+        }
+        Relationships: []
+      }
+      patronuses: {
+        Row: {
+          animal: string
+          created_at: string | null
+          form_strength: number
+          last_invoked_at: string | null
+          mastery_level: number
+          user_id: string
+        }
+        Insert: {
+          animal: string
+          created_at?: string | null
+          form_strength?: number
+          last_invoked_at?: string | null
+          mastery_level?: number
+          user_id: string
+        }
+        Update: {
+          animal?: string
+          created_at?: string | null
+          form_strength?: number
+          last_invoked_at?: string | null
+          mastery_level?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       post_comments: {
         Row: {
           character_id: string | null
@@ -2426,6 +2632,44 @@ export type Database = {
         }
         Relationships: []
       }
+      quidditch_events: {
+        Row: {
+          created_at: string | null
+          event_type: string
+          house: string
+          id: string
+          match_id: string
+          points: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          event_type: string
+          house: string
+          id?: string
+          match_id: string
+          points?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          event_type?: string
+          house?: string
+          id?: string
+          match_id?: string
+          points?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quidditch_events_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "quidditch_matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       quidditch_matches: {
         Row: {
           created_at: string | null
@@ -2483,6 +2727,41 @@ export type Database = {
             columns: ["winner_id"]
             isOneToOne: false
             referencedRelation: "quidditch_teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quidditch_players: {
+        Row: {
+          house: string
+          id: string
+          joined_at: string | null
+          match_id: string
+          position: string
+          user_id: string
+        }
+        Insert: {
+          house: string
+          id?: string
+          joined_at?: string | null
+          match_id: string
+          position: string
+          user_id: string
+        }
+        Update: {
+          house?: string
+          id?: string
+          joined_at?: string | null
+          match_id?: string
+          position?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quidditch_players_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "quidditch_matches"
             referencedColumns: ["id"]
           },
         ]
@@ -2782,6 +3061,68 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
         ]
+      }
+      room_members: {
+        Row: {
+          id: string
+          joined_at: string | null
+          room_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          joined_at?: string | null
+          room_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          joined_at?: string | null
+          room_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_members_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "room_of_requirement"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      room_of_requirement: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          max_members: number
+          name: string
+          owner_id: string
+          password_hash: string | null
+          theme: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          max_members?: number
+          name: string
+          owner_id: string
+          password_hash?: string | null
+          theme?: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          max_members?: number
+          name?: string
+          owner_id?: string
+          password_hash?: string | null
+          theme?: string
+        }
+        Relationships: []
       }
       rp_daily_claims: {
         Row: {
@@ -4067,6 +4408,42 @@ export type Database = {
           },
         ]
       }
+      wands: {
+        Row: {
+          bonus_attack: number
+          bonus_defense: number
+          bonus_speed: number
+          core: string
+          crafted_at: string | null
+          flexibility: string
+          length_inches: number
+          user_id: string
+          wood: string
+        }
+        Insert: {
+          bonus_attack?: number
+          bonus_defense?: number
+          bonus_speed?: number
+          core: string
+          crafted_at?: string | null
+          flexibility?: string
+          length_inches?: number
+          user_id: string
+          wood: string
+        }
+        Update: {
+          bonus_attack?: number
+          bonus_defense?: number
+          bonus_speed?: number
+          core?: string
+          crafted_at?: string | null
+          flexibility?: string
+          length_inches?: number
+          user_id?: string
+          wood?: string
+        }
+        Relationships: []
+      }
       webhook_audit_log: {
         Row: {
           created_at: string | null
@@ -4171,6 +4548,7 @@ export type Database = {
       }
     }
     Functions: {
+      accept_duel: { Args: { p_match: string }; Returns: undefined }
       accept_sticker_trade: { Args: { _trade_id: string }; Returns: Json }
       admin_credit_order: { Args: { _order_id: string }; Returns: Json }
       admin_grant_vip: {
@@ -4222,6 +4600,10 @@ export type Database = {
       }
       cancel_marketplace_listing: {
         Args: { p_listing_id: string }
+        Returns: Json
+      }
+      cast_duel_spell: {
+        Args: { p_match: string; p_spell_code: string }
         Returns: Json
       }
       claim_battle_pass_reward: {
@@ -4282,6 +4664,32 @@ export type Database = {
         Args: { _invited_id: string }
         Returns: undefined
       }
+      craft_wand: {
+        Args: {
+          p_core: string
+          p_flex: string
+          p_length: number
+          p_wood: string
+        }
+        Returns: {
+          bonus_attack: number
+          bonus_defense: number
+          bonus_speed: number
+          core: string
+          crafted_at: string | null
+          flexibility: string
+          length_inches: number
+          user_id: string
+          wood: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "wands"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      create_duel: { Args: { p_opponent: string }; Returns: string }
       create_guild: {
         Args: { p_description?: string; p_emblem?: string; p_name: string }
         Returns: Json
@@ -4312,6 +4720,7 @@ export type Database = {
         Returns: Json
       }
       finalize_auction: { Args: { p_auction_id: string }; Returns: Json }
+      forfeit_duel: { Args: { p_match: string }; Returns: undefined }
       get_payment_link: {
         Args: { p_order_id: string; p_request_id: number }
         Returns: Json
@@ -4323,6 +4732,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      invoke_patronus: { Args: { p_focus: number }; Returns: Json }
       join_club: { Args: { p_club_id: string }; Returns: Json }
       join_guild: { Args: { p_guild_id: string }; Returns: Json }
       join_tournament: { Args: { p_tournament_id: string }; Returns: Json }
@@ -4336,6 +4746,10 @@ export type Database = {
         Returns: Json
       }
       process_vip_renewals: { Args: never; Returns: Json }
+      quidditch_score: {
+        Args: { p_event: string; p_match: string }
+        Returns: Json
+      }
       repay_bank_loan: {
         Args: { p_amount: number; p_loan_id: string }
         Returns: Json
@@ -4369,6 +4783,7 @@ export type Database = {
         Returns: Json
       }
       start_quest: { Args: { p_quest_id: string }; Returns: Json }
+      start_quidditch_match: { Args: { p_match: string }; Returns: undefined }
       take_bank_loan: {
         Args: { p_amount: number; p_days?: number }
         Returns: Json
