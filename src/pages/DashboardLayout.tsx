@@ -24,6 +24,7 @@ import { NAV_GROUPS, ADMIN_GROUP } from "@/constants/navigation";
 import { AtmosphericBackground } from "@/components/shared/AtmosphericBackground";
 import { MagicalClock } from "@/components/shared/MagicalClock";
 import AmbientAudio from "@/components/AmbientAudio";
+import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
 
 const NavItem = memo(({ item, isActive, dmUnread, onClick }: { item: any, isActive: boolean, dmUnread: number, onClick: () => void }) => (
   <Link
@@ -264,7 +265,9 @@ export default function DashboardLayout() {
                 transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
                 className="pb-32 md:pb-24"
               >
-                <Outlet />
+                <ErrorBoundary>
+                  <Outlet />
+                </ErrorBoundary>
               </motion.div>
             </AnimatePresence>
           </div>

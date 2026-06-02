@@ -35,7 +35,7 @@ export default function Notifications() {
 
     fetchNotifs();
 
-    const channelId = `notifications:${user.id}:${Date.now()}:${Math.random().toString(36).slice(2)}`;
+    const channelId = `notifications:${user.id}`;
     const sub = supabase
       .channel(channelId)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` }, (payload) => {
