@@ -26,6 +26,9 @@ import { MagicalClock } from "@/components/shared/MagicalClock";
 import AmbientAudio from "@/components/AmbientAudio";
 import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
 import DailyRPSlot from "@/components/DailyRPSlot";
+import MagicalCelebration from "@/components/MagicalCelebration";
+import LevelUpCeremony from "@/components/LevelUpCeremony";
+import HouseGhost from "@/components/HouseGhost";
 
 const NavItem = memo(({ item, isActive, dmUnread, onClick }: { item: any, isActive: boolean, dmUnread: number, onClick: () => void }) => (
   <Link
@@ -300,6 +303,9 @@ export default function DashboardLayout() {
         </div>
         <BottomNav />
       </main>
+      <MagicalCelebration />
+      <LevelUpCeremony />
+      <HouseGhost />
     </div>
   );
 }
