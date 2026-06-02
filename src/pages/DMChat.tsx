@@ -183,7 +183,10 @@ export default function DMChat() {
       </div>
 
       {/* Input */}
-      <div className="glass rounded-[1.5rem] sm:rounded-2xl p-2 sm:p-3 flex items-end gap-2 shrink-0 mt-1 mb-2 border-white/10 shadow-2xl">
+      <div
+        className="glass rounded-[1.5rem] sm:rounded-2xl p-2 sm:p-3 flex items-end gap-2 shrink-0 mt-1 border-white/10 shadow-2xl"
+        style={{ marginBottom: 'max(8px, env(safe-area-inset-bottom))' }}
+      >
         <textarea
           value={text}
           onChange={e => setText(e.target.value)}
