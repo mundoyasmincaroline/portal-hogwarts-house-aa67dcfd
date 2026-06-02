@@ -72,6 +72,11 @@ const Prophecy = lazy(() => import("./pages/Prophecy"));
 const CastleMap = lazy(() => import("./pages/CastleMap"));
 const Support = lazy(() => import("./pages/Support"));
 const AdminSupport = lazy(() => import("./pages/AdminSupport"));
+const RPTeams = lazy(() => import("./pages/RPTeams"));
+const RPTeamDetail = lazy(() => import("./pages/RPTeamDetail"));
+const LiveEvents = lazy(() => import("./pages/LiveEvents"));
+const EventDetail = lazy(() => import("./pages/EventDetail"));
+const Reputation = lazy(() => import("./pages/Reputation"));
 
 const LoadingFallback = () => (
   <div className="relative flex h-screen flex-col items-center justify-center bg-background overflow-hidden">
@@ -224,6 +229,11 @@ const App = () => {
                   <Route path="diary" element={<Diary />} />
                   <Route path="prophecy" element={<Prophecy />} />
                   <Route path="castle-map" element={<CastleMap />} />
+                  <Route path="rp-teams" element={<RPTeams />} />
+                  <Route path="rp-teams/:id" element={<RPTeamDetail />} />
+                  <Route path="live-events" element={<LiveEvents />} />
+                  <Route path="events/:id" element={<EventDetail />} />
+                  <Route path="reputation" element={<Reputation />} />
                   <Route path="admin/analytics" element={
                     <ProtectedRoute adminOnly>
                       <AdminAnalytics />
