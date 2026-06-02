@@ -97,6 +97,9 @@ const DuelLadder = lazy(() => import("./pages/DuelLadder"));
 const HallOfFame = lazy(() => import("./pages/HallOfFame"));
 const DarkArts = lazy(() => import("./pages/DarkArts"));
 const Factions = lazy(() => import("./pages/Factions"));
+const LegendaryProphecies = lazy(() => import("./pages/LegendaryProphecies"));
+const BattleOfHogwarts = lazy(() => import("./pages/BattleOfHogwarts"));
+const EndTimes = lazy(() => import("./pages/EndTimes"));
 
 const LoadingFallback = () => (
   <div className="relative flex h-screen flex-col items-center justify-center bg-background overflow-hidden">
@@ -274,6 +277,9 @@ const App = () => {
                   <Route path="hall-of-fame" element={<HallOfFame />} />
                   <Route path="dark-arts" element={<DarkArts />} />
                   <Route path="factions" element={<Factions />} />
+                  <Route path="legendary-prophecies" element={<LegendaryProphecies />} />
+                  <Route path="battle-of-hogwarts" element={<BattleOfHogwarts />} />
+                  <Route path="end-times" element={<EndTimes />} />
                   <Route path="admin/analytics" element={
                     <ProtectedRoute adminOnly>
                       <AdminAnalytics />

@@ -64,6 +64,9 @@ export const NAV_GROUPS = [
       { icon: <MagicalIcon icon={Crown} size="xs" color="#fbbf24" />, label: "Hall da Fama", path: "/dashboard/hall-of-fame" },
       { icon: <MagicalEmoji emoji="💀" size="xs" />, label: "Artes das Trevas", path: "/dashboard/dark-arts" },
       { icon: <MagicalEmoji emoji="🦅" size="xs" />, label: "Facções", path: "/dashboard/factions" },
+      { icon: <MagicalEmoji emoji="🌌" size="xs" />, label: "Profecias Lendárias", path: "/dashboard/legendary-prophecies" },
+      { icon: <MagicalEmoji emoji="⚔️" size="xs" />, label: "Batalha de Hogwarts", path: "/dashboard/battle-of-hogwarts" },
+      { icon: <MagicalEmoji emoji="👑" size="xs" />, label: "Final dos Tempos", path: "/dashboard/end-times" },
     ]
   },
   {
