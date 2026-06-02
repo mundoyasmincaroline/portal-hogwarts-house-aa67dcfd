@@ -136,16 +136,16 @@
 .glass {
   background: linear-gradient(
     135deg, 
-    rgba(20, 25, 35, 0.45) 0%, 
-    rgba(15, 20, 30, 0.65) 100%
+    rgba(18, 14, 8, 0.78) 0%, 
+    rgba(12, 9, 5, 0.88) 100%
   );
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(212, 175, 55, 0.1);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(212, 175, 55, 0.18);
   box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 10px 40px -5px rgba(0, 0, 0, 0.5),
-    inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    0 4px 12px -2px rgba(0, 0, 0, 0.4),
+    0 18px 48px -10px rgba(0, 0, 0, 0.7),
+    inset 0 1px 1px rgba(255, 255, 255, 0.04);
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
@@ -170,11 +170,11 @@
 }
 
 .glass:hover {
-  border-color: rgba(212, 175, 55, 0.3);
+  border-color: rgba(212, 175, 55, 0.4);
   box-shadow: 
-    0 25px 50px -12px rgba(0, 0, 0, 0.7),
-    0 0 25px rgba(212, 175, 55, 0.15),
-    inset 0 1px 2px rgba(255, 255, 255, 0.08);
+    0 28px 60px -15px rgba(0, 0, 0, 0.85),
+    0 0 30px rgba(212, 175, 55, 0.2),
+    inset 0 1px 2px rgba(255, 255, 255, 0.07);
   transform: translateY(-4px) scale(1.01);
 }
 
@@ -182,13 +182,13 @@
   @apply glass;
   background: linear-gradient(
     135deg, 
-    rgba(30, 35, 50, 0.6) 0%, 
-    rgba(20, 25, 40, 0.8) 100%
+    rgba(28, 20, 10, 0.85) 0%, 
+    rgba(18, 12, 6, 0.92) 100%
   );
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  border: 1px solid rgba(212, 175, 55, 0.28);
   box-shadow: 
-    0 20px 60px -10px rgba(0, 0, 0, 0.8),
-    inset 0 0 0 1px rgba(212, 175, 55, 0.1);
+    0 22px 70px -12px rgba(0, 0, 0, 0.9),
+    inset 0 0 0 1px rgba(212, 175, 55, 0.14);
 }
 
 .glass-premium:hover {

@@ -7,9 +7,9 @@ interface ActiveWizardsSidebarProps {
 
 export function ActiveWizardsSidebar({ onlineUsers }: ActiveWizardsSidebarProps) {
   return (
-    <div className="glass rounded-[2rem] p-6 border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent shadow-2xl">
-      <h3 className="font-heading text-xs uppercase tracking-[0.3em] text-primary/60 mb-6 flex items-center gap-3">
-        <span className="w-8 h-[1px] bg-primary/20" />
+    <div className="glass rounded-[2rem] p-6 shadow-2xl">
+      <h3 className="font-heading text-xs uppercase tracking-[0.3em] text-primary/90 mb-6 flex items-center gap-3">
+        <span className="w-8 h-[1px] bg-primary/40" />
         Bruxos Ativos
       </h3>
       

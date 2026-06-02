@@ -18,8 +18,8 @@ export function ChallengesSidebar({ activeChallenges }: ChallengesSidebarProps) 
   return (
     <div className="glass rounded-[2rem] p-7 border-white/5 bg-gradient-to-tr from-primary/10 via-transparent to-transparent shadow-2xl overflow-hidden relative group/challenges">
       <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-[60px] group-hover/challenges:bg-primary/10 transition-colors" />
-      <h3 className="font-heading text-xs uppercase tracking-[0.3em] text-primary/60 mb-6 flex items-center gap-3 relative z-10">
-        <span className="w-8 h-[1px] bg-primary/20" />
+      <h3 className="font-heading text-xs uppercase tracking-[0.3em] text-primary/90 mb-6 flex items-center gap-3 relative z-10">
+        <span className="w-8 h-[1px] bg-primary/40" />
         Desafios Ativos
       </h3>
       <div className="space-y-4 relative z-10 max-h-[400px] overflow-y-auto pr-1 custom-scrollbar">
