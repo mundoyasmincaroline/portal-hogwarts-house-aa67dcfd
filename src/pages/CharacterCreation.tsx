@@ -217,7 +217,12 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
 
       await supabase.from("profiles").update({ active_character_id: char!.id, has_seen_intro: false } as any).eq("user_id", user.id);
       localStorage.removeItem("pending_character_draft"); 
-      
+
+      // Atualiza o estado local imediatamente para evitar loop na tela de seleção
+      useAuth.setState((state) => ({
+        profile: state.profile ? { ...state.profile, active_character_id: char!.id } : null
+      }));
+
       if (isFirstChar) {
         await reward(user.id, 'first_character');
       } else {
