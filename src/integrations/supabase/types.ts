@@ -1525,6 +1525,100 @@ export type Database = {
         }
         Relationships: []
       }
+      endorsements: {
+        Row: {
+          created_at: string
+          from_user: string
+          id: string
+          note: string | null
+          to_user: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          from_user: string
+          id?: string
+          note?: string | null
+          to_user: string
+          type: string
+        }
+        Update: {
+          created_at?: string
+          from_user?: string
+          id?: string
+          note?: string | null
+          to_user?: string
+          type?: string
+        }
+        Relationships: []
+      }
+      event_attendees: {
+        Row: {
+          attended: boolean
+          event_id: string
+          id: string
+          joined_at: string
+          rsvp: string
+          user_id: string
+        }
+        Insert: {
+          attended?: boolean
+          event_id: string
+          id?: string
+          joined_at?: string
+          rsvp?: string
+          user_id: string
+        }
+        Update: {
+          attended?: boolean
+          event_id?: string
+          id?: string
+          joined_at?: string
+          rsvp?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_attendees_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "live_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_chat: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: string
+          message: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: string
+          message: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: string
+          message?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_chat_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "live_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       fichas: {
         Row: {
           age: number | null
@@ -1993,6 +2087,57 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      live_events: {
+        Row: {
+          cover_emoji: string
+          created_at: string
+          created_by: string
+          description: string | null
+          ends_at: string
+          id: string
+          location: string
+          max_attendees: number | null
+          reward_gold: number
+          reward_xp: number
+          starts_at: string
+          status: string
+          title: string
+          type: string
+        }
+        Insert: {
+          cover_emoji?: string
+          created_at?: string
+          created_by: string
+          description?: string | null
+          ends_at: string
+          id?: string
+          location?: string
+          max_attendees?: number | null
+          reward_gold?: number
+          reward_xp?: number
+          starts_at: string
+          status?: string
+          title: string
+          type?: string
+        }
+        Update: {
+          cover_emoji?: string
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          ends_at?: string
+          id?: string
+          location?: string
+          max_attendees?: number | null
+          reward_gold?: number
+          reward_xp?: number
+          starts_at?: string
+          status?: string
+          title?: string
+          type?: string
+        }
+        Relationships: []
       }
       marketplace_listings: {
         Row: {
@@ -3247,6 +3392,36 @@ export type Database = {
           },
         ]
       }
+      reputation: {
+        Row: {
+          admiration: number
+          fear: number
+          respect: number
+          score: number
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admiration?: number
+          fear?: number
+          respect?: number
+          score?: number
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admiration?: number
+          fear?: number
+          respect?: number
+          score?: number
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       room_members: {
         Row: {
           id: string
@@ -3446,6 +3621,136 @@ export type Database = {
         }
         Relationships: []
       }
+      rp_team_members: {
+        Row: {
+          id: string
+          joined_at: string
+          role: string
+          team_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          joined_at?: string
+          role?: string
+          team_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          joined_at?: string
+          role?: string
+          team_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rp_team_members_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "rp_teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rp_team_missions: {
+        Row: {
+          completed_at: string | null
+          completed_by: string | null
+          created_at: string
+          deadline: string | null
+          description: string | null
+          id: string
+          reward_gold: number
+          reward_xp: number
+          status: string
+          team_id: string
+          title: string
+        }
+        Insert: {
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          id?: string
+          reward_gold?: number
+          reward_xp?: number
+          status?: string
+          team_id: string
+          title: string
+        }
+        Update: {
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          id?: string
+          reward_gold?: number
+          reward_xp?: number
+          status?: string
+          team_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rp_team_missions_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "rp_teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rp_teams: {
+        Row: {
+          created_at: string
+          description: string | null
+          emblem: string
+          house: string | null
+          id: string
+          leader_id: string
+          level: number
+          max_members: number
+          member_count: number
+          motto: string | null
+          name: string
+          treasury: number
+          xp: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          emblem?: string
+          house?: string | null
+          id?: string
+          leader_id: string
+          level?: number
+          max_members?: number
+          member_count?: number
+          motto?: string | null
+          name: string
+          treasury?: number
+          xp?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          emblem?: string
+          house?: string | null
+          id?: string
+          leader_id?: string
+          level?: number
+          max_members?: number
+          member_count?: number
+          motto?: string | null
+          name?: string
+          treasury?: number
+          xp?: number
+        }
+        Relationships: []
+      }
       seasonal_events: {
         Row: {
           active: boolean | null
@@ -3503,6 +3808,33 @@ export type Database = {
           setting_key?: string
           setting_value?: Json
           updated_at?: string
+        }
+        Relationships: []
+      }
+      social_bonds: {
+        Row: {
+          created_at: string
+          id: string
+          status: string
+          type: string
+          user_a: string
+          user_b: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          status?: string
+          type?: string
+          user_a: string
+          user_b: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          status?: string
+          type?: string
+          user_a?: string
+          user_b?: string
         }
         Relationships: []
       }
