@@ -1942,6 +1942,36 @@ export type Database = {
         }
         Relationships: []
       }
+      explorer_achievements: {
+        Row: {
+          code: string
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+          required_visits: number
+          xp_reward: number
+        }
+        Insert: {
+          code: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          required_visits?: number
+          xp_reward?: number
+        }
+        Update: {
+          code?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          required_visits?: number
+          xp_reward?: number
+        }
+        Relationships: []
+      }
       fichas: {
         Row: {
           age: number | null
@@ -5360,6 +5390,47 @@ export type Database = {
         }
         Relationships: []
       }
+      travel_journal: {
+        Row: {
+          created_at: string | null
+          entry: string
+          id: string
+          location_id: string | null
+          mood: string | null
+          photo_url: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          entry: string
+          id?: string
+          location_id?: string | null
+          mood?: string | null
+          photo_url?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          entry?: string
+          id?: string
+          location_id?: string | null
+          mood?: string | null
+          photo_url?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "travel_journal_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "world_locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ugc_missions: {
         Row: {
           created_at: string
@@ -5760,6 +5831,35 @@ export type Database = {
           },
         ]
       }
+      user_explorer_achievements: {
+        Row: {
+          achievement_id: string
+          earned_at: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          earned_at?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          achievement_id?: string
+          earned_at?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_explorer_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "explorer_achievements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_ingredients: {
         Row: {
           id: string
@@ -5888,6 +5988,35 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_position: {
+        Row: {
+          current_location_id: string | null
+          last_travel_at: string | null
+          user_id: string
+          visited_count: number
+        }
+        Insert: {
+          current_location_id?: string | null
+          last_travel_at?: string | null
+          user_id: string
+          visited_count?: number
+        }
+        Update: {
+          current_location_id?: string | null
+          last_travel_at?: string | null
+          user_id?: string
+          visited_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_position_current_location_id_fkey"
+            columns: ["current_location_id"]
+            isOneToOne: false
+            referencedRelation: "world_locations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_potions: {
         Row: {
@@ -6098,6 +6227,44 @@ export type Database = {
           },
         ]
       }
+      user_travels: {
+        Row: {
+          id: string
+          location_id: string
+          method: Database["public"]["Enums"]["travel_method"]
+          notes: string | null
+          success: boolean
+          traveled_at: string | null
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          location_id: string
+          method: Database["public"]["Enums"]["travel_method"]
+          notes?: string | null
+          success?: boolean
+          traveled_at?: string | null
+          user_id: string
+        }
+        Update: {
+          id?: string
+          location_id?: string
+          method?: Database["public"]["Enums"]["travel_method"]
+          notes?: string | null
+          success?: boolean
+          traveled_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_travels_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "world_locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vip_subscriptions: {
         Row: {
           amount_brl: number
@@ -6232,6 +6399,57 @@ export type Database = {
           ticker?: string
           updated_at?: string
           volatility?: number
+        }
+        Relationships: []
+      }
+      world_locations: {
+        Row: {
+          danger_level: number
+          description: string | null
+          discoverable: boolean | null
+          icon: string | null
+          id: string
+          lore: string | null
+          min_level: number
+          name: string
+          pos_x: number
+          pos_y: number
+          region: string
+          slug: string
+          travel_cost: number
+          xp_reward: number
+        }
+        Insert: {
+          danger_level?: number
+          description?: string | null
+          discoverable?: boolean | null
+          icon?: string | null
+          id?: string
+          lore?: string | null
+          min_level?: number
+          name: string
+          pos_x?: number
+          pos_y?: number
+          region: string
+          slug: string
+          travel_cost?: number
+          xp_reward?: number
+        }
+        Update: {
+          danger_level?: number
+          description?: string | null
+          discoverable?: boolean | null
+          icon?: string | null
+          id?: string
+          lore?: string | null
+          min_level?: number
+          name?: string
+          pos_x?: number
+          pos_y?: number
+          region?: string
+          slug?: string
+          travel_cost?: number
+          xp_reward?: number
         }
         Relationships: []
       }
@@ -6590,6 +6808,13 @@ export type Database = {
         Returns: undefined
       }
       train_creature: { Args: { p_user_creature_id: string }; Returns: Json }
+      travel_to: {
+        Args: {
+          p_location_id: string
+          p_method: Database["public"]["Enums"]["travel_method"]
+        }
+        Returns: Json
+      }
       validate_enigma_answer: {
         Args: { _answer: string; _challenge_id: string }
         Returns: Json
@@ -6622,6 +6847,7 @@ export type Database = {
         | "jogos"
         | "controle_criaturas"
         | "justica"
+      travel_method: "floo" | "apparate" | "portkey" | "broom" | "thestral"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -6760,6 +6986,7 @@ export const Constants = {
         "controle_criaturas",
         "justica",
       ],
+      travel_method: ["floo", "apparate", "portkey", "broom", "thestral"],
     },
   },
 } as const

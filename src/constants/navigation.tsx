@@ -56,6 +56,9 @@ export const NAV_GROUPS = [
       { icon: <MagicalEmoji emoji="🐉" size="xs" />, label: "Criaturas Mágicas", path: "/dashboard/creatures" },
       { icon: <MagicalEmoji emoji="🌿" size="xs" />, label: "Estufa (Herbologia)", path: "/dashboard/greenhouse" },
       { icon: <MagicalEmoji emoji="🧪" size="xs" />, label: "Laboratório de Poções", path: "/dashboard/potions" },
+      { icon: <MagicalEmoji emoji="🌍" size="xs" />, label: "Mapa do Mundo", path: "/dashboard/world-map" },
+      { icon: <MagicalEmoji emoji="✈️" size="xs" />, label: "Viagens Mágicas", path: "/dashboard/travel" },
+      { icon: <MagicalEmoji emoji="📓" size="xs" />, label: "Diário de Viagem", path: "/dashboard/journal" },
     ]
   },
   {
