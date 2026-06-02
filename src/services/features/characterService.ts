@@ -5,7 +5,7 @@ export const characterService = {
   async getByUserId(userId: string): Promise<Character[]> {
     const { data, error } = await supabase
       .from("characters")
-      .select("id, full_name, avatar_url, house, character_type, level")
+      .select("id, full_name, avatar_url, house, character_type, level, xp")
       .eq("user_id", userId)
       .order("created_at", { ascending: true });
     
