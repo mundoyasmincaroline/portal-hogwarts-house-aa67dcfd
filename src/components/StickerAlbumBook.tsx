@@ -89,7 +89,7 @@ export default function StickerAlbumBook({ stickers, userStickers, onBuy, buying
                 </div>
 
                 <div className="pt-8">
-                  <Button variant="plaque" className="h-14 px-10 rounded-full animate-bounce">
+                  <Button variant="plaque" className="min-h-14 h-auto px-5 sm:px-10 rounded-full animate-bounce">
                     Abrir Relicário <BookOpen className="ml-2" />
                   </Button>
                 </div>
@@ -166,7 +166,7 @@ export default function StickerAlbumBook({ stickers, userStickers, onBuy, buying
                   </div>
                   <button 
                     onClick={() => setIsOpened(false)}
-                    className="mt-2 text-[8px] text-black/40 hover:text-black/80 uppercase tracking-widest font-heading transition-colors"
+                    className="mt-2 text-[8px] text-black/40 hover:text-black/80 uppercase tracking-[0.04em] sm:tracking-widest font-heading transition-colors"
                   >
                     Fechar Álbum
                   </button>

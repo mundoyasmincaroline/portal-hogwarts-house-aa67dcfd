@@ -294,7 +294,7 @@ export default function AdminFinance() {
           <div className="p-6 bg-white/5 border-t border-white/5 text-center">
             <button
               onClick={() => setShowAll(v => !v)}
-              className="text-xs text-primary hover:underline font-bold uppercase tracking-widest"
+              className="text-xs text-primary hover:underline font-bold uppercase tracking-[0.04em] sm:tracking-widest"
             >
               {showAll ? "Recolher" : `Ver Histórico Completo (${orders.length})`}
             </button>
