@@ -99,8 +99,26 @@ export default function DailyRPSlot() {
       return;
     }
     setClaim(data as Claim);
-    toast.success("Vaga de RP reivindicada para hoje! ✨");
-    // Refresh streak + reward
+    // Buscar recompensa registrada (o RPC garante anti-duplicidade)
+    const today = todayInSP();
+    const { data: reward } = await (supabase as any)
+      .from("rp_streak_rewards")
+      .select("xp_bonus, galeons_bonus, label, milestone, streak_day")
+      .eq("user_id", user!.id)
+      .eq("claim_date", today)
+      .maybeSingle();
+
+    if (reward) {
+      const parts: string[] = [];
+      if (reward.xp_bonus) parts.push(`+${reward.xp_bonus} XP`);
+      if (reward.galeons_bonus) parts.push(`+${reward.galeons_bonus}🪙`);
+      toast.success(
+        `${reward.label ?? "Check-in feito"} · Dia ${reward.streak_day}${reward.milestone ? " · MARCO!" : ""}`,
+        { description: parts.join(" · "), duration: 4500 }
+      );
+    } else {
+      toast.success("Check-in já registrado hoje ✨");
+    }
     fetchToday();
   };
 
