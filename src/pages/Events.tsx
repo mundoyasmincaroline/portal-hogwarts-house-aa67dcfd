@@ -230,6 +230,15 @@ export default function Events() {
             </div>
           );
         })}
+        {!loading && dailyEvents.length === 0 && (
+          <div className="col-span-full glass rounded-2xl sm:rounded-[2rem] p-12 sm:p-16 text-center border border-white/5">
+            <div className="text-6xl mb-4">🌙</div>
+            <p className="font-heading text-xl text-foreground">Nenhum evento mágico hoje</p>
+            <p className="text-sm text-muted-foreground italic font-serif mt-2 max-w-md mx-auto">
+              "Até os dementadores precisam de um dia de folga. Volte amanhã para novas celebrações em Hogwarts!"
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Info Adicional */}
