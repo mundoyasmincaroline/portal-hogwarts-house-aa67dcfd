@@ -1,6 +1,6 @@
 import { memo } from "react";
 import {
-  Sun, Venus, Swords, Scale, Settings, Crown, AlertTriangle, Zap, Circle, Link2,
+  Sun, User as MaleIcon, Swords, Scale, Settings, Crown, AlertTriangle, Zap, Circle, Link2,
   Tent, CheckCircle2, Plane, Mail, PenLine, Pencil, Check, X, Ban, Sparkles, Star,
   Snowflake, XCircle, HelpCircle, Heart, Plus, Tornado, Rainbow, Stars, Globe, Moon,
   Sprout, Trees, Wheat, Leaf, Drumstick, Candy, Cookie, Gift, Cake, Ghost, PartyPopper,
@@ -34,7 +34,7 @@ const SILVER = "#cbd5e1";
 
 const MAP: Record<string, IconSpec> = {
   // Símbolos / status
-  "☀": { I: Sun, c: YELLOW }, "♂": { I: Venus, c: BLUE },
+  "☀": { I: Sun, c: YELLOW }, "♂": { I: MaleIcon, c: BLUE },
   "⚔": { I: Swords, c: SILVER }, "⚖": { I: Scale, c: GOLD },
   "⚙": { I: Settings, c: SILVER }, "⚜": { I: Crown, c: GOLD },
   "⚠": { I: AlertTriangle, c: YELLOW }, "⚡": { I: Zap, c: YELLOW },
