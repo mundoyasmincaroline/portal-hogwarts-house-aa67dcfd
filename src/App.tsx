@@ -48,6 +48,10 @@ const RPHistory = lazy(() => import("./pages/RPHistory"));
 const Tournaments = lazy(() => import("./pages/Tournaments"));
 const Marketplace = lazy(() => import("./pages/Marketplace"));
 const NotificationPreferences = lazy(() => import("./pages/NotificationPreferences"));
+const Quests = lazy(() => import("./pages/Quests"));
+const SortingHatAI = lazy(() => import("./pages/SortingHatAI"));
+const ProphetDaily = lazy(() => import("./pages/ProphetDaily"));
+const AdminAnalytics = lazy(() => import("./pages/AdminAnalytics"));
 
 const LoadingFallback = () => (
   <div className="relative flex h-screen flex-col items-center justify-center bg-background overflow-hidden">
@@ -169,6 +173,14 @@ const App = () => {
                   <Route path="tournaments" element={<Tournaments />} />
                   <Route path="marketplace" element={<Marketplace />} />
                   <Route path="settings/notifications" element={<NotificationPreferences />} />
+                  <Route path="quests" element={<Quests />} />
+                  <Route path="sorting-hat" element={<SortingHatAI />} />
+                  <Route path="prophet" element={<ProphetDaily />} />
+                  <Route path="admin/analytics" element={
+                    <ProtectedRoute adminOnly>
+                      <AdminAnalytics />
+                    </ProtectedRoute>
+                  } />
                   {/* Wildcard dentro do dashboard: rota inválida → volta ao Salão Principal */}
                   <Route path="*" element={<Feed />} />
                 </Route>
