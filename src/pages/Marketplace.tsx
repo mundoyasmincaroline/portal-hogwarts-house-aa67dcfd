@@ -49,11 +49,21 @@ export default function Marketplace() {
     setLoading(true);
     const { data: l } = await supabase
       .from("marketplace_listings")
-      .select("*, sticker:stickers(character_name,rarity,image_url,house), seller:profiles!marketplace_listings_seller_id_fkey(username)")
+      .select("*, sticker:stickers(character_name,rarity,image_url,house)")
       .eq("status", "active")
       .order("created_at", { ascending: false })
       .limit(50);
-    setListings((l || []) as any);
+    const rows = (l || []) as any[];
+    const sellerIds = Array.from(new Set(rows.map((r) => r.seller_id)));
+    let sellers: Record<string, string> = {};
+    if (sellerIds.length) {
+      const { data: ps } = await supabase
+        .from("profiles")
+        .select("user_id, username")
+        .in("user_id", sellerIds);
+      (ps || []).forEach((p: any) => (sellers[p.user_id] = p.username));
+    }
+    setListings(rows.map((r) => ({ ...r, seller: { username: sellers[r.seller_id] } })));
 
     if (user) {
       const { data: o } = await supabase
