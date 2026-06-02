@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
+import { Wand2 } from "lucide-react";
 
 // Critical Routes (Loaded on demand but prioritized)
 const Landing = lazy(() => import("./pages/Landing"));
