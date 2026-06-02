@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,8 +8,6 @@ import MagicalParticles from "@/components/MagicalParticles";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { playDoorSound } from "@/services/core/soundService";
-
-const MagicalOrb = lazy(() => import("@/components/three/MagicalOrb"));
 
 export default function Login() {
   const navigate = useNavigate();
@@ -25,6 +23,24 @@ export default function Login() {
   // Recovery Mode State
   const [isRecoveryMode, setIsRecoveryMode] = useState(false);
   const [newPassword, setNewPassword] = useState("");
+
+  // ── Cinematic time-based background ──
+  const [currentTime, setCurrentTime] = useState(new Date());
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 60_000);
+    return () => clearInterval(timer);
+  }, []);
+  const hour = currentTime.getHours();
+  let timeOfDay = "night";
+  if (hour >= 5 && hour < 7) timeOfDay = "dawn";
+  else if (hour >= 7 && hour < 12) timeOfDay = "morning";
+  else if (hour >= 12 && hour < 17) timeOfDay = "afternoon";
+  else if (hour >= 17 && hour < 19) timeOfDay = "dusk";
+  let bgUrl = new URL('../assets/hogwarts_night.png', import.meta.url).href;
+  if (timeOfDay === "morning") bgUrl = new URL('../assets/hogwarts_morning.png', import.meta.url).href;
+  else if (timeOfDay === "afternoon") bgUrl = new URL('../assets/hogwarts_afternoon.png', import.meta.url).href;
+  else if (timeOfDay === "dawn") bgUrl = new URL('../assets/hogwarts_dawn.jpg', import.meta.url).href;
+  else if (timeOfDay === "dusk") bgUrl = new URL('../assets/hogwarts_dusk.jpg', import.meta.url).href;
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
@@ -105,14 +121,14 @@ export default function Login() {
     <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
       {/* ── CINEMATIC BACKGROUND ── */}
       <div className="absolute inset-0 z-0">
-         <img src="https://images.unsplash.com/photo-1514894780037-d2ef692277bb?auto=format&fit=crop&q=80&w=2000" className="w-full h-full object-cover opacity-20 grayscale scale-110" alt="Background" />
-         <div className="absolute inset-0 bg-gradient-to-br from-black via-black/90 to-purple-950/30" />
+         <img src={bgUrl} alt="Hogwarts Castle" className="w-full h-full object-cover scale-105 animate-[float_20s_ease-in-out_infinite]" />
+         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/70 to-background" />
+         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_0%,_transparent_45%,_rgba(0,0,0,0.85)_100%)]" />
+         <div className="absolute inset-0 bg-gradient-to-tr from-amber-900/15 via-transparent to-blue-900/20 mix-blend-overlay" />
+         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(212,175,55,0.10),_transparent_55%)]" />
       </div>
 
       <MagicalParticles />
-      <Suspense fallback={null}>
-        <MagicalOrb className="absolute inset-0 z-10 opacity-70" />
-      </Suspense>
       <div className="glass-premium rounded-[2.5rem] p-10 w-[95%] max-w-md z-20 animate-fade-in-up border-primary/20 shadow-[0_40px_120px_rgba(0,0,0,0.95)] mx-auto hover:border-primary/50 transition-all duration-1000">
         <div className="text-center mb-8">
           <h1 className="font-heading text-4xl text-gold-gradient mb-3">
