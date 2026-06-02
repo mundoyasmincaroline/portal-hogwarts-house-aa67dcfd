@@ -34,9 +34,9 @@ export default function RankedLadder() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-6">
+    <div className="max-w-3xl mx-auto p-4 sm:p-6 space-y-6">
       <header>
-        <h1 className="font-heading text-3xl text-primary">🏅 Modo Ranqueado</h1>
+        <h1 className="font-heading text-2xl sm:text-3xl text-primary">🏅 Modo Ranqueado</h1>
         <p className="text-foreground/70 font-serif italic">Suba de divisão: Bronze → Prata → Ouro → Diamante → Mestre → Auror.</p>
         {season && <p className="text-xs text-foreground/60 mt-1">Temporada: {season.name} · Encerra em {new Date(season.ends_at).toLocaleDateString()}</p>}
       </header>

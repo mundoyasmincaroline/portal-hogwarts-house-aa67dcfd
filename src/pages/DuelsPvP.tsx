@@ -164,7 +164,7 @@ export default function DuelsPvP() {
   return (
     <div className="max-w-4xl mx-auto p-4 space-y-6">
       <header>
-        <h1 className="font-heading text-3xl text-primary flex items-center gap-2"><Swords/> Duelos PvP</h1>
+        <h1 className="font-heading text-2xl sm:text-3xl text-primary flex items-center gap-2 flex-wrap"><Swords/> Duelos PvP</h1>
         <p className="text-foreground/70 font-serif italic">Desafie outros bruxos em um duelo mágico por turnos.</p>
       </header>
 

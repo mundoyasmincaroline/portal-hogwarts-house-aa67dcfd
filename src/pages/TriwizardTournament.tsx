@@ -75,11 +75,11 @@ export default function TriwizardTournament() {
   if (!tournament) return <div className="p-8 text-foreground/60">Nenhum Torneio Tribruxo ativo no momento.</div>;
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center gap-3">
-        <Trophy className="h-8 w-8 text-primary" />
-        <div>
-          <h1 className="font-heading text-3xl">{tournament.name}</h1>
+    <div className="p-4 sm:p-6 space-y-6">
+      <div className="flex items-center gap-3 flex-wrap">
+        <Trophy className="h-7 w-7 sm:h-8 sm:w-8 text-primary" />
+        <div className="min-w-0">
+          <h1 className="font-heading text-2xl sm:text-3xl break-words">{tournament.name}</h1>
           <p className="text-sm text-foreground/60">{tournament.description}</p>
         </div>
       </div>
@@ -88,7 +88,7 @@ export default function TriwizardTournament() {
         <CardHeader>
           <CardTitle className="font-heading">Premiação Final</CardTitle>
         </CardHeader>
-        <CardContent className="flex gap-6">
+        <CardContent className="flex gap-3 sm:gap-6 flex-wrap">
           <Badge variant="secondary">🏆 {tournament.galeon_prize} Galeões</Badge>
           <Badge variant="secondary">✨ {tournament.xp_prize} XP</Badge>
           <Badge>Encerra em {new Date(tournament.ends_at).toLocaleDateString("pt-BR")}</Badge>

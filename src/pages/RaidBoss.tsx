@@ -26,9 +26,9 @@ export default function RaidBoss() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
+    <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
       <header>
-        <h1 className="font-heading text-3xl text-primary">🐉 Chefes Cooperativos</h1>
+        <h1 className="font-heading text-2xl sm:text-3xl text-primary">🐉 Chefes Cooperativos</h1>
         <p className="text-foreground/70 font-serif italic">Una forças com todo o castelo para derrotar criaturas lendárias.</p>
       </header>
       {bosses.map(b => {
