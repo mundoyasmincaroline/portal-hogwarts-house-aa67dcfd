@@ -229,14 +229,14 @@ export default function DashboardLayout() {
         <div className="p-5 border-t border-primary/10 bg-black/20 backdrop-blur-2xl">
           <Link 
             to="/dashboard/store" 
-            className="flex items-center justify-between px-5 py-4 mb-4 rounded-2xl border border-yellow-500/30 bg-gradient-to-br from-amber-600/10 via-yellow-900/30 to-black/80 hover:border-yellow-400/60 hover:-translate-y-1 transition-all group overflow-hidden relative shadow-2xl"
+            className="flex items-center justify-between px-4 py-3 sm:px-5 sm:py-4 mb-4 rounded-2xl border border-yellow-500/30 bg-gradient-to-br from-amber-600/10 via-yellow-900/30 to-black/80 hover:border-yellow-400/60 hover:-translate-y-1 transition-all group overflow-hidden relative shadow-2xl"
           >
             <div className="absolute inset-0 bg-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="flex items-center gap-3 relative z-10">
-              <MagicalGaleon size="xs" className="animate-pulse" />
-              <span className="text-[10px] text-yellow-400/80 font-heading uppercase tracking-[0.2em]">Tesouro</span>
+            <div className="flex items-center gap-2 sm:gap-3 relative z-10 min-w-0">
+              <MagicalGaleon size="xs" className="animate-pulse shrink-0" />
+              <span className="text-[9px] sm:text-[10px] text-yellow-400/80 font-heading uppercase tracking-[0.1em] sm:tracking-[0.2em] truncate">Tesouro</span>
             </div>
-            <span className="font-heading text-xl text-yellow-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.6)] relative z-10">
+            <span className="font-heading text-lg sm:text-xl text-yellow-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.6)] relative z-10 ml-2">
               {(profile?.galeons || 0).toLocaleString("pt-BR")}
             </span>
           </Link>

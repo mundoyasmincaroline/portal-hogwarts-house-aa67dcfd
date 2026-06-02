@@ -229,19 +229,19 @@ export default function GringottsStore() {
         <p className="text-muted-foreground/90 text-xl font-serif italic max-w-2xl mx-auto leading-relaxed">"Fortius Quo Fidelius" — Mais forte quanto mais fiel.</p>
       </div>
 
-      <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mb-12">
         {TABS.map(t => (
           <Button
             key={t.id}
             variant={tab === t.id ? "magical" : "outline"}
-            className="rounded-full px-3 py-2 sm:px-6 sm:py-6 h-auto text-xs sm:text-sm"
+            className="rounded-full px-3 py-2 sm:px-6 sm:py-6 h-auto text-[10px] sm:text-sm flex-1 min-w-[100px] sm:flex-initial"
             onClick={() => {
               playMagicSound();
               setTab(t.id);
             }}
           >
-            <t.icon size={18} className="mr-2" />
-            {t.label}
+            <t.icon size={16} className="mr-1 sm:mr-2 shrink-0" />
+            <span className="truncate">{t.label}</span>
           </Button>
         ))}
       </div>

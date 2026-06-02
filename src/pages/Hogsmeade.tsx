@@ -78,18 +78,19 @@ export default function Hogsmeade() {
         </div>
       </div>
 
-      <div className="flex gap-2 flex-wrap mb-4">
+      <div className="flex gap-2 overflow-x-auto pb-4 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap mb-4">
         {CATEGORIES.map(c => (
           <button
             key={c.id}
             onClick={() => setCategory(c.id)}
-            className={`px-3 py-1.5 rounded-full text-xs font-heading border transition-all ${
+            className={`px-4 py-2 rounded-full text-xs font-heading border transition-all whitespace-nowrap flex items-center gap-2 shrink-0 ${
               category === c.id
-                ? "bg-primary text-primary-foreground border-primary"
-                : "border-border text-muted-foreground hover:border-primary/50"
+                ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20"
+                : "bg-card/40 border-border text-muted-foreground hover:border-primary/50"
             }`}
           >
-            {c.emoji} {c.label}
+            <span className="text-sm">{c.emoji}</span>
+            <span>{c.label}</span>
           </button>
         ))}
       </div>
