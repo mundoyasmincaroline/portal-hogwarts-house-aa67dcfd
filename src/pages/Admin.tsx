@@ -70,9 +70,14 @@ export default function Admin() {
       <AdminKpiPanel />
 
       <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-        {(["members", "monetization", "pedidos", "streak"] as Tab[]).map((t) => (
-          <Button key={t} onClick={() => setTab(t)} variant={tab === t ? "magical" : "ghost"}>
-            {t.toUpperCase()}
+        {([
+          { key: "members", label: "Membros" },
+          { key: "monetization", label: "Monetização" },
+          { key: "pedidos", label: "Pedidos" },
+          { key: "streak", label: "Sequência" },
+        ] as { key: Tab; label: string }[]).map((t) => (
+          <Button key={t.key} onClick={() => setTab(t.key)} variant={tab === t.key ? "magical" : "ghost"}>
+            {t.label.toUpperCase()}
           </Button>
         ))}
       </div>
