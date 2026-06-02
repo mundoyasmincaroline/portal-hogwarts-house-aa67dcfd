@@ -31,7 +31,25 @@ export default function Admin() {
     if (isAdmin) fetchAll();
   }, [isAdmin, fetchAll]);
 
-  if (!isAdmin) return null;
+  if (isAdmin === undefined) {
+    return (
+      <div className="text-center py-20 text-muted-foreground animate-pulse font-heading uppercase tracking-widest text-xs">
+        Verificando permissões do Ministério...
+      </div>
+    );
+  }
+  if (!isAdmin) {
+    return (
+      <div className="text-center py-24 space-y-4">
+        <p className="text-6xl">🚫</p>
+        <p className="font-heading text-2xl text-red-400">Acesso Negado pelo Ministério da Magia</p>
+        <p className="text-sm text-muted-foreground font-serif italic">"Somente membros da Ordem podem ver este pergaminho."</p>
+        <Button variant="outline" onClick={() => navigate("/dashboard")} className="mt-4">
+          ← Voltar ao Salão Principal
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
