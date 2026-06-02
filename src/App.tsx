@@ -27,6 +27,7 @@ const ChatRoom = lazy(() => import("./pages/ChatRoom"));
 const InstaHogwarts = lazy(() => import("./pages/InstaHogwarts"));
 const StickerAlbum = lazy(() => import("./pages/StickerAlbum"));
 const Classes = lazy(() => import("./pages/Classes"));
+const CanonLessons = lazy(() => import("./pages/CanonLessons"));
 const Rules = lazy(() => import("./pages/Rules"));
 const MaraudersGuide = lazy(() => import("./pages/MaraudersGuide"));
 const DMInbox = lazy(() => import("./pages/DMInbox"));
@@ -126,6 +127,7 @@ const App = () => {
                   <Route path="instahogwarts" element={<InstaHogwarts />} />
                   <Route path="album" element={<StickerAlbum />} />
                   <Route path="classes" element={<Classes />} />
+                  <Route path="canon-lessons" element={<CanonLessons />} />
                   <Route path="houses" element={<Houses />} />
                   <Route path="ranking" element={<Ranking />} />
                   <Route path="challenges" element={<Challenges />} />

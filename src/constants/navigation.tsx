@@ -27,6 +27,7 @@ export const NAV_GROUPS = [
       { icon: <MagicalIcon icon={Zap} size="xs" color="#a855f7" />, label: "Desafios", path: "/dashboard/challenges" },
       { icon: <MagicalIcon icon={Sparkles} size="xs" color="#f472b6" />, label: "Eventos", path: "/dashboard/events" },
       { icon: <MagicalIcon icon={GraduationCap} size="xs" color="#3b82f6" />, label: "Aulas", path: "/dashboard/classes" },
+      { icon: <MagicalIcon icon={Sparkles} size="xs" color="#fbbf24" />, label: "Aulas Canon", path: "/dashboard/canon-lessons" },
     ]
   },
   {
