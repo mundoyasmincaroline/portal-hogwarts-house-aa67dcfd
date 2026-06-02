@@ -110,12 +110,12 @@ export default function AdminFinance() {
   return (
     <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10 pb-20 px-2 sm:px-4">
       {/* ── HEADER ── */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div>
-          <h1 className="text-4xl md:text-5xl font-heading text-gold-gradient tracking-tight">Tesouro de Gringotts</h1>
-          <p className="text-muted-foreground font-serif italic">Painel de Administração Financeira em Tempo Real</p>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6">
+        <div className="min-w-0">
+          <h1 className="text-2xl sm:text-3xl md:text-5xl font-heading text-gold-gradient tracking-tight break-words">Tesouro de Gringotts</h1>
+          <p className="text-muted-foreground font-serif italic text-sm sm:text-base">Painel de Administração Financeira em Tempo Real</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-2 sm:gap-3">
           <Button variant="outline" className="glass border-white/10 gap-2" onClick={handleExport}>
             <Download size={16} /> Exportar Planilha
           </Button>
