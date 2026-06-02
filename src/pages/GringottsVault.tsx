@@ -38,7 +38,7 @@ export default function GringottsVault() {
 
   if (!vault) {
     return (
-      <div className="p-6 max-w-2xl mx-auto">
+      <div className="p-4 sm:p-6 max-w-2xl mx-auto">
         <Card className="p-8 text-center space-y-4 bg-card/60 border-primary/30">
           <div className="text-6xl">🏦</div>
           <h1 className="font-heading text-2xl">Bem-vindo a Gringotes</h1>
@@ -50,16 +50,16 @@ export default function GringottsVault() {
   }
 
   return (
-    <div className="p-6 max-w-3xl mx-auto space-y-6">
-      <Card className="p-6 bg-gradient-to-br from-amber-950/40 to-card border-primary/40">
-        <div className="flex items-center justify-between">
-          <div>
+    <div className="p-4 sm:p-6 max-w-3xl mx-auto space-y-6">
+      <Card className="p-4 sm:p-6 bg-gradient-to-br from-amber-950/40 to-card border-primary/40">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="min-w-0">
             <p className="text-xs uppercase tracking-widest text-muted-foreground">Cofre Pessoal</p>
-            <h1 className="font-heading text-3xl text-primary">N.º {vault.vault_number}</h1>
+            <h1 className="font-heading text-2xl sm:text-3xl text-primary">N.º {vault.vault_number}</h1>
           </div>
           <div className="text-right">
             <p className="text-xs text-muted-foreground">Saldo</p>
-            <p className="text-4xl font-bold text-primary">{vault.balance.toLocaleString()} G</p>
+            <p className="text-3xl sm:text-4xl font-bold text-primary break-words">{vault.balance.toLocaleString()} G</p>
           </div>
         </div>
         <p className="text-xs text-muted-foreground mt-2">Taxa de juros: {(vault.interest_rate * 100).toFixed(1)}% ao dia</p>

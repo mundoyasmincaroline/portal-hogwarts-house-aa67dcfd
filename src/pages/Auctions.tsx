@@ -22,9 +22,9 @@ export default function Auctions() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-6">
+    <div className="max-w-3xl mx-auto p-4 sm:p-6 space-y-6">
       <header>
-        <h1 className="font-heading text-3xl text-primary">🔨 Casa de Leilões</h1>
+        <h1 className="font-heading text-2xl sm:text-3xl text-primary">🔨 Casa de Leilões</h1>
         <p className="text-foreground/70 font-serif italic">Lances em galeões. Maior oferta leva.</p>
       </header>
       {items.map(a => (
@@ -35,7 +35,7 @@ export default function Auctions() {
           </div>
           <p className="text-sm text-foreground/70">{a.description}</p>
           <div className="text-sm">Lance atual: <strong className="text-primary">{a.current_bid || a.starting_bid} G</strong></div>
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <Input type="number" placeholder="Seu lance" value={bid[a.id] || ""} onChange={e => setBid({ ...bid, [a.id]: e.target.value })} />
             <Button onClick={() => place(a.id)}>Dar lance</Button>
           </div>

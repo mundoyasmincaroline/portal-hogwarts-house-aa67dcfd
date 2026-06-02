@@ -49,7 +49,7 @@ export default function Inventory() {
     <div className="container mx-auto px-4 py-6 max-w-5xl">
       <div className="flex items-start justify-between flex-wrap gap-4 mb-6">
         <div>
-          <h1 className="font-heading text-3xl text-gold-gradient flex items-center gap-2">
+          <h1 className="font-heading text-2xl sm:text-3xl text-gold-gradient flex items-center gap-2">
             <Backpack /> Mochila Mágica
           </h1>
           <p className="text-sm text-muted-foreground">
