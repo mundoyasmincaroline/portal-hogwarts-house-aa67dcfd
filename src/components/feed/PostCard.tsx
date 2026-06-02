@@ -154,7 +154,7 @@ const PostCard = memo(({
           <input
             value={commentDraft}
             onChange={(e) => onCommentDraftChange(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && onSubmitComment()}
+            onKeyDown={(e) => { if (e.key === "Enter" && commentDraft.trim()) onSubmitComment(); }}
             placeholder="Escreva um comentário mágico..."
             maxLength={500}
             className="flex-1 bg-transparent rounded-xl px-4 py-2.5 text-xs focus:outline-none text-foreground placeholder:text-muted-foreground/50 italic"
