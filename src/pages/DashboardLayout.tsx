@@ -73,6 +73,29 @@ export default function DashboardLayout() {
     if (sidebarOpen) cast('door');
   }, [sidebarOpen, cast]);
 
+  // Faz upload do avatar pendente do cadastro (precisa de sessão ativa para passar pelo RLS do storage)
+  useEffect(() => {
+    if (!user?.id) return;
+    const raw = localStorage.getItem("pending_avatar_upload");
+    if (!raw) return;
+    (async () => {
+      try {
+        const { dataUrl, name } = JSON.parse(raw);
+        if (!dataUrl) { localStorage.removeItem("pending_avatar_upload"); return; }
+        const res = await fetch(dataUrl);
+        const blob = await res.blob();
+        const ext = (name?.split(".").pop() || "png").toLowerCase();
+        const path = `${user.id}/avatar.${ext}`;
+        const { error: upErr } = await supabase.storage.from("avatars").upload(path, blob, { upsert: true, contentType: blob.type });
+        if (!upErr) {
+          const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
+          await supabase.from("profiles").update({ avatar_url: `${publicUrl}?t=${Date.now()}` } as any).eq("user_id", user.id);
+        }
+      } catch { /* ignore */ }
+      finally { localStorage.removeItem("pending_avatar_upload"); }
+    })();
+  }, [user?.id]);
+
   useEffect(() => {
     if (!user) { setHasCharacters(null); return; }
     let cancelled = false;
