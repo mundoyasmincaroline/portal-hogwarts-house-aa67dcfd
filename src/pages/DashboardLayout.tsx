@@ -161,7 +161,7 @@ export default function DashboardLayout() {
         )}
       </AnimatePresence>
 
-      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-[85vw] max-w-[280px] md:w-64 bg-card/85 backdrop-blur-3xl border-r border-primary/25 flex flex-col transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] md:translate-x-0 shadow-[8px_0_40px_rgba(0,0,0,0.5)] ${sidebarOpen ? "translate-x-0 shadow-[20px_0_80px_rgba(0,0,0,0.95)]" : "-translate-x-full"}`}>
+      <aside className={`fixed md:static inset-y-0 left-0 z-40 w-[85vw] max-w-[280px] md:w-64 bg-gradient-to-b from-[#1a0f05]/95 via-[#0f0a05]/90 to-[#0a0604]/95 backdrop-blur-3xl border-r border-primary/30 flex flex-col transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] md:translate-x-0 shadow-[8px_0_40px_rgba(0,0,0,0.6)] ${sidebarOpen ? "translate-x-0 shadow-[20px_0_80px_rgba(0,0,0,0.95)]" : "-translate-x-full"}`}>
         <div className="p-6 border-b border-primary/10">
           <Link to="/dashboard" className="flex items-center gap-4 group">
             <div className="bg-primary/20 p-3 rounded-2xl text-primary transition-all group-hover:rotate-[360deg] group-hover:scale-110 duration-1000 shadow-[0_0_20px_rgba(212,175,55,0.2)]"><Castle size={28} /></div>
