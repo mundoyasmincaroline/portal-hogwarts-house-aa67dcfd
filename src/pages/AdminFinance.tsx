@@ -229,7 +229,16 @@ export default function AdminFinance() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {orders.slice(0, 20).map(o => (
+              {(() => {
+                const q = filterQuery.trim().toLowerCase();
+                const filtered = q
+                  ? orders.filter(o =>
+                      (o.profiles?.full_name?.toLowerCase().includes(q)) ||
+                      o.id.toLowerCase().includes(q) ||
+                      o.user_id.toLowerCase().includes(q)
+                    )
+                  : orders;
+                return (showAll ? filtered : filtered.slice(0, 20)).map(o => (
                 <tr key={o.id} className="hover:bg-white/5 transition-colors group">
                   <td className="px-4 sm:px-8 py-6">
                     <div className="flex items-center gap-3">
@@ -271,7 +280,8 @@ export default function AdminFinance() {
                     <p className="text-[10px] text-muted-foreground/50">{new Date(o.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</p>
                   </td>
                 </tr>
-              ))}
+                ));
+              })()}
             </tbody>
           </table>
         </div>
@@ -280,9 +290,16 @@ export default function AdminFinance() {
           <div className="p-20 text-center text-muted-foreground italic">Nenhuma transação registrada ainda.</div>
         )}
         
-        <div className="p-6 bg-white/5 border-t border-white/5 text-center">
-          <button className="text-xs text-primary hover:underline font-bold uppercase tracking-widest">Ver Histórico Completo</button>
-        </div>
+        {orders.length > 20 && (
+          <div className="p-6 bg-white/5 border-t border-white/5 text-center">
+            <button
+              onClick={() => setShowAll(v => !v)}
+              className="text-xs text-primary hover:underline font-bold uppercase tracking-widest"
+            >
+              {showAll ? "Recolher" : `Ver Histórico Completo (${orders.length})`}
+            </button>
+          </div>
+        )}
       </Card>
     </div>
   );
