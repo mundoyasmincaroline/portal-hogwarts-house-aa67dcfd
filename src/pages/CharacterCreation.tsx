@@ -138,18 +138,12 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
     const isFirstCharacter = !profile?.active_character_id;
     const requiredFields = ["full_name", "house", "blood_status", "wand", "patronus", "personality", "strength", "weakness", "fears", "dreams"];
     
-    if (!isFirstCharacter) {
-      const missing = requiredFields.filter(f => !form[f as keyof typeof form]);
-      if (missing.length > 0 || (!form.avatar_url && !avatarFile)) {
-        toast.error(`Preencha todos os campos obrigatórios: ${missing.join(", ")}`);
-        return;
-      }
-    } else {
-      // No primeiro personagem (Rito), garantimos apenas Nome, Casa e Foto
-      if (!form.full_name || !form.house || (!form.avatar_url && !avatarFile)) {
-        toast.error("Nome, Casa e Foto são obrigatórios para atravessar o portal!");
-        return;
-      }
+    // Na primeira ficha (onboarding), apenas nome e casa são estritamente bloqueantes para a UI, 
+    // mas vamos garantir que o formulário não falhe silenciosamente se faltar algo essencial no DB.
+    if (!form.full_name || !form.house) {
+      toast.error("Nome e Casa são obrigatórios para atravessar o portal!");
+      setLoading(false);
+      return;
     }
     
     if (type === "canon" && !form.canon_portrayed_by) {
