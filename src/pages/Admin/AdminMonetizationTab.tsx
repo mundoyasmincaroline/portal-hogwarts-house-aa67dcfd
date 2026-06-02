@@ -31,13 +31,18 @@ export const AdminMonetizationTab = memo(({ members, fetchAll }: { members: any[
   const creditGaleons = async () => {
     if (!galeonTarget || galeonAmount <= 0) return toast.error("Selecione um membro e um valor válido.");
     const member = members.find(m => m.user_id === galeonTarget);
-    if (!member) { toast.error("Membro não encontrado."); setCrediting(false); return; }
+    if (!member) { toast.error("Membro não encontrado."); return; }
     if (!confirm(`Creditar ${galeonAmount} Galeões para ${member.full_name}? Esta ação não pode ser desfeita.`)) return;
     setCrediting(true);
-    const current = (member as any).galeons || 0;
+    // Re-lê valor atual para evitar race com outras transações
+    const { data: fresh } = await supabase.from("profiles").select("galeons").eq("user_id", galeonTarget).single();
+    const current = (fresh as any)?.galeons || 0;
     const { error } = await supabase.from("profiles").update({ galeons: current + galeonAmount } as any).eq("user_id", galeonTarget);
     if (error) { toast.error("Erro ao creditar Galeões."); }
-    else { toast.success(`🪙 ${galeonAmount} Galeões creditados para ${member.full_name}!`); }
+    else {
+      toast.success(`🪙 ${galeonAmount} Galeões creditados para ${member.full_name}!`);
+      setGaleonTarget(""); setGaleonAmount(0);
+    }
     setCrediting(false);
     fetchAll();
   };
@@ -105,7 +110,7 @@ export const AdminMonetizationTab = memo(({ members, fetchAll }: { members: any[
               onChange={e => setGaleonAmount(parseInt(e.target.value) || 0)}
             />
             <Button onClick={creditGaleons} variant="magical" className="w-full" disabled={crediting}>
-              {crediting ? "Creditando..." : "Creditário Manual ✨"}
+              {crediting ? "Creditando..." : "Crédito Manual ✨"}
             </Button>
           </div>
         </div>
