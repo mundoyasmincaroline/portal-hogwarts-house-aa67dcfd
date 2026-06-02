@@ -29,11 +29,11 @@ export default function HouseCupWidget({ isLanding = false }: { isLanding?: bool
 
   const fetchScores = useCallback(async () => {
     try {
-      const { data, error } = await supabase.from('profiles').select('house, xp');
+      const { data, error } = await supabase.from('house_points').select('house, points');
       if (error) throw error;
 
-      const totals = data.reduce((acc: any, p) => {
-        if (p.house) acc[p.house] = (acc[p.house] || 0) + (p.xp || 0);
+      const totals = (data || []).reduce((acc: any, p: any) => {
+        if (p.house) acc[p.house] = (acc[p.house] || 0) + (p.points || 0);
         return acc;
       }, { gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0 });
 
@@ -71,7 +71,7 @@ export default function HouseCupWidget({ isLanding = false }: { isLanding?: bool
     fetchScores();
   }, [fetchScores]);
 
-  useRealtime('profiles', '*', fetchScores);
+  useRealtime('house_points', '*', fetchScores);
 
   const leaderColor = leader?.house === 'slytherin' ? 'rgba(16, 185, 129, 0.4)' : leader?.house === 'gryffindor' ? 'rgba(220, 38, 38, 0.4)' : leader?.house === 'ravenclaw' ? 'rgba(37, 99, 235, 0.4)' : 'rgba(217, 119, 6, 0.4)';
 
