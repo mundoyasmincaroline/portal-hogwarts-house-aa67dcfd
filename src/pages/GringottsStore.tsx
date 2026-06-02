@@ -6,9 +6,10 @@ import EmojiIcon from "@/components/shared/EmojiIcon";
 import { 
   ShoppingBag, Sparkles, Coins, Crown, Gift, 
   Search, Filter, ChevronRight, Wand2, Shield, Heart, Zap, Star,
-  Flame, Shirt, Gem, ExternalLink, Check
+  Flame, Shirt, Gem, ExternalLink, Check, Smartphone, CreditCard, CheckCircle2, Wallet as WalletIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import SafeImage from "@/components/SafeImage";
@@ -76,10 +77,6 @@ export default function GringottsStore() {
   const [tab, setTab] = useState("featured");
   const [buyingPackageId, setBuyingPackageId] = useState<string | null>(null);
   const [previewItem, setPreviewItem] = useState<StoreItem | null>(null);
-
-  useEffect(() => { 
-    // loadStore logic handled by hook
-  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -206,6 +203,27 @@ export default function GringottsStore() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-16 pb-24 px-4 sm:px-6">
+      {/* ── Header com saldo persistente ── */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 -mb-8">
+        <Link to="/dashboard/wallet" className="glass rounded-2xl px-5 py-3 border border-yellow-500/30 flex items-center gap-3 hover:border-yellow-400/60 transition-all group">
+          <WalletIcon size={18} className="text-yellow-400" />
+          <div className="text-left">
+            <p className="text-[9px] uppercase tracking-widest text-yellow-300/80 font-heading leading-none">Saldo na Carteira</p>
+            <p className="font-heading text-lg text-yellow-400 leading-tight">{galeons.toLocaleString("pt-BR")} Galeões</p>
+          </div>
+          <ChevronRight size={14} className="text-yellow-400/60 group-hover:translate-x-1 transition-transform" />
+        </Link>
+        {profile?.vip_plan && (
+          <div className="glass rounded-2xl px-5 py-3 border border-purple-500/30 flex items-center gap-3">
+            <Crown size={18} className="text-purple-400" />
+            <div className="text-left">
+              <p className="text-[9px] uppercase tracking-widest text-purple-300/80 font-heading leading-none">Plano Ativo</p>
+              <p className="font-heading text-lg text-purple-400 leading-tight uppercase">{profile.vip_plan}</p>
+            </div>
+          </div>
+        )}
+      </div>
+
       <div className="text-center space-y-6 mb-16">
         <h1 className="text-4xl sm:text-6xl md:text-8xl font-heading text-gold-gradient tracking-tighter drop-shadow-[0_15px_40px_rgba(212,175,55,0.5)]">Gringotts Bank</h1>
         <p className="text-muted-foreground/90 text-xl font-serif italic max-w-2xl mx-auto leading-relaxed">"Fortius Quo Fidelius" — Mais forte quanto mais fiel.</p>
@@ -254,12 +272,37 @@ export default function GringottsStore() {
       )}
 
       {tab === "galeons" && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 animate-in fade-in slide-in-from-bottom-8">
+        <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8">
+          <div className="glass rounded-[2rem] p-6 sm:p-8 border border-yellow-500/20 bg-gradient-to-br from-yellow-950/20 to-black/30">
+            <h3 className="font-heading text-lg text-yellow-400 mb-5 flex items-center gap-2">
+              <CreditCard size={18} /> Como Comprar Galeões
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {[
+                { icon: Star, title: "1. Escolha o pacote", desc: "Quanto maior o pacote, mais Galeões por Real." },
+                { icon: Smartphone, title: "2. Pague no Pix ou Cartão", desc: "Checkout seguro via InfinitePay. Pix cai em segundos." },
+                { icon: CheckCircle2, title: "3. Crédito automático", desc: "Os Galeões aparecem na carteira em tempo real." },
+              ].map((s, i) => (
+                <div key={i} className="bg-white/5 rounded-2xl p-4 border border-white/5">
+                  <s.icon size={18} className="text-yellow-400 mb-2" />
+                  <p className="font-heading text-sm text-foreground">{s.title}</p>
+                  <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">{s.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {GALEON_PACKAGES.map(pkg => (
-            <div key={pkg.id} className="glass p-6 sm:p-10 rounded-2xl sm:rounded-[3.5rem] border-yellow-500/20 text-center flex flex-col items-center hover:scale-[1.02] transition-transform">
+            <div key={pkg.id} className="glass p-6 sm:p-10 rounded-2xl sm:rounded-[3.5rem] border-yellow-500/20 text-center flex flex-col items-center hover:scale-[1.02] transition-transform relative">
+              {pkg.badge && (
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-black text-[10px] font-heading uppercase tracking-widest px-3 py-1 rounded-full shadow-lg whitespace-nowrap">{pkg.badge}</span>
+              )}
               <div className="text-6xl mb-4">{pkg.icon}</div>
               <h3 className="font-heading text-2xl text-yellow-400">{pkg.name}</h3>
               <p className="text-3xl sm:text-4xl font-heading my-4">{pkg.galeons} 🪙</p>
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-3">
+                ≈ {(pkg.galeons / pkg.price_brl).toFixed(0)} Galeões por R$
+              </p>
               <Button 
                 variant="magical" 
                 className="w-full h-14 rounded-2xl"
@@ -270,16 +313,34 @@ export default function GringottsStore() {
               </Button>
             </div>
           ))}
+          </div>
         </div>
       )}
       
       {tab === "vip" && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-in fade-in slide-in-from-bottom-8">
+        <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8">
+          <div className="glass rounded-[2rem] p-6 sm:p-8 border border-purple-500/20 bg-gradient-to-br from-purple-950/30 to-black/30">
+            <h3 className="font-heading text-lg text-purple-300 mb-2 flex items-center gap-2">
+              <Crown size={18} /> Por que ser VIP?
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              Assinaturas mensais via InfinitePay. Você mantém todos os benefícios pelo período pago e pode renovar quando quiser.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
            {VIP_PLANS.map(plan => (
-             <div key={plan.id} className="glass p-8 rounded-[3rem] border-purple-500/20 text-center">
+             <div key={plan.id} className="glass p-8 rounded-[3rem] border-purple-500/20 text-center relative">
+                {plan.badge && (
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-purple-500 text-white text-[10px] font-heading uppercase tracking-widest px-3 py-1 rounded-full shadow-lg whitespace-nowrap">{plan.badge}</span>
+                )}
                 <div className="text-6xl mb-4">{plan.icon}</div>
                 <h3 className="font-heading text-2xl text-purple-400">{plan.name}</h3>
-                <p className="text-3xl font-heading my-4">R$ {plan.price_brl.toFixed(2)}</p>
+                <p className="text-3xl font-heading my-4">R$ {plan.price_brl.toFixed(2)}<span className="text-sm text-muted-foreground">/mês</span></p>
+                <ul className="text-[11px] text-muted-foreground space-y-1.5 mb-5 text-left">
+                  {plan.benefits.map((b, i) => (
+                    <li key={i} className="flex items-start gap-2"><Check size={12} className="text-purple-400 mt-0.5 shrink-0" /><span>{b}</span></li>
+                  ))}
+                </ul>
                 <Button 
                   variant="magical" 
                   className="w-full h-14 rounded-2xl bg-purple-600 hover:bg-purple-500"
@@ -290,6 +351,7 @@ export default function GringottsStore() {
                 </Button>
              </div>
            ))}
+          </div>
         </div>
       )}
 

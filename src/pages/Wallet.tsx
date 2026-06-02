@@ -1,6 +1,6 @@
 import { useAuth } from "@/lib/auth";
 import { Link } from "react-router-dom";
-import { Coins, Crown, ShoppingBag, Zap, Star, Trophy, Calendar, ChevronRight, Gift } from "lucide-react";
+import { Coins, Crown, ShoppingBag, Zap, Star, Trophy, Calendar, ChevronRight, Gift, Landmark, Backpack, Store, ArrowLeftRight, Gavel, TrendingUp, Sparkles, Vault, CreditCard, Smartphone, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MagicalEmoji from "@/components/shared/MagicalEmoji";
 import MagicalGaleon from "@/components/shared/MagicalGaleon";
@@ -23,8 +23,28 @@ const FREE_WAYS = [
 ];
 
 export default function Wallet() {
-  const { galeons, vipPlan, vipExpires, paidOrders, pendingOrders, totalSpent, loading } = useWallet();
+  const { galeons, vipPlan, vipExpires, paidOrders, pendingOrders, totalSpent, loading, vaultBalance } = useWallet();
   const vipConf = vipPlan ? VIP_CONFIG[vipPlan] : null;
+
+  const HUBS = [
+    { to: "/dashboard/store",       icon: Store,          color: "text-yellow-400",  ring: "border-yellow-500/30",  label: "Loja Gringotts",  desc: "Galeões reais, VIP e itens premium" },
+    { to: "/dashboard/hogsmeade",   icon: ShoppingBag,    color: "text-rose-400",    ring: "border-rose-500/30",    label: "Hogsmeade",       desc: "Itens mágicos in-game" },
+    { to: "/dashboard/diagon",      icon: Sparkles,       color: "text-purple-400",  ring: "border-purple-500/30",  label: "Beco Diagonal",   desc: "Lojas especializadas" },
+    { to: "/dashboard/marketplace", icon: ArrowLeftRight, color: "text-cyan-400",    ring: "border-cyan-500/30",    label: "Mercado",         desc: "Compre figurinhas de outros" },
+    { to: "/dashboard/item-trades", icon: ArrowLeftRight, color: "text-emerald-400", ring: "border-emerald-500/30", label: "Trocas",          desc: "Negocie itens entre bruxos" },
+    { to: "/dashboard/auctions",    icon: Gavel,          color: "text-orange-400",  ring: "border-orange-500/30",  label: "Leilões",         desc: "Arremate raridades" },
+    { to: "/dashboard/inventory",   icon: Backpack,       color: "text-indigo-400",  ring: "border-indigo-500/30",  label: "Mochila",         desc: "Seus itens e equipamentos" },
+    { to: "/dashboard/vault",       icon: Vault,          color: "text-amber-300",   ring: "border-amber-400/30",   label: "Cofre Gringotes", desc: "Poupança com juros diários" },
+    { to: "/dashboard/gringotts",   icon: Landmark,       color: "text-yellow-300",  ring: "border-yellow-400/30",  label: "Banco & Bolsa",   desc: "Empréstimos e investimentos" },
+    { to: "/dashboard/battle-pass", icon: Crown,          color: "text-fuchsia-400", ring: "border-fuchsia-500/30", label: "Pacto Mágico",    desc: "Battle Pass sazonal" },
+    { to: "/dashboard/album",       icon: Trophy,         color: "text-pink-400",    ring: "border-pink-500/30",    label: "Álbum",           desc: "Figurinhas colecionáveis" },
+  ];
+
+  const STEPS = [
+    { icon: Star,        title: "1. Escolha um pacote", desc: "Em Loja Gringotts, selecione o pacote de Galeões ou plano VIP ideal." },
+    { icon: Smartphone,  title: "2. Pague no Pix ou Cartão", desc: "Você é levado ao checkout seguro da InfinitePay. Pix cai em segundos." },
+    { icon: CheckCircle2,title: "3. Receba na hora", desc: "Os Galeões ou benefícios VIP aparecem automaticamente na sua carteira." },
+  ];
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-16 px-2 sm:px-0">
@@ -98,6 +118,89 @@ export default function Wallet() {
           <p className="text-xs text-muted-foreground font-heading uppercase tracking-widest mb-1">Total Investido</p>
           <p className="font-heading text-2xl text-foreground">R$ {totalSpent.toFixed(2).replace(".", ",")}</p>
           <p className="text-xs text-muted-foreground mt-2 opacity-95">{paidOrders.length} {paidOrders.length === 1 ? "compra realizada" : "compras realizadas"}</p>
+        </div>
+      </div>
+
+      {/* ── Saldo do Cofre Gringotes ── */}
+      <Link to="/dashboard/vault" className="block group">
+        <div className="glass rounded-2xl p-5 border border-amber-500/30 bg-gradient-to-r from-amber-950/40 via-black/40 to-amber-900/20 flex items-center justify-between hover:border-amber-400/60 transition-all">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-amber-500/15 border border-amber-400/30 flex items-center justify-center">
+              <Vault size={22} className="text-amber-300" />
+            </div>
+            <div>
+              <p className="text-[10px] uppercase tracking-widest text-amber-300/80 font-heading">Cofre Gringotes</p>
+              <p className="font-heading text-xl text-foreground">
+                {vaultBalance === null
+                  ? "Cofre ainda não aberto"
+                  : `${vaultBalance.toLocaleString("pt-BR")} G poupados`}
+              </p>
+              <p className="text-[11px] text-muted-foreground">Rende juros diários enquanto seus Galeões estão lá.</p>
+            </div>
+          </div>
+          <ChevronRight className="text-amber-400/70 group-hover:translate-x-1 transition-transform" />
+        </div>
+      </Link>
+
+      {/* ── Central Financeira (atalhos) ── */}
+      <div className="glass rounded-[2rem] p-6 sm:p-8 border border-primary/20">
+        <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
+          <div>
+            <h2 className="font-heading text-xl text-foreground flex items-center gap-3">
+              <TrendingUp size={20} className="text-primary" /> Central Financeira
+            </h2>
+            <p className="text-xs text-muted-foreground font-serif italic">Tudo que você pode fazer com seus Galeões.</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          {HUBS.map((h) => (
+            <Link
+              key={h.to}
+              to={h.to}
+              className={`group glass rounded-2xl p-4 border ${h.ring} bg-white/[0.02] hover:bg-white/[0.05] hover:-translate-y-0.5 transition-all`}
+            >
+              <div className={`w-9 h-9 rounded-lg bg-black/40 border border-white/5 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
+                <h.icon size={18} className={h.color} />
+              </div>
+              <p className="font-heading text-sm text-foreground leading-tight">{h.label}</p>
+              <p className="text-[10px] text-muted-foreground mt-1 line-clamp-2 leading-snug">{h.desc}</p>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Como comprar Galeões ── */}
+      <div className="glass rounded-[2rem] p-6 sm:p-8 border border-yellow-500/20 bg-gradient-to-br from-yellow-950/20 to-black/30">
+        <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+          <div>
+            <h2 className="font-heading text-xl text-foreground flex items-center gap-3">
+              <CreditCard size={20} className="text-yellow-400" /> Como Comprar Galeões
+            </h2>
+            <p className="text-xs text-muted-foreground font-serif italic">Processo simples, seguro e instantâneo via InfinitePay.</p>
+          </div>
+          <Link to="/dashboard/store">
+            <Button variant="magical" size="sm" className="text-[10px] h-9 px-5 rounded-xl">
+              IR PARA A LOJA <ChevronRight size={14} className="ml-1" />
+            </Button>
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {STEPS.map((s, i) => (
+            <div key={i} className="bg-white/5 rounded-2xl p-5 border border-white/5 relative overflow-hidden">
+              <div className="absolute top-3 right-3 text-4xl font-heading text-yellow-500/10">{i + 1}</div>
+              <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center mb-3">
+                <s.icon size={18} className="text-yellow-400" />
+              </div>
+              <p className="font-heading text-sm text-foreground mb-1">{s.title}</p>
+              <p className="text-[11px] text-muted-foreground leading-relaxed">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-5 flex flex-wrap gap-3 text-[11px] text-muted-foreground">
+          <span className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-full border border-white/5"><CheckCircle2 size={12} className="text-green-400" /> Pix instantâneo</span>
+          <span className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-full border border-white/5"><CheckCircle2 size={12} className="text-green-400" /> Cartão de crédito</span>
+          <span className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-full border border-white/5"><CheckCircle2 size={12} className="text-green-400" /> Checkout protegido</span>
+          <span className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-full border border-white/5"><CheckCircle2 size={12} className="text-green-400" /> Crédito automático</span>
         </div>
       </div>
 
