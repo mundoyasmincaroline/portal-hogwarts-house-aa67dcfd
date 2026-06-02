@@ -13,6 +13,9 @@ import MagicalDashboardHeader from "@/components/shared/MagicalDashboardHeader";
 import { PostComposer } from "@/components/feed/PostComposer";
 import { ActiveWizardsSidebar } from "@/components/feed/ActiveWizardsSidebar";
 import { ChallengesSidebar } from "@/components/feed/ChallengesSidebar";
+import MonthlyCheckInCalendar from "@/components/MonthlyCheckInCalendar";
+import DailyMissionsPanel from "@/components/DailyMissionsPanel";
+import StreakFreezeCard from "@/components/StreakFreezeCard";
 
 const REACTIONS = ["⚡", "❤️", "🔥", "🦁", "🦅", "🐍", "🦡"];
 
@@ -151,6 +154,9 @@ export default function Feed() {
 
         <div className="lg:col-span-4 space-y-8 sticky top-8 h-fit">
           <ActiveWizardsSidebar onlineUsers={onlineUsers} />
+          <DailyMissionsPanel />
+          <MonthlyCheckInCalendar />
+          <StreakFreezeCard />
           <ChallengesSidebar activeChallenges={activeChallenges} />
         </div>
       </div>
