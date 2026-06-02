@@ -176,7 +176,7 @@ export default function DashboardLayout() {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden relative bg-black">
+    <div className="flex h-dvh-screen overflow-hidden relative bg-black">
       <AtmosphericBackground />
 
       <AnimatePresence>
@@ -274,8 +274,8 @@ export default function DashboardLayout() {
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
 
-        <div className="flex-1 overflow-y-auto relative scroll-smooth contain-strict pb-safe custom-scrollbar">
-          <div className="page-container px-3 sm:px-6 pt-4 sm:pt-8">
+        <div className="flex-1 overflow-y-auto relative scroll-smooth contain-strict custom-scrollbar">
+          <div className="page-container px-3 sm:px-6 pt-14 sm:pt-8 pl-safe pr-safe">
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                <MagicalClock />
             </div>
@@ -292,7 +292,7 @@ export default function DashboardLayout() {
                 animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
                 exit={{ opacity: 0, y: -15, scale: 0.98, filter: "blur(12px)" }}
                 transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-                className="pb-32 md:pb-24"
+                className="pb-bottom-nav md:pb-24"
               >
                 <ErrorBoundary>
                   <Outlet />

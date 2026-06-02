@@ -14,8 +14,11 @@ export default function BottomNav() {
   const location = useLocation();
 
   return (
-    <nav className="md:hidden fixed bottom-4 left-3 right-3 z-[100] pb-safe">
-      <div className="bg-gradient-to-b from-[#1a0f05]/95 to-[#0a0604]/98 backdrop-blur-3xl border border-primary/30 rounded-[2rem] px-2 h-[68px] flex items-center justify-around shadow-[0_20px_60px_rgba(0,0,0,0.85),0_0_30px_rgba(212,175,55,0.08)] animate-in slide-in-from-bottom-10 duration-1000">
+    <nav
+      className="md:hidden fixed left-3 right-3 z-[100]"
+      style={{ bottom: "calc(0.75rem + env(safe-area-inset-bottom, 0px))" }}
+    >
+      <div className="bg-gradient-to-b from-[#1a0f05]/95 to-[#0a0604]/98 backdrop-blur-3xl border border-primary/30 rounded-[2rem] px-2 h-[64px] flex items-center justify-around shadow-[0_20px_60px_rgba(0,0,0,0.85),0_0_30px_rgba(212,175,55,0.08)] animate-in slide-in-from-bottom-10 duration-1000">
         {MOBILE_NAV.map((item) => {
           const isActive = location.pathname === item.path;
           return (
