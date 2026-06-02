@@ -30,6 +30,8 @@ import DailyRPSlot from "@/components/DailyRPSlot";
 import MagicalCelebration from "@/components/MagicalCelebration";
 import LevelUpCeremony from "@/components/LevelUpCeremony";
 import HouseGhost from "@/components/HouseGhost";
+import MagicalMentor from "@/components/shared/MagicalMentor";
+
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 const NavItem = memo(({ item, isActive, dmUnread, onClick }: { item: any, isActive: boolean, dmUnread: number, onClick: () => void }) => (
@@ -309,6 +311,8 @@ export default function DashboardLayout() {
       <MagicalCelebration />
       <LevelUpCeremony />
       <HouseGhost />
+      <MagicalMentor />
     </div>
+
   );
 }
