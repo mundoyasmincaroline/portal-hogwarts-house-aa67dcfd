@@ -3071,6 +3071,7 @@ export type Database = {
         Args: { _item_id: string; _user_id: string }
         Returns: Json
       }
+      buy_streak_freeze: { Args: { p_qty?: number }; Returns: Json }
       calc_blood_status: {
         Args: { _father_id: string; _mother_id: string }
         Returns: string
