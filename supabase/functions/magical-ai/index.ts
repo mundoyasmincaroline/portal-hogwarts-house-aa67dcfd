@@ -51,6 +51,9 @@ Deno.serve(async (req) => {
     if (mode === 'npc' && character) {
       system += `\n\nVocê é: ${character}. ${context}`;
     }
+    if (mode === 'npc_custom' && body.systemPrompt) {
+      system = String(body.systemPrompt);
+    }
     if (mode === 'duel_narrator' && context) {
       system += `\n\nContexto da partida: ${context}`;
     }
