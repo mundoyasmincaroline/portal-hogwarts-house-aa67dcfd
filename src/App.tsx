@@ -44,8 +44,32 @@ const ParentsGuide = lazy(() => import("./pages/ParentsGuide"));
 const RPHistory = lazy(() => import("./pages/RPHistory"));
 
 const LoadingFallback = () => (
-  <div className="flex h-screen items-center justify-center bg-background">
-    <div className="text-4xl animate-float">⚡</div>
+  <div className="relative flex h-screen flex-col items-center justify-center bg-background overflow-hidden">
+    <div
+      className="absolute inset-0 pointer-events-none"
+      style={{
+        background:
+          "radial-gradient(ellipse at center, hsl(var(--primary)/0.18) 0%, transparent 70%)",
+      }}
+    />
+    {Array.from({ length: 12 }).map((_, i) => (
+      <span
+        key={i}
+        className="absolute w-1 h-1 rounded-full bg-primary/70 animate-sparkle"
+        style={{
+          left: `${10 + Math.random() * 80}%`,
+          top: `${10 + Math.random() * 80}%`,
+          boxShadow: "0 0 10px hsl(var(--primary))",
+          animationDelay: `${Math.random() * 1.5}s`,
+        }}
+      />
+    ))}
+    <div className="relative z-10 text-6xl animate-float drop-shadow-[0_0_25px_hsl(var(--primary)/0.6)]">
+      🪄
+    </div>
+    <p className="relative z-10 mt-6 font-heading text-sm uppercase tracking-[0.4em] text-foreground/70">
+      Aparatando…
+    </p>
   </div>
 );
 
