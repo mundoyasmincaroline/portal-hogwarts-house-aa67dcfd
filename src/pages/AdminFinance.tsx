@@ -92,6 +92,19 @@ export default function AdminFinance() {
 
   const COLORS = ["#f59e0b", "#a855f7", "#3b82f6", "#ef4444"];
 
+  const handleExport = () => {
+    if (!orders.length) { toast.error("Nenhum dado para exportar."); return; }
+    const csv = ["ID,Usuário,Produto,Valor BRL,Galeões,Status,Data",
+      ...orders.map(o => [o.id, (o.profiles?.full_name || "").replace(/,/g, " "), o.package_id, o.amount_brl, o.galeons, o.status, new Date(o.created_at).toLocaleDateString("pt-BR")].join(","))
+    ].join("\n");
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+    a.download = `gringotts_${Date.now()}.csv`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast.success("Planilha exportada!");
+  };
+
   return (
     <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10 pb-20 px-2 sm:px-4">
       {/* ── HEADER ── */}
@@ -101,10 +114,10 @@ export default function AdminFinance() {
           <p className="text-muted-foreground font-serif italic">Painel de Administração Financeira em Tempo Real</p>
         </div>
         <div className="flex gap-3">
-          <Button variant="outline" className="glass border-white/10 gap-2">
+          <Button variant="outline" className="glass border-white/10 gap-2" onClick={handleExport}>
             <Download size={16} /> Exportar Planilha
           </Button>
-          <Button variant="magical" className="gap-2 shadow-xl">
+          <Button variant="magical" className="gap-2 shadow-xl" onClick={loadFinanceData} disabled={loading}>
             <RefreshCw size={16} className={loading ? "animate-spin" : ""} /> Sincronizar
           </Button>
         </div>
