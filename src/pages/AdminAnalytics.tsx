@@ -68,7 +68,7 @@ export default function AdminAnalytics() {
   return (
     <div className="container mx-auto max-w-6xl px-4 py-8 space-y-6">
       <header>
-        <h1 className="font-heading text-3xl text-gold-gradient">📊 Analytics & Insights</h1>
+        <h1 className="font-heading text-2xl sm:text-3xl text-gold-gradient">📊 Analytics & Insights</h1>
         <p className="text-muted-foreground text-sm">
           Comportamento da geração, retenção e conversão VIP
         </p>
@@ -86,7 +86,7 @@ export default function AdminAnalytics() {
         </div>
       )}
 
-      <Card className="p-6 bg-card/60 border-primary/30">
+      <Card className="p-4 sm:p-6 bg-card/60 border-primary/30">
         <h2 className="font-heading text-lg text-primary mb-3">Atividade diária (30d)</h2>
         <ResponsiveContainer width="100%" height={260}>
           <LineChart data={daily}>
@@ -99,7 +99,7 @@ export default function AdminAnalytics() {
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card className="p-6 bg-card/60 border-primary/30">
+        <Card className="p-4 sm:p-6 bg-card/60 border-primary/30">
           <h2 className="font-heading text-lg text-primary mb-3">Distribuição por casa</h2>
           <ResponsiveContainer width="100%" height={260}>
             <PieChart>
@@ -121,7 +121,7 @@ export default function AdminAnalytics() {
           </ResponsiveContainer>
         </Card>
 
-        <Card className="p-6 bg-card/60 border-primary/30">
+        <Card className="p-4 sm:p-6 bg-card/60 border-primary/30">
           <h2 className="font-heading text-lg text-primary mb-3">Cohorts de retenção (semana)</h2>
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={cohorts}>
