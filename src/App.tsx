@@ -77,6 +77,9 @@ const RPTeamDetail = lazy(() => import("./pages/RPTeamDetail"));
 const LiveEvents = lazy(() => import("./pages/LiveEvents"));
 const EventDetail = lazy(() => import("./pages/EventDetail"));
 const Reputation = lazy(() => import("./pages/Reputation"));
+const Hogsmeade = lazy(() => import("./pages/Hogsmeade"));
+const Inventory = lazy(() => import("./pages/Inventory"));
+const ItemTrades = lazy(() => import("./pages/ItemTrades"));
 
 const LoadingFallback = () => (
   <div className="relative flex h-screen flex-col items-center justify-center bg-background overflow-hidden">
@@ -234,6 +237,9 @@ const App = () => {
                   <Route path="live-events" element={<LiveEvents />} />
                   <Route path="events/:id" element={<EventDetail />} />
                   <Route path="reputation" element={<Reputation />} />
+                  <Route path="hogsmeade" element={<Hogsmeade />} />
+                  <Route path="inventory" element={<Inventory />} />
+                  <Route path="item-trades" element={<ItemTrades />} />
                   <Route path="admin/analytics" element={
                     <ProtectedRoute adminOnly>
                       <AdminAnalytics />
