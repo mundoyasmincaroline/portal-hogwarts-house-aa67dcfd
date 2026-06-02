@@ -67,18 +67,12 @@ export default function DMChat() {
         event: "INSERT",
         schema: "public",
         table: "dm_messages",
+        filter: `receiver_id=eq.${user.id}`,
       }, (payload) => {
         const msg = payload.new as DM;
-        const relevant =
-          (msg.sender_id === user.id && msg.receiver_id === partnerId) ||
-          (msg.sender_id === partnerId && msg.receiver_id === user.id);
-        if (relevant) {
-          setMessages(prev => [...prev, msg]);
-          // mark as read if we received it
-          if (msg.receiver_id === user.id) {
-            supabase.from("dm_messages").update({ read: true } as never).eq("id", msg.id);
-          }
-        }
+        if (msg.sender_id !== partnerId) return;
+        setMessages(prev => prev.some(m => m.id === msg.id) ? prev : [...prev, msg]);
+        supabase.from("dm_messages").update({ read: true } as never).eq("id", msg.id);
       })
       .subscribe();
 

@@ -28,24 +28,22 @@ export default function RulesAgreement() {
       toast.error("Erro ao assinar o pergaminho. Tente novamente.");
       setLoading(false);
     } else {
-      // Processar Referral pendente
+      // Processar Referral pendente + recompensa de boas-vindas (uma única vez)
+      let welcomeGranted = false;
       const pendingReferral = localStorage.getItem("pending_referral");
       if (pendingReferral && user) {
         try {
-          // Busca o perfil do convidante
           const { data: inviter } = await supabase.from("profiles").select("user_id").eq("username", pendingReferral).maybeSingle();
           if (inviter) {
             await supabase.from("referrals").insert({ inviter_id: inviter.user_id, invited_id: user.id } as never);
             await reward(inviter.user_id, 'referral');
             await reward(user.id, 'welcome_bonus');
-
-            localStorage.removeItem("pending_referral");
+            welcomeGranted = true;
           }
         } catch (e) { console.error("Referral processing error:", e); }
+        localStorage.removeItem("pending_referral");
       }
-
-      // Recompensa de boas-vindas padrão (mesmo sem referral)
-      if (!localStorage.getItem("pending_referral") && user) {
+      if (!welcomeGranted && user) {
         await reward(user.id, 'welcome_bonus');
       }
 
