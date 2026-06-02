@@ -170,7 +170,7 @@ export default function GringottsStore() {
   return (
     <div className="max-w-7xl mx-auto space-y-16 pb-24 px-4 sm:px-6">
       <div className="text-center space-y-6 mb-16">
-        <h1 className="text-6xl md:text-8xl font-heading text-gold-gradient tracking-tighter drop-shadow-[0_15px_40px_rgba(212,175,55,0.5)]">Gringotts Bank</h1>
+        <h1 className="text-4xl sm:text-6xl md:text-8xl font-heading text-gold-gradient tracking-tighter drop-shadow-[0_15px_40px_rgba(212,175,55,0.5)]">Gringotts Bank</h1>
         <p className="text-muted-foreground/60 text-xl font-serif italic max-w-2xl mx-auto leading-relaxed">"Fortius Quo Fidelius" — Mais forte quanto mais fiel.</p>
       </div>
 
