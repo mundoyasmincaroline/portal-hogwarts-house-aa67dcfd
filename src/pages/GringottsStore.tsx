@@ -22,6 +22,7 @@ import { useStore } from "@/hooks/features/useStore";
 import { type StoreItem } from "@/types";
 import { CATEGORY_LABELS, RARITY_LABELS } from "@/constants/gameConstants";
 import StoreItemVisual from "@/components/StoreItemVisual";
+import ItemPreviewDialog from "@/components/store/ItemPreviewDialog";
 
 // ─── Pacotes de Galeões ────────────────────────────────────
 const GALEON_PACKAGES = [
