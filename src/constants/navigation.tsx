@@ -67,6 +67,7 @@ export const NAV_GROUPS = [
       { icon: <MagicalEmoji emoji="🌌" size="xs" />, label: "Profecias Lendárias", path: "/dashboard/legendary-prophecies" },
       { icon: <MagicalEmoji emoji="⚔️" size="xs" />, label: "Batalha de Hogwarts", path: "/dashboard/battle-of-hogwarts" },
       { icon: <MagicalEmoji emoji="👑" size="xs" />, label: "Final dos Tempos", path: "/dashboard/end-times" },
+      { icon: <MagicalEmoji emoji="🌳" size="xs" />, label: "Linhagens", path: "/dashboard/lineages" },
     ]
   },
   {
