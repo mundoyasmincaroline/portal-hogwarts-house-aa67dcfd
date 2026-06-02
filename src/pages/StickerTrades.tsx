@@ -318,9 +318,10 @@ export default function StickerTrades() {
                     variant="plaque"
                     size="lg"
                     className="w-full md:w-auto h-12 px-8 text-xs font-heading shadow-xl"
+                    disabled={acceptingId === trade.id}
                     onClick={() => acceptTrade(trade)}
                   >
-                    ACEITAR TROCA ✨
+                    {acceptingId === trade.id ? "Processando..." : "ACEITAR TROCA ✨"}
                   </Button>
                 ) : (
                   <Button
