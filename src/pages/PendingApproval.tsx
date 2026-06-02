@@ -9,7 +9,7 @@ export default function PendingApproval() {
   useEffect(() => {
     if (!user?.id) return;
     const channel = supabase
-      .channel(`approval-${user.id}`)
+      .channel(`approval-${user.id}-${Date.now()}-${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "profiles", filter: `user_id=eq.${user.id}` },
