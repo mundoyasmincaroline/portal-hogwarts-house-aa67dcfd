@@ -67,7 +67,7 @@ export default function NPCChat() {
   if (!npc) return <div className="text-center p-12">Carregando...</div>;
 
   return (
-    <div className="max-w-3xl mx-auto h-[calc(100vh-12rem)] flex flex-col">
+    <div className="max-w-3xl mx-auto h-[calc(100dvh-14rem)] sm:h-[calc(100dvh-12rem)] flex flex-col">
       <Card className="p-4 mb-3 flex items-center gap-3 border-primary/30">
         <Button variant="ghost" size="icon" onClick={() => nav("/dashboard/npcs")}><ArrowLeft size={18}/></Button>
         <div className="text-4xl">{npc.avatar_emoji || "🧙"}</div>

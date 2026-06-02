@@ -108,10 +108,10 @@ export default function Quests() {
   };
 
   return (
-    <div className="container mx-auto max-w-5xl px-4 py-8 space-y-6">
+    <div className="container mx-auto max-w-5xl px-4 py-6 sm:py-8 space-y-6">
       <header className="text-center">
-        <h1 className="font-heading text-4xl text-primary flex items-center justify-center gap-3">
-          <Map className="w-9 h-9" /> Aventuras & Quests
+        <h1 className="font-heading text-3xl sm:text-4xl text-primary flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
+          <Map className="w-7 h-7 sm:w-9 sm:h-9" /> Aventuras & Quests
         </h1>
         <p className="text-muted-foreground mt-2">
           Embarque em missões pela Floresta Proibida, Beco Diagonal, Hogsmeade e além.

@@ -63,11 +63,11 @@ export default function RPTeamDetail() {
     <div className="container mx-auto px-4 py-6 max-w-5xl">
       <Link to="/dashboard/rp-teams" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary mb-4"><ArrowLeft size={14}/>Todas as equipes</Link>
 
-      <div className="glass-premium rounded-2xl p-6 mb-6">
+      <div className="glass-premium rounded-2xl p-4 sm:p-6 mb-6">
         <div className="flex items-start gap-4 flex-wrap">
-          <div className="text-6xl">{team.emblem}</div>
+          <div className="text-5xl sm:text-6xl">{team.emblem}</div>
           <div className="flex-1 min-w-0">
-            <h1 className="font-heading text-3xl text-gold-gradient">{team.name}</h1>
+            <h1 className="font-heading text-2xl sm:text-3xl text-gold-gradient break-words">{team.name}</h1>
             {team.motto && <p className="italic text-primary/80">"{team.motto}"</p>}
             <p className="text-sm text-muted-foreground mt-2">{team.description}</p>
             <div className="flex flex-wrap gap-2 mt-3">
