@@ -55,8 +55,8 @@ export default function Admin() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      <div className="glass rounded-2xl p-6">
-        <h1 className="font-heading text-2xl text-gold-gradient mb-1">Painel Administrativo</h1>
+      <div className="glass rounded-2xl p-4 sm:p-6">
+        <h1 className="font-heading text-xl sm:text-2xl text-gold-gradient mb-1">Painel Administrativo</h1>
         <p className="text-muted-foreground text-sm">Gerencie o Portal Hogwarts House</p>
         <div className="mt-4 flex flex-wrap gap-2">
           <Button variant="outline" onClick={() => navigate("/dashboard/admin/characters")}>🧾 Fichas & Canons</Button>
