@@ -63,7 +63,7 @@ export default function Admin() {
               <div className="grid gap-4">
                 {members
                   .filter(m => onlineFilter === "all" || isUserOnline(m as any))
-                  .map(m => <AdminMemberCard key={m.user_id} member={m} onClick={() => {}} />)}
+                  .map(m => <AdminMemberCard key={m.user_id} member={m} onClick={() => navigate(`/dashboard/profile/${m.user_id}`)} />)}
                 {members.filter(m => onlineFilter === "all" || isUserOnline(m as any)).length === 0 && (
                   <p className="text-center py-10 text-muted-foreground text-sm italic">Nenhum bruxo encontrado nesta categoria.</p>
                 )}
