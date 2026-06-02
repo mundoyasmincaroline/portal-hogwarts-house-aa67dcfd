@@ -422,3 +422,37 @@ function NavRow({ onBack, onNext, disabled, labelNext = "Continuar" }: { onBack:
     </div>
   );
 }
+
+/**
+ * Comprime uma imagem para JPEG redimensionado em um DataURL.
+ * Mantém proporção, limita o lado maior a `maxSide` e usa qualidade `quality` (0..1).
+ * Em caso de falha, faz fallback para o DataURL original.
+ */
+async function compressImageToDataUrl(file: File, maxSide = 800, quality = 0.85): Promise<string> {
+  const readAsDataUrl = (f: File) => new Promise<string>((resolve, reject) => {
+    const r = new FileReader();
+    r.onloadend = () => resolve(String(r.result || ""));
+    r.onerror = () => reject(r.error);
+    r.readAsDataURL(f);
+  });
+  try {
+    const original = await readAsDataUrl(file);
+    const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const i = new Image();
+      i.onload = () => resolve(i);
+      i.onerror = () => reject(new Error("Falha ao decodificar imagem"));
+      i.src = original;
+    });
+    const ratio = Math.min(1, maxSide / Math.max(img.width, img.height));
+    const w = Math.max(1, Math.round(img.width * ratio));
+    const h = Math.max(1, Math.round(img.height * ratio));
+    const canvas = document.createElement("canvas");
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return original;
+    ctx.drawImage(img, 0, 0, w, h);
+    return canvas.toDataURL("image/jpeg", quality);
+  } catch {
+    return await readAsDataUrl(file);
+  }
+}
