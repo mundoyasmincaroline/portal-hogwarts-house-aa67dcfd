@@ -63,7 +63,8 @@ export default function Landing() {
   let bgUrl = new URL('../assets/hogwarts_night.png', import.meta.url).href;
   if (timeOfDay === "morning") bgUrl = new URL('../assets/hogwarts_morning.png', import.meta.url).href;
   else if (timeOfDay === "afternoon") bgUrl = new URL('../assets/hogwarts_afternoon.png', import.meta.url).href;
-  else if (timeOfDay === "dawn" || timeOfDay === "dusk") bgUrl = new URL('../assets/hogwarts_castle.jpg', import.meta.url).href;
+  else if (timeOfDay === "dawn") bgUrl = new URL('../assets/hogwarts_dawn.jpg', import.meta.url).href;
+  else if (timeOfDay === "dusk") bgUrl = new URL('../assets/hogwarts_dusk.jpg', import.meta.url).href;
 
 
   return (

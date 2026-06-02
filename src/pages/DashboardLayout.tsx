@@ -23,6 +23,7 @@ import BottomNav from "@/components/BottomNav";
 import { NAV_GROUPS, ADMIN_GROUP } from "@/constants/navigation";
 import { AtmosphericBackground } from "@/components/shared/AtmosphericBackground";
 import { MagicalClock } from "@/components/shared/MagicalClock";
+import MagicalParticles from "@/components/MagicalParticles";
 import AmbientAudio from "@/components/AmbientAudio";
 import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
 import DailyRPSlot from "@/components/DailyRPSlot";
@@ -178,6 +179,7 @@ export default function DashboardLayout() {
   return (
     <div className="flex h-dvh-screen overflow-hidden relative bg-black">
       <AtmosphericBackground />
+      <MagicalParticles />
 
       <AnimatePresence>
         {sidebarOpen && (
