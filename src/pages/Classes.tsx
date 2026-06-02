@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Clock, BookOpen, Star, AlertCircle, GraduationCap } from "lucide-react";
+import AcademicProgressCard from "@/components/AcademicProgressCard";
 
 interface SchoolClass {
   id: string;
@@ -275,6 +276,8 @@ export default function Classes() {
       </div>
 
       {/* ── FOOTER ADVISORY ── */}
+      <AcademicProgressCard />
+
       <div className="relative glass rounded-[2rem] p-8 border border-red-900/20 bg-red-950/5 group">
         <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 to-transparent pointer-events-none" />
         <div className="relative z-10 flex gap-6 items-center">
