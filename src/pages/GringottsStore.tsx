@@ -75,6 +75,7 @@ export default function GringottsStore() {
   const [buyingIdLocal, setBuyingIdLocal] = useState<string | null>(null);
   const [tab, setTab] = useState("featured");
   const [buyingPackageId, setBuyingPackageId] = useState<string | null>(null);
+  const [previewItem, setPreviewItem] = useState<StoreItem | null>(null);
 
   useEffect(() => { 
     // loadStore logic handled by hook
