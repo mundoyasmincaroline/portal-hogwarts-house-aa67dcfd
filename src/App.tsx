@@ -41,6 +41,7 @@ const Wallet = lazy(() => import("./pages/Wallet"));
 const Terms = lazy(() => import("./pages/Terms"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const ParentsGuide = lazy(() => import("./pages/ParentsGuide"));
+const RPHistory = lazy(() => import("./pages/RPHistory"));
 
 const LoadingFallback = () => (
   <div className="flex h-screen items-center justify-center bg-background">
@@ -131,6 +132,7 @@ const App = () => {
                   <Route path="store" element={<GringottsStore />} />
                   <Route path="duels" element={<Duels />} />
                   <Route path="wallet" element={<Wallet />} />
+                  <Route path="rp-history" element={<RPHistory />} />
                   {/* Wildcard dentro do dashboard: rota inválida → volta ao Salão Principal */}
                   <Route path="*" element={<Feed />} />
                 </Route>
