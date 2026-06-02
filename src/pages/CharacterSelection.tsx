@@ -52,7 +52,7 @@ export default function CharacterSelection({ adminMode }: Props) {
     }
   };
 
-  if (loading) return <div className="h-screen flex items-center justify-center">Lendo registros mágicos...</div>;
+  if (loading) return <div className="h-dvh flex items-center justify-center">Lendo registros mágicos...</div>;
 
   // Admin can skip character creation entirely via a bypass flag
   const handleAdminSkip = async () => {

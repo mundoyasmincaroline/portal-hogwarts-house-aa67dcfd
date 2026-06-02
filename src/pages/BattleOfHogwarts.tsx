@@ -47,20 +47,20 @@ export default function BattleOfHogwarts() {
   const pct = (battle.voldemort_hp / battle.voldemort_max_hp) * 100;
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center gap-3">
+    <div className="p-4 sm:p-6 space-y-6">
+      <div className="flex items-center gap-3 flex-wrap">
         <Swords className="h-8 w-8 text-primary" />
         <div>
-          <h1 className="font-heading text-3xl">{battle.name}</h1>
+          <h1 className="font-heading text-2xl sm:text-3xl break-words">{battle.name}</h1>
           <p className="text-sm text-foreground/60">Evento global. Cada feitiço conta. Defenda Hogwarts.</p>
         </div>
       </div>
 
       <Card className="border-destructive/50 bg-card/60">
-        <CardHeader className="flex flex-row items-center gap-3">
+        <CardHeader className="flex flex-row items-center gap-3 flex-wrap">
           <Skull className="h-8 w-8 text-destructive" />
-          <CardTitle className="font-heading">Lorde Voldemort</CardTitle>
-          <Badge variant={battle.status === "active" ? "destructive" : "secondary"} className="ml-auto">{battle.status}</Badge>
+          <CardTitle className="font-heading flex-1 min-w-0">Lorde Voldemort</CardTitle>
+          <Badge variant={battle.status === "active" ? "destructive" : "secondary"}>{battle.status}</Badge>
         </CardHeader>
         <CardContent className="space-y-3">
           <Progress value={pct} className="h-4" />
