@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import SafeImage from "@/components/SafeImage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Upload, Link as LinkIcon, Edit2, Save, X } from "lucide-react";
+
+const HouseCrest3D = lazy(() => import("@/components/three/HouseCrest3D"));
 
 interface Props {
   userId: string;
