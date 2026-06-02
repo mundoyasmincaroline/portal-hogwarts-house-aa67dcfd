@@ -61,11 +61,13 @@ export const NAV_GROUPS = [
       { icon: <MagicalIcon icon={ImageIcon} size="xs" color="#94a3b8" />, label: "Álbum", path: "/dashboard/album" },
       { icon: <MagicalIcon icon={ShoppingBag} size="xs" color="#f59e0b" />, label: "Loja", path: "/dashboard/store" },
       { icon: <MagicalEmoji emoji="🏪" size="xs" />, label: "Hogsmeade", path: "/dashboard/hogsmeade" },
+      { icon: <MagicalEmoji emoji="🛍️" size="xs" />, label: "Beco Diagonal", path: "/dashboard/diagon" },
       { icon: <MagicalEmoji emoji="🎒" size="xs" />, label: "Mochila", path: "/dashboard/inventory" },
       { icon: <MagicalEmoji emoji="🤝" size="xs" />, label: "Trocas de Itens", path: "/dashboard/item-trades" },
       { icon: <MagicalIcon icon={ShoppingBag} size="xs" color="#a855f7" />, label: "Mercado", path: "/dashboard/marketplace" },
       { icon: <MagicalEmoji emoji="🔨" size="xs" />, label: "Leilões", path: "/dashboard/auctions" },
       { icon: <MagicalEmoji emoji="🏦" size="xs" />, label: "Gringotts", path: "/dashboard/gringotts" },
+      { icon: <MagicalEmoji emoji="💰" size="xs" />, label: "Cofre Gringotes", path: "/dashboard/vault" },
       { icon: <MagicalIcon icon={Wallet} size="xs" color="#10b981" />, label: "Carteira", path: "/dashboard/wallet" },
       { icon: <MagicalIcon icon={Crown} size="xs" color="#fbbf24" />, label: "Pacto Mágico", path: "/dashboard/battle-pass" },
     ]
@@ -78,6 +80,7 @@ export const NAV_GROUPS = [
       { icon: <MagicalIcon icon={ScrollText} size="xs" color="#94a3b8" />, label: "Regras", path: "/dashboard/rules" },
       { icon: <MagicalIcon icon={Lock} size="xs" color="#ef4444" />, label: "Azkaban", path: "/dashboard/azkaban" },
       { icon: <MagicalEmoji emoji="🦉" size="xs" />, label: "Coruja Postal", path: "/dashboard/settings/notifications" },
+      { icon: <MagicalEmoji emoji="🏛️" size="xs" />, label: "Ministério da Magia", path: "/dashboard/ministry" },
     ]
   }
 ];

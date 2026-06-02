@@ -1232,6 +1232,118 @@ export type Database = {
         }
         Relationships: []
       }
+      diagon_purchases: {
+        Row: {
+          id: string
+          item_id: string
+          price_paid: number
+          purchased_at: string | null
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          item_id: string
+          price_paid: number
+          purchased_at?: string | null
+          user_id: string
+        }
+        Update: {
+          id?: string
+          item_id?: string
+          price_paid?: number
+          purchased_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "diagon_purchases_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "diagon_shop_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      diagon_shop_items: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          exclusive: boolean | null
+          icon: string | null
+          id: string
+          name: string
+          price_galeons: number
+          rarity: string | null
+          shop_id: string
+          stock: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          exclusive?: boolean | null
+          icon?: string | null
+          id?: string
+          name: string
+          price_galeons?: number
+          rarity?: string | null
+          shop_id: string
+          stock?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          exclusive?: boolean | null
+          icon?: string | null
+          id?: string
+          name?: string
+          price_galeons?: number
+          rarity?: string | null
+          shop_id?: string
+          stock?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "diagon_shop_items_shop_id_fkey"
+            columns: ["shop_id"]
+            isOneToOne: false
+            referencedRelation: "diagon_shops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      diagon_shops: {
+        Row: {
+          active: boolean | null
+          banner_color: string | null
+          created_at: string | null
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          active?: boolean | null
+          banner_color?: string | null
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          active?: boolean | null
+          banner_color?: string | null
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
       diary_entries: {
         Row: {
           ai_reflection: string | null
@@ -1925,6 +2037,74 @@ export type Database = {
           },
         ]
       }
+      gringotts_transactions: {
+        Row: {
+          amount: number
+          created_at: string | null
+          description: string | null
+          id: string
+          type: string
+          user_id: string
+          vault_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          type: string
+          user_id: string
+          vault_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          type?: string
+          user_id?: string
+          vault_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gringotts_transactions_vault_id_fkey"
+            columns: ["vault_id"]
+            isOneToOne: false
+            referencedRelation: "gringotts_vaults"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gringotts_vaults: {
+        Row: {
+          balance: number
+          created_at: string | null
+          id: string
+          interest_rate: number
+          last_interest_at: string | null
+          user_id: string
+          vault_number: number
+        }
+        Insert: {
+          balance?: number
+          created_at?: string | null
+          id?: string
+          interest_rate?: number
+          last_interest_at?: string | null
+          user_id: string
+          vault_number: number
+        }
+        Update: {
+          balance?: number
+          created_at?: string | null
+          id?: string
+          interest_rate?: number
+          last_interest_at?: string | null
+          user_id?: string
+          vault_number?: number
+        }
+        Relationships: []
+      }
       guild_members: {
         Row: {
           contributed_xp: number
@@ -2565,6 +2745,169 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      ministry_employees: {
+        Row: {
+          active: boolean | null
+          hired_at: string | null
+          id: string
+          position_id: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean | null
+          hired_at?: string | null
+          id?: string
+          position_id: string
+          user_id: string
+        }
+        Update: {
+          active?: boolean | null
+          hired_at?: string | null
+          id?: string
+          position_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ministry_employees_position_id_fkey"
+            columns: ["position_id"]
+            isOneToOne: false
+            referencedRelation: "ministry_positions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ministry_laws: {
+        Row: {
+          code: string
+          description: string
+          enacted_at: string | null
+          id: string
+          penalty: string | null
+          title: string
+        }
+        Insert: {
+          code: string
+          description: string
+          enacted_at?: string | null
+          id?: string
+          penalty?: string | null
+          title: string
+        }
+        Update: {
+          code?: string
+          description?: string
+          enacted_at?: string | null
+          id?: string
+          penalty?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      ministry_mission_attempts: {
+        Row: {
+          completed_at: string | null
+          id: string
+          mission_id: string
+          started_at: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          id?: string
+          mission_id: string
+          started_at?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          id?: string
+          mission_id?: string
+          started_at?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ministry_mission_attempts_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "ministry_missions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ministry_missions: {
+        Row: {
+          active: boolean | null
+          created_at: string | null
+          department: Database["public"]["Enums"]["ministry_dept"]
+          description: string
+          difficulty: number
+          galeon_reward: number
+          id: string
+          title: string
+          xp_reward: number
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string | null
+          department: Database["public"]["Enums"]["ministry_dept"]
+          description: string
+          difficulty?: number
+          galeon_reward?: number
+          id?: string
+          title: string
+          xp_reward?: number
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string | null
+          department?: Database["public"]["Enums"]["ministry_dept"]
+          description?: string
+          difficulty?: number
+          galeon_reward?: number
+          id?: string
+          title?: string
+          xp_reward?: number
+        }
+        Relationships: []
+      }
+      ministry_positions: {
+        Row: {
+          active: boolean | null
+          department: Database["public"]["Enums"]["ministry_dept"]
+          description: string | null
+          icon: string | null
+          id: string
+          min_level: number
+          name: string
+          salary_galeons: number
+        }
+        Insert: {
+          active?: boolean | null
+          department: Database["public"]["Enums"]["ministry_dept"]
+          description?: string | null
+          icon?: string | null
+          id?: string
+          min_level?: number
+          name: string
+          salary_galeons?: number
+        }
+        Update: {
+          active?: boolean | null
+          department?: Database["public"]["Enums"]["ministry_dept"]
+          description?: string | null
+          icon?: string | null
+          id?: string
+          min_level?: number
+          name?: string
+          salary_galeons?: number
+        }
+        Relationships: []
       }
       moderation_log: {
         Row: {
@@ -5670,6 +6013,10 @@ export type Database = {
         Args: { _months?: number; _plan: string; _user_id: string }
         Returns: undefined
       }
+      apply_ministry_position: {
+        Args: { p_position_id: string }
+        Returns: Json
+      }
       assign_daily_missions: {
         Args: never
         Returns: {
@@ -5708,6 +6055,7 @@ export type Database = {
         Args: { _action: string; _user_id: string; _xp: number }
         Returns: undefined
       }
+      buy_diagon_item: { Args: { p_item_id: string }; Returns: Json }
       buy_hogsmeade_item: {
         Args: { p_item_id: string; p_qty?: number }
         Returns: Json
@@ -5789,6 +6137,10 @@ export type Database = {
         }
       }
       complete_detention: { Args: { p_detention_id: string }; Returns: Json }
+      complete_ministry_mission: {
+        Args: { p_mission_id: string }
+        Returns: Json
+      }
       complete_quest_step: { Args: { p_quest_id: string }; Returns: Json }
       complete_referral_action: {
         Args: { _invited_id: string }
@@ -5871,6 +6223,7 @@ export type Database = {
       join_guild: { Args: { p_guild_id: string }; Returns: Json }
       join_tournament: { Args: { p_tournament_id: string }; Returns: Json }
       open_sticker_pack: { Args: { _user_id: string }; Returns: Json }
+      open_vault: { Args: never; Returns: Json }
       place_auction_bid: {
         Args: { p_amount: number; p_auction_id: string }
         Returns: Json
@@ -5952,6 +6305,9 @@ export type Database = {
         Args: { _answer: string; _challenge_id: string }
         Returns: Json
       }
+      vault_claim_interest: { Args: never; Returns: Json }
+      vault_deposit: { Args: { p_amount: number }; Returns: Json }
+      vault_withdraw: { Args: { p_amount: number }; Returns: Json }
       verify_infinitepay_payment: {
         Args: {
           p_order_nsu: string
@@ -5968,6 +6324,14 @@ export type Database = {
     Enums: {
       app_role: "admin" | "moderator" | "user"
       house_type: "gryffindor" | "slytherin" | "ravenclaw" | "hufflepuff"
+      ministry_dept:
+        | "aurores"
+        | "misterios"
+        | "cooperacao"
+        | "transportes"
+        | "jogos"
+        | "controle_criaturas"
+        | "justica"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -6097,6 +6461,15 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "moderator", "user"],
       house_type: ["gryffindor", "slytherin", "ravenclaw", "hufflepuff"],
+      ministry_dept: [
+        "aurores",
+        "misterios",
+        "cooperacao",
+        "transportes",
+        "jogos",
+        "controle_criaturas",
+        "justica",
+      ],
     },
   },
 } as const

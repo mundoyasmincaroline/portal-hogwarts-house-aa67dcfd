@@ -83,6 +83,9 @@ const ItemTrades = lazy(() => import("./pages/ItemTrades"));
 const Grimoire = lazy(() => import("./pages/Grimoire"));
 const Exams = lazy(() => import("./pages/Exams"));
 const Discipline = lazy(() => import("./pages/Discipline"));
+const DiagonAlley = lazy(() => import("./pages/DiagonAlley"));
+const GringottsVault = lazy(() => import("./pages/GringottsVault"));
+const Ministry = lazy(() => import("./pages/Ministry"));
 
 const LoadingFallback = () => (
   <div className="relative flex h-screen flex-col items-center justify-center bg-background overflow-hidden">
@@ -246,6 +249,9 @@ const App = () => {
                   <Route path="grimoire" element={<Grimoire />} />
                   <Route path="exams" element={<Exams />} />
                   <Route path="discipline" element={<Discipline />} />
+                  <Route path="diagon" element={<DiagonAlley />} />
+                  <Route path="vault" element={<GringottsVault />} />
+                  <Route path="ministry" element={<Ministry />} />
                   <Route path="admin/analytics" element={
                     <ProtectedRoute adminOnly>
                       <AdminAnalytics />
