@@ -235,7 +235,7 @@ export default function StickerAlbum() {
                 </div>
               </div>
 
-              <div className={`relative w-72 h-[420px] rounded-[2.5rem] overflow-hidden border-4 shadow-[0_0_100px_rgba(0,0,0,0.8)] group transition-all duration-1000 ${
+              <div className={`relative w-full max-w-[18rem] h-[420px] rounded-[2.5rem] overflow-hidden border-4 shadow-[0_0_100px_rgba(0,0,0,0.8)] group transition-all duration-1000 ${
                 packReveal.rarity === "gold" ? "border-yellow-400 shadow-yellow-400/30 ring-4 ring-yellow-400/20"
                 : packReveal.rarity === "silver" ? "border-slate-300 shadow-white/10 ring-2 ring-slate-300/10"
                 : "border-amber-800 shadow-amber-900/20"
