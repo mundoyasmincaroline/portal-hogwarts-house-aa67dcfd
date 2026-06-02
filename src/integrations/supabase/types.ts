@@ -1193,6 +1193,45 @@ export type Database = {
         }
         Relationships: []
       }
+      detentions: {
+        Row: {
+          assigned_by: string | null
+          completed_at: string | null
+          created_at: string
+          hours: number
+          id: string
+          points_deducted: number
+          reason: string
+          status: string
+          task_description: string | null
+          user_id: string
+        }
+        Insert: {
+          assigned_by?: string | null
+          completed_at?: string | null
+          created_at?: string
+          hours?: number
+          id?: string
+          points_deducted?: number
+          reason: string
+          status?: string
+          task_description?: string | null
+          user_id: string
+        }
+        Update: {
+          assigned_by?: string | null
+          completed_at?: string | null
+          created_at?: string
+          hours?: number
+          id?: string
+          points_deducted?: number
+          reason?: string
+          status?: string
+          task_description?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       diary_entries: {
         Row: {
           ai_reflection: string | null
@@ -1618,6 +1657,136 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      exam_attempts: {
+        Row: {
+          answers: Json | null
+          exam_id: string
+          grade: string
+          id: string
+          passed: boolean
+          percentage: number
+          score: number
+          taken_at: string
+          total: number
+          user_id: string
+        }
+        Insert: {
+          answers?: Json | null
+          exam_id: string
+          grade: string
+          id?: string
+          passed?: boolean
+          percentage?: number
+          score?: number
+          taken_at?: string
+          total?: number
+          user_id: string
+        }
+        Update: {
+          answers?: Json | null
+          exam_id?: string
+          grade?: string
+          id?: string
+          passed?: boolean
+          percentage?: number
+          score?: number
+          taken_at?: string
+          total?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exam_attempts_exam_id_fkey"
+            columns: ["exam_id"]
+            isOneToOne: false
+            referencedRelation: "exams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exam_questions: {
+        Row: {
+          correct_index: number
+          exam_id: string
+          explanation: string | null
+          id: string
+          options: Json
+          order_idx: number
+          question: string
+        }
+        Insert: {
+          correct_index: number
+          exam_id: string
+          explanation?: string | null
+          id?: string
+          options: Json
+          order_idx?: number
+          question: string
+        }
+        Update: {
+          correct_index?: number
+          exam_id?: string
+          explanation?: string | null
+          id?: string
+          options?: Json
+          order_idx?: number
+          question?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exam_questions_exam_id_fkey"
+            columns: ["exam_id"]
+            isOneToOne: false
+            referencedRelation: "exams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exams: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string | null
+          duration_minutes: number
+          exam_type: string
+          galeons_reward: number
+          id: string
+          min_year: number
+          passing_percentage: number
+          subject: string
+          title: string
+          xp_reward: number
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number
+          exam_type?: string
+          galeons_reward?: number
+          id?: string
+          min_year?: number
+          passing_percentage?: number
+          subject: string
+          title: string
+          xp_reward?: number
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number
+          exam_type?: string
+          galeons_reward?: number
+          id?: string
+          min_year?: number
+          passing_percentage?: number
+          subject?: string
+          title?: string
+          xp_reward?: number
+        }
+        Relationships: []
       }
       fichas: {
         Row: {
@@ -2322,6 +2491,33 @@ export type Database = {
           started_at?: string | null
           status?: string
           total_bonus_xp?: number
+        }
+        Relationships: []
+      }
+      merits: {
+        Row: {
+          created_at: string
+          given_by: string | null
+          id: string
+          points: number
+          reason: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          given_by?: string | null
+          id?: string
+          points?: number
+          reason: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          given_by?: string | null
+          id?: string
+          points?: number
+          reason?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -3952,6 +4148,45 @@ export type Database = {
         }
         Relationships: []
       }
+      spell_combos: {
+        Row: {
+          active: boolean
+          bonus_galeons: number
+          bonus_xp: number
+          created_at: string
+          description: string | null
+          emoji: string
+          id: string
+          name: string
+          rarity: string
+          spell_sequence: string[]
+        }
+        Insert: {
+          active?: boolean
+          bonus_galeons?: number
+          bonus_xp?: number
+          created_at?: string
+          description?: string | null
+          emoji?: string
+          id?: string
+          name: string
+          rarity?: string
+          spell_sequence: string[]
+        }
+        Update: {
+          active?: boolean
+          bonus_galeons?: number
+          bonus_xp?: number
+          created_at?: string
+          description?: string | null
+          emoji?: string
+          id?: string
+          name?: string
+          rarity?: string
+          spell_sequence?: string[]
+        }
+        Relationships: []
+      }
       spells: {
         Row: {
           base_damage: number | null
@@ -5177,23 +5412,29 @@ export type Database = {
       user_spells: {
         Row: {
           id: string
+          last_practiced_at: string | null
           learned_at: string
           mastery_level: number | null
           spell_id: string
+          times_practiced: number
           user_id: string
         }
         Insert: {
           id?: string
+          last_practiced_at?: string | null
           learned_at?: string
           mastery_level?: number | null
           spell_id: string
+          times_practiced?: number
           user_id: string
         }
         Update: {
           id?: string
+          last_practiced_at?: string | null
           learned_at?: string
           mastery_level?: number | null
           spell_id?: string
+          times_practiced?: number
           user_id?: string
         }
         Relationships: [
@@ -5450,6 +5691,15 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      assign_detention: {
+        Args: {
+          p_hours?: number
+          p_reason: string
+          p_task?: string
+          p_user_id: string
+        }
+        Returns: Json
+      }
       award_galeons: {
         Args: { _amount: number; _reason?: string; _user_id: string }
         Returns: undefined
@@ -5538,6 +5788,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      complete_detention: { Args: { p_detention_id: string }; Returns: Json }
       complete_quest_step: { Args: { p_quest_id: string }; Returns: Json }
       complete_referral_action: {
         Args: { _invited_id: string }
@@ -5604,6 +5855,10 @@ export type Database = {
         Args: { p_order_id: string; p_request_id: number }
         Returns: Json
       }
+      grant_merit: {
+        Args: { p_points?: number; p_reason: string; p_user_id: string }
+        Returns: Json
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -5620,6 +5875,7 @@ export type Database = {
         Args: { p_amount: number; p_auction_id: string }
         Returns: Json
       }
+      practice_spell: { Args: { p_spell_id: string }; Returns: Json }
       process_duel_turn: {
         Args: { _duel_id: string; _spell_id: string }
         Returns: Json
@@ -5680,6 +5936,10 @@ export type Database = {
       }
       start_quest: { Args: { p_quest_id: string }; Returns: Json }
       start_quidditch_match: { Args: { p_match: string }; Returns: undefined }
+      submit_exam: {
+        Args: { p_answers: Json; p_exam_id: string }
+        Returns: Json
+      }
       take_bank_loan: {
         Args: { p_amount: number; p_days?: number }
         Returns: Json

@@ -50,6 +50,9 @@ export const NAV_GROUPS = [
       { icon: <MagicalEmoji emoji="📰" size="xs" />, label: "Profeta Diário", path: "/dashboard/prophet" },
       { icon: <MagicalIcon icon={GraduationCap} size="xs" color="#3b82f6" />, label: "Aulas", path: "/dashboard/classes" },
       { icon: <MagicalIcon icon={Sparkles} size="xs" color="#fbbf24" />, label: "Aulas Canon", path: "/dashboard/canon-lessons" },
+      { icon: <MagicalEmoji emoji="📖" size="xs" />, label: "Grimório", path: "/dashboard/grimoire" },
+      { icon: <MagicalEmoji emoji="📜" size="xs" />, label: "N.O.M.s & Exames", path: "/dashboard/exams" },
+      { icon: <MagicalEmoji emoji="⚖️" size="xs" />, label: "Disciplina", path: "/dashboard/discipline" },
     ]
   },
   {
