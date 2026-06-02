@@ -16,15 +16,16 @@ export function PostComposer({ bannedWords }: PostComposerProps) {
   const [posting, setPosting] = useState(false);
 
   const submitPost = async () => {
-    if (!newPost.trim() || !user) return;
-    
-    const content = newPost.trim();
-    const lowerContent = content.toLowerCase();
-    const hasBannedWord = bannedWords.some(word => lowerContent.includes(word));
-    const isAllCaps = content.length > 20 && content === content.toUpperCase();
-    const hasSpamChars = /(.)\1{5,}/.test(content);
-    
-    if (hasBannedWord || isAllCaps || hasSpamChars) {
+    if (!newPost.trim() || !user || posting) return;
+    setPosting(true);
+    try {
+      const content = newPost.trim();
+      const lowerContent = content.toLowerCase();
+      const hasBannedWord = bannedWords.some(word => lowerContent.includes(word));
+      const isAllCaps = content.length > 20 && content === content.toUpperCase();
+      const hasSpamChars = /(.)\1{5,}/.test(content);
+
+      if (hasBannedWord || isAllCaps || hasSpamChars) {
       let reason = hasBannedWord ? "Palavra proibida" : isAllCaps ? "Gritaria (CAPS LOCK)" : "Spam (letras repetidas)";
       toast.error(
         <div className="flex gap-3 items-center">
@@ -39,24 +40,25 @@ export function PostComposer({ bannedWords }: PostComposerProps) {
       await supabase.from("moderation_log").insert({ user_id: user.id, content_type: "post", original_content: content, reason: reason, action: "block" });
       await supabase.rpc("award_xp_action", { _action: "spam_penalty", _user_id: user.id, _xp: -10 });
       return;
-    }
+      }
 
-    setPosting(true);
-    const { error } = await supabase.from("posts").insert({ 
-      user_id: user.id, 
-      content: content,
-      music_url: newMusicUrl.trim() || null 
-    } as any);
-    
-    setPosting(false);
-    if (error) {
-      toast.error(error.message.includes("Filch") ? error.message : "Erro ao publicar: " + error.message);
-      return;
+      const { error } = await supabase.from("posts").insert({
+        user_id: user.id,
+        content: content,
+        music_url: newMusicUrl.trim() || null
+      } as any);
+
+      if (error) {
+        toast.error(error.message.includes("Filch") ? error.message : "Erro ao publicar: " + error.message);
+        return;
+      }
+      setNewPost("");
+      setNewMusicUrl("");
+      toast.success("Publicado! ✨");
+      await reward(user.id, 'post');
+    } finally {
+      setPosting(false);
     }
-    setNewPost("");
-    setNewMusicUrl("");
-    toast.success("Publicado! ✨");
-    await reward(user.id, 'post');
   };
 
   return (

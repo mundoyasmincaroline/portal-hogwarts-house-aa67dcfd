@@ -28,6 +28,8 @@ export default function AdminFinance() {
     totalRevenue: 0, totalGaleons: 0, totalOrders: 0, activeVips: 0,
     revenueByDay: [], ordersByType: []
   });
+  const [filterQuery, setFilterQuery] = useState("");
+  const [showAll, setShowAll] = useState(false);
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -125,10 +127,10 @@ export default function AdminFinance() {
 
       {/* ── KPI CARDS ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
-        <KPIItem title="Receita Total" value={`R$ ${stats.totalRevenue.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`} icon={DollarSign} color="text-green-500" trend="+12%" />
-        <KPIItem title="Galeões Vendidos" value={stats.totalGaleons.toLocaleString()} icon={Coins} color="text-yellow-500" trend="+8%" />
-        <KPIItem title="Vendas Concluídas" value={stats.totalOrders.toString()} icon={TrendingUp} color="text-blue-500" trend="+15%" />
-        <KPIItem title="VIPs Ativos" value={stats.activeVips.toString()} icon={Crown} color="text-purple-500" trend="+5%" />
+        <KPIItem title="Receita Total" value={`R$ ${stats.totalRevenue.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`} icon={DollarSign} color="text-green-500" />
+        <KPIItem title="Galeões Vendidos" value={stats.totalGaleons.toLocaleString()} icon={Coins} color="text-yellow-500" />
+        <KPIItem title="Vendas Concluídas" value={stats.totalOrders.toString()} icon={TrendingUp} color="text-blue-500" />
+        <KPIItem title="VIPs Ativos" value={stats.activeVips.toString()} icon={Crown} color="text-purple-500" />
       </div>
 
       {/* ── CHARTS SECTION ── */}
@@ -204,7 +206,12 @@ export default function AdminFinance() {
           </h3>
           <div className="relative">
             <Filter size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <input placeholder="Filtrar por usuário ou ID..." className="bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm focus:outline-none focus:border-primary/50 w-full md:w-64" />
+            <input
+              value={filterQuery}
+              onChange={(e) => setFilterQuery(e.target.value)}
+              placeholder="Filtrar por usuário ou ID..."
+              className="bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm focus:outline-none focus:border-primary/50 w-full md:w-64"
+            />
           </div>
         </div>
         
@@ -222,7 +229,16 @@ export default function AdminFinance() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {orders.slice(0, 20).map(o => (
+              {(() => {
+                const q = filterQuery.trim().toLowerCase();
+                const filtered = q
+                  ? orders.filter(o =>
+                      (o.profiles?.full_name?.toLowerCase().includes(q)) ||
+                      o.id.toLowerCase().includes(q) ||
+                      o.user_id.toLowerCase().includes(q)
+                    )
+                  : orders;
+                return (showAll ? filtered : filtered.slice(0, 20)).map(o => (
                 <tr key={o.id} className="hover:bg-white/5 transition-colors group">
                   <td className="px-4 sm:px-8 py-6">
                     <div className="flex items-center gap-3">
@@ -264,7 +280,8 @@ export default function AdminFinance() {
                     <p className="text-[10px] text-muted-foreground/50">{new Date(o.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</p>
                   </td>
                 </tr>
-              ))}
+                ));
+              })()}
             </tbody>
           </table>
         </div>
@@ -273,24 +290,28 @@ export default function AdminFinance() {
           <div className="p-20 text-center text-muted-foreground italic">Nenhuma transação registrada ainda.</div>
         )}
         
-        <div className="p-6 bg-white/5 border-t border-white/5 text-center">
-          <button className="text-xs text-primary hover:underline font-bold uppercase tracking-widest">Ver Histórico Completo</button>
-        </div>
+        {orders.length > 20 && (
+          <div className="p-6 bg-white/5 border-t border-white/5 text-center">
+            <button
+              onClick={() => setShowAll(v => !v)}
+              className="text-xs text-primary hover:underline font-bold uppercase tracking-widest"
+            >
+              {showAll ? "Recolher" : `Ver Histórico Completo (${orders.length})`}
+            </button>
+          </div>
+        )}
       </Card>
     </div>
   );
 }
 
-function KPIItem({ title, value, icon: Icon, color, trend }: any) {
+function KPIItem({ title, value, icon: Icon, color }: any) {
   return (
     <Card className="glass rounded-[2rem] p-6 border-white/10 bg-black/40 hover:border-primary/30 transition-all group overflow-hidden relative">
       <div className="absolute top-0 right-0 w-24 h-24 bg-current opacity-5 blur-2xl group-hover:opacity-10 transition-opacity -mr-8 -mt-8" style={{ color: color.replace('text-', '') }} />
       <div className="flex justify-between items-start mb-4 relative z-10">
         <div className={`p-3 rounded-2xl bg-white/5 border border-white/10 ${color}`}>
           <Icon size={24} />
-        </div>
-        <div className="flex items-center gap-1 text-green-400 text-[10px] font-bold bg-green-400/10 px-2 py-1 rounded-full border border-green-400/20">
-          <ArrowUpRight size={10} /> {trend}
         </div>
       </div>
       <div className="relative z-10">

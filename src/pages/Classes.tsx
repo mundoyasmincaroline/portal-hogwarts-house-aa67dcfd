@@ -22,6 +22,7 @@ export default function Classes() {
   const [classes, setClasses] = useState<SchoolClass[]>([]);
   const [attendedMap, setAttendedMap] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
+  const [submittingClass, setSubmittingClass] = useState<string | null>(null);
 
   // Time & Date calculations
   const now = new Date();
@@ -119,7 +120,7 @@ export default function Classes() {
   };
 
   const attendClass = async (cls: SchoolClass) => {
-    if (!user || !profile) return;
+    if (!user || !profile || submittingClass === cls.id) return;
     
     if (!isClassActive(cls.time_slot)) {
       toast.error("Você não pode entrar nesta aula agora. As portas estão trancadas!");
@@ -131,22 +132,22 @@ export default function Classes() {
       return;
     }
 
-    const { error } = await supabase.from("class_attendance").insert({
-      user_id: user.id,
-      class_id: cls.id
-    });
+    setSubmittingClass(cls.id);
+    try {
+      const { error } = await supabase.from("class_attendance").insert({
+        user_id: user.id,
+        class_id: cls.id
+      });
+      if (error) { toast.error("Erro ao registrar presença: " + error.message); return; }
 
-    if (error) {
-      toast.error("Erro ao registrar presença: " + error.message);
-      return;
+      const { error: xpErr } = await supabase.rpc("award_xp_action", { _action: "class", _user_id: user.id, _xp: cls.xp_reward });
+      if (xpErr) { toast.error("Erro ao ganhar XP: " + xpErr.message); return; }
+
+      setAttendedMap(prev => ({ ...prev, [cls.id]: true }));
+      toast.success(`✨ Mais ${cls.xp_reward} XP! Você assistiu à aula de ${cls.title} com sucesso!`);
+    } finally {
+      setSubmittingClass(null);
     }
-
-    // Award XP via RPC
-    const { error: xpErr } = await supabase.rpc("award_xp_action", { _action: "class", _user_id: user.id, _xp: cls.xp_reward });
-    if (xpErr) { toast.error("Erro ao ganhar XP: " + xpErr.message); return; }
-    
-    setAttendedMap(prev => ({ ...prev, [cls.id]: true }));
-    toast.success(`✨ Mais ${cls.xp_reward} XP! Você assistiu à aula de ${cls.title} com sucesso!`);
   };
 
   if (loading) return <div className="text-center py-10">Consultando pergaminhos...</div>;
@@ -258,10 +259,11 @@ export default function Classes() {
                       <Button 
                         variant={active ? "magical" : "secondary"} 
                         size="sm"
+                        disabled={submittingClass === cls.id || !active}
                         onClick={() => attendClass(cls)}
                         className={`px-8 rounded-2xl h-12 shadow-2xl transition-all duration-500 ${active ? "scale-105" : "opacity-50"}`}
                       >
-                        {active ? "Participar Agora ✨" : "Porta Trancada"}
+                        {submittingClass === cls.id ? "Entrando..." : active ? "Participar Agora ✨" : "Porta Trancada"}
                       </Button>
                     )}
                   </div>
