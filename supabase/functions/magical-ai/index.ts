@@ -3,7 +3,7 @@ import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 const GATEWAY_URL = 'https://ai.gateway.lovable.dev/v1/chat/completions';
 const MODEL = 'google/gemini-3-flash-preview';
 
-type Mode = 'sorting_hat' | 'prophet' | 'npc' | 'duel_narrator' | 'story';
+type Mode = 'sorting_hat' | 'prophet' | 'npc' | 'duel_narrator' | 'story' | 'npc_custom' | 'prophecy';
 
 const SYSTEM_PROMPTS: Record<Mode, string> = {
   sorting_hat:
@@ -16,6 +16,10 @@ const SYSTEM_PROMPTS: Record<Mode, string> = {
     'Você narra duelos bruxos com energia épica de transmissão esportiva. Em português do Brasil, 2-3 frases por turno, descrevendo feitiços, esquivas e reações.',
   story:
     'Você é um mestre de RPG narrando aventuras em Hogwarts. Gere uma cena imersiva curta (1 parágrafo) em segunda pessoa, em português do Brasil.',
+  npc_custom:
+    '',
+  prophecy:
+    'Você é um Oráculo Mágico. Gere uma profecia poética, enigmática, em português do Brasil (PT-BR). 3-5 versos curtos, com símbolos e metáforas. Sempre fale do destino do bruxo de forma misteriosa. Termine com um símbolo (🔮, ⚡, 🌙, ✨, 🦉).',
 };
 
 Deno.serve(async (req) => {
@@ -46,6 +50,9 @@ Deno.serve(async (req) => {
     let system = SYSTEM_PROMPTS[mode];
     if (mode === 'npc' && character) {
       system += `\n\nVocê é: ${character}. ${context}`;
+    }
+    if (mode === 'npc_custom' && body.systemPrompt) {
+      system = String(body.systemPrompt);
     }
     if (mode === 'duel_narrator' && context) {
       system += `\n\nContexto da partida: ${context}`;

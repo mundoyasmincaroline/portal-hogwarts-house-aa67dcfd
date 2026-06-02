@@ -64,6 +64,12 @@ const Quidditch = lazy(() => import("./pages/Quidditch"));
 const RoomOfRequirement = lazy(() => import("./pages/RoomOfRequirement"));
 const WandCrafting = lazy(() => import("./pages/WandCrafting"));
 const Patronus = lazy(() => import("./pages/Patronus"));
+const Chapters = lazy(() => import("./pages/Chapters"));
+const NPCs = lazy(() => import("./pages/NPCs"));
+const NPCChat = lazy(() => import("./pages/NPCChat"));
+const Diary = lazy(() => import("./pages/Diary"));
+const Prophecy = lazy(() => import("./pages/Prophecy"));
+const CastleMap = lazy(() => import("./pages/CastleMap"));
 
 const LoadingFallback = () => (
   <div className="relative flex h-screen flex-col items-center justify-center bg-background overflow-hidden">
@@ -204,6 +210,12 @@ const App = () => {
                   <Route path="room" element={<RoomOfRequirement />} />
                   <Route path="wand" element={<WandCrafting />} />
                   <Route path="patronus" element={<Patronus />} />
+                  <Route path="chapters" element={<Chapters />} />
+                  <Route path="npcs" element={<NPCs />} />
+                  <Route path="npc/:slug" element={<NPCChat />} />
+                  <Route path="diary" element={<Diary />} />
+                  <Route path="prophecy" element={<Prophecy />} />
+                  <Route path="castle-map" element={<CastleMap />} />
                   <Route path="admin/analytics" element={
                     <ProtectedRoute adminOnly>
                       <AdminAnalytics />

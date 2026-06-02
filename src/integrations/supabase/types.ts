@@ -377,6 +377,48 @@ export type Database = {
         }
         Relationships: []
       }
+      castle_rooms: {
+        Row: {
+          description: string
+          emoji: string | null
+          event_chance: number
+          event_payload: Json | null
+          id: string
+          name: string
+          pos_x: number
+          pos_y: number
+          room_type: string
+          slug: string
+          unlock_level: number
+        }
+        Insert: {
+          description: string
+          emoji?: string | null
+          event_chance?: number
+          event_payload?: Json | null
+          id?: string
+          name: string
+          pos_x?: number
+          pos_y?: number
+          room_type?: string
+          slug: string
+          unlock_level?: number
+        }
+        Update: {
+          description?: string
+          emoji?: string | null
+          event_chance?: number
+          event_payload?: Json | null
+          id?: string
+          name?: string
+          pos_x?: number
+          pos_y?: number
+          room_type?: string
+          slug?: string
+          unlock_level?: number
+        }
+        Relationships: []
+      }
       challenges: {
         Row: {
           action_type: string | null
@@ -1148,6 +1190,45 @@ export type Database = {
           image_url?: string | null
           is_ai_generated?: boolean | null
           title?: string
+        }
+        Relationships: []
+      }
+      diary_entries: {
+        Row: {
+          ai_reflection: string | null
+          character_id: string | null
+          content: string
+          created_at: string
+          id: string
+          is_private: boolean
+          mood: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_reflection?: string | null
+          character_id?: string | null
+          content: string
+          created_at?: string
+          id?: string
+          is_private?: boolean
+          mood?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_reflection?: string | null
+          character_id?: string | null
+          content?: string
+          created_at?: string
+          id?: string
+          is_private?: boolean
+          mood?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -2126,6 +2207,83 @@ export type Database = {
         }
         Relationships: []
       }
+      npc_conversations: {
+        Row: {
+          created_at: string
+          id: string
+          messages: Json
+          npc_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          messages?: Json
+          npc_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          messages?: Json
+          npc_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "npc_conversations_npc_id_fkey"
+            columns: ["npc_id"]
+            isOneToOne: false
+            referencedRelation: "npcs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      npcs: {
+        Row: {
+          avatar_emoji: string | null
+          created_at: string
+          house: string | null
+          id: string
+          is_active: boolean
+          location: string | null
+          name: string
+          personality: string
+          role: string
+          slug: string
+          system_prompt: string
+        }
+        Insert: {
+          avatar_emoji?: string | null
+          created_at?: string
+          house?: string | null
+          id?: string
+          is_active?: boolean
+          location?: string | null
+          name: string
+          personality: string
+          role: string
+          slug: string
+          system_prompt: string
+        }
+        Update: {
+          avatar_emoji?: string | null
+          created_at?: string
+          house?: string | null
+          id?: string
+          is_active?: boolean
+          location?: string | null
+          name?: string
+          personality?: string
+          role?: string
+          slug?: string
+          system_prompt?: string
+        }
+        Relationships: []
+      }
       patronus_invocations: {
         Row: {
           created_at: string | null
@@ -2464,6 +2622,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      prophecies: {
+        Row: {
+          created_at: string
+          id: string
+          prompt: string | null
+          prophecy_text: string
+          symbol: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          prompt?: string | null
+          prophecy_text: string
+          symbol?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          prompt?: string | null
+          prophecy_text?: string
+          symbol?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       prophet_articles: {
         Row: {
@@ -3124,6 +3309,38 @@ export type Database = {
         }
         Relationships: []
       }
+      room_visits: {
+        Row: {
+          id: string
+          last_visited: string
+          room_id: string
+          user_id: string
+          visit_count: number
+        }
+        Insert: {
+          id?: string
+          last_visited?: string
+          room_id: string
+          user_id: string
+          visit_count?: number
+        }
+        Update: {
+          id?: string
+          last_visited?: string
+          room_id?: string
+          user_id?: string
+          visit_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_visits_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "castle_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rp_daily_claims: {
         Row: {
           character_id: string
@@ -3562,6 +3779,131 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      story_chapters: {
+        Row: {
+          arc: string
+          chapter_order: number
+          content: string
+          cover_emoji: string | null
+          created_at: string
+          id: string
+          requires_level: number
+          rewards_galeons: number
+          rewards_xp: number
+          slug: string
+          summary: string | null
+          title: string
+        }
+        Insert: {
+          arc?: string
+          chapter_order?: number
+          content: string
+          cover_emoji?: string | null
+          created_at?: string
+          id?: string
+          requires_level?: number
+          rewards_galeons?: number
+          rewards_xp?: number
+          slug: string
+          summary?: string | null
+          title: string
+        }
+        Update: {
+          arc?: string
+          chapter_order?: number
+          content?: string
+          cover_emoji?: string | null
+          created_at?: string
+          id?: string
+          requires_level?: number
+          rewards_galeons?: number
+          rewards_xp?: number
+          slug?: string
+          summary?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      story_choices: {
+        Row: {
+          attribute_effect: Json | null
+          chapter_id: string
+          display_order: number
+          id: string
+          label: string
+          next_chapter_slug: string | null
+          outcome_text: string | null
+          xp_bonus: number
+        }
+        Insert: {
+          attribute_effect?: Json | null
+          chapter_id: string
+          display_order?: number
+          id?: string
+          label: string
+          next_chapter_slug?: string | null
+          outcome_text?: string | null
+          xp_bonus?: number
+        }
+        Update: {
+          attribute_effect?: Json | null
+          chapter_id?: string
+          display_order?: number
+          id?: string
+          label?: string
+          next_chapter_slug?: string | null
+          outcome_text?: string | null
+          xp_bonus?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "story_choices_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: false
+            referencedRelation: "story_chapters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      story_progress: {
+        Row: {
+          chapter_id: string
+          choice_id: string | null
+          completed_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          chapter_id: string
+          choice_id?: string | null
+          completed_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          chapter_id?: string
+          choice_id?: string | null
+          completed_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "story_progress_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: false
+            referencedRelation: "story_chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "story_progress_choice_id_fkey"
+            columns: ["choice_id"]
+            isOneToOne: false
+            referencedRelation: "story_choices"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       story_views: {
         Row: {
