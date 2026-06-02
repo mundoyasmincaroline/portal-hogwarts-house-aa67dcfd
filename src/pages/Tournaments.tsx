@@ -101,8 +101,8 @@ export default function Tournaments() {
   return (
     <div className="container mx-auto max-w-5xl px-4 py-8 space-y-6">
       <header className="text-center mb-2">
-        <h1 className="font-heading text-4xl text-primary flex items-center justify-center gap-3">
-          <Trophy className="w-9 h-9" /> Torneio Tribruxo
+        <h1 className="font-heading text-3xl sm:text-4xl text-primary flex items-center justify-center gap-3 flex-wrap">
+          <Trophy className="w-7 h-7 sm:w-9 sm:h-9" /> Torneio Tribruxo
         </h1>
         <p className="text-muted-foreground mt-2">
           Inscreva-se nas competições oficiais do castelo e dispute por glória, XP e Galeões.
