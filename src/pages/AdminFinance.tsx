@@ -28,6 +28,8 @@ export default function AdminFinance() {
     totalRevenue: 0, totalGaleons: 0, totalOrders: 0, activeVips: 0,
     revenueByDay: [], ordersByType: []
   });
+  const [filterQuery, setFilterQuery] = useState("");
+  const [showAll, setShowAll] = useState(false);
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
