@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import SafeImage from "@/components/SafeImage";
 import MagicalGaleon from "@/components/shared/MagicalGaleon";
+import Card3D from "@/components/Card3D";
 import { playMagicSound } from "@/services/core/soundService";
 import VipUpsellBanner from "@/components/VipUpsellBanner";
 import PedidosTab from "@/components/PedidosTab";
