@@ -168,7 +168,7 @@ export default function DashboardLayout() {
   const adminSkippedCharacter = isAdmin && user && typeof window !== "undefined" && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
   if (hasCharacters === false && !profile.active_character_id && !adminSkippedCharacter) return <ProtectedRoute adminOnly={false}><CharacterSelection adminMode={isAdmin} /></ProtectedRoute>;
   // Cena cinematográfica de entrada no castelo — exibida uma única vez após a primeira ficha
-  if (!isAdmin && profile.active_character_id && profile.has_seen_intro === false) {
+  if (!isAdmin && profile.active_character_id && (profile as any).has_seen_intro === false) {
     return <ProtectedRoute adminOnly={false}><CastleEntrance /></ProtectedRoute>;
   }
 
