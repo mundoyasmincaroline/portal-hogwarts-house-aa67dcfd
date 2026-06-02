@@ -106,13 +106,13 @@ export default function PedidosTab() {
               className={`text-xs px-3 py-1.5 rounded-full font-heading border transition-all ${
                 filter === f
                   ? "bg-primary/20 border-primary text-primary"
-                  : "border-border text-muted-foreground hover:border-primary/40"
+                  : "bg-background/70 backdrop-blur-md border-primary/30 text-foreground hover:border-primary/40"
               }`}>
               {f === "pending" ? "⏳ Pendentes" : f === "paid" ? "✅ Pagos" : "📋 Todos"}
             </button>
           ))}
           <button onClick={loadOrders}
-            className="text-xs px-3 py-1.5 rounded-full border border-border text-muted-foreground hover:border-primary/40">
+            className="text-xs px-3 py-1.5 rounded-full border bg-background/70 backdrop-blur-md border-primary/30 text-foreground hover:border-primary/40">
             🔄 Atualizar
           </button>
         </div>

@@ -212,7 +212,7 @@ export default function MaraudersGuide() {
             className={`text-xs px-3 py-1.5 rounded-full font-heading transition-all border ${
               activePage === i + 1
                 ? "bg-primary/20 border-primary text-primary"
-                : "border-border text-muted-foreground hover:border-primary/50"
+                : "bg-background/70 backdrop-blur-md border-primary/30 text-foreground hover:border-primary/50"
             }`}
           >
             {page.title.split(" ").slice(0, 2).join(" ")}
