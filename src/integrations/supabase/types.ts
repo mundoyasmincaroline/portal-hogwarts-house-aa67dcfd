@@ -1710,6 +1710,9 @@ export type Database = {
           level: number
           online: boolean
           role: string | null
+          rp_last_claim_date: string | null
+          rp_streak_best: number
+          rp_streak_current: number
           sickles: number | null
           updated_at: string
           user_id: string
@@ -1740,6 +1743,9 @@ export type Database = {
           level?: number
           online?: boolean
           role?: string | null
+          rp_last_claim_date?: string | null
+          rp_streak_best?: number
+          rp_streak_current?: number
           sickles?: number | null
           updated_at?: string
           user_id: string
@@ -1770,6 +1776,9 @@ export type Database = {
           level?: number
           online?: boolean
           role?: string | null
+          rp_last_claim_date?: string | null
+          rp_streak_best?: number
+          rp_streak_current?: number
           sickles?: number | null
           updated_at?: string
           user_id?: string
@@ -2068,6 +2077,42 @@ export type Database = {
           messages_count?: number
           user_id?: string
           xp_earned?: number
+        }
+        Relationships: []
+      }
+      rp_streak_rewards: {
+        Row: {
+          claim_date: string
+          created_at: string
+          galeons_bonus: number
+          id: string
+          label: string | null
+          milestone: number | null
+          streak_day: number
+          user_id: string
+          xp_bonus: number
+        }
+        Insert: {
+          claim_date: string
+          created_at?: string
+          galeons_bonus?: number
+          id?: string
+          label?: string | null
+          milestone?: number | null
+          streak_day: number
+          user_id: string
+          xp_bonus?: number
+        }
+        Update: {
+          claim_date?: string
+          created_at?: string
+          galeons_bonus?: number
+          id?: string
+          label?: string | null
+          milestone?: number | null
+          streak_day?: number
+          user_id?: string
+          xp_bonus?: number
         }
         Relationships: []
       }
