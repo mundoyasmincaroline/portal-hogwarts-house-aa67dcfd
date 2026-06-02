@@ -80,5 +80,6 @@ export const ADMIN_GROUP = {
     { icon: <MagicalEmoji emoji="🧾" size="xs" />, label: "Fichas & Canons", path: "/dashboard/admin/characters" },
     { icon: <MagicalEmoji emoji="💰" size="xs" />, label: "Gestão Financeira", path: "/dashboard/admin/finance" },
     { icon: <MagicalEmoji emoji="📊" size="xs" />, label: "Analytics", path: "/dashboard/admin/analytics" },
+    { icon: <MagicalEmoji emoji="🛟" size="xs" />, label: "Central de Suporte", path: "/dashboard/admin/support" },
   ]
 };
