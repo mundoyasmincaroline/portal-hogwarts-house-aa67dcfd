@@ -2893,6 +2893,7 @@ export type Database = {
         Args: { _duel_id: string; _spell_id: string }
         Returns: Json
       }
+      process_vip_renewals: { Args: never; Returns: Json }
       start_payment_request: {
         Args: {
           p_amount_brl: number

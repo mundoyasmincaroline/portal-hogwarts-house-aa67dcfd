@@ -15,7 +15,8 @@ export function useRealtime<T>(
   callbackRef.current = callback;
 
   useEffect(() => {
-    const channelId = `rt:${table}:${event}:${filter || 'all'}:${Math.random().toString(36).slice(2, 6)}`;
+    // Stable channelId — avoids unnecessary reconnects on re-renders
+    const channelId = `rt:${table}:${event}:${filter || 'all'}`;
     const channel = supabase.channel(channelId);
     
     channel
