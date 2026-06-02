@@ -30,7 +30,12 @@ export default function Challenges() {
   const [userProgress, setUserProgress] = useState<Record<string, number>>({});
 
   const load = useCallback(async () => {
-    const { data: ch } = await supabase.from("challenges").select("*").eq("active", true).order("created_at", { ascending: false });
+    // Não trazemos correct_answer ao cliente — validação acontece via RPC validate_enigma_answer
+    const { data: ch } = await supabase
+      .from("challenges")
+      .select("id,title,description,xp_reward,type,active,question,action_type,goal,created_at,created_by")
+      .eq("active", true)
+      .order("created_at", { ascending: false });
     setChallenges(ch || []);
     if (user) {
       const { data: uc } = await supabase
@@ -98,24 +103,21 @@ export default function Challenges() {
     const c = activeEnigma;
     if (!c || !user || !profile) return;
 
-    if (answerInput.trim().toLowerCase() !== c.correct_answer?.trim().toLowerCase()) {
-      toast.error("Resposta incorreta! A magia falhou. Aguarde o cooldown para tentar novamente.");
+    const { data, error } = await (supabase.rpc as any)("validate_enigma_answer", {
+      _challenge_id: c.id,
+      _answer: answerInput,
+    });
+    if (error) { toast.error("Erro ao validar resposta: " + error.message); return; }
+    const result = data as { success: boolean; message?: string; xp?: number };
+    if (!result?.success) {
+      toast.error(result?.message || "Resposta incorreta! A magia falhou.");
       setActiveEnigma(null);
       return;
     }
-
-    // Quiz is auto-approved
-    const { error: ucErr } = await supabase
-      .from("user_challenges")
-      .insert({ user_id: user.id, challenge_id: c.id, completed: true, status: 'approved', completed_at: new Date().toISOString() } as never);
-    if (ucErr) { toast.error("Erro: " + ucErr.message); return; }
-
-    const { error: xpErr } = await supabase.rpc("award_xp_action", { _action: "challenge", _user_id: user.id, _xp: c.xp_reward });
-    if (xpErr) { toast.error("Erro ao ganhar XP: " + xpErr.message); return; }
+    // Pontos da casa (mantém side-effect que a RPC não cobre)
     await supabase.from("house_points").insert({ house: profile.house, points: c.xp_reward, reason: `Desafio: ${c.title}`, awarded_by: user.id } as never);
     await fetchProfile(user.id);
-
-    toast.success(`Resposta correta! +${c.xp_reward} XP! ⚡ Pontos para ${profile.house}!`);
+    toast.success(`Resposta correta! +${result.xp ?? c.xp_reward} XP! ⚡ Pontos para ${profile.house}!`);
     setCompletedIds((s) => new Set([...s, c.id]));
     setActiveEnigma(null);
   };
