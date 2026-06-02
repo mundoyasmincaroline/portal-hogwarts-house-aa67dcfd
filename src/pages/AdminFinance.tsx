@@ -268,11 +268,11 @@ export default function AdminFinance() {
                   </td>
                   <td className="px-4 sm:px-8 py-6">
                     <span className={`text-[8px] sm:text-[9px] font-bold uppercase px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border ${
-                      o.status === "completed" ? "bg-green-500/20 text-green-400 border-green-500/30" : 
+                      o.status === "paid" ? "bg-green-500/20 text-green-400 border-green-500/30" : 
                       o.status === "pending" ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" : 
                       "bg-red-500/20 text-red-400 border-red-500/30"
                     }`}>
-                      {o.status === "completed" ? "OK" : o.status === "pending" ? "PEN" : "ERRO"}
+                      {o.status === "paid" ? "OK" : o.status === "pending" ? "PEN" : "ERRO"}
                     </span>
                   </td>
                   <td className="px-4 sm:px-8 py-6 text-right hidden lg:table-cell">
