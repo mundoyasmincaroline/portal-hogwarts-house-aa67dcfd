@@ -261,7 +261,7 @@ export default function StickerAlbum() {
 
               <div className="text-center space-y-6">
                 <div className="space-y-2">
-                    <h2 className="font-heading text-4xl text-white drop-shadow-lg">¡Nova Figurinha!</h2>
+                   <h2 className="font-heading text-4xl text-white drop-shadow-lg">✨ Nova Figurinha!</h2>
                     <p className="text-muted-foreground font-serif italic text-lg">"Uma adição magnífica ao seu álbum."</p>
                 </div>
                 <div className="flex flex-col gap-3 w-full">
