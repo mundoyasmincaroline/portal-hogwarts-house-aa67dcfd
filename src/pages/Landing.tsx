@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import MagicalParticles from "@/components/MagicalParticles";
+import Card3D from "@/components/Card3D";
 import { type House } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
 import { ChevronRight, Zap, Crown, Users, ShoppingBag, Trophy, MessageCircle, Sparkles, Flame } from "lucide-react";
@@ -166,8 +167,8 @@ export default function Landing() {
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {HOUSES_INFO.map(h => (
-            <div key={h.id} onClick={() => navigate("/register")}
-              className={`relative glass rounded-[1.5rem] sm:rounded-[3.5rem] p-4 sm:p-10 border-2 bg-gradient-to-br ${h.color} text-center cursor-pointer hover:-translate-y-2 sm:hover:-translate-y-5 hover:shadow-[0_20px_60px_rgba(0,0,0,0.8)] transition-all duration-700 group flex flex-col items-center gap-3 sm:gap-6 overflow-hidden`}>
+            <Card3D key={h.id} onClick={() => navigate("/register")} intensity={12}
+              className={`relative glass rounded-[1.5rem] sm:rounded-[3.5rem] p-4 sm:p-10 border-2 bg-gradient-to-br ${h.color} text-center cursor-pointer hover:shadow-[0_30px_80px_rgba(0,0,0,0.9)] transition-shadow duration-700 group flex flex-col items-center gap-3 sm:gap-6 overflow-hidden`}>
               
               {/* Inner Glow Artifact */}
               <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -183,7 +184,7 @@ export default function Landing() {
               
               {/* Luxury Accent */}
               <div className="absolute bottom-0 left-0 right-0 h-1 sm:h-1.5 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-            </div>
+            </Card3D>
           ))}
         </div>
       </div>
@@ -206,7 +207,7 @@ export default function Landing() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
             {FEATURES.map((f, i) => (
-              <div key={i} className={`group/feat glass rounded-[1.5rem] sm:rounded-[2.5rem] p-6 sm:p-8 border ${f.cardColor} hover:-translate-y-1 transition-all duration-500 relative overflow-hidden`}>
+              <Card3D key={i} intensity={7} className={`group/feat glass rounded-[1.5rem] sm:rounded-[2.5rem] p-6 sm:p-8 border ${f.cardColor} relative overflow-hidden`}>
                 <div className="absolute inset-0 bg-white/5 opacity-0 group-hover/feat:opacity-100 transition-opacity" />
                 <div className="mb-4 sm:mb-6">
                    <MagicalIcon icon={f.icon} color={f.color} size={20} className="sm:w-[24px] sm:h-[24px]" />
@@ -216,7 +217,7 @@ export default function Landing() {
                 
                 {/* Luxury Bottom Accent */}
                 <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-              </div>
+              </Card3D>
             ))}
           </div>
         </div>
