@@ -9,8 +9,9 @@ import { toast } from "sonner";
 import { AdminMemberCard, type MemberProfile } from "./Admin/AdminMemberCard";
 import { AdminMonetizationTab } from "./Admin/AdminMonetizationTab";
 import PedidosTab from "@/components/PedidosTab";
+import { AdminStreakMilestonesTab } from "./Admin/AdminStreakMilestonesTab";
 
-type Tab = "members" | "pending_members" | "challenges" | "monetization" | "pedidos";
+type Tab = "members" | "pending_members" | "challenges" | "monetization" | "pedidos" | "streak";
 
 export default function Admin() {
   const { isAdmin, user } = useAuth();
@@ -59,7 +60,7 @@ export default function Admin() {
       </div>
 
       <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-        {(["members", "monetization", "pedidos"] as Tab[]).map((t) => (
+        {(["members", "monetization", "pedidos", "streak"] as Tab[]).map((t) => (
           <Button key={t} onClick={() => setTab(t)} variant={tab === t ? "magical" : "ghost"}>
             {t.toUpperCase()}
           </Button>
@@ -90,6 +91,7 @@ export default function Admin() {
           )}
           {tab === "monetization" && <AdminMonetizationTab members={members} fetchAll={fetchAll} />}
           {tab === "pedidos" && <PedidosTab />}
+          {tab === "streak" && <AdminStreakMilestonesTab />}
         </div>
       )}
     </div>
