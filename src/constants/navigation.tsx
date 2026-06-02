@@ -49,6 +49,7 @@ export const NAV_GROUPS = [
       { icon: <MagicalIcon icon={Shield} size="xs" color="#10b981" />, label: "Casas", path: "/dashboard/houses" },
       { icon: <MagicalIcon icon={ScrollText} size="xs" color="#94a3b8" />, label: "Regras", path: "/dashboard/rules" },
       { icon: <MagicalIcon icon={Lock} size="xs" color="#ef4444" />, label: "Azkaban", path: "/dashboard/azkaban" },
+      { icon: <MagicalEmoji emoji="🦉" size="xs" />, label: "Coruja Postal", path: "/dashboard/settings/notifications" },
     ]
   }
 ];
