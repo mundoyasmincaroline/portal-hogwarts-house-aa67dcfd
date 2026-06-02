@@ -32,8 +32,8 @@ const NavItem = memo(({ item, isActive, dmUnread, onClick }: { item: any, isActi
     onClick={onClick}
     className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group relative overflow-hidden border ${
       isActive 
-        ? "bg-primary/10 text-primary font-bold border-primary/30 shadow-[0_0_25px_rgba(212,175,55,0.15)]" 
-        : "text-muted-foreground/60 hover:bg-white/5 hover:text-foreground border-transparent active:scale-95"
+        ? "bg-primary/15 text-primary font-bold border-primary/40 shadow-[0_0_25px_rgba(212,175,55,0.18)]" 
+        : "text-foreground/85 hover:bg-white/10 hover:text-foreground border-transparent active:scale-95"
     }`}
   >
     {isActive && (
@@ -45,7 +45,7 @@ const NavItem = memo(({ item, isActive, dmUnread, onClick }: { item: any, isActi
     <span className={`relative z-10 transition-all duration-500 ${isActive ? "scale-110 drop-shadow-[0_0_8px_rgba(212,175,55,0.6)]" : "group-hover:scale-110 group-hover:text-primary/80"}`}>
       {item.icon}
     </span>
-    <span className={`font-heading text-[10px] uppercase tracking-[0.15em] relative z-10 transition-all duration-300 ${isActive ? "text-primary" : "group-hover:translate-x-1"}`}>
+    <span className={`font-heading text-[11px] uppercase tracking-[0.14em] relative z-10 transition-all duration-300 ${isActive ? "text-primary" : "group-hover:translate-x-1"}`}>
       {item.label}
     </span>
     {item.label === "Mensagens" && dmUnread > 0 && (
