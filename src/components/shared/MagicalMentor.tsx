@@ -21,6 +21,8 @@ import { HOUSES } from "@/types/house";
 import { type House } from "@/types";
 import EmojiIcon from "@/components/shared/EmojiIcon";
 import { Link } from "react-router-dom";
+import HouseCrest from "@/components/rpg/HouseCrest";
+
 
 interface GuideStep {
   id: string;
@@ -248,13 +250,10 @@ export default function MagicalMentor() {
                           animate={{ rotate: [0, 5, -5, 0] }}
                           transition={{ repeat: Infinity, duration: 4 }}
                         >
-                          <img 
-                            src={house.crest_url || ""} 
-                            alt={house.name} 
-                            className="w-24 h-24 relative z-10 drop-shadow-[0_0_15px_rgba(212,175,55,0.5)]" 
-                          />
+                          <HouseCrest house={houseId} size="lg" />
                         </motion.div>
                       </div>
+
                       
                       <h2 className="font-heading text-3xl text-gold-gradient">{house.name}</h2>
                       <p className="text-sm font-serif italic text-muted-foreground">"{house.motto}"</p>
