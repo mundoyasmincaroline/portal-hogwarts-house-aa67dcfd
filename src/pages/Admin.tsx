@@ -10,6 +10,7 @@ import { AdminMemberCard, type MemberProfile } from "./Admin/AdminMemberCard";
 import { AdminMonetizationTab } from "./Admin/AdminMonetizationTab";
 import PedidosTab from "@/components/PedidosTab";
 import { AdminStreakMilestonesTab } from "./Admin/AdminStreakMilestonesTab";
+import AdminKpiPanel from "@/components/admin/AdminKpiPanel";
 
 type Tab = "members" | "pending_members" | "challenges" | "monetization" | "pedidos" | "streak";
 
@@ -58,6 +59,8 @@ export default function Admin() {
         <h1 className="font-heading text-2xl text-gold-gradient mb-1">Painel Administrativo</h1>
         <p className="text-muted-foreground text-sm">Gerencie o Portal Hogwarts House</p>
       </div>
+
+      <AdminKpiPanel />
 
       <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
         {(["members", "monetization", "pedidos", "streak"] as Tab[]).map((t) => (

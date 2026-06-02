@@ -1518,6 +1518,42 @@ export type Database = {
           },
         ]
       }
+      marketplace_listings: {
+        Row: {
+          buyer_id: string | null
+          created_at: string
+          fee_galeons: number | null
+          id: string
+          price_galeons: number
+          seller_id: string
+          sold_at: string | null
+          status: string
+          sticker_id: string
+        }
+        Insert: {
+          buyer_id?: string | null
+          created_at?: string
+          fee_galeons?: number | null
+          id?: string
+          price_galeons: number
+          seller_id: string
+          sold_at?: string | null
+          status?: string
+          sticker_id: string
+        }
+        Update: {
+          buyer_id?: string | null
+          created_at?: string
+          fee_galeons?: number | null
+          id?: string
+          price_galeons?: number
+          seller_id?: string
+          sold_at?: string | null
+          status?: string
+          sticker_id?: string
+        }
+        Relationships: []
+      }
       mentorships: {
         Row: {
           apprentice_id: string
@@ -1629,6 +1665,39 @@ export type Database = {
           original_content?: string | null
           reason?: string | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      notification_preferences: {
+        Row: {
+          daily_digest: boolean
+          email_enabled: boolean
+          in_app: boolean
+          push_enabled: boolean
+          quiet_hours_end: number | null
+          quiet_hours_start: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          daily_digest?: boolean
+          email_enabled?: boolean
+          in_app?: boolean
+          push_enabled?: boolean
+          quiet_hours_end?: number | null
+          quiet_hours_start?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          daily_digest?: boolean
+          email_enabled?: boolean
+          in_app?: boolean
+          push_enabled?: boolean
+          quiet_hours_end?: number | null
+          quiet_hours_start?: number | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -2648,6 +2717,142 @@ export type Database = {
         }
         Relationships: []
       }
+      tournament_matches: {
+        Row: {
+          created_at: string
+          id: string
+          player_a: string | null
+          player_b: string | null
+          reported_at: string | null
+          round: number
+          scheduled_at: string | null
+          slot: number
+          status: string
+          tournament_id: string
+          winner: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          player_a?: string | null
+          player_b?: string | null
+          reported_at?: string | null
+          round: number
+          scheduled_at?: string | null
+          slot: number
+          status?: string
+          tournament_id: string
+          winner?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          player_a?: string | null
+          player_b?: string | null
+          reported_at?: string | null
+          round?: number
+          scheduled_at?: string | null
+          slot?: number
+          status?: string
+          tournament_id?: string
+          winner?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tournament_matches_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: false
+            referencedRelation: "tournaments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tournament_participants: {
+        Row: {
+          character_id: string | null
+          eliminated: boolean
+          id: string
+          joined_at: string
+          seed: number | null
+          tournament_id: string
+          user_id: string
+        }
+        Insert: {
+          character_id?: string | null
+          eliminated?: boolean
+          id?: string
+          joined_at?: string
+          seed?: number | null
+          tournament_id: string
+          user_id: string
+        }
+        Update: {
+          character_id?: string | null
+          eliminated?: boolean
+          id?: string
+          joined_at?: string
+          seed?: number | null
+          tournament_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tournament_participants_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: false
+            referencedRelation: "tournaments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tournaments: {
+        Row: {
+          banner_url: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          ends_at: string | null
+          format: string
+          galeon_prize: number
+          id: string
+          max_participants: number
+          name: string
+          starts_at: string | null
+          status: string
+          xp_prize: number
+        }
+        Insert: {
+          banner_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          ends_at?: string | null
+          format?: string
+          galeon_prize?: number
+          id?: string
+          max_participants?: number
+          name: string
+          starts_at?: string | null
+          status?: string
+          xp_prize?: number
+        }
+        Update: {
+          banner_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          ends_at?: string | null
+          format?: string
+          galeon_prize?: number
+          id?: string
+          max_participants?: number
+          name?: string
+          starts_at?: string | null
+          status?: string
+          xp_prize?: number
+        }
+        Relationships: []
+      }
       user_audio_prefs: {
         Row: {
           ambient_enabled: boolean
@@ -3139,7 +3344,18 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      admin_kpis: {
+        Row: {
+          approved_wizards: number | null
+          flags_week: number | null
+          market_active: number | null
+          new_week: number | null
+          revenue_month_brl: number | null
+          total_wizards: number | null
+          tournaments_active: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       accept_sticker_trade: { Args: { _trade_id: string }; Returns: Json }
@@ -3177,6 +3393,7 @@ export type Database = {
         Args: { _action: string; _user_id: string; _xp: number }
         Returns: undefined
       }
+      buy_marketplace_listing: { Args: { p_listing_id: string }; Returns: Json }
       buy_store_item: {
         Args: { _item_id: string; _user_id: string }
         Returns: Json
@@ -3185,6 +3402,10 @@ export type Database = {
       calc_blood_status: {
         Args: { _father_id: string; _mother_id: string }
         Returns: string
+      }
+      cancel_marketplace_listing: {
+        Args: { p_listing_id: string }
+        Returns: Json
       }
       claim_battle_pass_reward: {
         Args: { p_pass_id: string; p_reward_id: string }
@@ -3256,6 +3477,10 @@ export type Database = {
         }
         Returns: Json
       }
+      create_marketplace_listing: {
+        Args: { p_price: number; p_sticker_id: string }
+        Returns: Json
+      }
       credit_galeons_atomic: {
         Args: { _amount: number; _user_id: string }
         Returns: number
@@ -3272,12 +3497,17 @@ export type Database = {
         Returns: boolean
       }
       join_club: { Args: { p_club_id: string }; Returns: Json }
+      join_tournament: { Args: { p_tournament_id: string }; Returns: Json }
       open_sticker_pack: { Args: { _user_id: string }; Returns: Json }
       process_duel_turn: {
         Args: { _duel_id: string; _spell_id: string }
         Returns: Json
       }
       process_vip_renewals: { Args: never; Returns: Json }
+      report_match_result: {
+        Args: { p_match_id: string; p_winner: string }
+        Returns: Json
+      }
       request_mentorship: { Args: { p_mentor_id: string }; Returns: Json }
       respond_mentorship: {
         Args: { p_accept: boolean; p_mentorship_id: string }

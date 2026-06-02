@@ -27,6 +27,7 @@ export const NAV_GROUPS = [
       { icon: <MagicalIcon icon={Camera} size="xs" color="#f43f5e" />, label: "InstaHogwarts", path: "/dashboard/instahogwarts" },
       { icon: <MagicalIcon icon={Zap} size="xs" color="#a855f7" />, label: "Desafios", path: "/dashboard/challenges" },
       { icon: <MagicalIcon icon={Sparkles} size="xs" color="#f472b6" />, label: "Eventos", path: "/dashboard/events" },
+      { icon: <MagicalIcon icon={Trophy} size="xs" color="#facc15" />, label: "Torneios", path: "/dashboard/tournaments" },
       { icon: <MagicalIcon icon={GraduationCap} size="xs" color="#3b82f6" />, label: "Aulas", path: "/dashboard/classes" },
       { icon: <MagicalIcon icon={Sparkles} size="xs" color="#fbbf24" />, label: "Aulas Canon", path: "/dashboard/canon-lessons" },
     ]
@@ -36,6 +37,7 @@ export const NAV_GROUPS = [
     items: [
       { icon: <MagicalIcon icon={ImageIcon} size="xs" color="#94a3b8" />, label: "Álbum", path: "/dashboard/album" },
       { icon: <MagicalIcon icon={ShoppingBag} size="xs" color="#f59e0b" />, label: "Loja", path: "/dashboard/store" },
+      { icon: <MagicalIcon icon={ShoppingBag} size="xs" color="#a855f7" />, label: "Mercado", path: "/dashboard/marketplace" },
       { icon: <MagicalIcon icon={Wallet} size="xs" color="#10b981" />, label: "Carteira", path: "/dashboard/wallet" },
       { icon: <MagicalIcon icon={Crown} size="xs" color="#fbbf24" />, label: "Pacto Mágico", path: "/dashboard/battle-pass" },
     ]
@@ -47,6 +49,7 @@ export const NAV_GROUPS = [
       { icon: <MagicalIcon icon={Shield} size="xs" color="#10b981" />, label: "Casas", path: "/dashboard/houses" },
       { icon: <MagicalIcon icon={ScrollText} size="xs" color="#94a3b8" />, label: "Regras", path: "/dashboard/rules" },
       { icon: <MagicalIcon icon={Lock} size="xs" color="#ef4444" />, label: "Azkaban", path: "/dashboard/azkaban" },
+      { icon: <MagicalEmoji emoji="🦉" size="xs" />, label: "Coruja Postal", path: "/dashboard/settings/notifications" },
     ]
   }
 ];

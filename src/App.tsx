@@ -45,6 +45,9 @@ const Terms = lazy(() => import("./pages/Terms"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const ParentsGuide = lazy(() => import("./pages/ParentsGuide"));
 const RPHistory = lazy(() => import("./pages/RPHistory"));
+const Tournaments = lazy(() => import("./pages/Tournaments"));
+const Marketplace = lazy(() => import("./pages/Marketplace"));
+const NotificationPreferences = lazy(() => import("./pages/NotificationPreferences"));
 
 const LoadingFallback = () => (
   <div className="relative flex h-screen flex-col items-center justify-center bg-background overflow-hidden">
@@ -163,6 +166,9 @@ const App = () => {
                   <Route path="duels" element={<Duels />} />
                   <Route path="wallet" element={<Wallet />} />
                   <Route path="rp-history" element={<RPHistory />} />
+                  <Route path="tournaments" element={<Tournaments />} />
+                  <Route path="marketplace" element={<Marketplace />} />
+                  <Route path="settings/notifications" element={<NotificationPreferences />} />
                   {/* Wildcard dentro do dashboard: rota inválida → volta ao Salão Principal */}
                   <Route path="*" element={<Feed />} />
                 </Route>
