@@ -259,10 +259,11 @@ export default function Classes() {
                       <Button 
                         variant={active ? "magical" : "secondary"} 
                         size="sm"
+                        disabled={submittingClass === cls.id || !active}
                         onClick={() => attendClass(cls)}
                         className={`px-8 rounded-2xl h-12 shadow-2xl transition-all duration-500 ${active ? "scale-105" : "opacity-50"}`}
                       >
-                        {active ? "Participar Agora ✨" : "Porta Trancada"}
+                        {submittingClass === cls.id ? "Entrando..." : active ? "Participar Agora ✨" : "Porta Trancada"}
                       </Button>
                     )}
                   </div>
