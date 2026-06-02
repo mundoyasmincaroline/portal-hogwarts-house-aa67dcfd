@@ -11,6 +11,7 @@ import MagicalGaleon from "@/components/shared/MagicalGaleon";
 import { useNavigate } from "react-router-dom";
 import { Trophy, Zap, Crown } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface RankMember {
   user_id: string;
   full_name: string;
@@ -75,9 +76,9 @@ export default function Ranking() {
   const rest = members.slice(3);
 
   const vipBadge = (plan?: string) => {
-    if (plan === "founder") return <span className="text-[9px] font-heading px-1.5 py-0.5 rounded-full bg-gradient-to-r from-yellow-600 to-amber-400 text-black">👑</span>;
-    if (plan === "vip")     return <span className="text-[9px] font-heading px-1.5 py-0.5 rounded-full bg-gradient-to-r from-purple-600 to-purple-400 text-white">🥇</span>;
-    if (plan === "premium") return <span className="text-[9px] font-heading px-1.5 py-0.5 rounded-full bg-gradient-to-r from-blue-600 to-blue-400 text-white">✨</span>;
+    if (plan === "founder") return <span className="text-[9px] font-heading px-1.5 py-0.5 rounded-full bg-gradient-to-r from-yellow-600 to-amber-400 text-black"><EmojiIcon e="👑" /></span>;
+    if (plan === "vip")     return <span className="text-[9px] font-heading px-1.5 py-0.5 rounded-full bg-gradient-to-r from-purple-600 to-purple-400 text-white"><EmojiIcon e="🥇" /></span>;
+    if (plan === "premium") return <span className="text-[9px] font-heading px-1.5 py-0.5 rounded-full bg-gradient-to-r from-blue-600 to-blue-400 text-white"><EmojiIcon e="✨" /></span>;
     return null;
   };
 
@@ -112,7 +113,7 @@ export default function Ranking() {
 
       {loading ? (
         <div className="glass rounded-2xl p-16 text-center">
-          <div className="text-4xl animate-bounce mb-4">⚡</div>
+          <div className="text-4xl animate-bounce mb-4"><EmojiIcon e="⚡" /></div>
           <p className="text-muted-foreground animate-pulse font-heading">Consultando o Livro dos Feiticeiros...</p>
         </div>
       ) : tab === "geral" ? (
@@ -234,7 +235,7 @@ export default function Ranking() {
 
             {members.length === 0 && (
               <div className="text-center py-12 text-muted-foreground">
-                <p className="text-3xl mb-3">🧙</p>
+                <p className="text-3xl mb-3"><EmojiIcon e="🧙" /></p>
                 <p>Nenhum bruxo encontrado ainda.</p>
               </div>
             )}
@@ -258,7 +259,7 @@ export default function Ranking() {
                   <HouseCrest house={houseId as House} size="lg" />
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      {i === 0 && <span className="text-xl">🏆</span>}
+                      {i === 0 && <span className="text-xl"><EmojiIcon e="🏆" /></span>}
                       <h3 className="font-heading text-xl text-foreground">{house.name}</h3>
                       <span className={`text-xs font-heading px-2 py-0.5 rounded-full border ${colors.text} border-current`}>
                         #{i + 1}

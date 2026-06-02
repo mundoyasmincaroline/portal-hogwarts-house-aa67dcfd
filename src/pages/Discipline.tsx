@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { Scale, Trophy, AlertTriangle } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function Discipline() {
   const { user } = useAuth();
   const [detentions, setDetentions] = useState<any[]>([]);
@@ -64,12 +65,12 @@ export default function Discipline() {
       <Tabs defaultValue="detentions">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="detentions">🧹 Detenções {pendingDet.length > 0 && <Badge variant="destructive" className="ml-1 text-[9px]">{pendingDet.length}</Badge>}</TabsTrigger>
-          <TabsTrigger value="merits">🏆 Meus Méritos</TabsTrigger>
-          <TabsTrigger value="hall">📜 Hall de Honra</TabsTrigger>
+          <TabsTrigger value="merits"><EmojiIcon e="🏆" /> Meus Méritos</TabsTrigger>
+          <TabsTrigger value="hall"><EmojiIcon e="📜" /> Hall de Honra</TabsTrigger>
         </TabsList>
 
         <TabsContent value="detentions" className="mt-4 space-y-2">
-          {detentions.length === 0 ? <p className="text-center text-muted-foreground py-8">Nenhuma detenção. Continue assim! ✨</p> :
+          {detentions.length === 0 ? <p className="text-center text-muted-foreground py-8">Nenhuma detenção. Continue assim! <EmojiIcon e="✨" /></p> :
             detentions.map(d => (
               <div key={d.id} className="glass-premium rounded-xl p-4">
                 <div className="flex items-start justify-between gap-3 mb-2">

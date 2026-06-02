@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { reward } from "@/services/core/rewardService";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface PostComposerProps {
   bannedWords: string[];
 }
@@ -81,7 +82,7 @@ export function PostComposer({ bannedWords }: PostComposerProps) {
       
       <div className="flex flex-col sm:flex-row gap-4 mt-6 pt-6 border-t border-white/10">
         <div className="flex-1 relative group/input">
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/40 group-focus-within/input:text-primary transition-colors duration-300">🎵</div>
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/40 group-focus-within/input:text-primary transition-colors duration-300"><EmojiIcon e="🎵" /></div>
           <input 
             type="text" 
             value={newMusicUrl} 

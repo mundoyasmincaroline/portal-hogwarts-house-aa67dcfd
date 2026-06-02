@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { BookOpen, Sparkles, Zap } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function Grimoire() {
   const { user } = useAuth();
   const [spells, setSpells] = useState<any[]>([]);
@@ -74,7 +75,7 @@ export default function Grimoire() {
         </div>
 
         <div>
-          <h2 className="font-heading text-lg text-gold-gradient mb-3">⚡ Combos Mágicos</h2>
+          <h2 className="font-heading text-lg text-gold-gradient mb-3"><EmojiIcon e="⚡" /> Combos Mágicos</h2>
           <div className="space-y-2">
             {combos.map(c => (
               <div key={c.id} className="glass-premium rounded-xl p-3">

@@ -7,6 +7,7 @@ import MemberCard from "@/components/MemberCard";
 import { Search, Users } from "lucide-react";
 import { type House } from "@/types";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface Member {
   user_id: string;
   full_name: string;
@@ -145,7 +146,7 @@ export default function Members() {
         <div className="text-center py-20 text-muted-foreground animate-pulse">Convocando os bruxos...</div>
       ) : filtered.length === 0 ? (
         <div className="glass rounded-2xl p-10 text-center">
-          <p className="text-4xl mb-3">🔍</p>
+          <p className="text-4xl mb-3"><EmojiIcon e="🔍" /></p>
           <p className="text-muted-foreground">Nenhum membro encontrado.</p>
         </div>
       ) : (

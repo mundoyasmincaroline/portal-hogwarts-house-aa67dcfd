@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 type Recipe = { id: string; name: string; description: string | null; icon: string; difficulty: number; brew_minutes: number; ingredients: Record<string, number>; xp_reward: number; galeon_reward: number; min_level: number };
 type Brew = { id: string; recipe_id: string; status: string; ready_at: string; success: boolean | null };
 type Plant = { slug: string; name: string; icon: string };
@@ -55,7 +56,7 @@ export default function PotionsLab() {
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-6">
       <div>
-        <h1 className="font-heading text-3xl text-primary">🧪 Laboratório de Poções</h1>
+        <h1 className="font-heading text-3xl text-primary"><EmojiIcon e="🧪" /> Laboratório de Poções</h1>
         <p className="text-muted-foreground">Combine ingredientes da estufa em receitas lendárias.</p>
       </div>
 

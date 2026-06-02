@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function WorldEditor() {
   const { user } = useAuth();
   const [tab, setTab] = useState("rooms");
@@ -47,7 +48,7 @@ export default function WorldEditor() {
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-6">
       <header>
-        <h1 className="font-heading text-3xl text-primary">🛠️ Oficina do Mundo</h1>
+        <h1 className="font-heading text-3xl text-primary"><EmojiIcon e="🛠️" /> Oficina do Mundo</h1>
         <p className="text-foreground/70 font-serif italic">Crie salas, missões e feitiços. A comunidade vota e os moderadores aprovam.</p>
       </header>
       <Tabs value={tab} onValueChange={setTab}>

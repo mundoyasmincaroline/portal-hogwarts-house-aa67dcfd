@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function BirthdayBanner() {
   const [birthdayChars, setBirthdayChars] = useState<any[]>([]);
   const [birthdayMembers, setBirthdayMembers] = useState<any[]>([]);
@@ -44,7 +45,7 @@ export default function BirthdayBanner() {
       {birthdayMembers.map((m, i) => (
         <div key={`m-${i}`} className="bg-gradient-to-r from-primary/30 via-secondary to-primary/30 border border-primary/50 text-foreground px-4 py-3 rounded-xl shadow-lg flex flex-col md:flex-row items-center justify-between gap-4 animate-in slide-in-from-top-4 duration-500">
           <div className="flex items-center gap-4">
-            <div className="text-4xl animate-bounce">🎈</div>
+            <div className="text-4xl animate-bounce"><EmojiIcon e="🎈" /></div>
             <div>
               <h3 className="font-heading text-lg text-primary drop-shadow-sm">Parabéns, {m.full_name}!</h3>
               <p className="text-sm">
@@ -58,7 +59,7 @@ export default function BirthdayBanner() {
       {birthdayChars.map((c, i) => (
         <div key={`c-${i}`} className="bg-gradient-to-r from-primary/30 via-secondary to-primary/30 border border-primary/50 text-foreground px-4 py-3 rounded-xl shadow-lg flex flex-col md:flex-row items-center justify-between gap-4 animate-in slide-in-from-top-4 duration-500">
           <div className="flex items-center gap-4">
-            <div className="text-4xl animate-bounce">🎂</div>
+            <div className="text-4xl animate-bounce"><EmojiIcon e="🎂" /></div>
             <div>
               <h3 className="font-heading text-lg text-primary drop-shadow-sm">Aniversário no Mundo Bruxo!</h3>
               <p className="text-sm">

@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { MessageCircle } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface NPC {
   id: string; slug: string; name: string; role: string; house: string | null;
   personality: string; avatar_emoji: string | null; location: string | null;
@@ -34,7 +35,7 @@ export default function NPCs() {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       <header className="text-center space-y-2">
-        <div className="text-4xl">🗣️</div>
+        <div className="text-4xl"><EmojiIcon e="🗣️" /></div>
         <h1 className="font-heading text-3xl sm:text-4xl text-gold-gradient">Salão dos Retratos Falantes</h1>
         <p className="text-muted-foreground text-sm">Converse com personagens icônicos. Eles têm vida, memória e opiniões.</p>
       </header>

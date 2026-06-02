@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Users, Plus, Sword, Trophy } from "lucide-react";
 import { toast } from "sonner";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 const EMBLEMS = ["⚔️","🛡️","🦁","🐍","🦅","🦡","🐺","🦊","🐉","🦄","⚡","✨","🌙","☀️","🔥"];
 
 export default function RPTeams() {
@@ -40,7 +41,7 @@ export default function RPTeams() {
     <div className="container mx-auto px-4 py-6 max-w-6xl">
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <div>
-          <h1 className="font-heading text-2xl sm:text-3xl text-gold-gradient">⚔️ Equipes de RP</h1>
+          <h1 className="font-heading text-2xl sm:text-3xl text-gold-gradient"><EmojiIcon e="⚔️" /> Equipes de RP</h1>
           <p className="text-sm text-muted-foreground">Forme alianças, cumpra missões coletivas, suba no ranking</p>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>

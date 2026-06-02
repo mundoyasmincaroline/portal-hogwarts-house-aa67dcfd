@@ -11,11 +11,12 @@ import { Calendar, MapPin, Clock, Plus, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 function Countdown({ to }: { to: string }) {
   const [now, setNow] = useState(Date.now());
   useEffect(() => { const i = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(i); }, []);
   const diff = new Date(to).getTime() - now;
-  if (diff <= 0) return <span className="text-green-400 font-heading text-sm">AO VIVO AGORA ✦</span>;
+  if (diff <= 0) return <span className="text-green-400 font-heading text-sm">AO VIVO AGORA <EmojiIcon e="✦" /></span>;
   const d = Math.floor(diff / 86400000), h = Math.floor((diff%86400000)/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
   return <span className="text-primary font-mono text-sm">{d>0?`${d}d `:''}{h}h {m}m {s}s</span>;
 }
@@ -63,7 +64,7 @@ export default function LiveEvents() {
     <div className="container mx-auto px-4 py-6 max-w-5xl">
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <div>
-          <h1 className="font-heading text-3xl text-gold-gradient">🎭 Eventos ao Vivo</h1>
+          <h1 className="font-heading text-3xl text-gold-gradient"><EmojiIcon e="🎭" /> Eventos ao Vivo</h1>
           <p className="text-sm text-muted-foreground">Bailes, banquetes, torneios — confirme presença e ganhe recompensas</p>
         </div>
         {isAdmin && (

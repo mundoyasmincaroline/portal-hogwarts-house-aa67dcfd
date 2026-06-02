@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 type Milestone = {
   id: string;
   days_required: number;
@@ -73,9 +74,9 @@ export function AdminStreakMilestonesTab() {
   return (
     <div className="space-y-6">
       <div className="glass rounded-2xl p-6">
-        <h2 className="font-heading text-xl text-primary mb-4">🔥 Marcos de Sequência (Streak)</h2>
+        <h2 className="font-heading text-xl text-primary mb-4"><EmojiIcon e="🔥" /> Marcos de Sequência (Streak)</h2>
         <p className="text-xs text-muted-foreground mb-4">
-          Configure os dias necessários para cada marco e os bônus de XP/Galeões. Base diária fixa: <b>+10 XP / +2 🪙</b>.
+          Configure os dias necessários para cada marco e os bônus de XP/Galeões. Base diária fixa: <b>+10 XP / +2 <EmojiIcon e="🪙" /></b>.
         </p>
 
         {loading ? (
@@ -108,7 +109,7 @@ export function AdminStreakMilestonesTab() {
                   <Button size="sm" variant="ghost" onClick={() => { updateField(m.id, "active", !m.active); save({ ...m, active: !m.active }); }}>
                     {m.active ? "Desativar" : "Ativar"}
                   </Button>
-                  <Button size="sm" variant="destructive" onClick={() => remove(m.id)}>🗑️</Button>
+                  <Button size="sm" variant="destructive" onClick={() => remove(m.id)}><EmojiIcon e="🗑️" /></Button>
                 </div>
               </div>
             ))}
@@ -116,7 +117,7 @@ export function AdminStreakMilestonesTab() {
         )}
 
         <div className="mt-6 p-4 rounded-xl border border-primary/30 bg-primary/5 space-y-3">
-          <h3 className="font-heading text-sm text-primary">➕ Adicionar novo marco</h3>
+          <h3 className="font-heading text-sm text-primary"><EmojiIcon e="➕" /> Adicionar novo marco</h3>
           <div className="grid grid-cols-12 gap-2">
             <div className="col-span-2"><Input type="number" placeholder="Dias" value={novo.days_required || ""} onChange={e => setNovo({ ...novo, days_required: parseInt(e.target.value) || 0 })} /></div>
             <div className="col-span-2"><Input type="number" placeholder="XP" value={novo.xp_bonus || ""} onChange={e => setNovo({ ...novo, xp_bonus: parseInt(e.target.value) || 0 })} /></div>

@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { GraduationCap, Clock, Award } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 const GRADE_STYLE: Record<string, string> = {
   O: "bg-green-500/30 text-green-400 border-green-500/50",
   E: "bg-blue-500/30 text-blue-400 border-blue-500/50",
@@ -65,7 +66,7 @@ export default function Exams() {
 
       <div className="grid md:grid-cols-2 gap-6">
         <div>
-          <h2 className="font-heading text-lg text-gold-gradient mb-3">📜 Exames Disponíveis</h2>
+          <h2 className="font-heading text-lg text-gold-gradient mb-3"><EmojiIcon e="📜" /> Exames Disponíveis</h2>
           <div className="space-y-3">
             {exams.map(e => (
               <div key={e.id} className="glass-premium rounded-2xl p-4">

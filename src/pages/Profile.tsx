@@ -8,6 +8,7 @@ import ProfileAlbum from "@/components/profile/ProfileAlbum";
 import EditProfileButton from "@/components/profile/EditProfileButton";
 import { useProfile } from "@/hooks/features/useProfile";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function Profile() {
   const { userId } = useParams<{ userId: string }>();
   const { profile: currentUserProfile, user } = useAuth();
@@ -26,7 +27,7 @@ export default function Profile() {
 
   if (!profile) return (
     <div className="min-h-[60vh] flex flex-col items-center justify-center gap-6 text-center px-4">
-      <div className="text-6xl animate-pulse">🔮</div>
+      <div className="text-6xl animate-pulse"><EmojiIcon e="🔮" /></div>
       <p className="font-heading text-2xl text-muted-foreground">Consultando os Arquivos de Hogwarts...</p>
       <p className="text-sm text-muted-foreground/60 font-serif italic">"Nem todo bruxo pode ser encontrado nos registros."</p>
     </div>
@@ -54,14 +55,14 @@ export default function Profile() {
 
       {profileUserId && (
         <div className="space-y-4">
-          <h2 className="font-heading text-xl text-primary px-1">📜 Fichas de Personagem</h2>
+          <h2 className="font-heading text-xl text-primary px-1"><EmojiIcon e="📜" /> Fichas de Personagem</h2>
           <CharacterSheetView userId={profileUserId} isOwner={isMe} userItems={userItems} />
         </div>
       )}
 
       {profileUserId && (
         <div className="space-y-4">
-          <h2 className="font-heading text-xl text-primary px-1">🎴 Álbum de Figurinhas</h2>
+          <h2 className="font-heading text-xl text-primary px-1"><EmojiIcon e="🎴" /> Álbum de Figurinhas</h2>
           <ProfileAlbum userId={profileUserId} />
         </div>
       )}

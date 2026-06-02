@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 const THEMES = [
   { id: "estudo", icon: "📚", label: "Sala de Estudos" },
   { id: "duelo", icon: "⚔️", label: "Arena de Duelos" },
@@ -62,7 +63,7 @@ export default function RoomOfRequirement() {
   return (
     <div className="max-w-4xl mx-auto p-4 space-y-6">
       <header>
-        <h1 className="font-heading text-3xl text-primary">🚪 Sala Precisa</h1>
+        <h1 className="font-heading text-3xl text-primary"><EmojiIcon e="🚪" /> Sala Precisa</h1>
         <p className="text-foreground/70 font-serif italic">Manifeste uma sala mágica que se transforma conforme sua necessidade.</p>
       </header>
 
@@ -77,7 +78,7 @@ export default function RoomOfRequirement() {
             </button>
           ))}
         </div>
-        <Button onClick={create} className="w-full">✨ Materializar Sala</Button>
+        <Button onClick={create} className="w-full"><EmojiIcon e="✨" /> Materializar Sala</Button>
       </Card>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -92,7 +93,7 @@ export default function RoomOfRequirement() {
                   <h3 className="font-heading text-lg text-primary">{t?.icon} {r.name}</h3>
                   <div className="text-[10px] uppercase tracking-widest text-foreground/60">{t?.label}</div>
                 </div>
-                {r.owner_id === user?.id && <Button size="sm" variant="ghost" onClick={() => del(r.id)}>🗑</Button>}
+                {r.owner_id === user?.id && <Button size="sm" variant="ghost" onClick={() => del(r.id)}><EmojiIcon e="🗑" /></Button>}
               </div>
               {r.description && <p className="text-sm text-foreground/80">{r.description}</p>}
               <div className="text-xs text-foreground/60">{ms.length}/{r.max_members} bruxos dentro</div>

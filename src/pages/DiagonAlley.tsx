@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 type Shop = { id: string; slug: string; name: string; description: string | null; icon: string };
 type Item = { id: string; shop_id: string; name: string; description: string | null; icon: string; price_galeons: number; rarity: string; exclusive: boolean; stock: number };
 
@@ -44,7 +45,7 @@ export default function DiagonAlley() {
   return (
     <div className="p-4 sm:p-6 space-y-6">
       <div>
-        <h1 className="font-heading text-2xl sm:text-3xl text-primary">🛍️ Beco Diagonal</h1>
+        <h1 className="font-heading text-2xl sm:text-3xl text-primary"><EmojiIcon e="🛍️" /> Beco Diagonal</h1>
         <p className="text-muted-foreground">A rua mágica mais famosa do mundo bruxo.</p>
       </div>
 

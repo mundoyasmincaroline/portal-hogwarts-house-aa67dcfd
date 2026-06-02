@@ -1,5 +1,6 @@
 import { Component, ErrorInfo, ReactNode } from "react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface Props {
   children?: ReactNode;
   fallback?: ReactNode;
@@ -32,7 +33,7 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="min-h-[400px] flex flex-col items-center justify-center p-8 glass rounded-[2.5rem] border-2 border-red-500/20 bg-gradient-to-br from-red-950/20 via-black to-black text-center space-y-6 m-4 shadow-2xl relative overflow-hidden animate-fade-in">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(220,38,38,0.05),_transparent_70%)]" />
-          <div className="text-6xl animate-pulse filter drop-shadow-[0_0_20px_rgba(220,38,38,0.3)]">🔮</div>
+          <div className="text-6xl animate-pulse filter drop-shadow-[0_0_20px_rgba(220,38,38,0.3)]"><EmojiIcon e="🔮" /></div>
           <div className="relative z-10 space-y-4">
             <h2 className="font-heading text-3xl text-gold-gradient uppercase tracking-tighter">Perturbação na Trama Mágica</h2>
             <p className="text-muted-foreground text-sm font-serif italic max-w-md mx-auto leading-relaxed opacity-80">
@@ -53,7 +54,7 @@ export class ErrorBoundary extends Component<Props, State> {
             }}
             className="px-8 py-4 bg-primary/10 hover:bg-primary/20 border border-primary/30 rounded-full text-[10px] font-heading font-black uppercase tracking-[0.2em] text-primary transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(212,175,55,0.1)]"
           >
-            Conjurar Restauração ⚡
+            Conjurar Restauração <EmojiIcon e="⚡" />
           </button>
         </div>
       );

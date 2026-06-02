@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { MessageCircle } from "lucide-react";
 import SafeImage from "@/components/SafeImage";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface DMThread {
   partner_id: string;
   partner_name: string;
@@ -102,8 +103,8 @@ export default function DMInbox() {
         <p className="text-center text-muted-foreground py-10">Acordando as corujas...</p>
       ) : threads.length === 0 ? (
         <div className="glass rounded-2xl p-10 text-center">
-          <div className="text-4xl mb-3">🦉</div>
-          <p className="text-muted-foreground text-sm">Nenhuma conversa ainda.<br />Visite o perfil de um membro e clique em "💬 Mensagem".</p>
+          <div className="text-4xl mb-3"><EmojiIcon e="🦉" /></div>
+          <p className="text-muted-foreground text-sm">Nenhuma conversa ainda.<br />Visite o perfil de um membro e clique em "<EmojiIcon e="💬" /> Mensagem".</p>
         </div>
       ) : (
         <div className="space-y-2">

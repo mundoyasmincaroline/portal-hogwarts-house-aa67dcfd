@@ -9,6 +9,7 @@ import { Sparkles, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface Prophecy { id: string; prompt: string | null; prophecy_text: string; symbol: string | null; created_at: string; }
 
 export default function ProphecyPage() {
@@ -57,7 +58,7 @@ export default function ProphecyPage() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <header className="text-center space-y-2">
-        <div className="text-5xl animate-float">🔮</div>
+        <div className="text-5xl animate-float"><EmojiIcon e="🔮" /></div>
         <h1 className="font-heading text-3xl sm:text-4xl text-gold-gradient">Sala das Profecias</h1>
         <p className="text-muted-foreground text-sm italic">Pergunte ao Oráculo. Mas cuidado — toda profecia tem um preço.</p>
       </header>

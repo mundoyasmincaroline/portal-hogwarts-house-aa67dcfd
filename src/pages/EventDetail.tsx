@@ -8,6 +8,7 @@ import { ArrowLeft, Send, Users, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function EventDetail() {
   const { id } = useParams();
   const { user } = useAuth();
@@ -88,7 +89,7 @@ export default function EventDetail() {
         <div className="glass-premium rounded-2xl p-4 flex flex-col h-[500px]">
           <h2 className="font-heading text-sm text-gold-gradient mb-2">Chat do Evento {live && '· AO VIVO'}</h2>
           <div ref={scrollRef} className="flex-1 overflow-y-auto space-y-2 pr-2">
-            {messages.length === 0 ? <p className="text-xs text-muted-foreground text-center py-10">Seja o primeiro a comentar ✨</p> :
+            {messages.length === 0 ? <p className="text-xs text-muted-foreground text-center py-10">Seja o primeiro a comentar <EmojiIcon e="✨" /></p> :
               messages.map(m => (
                 <div key={m.id} className={`p-2 rounded-lg ${m.user_id===user?.id?'bg-primary/10 ml-8':'bg-secondary/30 mr-8'}`}>
                   <p className="text-[10px] text-primary font-heading">{m.user_id.slice(0,8)}</p>

@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Lock, MapPin } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface Room {
   id: string; slug: string; name: string; description: string; room_type: string;
   pos_x: number; pos_y: number; emoji: string | null; unlock_level: number; event_chance: number;
@@ -73,7 +74,7 @@ export default function CastleMap() {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       <header className="text-center space-y-2">
-        <div className="text-4xl">🗺️</div>
+        <div className="text-4xl"><EmojiIcon e="🗺️" /></div>
         <h1 className="font-heading text-3xl sm:text-4xl text-gold-gradient">Mapa do Castelo</h1>
         <p className="text-muted-foreground text-sm">Explore Hogwarts. Cada sala guarda surpresas.</p>
       </header>
@@ -120,7 +121,7 @@ export default function CastleMap() {
           <p className="text-sm text-muted-foreground italic font-serif">{selected.description}</p>
           {eventMsg && (
             <div className="mt-4 p-4 rounded-xl border border-primary/40 bg-primary/10 text-foreground text-sm">
-              <p className="font-heading text-primary text-xs uppercase tracking-widest mb-1">✨ Evento mágico!</p>
+              <p className="font-heading text-primary text-xs uppercase tracking-widest mb-1"><EmojiIcon e="✨" /> Evento mágico!</p>
               {eventMsg}
             </div>
           )}

@@ -6,6 +6,7 @@ import MagicalIcon from "@/components/shared/MagicalIcon";
 import MagicalEmoji from "@/components/shared/MagicalEmoji";
 import SafeImage from "./SafeImage";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 const MAP_LOCATIONS = [
   { id: "castle", name: "O Castelo", path: "/dashboard", x: "50%", y: "45%", icon: <Castle /> },
   { id: "guide", name: "Guia do Maroto", path: "/dashboard/guide", x: "30%", y: "30%", icon: <BookOpen /> },
@@ -89,8 +90,8 @@ export default function MaraudersMap({ isOpen, onClose }: { isOpen: boolean; onC
                           {/* Footprints following the location */}
                           {activeLoc === loc.id && (
                               <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex gap-4 animate-footprints-fast">
-                                  <span className="text-[#3d2b1f] text-xl rotate-12">👣</span>
-                                  <span className="text-[#3d2b1f] text-xl -rotate-12 mt-2">👣</span>
+                                  <span className="text-[#3d2b1f] text-xl rotate-12"><EmojiIcon e="👣" /></span>
+                                  <span className="text-[#3d2b1f] text-xl -rotate-12 mt-2"><EmojiIcon e="👣" /></span>
                               </div>
                           )}
                         </div>
@@ -111,7 +112,7 @@ export default function MaraudersMap({ isOpen, onClose }: { isOpen: boolean; onC
                         animationDelay: `${i * 2}s`
                     }}
                 >
-                    👣
+                    <EmojiIcon e="👣" />
                 </div>
             ))}
         </div>

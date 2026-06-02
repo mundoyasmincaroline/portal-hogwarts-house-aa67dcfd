@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 type Loc = { id: string; name: string; icon: string };
 type Entry = { id: string; location_id: string | null; title: string; entry: string; mood: string | null; created_at: string };
 type Ach = { id: string; achievement_id: string; earned_at: string };
@@ -67,12 +68,12 @@ export default function TravelJournal() {
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-6">
       <div>
-        <h1 className="font-heading text-3xl text-primary">📓 Diário de Viagem</h1>
+        <h1 className="font-heading text-3xl text-primary"><EmojiIcon e="📓" /> Diário de Viagem</h1>
         <p className="text-muted-foreground">Registre suas aventuras pelo mundo bruxo.</p>
       </div>
 
       <Card className="p-4 bg-card/60 border-primary/30">
-        <h2 className="font-heading mb-3">🏆 Conquistas de Explorador</h2>
+        <h2 className="font-heading mb-3"><EmojiIcon e="🏆" /> Conquistas de Explorador</h2>
         <div className="flex flex-wrap gap-2">
           {catalog.map((c) => {
             const got = earnedIds.has(c.id);
@@ -86,7 +87,7 @@ export default function TravelJournal() {
       </Card>
 
       <Card className="p-4 space-y-3 bg-card/60 border-primary/20">
-        <h2 className="font-heading">✍️ Nova Entrada</h2>
+        <h2 className="font-heading"><EmojiIcon e="✍️" /> Nova Entrada</h2>
         <Input placeholder="Título do registro" value={title} onChange={(e) => setTitle(e.target.value)} />
         <div className="grid grid-cols-2 gap-2">
           <Select value={locId} onValueChange={setLocId}>
@@ -103,7 +104,7 @@ export default function TravelJournal() {
           </Select>
         </div>
         <Textarea placeholder="O que aconteceu na sua viagem?" rows={4} value={body} onChange={(e) => setBody(e.target.value)} />
-        <Button onClick={save} disabled={loading}>📜 Salvar Entrada</Button>
+        <Button onClick={save} disabled={loading}><EmojiIcon e="📜" /> Salvar Entrada</Button>
       </Card>
 
       <div className="space-y-3">
@@ -120,7 +121,7 @@ export default function TravelJournal() {
                     {new Date(e.created_at).toLocaleString("pt-BR")}
                   </p>
                 </div>
-                <Button size="sm" variant="ghost" onClick={() => del(e.id)}>🗑️</Button>
+                <Button size="sm" variant="ghost" onClick={() => del(e.id)}><EmojiIcon e="🗑️" /></Button>
               </div>
               <p className="text-sm whitespace-pre-wrap">{e.entry}</p>
             </Card>

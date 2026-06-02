@@ -4,6 +4,7 @@ import { ArrowLeft, CalendarDays, MessageSquare, Sparkles, Flame, Trophy } from 
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 type Row = {
   id: string;
   claim_date: string;
@@ -145,7 +146,7 @@ export default function RPHistory() {
                 {r.character?.avatar_url ? (
                   <img src={r.character.avatar_url} alt="" className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center">🧙</div>
+                  <div className="w-full h-full flex items-center justify-center"><EmojiIcon e="🧙" /></div>
                 )}
               </div>
               <div className="min-w-0 flex-1">

@@ -31,6 +31,7 @@ import MagicalCelebration from "@/components/MagicalCelebration";
 import LevelUpCeremony from "@/components/LevelUpCeremony";
 import HouseGhost from "@/components/HouseGhost";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 const NavItem = memo(({ item, isActive, dmUnread, onClick }: { item: any, isActive: boolean, dmUnread: number, onClick: () => void }) => (
   <Link
     to={item.path}
@@ -158,7 +159,7 @@ export default function DashboardLayout() {
     return (
       <div className="flex h-dvh items-center justify-center bg-background">
         <div className="text-center">
-          <div className="text-4xl animate-float mb-4">⚡</div>
+          <div className="text-4xl animate-float mb-4"><EmojiIcon e="⚡" /></div>
           <p className="font-heading text-muted-foreground uppercase tracking-widest text-xs">Carregando portal...</p>
         </div>
       </div>

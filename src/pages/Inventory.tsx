@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Backpack, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 const RARITY_STYLE: Record<string, string> = {
   common: "border-muted",
   uncommon: "border-green-500/50",
@@ -57,8 +58,8 @@ export default function Inventory() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Link to="/dashboard/hogsmeade"><Button variant="outline" size="sm">🏪 Hogsmeade</Button></Link>
-          <Link to="/dashboard/item-trades"><Button size="sm">🤝 Trocas</Button></Link>
+          <Link to="/dashboard/hogsmeade"><Button variant="outline" size="sm"><EmojiIcon e="🏪" /> Hogsmeade</Button></Link>
+          <Link to="/dashboard/item-trades"><Button size="sm"><EmojiIcon e="🤝" /> Trocas</Button></Link>
         </div>
       </div>
 

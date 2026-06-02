@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import SafeImage from "@/components/SafeImage";
 import { Eye } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function StoriesBar() {
   const { user } = useAuth();
   const [stories, setStories] = useState<any[]>([]);
@@ -269,7 +270,7 @@ export default function StoriesBar() {
                 <p className="font-heading text-sm">{currentActiveStory.profiles?.full_name}</p>
                 <p className="text-xs opacity-75">{new Date(currentActiveStory.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</p>
               </div>
-              <button className="text-white hover:scale-110 transition-transform text-lg" onClick={() => setActiveStoryUser(null)}>✖</button>
+              <button className="text-white hover:scale-110 transition-transform text-lg" onClick={() => setActiveStoryUser(null)}><EmojiIcon e="✖" /></button>
             </div>
 
             {/* Tap zones */}
@@ -337,7 +338,7 @@ export default function StoriesBar() {
       {showAddModal && (
         <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="w-full max-w-sm glass rounded-2xl p-6 relative">
-            <button className="absolute top-4 right-4 text-muted-foreground hover:text-foreground" onClick={() => setShowAddModal(false)}>✖</button>
+            <button className="absolute top-4 right-4 text-muted-foreground hover:text-foreground" onClick={() => setShowAddModal(false)}><EmojiIcon e="✖" /></button>
             <h3 className="font-heading text-xl text-primary mb-4">Novo Story</h3>
 
             <div className="space-y-4">
@@ -355,12 +356,12 @@ export default function StoriesBar() {
               {newStoryFile ? (
                 <div className="relative inline-block w-full">
                   <img src={URL.createObjectURL(newStoryFile)} className="w-full h-32 object-cover rounded-xl border border-border" />
-                  <button className="absolute top-2 right-2 bg-destructive text-white rounded-full w-6 h-6 text-xs flex items-center justify-center" onClick={() => setNewStoryFile(null)}>✕</button>
+                  <button className="absolute top-2 right-2 bg-destructive text-white rounded-full w-6 h-6 text-xs flex items-center justify-center" onClick={() => setNewStoryFile(null)}><EmojiIcon e="✕" /></button>
                 </div>
               ) : (
                 <>
                   <label className="flex items-center justify-center gap-2 w-full py-3 rounded-xl border-2 border-dashed border-primary/40 bg-primary/5 hover:bg-primary/10 cursor-pointer transition-colors text-sm text-primary font-heading">
-                    📷 Fazer upload de foto
+                    <EmojiIcon e="📷" /> Fazer upload de foto
                     <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => { setNewStoryFile(e.target.files?.[0] || null); setNewStoryImage(""); }} />
                   </label>
                   <p className="text-[11px] text-muted-foreground text-center">— ou cole um link abaixo —</p>

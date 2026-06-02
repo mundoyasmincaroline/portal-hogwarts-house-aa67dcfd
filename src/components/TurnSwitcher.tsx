@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { HOUSES, type House } from "@/types";
 import { useCharacters } from "@/hooks/features/useCharacters";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function TurnSwitcher() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -56,7 +57,7 @@ export default function TurnSwitcher() {
                     {c.avatar_url ? (
                       <img src={c.avatar_url} alt={c.full_name} className="w-full h-full object-cover" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-base">🧙</div>
+                      <div className="w-full h-full flex items-center justify-center text-base"><EmojiIcon e="🧙" /></div>
                     )}
                   </div>
                   <div className="min-w-0 flex-1">

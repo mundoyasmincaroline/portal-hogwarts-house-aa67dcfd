@@ -3,6 +3,7 @@ import HouseCrest from "@/components/rpg/HouseCrest";
 import { Badge } from "@/components/ui/badge";
 import { isUserOnline } from "@/lib/auth";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 export interface MemberProfile {
   id: string;
   user_id: string;
@@ -37,9 +38,9 @@ export const AdminMemberCard = memo(({ member, onClick }: AdminMemberCardProps) 
     </div>
     <div className="flex flex-col items-end gap-1 shrink-0">
       {isUserOnline(member) ? (
-        <span className="text-xs text-green-500 font-medium">🟢 Online</span>
+        <span className="text-xs text-green-500 font-medium"><EmojiIcon e="🟢" /> Online</span>
       ) : (
-        <span className="text-xs text-muted-foreground">⚫ Offline</span>
+        <span className="text-xs text-muted-foreground"><EmojiIcon e="⚫" /> Offline</span>
       )}
     </div>
   </div>

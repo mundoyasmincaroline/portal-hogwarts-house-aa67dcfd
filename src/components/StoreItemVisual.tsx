@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 /**
  * StoreItemVisual — arte digital para itens da loja Gringotts
  * Gerado 100% em código: gradientes, SVG e animações por casa/categoria.
@@ -209,7 +210,7 @@ export default function StoreItemVisual({ imageUrl, name, category, isOwned }: P
         <div className="absolute inset-0 bg-green-950/70 backdrop-blur-md flex flex-col items-center justify-center z-30 animate-in fade-in duration-500">
           <div className="flex flex-col items-center gap-3 transform group-hover:scale-110 transition-all duration-700">
             <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center border border-green-500/40 shadow-[0_0_30px_rgba(34,197,94,0.4)]">
-                <span className="text-4xl">✅</span>
+                <span className="text-4xl"><EmojiIcon e="✅" /></span>
             </div>
             <span className="font-heading text-green-400 text-sm font-bold uppercase tracking-[0.3em] drop-shadow-lg">Relíquia Obtida</span>
           </div>

@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 type Position = { id: string; name: string; department: string; description: string | null; min_level: number; salary_galeons: number; icon: string };
 type Law = { id: string; code: string; title: string; description: string; penalty: string | null };
 type Mission = { id: string; title: string; description: string; department: string; difficulty: number; xp_reward: number; galeon_reward: number };
@@ -64,7 +65,7 @@ export default function Ministry() {
   return (
     <div className="p-6 space-y-6 max-w-6xl mx-auto">
       <div>
-        <h1 className="font-heading text-3xl text-primary">🏛️ Ministério da Magia</h1>
+        <h1 className="font-heading text-3xl text-primary"><EmojiIcon e="🏛️" /> Ministério da Magia</h1>
         <p className="text-muted-foreground">Sede do governo bruxo britânico. Sirva, legisle e proteja o mundo mágico.</p>
       </div>
 

@@ -6,6 +6,7 @@ import { Award, Heart, Skull, Star, TrendingUp } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 const TIERS = [
   { min: 0, title: 'Iniciante', color: 'bg-muted text-muted-foreground' },
   { min: 30, title: 'Aprendiz', color: 'bg-blue-500/20 text-blue-400' },
@@ -46,7 +47,7 @@ export default function Reputation() {
   return (
     <div className="container mx-auto px-4 py-6 max-w-5xl">
       <div className="mb-6">
-        <h1 className="font-heading text-3xl text-gold-gradient">🌟 Reputação Social</h1>
+        <h1 className="font-heading text-3xl text-gold-gradient"><EmojiIcon e="🌟" /> Reputação Social</h1>
         <p className="text-sm text-muted-foreground">Sua presença e influência no mundo bruxo</p>
       </div>
 

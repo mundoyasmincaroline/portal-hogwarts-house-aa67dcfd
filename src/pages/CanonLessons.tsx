@@ -7,6 +7,7 @@ import { Sparkles, Clock, Award, BookOpen, Wand2 } from "lucide-react";
 import SpellCastingMiniGame from "@/components/SpellCastingMiniGame";
 import AcademicProgressCard from "@/components/AcademicProgressCard";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface Lesson {
   id: string;
   title: string;
@@ -136,7 +137,7 @@ export default function CanonLessons() {
                         {l.professor?.avatar_url ? (
                           <img src={l.professor.avatar_url} alt={l.professor.canon_name} className="w-full h-full object-cover" />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-3xl">🧙</div>
+                          <div className="w-full h-full flex items-center justify-center text-3xl"><EmojiIcon e="🧙" /></div>
                         )}
                       </div>
                       <div className="min-w-0">

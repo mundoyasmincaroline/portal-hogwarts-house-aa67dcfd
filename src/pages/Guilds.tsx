@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function Guilds() {
   const { user, profile } = useAuth();
   const [guilds, setGuilds] = useState<any[]>([]);
@@ -38,13 +39,13 @@ export default function Guilds() {
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
       <header>
-        <h1 className="font-heading text-3xl text-primary">⚔️ Guildas & Guerra das Casas</h1>
+        <h1 className="font-heading text-3xl text-primary"><EmojiIcon e="⚔️" /> Guildas & Guerra das Casas</h1>
         <p className="text-foreground/70 font-serif italic">Una-se a um clã da sua casa e lute pela glória semanal.</p>
       </header>
 
       {war && (
         <section className="rounded-xl border border-primary/30 bg-card/60 p-5">
-          <h2 className="font-heading text-lg text-primary mb-3">🏆 Guerra da Semana</h2>
+          <h2 className="font-heading text-lg text-primary mb-3"><EmojiIcon e="🏆" /> Guerra da Semana</h2>
           <ul className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {scores.map(s => (
               <li key={s.id} className="text-center p-3 rounded-lg bg-background/40">

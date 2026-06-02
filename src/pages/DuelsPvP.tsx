@@ -7,6 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { Swords, Heart, Sparkles, Shield, Skull } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 type Spell = { id: string; code: string; name: string; type: string; damage: number; heal: number; shield: number; mp_cost: number; level_req: number; description: string; icon: string };
 type Match = any;
 type Action = any;
@@ -136,7 +137,7 @@ export default function DuelsPvP() {
         </div>
 
         <Card className="p-3 bg-card/50 border-primary/20 max-h-48 overflow-y-auto">
-          <div className="font-heading text-xs text-primary mb-2 uppercase tracking-widest">📜 Log do Duelo</div>
+          <div className="font-heading text-xs text-primary mb-2 uppercase tracking-widest"><EmojiIcon e="📜" /> Log do Duelo</div>
           {actions.slice().reverse().map(a => (
             <div key={a.id} className="text-xs text-foreground/80 py-0.5">
               <span className="text-primary/70">T{a.turn}</span> · {a.player === user?.id ? "Você" : "Oponente"}: {a.log_text}
@@ -170,7 +171,7 @@ export default function DuelsPvP() {
 
       {pending.length > 0 && (
         <Card className="p-4 bg-primary/10 border-primary/40">
-          <h2 className="font-heading text-primary mb-3">⚡ Desafios pendentes</h2>
+          <h2 className="font-heading text-primary mb-3"><EmojiIcon e="⚡" /> Desafios pendentes</h2>
           {pending.map(m => (
             <div key={m.id} className="flex justify-between items-center py-2">
               <span className="text-sm">Desafio recebido</span>
@@ -184,7 +185,7 @@ export default function DuelsPvP() {
       )}
 
       <Card className="p-4 bg-card/60 border-primary/30">
-        <h2 className="font-heading text-primary mb-3">🎯 Escolha um oponente</h2>
+        <h2 className="font-heading text-primary mb-3"><EmojiIcon e="🎯" /> Escolha um oponente</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
           {opponents.map(o => (
             <button key={o.user_id} onClick={() => challenge(o.user_id)} className="flex items-center gap-3 p-3 rounded-xl border border-primary/20 bg-background/50 hover:border-primary hover:bg-primary/10 transition-all">

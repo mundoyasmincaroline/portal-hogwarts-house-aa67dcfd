@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function RaidBoss() {
   const [bosses, setBosses] = useState<any[]>([]);
   const [ranking, setRanking] = useState<Record<string, any[]>>({});
@@ -28,7 +29,7 @@ export default function RaidBoss() {
   return (
     <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
       <header>
-        <h1 className="font-heading text-2xl sm:text-3xl text-primary">🐉 Chefes Cooperativos</h1>
+        <h1 className="font-heading text-2xl sm:text-3xl text-primary"><EmojiIcon e="🐉" /> Chefes Cooperativos</h1>
         <p className="text-foreground/70 font-serif italic">Una forças com todo o castelo para derrotar criaturas lendárias.</p>
       </header>
       {bosses.map(b => {
@@ -41,7 +42,7 @@ export default function RaidBoss() {
             </div>
             <Progress value={pct} />
             <p className="text-sm text-foreground/70">{b.description}</p>
-            <Button onClick={() => attack(b.id)} className="w-full">⚔️ Atacar</Button>
+            <Button onClick={() => attack(b.id)} className="w-full"><EmojiIcon e="⚔️" /> Atacar</Button>
             <div>
               <div className="text-xs uppercase tracking-widest text-foreground/60 mb-1">Top atacantes</div>
               <ul className="text-sm space-y-1">

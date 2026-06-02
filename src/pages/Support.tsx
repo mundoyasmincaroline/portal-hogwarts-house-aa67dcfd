@@ -10,6 +10,7 @@ import MagicalParticles from "@/components/MagicalParticles";
 import { toast } from "sonner";
 import { LifeBuoy, ArrowLeft, CheckCircle2 } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 const ticketSchema = z.object({
   name: z.string().trim().min(2, "Nome muito curto").max(100),
   email: z.string().trim().email("E-mail inválido").max(255),
@@ -170,7 +171,7 @@ export default function Support() {
             </Button>
 
             <p className="text-xs text-muted-foreground text-center pt-2">
-              Atendimento: 24h em dias úteis · Privacidade garantida ✦
+              Atendimento: 24h em dias úteis · Privacidade garantida <EmojiIcon e="✦" />
             </p>
           </form>
         )}

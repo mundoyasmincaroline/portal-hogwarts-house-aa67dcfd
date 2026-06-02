@@ -7,6 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { Crown, Star } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface Legend { user_id:string; prestige:number; legend_title:string; ascensions:number; bonus_xp_multiplier:number; last_ascended_at:string|null; }
 
 export default function EndTimes() {
@@ -77,10 +78,10 @@ export default function EndTimes() {
       <Card className="border-border/50 bg-card/40">
         <CardHeader><CardTitle className="font-heading text-lg">O que você ganha ao ascender?</CardTitle></CardHeader>
         <CardContent className="space-y-2 text-sm text-foreground/70">
-          <p>✨ +10% de XP permanente por ascensão (acumulativo)</p>
-          <p>👑 Título de Lenda visível em toda a comunidade</p>
-          <p>🏆 Lugar eterno na história de Hogwarts</p>
-          <p className="text-destructive">⚠ Seu nível e XP serão resetados — mas seu prestígio permanece para sempre.</p>
+          <p><EmojiIcon e="✨" /> +10% de XP permanente por ascensão (acumulativo)</p>
+          <p><EmojiIcon e="👑" /> Título de Lenda visível em toda a comunidade</p>
+          <p><EmojiIcon e="🏆" /> Lugar eterno na história de Hogwarts</p>
+          <p className="text-destructive"><EmojiIcon e="⚠" /> Seu nível e XP serão resetados — mas seu prestígio permanece para sempre.</p>
         </CardContent>
       </Card>
     </div>

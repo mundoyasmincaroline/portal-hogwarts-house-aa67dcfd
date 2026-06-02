@@ -4,6 +4,7 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import EmojiIcon from "@/components/shared/EmojiIcon";
 import {
   ResponsiveContainer,
   LineChart,
@@ -52,7 +53,7 @@ export default function AdminAnalytics() {
   if (isAdmin === false) {
     return (
       <div className="text-center py-24">
-        <p className="text-6xl">🚫</p>
+        <p className="text-6xl"><EmojiIcon e="🚫" /></p>
         <p className="font-heading text-2xl text-red-400 mt-3">Acesso restrito</p>
         <Button variant="outline" className="mt-4" onClick={() => navigate("/dashboard")}>
           Voltar
@@ -68,7 +69,7 @@ export default function AdminAnalytics() {
   return (
     <div className="container mx-auto max-w-6xl px-4 py-8 space-y-6">
       <header>
-        <h1 className="font-heading text-2xl sm:text-3xl text-gold-gradient">📊 Analytics & Insights</h1>
+        <h1 className="font-heading text-2xl sm:text-3xl text-gold-gradient"><EmojiIcon e="📊" /> Analytics & Insights</h1>
         <p className="text-muted-foreground text-sm">
           Comportamento da geração, retenção e conversão VIP
         </p>

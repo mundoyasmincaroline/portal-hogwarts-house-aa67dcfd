@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 type Loc = { id: string; slug: string; name: string; region: string; description: string | null; icon: string; pos_x: number; pos_y: number; min_level: number; danger_level: number; travel_cost: number };
 
 export default function WorldMap() {
@@ -30,7 +31,7 @@ export default function WorldMap() {
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       <div>
-        <h1 className="font-heading text-3xl text-primary">🌍 Mapa do Mundo Mágico</h1>
+        <h1 className="font-heading text-3xl text-primary"><EmojiIcon e="🌍" /> Mapa do Mundo Mágico</h1>
         <p className="text-muted-foreground">Clique em um marco para ver detalhes e viajar.</p>
       </div>
 
@@ -52,7 +53,7 @@ export default function WorldMap() {
               <div className="absolute left-1/2 -translate-x-1/2 mt-1 text-[10px] font-heading whitespace-nowrap bg-background/80 px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition">
                 {l.name}
               </div>
-              {isCurrent && <div className="absolute -top-1 left-1/2 -translate-x-1/2 text-xs">📍</div>}
+              {isCurrent && <div className="absolute -top-1 left-1/2 -translate-x-1/2 text-xs"><EmojiIcon e="📍" /></div>}
             </button>
           );
         })}
@@ -73,7 +74,7 @@ export default function WorldMap() {
           <p className="text-sm text-muted-foreground">{active.description}</p>
           <div className="flex gap-2">
             <Button asChild><Link to={`/dashboard/travel?to=${active.id}`}>✈️ Viajar ({active.travel_cost} G)</Link></Button>
-            {visited.has(active.id) && <Badge className="bg-green-500/20 text-green-300 self-center">✓ Já visitou</Badge>}
+            {visited.has(active.id) && <Badge className="bg-green-500/20 text-green-300 self-center"><EmojiIcon e="✓" /> Já visitou</Badge>}
           </div>
         </Card>
       )}
@@ -87,7 +88,7 @@ export default function WorldMap() {
                 <h3 className="font-heading text-sm">{l.name}</h3>
                 <p className="text-xs text-muted-foreground">{l.region}</p>
               </div>
-              {visited.has(l.id) && <span className="text-green-400">✓</span>}
+              {visited.has(l.id) && <span className="text-green-400"><EmojiIcon e="✓" /></span>}
             </div>
           </Card>
         ))}
