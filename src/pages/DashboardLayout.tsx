@@ -10,7 +10,6 @@ import MagicalGaleon from "@/components/shared/MagicalGaleon";
 import { HOUSES } from "@/types/house";
 import { type House } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
-import { isSoundEnabled, toggleSound } from "@/services/core/soundService";
 import Notifications from "@/components/Notifications";
 import PendingApproval from "@/pages/PendingApproval";
 import RulesAgreement from "@/pages/RulesAgreement";
