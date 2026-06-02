@@ -305,16 +305,13 @@ export default function AdminFinance() {
   );
 }
 
-function KPIItem({ title, value, icon: Icon, color, trend }: any) {
+function KPIItem({ title, value, icon: Icon, color }: any) {
   return (
     <Card className="glass rounded-[2rem] p-6 border-white/10 bg-black/40 hover:border-primary/30 transition-all group overflow-hidden relative">
       <div className="absolute top-0 right-0 w-24 h-24 bg-current opacity-5 blur-2xl group-hover:opacity-10 transition-opacity -mr-8 -mt-8" style={{ color: color.replace('text-', '') }} />
       <div className="flex justify-between items-start mb-4 relative z-10">
         <div className={`p-3 rounded-2xl bg-white/5 border border-white/10 ${color}`}>
           <Icon size={24} />
-        </div>
-        <div className="flex items-center gap-1 text-green-400 text-[10px] font-bold bg-green-400/10 px-2 py-1 rounded-full border border-green-400/20">
-          <ArrowUpRight size={10} /> {trend}
         </div>
       </div>
       <div className="relative z-10">
