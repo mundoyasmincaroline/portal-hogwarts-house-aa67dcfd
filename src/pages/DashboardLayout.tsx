@@ -24,6 +24,7 @@ import { AtmosphericBackground } from "@/components/shared/AtmosphericBackground
 import { MagicalClock } from "@/components/shared/MagicalClock";
 import AmbientAudio from "@/components/AmbientAudio";
 import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
+import DailyRPSlot from "@/components/DailyRPSlot";
 
 const NavItem = memo(({ item, isActive, dmUnread, onClick }: { item: any, isActive: boolean, dmUnread: number, onClick: () => void }) => (
   <Link
@@ -269,6 +270,10 @@ export default function DashboardLayout() {
           <div className="page-container px-3 sm:px-6 pt-4 sm:pt-8">
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                <MagicalClock />
+            </div>
+
+            <div className="mb-6">
+              <DailyRPSlot />
             </div>
 
             <AnimatePresence mode="wait">
