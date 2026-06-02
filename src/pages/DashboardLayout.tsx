@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { useImmersion } from "@/hooks/core/useImmersion";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { LogOut, Volume2, VolumeX, Menu, Castle } from "lucide-react";
+import { LogOut, Menu, Castle } from "lucide-react";
 import { useAuth, isUserOnline } from "@/lib/auth";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import HouseCrest from "@/components/rpg/HouseCrest";
