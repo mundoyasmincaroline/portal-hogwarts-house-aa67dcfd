@@ -89,7 +89,7 @@ export default function AmbientAudio({ className }: { className?: string }) {
       aria-label={enabled ? "Desligar trilha mágica" : "Ligar trilha mágica do castelo"}
       title={enabled ? "Desligar trilha mágica" : "Ligar trilha mágica do castelo"}
       className={cn(
-        "touch-target w-9 h-9 text-muted-foreground hover:bg-primary/10 hover:text-primary rounded-xl border border-transparent hover:border-primary/20 transition-all active:scale-90",
+        "touch-target w-10 h-10 text-foreground/85 hover:bg-primary/15 hover:text-primary rounded-xl border border-transparent hover:border-primary/25 transition-all active:scale-90",
         enabled && "text-primary bg-primary/10 border-primary/20",
         className
       )}

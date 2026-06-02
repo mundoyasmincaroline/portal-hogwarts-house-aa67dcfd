@@ -86,7 +86,7 @@ export default function Notifications() {
           setOpen(!open);
           if (!open) cast('whoosh', { volume: 0.2 });
         }}
-        className="relative touch-target text-muted-foreground hover:text-primary transition-all duration-300 rounded-xl hover:bg-primary/10 active:scale-90 group"
+        className="relative touch-target w-10 h-10 text-foreground/85 hover:text-primary transition-all duration-300 rounded-xl hover:bg-primary/15 active:scale-90 group"
         aria-label="Notificações"
       >
         <div className="relative z-10 text-xl group-hover:rotate-12 transition-transform">🦉</div>
@@ -110,7 +110,7 @@ export default function Notifications() {
             {notifications.length === 0 ? (
               <div className="p-10 text-center space-y-3">
                 <div className="text-4xl opacity-20 grayscale">🦉</div>
-                <p className="text-xs text-muted-foreground italic font-serif">O corujal está silencioso hoje.</p>
+                <p className="text-xs text-foreground/70 italic font-serif">O corujal está silencioso hoje.</p>
               </div>
             ) : (
               <div className="divide-y divide-white/5">
@@ -127,11 +127,11 @@ export default function Notifications() {
                           <h4 className={`text-sm leading-tight mb-1 ${!n.read ? "font-bold text-foreground" : "font-medium text-foreground/70"}`}>
                             {n.title === 'mention' ? '🦉 Menção' : n.title === 'system' ? '📜 Aviso' : n.title}
                           </h4>
-                          <span className="text-[8px] text-muted-foreground/30 font-mono shrink-0 whitespace-nowrap">
+                          <span className="text-[9px] text-foreground/55 font-mono shrink-0 whitespace-nowrap">
                              {new Date(n.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                           </span>
                         </div>
-                        <p className="text-xs text-muted-foreground/80 leading-relaxed italic font-serif">{n.message}</p>
+                        <p className="text-xs text-foreground/75 leading-relaxed italic font-serif">{n.message}</p>
                         
                         {n.link && (
                           <Link 

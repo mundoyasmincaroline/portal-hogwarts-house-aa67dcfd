@@ -112,9 +112,9 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
     if (isMe) return null;
     const configs = {
       none:             { icon: <UserPlus size={12} />, label: "Adicionar",  cls: "bg-primary/20 text-primary border-primary/40 hover:bg-primary/40" },
-      pending_sent:     { icon: <Clock size={12} />,    label: "Enviado",    cls: "bg-zinc-800 text-zinc-500 border-zinc-700" },
+      pending_sent:     { icon: <Clock size={12} />,    label: "Enviado",    cls: "bg-card text-zinc-500 border-zinc-700" },
       pending_received: { icon: <UserCheck size={12} />, label: "Aceitar",   cls: "bg-green-500/20 text-green-400 border-green-500/40 hover:bg-green-500/40" },
-      accepted:         { icon: <UserCheck size={12} />, label: "Amigos",    cls: "bg-zinc-800 text-zinc-400 border-zinc-700 hover:border-red-500/50 hover:text-red-400" },
+      accepted:         { icon: <UserCheck size={12} />, label: "Amigos",    cls: "bg-card text-zinc-400 border-zinc-700 hover:border-red-500/50 hover:text-red-400" },
       blocked:          { icon: null, label: "Bloqueado", cls: "bg-red-500/20 text-red-400 border-red-500/40" },
     };
     const cfg = configs[status] || configs.none;

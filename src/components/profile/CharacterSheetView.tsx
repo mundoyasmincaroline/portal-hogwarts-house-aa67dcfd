@@ -38,7 +38,7 @@ function Field({ label, value }: { label: string; value?: string | number | null
   if (!value && value !== 0) return null;
   return (
     <div className="space-y-0.5">
-      <p className="text-[10px] uppercase tracking-widest text-muted-foreground/70 font-heading">{label}</p>
+      <p className="text-[10px] uppercase tracking-widest text-muted-foreground/95 font-heading">{label}</p>
       <p className="text-sm text-foreground leading-relaxed">{value}</p>
     </div>
   );
@@ -303,7 +303,7 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
               <div className="sm:col-span-2 space-y-3">
                 {char.secrets && (
                   <div className="bg-secondary/40 rounded-xl p-3 border border-border/50">
-                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground/70 font-heading mb-1">Segredos</p>
+                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground/95 font-heading mb-1">Segredos</p>
                     <p className="text-sm text-foreground/90 italic">{char.secrets}</p>
                   </div>
                 )}
@@ -322,12 +322,12 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
             <Section title="👨‍👩‍👧 Genealogia & Família">
               {char.mother ? (
                 <div className="space-y-1">
-                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground/70 font-heading">Mãe (Portal)</p>
+                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground/95 font-heading">Mãe (Portal)</p>
                   <div className="flex items-center gap-2 bg-secondary/30 p-2 rounded-lg border border-border/40">
                     <SafeImage src={char.mother.avatar_url} alt={char.mother.full_name} className="w-8 h-8 rounded-full object-cover border border-primary/20" fallbackEmoji="🧙" fallbackText={char.mother.full_name} />
                     <div className="flex-1 overflow-hidden">
                       <p className="text-xs font-heading truncate">{char.mother.full_name}</p>
-                      <p className="text-[9px] text-primary/60">{HOUSE_LABELS[char.mother.house] || char.mother.house}</p>
+                      <p className="text-[9px] text-primary/90">{HOUSE_LABELS[char.mother.house] || char.mother.house}</p>
                     </div>
                   </div>
                 </div>
@@ -337,12 +337,12 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
 
               {char.father ? (
                 <div className="space-y-1">
-                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground/70 font-heading">Pai (Portal)</p>
+                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground/95 font-heading">Pai (Portal)</p>
                   <div className="flex items-center gap-2 bg-secondary/30 p-2 rounded-lg border border-border/40">
                     <SafeImage src={char.father.avatar_url} alt={char.father.full_name} className="w-8 h-8 rounded-full object-cover border border-primary/20" fallbackEmoji="🧙" fallbackText={char.father.full_name} />
                     <div className="flex-1 overflow-hidden">
                       <p className="text-xs font-heading truncate">{char.father.full_name}</p>
-                      <p className="text-[9px] text-primary/60">{HOUSE_LABELS[char.father.house] || char.father.house}</p>
+                      <p className="text-[9px] text-primary/90">{HOUSE_LABELS[char.father.house] || char.father.house}</p>
                     </div>
                   </div>
                 </div>
@@ -372,7 +372,7 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
               {userItems.length === 0 ? (
                 <div className="col-span-full py-6 bg-black/20 rounded-2xl border border-dashed border-white/10 text-center">
                   <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Baú Vazio</p>
-                  <p className="text-[8px] text-muted-foreground/50 mt-1 italic">Visite a Loja Gringotts para adquirir itens e equipamentos.</p>
+                  <p className="text-[8px] text-muted-foreground/85 mt-1 italic">Visite a Loja Gringotts para adquirir itens e equipamentos.</p>
                 </div>
               ) : (
                 userItems.map(ui => (

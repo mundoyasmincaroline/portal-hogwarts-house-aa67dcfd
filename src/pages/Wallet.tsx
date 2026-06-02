@@ -76,7 +76,7 @@ export default function Wallet() {
               <>
                 <p className="font-heading text-2xl text-foreground">{vipConf.icon} {vipConf.name}</p>
                 {vipExpires && (
-                  <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1 opacity-70">
+                  <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1 opacity-95">
                     <Calendar size={12} /> Expira em {new Date(vipExpires).toLocaleDateString("pt-BR")}
                   </p>
                 )}
@@ -96,7 +96,7 @@ export default function Wallet() {
         <div className="glass rounded-2xl p-6 border border-border/30">
           <p className="text-xs text-muted-foreground font-heading uppercase tracking-widest mb-1">Total Investido</p>
           <p className="font-heading text-2xl text-foreground">R$ {totalSpent.toFixed(2).replace(".", ",")}</p>
-          <p className="text-xs text-muted-foreground mt-2 opacity-70">{paidOrders.length} {paidOrders.length === 1 ? "compra realizada" : "compras realizadas"}</p>
+          <p className="text-xs text-muted-foreground mt-2 opacity-95">{paidOrders.length} {paidOrders.length === 1 ? "compra realizada" : "compras realizadas"}</p>
         </div>
       </div>
 
@@ -140,7 +140,7 @@ export default function Wallet() {
             <h2 className="font-heading text-2xl text-foreground mb-1 flex items-center gap-3">
               <Gift size={24} className="text-green-400" /> Recompensas do Portal
             </h2>
-            <p className="text-sm text-muted-foreground font-serif italic opacity-70">"A atividade é recompensada com ouro para os bruxos dedicados."</p>
+            <p className="text-sm text-muted-foreground font-serif italic opacity-95">"A atividade é recompensada com ouro para os bruxos dedicados."</p>
           </div>
           <Link to="/dashboard/store">
             <Button variant="magical" size="sm" className="text-[10px] h-10 px-6 rounded-xl">
@@ -160,7 +160,7 @@ export default function Wallet() {
                 </div>
               </div>
               <p className="text-sm font-heading text-foreground mb-1">{w.label}</p>
-              <p className="text-[10px] text-muted-foreground font-serif italic opacity-60 leading-relaxed">{w.tip}</p>
+              <p className="text-[10px] text-muted-foreground font-serif italic opacity-90 leading-relaxed">{w.tip}</p>
             </div>
           ))}
         </div>

@@ -208,7 +208,7 @@ export default function GringottsStore() {
     <div className="max-w-7xl mx-auto space-y-16 pb-24 px-4 sm:px-6">
       <div className="text-center space-y-6 mb-16">
         <h1 className="text-4xl sm:text-6xl md:text-8xl font-heading text-gold-gradient tracking-tighter drop-shadow-[0_15px_40px_rgba(212,175,55,0.5)]">Gringotts Bank</h1>
-        <p className="text-muted-foreground/60 text-xl font-serif italic max-w-2xl mx-auto leading-relaxed">"Fortius Quo Fidelius" — Mais forte quanto mais fiel.</p>
+        <p className="text-muted-foreground/90 text-xl font-serif italic max-w-2xl mx-auto leading-relaxed">"Fortius Quo Fidelius" — Mais forte quanto mais fiel.</p>
       </div>
 
       <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
@@ -302,7 +302,7 @@ export default function GringottsStore() {
           <div className="text-center py-24 space-y-4 animate-in fade-in duration-700">
             <div className="text-7xl opacity-30">🪄</div>
             <p className="font-heading text-2xl text-muted-foreground">Os estoques de Gringotts estão sendo repostos...</p>
-            <p className="text-sm text-muted-foreground/50 font-serif italic">"Os goblins trabalham dia e noite. Volte em breve."</p>
+            <p className="text-sm text-muted-foreground/85 font-serif italic">"Os goblins trabalham dia e noite. Volte em breve."</p>
           </div>
         ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-8">
