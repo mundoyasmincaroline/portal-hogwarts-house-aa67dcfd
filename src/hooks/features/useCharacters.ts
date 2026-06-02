@@ -40,7 +40,8 @@ export function useCharacters() {
       }));
 
       toast.success(`✨ Turno: ${target?.full_name}`);
-      setTimeout(() => window.location.reload(), 350);
+      // Refresca o perfil sem recarregar a página (preserva scroll/estado)
+      try { await useAuth.getState().fetchProfile(user.id); } catch { /* ignore */ }
     } catch (error: any) {
       toast.error("Erro ao trocar de personagem: " + error.message);
     } finally {

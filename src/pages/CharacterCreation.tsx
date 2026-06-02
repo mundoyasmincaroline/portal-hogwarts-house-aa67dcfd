@@ -133,19 +133,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
       toast.error("Por favor, preencha o nome e selecione uma Casa.");
       return;
     }
-    
-    // Verificação de campos obrigatórios (Rito é mais flexível no primeiro personagem)
-    const isFirstCharacter = !profile?.active_character_id;
-    const requiredFields = ["full_name", "house", "blood_status", "wand", "patronus", "personality", "strength", "weakness", "fears", "dreams"];
-    
-    // Na primeira ficha (onboarding), apenas nome e casa são estritamente bloqueantes para a UI, 
-    // mas vamos garantir que o formulário não falhe silenciosamente se faltar algo essencial no DB.
-    if (!form.full_name || !form.house) {
-      toast.error("Nome e Casa são obrigatórios para atravessar o portal!");
-      setLoading(false);
-      return;
-    }
-    
+
     if (type === "canon" && !form.canon_portrayed_by) {
       toast.error("Informe o ator/atriz original do personagem Canon!");
       return;
@@ -220,8 +208,10 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
 
       // Atualiza o estado local imediatamente para evitar loop na tela de seleção
       useAuth.setState((state) => ({
-        profile: state.profile ? { ...state.profile, active_character_id: char!.id } : null
+        profile: state.profile ? { ...state.profile, active_character_id: char!.id, house: form.house as any } : null
       }));
+      // Sincroniza demais campos derivados (house, blood_status pelo trigger)
+      try { await useAuth.getState().fetchProfile(user.id); } catch { /* ignore */ }
 
       if (isFirstChar) {
         await reward(user.id, 'first_character');
