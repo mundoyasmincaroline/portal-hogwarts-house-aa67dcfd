@@ -98,16 +98,18 @@ export default function Register() {
     // (RLS do storage exige sessão ativa). O blood_status já é gravado via metadata pelo trigger.
     if (result.success && avatarFile) {
       try {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          try {
-            localStorage.setItem("pending_avatar_upload", JSON.stringify({
-              dataUrl: reader.result,
-              name: avatarFile.name,
-            }));
-          } catch { /* quota */ }
-        };
-        reader.readAsDataURL(avatarFile);
+        // Comprime a imagem antes de salvar no localStorage (cota ~5MB).
+        // Original em base64 pode ser ~33% maior que o arquivo cru e estourar a cota.
+        const compressed = await compressImageToDataUrl(avatarFile, 800, 0.85);
+        try {
+          localStorage.setItem("pending_avatar_upload", JSON.stringify({
+            dataUrl: compressed,
+            name: avatarFile.name,
+          }));
+        } catch (quotaErr) {
+          console.warn("localStorage quota excedida ao salvar avatar pendente", quotaErr);
+          toast.warning("Não foi possível guardar sua foto agora. Você poderá enviá-la na ficha do personagem.");
+        }
       } catch { /* ignore */ }
     }
 
@@ -419,4 +421,38 @@ function NavRow({ onBack, onNext, disabled, labelNext = "Continuar" }: { onBack:
       </Button>
     </div>
   );
+}
+
+/**
+ * Comprime uma imagem para JPEG redimensionado em um DataURL.
+ * Mantém proporção, limita o lado maior a `maxSide` e usa qualidade `quality` (0..1).
+ * Em caso de falha, faz fallback para o DataURL original.
+ */
+async function compressImageToDataUrl(file: File, maxSide = 800, quality = 0.85): Promise<string> {
+  const readAsDataUrl = (f: File) => new Promise<string>((resolve, reject) => {
+    const r = new FileReader();
+    r.onloadend = () => resolve(String(r.result || ""));
+    r.onerror = () => reject(r.error);
+    r.readAsDataURL(f);
+  });
+  try {
+    const original = await readAsDataUrl(file);
+    const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const i = new Image();
+      i.onload = () => resolve(i);
+      i.onerror = () => reject(new Error("Falha ao decodificar imagem"));
+      i.src = original;
+    });
+    const ratio = Math.min(1, maxSide / Math.max(img.width, img.height));
+    const w = Math.max(1, Math.round(img.width * ratio));
+    const h = Math.max(1, Math.round(img.height * ratio));
+    const canvas = document.createElement("canvas");
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return original;
+    ctx.drawImage(img, 0, 0, w, h);
+    return canvas.toDataURL("image/jpeg", quality);
+  } catch {
+    return await readAsDataUrl(file);
+  }
 }
