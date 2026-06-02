@@ -9,7 +9,7 @@ export const ProfileAboutTab = memo(({ profile, userBadges, userItems }: { profi
 
   return (
     <>
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="glass rounded-xl p-4 text-center">
           <p className="text-xl font-heading text-primary">{profile.xp}</p>
           <p className="text-[8px] text-muted-foreground uppercase">XP Total</p>

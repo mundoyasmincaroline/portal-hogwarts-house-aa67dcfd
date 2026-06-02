@@ -49,7 +49,7 @@ export default function Wallet() {
           </div>
 
           <div className="w-full md:w-auto">
-            <div className="glass rounded-[2rem] p-8 border-yellow-400/30 bg-gradient-to-br from-yellow-900/30 to-black/60 shadow-2xl text-center relative group min-w-[280px]">
+            <div className="glass rounded-[2rem] p-6 sm:p-8 border-yellow-400/30 bg-gradient-to-br from-yellow-900/30 to-black/60 shadow-2xl text-center relative group w-full md:min-w-[280px]">
               <div className="absolute inset-0 bg-yellow-400/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
               <p className="text-[10px] text-yellow-400/70 font-heading uppercase tracking-[0.2em] mb-4">Saldo Disponível</p>
               <div className="flex items-center justify-center gap-3 mb-6">
