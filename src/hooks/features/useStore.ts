@@ -35,6 +35,8 @@ export function useStore() {
     }
   }, [user]);
 
+  useEffect(() => { loadStore(); }, [loadStore]);
+
   const buyItem = async (item: StoreItem) => {
     if (!user || !profile || buyingId) {
       if (!user || !profile) toast.error("Você precisa estar logado.");
