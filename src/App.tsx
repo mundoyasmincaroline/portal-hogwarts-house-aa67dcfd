@@ -40,6 +40,7 @@ const GringottsStore = lazy(() => import("./pages/GringottsStore"));
 const Duels = lazy(() => import("./pages/Duels"));
 const Wallet = lazy(() => import("./pages/Wallet"));
 const BattlePass = lazy(() => import("./pages/BattlePass"));
+const Clubs = lazy(() => import("./pages/Clubs"));
 const Terms = lazy(() => import("./pages/Terms"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const ParentsGuide = lazy(() => import("./pages/ParentsGuide"));
