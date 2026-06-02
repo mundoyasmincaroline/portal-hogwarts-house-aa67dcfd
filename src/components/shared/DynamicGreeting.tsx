@@ -48,7 +48,7 @@ const DynamicGreeting = memo(() => {
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading text-gold-gradient mb-1 tracking-tighter">
           {greeting.title}, {profile.full_name.split(' ')[0]}!
         </h2>
-        <p className="text-base sm:text-lg text-muted-foreground/80 font-serif italic max-w-xl">"{greeting.desc}"</p>
+        <p className="text-base sm:text-lg text-foreground/80 font-serif italic max-w-xl">"{greeting.desc}"</p>
       </div>
     </div>
   );

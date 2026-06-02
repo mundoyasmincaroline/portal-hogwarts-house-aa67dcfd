@@ -98,10 +98,10 @@ export default function ChatRoom() {
         return <span key={i} className="italic text-muted-foreground/60 text-[13px]">{part}</span>;
       }
       if (part.startsWith('{') && part.endsWith('}')) {
-        return <span key={i} className="text-pink-400/70 italic font-serif text-[13px]">[{part.slice(1, -1)}]</span>;
+        return <span key={i} className="text-primary/85 italic font-serif text-[13px]">[{part.slice(1, -1)}]</span>;
       }
       if (part.startsWith('~') && part.endsWith('~')) {
-        return <span key={i} className="text-white/40 italic text-[12px] tracking-widest">{part}</span>;
+        return <span key={i} className="text-foreground/55 italic text-[12px] tracking-widest">{part}</span>;
       }
       if (part.startsWith('"') && part.endsWith('"')) {
         return <span key={i} className="font-semibold text-foreground/90 border-l-2 border-primary/20 pl-2 ml-1">{part}</span>;
@@ -548,7 +548,7 @@ export default function ChatRoom() {
               <div className="text-center space-y-6 max-w-xs animate-in fade-in zoom-in duration-1000">
                 <MagicalEmoji emoji="🕯️" size="lg" glowColor="rgba(255, 255, 255, 0.1)" className="mx-auto grayscale opacity-40" />
                 <div className="space-y-2">
-                  <p className="text-white/40 text-lg font-serif italic">"O silêncio é a primeira página de um grande livro."</p>
+                  <p className="text-foreground/55 text-lg font-serif italic">"O silêncio é a primeira página de um grande livro."</p>
                   <p className="text-[10px] text-white/20 uppercase tracking-[0.3em] font-bold">Seja o primeiro a escrever</p>
                 </div>
               </div>
@@ -727,7 +727,7 @@ export default function ChatRoom() {
             
             <Button type="submit" variant="plaque" size="icon" className="w-14 h-14 rounded-2xl shadow-xl shadow-primary/10 active:scale-95 transition-transform" disabled={!input.trim() || cooldown > 0}>
               {cooldown > 0 ? (
-                <span className="text-xs font-bold text-white/40">{cooldown}</span>
+                <span className="text-xs font-bold text-foreground/55">{cooldown}</span>
               ) : (
                 <Zap size={22} className="text-white animate-pulse" />
               )}

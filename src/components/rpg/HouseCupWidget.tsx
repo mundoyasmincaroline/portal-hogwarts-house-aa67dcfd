@@ -98,7 +98,7 @@ export default function HouseCupWidget({ isLanding = false }: { isLanding?: bool
               </div>
             </div>
             <div className="hidden sm:block">
-              <p className="text-[8px] font-heading text-yellow-500/80 uppercase tracking-[0.3em] font-bold leading-none mb-1">Liderando</p>
+              <p className="text-[8px] font-heading text-yellow-500/95 uppercase tracking-[0.3em] font-bold leading-none mb-1">Liderando</p>
               <p className={`text-xs font-heading uppercase tracking-tight ${leader?.color.replace('bg-', 'text-')} font-bold leading-none`}>
                 {leader?.label}
               </p>

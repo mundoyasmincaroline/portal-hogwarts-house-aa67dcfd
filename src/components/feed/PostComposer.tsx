@@ -76,7 +76,7 @@ export function PostComposer({ bannedWords }: PostComposerProps) {
           "O que o Chapéu Seletor diria sobre seu dia?",
         ][new Date().getMinutes() % 4]}
         maxLength={1000}
-        className="w-full bg-black/60 rounded-2xl p-6 border border-white/10 focus:border-primary/50 transition-all resize-none text-base sm:text-lg text-foreground placeholder:text-foreground/55 focus:outline-none min-h-[140px] font-serif italic shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)] leading-relaxed"
+        className="w-full bg-[#14100a]/80 rounded-2xl p-6 border border-white/10 focus:border-primary/50 transition-all resize-none text-base sm:text-lg text-foreground placeholder:text-foreground/55 focus:outline-none min-h-[140px] font-serif italic shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)] leading-relaxed"
       />
       
       <div className="flex flex-col sm:flex-row gap-4 mt-6 pt-6 border-t border-white/10">
@@ -87,7 +87,7 @@ export function PostComposer({ bannedWords }: PostComposerProps) {
             value={newMusicUrl} 
             onChange={(e) => setNewMusicUrl(e.target.value)} 
             placeholder="Link do Spotify ou MP3..." 
-            className="w-full bg-black/60 rounded-xl pl-11 pr-4 py-4 text-xs text-foreground focus:outline-none border border-white/10 focus:border-primary/40 transition-all placeholder:text-foreground/50" 
+            className="w-full bg-[#14100a]/80 rounded-xl pl-11 pr-4 py-4 text-xs text-foreground focus:outline-none border border-white/10 focus:border-primary/40 transition-all placeholder:text-foreground/50" 
           />
         </div>
         <div className="flex items-center justify-between sm:justify-end gap-6">

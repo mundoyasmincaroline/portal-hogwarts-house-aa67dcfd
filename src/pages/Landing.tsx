@@ -87,7 +87,7 @@ export default function Landing() {
         <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-6 py-4">
           <div className="flex flex-col">
             <span className="font-heading text-lg text-gold-gradient drop-shadow-md">✦ Hogwarts House</span>
-            <span className="text-[10px] text-white/50 font-mono tracking-widest uppercase">
+            <span className="text-[10px] text-white/85 font-mono tracking-widest uppercase">
               {currentTime.toLocaleDateString("pt-BR")} · {currentTime.toLocaleTimeString("pt-BR")}
             </span>
           </div>
@@ -112,28 +112,28 @@ export default function Landing() {
           <div className="grid grid-cols-2 sm:flex sm:items-center sm:justify-center gap-4 sm:gap-10 mb-8 sm:mb-12 max-w-[280px] sm:max-w-none mx-auto animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-500">
             <div className="relative group text-center">
               <p className="font-heading text-xl sm:text-4xl text-gold-gradient">{memberCount !== null ? memberCount.toLocaleString("pt-BR") : "10"}</p>
-              <p className="text-[8px] sm:text-[10px] text-primary/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Bruxos</p>
+              <p className="text-[8px] sm:text-[10px] text-primary/90 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Bruxos</p>
             </div>
             
             <div className="w-px h-6 sm:h-10 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden sm:block" />
             
             <div className="relative group text-center border-l border-primary/10 sm:border-none pl-4 sm:pl-0">
               <p className="font-heading text-xl sm:text-4xl text-gold-gradient">4</p>
-              <p className="text-[8px] sm:text-[10px] text-primary/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Casas</p>
+              <p className="text-[8px] sm:text-[10px] text-primary/90 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Casas</p>
             </div>
 
             <div className="w-px h-6 sm:h-10 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden sm:block" />
 
             <div className="relative group text-center">
               <p className="font-heading text-xl sm:text-4xl text-gold-gradient">80+</p>
-              <p className="text-[8px] sm:text-[10px] text-primary/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Itens</p>
+              <p className="text-[8px] sm:text-[10px] text-primary/90 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Itens</p>
             </div>
 
             <div className="w-px h-6 sm:h-10 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden sm:block" />
 
             <div className="relative group text-center border-l border-primary/10 sm:border-none pl-4 sm:pl-0">
               <p className="font-heading text-xl sm:text-4xl text-gold-gradient">∞</p>
-              <p className="text-[8px] sm:text-[10px] text-primary/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Magia</p>
+              <p className="text-[8px] sm:text-[10px] text-primary/90 uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold">Magia</p>
             </div>
           </div>
 
@@ -193,7 +193,7 @@ export default function Landing() {
       <div className="relative z-10 px-4 py-6 max-w-5xl mx-auto">
         <div className="flex items-center justify-between gap-3 mb-3 px-1">
           <p className="text-[10px] font-heading text-primary/80 uppercase tracking-[0.3em]">Taça das Casas · ao vivo</p>
-          <span className="text-[10px] font-mono text-white/40">tempo real</span>
+          <span className="text-[10px] font-mono text-white/75">tempo real</span>
         </div>
         <HouseCupWidget isLanding={true} />
       </div>
@@ -367,7 +367,7 @@ export default function Landing() {
                 <div className="flex flex-col gap-2">
                   <button onClick={() => navigate("/terms")} className="text-xs text-muted-foreground/50 hover:text-primary transition-colors">Termos de Uso</button>
                   <button onClick={() => navigate("/privacy")} className="text-xs text-muted-foreground/50 hover:text-primary transition-colors">Privacidade</button>
-                  <button onClick={() => navigate("/parents")} className="text-xs text-primary/60 hover:text-primary transition-colors font-bold">Para os Pais 🛡️</button>
+                  <button onClick={() => navigate("/parents")} className="text-xs text-primary/90 hover:text-primary transition-colors font-bold">Para os Pais 🛡️</button>
                   <button onClick={() => navigate("/register")} className="text-xs text-muted-foreground/50 hover:text-primary transition-colors">Solicitar Vaga</button>
 
                 </div>

@@ -51,7 +51,7 @@ export default function Wallet() {
           <div className="w-full md:w-auto">
             <div className="glass rounded-[2rem] p-6 sm:p-8 border-yellow-400/30 bg-gradient-to-br from-yellow-900/30 to-black/60 shadow-2xl text-center relative group w-full md:min-w-[280px]">
               <div className="absolute inset-0 bg-yellow-400/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-              <p className="text-[10px] text-yellow-400/70 font-heading uppercase tracking-[0.2em] mb-4">Saldo Disponível</p>
+              <p className="text-[10px] text-yellow-400/95 font-heading uppercase tracking-[0.2em] mb-4">Saldo Disponível</p>
               <div className="flex items-center justify-center gap-3 mb-6 flex-wrap">
                 <MagicalGaleon size="md" />
                 <p className="font-heading text-4xl sm:text-5xl md:text-6xl text-yellow-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.6)] break-words max-w-full leading-none">{galeons.toLocaleString("pt-BR")}</p>
@@ -76,7 +76,7 @@ export default function Wallet() {
               <>
                 <p className="font-heading text-2xl text-foreground">{vipConf.icon} {vipConf.name}</p>
                 {vipExpires && (
-                  <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1 opacity-70">
+                  <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1 opacity-95">
                     <Calendar size={12} /> Expira em {new Date(vipExpires).toLocaleDateString("pt-BR")}
                   </p>
                 )}
@@ -96,7 +96,7 @@ export default function Wallet() {
         <div className="glass rounded-2xl p-6 border border-border/30">
           <p className="text-xs text-muted-foreground font-heading uppercase tracking-widest mb-1">Total Investido</p>
           <p className="font-heading text-2xl text-foreground">R$ {totalSpent.toFixed(2).replace(".", ",")}</p>
-          <p className="text-xs text-muted-foreground mt-2 opacity-70">{paidOrders.length} {paidOrders.length === 1 ? "compra realizada" : "compras realizadas"}</p>
+          <p className="text-xs text-muted-foreground mt-2 opacity-95">{paidOrders.length} {paidOrders.length === 1 ? "compra realizada" : "compras realizadas"}</p>
         </div>
       </div>
 
@@ -140,7 +140,7 @@ export default function Wallet() {
             <h2 className="font-heading text-2xl text-foreground mb-1 flex items-center gap-3">
               <Gift size={24} className="text-green-400" /> Recompensas do Portal
             </h2>
-            <p className="text-sm text-muted-foreground font-serif italic opacity-70">"A atividade é recompensada com ouro para os bruxos dedicados."</p>
+            <p className="text-sm text-muted-foreground font-serif italic opacity-95">"A atividade é recompensada com ouro para os bruxos dedicados."</p>
           </div>
           <Link to="/dashboard/store">
             <Button variant="magical" size="sm" className="text-[10px] h-10 px-6 rounded-xl">
@@ -160,7 +160,7 @@ export default function Wallet() {
                 </div>
               </div>
               <p className="text-sm font-heading text-foreground mb-1">{w.label}</p>
-              <p className="text-[10px] text-muted-foreground font-serif italic opacity-60 leading-relaxed">{w.tip}</p>
+              <p className="text-[10px] text-muted-foreground font-serif italic opacity-90 leading-relaxed">{w.tip}</p>
             </div>
           ))}
         </div>
@@ -184,7 +184,7 @@ export default function Wallet() {
                 </div>
                 <div className="text-right">
                   <p className="text-yellow-400 font-heading text-base">R$ {o.amount_brl?.toFixed(2).replace(".", ",")}</p>
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-yellow-500/60">Processando</span>
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-yellow-500/95">Processando</span>
                 </div>
               </div>
             ))}

@@ -136,7 +136,7 @@ export default function StickerAlbum() {
               {completedBanner ? "🏆 ÁLBUM LENDÁRIO 🏆" : "Álbum de Magia"}
             </h1>
             
-            <p className="text-yellow-100/60 text-sm sm:text-lg max-w-2xl mx-auto font-serif italic leading-relaxed">
+            <p className="text-yellow-100/90 text-sm sm:text-lg max-w-2xl mx-auto font-serif italic leading-relaxed">
               "As memórias de Hogwarts estão gravadas nestas páginas. Encontre cada fragmento e restaure o equilíbrio da magia."
             </p>
           </div>

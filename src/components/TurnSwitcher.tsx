@@ -23,7 +23,7 @@ export default function TurnSwitcher() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
-          className="touch-target w-9 h-9 text-muted-foreground hover:bg-primary/10 hover:text-primary rounded-xl transition-all active:scale-90"
+          className="touch-target w-10 h-10 text-foreground/85 hover:bg-primary/15 hover:text-primary rounded-xl transition-all active:scale-90"
           title="Trocar Personagem"
         >
           <RefreshCw size={16} className={switchingId ? "animate-spin" : "transition-transform group-hover:rotate-180 duration-700"} />
