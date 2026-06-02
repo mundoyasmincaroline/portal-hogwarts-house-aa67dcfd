@@ -132,16 +132,16 @@ export default function ProfileAlbum({ userId }: { userId: string }) {
             </button>
           ))}
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-2 sm:mt-0 ml-auto w-full sm:w-auto justify-end">
-            <Button size="sm" variant="outline" className="h-8 text-[9px] sm:text-[10px] rounded-full px-3" onClick={handleShare}>
+            <Button size="sm" variant="outline" className="text-[9px] sm:text-[10px] rounded-full px-space-md" onClick={handleShare}>
               <Share2 size={12} className="mr-1 sm:mr-1.5" /> <span className="hidden xs:inline">Compartilhar</span>
             </Button>
             {isMe ? (
               <Link to="/dashboard/album">
-                <Button size="sm" variant="plaque" className="h-8 text-[9px] sm:text-[10px] rounded-full px-3">Abrir Álbum</Button>
+                <Button size="sm" variant="plaque" className="text-[9px] sm:text-[10px] rounded-full px-space-md">Abrir Álbum</Button>
               </Link>
             ) : (
               <Link to="/dashboard/trades">
-                <Button size="sm" variant="plaque" className="h-8 text-[9px] sm:text-[10px] rounded-full px-3">Trocar</Button>
+                <Button size="sm" variant="plaque" className="text-[9px] sm:text-[10px] rounded-full px-space-md">Trocar</Button>
               </Link>
             )}
           </div>

@@ -187,7 +187,7 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
               {isOwner && (
                 <button 
                   onClick={() => { setEditingPhoto(!editingPhoto); setTempUrl(char.avatar_url || ""); }}
-                  className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground p-1.5 rounded-full shadow-lg hover:scale-110 transition-transform z-10"
+                  className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground p-space-sm rounded-full shadow-lg hover:scale-110 transition-transform z-10 btn-min"
                   title="Editar foto do personagem"
                 >
                   <Edit2 size={14} />
@@ -212,10 +212,10 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
                         placeholder="Ou cole o link da foto aqui..." 
                         className="h-8 text-xs bg-secondary/50"
                       />
-                      <Button size="sm" className="h-8" onClick={saveUrl} disabled={uploading || !tempUrl}>
+                      <Button size="sm" onClick={saveUrl} disabled={uploading || !tempUrl}>
                         <Save size={14} />
                       </Button>
-                      <Button size="sm" variant="ghost" className="h-8" onClick={() => setEditingPhoto(false)}>
+                      <Button size="sm" variant="ghost" onClick={() => setEditingPhoto(false)}>
                         <X size={14} />
                       </Button>
                     </div>
