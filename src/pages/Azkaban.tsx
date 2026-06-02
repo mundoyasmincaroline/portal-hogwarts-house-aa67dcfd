@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Shield, AlertTriangle, Clock, Zap } from "lucide-react";
 import MagicalEmoji from "@/components/shared/MagicalEmoji";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function Azkaban() {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
@@ -195,11 +196,11 @@ export default function Azkaban() {
                 <Zap size={14} /> Como escapar do radar do Filch:
               </p>
               <ul className="text-xs text-muted-foreground mt-2 space-y-1">
-                <li>✅ Acesse o portal pelo menos uma vez a cada 2 dias</li>
-                <li>✅ Participe de chats, InstaHogwarts ou desafios</li>
-                <li>✅ Complete aulas e missões para ganhar XP</li>
-                <li>✅ Curta e comente posts no feed</li>
-                <li>✅ Avise nos chats se for ficar ausente (aviso de viagem)</li>
+                <li><EmojiIcon e="✅" /> Acesse o portal pelo menos uma vez a cada 2 dias</li>
+                <li><EmojiIcon e="✅" /> Participe de chats, InstaHogwarts ou desafios</li>
+                <li><EmojiIcon e="✅" /> Complete aulas e missões para ganhar XP</li>
+                <li><EmojiIcon e="✅" /> Curta e comente posts no feed</li>
+                <li><EmojiIcon e="✅" /> Avise nos chats se for ficar ausente (aviso de viagem)</li>
               </ul>
             </div>
           </div>

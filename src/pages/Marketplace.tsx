@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import EmojiIcon from "@/components/shared/EmojiIcon";
 import {
   Dialog,
   DialogContent,
@@ -189,7 +190,7 @@ export default function Marketplace() {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span className="text-4xl">🪄</span>
+                  <span className="text-4xl"><EmojiIcon e="🪄" /></span>
                 )}
               </div>
               <div>

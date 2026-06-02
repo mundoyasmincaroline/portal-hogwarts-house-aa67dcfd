@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
 import MagicalEmoji from "@/components/shared/MagicalEmoji";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function RecruitmentWidget() {
   const { profile } = useAuth();
   const [copied, setCopied] = useState(false);
@@ -57,7 +58,7 @@ export default function RecruitmentWidget() {
                  </button>
               </div>
               <Button onClick={shareViralText} variant="magical" className="w-full h-14 rounded-2xl shadow-[0_10px_30px_rgba(212,175,55,0.3)] font-heading text-sm">
-                GERAR TEXTO VIRAL 🚀
+                GERAR TEXTO VIRAL <EmojiIcon e="🚀" />
               </Button>
            </div>
         </div>

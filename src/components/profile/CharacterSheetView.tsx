@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Upload, Link as LinkIcon, Edit2, Save, X } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 const HouseCrest3D = lazy(() => import("@/components/three/HouseCrest3D"));
 
 interface Props {
@@ -89,7 +90,7 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
   if (characters.length === 0) {
     return (
       <div className="glass rounded-2xl p-10 text-center">
-        <div className="text-4xl mb-3">📜</div>
+        <div className="text-4xl mb-3"><EmojiIcon e="📜" /></div>
         <p className="text-muted-foreground text-sm">
           {isOwner ? "Você ainda não registrou nenhuma ficha de personagem." : "Este membro não registrou fichas ainda."}
         </p>
@@ -284,7 +285,7 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
           {/* Personalidade */}
           {char.personality && (
             <div className="space-y-2">
-              <h4 className="font-heading text-xs uppercase tracking-widest text-primary border-b border-primary/20 pb-1">🧠 Personalidade</h4>
+              <h4 className="font-heading text-xs uppercase tracking-widest text-primary border-b border-primary/20 pb-1"><EmojiIcon e="🧠" /> Personalidade</h4>
               <p className="text-sm text-foreground/90 leading-relaxed italic">{char.personality}</p>
             </div>
           )}

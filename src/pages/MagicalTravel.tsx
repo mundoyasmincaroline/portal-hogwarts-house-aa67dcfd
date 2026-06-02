@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 type Loc = { id: string; name: string; region: string; icon: string; danger_level: number; min_level: number; travel_cost: number };
 type Trip = { id: string; location_id: string; method: string; success: boolean; traveled_at: string; notes: string | null };
 
@@ -54,7 +55,7 @@ export default function MagicalTravel() {
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       <div>
-        <h1 className="font-heading text-3xl text-primary">✈️ Viagens Mágicas</h1>
+        <h1 className="font-heading text-3xl text-primary"><EmojiIcon e="✈️" /> Viagens Mágicas</h1>
         <p className="text-muted-foreground">Escolha um destino e um método de transporte.</p>
       </div>
 
@@ -96,12 +97,12 @@ export default function MagicalTravel() {
         </div>
 
         <Button onClick={travel} disabled={loading || !dest} className="w-full" size="lg">
-          ✨ Iniciar Viagem
+          <EmojiIcon e="✨" /> Iniciar Viagem
         </Button>
       </Card>
 
       <Card className="p-4 bg-card/60 border-primary/20">
-        <h2 className="font-heading mb-3">📜 Histórico Recente</h2>
+        <h2 className="font-heading mb-3"><EmojiIcon e="📜" /> Histórico Recente</h2>
         {trips.length === 0 ? (
           <p className="text-sm text-muted-foreground">Nenhuma viagem ainda.</p>
         ) : (
@@ -117,7 +118,7 @@ export default function MagicalTravel() {
                     <span className="text-xs text-muted-foreground ml-2">{m?.icon} {m?.label}</span>
                   </div>
                   <div className="text-xs">
-                    {t.success ? <span className="text-green-400">✓ Sucesso</span> : <span className="text-destructive">💥 Falhou</span>}
+                    {t.success ? <span className="text-green-400"><EmojiIcon e="✓" /> Sucesso</span> : <span className="text-destructive"><EmojiIcon e="💥" /> Falhou</span>}
                     <span className="text-muted-foreground ml-2">{new Date(t.traveled_at).toLocaleDateString("pt-BR")}</span>
                   </div>
                 </div>

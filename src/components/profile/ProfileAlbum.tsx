@@ -9,6 +9,7 @@ import { shareContent, buildAlbumShareText } from "@/lib/share";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface Sticker {
   id: string;
   character_name: string;
@@ -52,7 +53,7 @@ export default function ProfileAlbum({ userId }: { userId: string }) {
   if (allStickers.length === 0) {
     return (
       <div className="glass rounded-xl p-8 text-center border border-border/50">
-        <div className="text-4xl mb-4 opacity-50">📖</div>
+        <div className="text-4xl mb-4 opacity-50"><EmojiIcon e="📖" /></div>
         <p className="text-muted-foreground text-sm">O álbum mágico ainda está sendo encadernado...</p>
       </div>
     );
@@ -79,14 +80,14 @@ export default function ProfileAlbum({ userId }: { userId: string }) {
       <div className={`glass rounded-2xl p-4 border ${isComplete ? "border-yellow-400 bg-yellow-900/10" : "border-primary/20"}`}>
         {isComplete && (
           <div className="text-center mb-3 animate-pulse">
-            <p className="font-heading text-yellow-400 text-lg">🏆 ÁLBUM COMPLETO! LENDA DE HOGWARTS 🏆</p>
+            <p className="font-heading text-yellow-400 text-lg"><EmojiIcon e="🏆" /> ÁLBUM COMPLETO! LENDA DE HOGWARTS <EmojiIcon e="🏆" /></p>
           </div>
         )}
 
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <span className="font-heading text-foreground">Coleção</span>
-            {isComplete && <span className="text-xs bg-yellow-400/20 text-yellow-400 border border-yellow-400/50 px-2 py-0.5 rounded-full font-heading">COMPLETO ✨</span>}
+            {isComplete && <span className="text-xs bg-yellow-400/20 text-yellow-400 border border-yellow-400/50 px-2 py-0.5 rounded-full font-heading">COMPLETO <EmojiIcon e="✨" /></span>}
           </div>
           <span className="font-heading text-primary">{ownedCount}/{total} ({pct}%)</span>
         </div>

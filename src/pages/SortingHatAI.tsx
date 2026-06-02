@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 type Msg = { role: "user" | "assistant"; content: string };
 
 export default function SortingHatAI() {
@@ -43,7 +44,7 @@ export default function SortingHatAI() {
   return (
     <div className="container mx-auto max-w-2xl px-4 py-8 space-y-4">
       <header className="text-center">
-        <h1 className="font-heading text-4xl text-primary">🎩 Chapéu Seletor</h1>
+        <h1 className="font-heading text-4xl text-primary"><EmojiIcon e="🎩" /> Chapéu Seletor</h1>
         <p className="text-muted-foreground mt-2 italic">
           "Não há nada escondido em sua cabeça que eu não veja..."
         </p>

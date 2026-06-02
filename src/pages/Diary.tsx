@@ -11,6 +11,7 @@ import { Trash2, Plus, BookOpen } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface Entry { id: string; title: string; content: string; mood: string; created_at: string; }
 const MOODS = [
   { v: "joyful", l: "Alegre", e: "😊" },
@@ -57,7 +58,7 @@ export default function Diary() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <header className="text-center space-y-2">
-        <div className="text-4xl">📔</div>
+        <div className="text-4xl"><EmojiIcon e="📔" /></div>
         <h1 className="font-heading text-3xl sm:text-4xl text-gold-gradient">Diário Pessoal</h1>
         <p className="text-muted-foreground text-sm">Suas memórias, suas reflexões. Só você pode ler.</p>
       </header>

@@ -8,6 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 type Catalog = { id: string; name: string; species: string; description: string | null; icon: string; rarity: string; adopt_cost: number };
 type Mine = { id: string; creature_id: string; nickname: string; bond: number; hunger: number; training_level: number };
 
@@ -50,7 +51,7 @@ export default function Creatures() {
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-6">
       <div>
-        <h1 className="font-heading text-3xl text-primary">🐉 Criaturas Mágicas</h1>
+        <h1 className="font-heading text-3xl text-primary"><EmojiIcon e="🐉" /> Criaturas Mágicas</h1>
         <p className="text-muted-foreground">Sua reserva pessoal. Adote, alimente e treine.</p>
       </div>
 
@@ -81,8 +82,8 @@ export default function Creatures() {
                   <div className="flex justify-between"><span>Treino</span><span>Nv. {m.training_level}/10</span></div>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <Button size="sm" disabled={loading} onClick={() => act("feed_creature", m.id)}>🍖 Alimentar</Button>
-                  <Button size="sm" variant="outline" disabled={loading} onClick={() => act("train_creature", m.id)}>🎯 Treinar</Button>
+                  <Button size="sm" disabled={loading} onClick={() => act("feed_creature", m.id)}><EmojiIcon e="🍖" /> Alimentar</Button>
+                  <Button size="sm" variant="outline" disabled={loading} onClick={() => act("train_creature", m.id)}><EmojiIcon e="🎯" /> Treinar</Button>
                 </div>
               </Card>
             );

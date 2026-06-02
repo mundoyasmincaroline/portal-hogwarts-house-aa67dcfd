@@ -6,6 +6,7 @@ import MagicalEmoji from "@/components/shared/MagicalEmoji";
 import MagicalGaleon from "@/components/shared/MagicalGaleon";
 import { useWallet } from "@/hooks/features/useWallet";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 const VIP_CONFIG: Record<string, { name: string; color: string; icon: string; galeons: number }> = {
   premium: { name: "Iniciante",  color: "from-slate-700 to-slate-600",   icon: "⭐", galeons: 0 },
   vip:     { name: "VIP",        color: "from-purple-800 to-violet-700", icon: "💜", galeons: 200 },
@@ -203,7 +204,7 @@ export default function Wallet() {
           </div>
         ) : paidOrders.length === 0 ? (
           <div className="text-center py-12 bg-black/20 rounded-2xl border border-dashed border-white/5">
-            <div className="text-5xl mb-4 opacity-20">🏦</div>
+            <div className="text-5xl mb-4 opacity-20"><EmojiIcon e="🏦" /></div>
             <p className="text-muted-foreground font-serif italic">Nenhuma transação registrada em seu nome ainda.</p>
           </div>
         ) : (

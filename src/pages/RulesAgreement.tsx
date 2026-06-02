@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { reward } from "@/services/core/rewardService";
 import { Checkbox } from "@/components/ui/checkbox";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function RulesAgreement() {
   const { user, profile } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -74,7 +75,7 @@ export default function RulesAgreement() {
         <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50" />
         
         <div className="text-center mb-8">
-          <span className="text-4xl mb-4 block">📜</span>
+          <span className="text-4xl mb-4 block"><EmojiIcon e="📜" /></span>
           <h1 className="font-heading text-3xl text-gold-gradient mb-2">Regras do Castelo</h1>
           <p className="text-muted-foreground text-sm">
             Para garantir a ordem e a segurança em nossa comunidade mágica, leia e aceite as regras abaixo.

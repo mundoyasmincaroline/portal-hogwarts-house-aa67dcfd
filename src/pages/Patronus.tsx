@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 const ANIMALS = ["Cervo", "Lebre", "Lontra", "Raposa", "Lobo", "Coruja", "Lince", "Pantera", "Águia", "Cisne", "Cavalo", "Golfinho"];
 
 export default function Patronus() {
@@ -70,7 +71,7 @@ export default function Patronus() {
     return (
       <div className="max-w-md mx-auto p-4 space-y-6">
         <header className="text-center">
-          <h1 className="font-heading text-3xl text-primary">✨ Descubra seu Patrono</h1>
+          <h1 className="font-heading text-3xl text-primary"><EmojiIcon e="✨" /> Descubra seu Patrono</h1>
           <p className="text-foreground/70 font-serif italic mt-2">Pense em sua memória mais feliz…</p>
         </header>
         <Card className="p-4 bg-card/60 border-primary/30 space-y-3">
@@ -105,9 +106,9 @@ export default function Patronus() {
             <div className="absolute top-0 bottom-0 w-1 bg-primary shadow-[0_0_15px_rgba(212,175,55,0.8)] transition-none" style={{ left: `${bar}%` }} />
           </div>
           {!running ? (
-            <Button onClick={startMiniGame} className="w-full" variant="magical">🪄 Iniciar invocação</Button>
+            <Button onClick={startMiniGame} className="w-full" variant="magical"><EmojiIcon e="🪄" /> Iniciar invocação</Button>
           ) : (
-            <Button onClick={stopAndInvoke} className="w-full" variant="default">⚡ Parar agora!</Button>
+            <Button onClick={stopAndInvoke} className="w-full" variant="default"><EmojiIcon e="⚡" /> Parar agora!</Button>
           )}
         </div>
       </Card>

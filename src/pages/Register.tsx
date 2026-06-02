@@ -11,6 +11,7 @@ import MagicalParticles from "@/components/MagicalParticles";
 import AcceptanceLetter from "@/components/AcceptanceLetter";
 import { Sparkles, Feather, Droplet, Wand2, ArrowLeft } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 /* ────────────────────────────────────────────────────────────
    CADASTRO-RITO  ✦  Cinematic onboarding
    7 telas-pergunta. Cada escolha é guardada e ressurge no
@@ -291,7 +292,7 @@ export default function Register() {
           {step === 4 && (
             <div className="space-y-5">
               <header className="text-center">
-                <p className="text-4xl mb-2">🎩</p>
+                <p className="text-4xl mb-2"><EmojiIcon e="🎩" /></p>
                 <p className="text-xs uppercase tracking-[0.3em] text-primary/70">Pergaminho IV</p>
                 <h2 className="font-heading text-2xl text-foreground">"Hmm… deixe-me ver."</h2>
                 <p className="text-sm text-muted-foreground mt-1 italic">O Chapéu sussurra. Onde seu coração responde mais alto?</p>
@@ -323,12 +324,12 @@ export default function Register() {
                 <label className="text-xs text-muted-foreground block mb-3 uppercase tracking-widest">Foto de perfil</label>
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 rounded-full bg-secondary/50 border-2 border-dashed border-border flex items-center justify-center overflow-hidden flex-shrink-0">
-                    {avatarPreview ? <img src={avatarPreview} alt="" className="w-full h-full object-cover" /> : <span className="text-2xl">🧙</span>}
+                    {avatarPreview ? <img src={avatarPreview} alt="" className="w-full h-full object-cover" /> : <span className="text-2xl"><EmojiIcon e="🧙" /></span>}
                   </div>
                   <div className="flex-1 space-y-2">
                     <button type="button" onClick={() => fileInputRef.current?.click()}
                       className="w-full text-xs py-2 px-3 rounded-lg border border-border bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors">
-                      📁 Fazer upload
+                      <EmojiIcon e="📁" /> Fazer upload
                     </button>
                     <input ref={fileInputRef} type="file" accept="image/*" className="hidden"
                       onChange={(e) => {

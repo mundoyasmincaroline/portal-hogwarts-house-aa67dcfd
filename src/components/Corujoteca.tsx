@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Mail, X, Bell, ShieldAlert, Zap, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface OwlMessage {
   id: string;
   title: string;
@@ -75,7 +76,7 @@ export default function Corujoteca() {
               <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-black z-10 animate-bounce" />
               {/* Flying Hedwig Sprite/Animation */}
               <div className="absolute -top-20 -left-10 pointer-events-none animate-float-slow">
-                <span className="text-4xl filter drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">🦉</span>
+                <span className="text-4xl filter drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]"><EmojiIcon e="🦉" /></span>
               </div>
             </>
           )}

@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 const HOUSES = ["gryffindor", "slytherin", "ravenclaw", "hufflepuff"];
 const HOUSE_LABEL: Record<string, string> = { gryffindor: "🦁 Grifinória", slytherin: "🐍 Sonserina", ravenclaw: "🦅 Corvinal", hufflepuff: "🦡 Lufa-Lufa" };
 const POSITIONS: Record<string, { label: string; icon: string; actions: string[] }> = {
@@ -72,7 +73,7 @@ export default function Quidditch() {
   return (
     <div className="max-w-4xl mx-auto p-4 space-y-6">
       <header>
-        <h1 className="font-heading text-2xl sm:text-3xl text-primary">🧹 Quadribol</h1>
+        <h1 className="font-heading text-2xl sm:text-3xl text-primary"><EmojiIcon e="🧹" /> Quadribol</h1>
         <p className="text-foreground/70 font-serif italic">Voe pelos céus e defenda as cores da sua casa.</p>
       </header>
 

@@ -17,6 +17,7 @@ import MonthlyCheckInCalendar from "@/components/MonthlyCheckInCalendar";
 import DailyMissionsPanel from "@/components/DailyMissionsPanel";
 import StreakFreezeCard from "@/components/StreakFreezeCard";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 const REACTIONS = ["⚡", "❤️", "🔥", "🦁", "🦅", "🐍", "🦡"];
 
 export default function Feed() {
@@ -121,7 +122,7 @@ export default function Feed() {
           {loading && <p className="text-center text-foreground/80 text-sm py-6">Carregando feed...</p>}
           {!loading && posts.length === 0 && (
             <div className="glass rounded-2xl p-10 text-center space-y-3 border border-white/5">
-              <div className="text-5xl">📜</div>
+              <div className="text-5xl"><EmojiIcon e="📜" /></div>
               <p className="font-heading text-foreground">O Salão Principal está em silêncio...</p>
               <p className="text-sm text-foreground/65 italic font-serif max-w-md mx-auto">
                 "Seja o primeiro bruxo a inscrever suas palavras neste pergaminho — toda lenda começa com uma linha."
@@ -134,7 +135,7 @@ export default function Feed() {
               {index > 0 && index % 10 === 0 && <MagicAdBanner />}
               <ErrorBoundary fallback={
                 <div className="glass rounded-xl p-4 min-h-[100px] flex items-center justify-center border-destructive/20">
-                  <p className="text-xs text-destructive font-heading">Erro ao carregar pergaminho 📜</p>
+                  <p className="text-xs text-destructive font-heading">Erro ao carregar pergaminho <EmojiIcon e="📜" /></p>
                 </div>
               }>
                 <PostCard 

@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import HouseCrest from "@/components/rpg/HouseCrest";
 import { Shield } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 const HOUSE_GRADIENTS: Record<string, { bg: string; border: string; bar: string }> = {
   gryffindor: { bg: "from-red-900/20 to-transparent",    border: "border-red-500/30",    bar: "bg-red-500" },
   slytherin:  { bg: "from-green-900/20 to-transparent",  border: "border-green-500/30",  bar: "bg-green-500" },
@@ -77,7 +78,7 @@ export default function Houses() {
 
       {loading ? (
         <div className="glass rounded-2xl p-12 text-center">
-          <div className="text-3xl animate-bounce mb-3">🏰</div>
+          <div className="text-3xl animate-bounce mb-3"><EmojiIcon e="🏰" /></div>
           <p className="text-muted-foreground animate-pulse">Consultando o Livro das Casas...</p>
         </div>
       ) : (
@@ -85,7 +86,7 @@ export default function Houses() {
           {/* Casa líder */}
           {topHouse && (
             <div className={`glass rounded-2xl p-6 sm:p-8 text-center animate-pulse-glow border bg-gradient-to-br ${HOUSE_GRADIENTS[topHouse.id]?.bg} ${HOUSE_GRADIENTS[topHouse.id]?.border}`}>
-              <p className="text-xs font-heading text-primary tracking-widest uppercase mb-3">🏆 Casa da Semana</p>
+              <p className="text-xs font-heading text-primary tracking-widest uppercase mb-3"><EmojiIcon e="🏆" /> Casa da Semana</p>
               <HouseCrest house={topHouse.id as House} size="lg" />
               <h2 className="font-heading text-2xl text-foreground mt-4">{topHouse.name}</h2>
               <p className="text-xs text-muted-foreground italic font-serif mt-1">"{topHouse.motto}"</p>

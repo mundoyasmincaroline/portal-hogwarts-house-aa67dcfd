@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { TrendingUp, Crown, Coins, Clock } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function PedidosTab() {
   const [orders, setOrders] = useState<any[]>([]);
   const [allOrders, setAllOrders] = useState<any[]>([]);
@@ -113,7 +114,7 @@ export default function PedidosTab() {
           ))}
           <button onClick={loadOrders}
             className="text-xs px-3 py-1.5 rounded-full border bg-background/70 backdrop-blur-md border-primary/30 text-foreground hover:border-primary/40">
-            🔄 Atualizar
+            <EmojiIcon e="🔄" /> Atualizar
           </button>
         </div>
       </div>
@@ -124,7 +125,7 @@ export default function PedidosTab() {
         </div>
       ) : orders.length === 0 ? (
         <div className="glass rounded-xl p-10 text-center">
-          <p className="text-3xl mb-2">✨</p>
+          <p className="text-3xl mb-2"><EmojiIcon e="✨" /></p>
           <p className="text-muted-foreground text-sm">
             {filter === "pending" ? "Nenhum pedido pendente! Tudo em dia." : "Nenhum pedido encontrado."}
           </p>
@@ -183,7 +184,7 @@ export default function PedidosTab() {
                   <Button variant="outline" size="sm"
                     className="text-destructive border-destructive/40 hover:bg-destructive/10"
                     onClick={() => cancelOrder(order.id)}>
-                    ✕
+                    <EmojiIcon e="✕" />
                   </Button>
                 </div>
               )}

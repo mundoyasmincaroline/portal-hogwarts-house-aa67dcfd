@@ -8,6 +8,7 @@ import { X, Search, ChevronLeft } from "lucide-react";
 import MagicalParticles from "@/components/MagicalParticles";
 import { reward } from "@/services/core/rewardService";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface Props { onComplete: () => void; onCancel?: () => void; canCancel?: boolean; }
 
 const FIELD = ({ label, name, value, onChange, placeholder, type = "text", rows, required }: any) => (
@@ -252,26 +253,26 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
                 <strong className="text-foreground">Original Character</strong> — um personagem criado por você! Nome, história, personalidade e aparência são completamente da sua imaginação.
               </p>
               <ul className="text-xs text-muted-foreground space-y-1 mb-6">
-                <li>✦ Nome e história originais</li>
-                <li>✦ Livre para criar do zero</li>
-                <li>✦ Personalidade única</li>
-                <li>✦ Sem restrição de personagem</li>
+                <li><EmojiIcon e="✦" /> Nome e história originais</li>
+                <li><EmojiIcon e="✦" /> Livre para criar do zero</li>
+                <li><EmojiIcon e="✦" /> Personalidade única</li>
+                <li><EmojiIcon e="✦" /> Sem restrição de personagem</li>
               </ul>
               <span className="font-heading text-yellow-400 text-sm group-hover:underline">Criar ficha OC →</span>
             </button>
             {/* Canon */}
             <button onClick={() => setStep("canon")}
               className="glass rounded-[2rem] sm:rounded-3xl p-6 sm:p-8 border border-purple-500/30 hover:border-purple-400/70 hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(168,85,247,0.2)] transition-all text-left group">
-              <div className="text-5xl mb-4">📖</div>
+              <div className="text-5xl mb-4"><EmojiIcon e="📖" /></div>
               <h2 className="font-heading text-2xl text-purple-400 mb-2">Personagem Canon</h2>
               <p className="text-sm text-muted-foreground mb-4">
                 <strong className="text-foreground">Personagem Canônico</strong> — um personagem oficial da saga Harry Potter que você irá interpretar no portal (ex: Hermione, Draco, Luna…).
               </p>
               <ul className="text-xs text-muted-foreground space-y-1 mb-6">
-                <li>✦ Personagem da saga oficial</li>
-                <li>✦ 1 Canon por usuário no portal</li>
-                <li>✦ Baseado nos livros/filmes</li>
-                <li>✦ Campos extras de referência</li>
+                <li><EmojiIcon e="✦" /> Personagem da saga oficial</li>
+                <li><EmojiIcon e="✦" /> 1 Canon por usuário no portal</li>
+                <li><EmojiIcon e="✦" /> Baseado nos livros/filmes</li>
+                <li><EmojiIcon e="✦" /> Campos extras de referência</li>
               </ul>
               <span className="font-heading text-purple-400 text-sm group-hover:underline">Criar ficha Canon →</span>
             </button>
@@ -320,11 +321,11 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
               <div className="w-24 h-24 rounded-full border-2 border-border overflow-hidden flex-shrink-0 bg-secondary flex items-center justify-center">
                 {avatarPreview || form.avatar_url
                   ? <img src={avatarPreview || form.avatar_url} className="w-full h-full object-cover" />
-                  : <span className="text-3xl">🧙</span>}
+                  : <span className="text-3xl"><EmojiIcon e="🧙" /></span>}
               </div>
               <div className="flex-1 space-y-2">
                 <label className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border-2 border-dashed border-primary/40 bg-primary/5 hover:bg-primary/10 cursor-pointer transition-colors text-sm font-heading text-primary">
-                  📁 Upload de foto
+                  <EmojiIcon e="📁" /> Upload de foto
                   <input type="file" accept="image/*" className="hidden" onChange={handleAvatar} />
                 </label>
                 <p className="text-[10px] text-muted-foreground text-center">ou cole o link abaixo</p>
@@ -362,10 +363,10 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
                 <label className="text-xs font-heading text-muted-foreground block mb-1">Casa de Hogwarts *</label>
                 <select name="house" value={form.house} onChange={handleChange}
                   className="w-full bg-secondary/50 rounded-md px-3 py-2 text-sm text-foreground border border-border focus:border-primary/50 focus:outline-none">
-                  <option value="gryffindor">🦁 Grifinória</option>
-                  <option value="slytherin">🐍 Sonserina</option>
-                  <option value="ravenclaw">🦅 Corvinal</option>
-                  <option value="hufflepuff">🦡 Lufa-Lufa</option>
+                  <option value="gryffindor"><EmojiIcon e="🦁" /> Grifinória</option>
+                  <option value="slytherin"><EmojiIcon e="🐍" /> Sonserina</option>
+                  <option value="ravenclaw"><EmojiIcon e="🦅" /> Corvinal</option>
+                  <option value="hufflepuff"><EmojiIcon e="🦡" /> Lufa-Lufa</option>
                 </select>
               </div>
             </div>
@@ -527,7 +528,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
             </div>
             { (form.mother_id || form.father_id) && (
               <p className="text-[10px] text-primary/70 italic mt-2">
-                ✨ O status de sangue será bloqueado para edição manual se os pais forem definidos.
+                <EmojiIcon e="✨" /> O status de sangue será bloqueado para edição manual se os pais forem definidos.
               </p>
             )}
           </SECTION>

@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 const DIV_COLORS: Record<string, string> = {
   Bronze: "text-amber-700", Prata: "text-gray-300", Ouro: "text-yellow-400",
   Diamante: "text-cyan-300", Mestre: "text-purple-400", Auror: "text-red-400",
@@ -36,13 +37,13 @@ export default function RankedLadder() {
   return (
     <div className="max-w-3xl mx-auto p-4 sm:p-6 space-y-6">
       <header>
-        <h1 className="font-heading text-2xl sm:text-3xl text-primary">🏅 Modo Ranqueado</h1>
+        <h1 className="font-heading text-2xl sm:text-3xl text-primary"><EmojiIcon e="🏅" /> Modo Ranqueado</h1>
         <p className="text-foreground/70 font-serif italic">Suba de divisão: Bronze → Prata → Ouro → Diamante → Mestre → Auror.</p>
         {season && <p className="text-xs text-foreground/60 mt-1">Temporada: {season.name} · Encerra em {new Date(season.ends_at).toLocaleDateString()}</p>}
       </header>
 
       <section className="rounded-xl border border-primary/30 bg-card/60 p-5">
-        <h2 className="font-heading text-lg text-primary mb-3">🏆 Top 50</h2>
+        <h2 className="font-heading text-lg text-primary mb-3"><EmojiIcon e="🏆" /> Top 50</h2>
         <ol className="space-y-2">
           {players.map((p, i) => (
             <li key={p.id} className="flex justify-between p-2 rounded bg-background/40">

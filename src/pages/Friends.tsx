@@ -7,6 +7,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { UserPlus, Check, X, Ban, Trash2, Users } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface FriendRow {
   id: string;
   user_id: string;
@@ -163,7 +164,7 @@ export default function Friends() {
           {loading && <p className="text-center text-muted-foreground">Carregando...</p>}
           {!loading && friends.length === 0 && (
             <div className="text-center py-16 space-y-3">
-              <div className="text-6xl opacity-30">🦉</div>
+              <div className="text-6xl opacity-30"><EmojiIcon e="🦉" /></div>
               <p className="font-heading text-xl text-muted-foreground">Nenhum aliado registrado ainda</p>
               <p className="text-xs text-muted-foreground/50 font-serif italic">"Os melhores feiticeiros nunca enfrentam Voldemort sozinhos."</p>
             </div>
@@ -185,7 +186,7 @@ export default function Friends() {
         <TabsContent value="incoming" className="space-y-2 mt-4">
           {!loading && incoming.length === 0 && (
             <div className="text-center py-16 space-y-3">
-              <div className="text-6xl opacity-30">📜</div>
+              <div className="text-6xl opacity-30"><EmojiIcon e="📜" /></div>
               <p className="font-heading text-xl text-muted-foreground">Sua caixa de corujas está vazia</p>
               <p className="text-xs text-muted-foreground/50 font-serif italic">"Nenhuma carta chegou hoje."</p>
             </div>
@@ -210,7 +211,7 @@ export default function Friends() {
         <TabsContent value="outgoing" className="space-y-2 mt-4">
           {!loading && outgoing.length === 0 && (
             <div className="text-center py-16 space-y-3">
-              <div className="text-6xl opacity-30">✉️</div>
+              <div className="text-6xl opacity-30"><EmojiIcon e="✉️" /></div>
               <p className="font-heading text-xl text-muted-foreground">Nenhum convite enviado</p>
               <p className="text-xs text-muted-foreground/50 font-serif italic">"Use o Mapa do Maroto para encontrar novos aliados."</p>
             </div>
@@ -227,7 +228,7 @@ export default function Friends() {
         <TabsContent value="blocked" className="space-y-2 mt-4">
           {!loading && blocked.length === 0 && (
             <div className="text-center py-16 space-y-3">
-              <div className="text-6xl opacity-30">🚫</div>
+              <div className="text-6xl opacity-30"><EmojiIcon e="🚫" /></div>
               <p className="font-heading text-xl text-muted-foreground">Nenhum feitiço de bloqueio ativo</p>
               <p className="text-xs text-muted-foreground/50 font-serif italic">"Paz reina em seu castelo."</p>
             </div>

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Wand2, X, Sparkles } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface Props {
   open: boolean;
   spellName?: string | null;
@@ -122,7 +123,7 @@ export default function SpellCastingMiniGame({ open, spellName, incantation, onC
               acabar. Quanto mais runes você tocar, maior sua <span className="text-primary font-bold">maestria</span>.
             </p>
             <Button variant="magical" size="lg" onClick={() => setPhase("casting")}>
-              Empunhar Varinha ✦
+              Empunhar Varinha <EmojiIcon e="✦" />
             </Button>
           </div>
         )}

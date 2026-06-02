@@ -12,6 +12,7 @@ import PedidosTab from "@/components/PedidosTab";
 import { AdminStreakMilestonesTab } from "./Admin/AdminStreakMilestonesTab";
 import AdminKpiPanel from "@/components/admin/AdminKpiPanel";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 type Tab = "members" | "pending_members" | "challenges" | "monetization" | "pedidos" | "streak";
 
 export default function Admin() {
@@ -43,7 +44,7 @@ export default function Admin() {
   if (!isAdmin) {
     return (
       <div className="text-center py-24 space-y-4">
-        <p className="text-6xl">🚫</p>
+        <p className="text-6xl"><EmojiIcon e="🚫" /></p>
         <p className="font-heading text-2xl text-red-400">Acesso Negado pelo Ministério da Magia</p>
         <p className="text-sm text-muted-foreground font-serif italic">"Somente membros da Ordem podem ver este pergaminho."</p>
         <Button variant="outline" onClick={() => navigate("/dashboard")} className="mt-4">
@@ -59,10 +60,10 @@ export default function Admin() {
         <h1 className="font-heading text-xl sm:text-2xl text-gold-gradient mb-1">Painel Administrativo</h1>
         <p className="text-muted-foreground text-sm">Gerencie o Portal Hogwarts House</p>
         <div className="mt-4 flex flex-wrap gap-2">
-          <Button variant="outline" onClick={() => navigate("/dashboard/admin/characters")}>🧾 Fichas & Canons</Button>
-          <Button variant="outline" onClick={() => navigate("/dashboard/admin/analytics")}>📊 Analytics</Button>
-          <Button variant="outline" onClick={() => navigate("/dashboard/admin/finance")}>💰 Financeiro</Button>
-          <Button variant="outline" onClick={() => navigate("/dashboard/admin/support")}>🛟 Suporte</Button>
+          <Button variant="outline" onClick={() => navigate("/dashboard/admin/characters")}><EmojiIcon e="🧾" /> Fichas & Canons</Button>
+          <Button variant="outline" onClick={() => navigate("/dashboard/admin/analytics")}><EmojiIcon e="📊" /> Analytics</Button>
+          <Button variant="outline" onClick={() => navigate("/dashboard/admin/finance")}><EmojiIcon e="💰" /> Financeiro</Button>
+          <Button variant="outline" onClick={() => navigate("/dashboard/admin/support")}><EmojiIcon e="🛟" /> Suporte</Button>
         </div>
       </div>
 

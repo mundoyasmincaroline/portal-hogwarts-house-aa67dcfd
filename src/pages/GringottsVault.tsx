@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 type Vault = { id: string; vault_number: number; balance: number; interest_rate: number; last_interest_at: string };
 type Tx = { id: string; type: string; amount: number; description: string | null; created_at: string };
 
@@ -40,7 +41,7 @@ export default function GringottsVault() {
     return (
       <div className="p-4 sm:p-6 max-w-2xl mx-auto">
         <Card className="p-8 text-center space-y-4 bg-card/60 border-primary/30">
-          <div className="text-6xl">🏦</div>
+          <div className="text-6xl"><EmojiIcon e="🏦" /></div>
           <h1 className="font-heading text-2xl">Bem-vindo a Gringotes</h1>
           <p className="text-muted-foreground">Abra seu cofre pessoal e proteja seus galeões. Render juros diários de 2%.</p>
           <Button onClick={() => call("open_vault")} disabled={loading}>Abrir Cofre</Button>

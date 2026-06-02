@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Bell, Mail, Smartphone, Sparkles } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 type Prefs = {
   in_app: boolean;
   daily_digest: boolean;
@@ -62,7 +63,7 @@ export default function NotificationPreferences() {
     <div className="container mx-auto max-w-2xl px-4 py-8 space-y-6">
       <header>
         <h1 className="font-heading text-4xl text-primary flex items-center gap-3">
-          🦉 Coruja Postal
+          <EmojiIcon e="🦉" /> Coruja Postal
         </h1>
         <p className="text-muted-foreground mt-2">
           Configure como o castelo entrega suas mensagens importantes.

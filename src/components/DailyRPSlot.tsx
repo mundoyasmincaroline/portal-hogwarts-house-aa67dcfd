@@ -6,6 +6,7 @@ import { useAuth } from "@/lib/auth";
 import { useCharacters } from "@/hooks/features/useCharacters";
 import { toast } from "sonner";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 type Claim = {
   id: string;
   character_id: string;
@@ -189,7 +190,7 @@ export default function DailyRPSlot() {
             {activeCharacter.avatar_url ? (
               <img src={activeCharacter.avatar_url} alt={activeCharacter.full_name} className="w-full h-full object-cover" />
             ) : (
-              <div className="w-full h-full flex items-center justify-center">🧙</div>
+              <div className="w-full h-full flex items-center justify-center"><EmojiIcon e="🧙" /></div>
             )}
           </div>
           <div className="min-w-0 flex-1">
@@ -227,7 +228,7 @@ export default function DailyRPSlot() {
                   {c.avatar_url ? (
                     <img src={c.avatar_url} alt={c.full_name} className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-sm">🧙</div>
+                    <div className="w-full h-full flex items-center justify-center text-sm"><EmojiIcon e="🧙" /></div>
                   )}
                 </div>
                 <div className="min-w-0 flex-1">

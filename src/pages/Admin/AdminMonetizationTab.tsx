@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import MagicalGaleon from "@/components/shared/MagicalGaleon";
 import SafeImage from "@/components/SafeImage";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 export const AdminMonetizationTab = memo(({ members, fetchAll }: { members: any[], fetchAll: () => void }) => {
   const [storeItems, setStoreItems] = useState<any[]>([]);
   const [loadingItems, setLoadingItems] = useState(true);
@@ -89,7 +90,7 @@ export const AdminMonetizationTab = memo(({ members, fetchAll }: { members: any[
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="glass rounded-2xl p-6">
-          <h2 className="font-heading text-xl text-primary mb-4">💰 Gerenciar Créditos</h2>
+          <h2 className="font-heading text-xl text-primary mb-4"><EmojiIcon e="💰" /> Gerenciar Créditos</h2>
           <div className="space-y-4">
             <select
               value={galeonTarget}
@@ -115,7 +116,7 @@ export const AdminMonetizationTab = memo(({ members, fetchAll }: { members: any[
           </div>
         </div>
         <div className="glass rounded-2xl p-6 border-yellow-500/30 bg-yellow-500/5">
-           <h2 className="font-heading text-xl text-yellow-500 mb-4">💳 Teste InfinitePay</h2>
+           <h2 className="font-heading text-xl text-yellow-500 mb-4"><EmojiIcon e="💳" /> Teste InfinitePay</h2>
            <Button variant="outline" className="w-full border-yellow-500/50 text-yellow-500 hover:bg-yellow-500/10">
              Em breve: Link de teste automático
            </Button>
@@ -123,7 +124,7 @@ export const AdminMonetizationTab = memo(({ members, fetchAll }: { members: any[
       </div>
 
       <div className="glass rounded-2xl p-6">
-        <h2 className="font-heading text-xl text-primary mb-4">🏪 Gerenciar Loja Gringotts</h2>
+        <h2 className="font-heading text-xl text-primary mb-4"><EmojiIcon e="🏪" /> Gerenciar Loja Gringotts</h2>
         <div className="glass rounded-xl p-4 mb-6 border border-primary/20 space-y-3">
           <Input placeholder="Nome do item *" value={newItem.name} onChange={e => setNewItem({ ...newItem, name: e.target.value })} />
           <Input placeholder="Preço em Galeões *" type="number" value={newItem.price_galeons} onChange={e => setNewItem({ ...newItem, price_galeons: parseInt(e.target.value) || 0 })} />
@@ -142,7 +143,7 @@ export const AdminMonetizationTab = memo(({ members, fetchAll }: { members: any[
                   <p className="text-sm font-heading text-foreground truncate">{item.name}</p>
                   <p className="text-xs text-muted-foreground">🪙 {item.price_galeons}</p>
                 </div>
-                <Button size="sm" variant="destructive" onClick={() => deleteItem(item.id)}>🗑️</Button>
+                <Button size="sm" variant="destructive" onClick={() => deleteItem(item.id)}><EmojiIcon e="🗑️" /></Button>
               </div>
             ))}
           </div>

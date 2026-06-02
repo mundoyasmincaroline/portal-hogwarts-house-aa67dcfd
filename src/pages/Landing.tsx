@@ -10,6 +10,7 @@ import HouseCupWidget from "@/components/rpg/HouseCupWidget";
 import MagicalEmoji from "@/components/shared/MagicalEmoji";
 import MagicalIcon from "@/components/shared/MagicalIcon";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 const HOUSES_INFO: { id: House; name: string; color: string; animal: string; trait: string }[] = [
   { id: "gryffindor", name: "Grifinória", color: "from-red-900/80 to-yellow-900/60 border-red-500/50", animal: "🦁", trait: "Coragem & Bravura" },
   { id: "slytherin",  name: "Sonserina",  color: "from-green-900/80 to-slate-900/60 border-green-500/50", animal: "🐍", trait: "Ambição & Astúcia" },
@@ -87,7 +88,7 @@ export default function Landing() {
 
         <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-6 py-4">
           <div className="flex flex-col">
-            <span className="font-heading text-lg text-gold-gradient drop-shadow-md">✦ Hogwarts House</span>
+            <span className="font-heading text-lg text-gold-gradient drop-shadow-md"><EmojiIcon e="✦" /> Hogwarts House</span>
             <span className="text-[10px] text-white/85 font-mono tracking-widest uppercase">
               {currentTime.toLocaleDateString("pt-BR")} · {currentTime.toLocaleTimeString("pt-BR")}
             </span>
@@ -356,7 +357,7 @@ export default function Landing() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12 text-center md:text-left">
             {/* Column 1: Brand */}
             <div className="space-y-4">
-               <span className="font-heading text-xl text-gold-gradient tracking-tight">✦ Hogwarts House</span>
+               <span className="font-heading text-xl text-gold-gradient tracking-tight"><EmojiIcon e="✦" /> Hogwarts House</span>
                <p className="text-[11px] text-muted-foreground/60 leading-relaxed max-w-xs mx-auto md:mx-0">
                  O portal de elite para a comunidade bruxa. Viva sua própria história em Hogwarts com tecnologia e magia.
                </p>
@@ -368,7 +369,7 @@ export default function Landing() {
                 <div className="flex flex-col gap-2">
                   <button onClick={() => navigate("/terms")} className="text-xs text-muted-foreground/50 hover:text-primary transition-colors">Termos de Uso</button>
                   <button onClick={() => navigate("/privacy")} className="text-xs text-muted-foreground/50 hover:text-primary transition-colors">Privacidade</button>
-                  <button onClick={() => navigate("/parents")} className="text-xs text-primary/90 hover:text-primary transition-colors font-bold">Para os Pais 🛡️</button>
+                  <button onClick={() => navigate("/parents")} className="text-xs text-primary/90 hover:text-primary transition-colors font-bold">Para os Pais <EmojiIcon e="🛡️" /></button>
                   <button onClick={() => navigate("/register")} className="text-xs text-muted-foreground/50 hover:text-primary transition-colors">Solicitar Vaga</button>
 
                 </div>
@@ -413,7 +414,7 @@ export default function Landing() {
 
           <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
             <p className="text-[9px] text-muted-foreground/30 font-mono tracking-widest uppercase">
-              ✦ Mundo Yasmin Caroline · 2026 · Todos os Direitos Mágicos Reservados ✦
+              <EmojiIcon e="✦" /> Mundo Yasmin Caroline · 2026 · Todos os Direitos Mágicos Reservados <EmojiIcon e="✦" />
             </p>
             <div className="flex items-center gap-6">
                <span className="text-[10px] text-white/20 font-bold uppercase tracking-widest">Monster Quality Build 4.2</span>

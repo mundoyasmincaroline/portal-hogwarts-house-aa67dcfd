@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { ExternalLink, Zap, Flame, Sparkles, MessageCircle, Users } from "lucide-react";
 import MagicalEmoji from "@/components/shared/MagicalEmoji";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface MemberSuggestion {
   user_id: string;
   username: string;
@@ -490,8 +491,8 @@ export default function ChatRoom() {
           <div className="h-10 w-[1px] bg-white/10 mx-2 hidden md:block" />
           <div className="flex -space-x-3">
              {/* Simulação de membros online */}
-             <div className="w-8 h-8 rounded-full border-2 border-black bg-yellow-500/20 flex items-center justify-center text-[10px] font-bold text-yellow-400">⚡</div>
-             <div className="w-8 h-8 rounded-full border-2 border-black bg-blue-500/20 flex items-center justify-center text-[10px] font-bold text-blue-400">🛡️</div>
+             <div className="w-8 h-8 rounded-full border-2 border-black bg-yellow-500/20 flex items-center justify-center text-[10px] font-bold text-yellow-400"><EmojiIcon e="⚡" /></div>
+             <div className="w-8 h-8 rounded-full border-2 border-black bg-blue-500/20 flex items-center justify-center text-[10px] font-bold text-blue-400"><EmojiIcon e="🛡️" /></div>
           </div>
         </div>
       </div>
@@ -500,7 +501,7 @@ export default function ChatRoom() {
       {pinnedMessage && (
         <div className="relative z-20 bg-primary/10 border-b border-primary/20 p-3 flex items-center justify-between animate-in slide-in-from-top duration-500">
           <div className="flex items-center gap-3">
-             <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary">📌</div>
+             <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary"><EmojiIcon e="📌" /></div>
              <div>
                <p className="text-[10px] text-primary font-heading uppercase tracking-widest">Fixado por {pinnedMessage.profiles.full_name}</p>
                <p className="text-xs text-foreground/80 line-clamp-1">{pinnedMessage.content}</p>
@@ -519,7 +520,7 @@ export default function ChatRoom() {
         <div className="relative z-10 bg-black/95 border-b border-white/5 h-[280px] sm:h-[450px] shrink-0 group">
           <div className="absolute top-4 right-4 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
             <Button variant="outline" size="sm" onClick={() => window.open(channel.meet_link, "_blank")} className="bg-black/60 backdrop-blur-md border-white/20 text-xs rounded-xl hover:bg-white/10">
-              Ver em Tela Cheia 🔗
+              Ver em Tela Cheia <EmojiIcon e="🔗" />
             </Button>
           </div>
           <iframe 
@@ -533,7 +534,7 @@ export default function ChatRoom() {
               <h3 className="font-heading text-2xl text-white mb-2">Transmissão em Andamento</h3>
               <p className="text-sm text-white/50 max-w-sm mb-8 font-serif italic">"O Google Meet protege a privacidade de seus alunos. Clique abaixo para conjurar sua presença na sala."</p>
               <Button variant="magical" size="lg" className="rounded-2xl h-14 px-10 shadow-2xl" onClick={() => window.open(channel.meet_link, "_blank")}>
-                Participar da Aula 📞
+                Participar da Aula <EmojiIcon e="📞" />
               </Button>
             </div>
           )}
@@ -608,17 +609,17 @@ export default function ChatRoom() {
                           <span className={`text-[10px] sm:text-[11px] font-heading font-bold uppercase tracking-wider ${nameColor}`}>
                             {isMorpheus ? "MORPHEUS [ARQUITETO]" : isYasmin ? "YASMIN [FUNDADORA]" : isCarolina ? "CAROLINA [GUARDIÃ]" : profileName}
                           </span>
-                          {m.profiles?.vip_plan === "founder" && <span className="text-[7px] text-yellow-500 font-bold bg-yellow-500/10 px-1 rounded-sm border border-yellow-500/20">👑</span>}
-                          {m.profiles?.vip_plan === "vip" && <span className="text-[7px] text-purple-400 font-bold bg-purple-500/10 px-1 rounded-sm border border-purple-500/20">💜</span>}
+                          {m.profiles?.vip_plan === "founder" && <span className="text-[7px] text-yellow-500 font-bold bg-yellow-500/10 px-1 rounded-sm border border-yellow-500/20"><EmojiIcon e="👑" /></span>}
+                          {m.profiles?.vip_plan === "vip" && <span className="text-[7px] text-purple-400 font-bold bg-purple-500/10 px-1 rounded-sm border border-purple-500/20"><EmojiIcon e="💜" /></span>}
                         </div>
                         <span className="text-[8px] text-white/20 font-serif italic">{formatDate(m.created_at)}</span>
                         {isAdmin && !isMe && (
                           <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all ml-2">
                             <button onClick={() => pinMessage(m)} className="text-primary hover:text-primary/80 text-[10px] font-bold uppercase" title="Fixar">
-                               📌
+                               <EmojiIcon e="📌" />
                             </button>
                             <button onClick={() => deleteMessage(m.id)} className="text-red-500 hover:text-red-400 text-[10px] font-bold uppercase" title="Remover">
-                               🚫
+                               <EmojiIcon e="🚫" />
                             </button>
                           </div>
                         )}
@@ -655,28 +656,28 @@ export default function ChatRoom() {
         {/* RP TOOLBAR - MONSTER QUALITY */}
         <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4 scrollbar-hide overflow-x-auto pb-1">
           <Button size="sm" variant="outline" className="text-[9px] h-7 bg-primary/5 border-primary/20 rounded-xl hover:bg-primary/10" onClick={() => setInput(input + "*ação*")}>
-            ⚔️ Ação
+            <EmojiIcon e="⚔️" /> Ação
           </Button>
           <Button size="sm" variant="outline" className="text-[9px] h-7 bg-blue-500/5 border-blue-500/20 rounded-xl hover:bg-blue-500/10" onClick={() => setInput(input + "(pensamento)")}>
-            🧠 Pensamento
+            <EmojiIcon e="🧠" /> Pensamento
           </Button>
           <Button size="sm" variant="outline" className="text-[9px] h-7 bg-pink-500/5 border-pink-500/20 rounded-xl hover:bg-pink-500/10" onClick={() => setInput(input + "{sentimento}")}>
-            ❤️ Sentimento
+            <EmojiIcon e="❤️" /> Sentimento
           </Button>
           <Button size="sm" variant="outline" className="text-[9px] h-7 bg-white/5 border-white/10 rounded-xl hover:bg-white/10" onClick={() => setInput(input + "~sussurro~")}>
-            💨 Sussurro
+            <EmojiIcon e="💨" /> Sussurro
           </Button>
           <Button size="sm" variant="outline" className="text-[9px] h-7 bg-white/5 border-white/10 rounded-xl hover:bg-white/10" onClick={() => setInput(input + "\"fala\"")}>
-            💬 Fala
+            <EmojiIcon e="💬" /> Fala
           </Button>
           <div className="h-4 w-[1px] bg-white/10 mx-1 self-center" />
           {isAdmin && (channel?.name?.includes("Fichas") || channel?.name?.includes("𝐅𝐢𝐜𝐡𝐚𝐬")) && (
             <>
               <Button size="sm" variant="outline" className="text-[9px] h-7 bg-yellow-500/5 border-yellow-500/20 rounded-xl" onClick={() => setInput("✨ ~ 𝐅𝐢𝐜𝐡𝐚 𝐏𝐞𝐬𝐬𝐨𝐚𝐥 ~ ✨\n\n📸 𝐅𝐨𝐭𝐨:\n👤 𝐍𝐨𝐦𝐞:\n⏳ 𝐈𝐝𝐚𝐝𝐞:\n🏰 𝐂𝐚𝐬𝐚:\n🌀 𝐏𝐚𝐭𝐫𝐨𝐧𝐨:\n💫 𝐅𝐞𝐢𝐭𝐢ç𝐨 𝐅𝐚𝐯𝐨𝐫𝐢𝐭𝐨:")}>
-                📋 Modelo Pessoal
+                <EmojiIcon e="📋" /> Modelo Pessoal
               </Button>
               <Button size="sm" variant="outline" className="text-[9px] h-7 bg-yellow-500/5 border-yellow-500/20 rounded-xl" onClick={() => setInput("𝐅𝐈𝐂𝐇𝐀 𝐀𝐋𝐔𝐍𝐎(𝐀) \n\n⚡ ~ 𝐅𝐢𝐜𝐡𝐚 𝐝𝐨 𝐏𝐞𝐫𝐬𝐨𝐧𝐚𝐠𝐞𝐦 ~ ⚡\n\n📜 𝐍𝐨𝐦𝐞:\n⏳ 𝐈𝐝𝐚𝐝𝐞:\n🏰 𝐂𝐚𝐬𝐚:\n📚 𝐇𝐢𝐬𝐭ó𝐫𝐢𝐚:\n✨ 𝐕𝐚𝐫𝐢𝐧𝐡𝐚:\n🩸 𝐒𝐚𝐧𝐠𝐮𝐞:")}>
-                🏰 Ficha Aluno
+                <EmojiIcon e="🏰" /> Ficha Aluno
               </Button>
             </>
           )}
@@ -686,7 +687,7 @@ export default function ChatRoom() {
         <div className="relative group">
           {showMentionMenu && mentionSuggestions.length > 0 && (
             <div className="absolute bottom-full left-0 right-0 mb-4 bg-[#0a0a0a] border border-white/10 rounded-[1.5rem] shadow-[0_10px_40px_rgba(0,0,0,0.8)] z-50 overflow-hidden animate-in slide-in-from-bottom-2 duration-300">
-              <div className="p-3 text-[9px] text-yellow-500/60 font-bold uppercase tracking-widest px-4 border-b border-white/5">Invocando Membros... 🔮</div>
+              <div className="p-3 text-[9px] text-yellow-500/60 font-bold uppercase tracking-widest px-4 border-b border-white/5">Invocando Membros... <EmojiIcon e="🔮" /></div>
               <div className="max-h-[250px] overflow-y-auto">
                 {mentionSuggestions.map(member => (
                   <button
@@ -721,7 +722,7 @@ export default function ChatRoom() {
                 autoComplete="off"
               />
               <div className="absolute right-4 top-1/2 -translate-y-1/2 flex gap-2">
-                 <span className="text-white/10 hover:text-white/30 transition-colors cursor-pointer text-xl">📸</span>
+                 <span className="text-white/10 hover:text-white/30 transition-colors cursor-pointer text-xl"><EmojiIcon e="📸" /></span>
               </div>
             </div>
             

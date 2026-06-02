@@ -4,6 +4,7 @@ import { useAuth } from "@/lib/auth";
 import { Link } from "react-router-dom";
 import { useImmersion } from "@/hooks/core/useImmersion";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface Notification {
   id: string;
   title: string;
@@ -89,7 +90,7 @@ export default function Notifications() {
         className="relative touch-target w-10 h-10 text-foreground/85 hover:text-primary transition-all duration-300 rounded-xl hover:bg-primary/15 active:scale-90 group"
         aria-label="Notificações"
       >
-        <div className="relative z-10 text-xl group-hover:rotate-12 transition-transform">🦉</div>
+        <div className="relative z-10 text-xl group-hover:rotate-12 transition-transform"><EmojiIcon e="🦉" /></div>
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 min-w-[20px] h-[20px] px-1 bg-primary text-primary-foreground rounded-full text-[10px] flex items-center justify-center font-bold shadow-[0_0_10px_hsl(var(--primary)/0.5)] border-2 border-background animate-bounce">
             {unreadCount > 9 ? "9+" : unreadCount}
@@ -109,7 +110,7 @@ export default function Notifications() {
           <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
             {notifications.length === 0 ? (
               <div className="p-10 text-center space-y-3">
-                <div className="text-4xl opacity-20 grayscale">🦉</div>
+                <div className="text-4xl opacity-20 grayscale"><EmojiIcon e="🦉" /></div>
                 <p className="text-xs text-foreground/70 italic font-serif">O corujal está silencioso hoje.</p>
               </div>
             ) : (
@@ -121,7 +122,7 @@ export default function Notifications() {
                     onClick={() => { if (!n.read) markAsRead(n.id); }}
                   >
                     <div className="flex gap-4">
-                      <div className="text-2xl mt-1 group-hover:scale-110 transition-transform duration-500">🦉</div>
+                      <div className="text-2xl mt-1 group-hover:scale-110 transition-transform duration-500"><EmojiIcon e="🦉" /></div>
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-start gap-2">
                           <h4 className={`text-sm leading-tight mb-1 ${!n.read ? "font-bold text-foreground" : "font-medium text-foreground/70"}`}>

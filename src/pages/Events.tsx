@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import MagicalEmoji from "@/components/shared/MagicalEmoji";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 type MagicalEvent = {
   id: string;
   name: string;
@@ -202,7 +203,7 @@ export default function Events() {
                     <p className="text-base font-heading text-primary">+{event.xp}</p>
                   </div>
                   <div className="flex-1 bg-black/40 p-2 rounded-xl text-center border border-yellow-500/10">
-                    <p className="text-[10px] text-muted-foreground uppercase">🪙</p>
+                    <p className="text-[10px] text-muted-foreground uppercase"><EmojiIcon e="🪙" /></p>
                     <p className="text-base font-heading text-yellow-500">+{event.galeons}</p>
                   </div>
                 </div>
@@ -232,7 +233,7 @@ export default function Events() {
         })}
         {!loading && dailyEvents.length === 0 && (
           <div className="col-span-full glass rounded-2xl sm:rounded-[2rem] p-12 sm:p-16 text-center border border-white/5">
-            <div className="text-6xl mb-4">🌙</div>
+            <div className="text-6xl mb-4"><EmojiIcon e="🌙" /></div>
             <p className="font-heading text-xl text-foreground">Nenhum evento mágico hoje</p>
             <p className="text-sm text-muted-foreground italic font-serif mt-2 max-w-md mx-auto">
               "Até os dementadores precisam de um dia de folga. Volte amanhã para novas celebrações em Hogwarts!"

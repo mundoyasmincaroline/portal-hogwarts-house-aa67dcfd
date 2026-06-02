@@ -9,6 +9,7 @@ import SafeImage from "@/components/SafeImage";
 import { House } from "@/types";
 import { UserPlus, UserCheck, Heart, Users, Camera } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface Character {
   id: string;
   full_name: string;
@@ -324,7 +325,7 @@ export default function InstaHogwarts() {
                     <button
                       className="absolute top-2 right-2 bg-black/60 hover:bg-red-500 backdrop-blur-md text-white rounded-full w-8 h-8 text-xs flex items-center justify-center transition-all border border-white/10"
                       onClick={() => setSelectedFile(null)}
-                    >✕</button>
+                    ><EmojiIcon e="✕" /></button>
                   </div>
                 </div>
               )}
@@ -365,7 +366,7 @@ export default function InstaHogwarts() {
           </div>
         ) : posts.length === 0 ? (
           <div className="glass rounded-[3rem] p-20 text-center border border-white/5 shadow-2xl">
-            <div className="text-6xl mb-6 opacity-20">📜</div>
+            <div className="text-6xl mb-6 opacity-20"><EmojiIcon e="📜" /></div>
             <p className="text-muted-foreground font-serif italic text-lg italic">"Ainda não há novas histórias no Profeta."</p>
           </div>
         ) : (

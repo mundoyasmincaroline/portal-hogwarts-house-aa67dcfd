@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { Coins, Search, ShoppingBag } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 const RARITY_STYLE: Record<string, string> = {
   common: "border-muted text-muted-foreground",
   uncommon: "border-green-500/50 text-green-400",
@@ -67,7 +68,7 @@ export default function Hogsmeade() {
     <div className="container mx-auto px-4 py-6 max-w-6xl">
       <div className="flex items-start justify-between flex-wrap gap-4 mb-6">
         <div>
-          <h1 className="font-heading text-2xl sm:text-3xl text-gold-gradient">🏪 Vila de Hogsmeade</h1>
+          <h1 className="font-heading text-2xl sm:text-3xl text-gold-gradient"><EmojiIcon e="🏪" /> Vila de Hogsmeade</h1>
           <p className="text-sm text-muted-foreground">Compre itens mágicos com seus Galeões</p>
         </div>
         <div className="glass-premium rounded-xl px-4 py-2 flex items-center gap-2">

@@ -6,6 +6,7 @@ import MagicalParticles from "@/components/MagicalParticles";
 import { toast } from "sonner";
 import CharacterCreation from "./CharacterCreation";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface Props {
   adminMode?: boolean;
 }
@@ -89,7 +90,7 @@ export default function CharacterSelection({ adminMode }: Props) {
                 {char.avatar_url ? (
                   <img src={char.avatar_url} alt={char.full_name} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full bg-secondary flex items-center justify-center text-2xl">🧙</div>
+                  <div className="w-full h-full bg-secondary flex items-center justify-center text-2xl"><EmojiIcon e="🧙" /></div>
                 )}
               </div>
               <h3 className="font-heading text-xl text-foreground mb-1">{char.full_name}</h3>
@@ -115,7 +116,7 @@ export default function CharacterSelection({ adminMode }: Props) {
               className="glass p-8 rounded-[2.5rem] border border-dashed border-primary/20 text-center flex flex-col items-center justify-center cursor-pointer hover:border-primary/60 hover:bg-primary/5 transition-all min-h-[350px] shadow-2xl hover:scale-[1.03]"
             >
               <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center text-2xl mb-4">
-                ✨
+                <EmojiIcon e="✨" />
               </div>
               <h3 className="font-heading text-lg text-foreground">Nova Ficha</h3>
               <p className="text-xs text-muted-foreground">Criar um novo personagem para a sua conta.</p>
@@ -130,7 +131,7 @@ export default function CharacterSelection({ adminMode }: Props) {
               onClick={handleAdminSkip}
               className="text-xs text-muted-foreground hover:text-primary underline underline-offset-2 transition-colors"
             >
-              ⚙️ Admin: pular seleção de personagem por agora
+              <EmojiIcon e="⚙️" /> Admin: pular seleção de personagem por agora
             </button>
           </div>
         )}

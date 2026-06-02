@@ -11,6 +11,7 @@ import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { ArrowLeftRight, Check, X, Plus } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 const STATUS_STYLE: Record<string, string> = {
   pending: "bg-yellow-500/20 text-yellow-400",
   accepted: "bg-green-500/20 text-green-400",
@@ -125,7 +126,7 @@ export default function ItemTrades() {
     <div className="container mx-auto px-4 py-6 max-w-4xl">
       <div className="flex items-start justify-between flex-wrap gap-4 mb-6">
         <div>
-          <h1 className="font-heading text-2xl sm:text-3xl text-gold-gradient">🤝 Trocas Mágicas</h1>
+          <h1 className="font-heading text-2xl sm:text-3xl text-gold-gradient"><EmojiIcon e="🤝" /> Trocas Mágicas</h1>
           <p className="text-sm text-muted-foreground">Negocie itens e galeões com outros bruxos</p>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>

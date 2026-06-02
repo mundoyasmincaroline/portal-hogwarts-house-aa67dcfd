@@ -8,6 +8,7 @@ import SafeImage from "@/components/SafeImage";
 import MagicalEmoji from "@/components/shared/MagicalEmoji";
 import StickerVisual from "@/components/StickerVisual";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface Sticker {
   id: string;
   character_name: string;
@@ -245,14 +246,14 @@ export default function StickerTrades() {
         <div className="space-y-4">
           {tab === "mercado" && otherTrades.length === 0 && (
             <div className="text-center py-12 text-muted-foreground">
-              <p className="text-4xl mb-3">🏪</p>
+              <p className="text-4xl mb-3"><EmojiIcon e="🏪" /></p>
               <p className="font-heading">O mercado está vazio no momento.</p>
               <p className="text-xs mt-1">Seja o primeiro a publicar uma oferta!</p>
             </div>
           )}
           {tab === "minhas" && myTrades.length === 0 && (
             <div className="text-center py-12 text-muted-foreground">
-              <p className="text-4xl mb-3">📦</p>
+              <p className="text-4xl mb-3"><EmojiIcon e="📦" /></p>
               <p className="font-heading">Você não tem ofertas ativas.</p>
             </div>
           )}
@@ -273,7 +274,7 @@ export default function StickerTrades() {
 
               <div className="flex flex-col items-center justify-center gap-2">
                 <div className="w-16 h-16 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center text-3xl shadow-[0_0_20px_rgba(234,179,8,0.2)] group-hover:rotate-180 transition-transform duration-700">
-                  ⚡
+                  <EmojiIcon e="⚡" />
                 </div>
                 <span className="text-[10px] text-primary/85 font-bold tracking-widest uppercase">Pacto</span>
               </div>
@@ -290,7 +291,7 @@ export default function StickerTrades() {
                 ) : (
                   <>
                     <div className="w-32 h-44 rounded-2xl border-4 border-dashed border-white/10 flex items-center justify-center text-5xl text-white/5 flex-shrink-0 bg-white/5 shadow-inner">
-                      ❓
+                      <EmojiIcon e="❓" />
                     </div>
                     <p className="font-heading text-lg text-muted-foreground italic">Qualquer Relíquia</p>
                   </>
@@ -330,7 +331,7 @@ export default function StickerTrades() {
                     className="w-full md:w-auto h-12 px-8 text-xs text-red-400 border-red-500/30 hover:bg-red-500/10 rounded-xl"
                     onClick={() => cancelTrade(trade.id)}
                   >
-                    CANCELAR ✕
+                    CANCELAR <EmojiIcon e="✕" />
                   </Button>
                 )}
               </div>

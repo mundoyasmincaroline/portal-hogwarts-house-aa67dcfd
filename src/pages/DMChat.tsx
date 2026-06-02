@@ -6,6 +6,7 @@ import { ArrowLeft, Send } from "lucide-react";
 import SafeImage from "@/components/SafeImage";
 import { toast } from "sonner";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface DM {
   id: string;
   sender_id: string;
@@ -145,7 +146,7 @@ export default function DMChat() {
           <p className="text-center text-muted-foreground py-10 text-sm">Buscando penas e pergaminhos...</p>
         ) : messages.length === 0 ? (
           <div className="text-center py-16">
-            <div className="text-4xl mb-3">🦉</div>
+            <div className="text-4xl mb-3"><EmojiIcon e="🦉" /></div>
             <p className="text-muted-foreground text-sm">Nenhuma mensagem ainda.<br />Seja o primeiro a escrever!</p>
           </div>
         ) : (

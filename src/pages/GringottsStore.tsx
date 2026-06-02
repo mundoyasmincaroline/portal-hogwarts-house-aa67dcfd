@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import EmojiIcon from "@/components/shared/EmojiIcon";
 import { 
   ShoppingBag, Sparkles, Coins, Crown, Gift, 
   Search, Filter, ChevronRight, Wand2, Shield, Heart, Zap, Star,
@@ -295,7 +296,7 @@ export default function GringottsStore() {
       {(tab !== "featured" && tab !== "galeons" && tab !== "vip") && (
         filteredItems.length === 0 ? (
           <div className="text-center py-24 space-y-4 animate-in fade-in duration-700">
-            <div className="text-7xl opacity-30">🪄</div>
+            <div className="text-7xl opacity-30"><EmojiIcon e="🪄" /></div>
             <p className="font-heading text-2xl text-muted-foreground">Os estoques de Gringotts estão sendo repostos...</p>
             <p className="text-sm text-muted-foreground/85 font-serif italic">"Os goblins trabalham dia e noite. Volte em breve."</p>
           </div>

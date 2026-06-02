@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import EnigmaModal from "@/components/EnigmaModal";
 import MagicalEmoji from "@/components/shared/MagicalEmoji";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface Challenge {
   id: string;
   title: string;
@@ -168,7 +169,7 @@ export default function Challenges() {
                 </div>
               </>
             ) : (
-              <p className="text-[10px] text-muted-foreground/70 italic text-center">⚙️ Avaliação automática — concluído ao realizar a ação no portal.</p>
+              <p className="text-[10px] text-muted-foreground/70 italic text-center"><EmojiIcon e="⚙️" /> Avaliação automática — concluído ao realizar a ação no portal.</p>
             )}
           </div>
         )}
@@ -197,35 +198,35 @@ export default function Challenges() {
 
       {!loading && challenges.length === 0 && (
         <div className="glass rounded-2xl p-8 text-center">
-          <div className="text-4xl mb-3">🪄</div>
+          <div className="text-4xl mb-3"><EmojiIcon e="🪄" /></div>
           <p className="text-muted-foreground text-sm">Nenhum desafio ativo no momento. Volte em breve!</p>
         </div>
       )}
 
       {daily.length > 0 && (
         <div>
-          <h2 className="font-heading text-lg text-foreground mb-3">📅 Missões Diárias</h2>
+          <h2 className="font-heading text-lg text-foreground mb-3"><EmojiIcon e="📅" /> Missões Diárias</h2>
           <div className="grid md:grid-cols-2 gap-4">{daily.map((c) => renderCard(c))}</div>
         </div>
       )}
 
       {weekly.length > 0 && (
         <div>
-          <h2 className="font-heading text-lg text-foreground mb-3">🏆 Desafios Semanais</h2>
+          <h2 className="font-heading text-lg text-foreground mb-3"><EmojiIcon e="🏆" /> Desafios Semanais</h2>
           <div className="grid md:grid-cols-2 gap-4">{weekly.map((c) => renderCard(c, true))}</div>
         </div>
       )}
 
       {special.length > 0 && (
         <div>
-          <h2 className="font-heading text-lg text-foreground mb-3">✨ Eventos Especiais</h2>
+          <h2 className="font-heading text-lg text-foreground mb-3"><EmojiIcon e="✨" /> Eventos Especiais</h2>
           <div className="grid md:grid-cols-2 gap-4">{special.map((c) => renderCard(c, true))}</div>
         </div>
       )}
 
       {enigmas.length > 0 && (
         <div>
-          <h2 className="font-heading text-lg text-foreground mb-3">🦉 Enigmas de Hogwarts</h2>
+          <h2 className="font-heading text-lg text-foreground mb-3"><EmojiIcon e="🦉" /> Enigmas de Hogwarts</h2>
           <p className="text-xs text-muted-foreground mb-3 -mt-1">Responda corretamente para ganhar XP instantâneo!</p>
           <div className="grid md:grid-cols-2 gap-4">{enigmas.map((c) => renderCard(c, true))}</div>
         </div>
@@ -233,7 +234,7 @@ export default function Challenges() {
 
       {social.length > 0 && (
         <div>
-          <h2 className="font-heading text-lg text-foreground mb-3">📱 Embaixador de Hogwarts (Redes Sociais)</h2>
+          <h2 className="font-heading text-lg text-foreground mb-3"><EmojiIcon e="📱" /> Embaixador de Hogwarts (Redes Sociais)</h2>
           <div className="grid md:grid-cols-2 gap-4">{social.map((c) => renderCard(c, true))}</div>
         </div>
       )}
@@ -241,9 +242,9 @@ export default function Challenges() {
       {activeSocial && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-fade-in">
           <div className="glass max-w-md w-full rounded-2xl p-6 relative border border-primary/20 animate-scale-in">
-            <button onClick={() => setActiveSocial(null)} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground">✕</button>
+            <button onClick={() => setActiveSocial(null)} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"><EmojiIcon e="✕" /></button>
             <div className="text-center mb-6">
-              <span className="text-4xl">🔗</span>
+              <span className="text-4xl"><EmojiIcon e="🔗" /></span>
               <h2 className="font-heading text-2xl text-foreground mt-2">Comprovar Missão</h2>
               <p className="text-sm text-muted-foreground mt-1">Cole abaixo o link público da sua postagem.</p>
             </div>

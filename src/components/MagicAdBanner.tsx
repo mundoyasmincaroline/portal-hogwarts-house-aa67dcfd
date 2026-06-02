@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function MagicAdBanner() {
   const [ads, setAds] = useState<any[]>([]);
   const [currentAdIndex, setCurrentAdIndex] = useState(0);
@@ -53,7 +54,7 @@ export default function MagicAdBanner() {
           </p>
           <div className="flex items-center gap-2">
             <span className="text-[9px] font-bold text-primary uppercase tracking-tighter group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-              Ver Detalhes 🪄
+              Ver Detalhes <EmojiIcon e="🪄" />
             </span>
           </div>
         </div>

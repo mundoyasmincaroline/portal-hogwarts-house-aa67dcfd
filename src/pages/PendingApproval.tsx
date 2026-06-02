@@ -3,6 +3,7 @@ import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function PendingApproval() {
   const { logout, user, fetchProfile } = useAuth();
 
@@ -40,7 +41,7 @@ export default function PendingApproval() {
         />
       ))}
       <div className="max-w-md w-full glass rounded-[2.5rem] p-8 sm:p-10 text-center space-y-7 z-10 border-primary/20 shadow-[0_30px_100px_rgba(0,0,0,0.8)] hover:border-primary/40 transition-all duration-700 relative">
-        <div className="text-7xl animate-float drop-shadow-[0_0_25px_rgba(251,191,36,0.5)]">🦉</div>
+        <div className="text-7xl animate-float drop-shadow-[0_0_25px_rgba(251,191,36,0.5)]"><EmojiIcon e="🦉" /></div>
         <div className="space-y-2">
           <p className="text-xs uppercase tracking-[0.4em] text-primary/80">Carta em trânsito</p>
           <h1 className="font-heading text-3xl text-gold-gradient tracking-tight leading-none">

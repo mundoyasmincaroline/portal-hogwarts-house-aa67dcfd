@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import SafeImage from "@/components/SafeImage";
 import { motion } from "framer-motion";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface PostCardProps {
   post: any;
   user: any;
@@ -47,8 +48,8 @@ const PostCard = memo(({
             {post.author?.full_name || "Bruxo desconhecido"}
           </p>
           <div className="flex items-center gap-1.5 flex-wrap">
-            {post.author?.vip_plan === "founder" && <span className="text-[7px] sm:text-[8px] bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 px-1.5 sm:px-2 py-0.5 rounded-full font-heading tracking-widest uppercase shadow-[0_0_10px_rgba(234,179,8,0.1)]">👑 Fundador</span>}
-            {post.author?.vip_plan === "vip" && <span className="text-[7px] sm:text-[8px] bg-purple-500/10 text-purple-400 border border-purple-500/20 px-1.5 sm:px-2 py-0.5 rounded-full font-heading tracking-widest uppercase">💜 VIP</span>}
+            {post.author?.vip_plan === "founder" && <span className="text-[7px] sm:text-[8px] bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 px-1.5 sm:px-2 py-0.5 rounded-full font-heading tracking-widest uppercase shadow-[0_0_10px_rgba(234,179,8,0.1)]"><EmojiIcon e="👑" /> Fundador</span>}
+            {post.author?.vip_plan === "vip" && <span className="text-[7px] sm:text-[8px] bg-purple-500/10 text-purple-400 border border-purple-500/20 px-1.5 sm:px-2 py-0.5 rounded-full font-heading tracking-widest uppercase"><EmojiIcon e="💜" /> VIP</span>}
           </div>
         </div>
         <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
@@ -120,7 +121,7 @@ const PostCard = memo(({
         onClick={() => onToggleComments(post.id)}
         className="px-3 sm:px-4 py-2 rounded-2xl text-[10px] sm:text-[11px] font-heading uppercase tracking-widest text-foreground/85 bg-black/40 border border-white/10 hover:text-primary hover:border-primary/50 hover:bg-primary/10 transition-all active:scale-95 ml-auto sm:ml-0 flex items-center gap-2 min-h-[36px]"
       >
-        <span className="text-sm">💬</span> {post.comments?.length || 0}
+        <span className="text-sm"><EmojiIcon e="💬" /></span> {post.comments?.length || 0}
       </button>
     </div>
 

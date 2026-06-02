@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { X, User, Scroll, Save, Trash2, ChevronDown, ChevronUp, Image as ImageIcon, Upload } from "lucide-react";
 import SafeImage from "@/components/SafeImage";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface Props {
   memberId: string; // user_id
   memberName: string;
@@ -250,7 +251,7 @@ export default function AdminMemberModal({ memberId, memberName, onClose, onSave
                       onChange={e => pf("blood_locked", e.target.checked)}
                       className="accent-primary w-4 h-4"
                     />
-                    <span className="text-foreground">🔒 Status Sanguíneo Fixado (Impedir alteração automática)</span>
+                    <span className="text-foreground"><EmojiIcon e="🔒" /> Status Sanguíneo Fixado (Impedir alteração automática)</span>
                   </label>
                 </div>
               </div>
@@ -283,7 +284,7 @@ export default function AdminMemberModal({ memberId, memberName, onClose, onSave
                     setCharacters([...characters, newChar]);
                     setExpandedChar(newChar.id);
                   }} variant="magical" size="sm">
-                    ✨ Criar Primeira Ficha
+                    <EmojiIcon e="✨" /> Criar Primeira Ficha
                   </Button>
                 </div>
               ) : (
@@ -302,7 +303,7 @@ export default function AdminMemberModal({ memberId, memberName, onClose, onSave
                     setCharacters([newChar, ...characters]);
                     setExpandedChar(newChar.id);
                   }} variant="outline" size="sm">
-                    ➕ Nova Ficha
+                    <EmojiIcon e="➕" /> Nova Ficha
                   </Button>
                 </div>
               )}

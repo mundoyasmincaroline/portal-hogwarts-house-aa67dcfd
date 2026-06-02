@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { House } from "@/types";
 import MagicAdBanner from "@/components/MagicAdBanner";
+import EmojiIcon from "@/components/shared/EmojiIcon";
 import { 
   Lock, Zap, Coffee, Newspaper, MessageSquare, 
   Castle, Train, Sparkles, GraduationCap, Flame,
@@ -182,7 +183,7 @@ export default function Chats() {
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem]" />
                     
                     {room.is_premium && (
-                      <div className="absolute -top-3 -right-3 w-12 h-12 flex items-center justify-center text-3xl animate-bounce drop-shadow-[0_0_10px_rgba(234,179,8,0.6)]">✨</div>
+                      <div className="absolute -top-3 -right-3 w-12 h-12 flex items-center justify-center text-3xl animate-bounce drop-shadow-[0_0_10px_rgba(234,179,8,0.6)]"><EmojiIcon e="✨" /></div>
                     )}
                     
                     {isDisabled && (
@@ -197,7 +198,7 @@ export default function Chats() {
                       </div>
                       {isLocked && (
                         <div className="w-10 h-10 flex items-center justify-center text-xl text-muted-foreground bg-black/60 rounded-xl border border-white/10 shadow-inner" title="Acesso Negado">
-                          🔒
+                          <EmojiIcon e="🔒" />
                         </div>
                       )}
                     </div>

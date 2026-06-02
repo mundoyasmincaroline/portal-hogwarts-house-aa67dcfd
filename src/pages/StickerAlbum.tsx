@@ -15,6 +15,7 @@ import { Sticker } from "@/types";
 import { RARITY_COST, PACK_COST } from "@/constants/gameConstants";
 import { shareContent, buildStickerShareText, buildAlbumShareText } from "@/lib/share";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 const RARITY_ORDER = { bronze: 0, silver: 1, gold: 2 };
 
 export default function StickerAlbum() {
@@ -56,7 +57,7 @@ export default function StickerAlbum() {
       setTimeout(() => {
         toast(
           <div className="text-center">
-            <div className="text-4xl mb-2">🏆</div>
+            <div className="text-4xl mb-2"><EmojiIcon e="🏆" /></div>
             <p className="font-heading text-xl text-yellow-400 font-bold">ÁLBUM COMPLETO!</p>
             <p className="text-sm text-muted-foreground">Você é uma lenda de Hogwarts! +500 XP de bônus!</p>
           </div>,
@@ -261,7 +262,7 @@ export default function StickerAlbum() {
 
               <div className="text-center space-y-6">
                 <div className="space-y-2">
-                   <h2 className="font-heading text-4xl text-white drop-shadow-lg">✨ Nova Figurinha!</h2>
+                   <h2 className="font-heading text-4xl text-white drop-shadow-lg"><EmojiIcon e="✨" /> Nova Figurinha!</h2>
                     <p className="text-muted-foreground font-serif italic text-lg">"Uma adição magnífica ao seu álbum."</p>
                 </div>
                 <div className="flex flex-col gap-3 w-full">
@@ -329,7 +330,7 @@ export default function StickerAlbum() {
                 <p className="text-sm text-muted-foreground font-serif italic">"Um Galeão por uma história, uma carta por um amigo."</p>
             </div>
             <Button variant="plaque" className="w-full h-14 rounded-2xl border-white/10" onClick={() => navigate("/dashboard/trades")}>
-                Acessar Mercado 🏪
+                Acessar Mercado <EmojiIcon e="🏪" />
             </Button>
             <Button variant="outline" className="w-full h-12 rounded-2xl border-yellow-500/30 text-yellow-300 hover:bg-yellow-500/10" onClick={handleShareAlbum}>
                 <Share2 size={16} className="mr-2" /> Compartilhar Álbum
@@ -372,7 +373,7 @@ export default function StickerAlbum() {
 
       {completedBanner && (
         <div className="glass rounded-[3rem] p-12 text-center border-2 border-yellow-400 bg-gradient-to-r from-yellow-900/40 via-black/60 to-yellow-900/40 shadow-[0_0_80px_rgba(251,191,36,0.3)] animate-pulse-glow">
-            <h2 className="font-heading text-5xl text-yellow-400 mb-4 tracking-tighter">🏆 LENDA DE HOGWARTS 🏆</h2>
+            <h2 className="font-heading text-5xl text-yellow-400 mb-4 tracking-tighter"><EmojiIcon e="🏆" /> LENDA DE HOGWARTS <EmojiIcon e="🏆" /></h2>
             <p className="text-xl text-yellow-100/70 font-serif italic max-w-2xl mx-auto leading-relaxed">
                 "Você reuniu todos os fragmentos da história. Seu nome agora ecoa pelos corredores do castelo como o maior colecionador de todos os tempos."
             </p>

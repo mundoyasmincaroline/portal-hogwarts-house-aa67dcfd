@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface EnigmaModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -26,7 +27,7 @@ export default function EnigmaModal({ isOpen, onClose, question, onAnswer }: Eni
         <DialogHeader className="pt-6">
           <div className="flex justify-center mb-4">
             <div className="w-16 h-16 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center animate-pulse shadow-[0_0_20px_rgba(212,175,55,0.3)]">
-               <span className="text-3xl animate-float">🔮</span>
+               <span className="text-3xl animate-float"><EmojiIcon e="🔮" /></span>
             </div>
           </div>
           <DialogTitle className="font-heading text-2xl text-gold-gradient text-center">O Enigma da Esfinge</DialogTitle>
@@ -46,7 +47,7 @@ export default function EnigmaModal({ isOpen, onClose, question, onAnswer }: Eni
           />
           <div className="flex gap-3 justify-center">
             <Button type="button" variant="ghost" onClick={onClose}>Fugir</Button>
-            <Button type="submit" variant="magical">Responder ⚡</Button>
+            <Button type="submit" variant="magical">Responder <EmojiIcon e="⚡" /></Button>
           </div>
           <p className="text-[10px] text-muted-foreground text-center">Cuidado! Respostas erradas te deixarão em cooldown.</p>
         </form>

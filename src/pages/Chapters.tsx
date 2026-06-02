@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { BookOpen, Sparkles, Check, Lock } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 interface Chapter {
   id: string; slug: string; title: string; summary: string | null; content: string;
   chapter_order: number; requires_level: number; rewards_xp: number; rewards_galeons: number; cover_emoji: string | null;
@@ -109,7 +110,7 @@ export default function Chapters() {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       <header className="text-center space-y-2">
-        <div className="text-4xl">📜</div>
+        <div className="text-4xl"><EmojiIcon e="📜" /></div>
         <h1 className="font-heading text-3xl sm:text-4xl text-gold-gradient">Crônicas de Hogwarts</h1>
         <p className="text-muted-foreground text-sm">Sua jornada narrativa. Cada escolha molda seu destino.</p>
       </header>

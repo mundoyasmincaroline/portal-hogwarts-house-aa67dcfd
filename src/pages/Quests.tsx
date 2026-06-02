@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Map, Sparkles, Coins, Lock } from "lucide-react";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 type Quest = {
   id: string;
   slug: string;
@@ -157,7 +158,7 @@ export default function Quests() {
                   </Button>
                 )}
                 {myProg?.completed && (
-                  <Badge className="bg-primary text-primary-foreground">Concluída ✨</Badge>
+                  <Badge className="bg-primary text-primary-foreground">Concluída <EmojiIcon e="✨" /></Badge>
                 )}
               </div>
             </div>

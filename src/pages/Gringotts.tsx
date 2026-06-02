@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 
+import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function Gringotts() {
   const [loans, setLoans] = useState<any[]>([]);
   const [stocks, setStocks] = useState<any[]>([]);
@@ -44,7 +45,7 @@ export default function Gringotts() {
   return (
     <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
       <header>
-        <h1 className="font-heading text-2xl sm:text-3xl text-primary">🏦 Banco de Gringotts</h1>
+        <h1 className="font-heading text-2xl sm:text-3xl text-primary"><EmojiIcon e="🏦" /> Banco de Gringotts</h1>
         <p className="text-foreground/70 font-serif italic">Empréstimos e investimentos no mercado bruxo.</p>
       </header>
       <Tabs defaultValue="loans">
