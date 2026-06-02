@@ -12,7 +12,8 @@ import {
   Users,
   ShoppingBag,
   Zap,
-  Swords
+  Swords,
+  ScrollText
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -104,54 +105,65 @@ export default function MagicalMentor() {
   const [isOpen, setIsOpen] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
   const [showHouseGuide, setShowHouseGuide] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
   
   const houseId = (profile?.house as House) || "gryffindor";
   const house = HOUSES[houseId];
   const houseGuide = HOUSE_GUIDES[houseId];
 
+  const storageKey = profile?.user_id ? `mentor_state_${profile.user_id}` : null;
+  const readState = () => {
+    if (!storageKey) return {} as any;
+    try { return JSON.parse(localStorage.getItem(storageKey) || "{}"); } catch { return {}; }
+  };
+  const writeState = (patch: Record<string, any>) => {
+    if (!storageKey) return;
+    const next = { ...readState(), ...patch };
+    localStorage.setItem(storageKey, JSON.stringify(next));
+  };
+
   // Lógica de visibilidade e persistência do mentor
   useEffect(() => {
     if (!profile?.user_id) return;
-    
-    const mentorData = JSON.parse(localStorage.getItem(`mentor_state_${profile.user_id}`) || '{}');
+
+    const mentorData = readState();
+
+    // "Juro solenemente que já sei o caminho" — usuário pediu para nunca mais ver
+    if (mentorData.dismissed_forever) {
+      setDismissed(true);
+      return;
+    }
+
     const now = Date.now();
     const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
-    
-    // Se já passou o período de treinamento (7 dias) e já viu o guia, não abre sozinho
+
+    // Se já passou o período de treinamento (7 dias) e já viu o guia, oculta o mentor
     const isTrainingOver = mentorData.started_at && (now - mentorData.started_at > SEVEN_DAYS);
-    
+    if (isTrainingOver && mentorData.has_seen_initial_guide) {
+      setDismissed(true);
+      return;
+    }
+
     if (!mentorData.has_seen_initial_guide) {
       // Primeira vez: inicia contador e abre guia
-      localStorage.setItem(`mentor_state_${profile.user_id}`, JSON.stringify({
-        ...mentorData,
-        started_at: now,
-        has_seen_initial_guide: false
-      }));
+      writeState({
+        started_at: mentorData.started_at || now,
+        has_seen_initial_guide: false,
+      });
       setTimeout(() => setIsOpen(true), 2500);
-    } else if (!isTrainingOver) {
-      // Período de aprendizado: pode sugerir algo dependendo da página, 
-      // mas por enquanto apenas não abre sozinho se já viu o guia inicial hoje
-      const lastSeen = mentorData.last_auto_open || 0;
-      const ONE_DAY = 24 * 60 * 60 * 1000;
-      
-      if (now - lastSeen > ONE_DAY) {
-        // Abre uma vez por dia durante a primeira semana
-        setTimeout(() => setIsOpen(true), 3000);
-        localStorage.setItem(`mentor_state_${profile.user_id}`, JSON.stringify({
-          ...mentorData,
-          last_auto_open: now
-        }));
-      }
     }
+    // Após ver o guia inicial: NÃO reabre sozinho. Usuário decide quando consultar.
   }, [profile?.user_id]);
 
   const handleClose = () => {
-    const mentorData = JSON.parse(localStorage.getItem(`mentor_state_${profile?.user_id}`) || '{}');
-    localStorage.setItem(`mentor_state_${profile?.user_id}`, JSON.stringify({
-      ...mentorData,
-      has_seen_initial_guide: true
-    }));
+    writeState({ has_seen_initial_guide: true });
     setIsOpen(false);
+  };
+
+  const handleDismissForever = () => {
+    writeState({ has_seen_initial_guide: true, dismissed_forever: true });
+    setIsOpen(false);
+    setDismissed(true);
   };
 
   const nextStep = () => {
@@ -171,6 +183,8 @@ export default function MagicalMentor() {
   };
 
   const currentStep = GENERAL_STEPS[stepIndex];
+
+  if (dismissed) return null;
 
   return (
     <>
@@ -272,6 +286,17 @@ export default function MagicalMentor() {
                         </Button>
                       </div>
                     </div>
+
+                    <div className="pt-2 border-t border-primary/10">
+                      <button
+                        onClick={handleDismissForever}
+                        className="w-full text-[10px] font-heading uppercase tracking-widest text-foreground/40 hover:text-primary/80 transition-colors py-1 flex items-center justify-center gap-1.5"
+                        title="O mentor não aparecerá mais. Você sempre pode reativá-lo limpando os dados do navegador."
+                      >
+                        <ScrollText className="w-3 h-3" />
+                        Juro solenemente que já sei o caminho
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <div className="space-y-6 animate-fade-in">
@@ -305,7 +330,7 @@ export default function MagicalMentor() {
                       <Button 
                         variant="magical" 
                         className="w-full font-heading"
-                        onClick={handleClose}
+                        onClick={handleDismissForever}
                       >
                         Malfeito, Feito! Entrar no Castelo
                       </Button>
