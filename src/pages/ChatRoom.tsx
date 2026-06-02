@@ -280,9 +280,9 @@ export default function ChatRoom() {
     e.preventDefault();
     if (!input.trim() || !channel || !user || cooldown > 0 || isSending) return;
     setIsSending(true);
-    
+    try {
     const content = input;
-    
+
     // ── RPG Command: /dado ──
     if (content.startsWith('/dado')) {
       const parts = content.split(' ');
@@ -402,6 +402,9 @@ export default function ChatRoom() {
       }
     }
     setIsSending(false);
+    } finally {
+      setIsSending(false);
+    }
   };
 
   const deleteMessage = async (messageId: string) => {
