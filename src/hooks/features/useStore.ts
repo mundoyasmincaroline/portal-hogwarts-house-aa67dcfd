@@ -9,7 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 const MONSTER_QUALITY_ITEMS: StoreItem[] = [];
 
 export function useStore() {
-  const { user, profile } = useAuth();
+  const { user, profile, fetchProfile } = useAuth();
   const [items, setItems] = useState<StoreItem[]>([]);
   const [owned, setOwned] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -56,6 +56,8 @@ export function useStore() {
       }
 
       setOwned(prev => [...prev, item.id]);
+      // Atualiza saldo de Galeões/XP imediatamente
+      try { await fetchProfile(user.id); } catch {}
       if (item.effects?.xp_reward) {
         toast.success(`✅ "${item.name}" adicionado! Você recebeu ${item.effects.xp_reward} XP!`);
       } else {
