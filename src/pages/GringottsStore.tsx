@@ -210,7 +210,7 @@ export default function GringottsStore() {
           <Button
             key={t.id}
             variant={tab === t.id ? "magical" : "outline"}
-            className="rounded-full px-6 py-6 h-auto"
+            className="rounded-full px-3 py-2 sm:px-6 sm:py-6 h-auto text-xs sm:text-sm"
             onClick={() => {
               playMagicSound();
               setTab(t.id);
@@ -249,10 +249,10 @@ export default function GringottsStore() {
       {tab === "galeons" && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 animate-in fade-in slide-in-from-bottom-8">
           {GALEON_PACKAGES.map(pkg => (
-            <div key={pkg.id} className="glass p-10 rounded-[3.5rem] border-yellow-500/20 text-center flex flex-col items-center hover:scale-[1.02] transition-transform">
+            <div key={pkg.id} className="glass p-6 sm:p-10 rounded-2xl sm:rounded-[3.5rem] border-yellow-500/20 text-center flex flex-col items-center hover:scale-[1.02] transition-transform">
               <div className="text-6xl mb-4">{pkg.icon}</div>
               <h3 className="font-heading text-2xl text-yellow-400">{pkg.name}</h3>
-              <p className="text-4xl font-heading my-4">{pkg.galeons} 🪙</p>
+              <p className="text-3xl sm:text-4xl font-heading my-4">{pkg.galeons} 🪙</p>
               <Button 
                 variant="magical" 
                 className="w-full h-14 rounded-2xl"
