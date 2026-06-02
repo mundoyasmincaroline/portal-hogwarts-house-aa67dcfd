@@ -41,6 +41,7 @@ const Wallet = lazy(() => import("./pages/Wallet"));
 const Terms = lazy(() => import("./pages/Terms"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const ParentsGuide = lazy(() => import("./pages/ParentsGuide"));
+const RPHistory = lazy(() => import("./pages/RPHistory"));
 
 const LoadingFallback = () => (
   <div className="flex h-screen items-center justify-center bg-background">
