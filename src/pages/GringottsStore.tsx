@@ -104,10 +104,8 @@ export default function GringottsStore() {
           }
           playMagicSound();
           setTimeout(() => window.location.reload(), 1500);
-        } else if (result?.paid === false) {
-          toast.warning("⏳ Pagamento ainda não confirmado. Aguarde alguns segundos e atualize.");
         } else {
-          toast.error(result?.message || "Não foi possível confirmar agora.");
+          toast.warning(result?.message || "⏳ Pagamento ainda não confirmado. Aguarde alguns segundos.");
         }
       } catch (e: any) {
         toast.error(e.message || "Erro ao verificar pagamento.");

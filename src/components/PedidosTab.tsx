@@ -32,50 +32,18 @@ export default function PedidosTab() {
     if (order.status === "paid") { toast.info("Pedido já processado."); return; }
     setProcessing(order.id);
     try {
-      const { data: prof } = await supabase
-        .from("profiles")
-        .select("galeons")
-        .eq("user_id", order.user_id)
-        .single();
-
-      const currentGaleons = prof?.galeons ?? 0;
-      const isVip = order.package_id?.startsWith("vip_");
-
-      if (isVip) {
-        const planId = order.package_id.replace("vip_", "");
-        const VIP_GALEONS: Record<string, number> = { premium: 0, vip: 200, founder: 500 };
-        const expires = new Date();
-        expires.setMonth(expires.getMonth() + 1);
-
-        await supabase.from("profiles").update({
-          vip_plan: planId,
-          vip_expires_at: expires.toISOString(),
-          galeons: currentGaleons + (VIP_GALEONS[planId] || 0),
-        } as never).eq("user_id", order.user_id);
-
-        await supabase.from("vip_subscriptions").insert({
-          user_id: order.user_id,
-          plan: planId,
-          amount_brl: order.amount_brl,
-          status: "active",
-          expires_at: expires.toISOString(),
-          galeons_monthly: VIP_GALEONS[planId] ?? 0,
-        } as never);
-
-        toast.success(`👑 VIP ${planId.toUpperCase()} ativado para ${order.profiles?.full_name}!`);
-      } else {
-        const galeons = order.galeons ?? 0;
-        await supabase.from("profiles")
-          .update({ galeons: currentGaleons + galeons } as never)
-          .eq("user_id", order.user_id);
-        toast.success(`🪙 ${galeons} Galeões creditados para ${order.profiles?.full_name}!`);
+      const { data, error } = await supabase.rpc("admin_credit_order", { _order_id: order.id });
+      if (error) throw error;
+      const result = data as { success: boolean; message?: string; type?: string; plan?: string; galeons?: number };
+      if (!result?.success) {
+        toast.error(result?.message || "Falha ao creditar pedido.");
+        return;
       }
-
-      // Marcar pedido como pago
-      await supabase.from("galeon_orders")
-        .update({ status: "paid", paid_at: new Date().toISOString() } as never)
-        .eq("id", order.id);
-
+      if (result.type === "vip") {
+        toast.success(`👑 VIP ${String(result.plan).toUpperCase()} ativado para ${order.profiles?.full_name}!`);
+      } else {
+        toast.success(`🪙 ${result.galeons ?? 0} Galeões creditados para ${order.profiles?.full_name}!`);
+      }
       loadOrders();
     } catch (e: any) {
       toast.error("Erro ao creditar: " + e.message);

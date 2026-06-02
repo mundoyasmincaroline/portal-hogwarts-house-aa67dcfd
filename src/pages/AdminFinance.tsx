@@ -51,7 +51,7 @@ export default function AdminFinance() {
 
       if (error) throw error;
 
-      const completed = (allOrders || []).filter(o => o.status === "completed");
+      const completed = (allOrders || []).filter(o => o.status === "paid");
       
       // Calculate Stats
       const totalRevenue = completed.reduce((sum, o) => sum + (o.amount_brl || 0), 0);
@@ -60,7 +60,7 @@ export default function AdminFinance() {
       // Revenue by day (last 7 days)
       const dayMap: Record<string, number> = {};
       completed.forEach(o => {
-        const day = new Date(o.created_at).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
+        const day = new Date(o.paid_at || o.created_at).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
         dayMap[day] = (dayMap[day] || 0) + o.amount_brl;
       });
       const revenueByDay = Object.entries(dayMap).map(([name, value]) => ({ name, value })).reverse().slice(0, 7).reverse();
@@ -68,7 +68,7 @@ export default function AdminFinance() {
       // Orders by Type
       const typeMap: Record<string, number> = {};
       completed.forEach(o => {
-        const type = o.package_id.includes("vip") ? "VIP" : "Galeões";
+        const type = (o.package_id || "").startsWith("vip_") ? "VIP" : "Galeões";
         typeMap[type] = (typeMap[type] || 0) + 1;
       });
       const ordersByType = Object.entries(typeMap).map(([name, value]) => ({ name, value }));
@@ -268,11 +268,11 @@ export default function AdminFinance() {
                   </td>
                   <td className="px-4 sm:px-8 py-6">
                     <span className={`text-[8px] sm:text-[9px] font-bold uppercase px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border ${
-                      o.status === "completed" ? "bg-green-500/20 text-green-400 border-green-500/30" : 
+                      o.status === "paid" ? "bg-green-500/20 text-green-400 border-green-500/30" : 
                       o.status === "pending" ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" : 
                       "bg-red-500/20 text-red-400 border-red-500/30"
                     }`}>
-                      {o.status === "completed" ? "OK" : o.status === "pending" ? "PEN" : "ERRO"}
+                      {o.status === "paid" ? "OK" : o.status === "pending" ? "PEN" : "ERRO"}
                     </span>
                   </td>
                   <td className="px-4 sm:px-8 py-6 text-right hidden lg:table-cell">

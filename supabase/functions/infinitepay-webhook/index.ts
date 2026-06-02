@@ -97,7 +97,7 @@ serve(async (req) => {
         infinitepay_id: transaction_nsu ?? null,
       })
       .eq("id", order_nsu)
-      .neq("status", "paid")
+      .eq("status", "pending")
       .select("id")
       .maybeSingle();
 
@@ -145,16 +145,10 @@ serve(async (req) => {
       // Creditar Galeões mensais do VIP
       const galeonBonus = VIP_GALEONS[planId] ?? 0;
       if (galeonBonus > 0) {
-        const { data: prof } = await supabase
-          .from("profiles")
-          .select("galeons")
-          .eq("user_id", order.user_id)
-          .single();
-
-        await supabase
-          .from("profiles")
-          .update({ galeons: (prof?.galeons ?? 0) + galeonBonus })
-          .eq("user_id", order.user_id);
+        await supabase.rpc("credit_galeons_atomic", {
+          _user_id: order.user_id,
+          _amount: galeonBonus,
+        });
       }
 
       // Registrar assinatura
@@ -182,16 +176,10 @@ serve(async (req) => {
       const galeons = order.galeons ?? 0;
 
       if (galeons > 0) {
-        const { data: prof } = await supabase
-          .from("profiles")
-          .select("galeons")
-          .eq("user_id", order.user_id)
-          .single();
-
-        await supabase
-          .from("profiles")
-          .update({ galeons: (prof?.galeons ?? 0) + galeons })
-          .eq("user_id", order.user_id);
+        await supabase.rpc("credit_galeons_atomic", {
+          _user_id: order.user_id,
+          _amount: galeons,
+        });
 
         console.log(`✅ ${galeons} Galeões creditados para ${order.user_id}`);
 

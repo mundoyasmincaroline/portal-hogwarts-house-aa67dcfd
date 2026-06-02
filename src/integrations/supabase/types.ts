@@ -2830,6 +2830,7 @@ export type Database = {
     }
     Functions: {
       accept_sticker_trade: { Args: { _trade_id: string }; Returns: Json }
+      admin_credit_order: { Args: { _order_id: string }; Returns: Json }
       admin_grant_vip: {
         Args: { _months?: number; _plan: string; _user_id: string }
         Returns: undefined
@@ -2871,6 +2872,10 @@ export type Database = {
           p_vip_plan?: string
         }
         Returns: Json
+      }
+      credit_galeons_atomic: {
+        Args: { _amount: number; _user_id: string }
+        Returns: number
       }
       get_payment_link: {
         Args: { p_order_id: string; p_request_id: number }
