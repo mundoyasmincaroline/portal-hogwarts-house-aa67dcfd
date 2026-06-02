@@ -76,8 +76,15 @@ export default function CastleMap() {
       <header className="text-center space-y-2">
         <div className="text-4xl"><EmojiIcon e="🗺️" /></div>
         <h1 className="font-heading text-3xl sm:text-4xl text-gold-gradient">Mapa do Castelo</h1>
-        <p className="text-muted-foreground text-sm">Explore Hogwarts. Cada sala guarda surpresas.</p>
+        <div className="flex flex-col items-center gap-2 mt-2">
+          <p className="text-muted-foreground text-sm max-w-md">Explore Hogwarts clicando nos ícones. Cada sala guarda segredos, XP e até Galeões escondidos!</p>
+          <div className="flex gap-3 text-[10px] uppercase tracking-widest font-heading text-primary/60">
+            <span className="flex items-center gap-1"><EmojiIcon e="🔒" size={12} /> Nível Insuficiente</span>
+            <span className="flex items-center gap-1"><EmojiIcon e="✨" size={12} /> Evento Aleatório</span>
+          </div>
+        </div>
       </header>
+
 
       <Card className="relative w-full aspect-[16/10] bg-gradient-to-br from-amber-950/40 via-stone-900/60 to-slate-950/80 border-2 border-primary/30 overflow-hidden">
         {/* Castle silhouette decoration */}

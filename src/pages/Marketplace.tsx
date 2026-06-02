@@ -122,10 +122,16 @@ export default function Marketplace() {
           <h1 className="font-heading text-3xl sm:text-4xl text-primary flex items-center gap-3 flex-wrap">
             <ShoppingBag className="w-7 h-7 sm:w-9 sm:h-9" /> Mercado do Beco
           </h1>
-          <p className="text-muted-foreground mt-2">
-            Compre e venda figurinhas com outros bruxos. Taxa do Gringotes: 10%.
-          </p>
+          <div className="flex items-center gap-2 mt-2">
+            <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-3 py-1">
+              <EmojiIcon e="📜" className="mr-1" /> Guia do Comerciante
+            </Badge>
+            <p className="text-muted-foreground text-sm">
+              Compre e venda itens com outros bruxos. Taxa do Gringotes: 10%.
+            </p>
+          </div>
         </div>
+
 
         <Dialog>
           <DialogTrigger asChild>
