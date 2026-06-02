@@ -2080,6 +2080,39 @@ export type Database = {
         }
         Relationships: []
       }
+      rp_streak_milestones: {
+        Row: {
+          active: boolean
+          created_at: string
+          days_required: number
+          galeons_bonus: number
+          id: string
+          label: string
+          updated_at: string
+          xp_bonus: number
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          days_required: number
+          galeons_bonus?: number
+          id?: string
+          label?: string
+          updated_at?: string
+          xp_bonus?: number
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          days_required?: number
+          galeons_bonus?: number
+          id?: string
+          label?: string
+          updated_at?: string
+          xp_bonus?: number
+        }
+        Relationships: []
+      }
       rp_streak_rewards: {
         Row: {
           claim_date: string
@@ -2932,26 +2965,7 @@ export type Database = {
         Args: { _father_id: string; _mother_id: string }
         Returns: string
       }
-      claim_rp_slot: {
-        Args: { p_character_id: string }
-        Returns: {
-          character_id: string
-          claim_date: string
-          claimed_at: string
-          ended_at: string | null
-          id: string
-          last_active_at: string
-          messages_count: number
-          user_id: string
-          xp_earned: number
-        }
-        SetofOptions: {
-          from: "*"
-          to: "rp_daily_claims"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
+      claim_rp_slot: { Args: { p_character_id: string }; Returns: Json }
       complete_referral_action: {
         Args: { _invited_id: string }
         Returns: undefined
