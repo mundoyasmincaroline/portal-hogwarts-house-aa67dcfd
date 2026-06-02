@@ -122,7 +122,7 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
       <button
         onClick={handleFriendAction}
         disabled={loading || status === "blocked"}
-        className={`flex items-center gap-1 sm:gap-1.5 px-3 sm:px-4 py-2 rounded-2xl text-[8px] sm:text-[9px] font-heading uppercase tracking-widest border transition-all duration-300 active:scale-90 ${cfg.cls} disabled:opacity-50 shadow-md hover:shadow-lg`}
+        className={`flex min-w-0 w-full items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-4 py-2 rounded-2xl text-[8px] sm:text-[9px] font-heading uppercase tracking-[0.04em] sm:tracking-widest border transition-all duration-300 active:scale-90 ${cfg.cls} disabled:opacity-50 shadow-md hover:shadow-lg`}
       >
         {cfg.icon} {cfg.label}
       </button>
@@ -241,7 +241,7 @@ export default function MemberCard({ member, friendshipStatus = "none", onFriend
           <div className="flex justify-stretch w-full">{friendBtn()}</div>
           <button
             onClick={goToDM}
-            className="btn-magical flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 rounded-2xl text-[9px] sm:text-[10px] font-heading uppercase tracking-widest bg-white/5 border border-white/10 text-white/60 hover:border-primary/40 hover:text-white transition-all active:scale-90 shadow-md hover:shadow-lg"
+            className="btn-magical flex min-w-0 items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-2xl text-[9px] sm:text-[10px] font-heading uppercase tracking-[0.04em] sm:tracking-widest bg-white/5 border border-white/10 text-white/60 hover:border-primary/40 hover:text-white transition-all active:scale-90 shadow-md hover:shadow-lg"
           >
             <MessageSquare size={14} /> DM
           </button>
