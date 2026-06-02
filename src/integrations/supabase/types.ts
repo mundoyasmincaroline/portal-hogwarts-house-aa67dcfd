@@ -2168,6 +2168,62 @@ export type Database = {
         }
         Relationships: []
       }
+      family_members: {
+        Row: {
+          family_id: string
+          id: string
+          joined_at: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          family_id: string
+          id?: string
+          joined_at?: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          family_id?: string
+          id?: string
+          joined_at?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_members_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "wizard_families"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      family_relations: {
+        Row: {
+          created_at: string
+          id: string
+          related_user_id: string
+          relation: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          related_user_id: string
+          relation: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          related_user_id?: string
+          relation?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       fichas: {
         Row: {
           age: number | null
@@ -2673,6 +2729,36 @@ export type Database = {
         }
         Relationships: []
       }
+      inheritances: {
+        Row: {
+          declared_at: string
+          from_user: string
+          galleons: number
+          id: string
+          item_description: string | null
+          note: string | null
+          to_user: string
+        }
+        Insert: {
+          declared_at?: string
+          from_user: string
+          galleons?: number
+          id?: string
+          item_description?: string | null
+          note?: string | null
+          to_user: string
+        }
+        Update: {
+          declared_at?: string
+          from_user?: string
+          galleons?: number
+          id?: string
+          item_description?: string | null
+          note?: string | null
+          to_user?: string
+        }
+        Relationships: []
+      }
       insta_character_follows: {
         Row: {
           created_at: string | null
@@ -2995,6 +3081,36 @@ export type Database = {
           status?: string
           title?: string
           type?: string
+        }
+        Relationships: []
+      }
+      magical_alliances: {
+        Row: {
+          alliance_type: string
+          created_at: string
+          id: string
+          sealed_at: string | null
+          status: string
+          user_a: string
+          user_b: string
+        }
+        Insert: {
+          alliance_type?: string
+          created_at?: string
+          id?: string
+          sealed_at?: string | null
+          status?: string
+          user_a: string
+          user_b: string
+        }
+        Update: {
+          alliance_type?: string
+          created_at?: string
+          id?: string
+          sealed_at?: string | null
+          status?: string
+          user_a?: string
+          user_b?: string
         }
         Relationships: []
       }
@@ -6846,6 +6962,36 @@ export type Database = {
         }
         Relationships: []
       }
+      wizard_families: {
+        Row: {
+          blood_status: string
+          created_at: string
+          crest_emoji: string | null
+          founder_id: string
+          id: string
+          motto: string | null
+          name: string
+        }
+        Insert: {
+          blood_status?: string
+          created_at?: string
+          crest_emoji?: string | null
+          founder_id: string
+          id?: string
+          motto?: string | null
+          name: string
+        }
+        Update: {
+          blood_status?: string
+          created_at?: string
+          crest_emoji?: string | null
+          founder_id?: string
+          id?: string
+          motto?: string | null
+          name?: string
+        }
+        Relationships: []
+      }
       wizard_stocks: {
         Row: {
           company: string
@@ -6975,8 +7121,42 @@ export type Database = {
     }
     Functions: {
       _alignment_label: { Args: { c: number }; Returns: string }
+      accept_alliance: {
+        Args: { p_alliance: string }
+        Returns: {
+          alliance_type: string
+          created_at: string
+          id: string
+          sealed_at: string | null
+          status: string
+          user_a: string
+          user_b: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "magical_alliances"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       accept_duel: { Args: { p_match: string }; Returns: undefined }
       accept_sticker_trade: { Args: { _trade_id: string }; Returns: Json }
+      add_relation: {
+        Args: { p_related: string; p_relation: string }
+        Returns: {
+          created_at: string
+          id: string
+          related_user_id: string
+          relation: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "family_relations"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       admin_credit_order: { Args: { _order_id: string }; Returns: Json }
       admin_grant_vip: {
         Args: { _months?: number; _plan: string; _user_id: string }
@@ -7215,6 +7395,29 @@ export type Database = {
         }
       }
       create_duel: { Args: { p_opponent: string }; Returns: string }
+      create_family: {
+        Args: {
+          p_blood: string
+          p_crest: string
+          p_motto: string
+          p_name: string
+        }
+        Returns: {
+          blood_status: string
+          created_at: string
+          crest_emoji: string | null
+          founder_id: string
+          id: string
+          motto: string | null
+          name: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "wizard_families"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       create_guild: {
         Args: { p_description?: string; p_emblem?: string; p_name: string }
         Returns: Json
@@ -7261,6 +7464,29 @@ export type Database = {
         Args: { p_boss_id: string; p_damage: number }
         Returns: Json
       }
+      declare_inheritance: {
+        Args: {
+          p_galleons: number
+          p_item: string
+          p_note: string
+          p_to: string
+        }
+        Returns: {
+          declared_at: string
+          from_user: string
+          galleons: number
+          id: string
+          item_description: string | null
+          note: string | null
+          to_user: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "inheritances"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       feed_creature: { Args: { p_user_creature_id: string }; Returns: Json }
       finalize_auction: { Args: { p_auction_id: string }; Returns: Json }
       finalize_duel_elo: {
@@ -7302,8 +7528,25 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      join_family: {
+        Args: { p_family: string }
+        Returns: {
+          family_id: string
+          id: string
+          joined_at: string
+          role: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "family_members"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       join_guild: { Args: { p_guild_id: string }; Returns: Json }
       join_tournament: { Args: { p_tournament_id: string }; Returns: Json }
+      leave_family: { Args: never; Returns: undefined }
       open_sticker_pack: { Args: { _user_id: string }; Returns: Json }
       open_vault: { Args: never; Returns: Json }
       place_auction_bid: {
@@ -7320,6 +7563,24 @@ export type Database = {
         Returns: Json
       }
       process_vip_renewals: { Args: never; Returns: Json }
+      propose_alliance: {
+        Args: { p_other: string; p_type: string }
+        Returns: {
+          alliance_type: string
+          created_at: string
+          id: string
+          sealed_at: string | null
+          status: string
+          user_a: string
+          user_b: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "magical_alliances"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       propose_item_trade: {
         Args: {
           p_message?: string
