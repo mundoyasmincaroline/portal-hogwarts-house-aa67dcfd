@@ -93,7 +93,8 @@ export default function Events() {
       .eq("completed", true);
     
     if (data) {
-      setCompletedToday(data.map(d => d.challenge_id.split('_').pop() || ""));
+      const prefix = `event_${today}_`;
+      setCompletedToday(data.map(d => d.challenge_id.replace(prefix, "")));
     }
     setLoading(false);
   };
