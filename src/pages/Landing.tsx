@@ -405,7 +405,8 @@ export default function Landing() {
             <div className="space-y-4">
               <h4 className="font-heading text-xs text-primary uppercase tracking-[0.2em] font-bold">Suporte</h4>
               <ul className="space-y-2 text-sm text-muted-foreground/70">
-                <li><a href="mailto:mundoyasmincaroline@gmail.com" className="hover:text-primary transition-colors underline decoration-primary/30">mundoyasmincaroline@gmail.com</a></li>
+                <li><Link to="/support" className="hover:text-primary transition-colors underline decoration-primary/30">Central de Atendimento</Link></li>
+                <li><Link to="/support" className="hover:text-primary transition-colors">Abrir um chamado</Link></li>
               </ul>
             </div>
           </div>
