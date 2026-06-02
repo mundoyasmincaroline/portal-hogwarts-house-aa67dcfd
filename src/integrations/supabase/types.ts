@@ -793,6 +793,80 @@ export type Database = {
         }
         Relationships: []
       }
+      club_members: {
+        Row: {
+          club_id: string
+          id: string
+          joined_at: string
+          role: string
+          user_id: string
+          weekly_xp: number
+        }
+        Insert: {
+          club_id: string
+          id?: string
+          joined_at?: string
+          role?: string
+          user_id: string
+          weekly_xp?: number
+        }
+        Update: {
+          club_id?: string
+          id?: string
+          joined_at?: string
+          role?: string
+          user_id?: string
+          weekly_xp?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "club_members_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clubs: {
+        Row: {
+          active: boolean | null
+          color: string | null
+          created_at: string
+          description: string | null
+          emblem: string | null
+          founded_by: string | null
+          id: string
+          meeting_day: string | null
+          name: string
+          slug: string
+        }
+        Insert: {
+          active?: boolean | null
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          emblem?: string | null
+          founded_by?: string | null
+          id?: string
+          meeting_day?: string | null
+          name: string
+          slug: string
+        }
+        Update: {
+          active?: boolean | null
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          emblem?: string | null
+          founded_by?: string | null
+          id?: string
+          meeting_day?: string | null
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
       couples: {
         Row: {
           character1_id: string
@@ -1443,6 +1517,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      mentorships: {
+        Row: {
+          apprentice_id: string
+          apprentice_levels_gained: number
+          created_at: string
+          ended_at: string | null
+          id: string
+          mentor_id: string
+          started_at: string | null
+          status: string
+          total_bonus_xp: number
+        }
+        Insert: {
+          apprentice_id: string
+          apprentice_levels_gained?: number
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          mentor_id: string
+          started_at?: string | null
+          status?: string
+          total_bonus_xp?: number
+        }
+        Update: {
+          apprentice_id?: string
+          apprentice_levels_gained?: number
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          mentor_id?: string
+          started_at?: string | null
+          status?: string
+          total_bonus_xp?: number
+        }
+        Relationships: []
       }
       messages: {
         Row: {
@@ -3161,12 +3271,18 @@ export type Database = {
         }
         Returns: boolean
       }
+      join_club: { Args: { p_club_id: string }; Returns: Json }
       open_sticker_pack: { Args: { _user_id: string }; Returns: Json }
       process_duel_turn: {
         Args: { _duel_id: string; _spell_id: string }
         Returns: Json
       }
       process_vip_renewals: { Args: never; Returns: Json }
+      request_mentorship: { Args: { p_mentor_id: string }; Returns: Json }
+      respond_mentorship: {
+        Args: { p_accept: boolean; p_mentorship_id: string }
+        Returns: Json
+      }
       start_payment_request: {
         Args: {
           p_amount_brl: number
