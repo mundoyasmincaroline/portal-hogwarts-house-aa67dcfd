@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
+import { Wand2 } from "lucide-react";
 
 // Critical Routes (Loaded on demand but prioritized)
 const Landing = lazy(() => import("./pages/Landing"));
@@ -123,8 +124,8 @@ const LoadingFallback = () => (
         }}
       />
     ))}
-    <div className="relative z-10 text-6xl animate-float drop-shadow-[0_0_25px_hsl(var(--primary)/0.6)]">
-      🪄
+    <div className="relative z-10 animate-float drop-shadow-[0_0_25px_hsl(var(--primary)/0.6)] text-primary">
+      <Wand2 size={64} strokeWidth={1.5} />
     </div>
     <p className="relative z-10 mt-6 font-heading text-sm uppercase tracking-[0.4em] text-foreground/70">
       Aparatando…
