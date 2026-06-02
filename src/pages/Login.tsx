@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,8 @@ import MagicalParticles from "@/components/MagicalParticles";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { playDoorSound } from "@/services/core/soundService";
+
+const MagicalOrb = lazy(() => import("@/components/three/MagicalOrb"));
 
 export default function Login() {
   const navigate = useNavigate();
@@ -108,6 +110,9 @@ export default function Login() {
       </div>
 
       <MagicalParticles />
+      <Suspense fallback={null}>
+        <MagicalOrb className="absolute inset-0 z-10 opacity-70" />
+      </Suspense>
       <div className="glass-premium rounded-[2.5rem] p-10 w-[95%] max-w-md z-20 animate-fade-in-up border-primary/20 shadow-[0_40px_120px_rgba(0,0,0,0.95)] mx-auto hover:border-primary/50 transition-all duration-1000">
         <div className="text-center mb-8">
           <h1 className="font-heading text-4xl text-gold-gradient mb-3">
