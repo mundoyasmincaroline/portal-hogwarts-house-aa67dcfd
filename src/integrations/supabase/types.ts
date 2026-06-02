@@ -1827,6 +1827,54 @@ export type Database = {
         }
         Relationships: []
       }
+      hogsmeade_items: {
+        Row: {
+          active: boolean
+          category: string
+          consumable: boolean
+          created_at: string
+          description: string | null
+          emoji: string
+          equippable: boolean
+          id: string
+          name: string
+          price_galeons: number
+          rarity: string
+          stock_limit: number | null
+          tradable: boolean
+        }
+        Insert: {
+          active?: boolean
+          category: string
+          consumable?: boolean
+          created_at?: string
+          description?: string | null
+          emoji?: string
+          equippable?: boolean
+          id?: string
+          name: string
+          price_galeons: number
+          rarity?: string
+          stock_limit?: number | null
+          tradable?: boolean
+        }
+        Update: {
+          active?: boolean
+          category?: string
+          consumable?: boolean
+          created_at?: string
+          description?: string | null
+          emoji?: string
+          equippable?: boolean
+          id?: string
+          name?: string
+          price_galeons?: number
+          rarity?: string
+          stock_limit?: number | null
+          tradable?: boolean
+        }
+        Relationships: []
+      }
       house_points: {
         Row: {
           awarded_by: string | null
@@ -2049,6 +2097,72 @@ export type Database = {
             columns: ["character_id"]
             isOneToOne: false
             referencedRelation: "characters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      item_trades: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          message: string | null
+          offered_galeons: number
+          offered_item_id: string | null
+          offered_qty: number
+          recipient_id: string
+          requested_galeons: number
+          requested_item_id: string | null
+          requested_qty: number
+          resolved_at: string | null
+          sender_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          message?: string | null
+          offered_galeons?: number
+          offered_item_id?: string | null
+          offered_qty?: number
+          recipient_id: string
+          requested_galeons?: number
+          requested_item_id?: string | null
+          requested_qty?: number
+          resolved_at?: string | null
+          sender_id: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          message?: string | null
+          offered_galeons?: number
+          offered_item_id?: string | null
+          offered_qty?: number
+          recipient_id?: string
+          requested_galeons?: number
+          requested_item_id?: string | null
+          requested_qty?: number
+          resolved_at?: string | null
+          sender_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "item_trades_offered_item_id_fkey"
+            columns: ["offered_item_id"]
+            isOneToOne: false
+            referencedRelation: "hogsmeade_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "item_trades_requested_item_id_fkey"
+            columns: ["requested_item_id"]
+            isOneToOne: false
+            referencedRelation: "hogsmeade_items"
             referencedColumns: ["id"]
           },
         ]
@@ -4854,6 +4968,41 @@ export type Database = {
           },
         ]
       }
+      user_inventory: {
+        Row: {
+          equipped: boolean
+          id: string
+          item_id: string
+          obtained_at: string
+          quantity: number
+          user_id: string
+        }
+        Insert: {
+          equipped?: boolean
+          id?: string
+          item_id: string
+          obtained_at?: string
+          quantity?: number
+          user_id: string
+        }
+        Update: {
+          equipped?: boolean
+          id?: string
+          item_id?: string
+          obtained_at?: string
+          quantity?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_inventory_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "hogsmeade_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_items: {
         Row: {
           character_id: string | null
@@ -5309,6 +5458,10 @@ export type Database = {
         Args: { _action: string; _user_id: string; _xp: number }
         Returns: undefined
       }
+      buy_hogsmeade_item: {
+        Args: { p_item_id: string; p_qty?: number }
+        Returns: Json
+      }
       buy_marketplace_listing: { Args: { p_listing_id: string }; Returns: Json }
       buy_stock: {
         Args: { p_shares: number; p_stock_id: string }
@@ -5323,6 +5476,7 @@ export type Database = {
         Args: { _father_id: string; _mother_id: string }
         Returns: string
       }
+      cancel_item_trade: { Args: { p_trade_id: string }; Returns: Json }
       cancel_marketplace_listing: {
         Args: { p_listing_id: string }
         Returns: Json
@@ -5471,6 +5625,19 @@ export type Database = {
         Returns: Json
       }
       process_vip_renewals: { Args: never; Returns: Json }
+      propose_item_trade: {
+        Args: {
+          p_message?: string
+          p_offered_gal: number
+          p_offered_item: string
+          p_offered_qty: number
+          p_recipient_id: string
+          p_requested_gal: number
+          p_requested_item: string
+          p_requested_qty: number
+        }
+        Returns: Json
+      }
       quidditch_score: {
         Args: { p_event: string; p_match: string }
         Returns: Json
@@ -5488,6 +5655,10 @@ export type Database = {
         Returns: Json
       }
       request_mentorship: { Args: { p_mentor_id: string }; Returns: Json }
+      respond_item_trade: {
+        Args: { p_accept: boolean; p_trade_id: string }
+        Returns: Json
+      }
       respond_mentorship: {
         Args: { p_accept: boolean; p_mentorship_id: string }
         Returns: Json
