@@ -99,6 +99,19 @@
   }
 }
 
+/* Safe-area utilities (iOS notch / Android gesture bar) */
+@layer utilities {
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+  .pl-safe { padding-left: env(safe-area-inset-left, 0px); }
+  .pr-safe { padding-right: env(safe-area-inset-right, 0px); }
+  .bottom-safe { bottom: env(safe-area-inset-bottom, 0px); }
+  .h-dvh-screen { height: 100dvh; }
+  .min-h-dvh-screen { min-height: 100dvh; }
+  /* Espaço extra no fim das páginas para não ficar atrás do BottomNav mobile */
+  .pb-bottom-nav { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+}
+
 /* Magical animations */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
