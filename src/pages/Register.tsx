@@ -8,7 +8,6 @@ import { HOUSES } from "@/types/house";
 import { toast } from "sonner";
 import HouseCrest from "@/components/rpg/HouseCrest";
 import MagicalParticles from "@/components/MagicalParticles";
-import { supabase } from "@/integrations/supabase/client";
 import AcceptanceLetter from "@/components/AcceptanceLetter";
 import { Sparkles, Feather, Droplet, Wand2, ArrowLeft } from "lucide-react";
 
