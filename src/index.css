@@ -335,6 +335,26 @@
   @apply min-h-touch-lg min-w-touch-lg flex items-center justify-center;
 }
 
+/* Segurança global para textos em ações: botões nunca podem cortar letras. */
+button,
+[role="button"],
+a[class*="rounded"][class*="hover:"],
+a[class*="bg-"][class*="hover:"] {
+  max-width: 100%;
+}
+
+button,
+[role="button"] {
+  overflow-wrap: anywhere;
+}
+
+button > span,
+[role="button"] > span,
+a[class*="rounded"][class*="hover:"] > span,
+a[class*="bg-"][class*="hover:"] > span {
+  min-width: 0;
+}
+
 /* ===== Utilitários de espaçamento Hogwarts ===== */
 
 /* Stack: pilha vertical com gap consistente (use .stack-sm, .stack-md, .stack-lg, .stack-xl) */
@@ -361,6 +381,19 @@
    uma altura/min-height própria recebe automaticamente 44px (WCAG/Apple HIG).
    Não afeta botões que já têm h-* ou min-h-* explícito. */
 @media (max-width: 767px) {
+  button,
+  [role="button"] {
+    line-height: 1.15;
+    white-space: normal;
+  }
+
+  button[class*="tracking-widest"],
+  button[class*="tracking-["],
+  [role="button"][class*="tracking-widest"],
+  [role="button"][class*="tracking-"] {
+    letter-spacing: 0.04em;
+  }
+
   button:not([class*="h-"]):not([class*="min-h"]),
   [role="button"]:not([class*="h-"]):not([class*="min-h"]),
   a[class*="touch-target"] {
