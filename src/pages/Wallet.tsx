@@ -78,7 +78,7 @@ export default function Wallet() {
                 <p className="font-heading text-4xl sm:text-5xl md:text-6xl text-yellow-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.6)] break-words max-w-full leading-none">{galeons.toLocaleString("pt-BR")}</p>
               </div>
               <Link to="/dashboard/store" className="block">
-                <Button variant="magical" size="lg" className="w-full h-14 rounded-2xl text-xs font-bold uppercase tracking-widest shadow-xl">
+                <Button variant="magical" size="lg" className="w-full min-h-14 h-auto rounded-2xl text-xs font-bold uppercase shadow-xl px-4">
                   <ShoppingBag size={14} className="mr-2" /> Visitar a Loja
                 </Button>
               </Link>
@@ -346,7 +346,7 @@ export default function Wallet() {
           <h3 className="font-heading text-2xl text-foreground mb-2 tracking-tighter">Ascenda ao Status Lendário</h3>
           <p className="text-base text-muted-foreground/80 mb-6 font-serif italic max-w-md mx-auto">"O VIP é mais que um plano, é uma marca de distinção em Hogwarts."</p>
           <Link to="/dashboard/store">
-            <Button variant="magical" size="lg" className="font-heading text-sm px-10 h-14 rounded-2xl shadow-xl hover:scale-105 active:scale-95 transition-all">
+            <Button variant="magical" size="lg" className="w-full sm:w-auto font-heading text-xs sm:text-sm px-5 sm:px-10 min-h-14 h-auto rounded-2xl shadow-xl hover:scale-105 active:scale-95 transition-all">
               VER PLANOS VIP — DESBLOQUEAR MAGIA
             </Button>
           </Link>

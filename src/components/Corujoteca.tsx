@@ -143,7 +143,7 @@ export default function Corujoteca() {
             </div>
 
             <div className="p-6 border-t border-white/10 relative z-10">
-              <Button variant="outline" className="w-full rounded-2xl h-12 text-xs border-primary/20 text-primary hover:bg-primary/10" onClick={() => setIsOpen(false)}>
+              <Button variant="outline" className="w-full rounded-2xl min-h-12 h-auto text-xs border-primary/20 text-primary hover:bg-primary/10" onClick={() => setIsOpen(false)}>
                 Fechar Pergaminhos
               </Button>
             </div>

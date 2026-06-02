@@ -47,7 +47,7 @@ export default function Rules() {
                   <Button 
                     variant="plaque" 
                     onClick={handleSwear}
-                    className={`w-full h-16 sm:h-20 text-lg sm:text-xl bg-[#5d4037] hover:bg-[#3e2723] border-[#3e2723] transition-all duration-700 ${sworn ? 'opacity-0 scale-110' : 'opacity-100'}`}
+                    className={`w-full min-h-16 sm:min-h-20 h-auto text-base sm:text-xl bg-[#5d4037] hover:bg-[#3e2723] border-[#3e2723] transition-all duration-700 px-4 ${sworn ? 'opacity-0 scale-110' : 'opacity-100'}`}
                   >
                     Eu juro solenemente não fazer nada de bom
                   </Button>

@@ -164,7 +164,7 @@ export default function StickerTrades() {
             "No Beco Diagonal dos Colecionadores, cada troca é um pacto de honra. Encontre o que falta em seu destino."
           </p>
 
-          <Button variant="ghost" size="sm" className="mt-4 text-xs uppercase tracking-widest text-white/40 hover:text-white" onClick={() => navigate("/dashboard/album")}>
+          <Button variant="ghost" size="sm" className="mt-4 text-xs uppercase tracking-[0.04em] sm:tracking-widest text-white/40 hover:text-white" onClick={() => navigate("/dashboard/album")}>
             ← Retornar ao Álbum Encantado
           </Button>
         </div>
@@ -234,7 +234,7 @@ export default function StickerTrades() {
           </div>
         </div>
 
-        <Button variant="plaque" onClick={createTrade} disabled={creating || !offerStickerId} className="w-full h-16 rounded-2xl text-lg shadow-[0_15px_30px_-10px_rgba(234,179,8,0.3)]">
+        <Button variant="plaque" onClick={createTrade} disabled={creating || !offerStickerId} className="w-full min-h-16 h-auto rounded-2xl text-sm sm:text-lg shadow-[0_15px_30px_-10px_rgba(234,179,8,0.3)] px-4">
           {creating ? "Invocando o Mercado..." : "📮 PUBLICAR OFERTA NO BECCO DIAGONAL"}
         </Button>
       </div>
@@ -318,7 +318,7 @@ export default function StickerTrades() {
                   <Button
                     variant="plaque"
                     size="lg"
-                    className="w-full md:w-auto h-12 px-8 text-xs font-heading shadow-xl"
+                    className="w-full md:w-auto min-h-12 h-auto px-5 sm:px-8 text-xs font-heading shadow-xl"
                     disabled={acceptingId === trade.id}
                     onClick={() => acceptTrade(trade)}
                   >
@@ -328,7 +328,7 @@ export default function StickerTrades() {
                   <Button
                     variant="outline"
                     size="lg"
-                    className="w-full md:w-auto h-12 px-8 text-xs text-red-400 border-red-500/30 hover:bg-red-500/10 rounded-xl"
+                    className="w-full md:w-auto min-h-12 h-auto px-5 sm:px-8 text-xs text-red-400 border-red-500/30 hover:bg-red-500/10 rounded-xl"
                     onClick={() => cancelTrade(trade.id)}
                   >
                     CANCELAR <EmojiIcon e="✕" />
