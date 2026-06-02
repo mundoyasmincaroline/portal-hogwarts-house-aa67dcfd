@@ -50,6 +50,80 @@ export type Database = {
         }
         Relationships: []
       }
+      auction_bids: {
+        Row: {
+          amount: number
+          auction_id: string
+          bidder_id: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          amount: number
+          auction_id: string
+          bidder_id: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          amount?: number
+          auction_id?: string
+          bidder_id?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "auction_bids_auction_id_fkey"
+            columns: ["auction_id"]
+            isOneToOne: false
+            referencedRelation: "auctions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      auctions: {
+        Row: {
+          created_at: string
+          current_bid: number
+          current_winner: string | null
+          description: string | null
+          ends_at: string
+          id: string
+          seller_id: string
+          starting_bid: number
+          status: string
+          sticker_id: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          current_bid?: number
+          current_winner?: string | null
+          description?: string | null
+          ends_at: string
+          id?: string
+          seller_id: string
+          starting_bid?: number
+          status?: string
+          sticker_id?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          current_bid?: number
+          current_winner?: string | null
+          description?: string | null
+          ends_at?: string
+          id?: string
+          seller_id?: string
+          starting_bid?: number
+          status?: string
+          sticker_id?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
       azkaban_status: {
         Row: {
           active: boolean | null
@@ -118,6 +192,42 @@ export type Database = {
           name?: string
           rarity?: string | null
           xp_required?: number | null
+        }
+        Relationships: []
+      }
+      bank_loans: {
+        Row: {
+          amount: number
+          created_at: string
+          due_at: string
+          id: string
+          interest_pct: number
+          paid: number
+          status: string
+          total_due: number
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          due_at: string
+          id?: string
+          interest_pct?: number
+          paid?: number
+          status?: string
+          total_due: number
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          due_at?: string
+          id?: string
+          interest_pct?: number
+          paid?: number
+          status?: string
+          total_due?: number
+          user_id?: string
         }
         Relationships: []
       }
@@ -1316,6 +1426,77 @@ export type Database = {
           },
         ]
       }
+      guild_members: {
+        Row: {
+          contributed_xp: number
+          guild_id: string
+          id: string
+          joined_at: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          contributed_xp?: number
+          guild_id: string
+          id?: string
+          joined_at?: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          contributed_xp?: number
+          guild_id?: string
+          id?: string
+          joined_at?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guild_members_guild_id_fkey"
+            columns: ["guild_id"]
+            isOneToOne: false
+            referencedRelation: "guilds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      guilds: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string | null
+          emblem: string | null
+          house: Database["public"]["Enums"]["house_type"]
+          id: string
+          leader_id: string
+          name: string
+          total_xp: number
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          emblem?: string | null
+          house: Database["public"]["Enums"]["house_type"]
+          id?: string
+          leader_id: string
+          name: string
+          total_xp?: number
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          emblem?: string | null
+          house?: Database["public"]["Enums"]["house_type"]
+          id?: string
+          leader_id?: string
+          name?: string
+          total_xp?: number
+        }
+        Relationships: []
+      }
       house_points: {
         Row: {
           awarded_by: string | null
@@ -1340,6 +1521,65 @@ export type Database = {
           id?: string
           points?: number
           reason?: string | null
+        }
+        Relationships: []
+      }
+      house_war_scores: {
+        Row: {
+          house: Database["public"]["Enums"]["house_type"]
+          id: string
+          points: number
+          updated_at: string
+          war_id: string
+        }
+        Insert: {
+          house: Database["public"]["Enums"]["house_type"]
+          id?: string
+          points?: number
+          updated_at?: string
+          war_id: string
+        }
+        Update: {
+          house?: Database["public"]["Enums"]["house_type"]
+          id?: string
+          points?: number
+          updated_at?: string
+          war_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "house_war_scores_war_id_fkey"
+            columns: ["war_id"]
+            isOneToOne: false
+            referencedRelation: "house_wars"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      house_wars: {
+        Row: {
+          created_at: string
+          id: string
+          status: string
+          week_end: string
+          week_start: string
+          winner_house: Database["public"]["Enums"]["house_type"] | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          status?: string
+          week_end: string
+          week_start: string
+          winner_house?: Database["public"]["Enums"]["house_type"] | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          status?: string
+          week_end?: string
+          week_start?: string
+          winner_house?: Database["public"]["Enums"]["house_type"] | null
         }
         Relationships: []
       }
@@ -2280,6 +2520,195 @@ export type Database = {
         }
         Relationships: []
       }
+      raid_bosses: {
+        Row: {
+          created_at: string
+          current_hp: number
+          description: string | null
+          ends_at: string
+          galeon_pool: number
+          id: string
+          image_url: string | null
+          max_hp: number
+          name: string
+          starts_at: string
+          status: string
+          xp_pool: number
+        }
+        Insert: {
+          created_at?: string
+          current_hp?: number
+          description?: string | null
+          ends_at?: string
+          galeon_pool?: number
+          id?: string
+          image_url?: string | null
+          max_hp?: number
+          name: string
+          starts_at?: string
+          status?: string
+          xp_pool?: number
+        }
+        Update: {
+          created_at?: string
+          current_hp?: number
+          description?: string | null
+          ends_at?: string
+          galeon_pool?: number
+          id?: string
+          image_url?: string | null
+          max_hp?: number
+          name?: string
+          starts_at?: string
+          status?: string
+          xp_pool?: number
+        }
+        Relationships: []
+      }
+      raid_participants: {
+        Row: {
+          boss_id: string
+          damage_dealt: number
+          id: string
+          last_attack_at: string
+          rewarded: boolean
+          user_id: string
+        }
+        Insert: {
+          boss_id: string
+          damage_dealt?: number
+          id?: string
+          last_attack_at?: string
+          rewarded?: boolean
+          user_id: string
+        }
+        Update: {
+          boss_id?: string
+          damage_dealt?: number
+          id?: string
+          last_attack_at?: string
+          rewarded?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "raid_participants_boss_id_fkey"
+            columns: ["boss_id"]
+            isOneToOne: false
+            referencedRelation: "raid_bosses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ranked_matches: {
+        Row: {
+          id: string
+          mmr_change: number
+          player_a: string
+          player_b: string
+          replay: Json | null
+          reported_at: string
+          season_id: string
+          winner: string | null
+        }
+        Insert: {
+          id?: string
+          mmr_change?: number
+          player_a: string
+          player_b: string
+          replay?: Json | null
+          reported_at?: string
+          season_id: string
+          winner?: string | null
+        }
+        Update: {
+          id?: string
+          mmr_change?: number
+          player_a?: string
+          player_b?: string
+          replay?: Json | null
+          reported_at?: string
+          season_id?: string
+          winner?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ranked_matches_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "ranked_seasons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ranked_players: {
+        Row: {
+          division: string
+          id: string
+          losses: number
+          mmr: number
+          season_id: string
+          updated_at: string
+          user_id: string
+          wins: number
+        }
+        Insert: {
+          division?: string
+          id?: string
+          losses?: number
+          mmr?: number
+          season_id: string
+          updated_at?: string
+          user_id: string
+          wins?: number
+        }
+        Update: {
+          division?: string
+          id?: string
+          losses?: number
+          mmr?: number
+          season_id?: string
+          updated_at?: string
+          user_id?: string
+          wins?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ranked_players_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "ranked_seasons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ranked_seasons: {
+        Row: {
+          active: boolean
+          created_at: string
+          ends_at: string
+          id: string
+          name: string
+          starts_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          ends_at: string
+          id?: string
+          name: string
+          starts_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          ends_at?: string
+          id?: string
+          name?: string
+          starts_at?: string
+        }
+        Relationships: []
+      }
       referral_rewards: {
         Row: {
           amount: number | null
@@ -2651,6 +3080,70 @@ export type Database = {
         }
         Relationships: []
       }
+      stock_history: {
+        Row: {
+          id: string
+          price: number
+          recorded_at: string
+          stock_id: string
+        }
+        Insert: {
+          id?: string
+          price: number
+          recorded_at?: string
+          stock_id: string
+        }
+        Update: {
+          id?: string
+          price?: number
+          recorded_at?: string
+          stock_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_history_stock_id_fkey"
+            columns: ["stock_id"]
+            isOneToOne: false
+            referencedRelation: "wizard_stocks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stock_holdings: {
+        Row: {
+          avg_price: number
+          id: string
+          shares: number
+          stock_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avg_price?: number
+          id?: string
+          shares?: number
+          stock_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avg_price?: number
+          id?: string
+          shares?: number
+          stock_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_holdings_stock_id_fkey"
+            columns: ["stock_id"]
+            isOneToOne: false
+            referencedRelation: "wizard_stocks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       store_items: {
         Row: {
           active: boolean | null
@@ -2939,6 +3432,138 @@ export type Database = {
           starts_at?: string | null
           status?: string
           xp_prize?: number
+        }
+        Relationships: []
+      }
+      ugc_missions: {
+        Row: {
+          created_at: string
+          creator_id: string
+          description: string
+          difficulty: number
+          galeon_reward: number
+          id: string
+          status: string
+          title: string
+          votes: number
+          xp_reward: number
+        }
+        Insert: {
+          created_at?: string
+          creator_id: string
+          description: string
+          difficulty?: number
+          galeon_reward?: number
+          id?: string
+          status?: string
+          title: string
+          votes?: number
+          xp_reward?: number
+        }
+        Update: {
+          created_at?: string
+          creator_id?: string
+          description?: string
+          difficulty?: number
+          galeon_reward?: number
+          id?: string
+          status?: string
+          title?: string
+          votes?: number
+          xp_reward?: number
+        }
+        Relationships: []
+      }
+      ugc_rooms: {
+        Row: {
+          created_at: string
+          creator_id: string
+          description: string | null
+          id: string
+          name: string
+          status: string
+          theme: string | null
+          votes: number
+        }
+        Insert: {
+          created_at?: string
+          creator_id: string
+          description?: string | null
+          id?: string
+          name: string
+          status?: string
+          theme?: string | null
+          votes?: number
+        }
+        Update: {
+          created_at?: string
+          creator_id?: string
+          description?: string | null
+          id?: string
+          name?: string
+          status?: string
+          theme?: string | null
+          votes?: number
+        }
+        Relationships: []
+      }
+      ugc_spells: {
+        Row: {
+          created_at: string
+          creator_id: string
+          effect: string
+          id: string
+          incantation: string
+          power: number
+          status: string
+          votes: number
+        }
+        Insert: {
+          created_at?: string
+          creator_id: string
+          effect: string
+          id?: string
+          incantation: string
+          power?: number
+          status?: string
+          votes?: number
+        }
+        Update: {
+          created_at?: string
+          creator_id?: string
+          effect?: string
+          id?: string
+          incantation?: string
+          power?: number
+          status?: string
+          votes?: number
+        }
+        Relationships: []
+      }
+      ugc_votes: {
+        Row: {
+          created_at: string
+          id: string
+          target_id: string
+          target_type: string
+          user_id: string
+          value: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          target_id: string
+          target_type: string
+          user_id: string
+          value?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          target_id?: string
+          target_type?: string
+          user_id?: string
+          value?: number
         }
         Relationships: []
       }
@@ -3469,6 +4094,36 @@ export type Database = {
         }
         Relationships: []
       }
+      wizard_stocks: {
+        Row: {
+          company: string
+          description: string | null
+          id: string
+          price: number
+          ticker: string
+          updated_at: string
+          volatility: number
+        }
+        Insert: {
+          company: string
+          description?: string | null
+          id?: string
+          price?: number
+          ticker: string
+          updated_at?: string
+          volatility?: number
+        }
+        Update: {
+          company?: string
+          description?: string | null
+          id?: string
+          price?: number
+          ticker?: string
+          updated_at?: string
+          volatility?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       admin_kpis: {
@@ -3552,6 +4207,10 @@ export type Database = {
         Returns: undefined
       }
       buy_marketplace_listing: { Args: { p_listing_id: string }; Returns: Json }
+      buy_stock: {
+        Args: { p_shares: number; p_stock_id: string }
+        Returns: Json
+      }
       buy_store_item: {
         Args: { _item_id: string; _user_id: string }
         Returns: Json
@@ -3623,6 +4282,10 @@ export type Database = {
         Args: { _invited_id: string }
         Returns: undefined
       }
+      create_guild: {
+        Args: { p_description?: string; p_emblem?: string; p_name: string }
+        Returns: Json
+      }
       create_infinitepay_link: {
         Args: {
           p_amount_brl: number
@@ -3644,6 +4307,11 @@ export type Database = {
         Args: { _amount: number; _user_id: string }
         Returns: number
       }
+      damage_raid_boss: {
+        Args: { p_boss_id: string; p_damage: number }
+        Returns: Json
+      }
+      finalize_auction: { Args: { p_auction_id: string }; Returns: Json }
       get_payment_link: {
         Args: { p_order_id: string; p_request_id: number }
         Returns: Json
@@ -3656,20 +4324,37 @@ export type Database = {
         Returns: boolean
       }
       join_club: { Args: { p_club_id: string }; Returns: Json }
+      join_guild: { Args: { p_guild_id: string }; Returns: Json }
       join_tournament: { Args: { p_tournament_id: string }; Returns: Json }
       open_sticker_pack: { Args: { _user_id: string }; Returns: Json }
+      place_auction_bid: {
+        Args: { p_amount: number; p_auction_id: string }
+        Returns: Json
+      }
       process_duel_turn: {
         Args: { _duel_id: string; _spell_id: string }
         Returns: Json
       }
       process_vip_renewals: { Args: never; Returns: Json }
+      repay_bank_loan: {
+        Args: { p_amount: number; p_loan_id: string }
+        Returns: Json
+      }
       report_match_result: {
         Args: { p_match_id: string; p_winner: string }
+        Returns: Json
+      }
+      report_ranked_match: {
+        Args: { p_opponent: string; p_season_id: string; p_won: boolean }
         Returns: Json
       }
       request_mentorship: { Args: { p_mentor_id: string }; Returns: Json }
       respond_mentorship: {
         Args: { p_accept: boolean; p_mentorship_id: string }
+        Returns: Json
+      }
+      sell_stock: {
+        Args: { p_shares: number; p_stock_id: string }
         Returns: Json
       }
       start_payment_request: {
@@ -3684,6 +4369,10 @@ export type Database = {
         Returns: Json
       }
       start_quest: { Args: { p_quest_id: string }; Returns: Json }
+      take_bank_loan: {
+        Args: { p_amount: number; p_days?: number }
+        Returns: Json
+      }
       toggle_insta_like: {
         Args: { p_post_id: string; p_user_id: string }
         Returns: undefined
@@ -3698,6 +4387,10 @@ export type Database = {
           p_slug?: string
           p_transaction_nsu: string
         }
+        Returns: Json
+      }
+      vote_ugc: {
+        Args: { p_target_id: string; p_target_type: string }
         Returns: Json
       }
     }
