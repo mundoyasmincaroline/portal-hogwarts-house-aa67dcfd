@@ -120,7 +120,7 @@ export default function DMChat() {
     >
       {/* Header */}
       <div className="glass rounded-[1.5rem] sm:rounded-2xl p-2 sm:p-4 mb-3 flex items-center gap-3 shrink-0 border-white/5">
-        <button onClick={() => navigate("/dashboard/dm")} className="touch-target w-9 h-9 flex items-center justify-center rounded-xl hover:bg-white/5 text-muted-foreground hover:text-primary transition-all">
+        <button onClick={() => navigate("/dashboard/dm")} className="touch-target flex items-center justify-center rounded-xl hover:bg-primary/10 text-foreground/85 hover:text-primary transition-all">
           <ArrowLeft size={20} />
         </button>
         {partner && (

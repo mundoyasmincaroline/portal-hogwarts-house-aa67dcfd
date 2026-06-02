@@ -71,10 +71,10 @@ export default function Admin() {
           {tab === "members" && (
             <div className="space-y-4">
               <div className="flex justify-end gap-2 mb-4">
-                <Button size="sm" variant={onlineFilter === "all" ? "magical" : "ghost"} onClick={() => setOnlineFilter("all")} className="text-[10px] h-8 px-4 rounded-full">
+                <Button size="sm" variant={onlineFilter === "all" ? "magical" : "ghost"} onClick={() => setOnlineFilter("all")} className="text-[10px] px-space-md rounded-full">
                   TODOS
                 </Button>
-                <Button size="sm" variant={onlineFilter === "online" ? "magical" : "ghost"} onClick={() => setOnlineFilter("online")} className="text-[10px] h-8 px-4 rounded-full">
+                <Button size="sm" variant={onlineFilter === "online" ? "magical" : "ghost"} onClick={() => setOnlineFilter("online")} className="text-[10px] px-space-md rounded-full">
                   ONLINE AGORA
                 </Button>
               </div>
