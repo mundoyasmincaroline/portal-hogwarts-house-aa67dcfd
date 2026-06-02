@@ -140,7 +140,9 @@ export default function DashboardLayout() {
   if (!profile || !isAuthenticated) return null;
   if (!profile.approved && !isAdmin) return <ProtectedRoute adminOnly={false}><PendingApproval /></ProtectedRoute>;
   if (!isAdmin && !profile.has_accepted_rules) return <ProtectedRoute adminOnly={false}><RulesAgreement /></ProtectedRoute>;
-  if (hasCharacters === false && !profile.active_character_id) return <ProtectedRoute adminOnly={false}><CharacterSelection adminMode={isAdmin} /></ProtectedRoute>;
+  // Admin pode pular a seleção de personagem via flag persistido em localStorage
+  const adminSkippedCharacter = isAdmin && user && typeof window !== "undefined" && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
+  if (hasCharacters === false && !profile.active_character_id && !adminSkippedCharacter) return <ProtectedRoute adminOnly={false}><CharacterSelection adminMode={isAdmin} /></ProtectedRoute>;
 
   return (
     <div className="flex h-screen overflow-hidden relative bg-black">
