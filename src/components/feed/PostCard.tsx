@@ -30,7 +30,7 @@ const PostCard = memo(({
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true, margin: "-50px" }}
     transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-    className="glass rounded-[2.5rem] p-6 sm:p-10 border-white/5 hover:border-primary/25 shadow-2xl group/card relative mb-8 transition-all duration-700 hover:shadow-primary/10"
+    className="glass rounded-[2.5rem] p-6 sm:p-10 border border-primary/15 hover:border-primary/40 shadow-2xl group/card relative mb-8 transition-all duration-700 hover:shadow-primary/20"
   >
     <div className="flex items-start sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-5">
       <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-secondary/30 flex items-center justify-center overflow-hidden border-2 shrink-0 transition-all duration-500 group-hover/card:scale-105 ${post.author?.house === 'gryffindor' ? 'border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.2)]' : post.author?.house === 'slytherin' ? 'border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.2)]' : post.author?.house === 'ravenclaw' ? 'border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.2)]' : 'border-yellow-500/30 shadow-[0_0_15px_rgba(234,179,8,0.2)]'}`}>
@@ -43,7 +43,7 @@ const PostCard = memo(({
       </div>
       <div className="flex-1 min-w-0 py-0.5 sm:py-0">
         <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-0.5 sm:mb-0">
-          <p className="text-sm sm:text-base font-heading text-foreground tracking-tight truncate">
+          <p className="text-sm sm:text-base font-heading text-foreground font-semibold tracking-tight truncate">
             {post.author?.full_name || "Bruxo desconhecido"}
           </p>
           <div className="flex items-center gap-1.5 flex-wrap">
@@ -52,16 +52,16 @@ const PostCard = memo(({
           </div>
         </div>
         <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-          <span className="text-[9px] sm:text-[10px] text-primary/70 font-medium uppercase tracking-wider truncate max-w-[100px] sm:max-w-none">@{post.author?.username}</span>
-          <span className="w-0.5 h-0.5 sm:w-1 sm:h-1 rounded-full bg-white/10" />
-          <span className="text-[9px] sm:text-[10px] text-muted-foreground/50">{new Date(post.created_at).toLocaleDateString("pt-BR")}</span>
+          <span className="text-[10px] sm:text-[11px] text-primary/90 font-semibold uppercase tracking-wider truncate max-w-[100px] sm:max-w-none">@{post.author?.username}</span>
+          <span className="w-1 h-1 rounded-full bg-primary/30" />
+          <span className="text-[10px] sm:text-[11px] text-foreground/70">{new Date(post.created_at).toLocaleDateString("pt-BR")}</span>
         </div>
       </div>
       {post.author?.house && <div className="shrink-0 scale-75 sm:scale-90 origin-right transition-transform group-hover/card:scale-100 duration-500 ml-auto sm:ml-0"><HouseCrest house={post.author.house} size="sm" /></div>}
     </div>
 
     <div className="relative mb-6 group/content">
-      <p className="text-base sm:text-lg leading-relaxed text-foreground/90 whitespace-pre-wrap font-serif italic border-l-2 border-primary/20 pl-5 py-2 transition-all group-hover/content:border-primary group-hover/content:pl-7 duration-500 bg-gradient-to-r from-primary/5 to-transparent rounded-r-xl">
+      <p className="text-base sm:text-lg leading-relaxed text-foreground whitespace-pre-wrap font-serif italic border-l-2 border-primary/40 pl-5 py-3 transition-all group-hover/content:border-primary group-hover/content:pl-7 duration-500 bg-gradient-to-r from-primary/10 via-primary/[0.03] to-transparent rounded-r-xl">
         {post.content}
       </p>
       <div className="absolute -left-1 top-0 bottom-0 w-0.5 bg-primary/30 blur-sm opacity-0 group-hover/content:opacity-100 transition-opacity" />
@@ -118,7 +118,7 @@ const PostCard = memo(({
 
       <button
         onClick={() => onToggleComments(post.id)}
-        className="glass px-3 sm:px-4 py-1.5 rounded-2xl text-[10px] sm:text-[11px] font-heading uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-all active:scale-95 ml-auto sm:ml-0 flex items-center gap-2"
+        className="px-3 sm:px-4 py-2 rounded-2xl text-[10px] sm:text-[11px] font-heading uppercase tracking-widest text-foreground/85 bg-black/40 border border-white/10 hover:text-primary hover:border-primary/50 hover:bg-primary/10 transition-all active:scale-95 ml-auto sm:ml-0 flex items-center gap-2 min-h-[36px]"
       >
         <span className="text-sm">💬</span> {post.comments?.length || 0}
       </button>

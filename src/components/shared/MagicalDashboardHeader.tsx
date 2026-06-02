@@ -34,11 +34,11 @@ export default function MagicalDashboardHeader() {
       <div className="relative">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-4 mb-4">
           <div className="flex flex-col">
-            <h3 className="text-[10px] font-heading font-black uppercase tracking-[0.4em] text-primary/40 flex items-center gap-2">
+            <h3 className="text-[10px] font-heading font-black uppercase tracking-[0.4em] text-primary/85 flex items-center gap-2">
               <Sparkles size={12} className="animate-pulse" />
               Secretaria do Castelo
             </h3>
-            <p className="text-[9px] text-muted-foreground/40 font-serif italic">Informações e registros oficiais</p>
+            <p className="text-[10px] text-foreground/65 font-serif italic">Informações e registros oficiais</p>
           </div>
           <button 
             onClick={() => setIsExpanded(!isExpanded)}

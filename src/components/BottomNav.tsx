@@ -14,28 +14,29 @@ export default function BottomNav() {
   const location = useLocation();
 
   return (
-    <nav className="md:hidden fixed bottom-6 left-4 right-4 z-[100]">
-      <div className="glass !bg-card/40 backdrop-blur-3xl border border-primary/20 rounded-[2rem] px-2 h-16 flex items-center justify-around shadow-[0_20px_60px_rgba(0,0,0,0.8)] animate-in slide-in-from-bottom-10 duration-1000">
+    <nav className="md:hidden fixed bottom-4 left-3 right-3 z-[100] pb-safe">
+      <div className="bg-gradient-to-b from-[#1a0f05]/95 to-[#0a0604]/98 backdrop-blur-3xl border border-primary/30 rounded-[2rem] px-2 h-[68px] flex items-center justify-around shadow-[0_20px_60px_rgba(0,0,0,0.85),0_0_30px_rgba(212,175,55,0.08)] animate-in slide-in-from-bottom-10 duration-1000">
         {MOBILE_NAV.map((item) => {
           const isActive = location.pathname === item.path;
           return (
             <Link
               key={item.path}
               to={item.path}
-              className={`relative flex flex-col items-center justify-center gap-1 w-14 h-14 transition-all duration-300 ${
-                isActive ? "text-primary scale-110" : "text-muted-foreground/60 active:scale-90"
+              aria-label={item.label}
+              className={`relative flex flex-col items-center justify-center gap-0.5 min-w-[56px] h-14 rounded-2xl transition-all duration-300 ${
+                isActive ? "text-primary scale-105 bg-primary/10" : "text-foreground/70 active:scale-90 hover:text-primary/90"
               }`}
             >
               {isActive && (
                 <motion.div
                   layoutId="bottom-nav-active"
-                  className="absolute -top-1 w-1 h-1 bg-primary rounded-full shadow-[0_0_10px_rgba(212,175,55,1)]"
+                  className="absolute -top-1 w-1.5 h-1.5 bg-primary rounded-full shadow-[0_0_10px_rgba(212,175,55,1)]"
                 />
               )}
               <div className={`transition-transform duration-300 ${isActive ? "drop-shadow-[0_0_8px_rgba(212,175,55,0.5)]" : ""}`}>
                 {item.icon}
               </div>
-              <span className={`text-[8px] uppercase tracking-widest font-black transition-opacity duration-300 ${isActive ? "opacity-100" : "opacity-0"}`}>
+              <span className={`text-[9px] uppercase tracking-wider font-black transition-opacity duration-300 ${isActive ? "opacity-100" : "opacity-70"}`}>
                 {item.label}
               </span>
             </Link>
