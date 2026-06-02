@@ -22,6 +22,7 @@ const Events = lazy(() => import("./pages/Events"));
 const Profile = lazy(() => import("./pages/Profile"));
 const Admin = lazy(() => import("./pages/Admin"));
 const AdminFinance = lazy(() => import("./pages/AdminFinance"));
+const AdminCharacters = lazy(() => import("./pages/AdminCharacters"));
 const Chats = lazy(() => import("./pages/Chats"));
 const ChatRoom = lazy(() => import("./pages/ChatRoom"));
 const InstaHogwarts = lazy(() => import("./pages/InstaHogwarts"));
@@ -161,6 +162,11 @@ const App = () => {
                   <Route path="admin/finance" element={
                     <ProtectedRoute adminOnly>
                       <AdminFinance />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="admin/characters" element={
+                    <ProtectedRoute adminOnly>
+                      <AdminCharacters />
                     </ProtectedRoute>
                   } />
                   
