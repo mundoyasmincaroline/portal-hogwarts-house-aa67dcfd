@@ -131,6 +131,7 @@ const App = () => {
                   <Route path="classes" element={<Classes />} />
                   <Route path="canon-lessons" element={<CanonLessons />} />
                   <Route path="battle-pass" element={<BattlePass />} />
+                  <Route path="clubs" element={<Clubs />} />
                   <Route path="houses" element={<Houses />} />
                   <Route path="ranking" element={<Ranking />} />
                   <Route path="challenges" element={<Challenges />} />
