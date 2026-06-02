@@ -111,7 +111,13 @@ export default function DMChat() {
   }, {} as Record<string, DM[]>);
 
   return (
-    <div className="flex flex-col h-[calc(100dvh-80px)] sm:h-[calc(100dvh-120px)] max-w-xl mx-auto px-1 sm:px-0 pb-20 md:pb-0">
+    <div
+      className="flex flex-col max-w-xl mx-auto px-1 sm:px-0"
+      style={{
+        height: 'calc(100dvh - 80px)',
+        paddingBottom: 'max(80px, env(safe-area-inset-bottom))',
+      }}
+    >
       {/* Header */}
       <div className="glass rounded-[1.5rem] sm:rounded-2xl p-2 sm:p-4 mb-3 flex items-center gap-3 shrink-0 border-white/5">
         <button onClick={() => navigate("/dashboard/dm")} className="touch-target w-9 h-9 flex items-center justify-center rounded-xl hover:bg-white/5 text-muted-foreground hover:text-primary transition-all">
