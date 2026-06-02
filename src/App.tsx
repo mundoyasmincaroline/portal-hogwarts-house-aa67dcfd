@@ -123,8 +123,8 @@ const LoadingFallback = () => (
         }}
       />
     ))}
-    <div className="relative z-10 text-6xl animate-float drop-shadow-[0_0_25px_hsl(var(--primary)/0.6)]">
-      🪄
+    <div className="relative z-10 animate-float drop-shadow-[0_0_25px_hsl(var(--primary)/0.6)] text-primary">
+      <Wand2 size={64} strokeWidth={1.5} />
     </div>
     <p className="relative z-10 mt-6 font-heading text-sm uppercase tracking-[0.4em] text-foreground/70">
       Aparatando…
