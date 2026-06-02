@@ -2035,6 +2035,42 @@ export type Database = {
           },
         ]
       }
+      rp_daily_claims: {
+        Row: {
+          character_id: string
+          claim_date: string
+          claimed_at: string
+          ended_at: string | null
+          id: string
+          last_active_at: string
+          messages_count: number
+          user_id: string
+          xp_earned: number
+        }
+        Insert: {
+          character_id: string
+          claim_date?: string
+          claimed_at?: string
+          ended_at?: string | null
+          id?: string
+          last_active_at?: string
+          messages_count?: number
+          user_id: string
+          xp_earned?: number
+        }
+        Update: {
+          character_id?: string
+          claim_date?: string
+          claimed_at?: string
+          ended_at?: string | null
+          id?: string
+          last_active_at?: string
+          messages_count?: number
+          user_id?: string
+          xp_earned?: number
+        }
+        Relationships: []
+      }
       seasonal_events: {
         Row: {
           active: boolean | null
@@ -2850,6 +2886,26 @@ export type Database = {
       calc_blood_status: {
         Args: { _father_id: string; _mother_id: string }
         Returns: string
+      }
+      claim_rp_slot: {
+        Args: { p_character_id: string }
+        Returns: {
+          character_id: string
+          claim_date: string
+          claimed_at: string
+          ended_at: string | null
+          id: string
+          last_active_at: string
+          messages_count: number
+          user_id: string
+          xp_earned: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "rp_daily_claims"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       complete_referral_action: {
         Args: { _invited_id: string }
