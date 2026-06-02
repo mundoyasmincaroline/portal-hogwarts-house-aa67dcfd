@@ -233,14 +233,14 @@ export default function GringottsStore() {
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {items.filter(i => i.is_featured).map(item => (
                 <Card3D key={item.id} intensity={10} className="glass p-8 rounded-[2.5rem] border border-primary/20 hover:border-primary/50 group">
-                   <div className="relative aspect-square rounded-2xl overflow-hidden mb-4 border border-white/10">
+                   <button type="button" onClick={() => setPreviewItem(item)} className="relative aspect-square rounded-2xl overflow-hidden mb-4 border border-white/10 w-full block cursor-pointer">
                       <SafeImage src={item.image_url} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                       {item.category === "wand" && (
                         <Suspense fallback={null}>
                           <Wand3D className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                         </Suspense>
                       )}
-                   </div>
+                   </button>
                    <h3 className="font-heading text-xl text-primary">{item.name}</h3>
                    <div className="flex items-center justify-between mt-4">
                       <div className="flex items-center gap-2">
@@ -308,9 +308,9 @@ export default function GringottsStore() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-8">
           {filteredItems.map(item => (
             <Card3D key={item.id} intensity={6} className="glass p-4 rounded-xl border border-white/5 hover:border-primary/40">
-              <div className="aspect-square rounded-lg overflow-hidden border border-white/5 mb-4">
+              <button type="button" onClick={() => setPreviewItem(item)} className="aspect-square rounded-lg overflow-hidden border border-white/5 mb-4 w-full block cursor-pointer">
                  <SafeImage src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
-              </div>
+              </button>
               <h3 className="font-heading text-lg">{item.name}</h3>
               <p className="text-sm text-muted-foreground">{item.price_galeons} Galeões</p>
               <Button 
@@ -325,6 +325,13 @@ export default function GringottsStore() {
         </div>
         )
       )}
+      <ItemPreviewDialog
+        item={previewItem}
+        open={!!previewItem}
+        onOpenChange={(v) => !v && setPreviewItem(null)}
+        owned={previewItem ? owned.includes(previewItem.id) : false}
+        onBuy={buyItem}
+      />
     </div>
   );
 }
