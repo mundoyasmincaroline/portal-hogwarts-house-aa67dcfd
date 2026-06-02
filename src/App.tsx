@@ -39,6 +39,7 @@ const Members = lazy(() => import("./pages/Members"));
 const GringottsStore = lazy(() => import("./pages/GringottsStore"));
 const Duels = lazy(() => import("./pages/Duels"));
 const Wallet = lazy(() => import("./pages/Wallet"));
+const BattlePass = lazy(() => import("./pages/BattlePass"));
 const Terms = lazy(() => import("./pages/Terms"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const ParentsGuide = lazy(() => import("./pages/ParentsGuide"));
@@ -128,6 +129,7 @@ const App = () => {
                   <Route path="album" element={<StickerAlbum />} />
                   <Route path="classes" element={<Classes />} />
                   <Route path="canon-lessons" element={<CanonLessons />} />
+                  <Route path="battle-pass" element={<BattlePass />} />
                   <Route path="houses" element={<Houses />} />
                   <Route path="ranking" element={<Ranking />} />
                   <Route path="challenges" element={<Challenges />} />

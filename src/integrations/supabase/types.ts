@@ -3076,6 +3076,10 @@ export type Database = {
         Args: { _father_id: string; _mother_id: string }
         Returns: string
       }
+      claim_battle_pass_reward: {
+        Args: { p_pass_id: string; p_reward_id: string }
+        Returns: Json
+      }
       claim_rp_slot: {
         Args: { p_character_id: string }
         Returns: {
