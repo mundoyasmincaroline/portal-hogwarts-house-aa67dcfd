@@ -15,10 +15,13 @@ export function useRealtime<T>(
   callbackRef.current = callback;
 
   useEffect(() => {
-    // Stable channelId — avoids unnecessary reconnects on re-renders
-    const channelId = `rt:${table}:${event}:${filter || 'all'}`;
+    // Unique channelId per hook instance — prevents the supabase-js
+    // "cannot add postgres_changes callbacks after subscribe()" error that
+    // happens when StrictMode/HMR re-mounts and the same topic instance is
+    // still referenced by the realtime client.
+    const channelId = `rt:${table}:${event}:${filter || 'all'}:${Math.random().toString(36).slice(2, 10)}`;
     const channel = supabase.channel(channelId);
-    
+
     channel
       .on(
         'postgres_changes',

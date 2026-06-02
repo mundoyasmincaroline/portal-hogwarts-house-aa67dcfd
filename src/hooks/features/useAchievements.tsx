@@ -55,7 +55,7 @@ export function useAchievements(userId: string | undefined, _xp?: number, _level
 
     // Realtime: ouve novas medalhas concedidas pelo trigger no banco
     const channel = supabase
-      .channel(`badges-${userId}`)
+      .channel(`badges-${userId}-${Date.now()}-${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "user_badges", filter: `user_id=eq.${userId}` },

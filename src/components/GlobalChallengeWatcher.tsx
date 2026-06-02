@@ -12,8 +12,8 @@ export default function GlobalChallengeWatcher() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    // Escutar por novos desafios criados (channelId estável)
-    const channelId = `challenges_channel:global`;
+    // Escutar por novos desafios criados (id único por instância)
+    const channelId = `challenges_channel:global:${Date.now()}:${Math.random().toString(36).slice(2)}`;
     const channel = supabase
       .channel(channelId)
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "challenges" }, (payload) => {

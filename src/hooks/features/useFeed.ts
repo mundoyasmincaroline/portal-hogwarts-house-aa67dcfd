@@ -74,7 +74,7 @@ export function useFeed() {
   // Realtime simples para novos posts (opcional, mas melhora UX)
   useEffect(() => {
     let debounceTimer: ReturnType<typeof setTimeout> | null = null;
-    const channel = supabase.channel('feed-updates')
+    const channel = supabase.channel(`feed-updates:${Date.now()}:${Math.random().toString(36).slice(2)}`)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, () => {
         // Debounce para evitar recarregar várias vezes em rajadas
         if (debounceTimer) clearTimeout(debounceTimer);
