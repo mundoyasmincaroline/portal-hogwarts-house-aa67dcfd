@@ -231,8 +231,13 @@ export default function GringottsStore() {
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {items.filter(i => i.is_featured).map(item => (
                 <Card3D key={item.id} intensity={10} className="glass p-8 rounded-[2.5rem] border border-primary/20 hover:border-primary/50 group">
-                   <div className="aspect-square rounded-2xl overflow-hidden mb-4 border border-white/10">
+                   <div className="relative aspect-square rounded-2xl overflow-hidden mb-4 border border-white/10">
                       <SafeImage src={item.image_url} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                      {item.category === "wand" && (
+                        <Suspense fallback={null}>
+                          <Wand3D className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        </Suspense>
+                      )}
                    </div>
                    <h3 className="font-heading text-xl text-primary">{item.name}</h3>
                    <div className="flex items-center justify-between mt-4">
