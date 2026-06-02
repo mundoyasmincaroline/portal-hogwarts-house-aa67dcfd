@@ -70,7 +70,12 @@ export default function Challenges() {
       setActiveSocial(c);
       setSocialLink("");
     } else {
-      toast.info("✨ Esta missão é concluída automaticamente! Realize a ação descrita e o sistema irá detectar e recompensar você.");
+      const pct = userProgress[c.id] ?? 0;
+      if (pct > 0) {
+        toast.info(`⚙️ Progresso atual: ${pct}%. Continue agindo no portal para concluir!`);
+      } else {
+        toast.info("⚙️ Missão automática — execute a ação no portal e o sistema registra seu progresso em tempo real.");
+      }
     }
   };
 
