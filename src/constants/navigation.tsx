@@ -13,6 +13,11 @@ export const NAV_GROUPS = [
     title: "Mundo Bruxo",
     items: [
       { icon: <MagicalIcon icon={Castle} size="xs" color="#60a5fa" />, label: "O Castelo", path: "/dashboard" },
+      { icon: <MagicalEmoji emoji="🗺️" size="xs" />, label: "Mapa do Castelo", path: "/dashboard/castle-map" },
+      { icon: <MagicalEmoji emoji="📜" size="xs" />, label: "Crônicas", path: "/dashboard/chapters" },
+      { icon: <MagicalEmoji emoji="🗣️" size="xs" />, label: "Retratos Falantes", path: "/dashboard/npcs" },
+      { icon: <MagicalEmoji emoji="📔" size="xs" />, label: "Diário", path: "/dashboard/diary" },
+      { icon: <MagicalEmoji emoji="🔮" size="xs" />, label: "Profecias", path: "/dashboard/prophecy" },
       { icon: <MagicalIcon icon={BookOpen} size="xs" color="#10b981" />, label: "Guia do Maroto", path: "/dashboard/guide" },
       { icon: <MagicalIcon icon={Users} size="xs" color="#ec4899" />, label: "Amigos", path: "/dashboard/friends" },
       { icon: <MagicalIcon icon={Shield} size="xs" color="#a855f7" />, label: "Clubes", path: "/dashboard/clubs" },
