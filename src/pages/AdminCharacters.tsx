@@ -466,15 +466,15 @@ export default function AdminCharacters() {
       </header>
 
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-        <div className="flex gap-2 overflow-x-auto pb-1">
-          <Button variant={tab === "characters" ? "magical" : "outline"} onClick={() => setTab("characters")}>Fichas</Button>
-          <Button variant={tab === "professors" ? "magical" : "outline"} onClick={() => setTab("professors")}>Professores Canon</Button>
-          <Button variant={tab === "lessons" ? "magical" : "outline"} onClick={() => setTab("lessons")}>Aulas Canon</Button>
+        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+          <Button className="shrink-0" variant={tab === "characters" ? "magical" : "outline"} onClick={() => setTab("characters")}>Fichas</Button>
+          <Button className="shrink-0 max-w-[70vw]" variant={tab === "professors" ? "magical" : "outline"} onClick={() => setTab("professors")}>Professores Canon</Button>
+          <Button className="shrink-0" variant={tab === "lessons" ? "magical" : "outline"} onClick={() => setTab("lessons")}>Aulas Canon</Button>
         </div>
-        <div className="flex gap-2">
-          {tab === "characters" && <Button onClick={openNewCharacter}><Plus className="h-4 w-4" /> Nova ficha</Button>}
-          {tab === "professors" && <Button onClick={openNewProfessor}><Plus className="h-4 w-4" /> Novo canon</Button>}
-          {tab === "lessons" && <Button onClick={openNewLesson} disabled={professors.length === 0}><Plus className="h-4 w-4" /> Nova aula</Button>}
+        <div className="flex gap-2 w-full md:w-auto">
+          {tab === "characters" && <Button className="w-full md:w-auto" onClick={openNewCharacter}><Plus className="h-4 w-4" /> Nova ficha</Button>}
+          {tab === "professors" && <Button className="w-full md:w-auto" onClick={openNewProfessor}><Plus className="h-4 w-4" /> Novo canon</Button>}
+          {tab === "lessons" && <Button className="w-full md:w-auto" onClick={openNewLesson} disabled={professors.length === 0}><Plus className="h-4 w-4" /> Nova aula</Button>}
         </div>
       </div>
 
@@ -614,7 +614,7 @@ export default function AdminCharacters() {
             <Field label="Frase"><Textarea value={professorDraft.catchphrase || ""} onChange={(e) => setProfessorDraft((d) => ({ ...d, catchphrase: e.target.value }))} /></Field>
             <Field label="Biografia"><Textarea value={professorDraft.bio || ""} onChange={(e) => setProfessorDraft((d) => ({ ...d, bio: e.target.value }))} /></Field>
           </div>
-          <div className="flex justify-end gap-2 pt-4"><Button variant="outline" onClick={() => setProfessorOpen(false)}>Cancelar</Button><Button onClick={saveProfessor} disabled={saving}>Salvar canon</Button></div>
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-4"><Button variant="outline" onClick={() => setProfessorOpen(false)}>Cancelar</Button><Button onClick={saveProfessor} disabled={saving}>Salvar canon</Button></div>
         </DialogContent>
       </Dialog>
 
@@ -633,7 +633,7 @@ export default function AdminCharacters() {
             <Field label="Vagas"><Input type="number" value={lessonDraft.max_students ?? 30} onChange={(e) => setLessonDraft((d) => ({ ...d, max_students: Number(e.target.value) }))} /></Field>
             <Field label="Descrição"><Textarea value={lessonDraft.description || ""} onChange={(e) => setLessonDraft((d) => ({ ...d, description: e.target.value }))} /></Field>
           </div>
-          <div className="flex justify-end gap-2 pt-4"><Button variant="outline" onClick={() => setLessonOpen(false)}>Cancelar</Button><Button onClick={saveLesson} disabled={saving}>Salvar aula</Button></div>
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-4"><Button variant="outline" onClick={() => setLessonOpen(false)}>Cancelar</Button><Button onClick={saveLesson} disabled={saving}>Salvar aula</Button></div>
         </DialogContent>
       </Dialog>
     </div>
