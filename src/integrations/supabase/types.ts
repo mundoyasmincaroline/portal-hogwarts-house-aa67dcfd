@@ -3096,6 +3096,14 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      complete_canon_lesson: {
+        Args: {
+          p_character_id: string
+          p_lesson_id: string
+          p_mastery_score?: number
+        }
+        Returns: Json
+      }
       complete_daily_mission: {
         Args: { p_mission_id: string }
         Returns: {
