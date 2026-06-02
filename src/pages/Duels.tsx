@@ -135,62 +135,32 @@ export default function Duels() {
 
   const castSpell = async (spell: Spell) => {
     if (!activeDuel || !user || !profile) return;
-    
-    const isChallenger = activeDuel.challenger_user_id === user.id;
-    const isMyTurn = (isChallenger && activeDuel.current_turn === 'challenger') || 
-                     (!isChallenger && activeDuel.current_turn === 'opponent');
-
-    if (!isMyTurn) return;
-
-    let newOpponentHp = isChallenger ? activeDuel.opponent_hp : activeDuel.challenger_hp;
-    let newMyHp = isChallenger ? activeDuel.challenger_hp : activeDuel.opponent_hp;
-
-    // Simplified logic: damage category or defense
-    if (spell.category === 'damage' || spell.base_damage > 0) {
-      newOpponentHp = Math.max(0, newOpponentHp - (spell.base_damage || 15));
-    } else if (spell.category === 'defense' || spell.base_defense > 0) {
-      newMyHp = Math.min(100, newMyHp + (spell.base_defense || 10));
-    }
-
-    const nextTurn = isChallenger ? 'opponent' : 'challenger';
-    const isGameOver = newOpponentHp <= 0;
-
-    const updates: any = {
-      current_turn: nextTurn,
-      updated_at: new Date().toISOString()
-    };
-
-    if (isChallenger) {
-      updates.opponent_hp = newOpponentHp;
-      updates.challenger_hp = newMyHp;
-    } else {
-      updates.challenger_hp = newOpponentHp;
-      updates.opponent_hp = newMyHp;
-    }
-
-    if (isGameOver) {
-      updates.status = 'completed';
-      updates.winner = isChallenger ? 'challenger' : 'opponent';
-      const { error: xpErr } = await supabase.rpc("award_xp_action", { _action: "duel_win", _user_id: user.id, _xp: 50 });
-      if (xpErr) toast.error("Erro ao conceder XP: " + xpErr.message);
-    }
-
-    const { error: updErr } = await supabase.from("duels").update(updates as never).eq("id", activeDuel.id);
-    if (updErr) {
-      toast.error("Erro ao atualizar duelo.");
+    // Toda a lógica (dano, turno, HP, XP) acontece na RPC server-side process_duel_turn
+    const { data, error } = await (supabase.rpc as any)("process_duel_turn", {
+      _duel_id: activeDuel.id,
+      _spell_id: spell.id,
+    });
+    if (error) {
+      const msg = error.message || "";
+      if (msg.includes("not_your_turn")) toast.error("Aguarde seu turno!");
+      else if (msg.includes("duel_not_active")) toast.error("Este duelo já terminou.");
+      else toast.error("Erro ao lançar feitiço: " + msg);
       return;
     }
-    
-    const { error: turnErr } = await supabase.from("duel_turns").insert({
-      duel_id: activeDuel.id,
-      actor: isChallenger ? 'challenger' : 'opponent',
-      spell_id: spell.id,
-      spell_name: spell.name,
-      damage: spell.base_damage || 0,
-      hit: true,
-      narrative: `${profile.full_name} lançou ${spell.name}!`
-    } as never);
-    if (turnErr) console.error("Erro ao registrar turno:", turnErr);
+    if (data?.winner) {
+      const iWon =
+        (activeDuel.challenger_user_id === user.id && data.winner === 'challenger') ||
+        (activeDuel.opponent_user_id === user.id && data.winner === 'opponent');
+      toast.success(iWon ? "🏆 Vitória! +50 XP" : "💀 Derrota — o vencedor leva tudo.");
+    }
+    setActiveDuel((prev: any) => prev ? {
+      ...prev,
+      challenger_hp: data.challenger_hp,
+      opponent_hp: data.opponent_hp,
+      current_turn: data.current_turn,
+      status: data.status,
+      winner: data.winner,
+    } : prev);
   };
 
   const myTurn = activeDuel && (
