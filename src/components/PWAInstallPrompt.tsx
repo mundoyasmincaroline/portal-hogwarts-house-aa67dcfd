@@ -71,7 +71,7 @@ export default function PWAInstallPrompt() {
         </div>
 
         <div className="mt-5 flex gap-2">
-          <Button onClick={handleInstall} variant="magical" className="flex-1 h-12 rounded-xl text-xs font-bold tracking-widest uppercase shadow-xl">
+          <Button onClick={handleInstall} variant="magical" className="flex-1 min-h-12 h-auto rounded-xl text-[10px] sm:text-xs font-bold uppercase shadow-xl px-3">
             {isIOS ? "Ver Tutorial de Instalação" : "Baixar Agora ✨"}
           </Button>
         </div>

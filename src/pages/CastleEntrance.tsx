@@ -109,7 +109,7 @@ export default function CastleEntrance() {
                 key={i} 
                 variant="magical" 
                 size="lg" 
-                className="w-full h-16 text-lg font-heading rounded-2xl shadow-xl hover:scale-[1.02] active:scale-95 transition-all duration-300 animate-in fade-in slide-in-from-bottom-2"
+                className="w-full min-h-16 h-auto text-base sm:text-lg font-heading rounded-2xl shadow-xl hover:scale-[1.02] active:scale-95 transition-all duration-300 animate-in fade-in slide-in-from-bottom-2 px-4"
                 style={{ animationDelay: `${500 + i * 200}ms` }}
                 onClick={() => opt.next === -1 ? handleFinish() : setStep(opt.next)}
                 disabled={opt.next === -1 ? loading : false}

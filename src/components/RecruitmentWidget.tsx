@@ -57,7 +57,7 @@ export default function RecruitmentWidget() {
                     {copied ? <CheckCircle2 size={18} /> : <Copy size={18} />}
                  </button>
               </div>
-              <Button onClick={shareViralText} variant="magical" className="w-full h-14 rounded-2xl shadow-[0_10px_30px_rgba(212,175,55,0.3)] font-heading text-sm">
+               <Button onClick={shareViralText} variant="magical" className="w-full min-h-14 h-auto rounded-2xl shadow-[0_10px_30px_rgba(212,175,55,0.3)] font-heading text-xs sm:text-sm px-4">
                 GERAR TEXTO VIRAL <EmojiIcon e="🚀" />
               </Button>
            </div>

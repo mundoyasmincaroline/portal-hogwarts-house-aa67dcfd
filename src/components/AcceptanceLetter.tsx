@@ -84,7 +84,7 @@ export default function AcceptanceLetter({
             variant="magical" 
             size="lg" 
             onClick={onContinue}
-            className="h-16 px-12 rounded-2xl bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-600 text-black border-none font-bold text-xl shadow-[0_20px_50px_rgba(234,179,8,0.4)] animate-bounce"
+            className="min-h-16 h-auto w-full max-w-md px-5 sm:px-12 rounded-2xl bg-gradient-to-r from-yellow-600 via-amber-400 to-yellow-600 text-black border-none font-bold text-base sm:text-xl shadow-[0_20px_50px_rgba(234,179,8,0.4)] animate-bounce"
           >
             {isPreview ? "CONFIRMAR E SELAR" : "ATRAVESSAR O PORTAL"} <Sparkles className="ml-2" />
           </Button>

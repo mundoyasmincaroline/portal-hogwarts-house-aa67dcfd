@@ -91,7 +91,7 @@ export function PostComposer({ bannedWords }: PostComposerProps) {
             className="w-full bg-[#14100a]/80 rounded-xl pl-11 pr-4 py-4 text-xs text-foreground focus:outline-none border border-white/10 focus:border-primary/40 transition-all placeholder:text-foreground/50" 
           />
         </div>
-        <div className="flex items-center justify-between sm:justify-end gap-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between sm:justify-end gap-4 sm:gap-6">
           <div className="flex flex-col items-end">
             <span className="text-[10px] text-foreground/60 font-mono tracking-widest">{newPost.length}/1000</span>
             <span className="text-[8px] text-primary/50 uppercase tracking-tighter font-bold">Encantamento de texto</span>
@@ -99,7 +99,7 @@ export function PostComposer({ bannedWords }: PostComposerProps) {
           <Button 
             variant="magical" 
             size="lg" 
-            className="font-heading text-xs uppercase tracking-[0.2em] px-12 h-14 rounded-2xl shadow-[0_12px_24px_-8px_rgba(212,175,55,0.4)] hover:shadow-[0_20px_40px_-10px_rgba(212,175,55,0.6)] hover:-translate-y-1" 
+            className="w-full sm:w-auto font-heading text-xs uppercase px-6 sm:px-12 min-h-14 h-auto rounded-2xl shadow-[0_12px_24px_-8px_rgba(212,175,55,0.4)] hover:shadow-[0_20px_40px_-10px_rgba(212,175,55,0.6)] hover:-translate-y-1" 
             disabled={!newPost.trim() || posting} 
             onClick={submitPost}
           >
