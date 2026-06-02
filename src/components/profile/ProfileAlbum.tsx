@@ -126,7 +126,7 @@ export default function ProfileAlbum({ userId }: { userId: string }) {
         <div className="flex flex-wrap items-center gap-2">
           {(["all","owned","missing"] as const).map(f => (
             <button key={f} onClick={() => setFilter(f)}
-              className={`text-[10px] font-heading uppercase tracking-widest px-3 py-1.5 rounded-full border transition-all ${
+              className={`text-[10px] font-heading uppercase tracking-[0.04em] sm:tracking-widest px-3 py-1.5 rounded-full border transition-all ${
                 filter === f ? "bg-primary text-primary-foreground border-primary" : "bg-background/40 text-muted-foreground border-border hover:border-primary/40"
               }`}>
               {f === "all" ? `Todas (${total})` : f === "owned" ? `Conquistadas (${ownedCount})` : `Faltando (${total - ownedCount})`}
@@ -138,7 +138,7 @@ export default function ProfileAlbum({ userId }: { userId: string }) {
             </Button>
             {isMe ? (
               <Link to="/dashboard/album">
-                <Button size="sm" variant="plaque" className="text-[9px] sm:text-[10px] rounded-full px-space-md">Abrir Álbum</Button>
+                <Button size="sm" variant="plaque" className="text-[9px] sm:text-[10px] rounded-full px-space-sm sm:px-space-md">Abrir Álbum</Button>
               </Link>
             ) : (
               <Link to="/dashboard/trades">

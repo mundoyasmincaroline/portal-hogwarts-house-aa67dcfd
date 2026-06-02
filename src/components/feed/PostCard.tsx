@@ -119,7 +119,7 @@ const PostCard = memo(({
 
       <button
         onClick={() => onToggleComments(post.id)}
-        className="px-3 sm:px-4 py-2 rounded-2xl text-[10px] sm:text-[11px] font-heading uppercase tracking-widest text-foreground/85 bg-black/40 border border-white/10 hover:text-primary hover:border-primary/50 hover:bg-primary/10 transition-all active:scale-95 ml-auto sm:ml-0 flex items-center gap-2 min-h-[36px]"
+        className="px-3 sm:px-4 py-2 rounded-2xl text-[10px] sm:text-[11px] font-heading uppercase tracking-[0.04em] sm:tracking-widest text-foreground/85 bg-black/40 border border-white/10 hover:text-primary hover:border-primary/50 hover:bg-primary/10 transition-all active:scale-95 ml-auto sm:ml-0 flex items-center gap-2 min-h-[36px]"
       >
         <span className="text-sm"><EmojiIcon e="💬" /></span> {post.comments?.length || 0}
       </button>
@@ -160,7 +160,7 @@ const PostCard = memo(({
             maxLength={500}
             className="flex-1 bg-transparent rounded-xl px-4 py-2.5 text-xs focus:outline-none text-foreground placeholder:text-muted-foreground/50 italic"
           />
-          <Button size="sm" variant="magical" className="rounded-xl px-6 font-heading text-[10px] tracking-widest uppercase shadow-none" onClick={onSubmitComment}>
+          <Button size="sm" variant="magical" className="rounded-xl px-4 sm:px-6 font-heading text-[10px] uppercase shadow-none" onClick={onSubmitComment}>
             Enviar
           </Button>
         </div>

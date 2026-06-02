@@ -132,7 +132,7 @@ export default function Azkaban() {
             <p className="text-muted-foreground text-sm">
               Você não está em Azkaban. Continue participando do portal para evitar punições!
             </p>
-            <Button variant="plaque" onClick={() => navigate("/dashboard")} className="h-12 px-8 rounded-xl">
+            <Button variant="plaque" onClick={() => navigate("/dashboard")} className="min-h-12 h-auto px-5 sm:px-8 rounded-xl">
               Voltar ao Castelo <MagicalEmoji emoji="🏰" size="xs" className="ml-2 inline-flex" />
             </Button>
           </div>

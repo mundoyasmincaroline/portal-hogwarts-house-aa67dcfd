@@ -305,7 +305,7 @@ export default function GringottsStore() {
               </p>
               <Button 
                 variant="magical" 
-                className="w-full h-14 rounded-2xl"
+                className="w-full min-h-14 h-auto rounded-2xl px-4"
                 disabled={!!buyingPackageId}
                 onClick={() => buyGaleons(pkg)}
               >
@@ -343,7 +343,7 @@ export default function GringottsStore() {
                 </ul>
                 <Button 
                   variant="magical" 
-                  className="w-full h-14 rounded-2xl bg-purple-600 hover:bg-purple-500"
+                  className="w-full min-h-14 h-auto rounded-2xl bg-purple-600 hover:bg-purple-500 px-4"
                   disabled={!!buyingPackageId}
                   onClick={() => buyVip(plan)}
                 >

@@ -99,7 +99,7 @@ export default function InterstitialAd() {
           </a>
         )}
 
-        <Button asChild size="lg" variant="magical" className="w-full max-w-md text-lg h-14">
+        <Button asChild size="lg" variant="magical" className="w-full max-w-md text-base sm:text-lg min-h-14 h-auto px-4">
           <a href={activeAd.link} target="_blank" rel="noreferrer">
             Aproveitar Oferta
           </a>

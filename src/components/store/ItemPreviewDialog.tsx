@@ -47,7 +47,7 @@ export default function ItemPreviewDialog({ item, open, onOpenChange, owned, onB
             </div>
             <Button
               variant="magical"
-              className="w-full h-12 mt-6"
+              className="w-full min-h-12 h-auto mt-6"
               disabled={owned}
               onClick={() => { onBuy(item); onOpenChange(false); }}
             >

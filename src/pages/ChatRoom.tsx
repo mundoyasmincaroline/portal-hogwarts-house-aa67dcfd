@@ -533,7 +533,7 @@ export default function ChatRoom() {
               <MagicalEmoji emoji="🎥" size="lg" glowColor="rgba(234, 179, 8, 0.4)" className="mb-6 animate-pulse" />
               <h3 className="font-heading text-2xl text-white mb-2">Transmissão em Andamento</h3>
               <p className="text-sm text-white/50 max-w-sm mb-8 font-serif italic">"O Google Meet protege a privacidade de seus alunos. Clique abaixo para conjurar sua presença na sala."</p>
-              <Button variant="magical" size="lg" className="rounded-2xl h-14 px-10 shadow-2xl" onClick={() => window.open(channel.meet_link, "_blank")}>
+              <Button variant="magical" size="lg" className="rounded-2xl min-h-14 h-auto px-5 sm:px-10 shadow-2xl" onClick={() => window.open(channel.meet_link, "_blank")}>
                 Participar da Aula <EmojiIcon e="📞" />
               </Button>
             </div>

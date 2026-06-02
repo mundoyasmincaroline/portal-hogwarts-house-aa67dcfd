@@ -42,7 +42,7 @@ export default function MagicalDashboardHeader() {
           </div>
           <button 
             onClick={() => setIsExpanded(!isExpanded)}
-            className="text-[9px] sm:text-[10px] font-heading font-bold uppercase tracking-widest text-primary/60 hover:text-primary transition-all flex items-center justify-center gap-1.5 bg-primary/5 px-4 py-2 sm:py-2.5 rounded-full border border-primary/10 shadow-lg active:scale-95 w-fit sm:w-auto"
+            className="text-[9px] sm:text-[10px] font-heading font-bold uppercase tracking-[0.04em] sm:tracking-widest text-primary/60 hover:text-primary transition-all flex items-center justify-center gap-1.5 bg-primary/5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full border border-primary/10 shadow-lg active:scale-95 w-full sm:w-auto"
           >
             {isExpanded ? (
               <>Recolher <ChevronUp size={12} /></>

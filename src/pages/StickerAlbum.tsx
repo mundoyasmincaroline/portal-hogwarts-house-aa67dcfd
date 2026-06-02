@@ -156,7 +156,7 @@ export default function StickerAlbum() {
             <Button 
               variant="magical" 
               size="lg" 
-              className="h-20 px-12 rounded-[2rem] shadow-[0_20px_50px_-10px_rgba(212,175,55,0.4)] w-full sm:w-auto text-xl font-heading group/btn relative overflow-hidden" 
+              className="min-h-20 h-auto px-5 sm:px-12 rounded-[2rem] shadow-[0_20px_50px_-10px_rgba(212,175,55,0.4)] w-full sm:w-auto text-base sm:text-xl font-heading group/btn relative overflow-hidden" 
               onClick={openSurprisePack} 
               disabled={openingPack || (profile?.xp ?? 0) < 80}
             >
@@ -266,10 +266,10 @@ export default function StickerAlbum() {
                     <p className="text-muted-foreground font-serif italic text-lg">"Uma adição magnífica ao seu álbum."</p>
                 </div>
                 <div className="flex flex-col gap-3 w-full">
-                  <Button variant="plaque" size="lg" className="w-full h-14 text-base rounded-2xl shadow-2xl" onClick={(e) => { e.stopPropagation(); handleShareSticker(packReveal); }}>
+                  <Button variant="plaque" size="lg" className="w-full min-h-14 h-auto text-sm sm:text-base rounded-2xl shadow-2xl px-4" onClick={(e) => { e.stopPropagation(); handleShareSticker(packReveal); }}>
                     <Share2 className="mr-2" /> Compartilhar Figurinha
                   </Button>
-                  <Button variant="plaque" size="lg" className="w-full h-14 text-base rounded-2xl shadow-2xl opacity-90" onClick={closePack}>
+                  <Button variant="plaque" size="lg" className="w-full min-h-14 h-auto text-sm sm:text-base rounded-2xl shadow-2xl opacity-90 px-4" onClick={closePack}>
                     Adicionar à Coleção
                   </Button>
                 </div>
@@ -329,10 +329,10 @@ export default function StickerAlbum() {
                 <h3 className="font-heading text-2xl text-foreground">Mercado de Trocas</h3>
                 <p className="text-sm text-muted-foreground font-serif italic">"Um Galeão por uma história, uma carta por um amigo."</p>
             </div>
-            <Button variant="plaque" className="w-full h-14 rounded-2xl border-white/10" onClick={() => navigate("/dashboard/trades")}>
+            <Button variant="plaque" className="w-full min-h-14 h-auto rounded-2xl border-white/10 px-4" onClick={() => navigate("/dashboard/trades")}>
                 Acessar Mercado <EmojiIcon e="🏪" />
             </Button>
-            <Button variant="outline" className="w-full h-12 rounded-2xl border-yellow-500/30 text-yellow-300 hover:bg-yellow-500/10" onClick={handleShareAlbum}>
+            <Button variant="outline" className="w-full min-h-12 h-auto rounded-2xl border-yellow-500/30 text-yellow-300 hover:bg-yellow-500/10 px-4" onClick={handleShareAlbum}>
                 <Share2 size={16} className="mr-2" /> Compartilhar Álbum
             </Button>
             <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Trocas seguras auditadas por Gringotts</p>
@@ -354,7 +354,7 @@ export default function StickerAlbum() {
           <div className="glass p-1.5 sm:p-2 rounded-full border border-white/5 bg-black/40 backdrop-blur-2xl inline-flex flex-wrap justify-center gap-1.5 sm:gap-3">
             {(["all", "gold", "silver", "bronze"] as const).map(r => (
             <button key={r} onClick={() => setActiveRarity(r)}
-                className={`px-4 sm:px-8 py-2 sm:py-3 rounded-full text-[10px] sm:text-xs font-bold font-heading transition-all duration-500 relative overflow-hidden group ${
+                className={`px-3 sm:px-8 py-2 sm:py-3 rounded-full text-[10px] sm:text-xs font-bold font-heading transition-all duration-500 relative overflow-hidden group ${
                 activeRarity === r
                     ? r === "gold" ? "bg-yellow-400 text-black shadow-lg shadow-yellow-400/20"
                     : r === "silver" ? "bg-slate-200 text-black shadow-lg shadow-white/10"
@@ -362,7 +362,7 @@ export default function StickerAlbum() {
                     : "bg-primary text-white shadow-lg shadow-primary/20"
                     : "bg-transparent text-muted-foreground hover:bg-white/5 hover:text-white"
                 }`}>
-                <span className="relative z-10 uppercase tracking-widest">
+                <span className="relative z-10 uppercase tracking-[0.04em] sm:tracking-widest">
                     {r === "all" ? "✨ Todas" : r === "gold" ? "🥇 Ouro" : r === "silver" ? "🥈 Prata" : "🥉 Bronze"}
                 </span>
                 {activeRarity === r && <div className="absolute inset-0 bg-white/10 animate-pulse" />}
@@ -379,7 +379,7 @@ export default function StickerAlbum() {
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
                 <div className="bg-yellow-400 text-black px-8 py-3 rounded-full font-heading font-bold uppercase tracking-widest shadow-2xl">Título Desbloqueado</div>
-                <Button variant="plaque" className="h-12 px-8 rounded-full" onClick={handleShareAlbum}>
+                <Button variant="plaque" className="min-h-12 h-auto px-5 sm:px-8 rounded-full" onClick={handleShareAlbum}>
                     <Share2 size={16} className="mr-2" /> Compartilhar Conquista
                 </Button>
             </div>

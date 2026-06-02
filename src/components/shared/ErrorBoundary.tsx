@@ -52,7 +52,7 @@ export class ErrorBoundary extends Component<Props, State> {
               this.setState({ hasError: false, error: null });
               window.location.reload();
             }}
-            className="px-8 py-4 bg-primary/10 hover:bg-primary/20 border border-primary/30 rounded-full text-[10px] font-heading font-black uppercase tracking-[0.2em] text-primary transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(212,175,55,0.1)]"
+            className="px-5 sm:px-8 py-4 bg-primary/10 hover:bg-primary/20 border border-primary/30 rounded-full text-[10px] font-heading font-black uppercase tracking-[0.04em] sm:tracking-[0.2em] text-primary transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(212,175,55,0.1)]"
           >
             Conjurar Restauração <EmojiIcon e="⚡" />
           </button>

@@ -49,10 +49,10 @@ export default function DiagonAlley() {
         <p className="text-muted-foreground">A rua mágica mais famosa do mundo bruxo.</p>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto pb-2">
+      <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide">
         {shops.map((s) => (
-          <Button key={s.id} variant={active === s.id ? "default" : "outline"} onClick={() => setActive(s.id)} className="whitespace-nowrap">
-            <span className="mr-2">{s.icon}</span>{s.name}
+          <Button key={s.id} variant={active === s.id ? "default" : "outline"} onClick={() => setActive(s.id)} className="shrink-0 max-w-[78vw] sm:max-w-none px-4">
+            <span className="shrink-0">{s.icon}</span><span className="truncate">{s.name}</span>
           </Button>
         ))}
       </div>
@@ -78,9 +78,9 @@ export default function DiagonAlley() {
               <h3 className="font-heading">{i.name}</h3>
               <p className="text-xs text-muted-foreground">{i.description}</p>
             </div>
-            <div className="flex items-center justify-between pt-2">
+            <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
               <span className="text-primary font-bold">{i.price_galeons} G</span>
-              <Button size="sm" disabled={loading || i.stock === 0} onClick={() => buy(i.id)}>
+              <Button size="sm" className="w-full sm:w-auto" disabled={loading || i.stock === 0} onClick={() => buy(i.id)}>
                 {i.stock === 0 ? "Esgotado" : "Comprar"}
               </Button>
             </div>
