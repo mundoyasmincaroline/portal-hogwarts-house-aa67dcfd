@@ -57,6 +57,9 @@ export const NAV_GROUPS = [
     items: [
       { icon: <MagicalIcon icon={ImageIcon} size="xs" color="#94a3b8" />, label: "Álbum", path: "/dashboard/album" },
       { icon: <MagicalIcon icon={ShoppingBag} size="xs" color="#f59e0b" />, label: "Loja", path: "/dashboard/store" },
+      { icon: <MagicalEmoji emoji="🏪" size="xs" />, label: "Hogsmeade", path: "/dashboard/hogsmeade" },
+      { icon: <MagicalEmoji emoji="🎒" size="xs" />, label: "Mochila", path: "/dashboard/inventory" },
+      { icon: <MagicalEmoji emoji="🤝" size="xs" />, label: "Trocas de Itens", path: "/dashboard/item-trades" },
       { icon: <MagicalIcon icon={ShoppingBag} size="xs" color="#a855f7" />, label: "Mercado", path: "/dashboard/marketplace" },
       { icon: <MagicalEmoji emoji="🔨" size="xs" />, label: "Leilões", path: "/dashboard/auctions" },
       { icon: <MagicalEmoji emoji="🏦" size="xs" />, label: "Gringotts", path: "/dashboard/gringotts" },
