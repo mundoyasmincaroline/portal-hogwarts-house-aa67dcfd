@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,8 @@ import MagicalParticles from "@/components/MagicalParticles";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { playDoorSound } from "@/services/core/soundService";
+
+const MagicalOrb = lazy(() => import("@/components/three/MagicalOrb"));
 
 export default function Login() {
   const navigate = useNavigate();
