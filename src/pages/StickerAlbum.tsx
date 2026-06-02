@@ -77,29 +77,20 @@ export default function StickerAlbum() {
     const locked = stickers.filter(s => !userStickers[s.id]);
     if (locked.length === 0) { toast.info("🏆 Você já tem todas as figurinhas!"); return; }
 
-    const pool: Sticker[] = [];
-    locked.forEach(s => {
-      const weight = s.rarity === "gold" ? 1 : s.rarity === "silver" ? 3 : 6;
-      for (let i = 0; i < weight; i++) pool.push(s);
-    });
-    const picked = pool[Math.floor(Math.random() * pool.length)];
-
     setOpeningPack(true);
     setPackPhase("shaking");
     setPackReveal(null);
 
     try {
-      const { error: xpErr } = await supabase.rpc("award_xp_action", { _action: "buy_sticker", _user_id: user.id, _xp: -PACK_COST });
-      if (xpErr) {
-        toast.error("Erro ao descontar XP: " + xpErr.message);
+      const { data, error } = await supabase.rpc("open_sticker_pack" as any, { _user_id: user.id });
+      if (error || !(data as any)?.success) {
+        toast.error((data as any)?.message || error?.message || "Erro ao abrir o pacote.");
         setOpeningPack(false);
         setPackPhase("idle");
         return;
       }
-
-      await supabase.from("user_stickers").upsert({ user_id: user.id, sticker_id: picked.id } as never);
+      const picked = (data as any).sticker as Sticker;
       await fetchProfile(user.id);
-      // A atualização do estado agora é feita via reload no hook ou manualmente se necessário
       await loadAlbum();
       setTimeout(() => { setPackPhase("reveal"); setPackReveal(picked); }, 1500);
     } catch (err: any) {
