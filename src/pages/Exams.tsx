@@ -28,6 +28,7 @@ export default function Exams() {
   const [questions, setQuestions] = useState<any[]>([]);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [timer, setTimer] = useState<number>(0);
 
   const load = async () => {
     const [e, a] = await Promise.all([
@@ -38,9 +39,29 @@ export default function Exams() {
   };
   useEffect(() => { load(); }, [user?.id]);
 
+  useEffect(() => {
+    let interval: any;
+    if (current && timer > 0) {
+      interval = setInterval(() => {
+        setTimer(prev => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            // Auto submit or message? For now just stay at 0
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [current, timer]);
+
   const start = async (exam: any) => {
     const { data } = await supabase.from("exam_questions").select("*").eq("exam_id", exam.id).order("order_idx");
-    setCurrent(exam); setQuestions(data ?? []); setAnswers({});
+    setCurrent(exam); 
+    setQuestions(data ?? []); 
+    setAnswers({});
+    setTimer(exam.duration_minutes * 60);
   };
 
   const submit = async () => {
@@ -113,7 +134,15 @@ export default function Exams() {
       <Dialog open={!!current} onOpenChange={(o) => !o && setCurrent(null)}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{current?.title}</DialogTitle>
+            <DialogTitle className="flex justify-between items-center">
+              <span>{current?.title}</span>
+              {timer > 0 && (
+                <Badge variant="outline" className={`font-mono ${timer < 60 ? "text-red-500 animate-pulse" : "text-primary"}`}>
+                  <Clock size={12} className="mr-1" />
+                  {Math.floor(timer / 60)}:{(timer % 60).toString().padStart(2, '0')}
+                </Badge>
+              )}
+            </DialogTitle>
             <p className="text-xs text-muted-foreground">{current?.subject} · {questions.length} perguntas · Aprovação: {current?.passing_percentage}%</p>
           </DialogHeader>
           <div className="space-y-4">

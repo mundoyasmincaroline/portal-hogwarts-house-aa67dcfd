@@ -11,6 +11,8 @@ import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function RaidBoss() {
   const [bosses, setBosses] = useState<any[]>([]);
   const [ranking, setRanking] = useState<Record<string, any[]>>({});
+  const [isAttacking, setIsAttacking] = useState<string | null>(null);
+  const [cooldown, setCooldown] = useState<Record<string, number>>({});
 
   const load = async () => {
     const { data } = await (supabase as any).from("raid_bosses").select("*").eq("status", "active").order("ends_at");
@@ -23,10 +25,24 @@ export default function RaidBoss() {
   useEffect(() => { load(); }, []);
 
   const attack = async (id: string) => {
+    if (cooldown[id] && Date.now() < cooldown[id]) {
+      toast.error("Aguarde o cooldown mágico!");
+      return;
+    }
+    
+    setIsAttacking(id);
     const dmg = 50 + Math.floor(Math.random() * 150);
     const { error, data } = await (supabase as any).rpc("damage_raid_boss", { p_boss_id: id, p_damage: dmg });
-    if (error) toast.error(error.message);
-    else { toast.success(`⚡ Você causou ${dmg} de dano!`); load(); }
+    
+    setTimeout(() => setIsAttacking(null), 500);
+    
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success(`⚡ Você causou ${dmg} de dano!`);
+      setCooldown(prev => ({ ...prev, [id]: Date.now() + 3000 })); // 3s cooldown
+      load();
+    }
   };
 
   return (
@@ -41,7 +57,8 @@ export default function RaidBoss() {
           <motion.div 
             layout
             key={b.id} 
-            className="rounded-2xl border border-primary/30 bg-card/60 p-6 space-y-4 shadow-2xl relative overflow-hidden"
+            animate={isAttacking === b.id ? { x: [0, -10, 10, -10, 10, 0], transition: { duration: 0.4 } } : {}}
+            className={`rounded-2xl border border-primary/30 p-6 space-y-4 shadow-2xl relative overflow-hidden transition-colors ${isAttacking === b.id ? "bg-red-500/10 border-red-500/50" : "bg-card/60"}`}
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 -rotate-45 translate-x-16 -translate-y-16" />
             <div className="flex items-center justify-between relative z-10">
@@ -58,8 +75,35 @@ export default function RaidBoss() {
                />
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed italic">{b.description}</p>
-            <Button onClick={() => attack(b.id)} className="w-full h-14 rounded-xl text-lg font-heading group" variant="magical">
-              <Swords className="mr-2 group-hover:rotate-12 transition-transform" /> Atacar Criatura
+            <Button 
+              onClick={() => attack(b.id)} 
+              disabled={!!isAttacking || (cooldown[b.id] && Date.now() < cooldown[b.id])}
+              className="w-full h-14 rounded-xl text-lg font-heading group overflow-hidden relative" 
+              variant="magical"
+            >
+              <AnimatePresence mode="wait">
+                {cooldown[b.id] && Date.now() < cooldown[b.id] ? (
+                  <motion.span 
+                    key="cooldown"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="flex items-center gap-2"
+                  >
+                    <Zap className="w-4 h-4 text-blue-400 animate-pulse" /> Recarregando...
+                  </motion.span>
+                ) : (
+                  <motion.span 
+                    key="attack"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="flex items-center gap-2"
+                  >
+                    <Swords className="mr-2 group-hover:rotate-12 transition-transform" /> Atacar Criatura
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </Button>
             <div className="pt-4 border-t border-white/5">
               <div className="text-[10px] uppercase tracking-widest text-primary font-bold mb-3 flex items-center gap-2">

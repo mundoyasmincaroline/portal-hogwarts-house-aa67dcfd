@@ -54,6 +54,8 @@ export default function Quests() {
   const [steps, setSteps] = useState<Record<string, Step[]>>({});
   const [mine, setMine] = useState<Record<string, UserQuest>>({});
   const [loading, setLoading] = useState(true);
+  const [filterRegion, setFilterRegion] = useState<string>("all");
+  const [showCompleted, setShowCompleted] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -124,18 +126,53 @@ export default function Quests() {
 
   return (
     <div className="container mx-auto max-w-5xl px-4 py-6 sm:py-8 space-y-6">
-      <header className="text-center">
-        <h1 className="font-heading text-3xl sm:text-4xl text-primary flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
-          <Map className="w-7 h-7 sm:w-9 sm:h-9" /> Aventuras & Quests
-        </h1>
-        <p className="text-muted-foreground mt-2">
-          Embarque em missões pela Floresta Proibida, Beco Diagonal, Hogsmeade e além.
-        </p>
+      <header className="text-center space-y-4">
+        <div>
+          <h1 className="font-heading text-3xl sm:text-4xl text-primary flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
+            <Map className="w-7 h-7 sm:w-9 sm:h-9" /> Aventuras & Quests
+          </h1>
+          <p className="text-muted-foreground mt-2">
+            Embarque em missões pela Floresta Proibida, Beco Diagonal, Hogsmeade e além.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+          <Button 
+            variant={filterRegion === "all" ? "default" : "outline"} 
+            size="sm" 
+            onClick={() => setFilterRegion("all")}
+            className="rounded-full"
+          >
+            Todos
+          </Button>
+          {Object.keys(regionColor).map(r => (
+            <Button 
+              key={r}
+              variant={filterRegion === r ? "default" : "outline"} 
+              size="sm" 
+              onClick={() => setFilterRegion(r)}
+              className="rounded-full capitalize"
+            >
+              {r}
+            </Button>
+          ))}
+          <Button 
+            variant={showCompleted ? "default" : "outline"} 
+            size="sm" 
+            onClick={() => setShowCompleted(!showCompleted)}
+            className="rounded-full ml-4"
+          >
+            {showCompleted ? "Ocultar Concluídas" : "Ver Concluídas"}
+          </Button>
+        </div>
       </header>
 
       {loading && <p className="text-center text-muted-foreground">Carregando...</p>}
 
-      {quests.map((q) => {
+      {quests
+        .filter(q => filterRegion === "all" || q.region === filterRegion)
+        .filter(q => showCompleted || !mine[q.id]?.completed)
+        .map((q) => {
         const myProg = mine[q.id];
         const qSteps = steps[q.id] || [];
         const userLevel = (profile as any)?.level ?? 0;
@@ -145,7 +182,8 @@ export default function Quests() {
         const currentStep = qSteps.find((s) => s.step_order === (myProg?.current_step || 1));
 
         return (
-          <Card key={q.id} className="p-6 bg-card/60 border-primary/30 space-y-4">
+          <Card key={q.id} className={`p-6 border-primary/30 space-y-4 transition-all hover:border-primary/50 ${locked ? "opacity-60 grayscale-[0.5]" : "bg-card/60 shadow-lg"}`}>
+
             <div className="flex items-start justify-between gap-4 flex-wrap">
               <div className="flex-1 min-w-[240px]">
                 <div className="flex items-center gap-2 flex-wrap">

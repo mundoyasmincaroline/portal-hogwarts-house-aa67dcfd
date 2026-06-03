@@ -1,12 +1,14 @@
 import { useEffect } from "react";
 import { useAuth } from "@/lib/auth";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { ProfileAboutTab } from "./Profile/ProfileAboutTab";
 import SafeImage from "@/components/SafeImage";
 import CharacterSheetView from "@/components/profile/CharacterSheetView";
 import ProfileAlbum from "@/components/profile/ProfileAlbum";
 import EditProfileButton from "@/components/profile/EditProfileButton";
 import { useProfile } from "@/hooks/features/useProfile";
+import { Button } from "@/components/ui/button";
+import { Wallet, Backpack, Trophy, History } from "lucide-react";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function Profile() {
@@ -58,6 +60,22 @@ export default function Profile() {
         )}
         {isMe && profileUserId && (
           <EditProfileButton profile={profile} onSaved={() => fetchProfileData(profileUserId)} />
+        )}
+        {isMe && (
+          <div className="flex flex-wrap justify-center gap-2 mt-6">
+            <Button asChild variant="outline" size="sm" className="gap-2">
+              <Link to="/dashboard/wallet"><Wallet size={14}/> Carteira</Link>
+            </Button>
+            <Button asChild variant="outline" size="sm" className="gap-2">
+              <Link to="/dashboard/inventory"><Backpack size={14}/> Mochila</Link>
+            </Button>
+            <Button asChild variant="outline" size="sm" className="gap-2">
+              <Link to="/dashboard/reputation"><Trophy size={14}/> Reputação</Link>
+            </Button>
+            <Button asChild variant="outline" size="sm" className="gap-2">
+              <Link to="/dashboard/journal"><History size={14}/> Jornal</Link>
+            </Button>
+          </div>
         )}
       </div>
 
