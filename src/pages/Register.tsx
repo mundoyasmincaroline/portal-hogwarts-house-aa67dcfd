@@ -9,7 +9,8 @@ import { toast } from "sonner";
 import HouseCrest from "@/components/rpg/HouseCrest";
 import MagicalParticles from "@/components/MagicalParticles";
 import AcceptanceLetter from "@/components/AcceptanceLetter";
-import { Sparkles, Feather, Droplet, Wand2, ArrowLeft } from "lucide-react";
+import { Sparkles, Feather, Droplet, Wand2, ArrowLeft, ShieldCheck } from "lucide-react";
+import MagicFacialID from "@/components/auth/MagicFacialID";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 /* ────────────────────────────────────────────────────────────
@@ -44,6 +45,7 @@ export default function Register() {
   const [step, setStep] = useState(0); // 0=convocação ... 6=carta
   const [loading, setLoading] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState("");
+  const [facialIdPreview, setFacialIdPreview] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
