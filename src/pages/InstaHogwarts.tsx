@@ -104,8 +104,14 @@ export default function InstaHogwarts() {
     const { data } = await supabase.from("insta_character_follows").select("followed_char_id").eq("follower_user_id", user!.id);
     if (data) setFollowedCharIds(new Set(data.map(f => f.followed_char_id)));
 
-    // Fetch follow counts for all chars in posts
-    const { data: counts } = await supabase.from("insta_character_follows").select("followed_char_id");
+    // Fetch follow counts only for chars in current posts (evita varrer a tabela toda)
+    const charIds = Array.from(new Set(posts.map((p: any) => p.character_id).filter(Boolean)));
+    if (charIds.length === 0) { setCharFollowCounts({}); return; }
+    const { data: counts } = await supabase
+      .from("insta_character_follows")
+      .select("followed_char_id")
+      .in("followed_char_id", charIds)
+      .limit(2000);
     if (counts) {
       const countMap: Record<string, number> = {};
       counts.forEach(c => {
@@ -488,7 +494,7 @@ export default function InstaHogwarts() {
                              <Heart size={24} fill={hasLiked ? "currentColor" : "none"} className={hasLiked ? "animate-wiggle" : ""} />
                           </div>
                           <div className="text-left">
-                            <span className="text-xl font-heading leading-none block">{post.likes.length}</span>
+                            <span className="text-xl font-heading leading-none block">{(post.likes ?? []).length}</span>
                             <span className="text-[9px] uppercase tracking-widest font-bold opacity-60">Curtidas</span>
                           </div>
                         </button>

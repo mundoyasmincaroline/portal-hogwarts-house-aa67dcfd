@@ -59,12 +59,12 @@ export default function BattlePass() {
         .from("user_battle_pass_progress")
         .select("current_level,current_xp,claimed_rewards")
         .eq("pass_id", p.id)
-        .eq("user_id", user!.id)
+        .eq("user_id", user?.id ?? "")
         .maybeSingle(),
       supabase
         .from("vip_subscriptions")
         .select("id")
-        .eq("user_id", user!.id)
+        .eq("user_id", user?.id ?? "")
         .eq("status", "active")
         .gt("expires_at", new Date().toISOString())
         .limit(1),
@@ -249,7 +249,7 @@ export default function BattlePass() {
               <Crown className="w-7 h-7 text-amber-300" />
             </div>
             <div className="flex-1">
-              <h3 className="font-heading text-xl text-amber-300">Active o Pacto Premium</h3>
+              <h3 className="font-heading text-xl text-amber-300">Ative o Pacto Premium</h3>
               <p className="text-sm font-serif italic text-white/70">
                 Destrave todas as {rewards.filter((r) => r.is_premium).length} recompensas douradas desta temporada.
               </p>

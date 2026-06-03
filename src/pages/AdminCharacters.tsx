@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import { BookOpen, GraduationCap, Pencil, Plus, Search, Sparkles, Trash2, UserRound } from "lucide-react";
+import { BookOpen, GraduationCap, Pencil, Plus, Search, Sparkles, Trash2, Upload, UserRound } from "lucide-react";
 import { z } from "zod";
 
 type AdminTab = "characters" | "professors" | "lessons";
@@ -242,6 +242,8 @@ export default function AdminCharacters() {
   const [spells, setSpells] = useState<SpellRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingCharAdmin, setUploadingCharAdmin] = useState(false);
+  const [uploadingProfAdmin, setUploadingProfAdmin] = useState(false);
   const [query, setQuery] = useState("");
 
   const [characterOpen, setCharacterOpen] = useState(false);
@@ -573,7 +575,49 @@ export default function AdminCharacters() {
             <Field label="Gênero"><Input value={characterDraft.gender || ""} onChange={(e) => setCharacterDraft((d) => ({ ...d, gender: e.target.value }))} /></Field>
             <Field label="Idade"><Input type="number" value={characterDraft.age ?? ""} onChange={(e) => setCharacterDraft((d) => ({ ...d, age: e.target.value ? Number(e.target.value) : null }))} /></Field>
             <Field label="Ano escolar"><Input type="number" min={1} max={7} value={characterDraft.school_year ?? ""} onChange={(e) => setCharacterDraft((d) => ({ ...d, school_year: e.target.value ? Number(e.target.value) : null }))} /></Field>
-            <Field label="Avatar URL"><Input value={characterDraft.avatar_url || ""} onChange={(e) => setCharacterDraft((d) => ({ ...d, avatar_url: e.target.value }))} /></Field>
+            <Field label="Foto do personagem">
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  {characterDraft.avatar_url ? (
+                    <img src={characterDraft.avatar_url} alt="" className="w-12 h-12 rounded-lg object-cover border border-primary/30" />
+                  ) : (
+                    <div className="w-12 h-12 rounded-lg bg-secondary/40 flex items-center justify-center text-xl">🧙</div>
+                  )}
+                  <label className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-dashed border-primary/50 bg-primary/5 hover:bg-primary/10 cursor-pointer text-xs font-heading text-primary transition-colors">
+                    <Upload size={14} />
+                    {uploadingCharAdmin ? "Enviando..." : "Upload de imagem"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      disabled={uploadingCharAdmin}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file || !characterDraft.user_id) {
+                          if (!characterDraft.user_id) toast.error("Selecione o dono da ficha antes do upload.");
+                          return;
+                        }
+                        if (file.size > 5 * 1024 * 1024) { toast.error("Imagem maior que 5MB."); return; }
+                        setUploadingCharAdmin(true);
+                        try {
+                          const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+                          const path = `${characterDraft.user_id}/characters/${Date.now()}.${ext}`;
+                          const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, { upsert: true, contentType: file.type });
+                          if (upErr) { toast.error("Falha no upload: " + upErr.message); return; }
+                          const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
+                          setCharacterDraft((d) => ({ ...d, avatar_url: `${publicUrl}?t=${Date.now()}` }));
+                          toast.success("Foto enviada! ✨");
+                        } finally {
+                          setUploadingCharAdmin(false);
+                          e.target.value = "";
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
+                <Input placeholder="Ou cole uma URL de imagem..." value={characterDraft.avatar_url || ""} onChange={(e) => setCharacterDraft((d) => ({ ...d, avatar_url: e.target.value }))} />
+              </div>
+            </Field>
             <Field label="Status de sangue"><Input value={characterDraft.blood_status || ""} onChange={(e) => setCharacterDraft((d) => ({ ...d, blood_status: e.target.value }))} /></Field>
             <Field label="Varinha"><Input value={characterDraft.wand || ""} onChange={(e) => setCharacterDraft((d) => ({ ...d, wand: e.target.value }))} /></Field>
             <Field label="Patrono"><Input value={characterDraft.patronus || ""} onChange={(e) => setCharacterDraft((d) => ({ ...d, patronus: e.target.value }))} /></Field>
@@ -609,7 +653,46 @@ export default function AdminCharacters() {
             <Field label="Título"><Input value={professorDraft.title} onChange={(e) => setProfessorDraft((d) => ({ ...d, title: e.target.value }))} /></Field>
             <Field label="Matéria"><Input value={professorDraft.subject} onChange={(e) => setProfessorDraft((d) => ({ ...d, subject: e.target.value }))} /></Field>
             <Field label="Dificuldade"><Input type="number" min={1} max={5} value={professorDraft.difficulty ?? 3} onChange={(e) => setProfessorDraft((d) => ({ ...d, difficulty: Number(e.target.value) }))} /></Field>
-            <Field label="Avatar URL"><Input value={professorDraft.avatar_url || ""} onChange={(e) => setProfessorDraft((d) => ({ ...d, avatar_url: e.target.value }))} /></Field>
+            <Field label="Foto do professor">
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  {professorDraft.avatar_url ? (
+                    <img src={professorDraft.avatar_url} alt="" className="w-12 h-12 rounded-lg object-cover border border-primary/30" />
+                  ) : (
+                    <div className="w-12 h-12 rounded-lg bg-secondary/40 flex items-center justify-center text-xl">🎓</div>
+                  )}
+                  <label className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-dashed border-primary/50 bg-primary/5 hover:bg-primary/10 cursor-pointer text-xs font-heading text-primary transition-colors">
+                    <Upload size={14} />
+                    {uploadingProfAdmin ? "Enviando..." : "Upload de imagem"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      disabled={uploadingProfAdmin}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        if (file.size > 5 * 1024 * 1024) { toast.error("Imagem maior que 5MB."); return; }
+                        setUploadingProfAdmin(true);
+                        try {
+                          const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+                          const path = `canon-professors/${Date.now()}.${ext}`;
+                          const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, { upsert: true, contentType: file.type });
+                          if (upErr) { toast.error("Falha no upload: " + upErr.message); return; }
+                          const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
+                          setProfessorDraft((d) => ({ ...d, avatar_url: `${publicUrl}?t=${Date.now()}` }));
+                          toast.success("Foto enviada! ✨");
+                        } finally {
+                          setUploadingProfAdmin(false);
+                          e.target.value = "";
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
+                <Input placeholder="Ou cole uma URL de imagem..." value={professorDraft.avatar_url || ""} onChange={(e) => setProfessorDraft((d) => ({ ...d, avatar_url: e.target.value }))} />
+              </div>
+            </Field>
             <Field label="Status"><select className={selectClass()} value={professorDraft.active ? "active" : "inactive"} onChange={(e) => setProfessorDraft((d) => ({ ...d, active: e.target.value === "active" }))}><option value="active">Ativo</option><option value="inactive">Inativo</option></select></Field>
             <Field label="Frase"><Textarea value={professorDraft.catchphrase || ""} onChange={(e) => setProfessorDraft((d) => ({ ...d, catchphrase: e.target.value }))} /></Field>
             <Field label="Biografia"><Textarea value={professorDraft.bio || ""} onChange={(e) => setProfessorDraft((d) => ({ ...d, bio: e.target.value }))} /></Field>

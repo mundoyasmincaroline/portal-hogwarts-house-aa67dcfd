@@ -186,12 +186,12 @@ export default function CharacterSheetView({ userId, isOwner, userItems = [] }: 
                 />
               </Card3D>
               {isOwner && (
-                <button 
+                <button
                   onClick={() => { setEditingPhoto(!editingPhoto); setTempUrl(char.avatar_url || ""); }}
-                  className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground p-space-sm rounded-full shadow-lg hover:scale-110 transition-transform z-10 btn-min"
+                  className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-3 py-1.5 rounded-full shadow-lg hover:scale-105 active:scale-95 transition-transform z-10 flex items-center gap-1.5 text-[10px] font-heading uppercase tracking-wider whitespace-nowrap"
                   title="Editar foto do personagem"
                 >
-                  <Edit2 size={14} />
+                  <Upload size={12} /> Trocar foto
                 </button>
               )}
             </div>

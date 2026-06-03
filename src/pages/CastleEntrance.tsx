@@ -39,7 +39,9 @@ export default function CastleEntrance() {
     } finally {
       setLoading(false);
     }
-    window.location.reload(); // Força o recarregamento limpo para o dashboard (só após sucesso)
+    // Recarrega o perfil em memória e navega sem hard-reload (sem flash branco)
+    try { if (user?.id) await fetchProfile(user.id); } catch (_) { /* noop */ }
+    navigate("/dashboard", { replace: true });
   };
 
   let welcomeText = "As pesadas portas de carvalho do castelo se abrem lentamente, revelando o imponente Grande Salão iluminado por milhares de velas flutuantes.";
@@ -78,7 +80,7 @@ export default function CastleEntrance() {
   return (
     <div className="fixed inset-0 bg-background/98 backdrop-blur-xl z-50 flex items-center justify-center p-4 overflow-hidden">
       <div className="absolute inset-0 z-0">
-        <img src={bgUrl} alt="Castle" className="w-full h-full object-cover opacity-40 mix-blend-overlay animate-float" style={{ animationDuration: '30s' }} />
+        <img src={bgUrl} alt="" aria-hidden="true" className="w-full h-full object-cover opacity-40 mix-blend-overlay animate-float" style={{ animationDuration: '30s' }} />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-background/20 to-background" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,175,55,0.1),transparent_70%)]" />
       </div>

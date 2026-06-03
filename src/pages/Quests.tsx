@@ -49,6 +49,7 @@ const regionColor: Record<string, string> = {
 
 export default function Quests() {
   const user = useAuth((s) => s.user);
+  const profile = useAuth((s) => s.profile);
   const [quests, setQuests] = useState<Quest[]>([]);
   const [steps, setSteps] = useState<Record<string, Step[]>>({});
   const [mine, setMine] = useState<Record<string, UserQuest>>({});
@@ -92,8 +93,15 @@ export default function Quests() {
 
   const start = async (id: string) => {
     const { error } = await supabase.rpc("start_quest", { p_quest_id: id });
-    if (error) toast.error(error.message);
-    else {
+    if (error) {
+      const m = error.message.toLowerCase();
+      toast.error(
+        m.includes("rls") || m.includes("permission") ? "Você não tem permissão para iniciar esta quest."
+        : m.includes("duplicate") || m.includes("already") ? "Esta quest já foi iniciada."
+        : m.includes("level") ? "Seu nível ainda não é suficiente para esta quest."
+        : "Não foi possível iniciar agora. Tente novamente."
+      );
+    } else {
       toast.success("Aventura iniciada! 🗺️");
       load();
     }
@@ -101,8 +109,14 @@ export default function Quests() {
 
   const advance = async (id: string) => {
     const { data, error } = await supabase.rpc("complete_quest_step", { p_quest_id: id });
-    if (error) toast.error(error.message);
-    else {
+    if (error) {
+      const m = error.message.toLowerCase();
+      toast.error(
+        m.includes("rls") || m.includes("permission") ? "Você não tem permissão para esta etapa."
+        : m.includes("not found") ? "Etapa não encontrada."
+        : "Não foi possível concluir a etapa. Tente novamente."
+      );
+    } else {
       toast.success((data as any)?.completed ? "🏆 Quest concluída!" : "Etapa concluída!");
       load();
     }
@@ -124,7 +138,8 @@ export default function Quests() {
       {quests.map((q) => {
         const myProg = mine[q.id];
         const qSteps = steps[q.id] || [];
-        const locked = !user || false;
+        const userLevel = (profile as any)?.level ?? 0;
+        const locked = !user || userLevel < (q.min_level || 0);
         const total = qSteps.length || 1;
         const progress = myProg ? Math.min(100, ((myProg.completed ? total : myProg.current_step - 1) / total) * 100) : 0;
         const currentStep = qSteps.find((s) => s.step_order === (myProg?.current_step || 1));
@@ -153,8 +168,18 @@ export default function Quests() {
               </div>
               <div className="flex flex-col gap-2 items-end">
                 {!myProg && (
-                  <Button onClick={() => start(q.id)} disabled={locked}>
-                    {locked ? <><Lock className="w-4 h-4 mr-1" /> Entre</> : "Iniciar"}
+                  <Button
+                    onClick={() => start(q.id)}
+                    disabled={locked}
+                    title={locked && user ? `Requer nível ${q.min_level}` : undefined}
+                  >
+                    {!user ? (
+                      <><Lock className="w-4 h-4 mr-1" /> Entre</>
+                    ) : locked ? (
+                      <><Lock className="w-4 h-4 mr-1" /> Nível {q.min_level}</>
+                    ) : (
+                      "Iniciar"
+                    )}
                   </Button>
                 )}
                 {myProg?.completed && (

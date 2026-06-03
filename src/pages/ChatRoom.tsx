@@ -271,7 +271,7 @@ export default function ChatRoom() {
     return () => {
       supabase.removeChannel(subscription);
     };
-  }, [channel?.id]);
+  }, [channel?.id, selectedDate]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -310,7 +310,7 @@ export default function ChatRoom() {
     
     // Filtro de Segurança Reforçado (Vigia)
     const dangerousPatterns = [
-      /sexo|pau|buceta|safad|novinh|novinh|whats|tel|contato|safad|pqp|fdp|porra/i,
+      /sexo|pau|buceta|safad|novinh|whats|tel|contato|pqp|fdp|porra/i,
       /\d{8,}/, // Bloqueia sequencias de números que pareçam telefone
       /(.)\1{5,}/ // Bloqueia spam de caracteres repetidos
     ];

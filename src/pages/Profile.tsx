@@ -14,7 +14,7 @@ export default function Profile() {
   const { profile: currentUserProfile, user } = useAuth();
   const isMe = !userId || userId === user?.id;
   
-  const { targetProfile, userBadges, userItems, fetchProfileData } = useProfile(userId, isMe);
+  const { targetProfile, userBadges, userItems, loading, fetchProfileData } = useProfile(userId, isMe);
   
   const profile = isMe ? currentUserProfile : targetProfile;
   const profileUserId = (isMe ? user?.id : userId) as string | undefined;
@@ -25,11 +25,21 @@ export default function Profile() {
     }
   }, [isMe, user?.id, fetchProfileData]);
 
-  if (!profile) return (
+  if (!profile && loading) return (
     <div className="min-h-[60vh] flex flex-col items-center justify-center gap-6 text-center px-4">
       <div className="text-6xl animate-pulse"><EmojiIcon e="🔮" /></div>
       <p className="font-heading text-2xl text-muted-foreground">Consultando os Arquivos de Hogwarts...</p>
       <p className="text-sm text-muted-foreground/60 font-serif italic">"Nem todo bruxo pode ser encontrado nos registros."</p>
+    </div>
+  );
+
+  if (!profile) return (
+    <div className="min-h-[60vh] flex flex-col items-center justify-center gap-6 text-center px-4">
+      <div className="text-6xl"><EmojiIcon e="🪄" /></div>
+      <p className="font-heading text-2xl text-foreground">Bruxo não encontrado</p>
+      <p className="text-sm text-muted-foreground/70 font-serif italic max-w-md">
+        Esse pergaminho não consta nos arquivos do castelo. Pode ter sido removido ou nunca ter existido.
+      </p>
     </div>
   );
 
