@@ -288,7 +288,7 @@ export default function StickerAlbum() {
       <div className="flex flex-col md:flex-row gap-6 items-center justify-between glass p-6 rounded-[2rem] border-white/10">
         <div className="relative w-full md:max-w-md group">
           <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-primary/40 group-focus-within:text-primary transition-colors">
-            <EmojiIcon e="🔍" size="sm" />
+            <EmojiIcon e="🔍" />
           </div>
           <input
             type="text"
@@ -403,7 +403,7 @@ export default function StickerAlbum() {
 
         {filtered.length === 0 && (
           <div className="text-center py-20 glass rounded-[2rem] border-white/5">
-            <EmojiIcon e="📜" size="xl" className="opacity-20 mb-4" />
+            <EmojiIcon e="📜" />
             <p className="text-muted-foreground font-serif italic">"Nenhuma lembrança encontrada com este nome..."</p>
           </div>
         )}
@@ -462,7 +462,7 @@ function StickerCard({
           />
         ) : (
           <div className="w-full h-full bg-black/60 flex flex-col items-center justify-center p-4 text-center">
-            <EmojiIcon e="❓" size="lg" className="opacity-40 mb-2" />
+            <EmojiIcon e="❓" />
             <p className="text-[8px] font-heading uppercase tracking-tighter text-white/40">Mistério Mágico</p>
           </div>
         )}
