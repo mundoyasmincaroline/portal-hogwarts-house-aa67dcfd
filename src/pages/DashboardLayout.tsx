@@ -120,6 +120,7 @@ export default function DashboardLayout() {
   // Faz upload da identidade facial pendente do cadastro
   useEffect(() => {
     if (!user?.id) return;
+    const { setFaciallyValidated } = useAuth.getState();
     const dataUrl = localStorage.getItem("pending_facial_id");
     if (!dataUrl) return;
     (async () => {
@@ -139,6 +140,7 @@ export default function DashboardLayout() {
           facial_identity_url: publicUrl,
           facial_verification_enabled: true 
         } as any).eq("user_id", user.id);
+        setFaciallyValidated(true);
       } catch (err) { console.error("Pending facial ID processing error:", err); }
       finally { localStorage.removeItem("pending_facial_id"); }
     })();
