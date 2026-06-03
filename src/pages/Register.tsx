@@ -92,6 +92,8 @@ export default function Register() {
       house: form.house as House,
       avatarUrl: form.avatarUrl || undefined,
       bloodStatus: form.blood || undefined,
+      wandWood: form.wandWood || undefined,
+      wandCore: form.wandCore || undefined,
     });
 
     if (!result.success) {

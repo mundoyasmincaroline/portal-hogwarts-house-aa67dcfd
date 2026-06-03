@@ -3939,6 +3939,8 @@ export type Database = {
           username: string
           vip_expires_at: string | null
           vip_plan: string | null
+          wand_core: string | null
+          wand_wood: string | null
           xp: number
           xp_to_next: number
         }
@@ -3973,6 +3975,8 @@ export type Database = {
           username: string
           vip_expires_at?: string | null
           vip_plan?: string | null
+          wand_core?: string | null
+          wand_wood?: string | null
           xp?: number
           xp_to_next?: number
         }
@@ -4007,6 +4011,8 @@ export type Database = {
           username?: string
           vip_expires_at?: string | null
           vip_plan?: string | null
+          wand_core?: string | null
+          wand_wood?: string | null
           xp?: number
           xp_to_next?: number
         }

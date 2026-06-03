@@ -61,12 +61,12 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
     if (!raw) return;
     try {
       const draft = JSON.parse(raw);
-      const wand = [draft.wand_wood, draft.wand_core].filter(Boolean).join(" + ");
+      const wand = [draft.wand_wood || profile?.wand_wood, draft.wand_core || profile?.wand_core].filter(Boolean).join(" + ");
       setForm((f) => ({
         ...f,
         full_name: profile?.full_name || f.full_name,
-        blood_status: draft.blood_status || f.blood_status,
-        house: draft.house || f.house,
+        blood_status: draft.blood_status || profile?.blood_status || f.blood_status,
+        house: draft.house || profile?.house || f.house,
         wand: wand || f.wand,
         avatar_url: profile?.avatar_url || f.avatar_url,
       }));
@@ -194,6 +194,8 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
         canon_portrayed_by: step === "canon" ? form.canon_portrayed_by : null,
         pair_character_id: pairId,
         relationship_status: pairId ? "paired" : "single",
+        wand_wood: profile?.wand_wood || (localStorage.getItem("pending_character_draft") ? JSON.parse(localStorage.getItem("pending_character_draft")!).wand_wood : null),
+        wand_core: profile?.wand_core || (localStorage.getItem("pending_character_draft") ? JSON.parse(localStorage.getItem("pending_character_draft")!).wand_core : null),
         blood_locked: true
       };
 
