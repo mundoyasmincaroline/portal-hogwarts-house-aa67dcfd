@@ -24,6 +24,10 @@ export default function Login() {
   // Recovery Mode State
   const [isRecoveryMode, setIsRecoveryMode] = useState(false);
   const [newPassword, setNewPassword] = useState("");
+  
+  // Facial Validation State
+  const [showFacialValidation, setShowFacialValidation] = useState(false);
+  const [pendingUser, setPendingUser] = useState<any>(null);
 
   // ── Cinematic time-based background ──
   const [currentTime, setCurrentTime] = useState(new Date());
