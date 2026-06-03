@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { Search, Filter, Shield, User, Coins } from "lucide-react";
 import { AdminMemberCard, type MemberProfile } from "./Admin/AdminMemberCard";
 import { AdminMonetizationTab } from "./Admin/AdminMonetizationTab";
 import PedidosTab from "@/components/PedidosTab";
