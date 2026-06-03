@@ -163,7 +163,12 @@ export default function PotionsLab() {
                 <span className="text-muted-foreground">Ingredientes: </span>
                 {Object.entries(r.ingredients).map(([slug, qty]) => {
                   const p = ingName(slug);
-                  return <span key={slug} className="mr-2">{p?.icon} {p?.name || slug} ×{qty}</span>;
+                  const has = inventory[slug] || 0;
+                  return (
+                    <span key={slug} className={`mr-2 ${has < qty ? "text-destructive" : "text-green-500"}`}>
+                      {p?.icon} {p?.name || slug} ({has}/{qty})
+                    </span>
+                  );
                 })}
               </div>
               <div className="flex items-center justify-between pt-2">
