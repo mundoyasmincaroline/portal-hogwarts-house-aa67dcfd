@@ -16,6 +16,7 @@ import { ChallengesSidebar } from "@/components/feed/ChallengesSidebar";
 import MonthlyCheckInCalendar from "@/components/MonthlyCheckInCalendar";
 import DailyMissionsPanel from "@/components/DailyMissionsPanel";
 import StreakFreezeCard from "@/components/StreakFreezeCard";
+import { UpcomingBirthdays } from "@/components/UpcomingBirthdays";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 const REACTIONS = ["⚡", "❤️", "🔥", "🦁", "🦅", "🐍", "🦡"];
@@ -159,6 +160,7 @@ export default function Feed() {
           <DailyMissionsPanel />
           <MonthlyCheckInCalendar />
           <StreakFreezeCard />
+          <UpcomingBirthdays />
           <ChallengesSidebar activeChallenges={activeChallenges} />
         </div>
       </div>
