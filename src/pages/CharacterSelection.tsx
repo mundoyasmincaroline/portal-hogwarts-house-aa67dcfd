@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default function CharacterSelection({ adminMode }: Props) {
-  const { user, profile } = useAuth();
+  const { user, profile, fetchProfile } = useAuth();
   const [characters, setCharacters] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreation, setShowCreation] = useState(false);
@@ -22,6 +22,25 @@ export default function CharacterSelection({ adminMode }: Props) {
   useEffect(() => {
     fetchCharacters();
   }, []);
+
+  // Realtime: detecta personagens criados pelo admin (ou em outro dispositivo)
+  useEffect(() => {
+    if (!user?.id) return;
+    const ch = supabase
+      .channel(`character-selection-${user.id}-${Date.now()}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "characters", filter: `user_id=eq.${user.id}` },
+        () => { fetchCharacters(); }
+      )
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "profiles", filter: `user_id=eq.${user.id}` },
+        () => { try { fetchProfile(user.id); } catch { /* ignore */ } }
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [user?.id, fetchProfile]);
 
   const fetchCharacters = async () => {
     if (!user) return;
@@ -36,6 +55,14 @@ export default function CharacterSelection({ adminMode }: Props) {
     // Se não tiver nenhum personagem, força a criação (mas admin pode cancelar)
     if (data && data.length === 0) {
       setShowCreation(true);
+    } else if (data && data.length > 0) {
+      // Personagens existem mas a tela ainda foi exibida — provavelmente o
+      // active_character_id no perfil está dessincronizado (ex.: criação feita
+      // pelo admin). Auto-assume o primeiro para destravar o acesso.
+      setShowCreation(false);
+      if (!profile?.active_character_id && !selecting) {
+        selectCharacter(data[0].id);
+      }
     }
   };
 
@@ -54,10 +81,9 @@ export default function CharacterSelection({ adminMode }: Props) {
         profile: state.profile ? { ...state.profile, active_character_id: charId } : null
       }));
       toast.success("Personagem assumido com sucesso! ✨");
-      // Pequeno delay para garantir sincronia do estado
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
+      // Atualiza perfil do servidor e recarrega para sincronizar gates do dashboard
+      try { if (user?.id) await fetchProfile(user.id); } catch { /* ignore */ }
+      setTimeout(() => { window.location.reload(); }, 400);
     }
   };
 
