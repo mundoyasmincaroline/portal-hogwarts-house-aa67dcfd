@@ -63,7 +63,17 @@ export default function DarkArts() {
   };
 
   return (
-    <div className="p-4 sm:p-6 space-y-6">
+    <div className="p-4 sm:p-6 space-y-6 relative overflow-hidden">
+      <AnimatePresence>
+        {showVignette && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 pointer-events-none bg-[radial-gradient(circle_at_center,_transparent_0%,_rgba(0,0,0,0.95)_100%)] shadow-[inset_0_0_100px_rgba(0,0,0,1)]"
+          />
+        )}
+      </AnimatePresence>
       <div className="flex items-center gap-3 flex-wrap">
         <Skull className="h-8 w-8 text-primary" />
         <div>
