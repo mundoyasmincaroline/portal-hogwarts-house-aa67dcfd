@@ -42,25 +42,26 @@ export default function MagicFacialID({ onValidated, mode, referenceImage, onCan
         // Se for enroll (cadastro), apenas confirmamos a captura nítida
         // Se for verify (login), simulamos a comparação com a referência
         
-        if (mode === "verify" && referenceImage) {
-          // No futuro, poderíamos implementar uma comparação de histogramas ou similar aqui no front
-          // Para este protótipo funcional, validamos a presença de um rosto (simulado)
-          console.log("Validando contra referência...");
+        // Simulação de "Entropia Mágica" para validação
+        const faceMatch = Math.random() > 0.1; // 90% de chance de sucesso imediato
+        
+        if (!faceMatch && mode === "verify") {
+          throw new Error("Essência desalinhada.");
         }
 
         setStatus("success");
         setIsValidating(false);
-        toast.success(mode === "enroll" ? "Identidade Mágica registrada!" : "Identidade validada com sucesso!");
+        toast.success(mode === "enroll" ? "Essência capturada com sucesso!" : "Identidade Mágica reconhecida!");
         
         setTimeout(() => {
           onValidated(capturedImg);
-        }, 1500);
+        }, 1200);
       } catch (err) {
         setStatus("error");
         setIsValidating(false);
-        setErrorMessage("Não foi possível validar sua essência mágica. Tente novamente em um ambiente mais iluminado.");
+        setErrorMessage("Não foi possível validar sua essência mágica. Tente novamente em um ambiente mais iluminado ou remova o capuz.");
       }
-    }, 3000);
+    }, 2500);
   };
 
   const retake = () => {
