@@ -14,6 +14,7 @@ export default function Gringotts() {
   const [holdings, setHoldings] = useState<any[]>([]);
   const [amount, setAmount] = useState("100");
   const [shares, setShares] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(true);
 
   const load = async () => {
     const { data: l } = await (supabase as any).from("bank_loans").select("*").order("created_at", { ascending: false });
@@ -22,6 +23,7 @@ export default function Gringotts() {
     setStocks(s || []);
     const { data: h } = await (supabase as any).from("stock_holdings").select("*");
     setHoldings(h || []);
+    setLoading(false);
   };
   useEffect(() => { load(); }, []);
 

@@ -100,6 +100,30 @@ export default function ProphetDaily() {
         </Card>
       )}
 
+      <div className="overflow-hidden mb-6 relative group">
+        <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10" />
+        <motion.div 
+          animate={{ scale: [1, 1.05, 1] }}
+          transition={{ repeat: Infinity, duration: 10, ease: "easeInOut" }}
+          className="w-full h-48 sm:h-64 bg-zinc-800 rounded-lg overflow-hidden flex items-center justify-center border border-primary/20"
+        >
+          <div className="text-center p-4">
+            <Newspaper className="w-12 h-12 text-primary/40 mx-auto mb-2" />
+            <p className="text-xs text-muted-foreground font-serif">A imagem parece se mover levemente...</p>
+          </div>
+        </motion.div>
+      </div>
+
+      <div className="bg-primary/5 border-y border-primary/20 py-2 overflow-hidden mb-6">
+        <motion.div 
+          animate={{ x: ["100%", "-100%"] }}
+          transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+          className="whitespace-nowrap font-heading text-xs text-primary uppercase tracking-widest"
+        >
+          +++ URGENTE: AVISTAMENTOS DE TESTRÁLIOS NOS CAMPOS DE HOGWARTS +++ MINISTÉRIO DA MAGIA ALERTA PARA POSSÍVEIS ATAQUES DE COMERÇAIS DA MORTE +++
+        </motion.div>
+      </div>
+
       <div className="space-y-6">
         <AnimatePresence mode="popLayout">
           {articles.map((a, i) => (
