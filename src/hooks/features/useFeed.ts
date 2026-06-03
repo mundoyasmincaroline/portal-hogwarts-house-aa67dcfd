@@ -13,13 +13,25 @@ export function useFeed() {
   const { user } = useAuth();
   const [posts, setPosts] = useState<FeedPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
+  const [offset, setOffset] = useState(0);
+  const LIMIT = 10;
 
-  const loadFeed = useCallback(async (isSilent = false) => {
+  const loadFeed = useCallback(async (isSilent = false, reset = false) => {
     if (!isSilent) setLoading(true);
+    const currentOffset = reset ? 0 : offset;
+    
     try {
-      const postsData = await feedService.getPosts();
+      const postsData = await feedService.getPosts(LIMIT, currentOffset);
+      
+      if (postsData.length < LIMIT) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
+      }
+
       if (postsData.length === 0) {
-        setPosts([]);
+        if (reset) setPosts([]);
         setLoading(false);
         return;
       }
@@ -58,18 +70,24 @@ export function useFeed() {
         };
       });
 
-      setPosts(enriched);
+      if (reset) {
+        setPosts(enriched);
+        setOffset(LIMIT);
+      } else {
+        setPosts(prev => [...prev, ...enriched]);
+        setOffset(prev => prev + LIMIT);
+      }
     } catch (error: any) {
       console.error("Erro no feed:", error);
       toast.error("Erro ao carregar o feed.");
     } finally {
       setLoading(false);
     }
-  }, [user?.id]);
+  }, [user?.id, offset]);
 
   useEffect(() => {
-    loadFeed(false);
-  }, [loadFeed]);
+    loadFeed(false, true);
+  }, []); // Só carrega na montagem original
 
   // Realtime simples para novos posts (opcional, mas melhora UX)
   useEffect(() => {
@@ -78,7 +96,7 @@ export function useFeed() {
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, () => {
         // Debounce para evitar recarregar várias vezes em rajadas
         if (debounceTimer) clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => { loadFeed(true); }, 2000);
+        debounceTimer = setTimeout(() => { loadFeed(true, true); }, 2000);
       })
       .subscribe();
     return () => {
@@ -92,5 +110,7 @@ export function useFeed() {
     setPosts,
     loading,
     loadFeed,
+    hasMore,
+    setOffset,
   };
 }

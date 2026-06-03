@@ -2,7 +2,14 @@ import { memo } from "react";
 import HouseCrest from "@/components/rpg/HouseCrest";
 import { Button } from "@/components/ui/button";
 import SafeImage from "@/components/SafeImage";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { Trash2, MoreVertical } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 interface PostCardProps {
@@ -13,6 +20,8 @@ interface PostCardProps {
   onCommentDraftChange: (text: string) => void;
   commentDraft: string;
   onSubmitComment: () => void;
+  onDeletePost?: (postId: string) => void;
+  onDeleteComment?: (commentId: string) => void;
   reactions: string[];
 }
 
@@ -24,6 +33,8 @@ const PostCard = memo(({
   onCommentDraftChange, 
   commentDraft, 
   onSubmitComment, 
+  onDeletePost,
+  onDeleteComment,
   reactions 
 }: PostCardProps) => (
   <motion.div 
@@ -58,7 +69,26 @@ const PostCard = memo(({
           <span className="text-[10px] sm:text-[11px] text-foreground/70">{new Date(post.created_at).toLocaleDateString("pt-BR")}</span>
         </div>
       </div>
-      {post.author?.house && <div className="shrink-0 scale-75 sm:scale-90 origin-right transition-transform group-hover/card:scale-100 duration-500 ml-auto sm:ml-0"><HouseCrest house={post.author.house} size="sm" /></div>}
+      {post.author?.house && <div className="shrink-0 scale-75 sm:scale-90 origin-right transition-transform group-hover/card:scale-100 duration-500 ml-auto sm:ml-0 mr-2"><HouseCrest house={post.author.house} size="sm" /></div>}
+      
+      {user?.id === post.user_id && onDeletePost && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8 text-foreground/50 hover:text-destructive transition-colors">
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="bg-popover/95 backdrop-blur border-white/10">
+            <DropdownMenuItem 
+              onClick={() => onDeletePost(post.id)}
+              className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer flex items-center gap-2"
+            >
+              <Trash2 className="h-4 w-4" />
+              Excluir Pergaminho
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
     </div>
 
     <div className="relative mb-6 group/content">
@@ -125,13 +155,14 @@ const PostCard = memo(({
       </button>
     </div>
 
-    {post.showComments && (
-      <motion.div 
-        initial={{ opacity: 0, height: 0 }}
-        animate={{ opacity: 1, height: 'auto' }}
-        exit={{ opacity: 0, height: 0 }}
-        className="mt-5 pt-5 border-t border-white/5 space-y-4 overflow-hidden"
-      >
+    <AnimatePresence>
+      {post.showComments && (
+        <motion.div 
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          className="mt-5 pt-5 border-t border-white/5 space-y-4 overflow-hidden"
+        >
         <div className="max-h-[300px] overflow-y-auto pr-2 custom-scrollbar space-y-3">
           {post.comments?.map((c: any) => (
             <div key={c.id} className="flex gap-3 items-start group">
@@ -147,6 +178,14 @@ const PostCard = memo(({
                 <p className="text-xs font-bold text-primary mb-1 uppercase tracking-tighter">{c.author?.full_name}</p>
                 <p className="text-sm text-foreground/80 leading-relaxed font-serif italic">{c.content}</p>
               </div>
+              {user?.id === c.user_id && onDeleteComment && (
+                <button 
+                  onClick={() => onDeleteComment(c.id)}
+                  className="opacity-0 group-hover:opacity-100 p-1 text-foreground/30 hover:text-destructive transition-all"
+                >
+                  <Trash2 size={12} />
+                </button>
+              )}
             </div>
           ))}
         </div>
@@ -166,6 +205,7 @@ const PostCard = memo(({
         </div>
       </motion.div>
     )}
+    </AnimatePresence>
   </motion.div>
 ));
 

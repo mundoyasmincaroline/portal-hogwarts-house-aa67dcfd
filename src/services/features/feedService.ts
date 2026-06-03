@@ -5,12 +5,12 @@ export const feedService = {
   /**
    * getPosts — Busca posts e já tenta resolver autores básicos para reduzir requests subsequentes.
    */
-  async getPosts(limit = 20): Promise<any[]> {
+  async getPosts(limit = 20, offset = 0): Promise<any[]> {
     const { data, error } = await supabase
       .from("posts")
       .select("*")
       .order("created_at", { ascending: false })
-      .limit(limit);
+      .range(offset, offset + limit - 1);
 
     if (error) throw error;
     const posts = data || [];
@@ -65,5 +65,15 @@ export const feedService = {
     
     if (error) throw error;
     return data;
+  },
+
+  async deletePost(postId: string) {
+    const { error } = await supabase.from("posts").delete().eq("id", postId);
+    if (error) throw error;
+  },
+
+  async deleteComment(commentId: string) {
+    const { error } = await supabase.from("post_comments").delete().eq("id", commentId);
+    if (error) throw error;
   }
 };

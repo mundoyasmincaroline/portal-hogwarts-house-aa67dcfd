@@ -1,0 +1,13 @@
+-- Update event_payload for existing rooms to make them more interesting
+UPDATE public.castle_rooms SET event_payload = '{"events": [{"text": "Você encontrou um Galeão de ouro sob uma mesa!", "reward": {"galeons": 10}}, {"text": "Dumbledore acena para você com um sorriso enigmático. +20 XP", "reward": {"xp": 20}}]}' WHERE slug = 'salao-principal';
+UPDATE public.castle_rooms SET event_payload = '{"events": [{"text": "Você viu uma estrela cadente através do telescópio! +50 XP", "reward": {"xp": 50}}, {"text": "O vento quase levou seu cachecol, mas você o pegou no ar! +10 XP", "reward": {"xp": 10}}]}' WHERE slug = 'torre-astronomia';
+UPDATE public.castle_rooms SET event_payload = '{"events": [{"text": "Você encontrou um livro raro sobre poções antigas. +40 XP", "reward": {"xp": 40}}, {"text": "Madame Pince pediu silêncio absoluto. Você aprendeu a ser furtivo. +5 XP", "reward": {"xp": 5}}]}' WHERE slug = 'biblioteca';
+UPDATE public.castle_rooms SET event_payload = '{"events": [{"text": "O Prof. Snape te deu uma detenção injusta, mas você aprendeu algo novo. +15 XP", "reward": {"xp": 15}}, {"text": "Você encontrou um ingrediente raro no chão. +25 Galeões", "reward": {"galeons": 25}}]}' WHERE slug = 'masmorras';
+
+-- Add new rooms
+INSERT INTO public.castle_rooms (slug, name, description, room_type, pos_x, pos_y, emoji, unlock_level, event_chance, event_payload) VALUES
+('corujal', 'Corujal', 'Lugar barulhento e cheio de penas, mas essencial para as comunicações.', 'tower', 95, 25, '🦉', 2, 0.3, '{"events": [{"text": "Uma coruja te trouxe um pequeno presente de um admirador secreto! +15 Galeões", "reward": {"galeons": 15}}]}'),
+('sala-comunal-grifinoria', 'Comunal da Grifinória', 'Quente, aconchegante e cheia de poltronas vermelhas.', 'common-room', 60, 20, '🦁', 1, 0.2, '{"events": [{"text": "Você relaxou perto da lareira e recuperou energias. +10 XP", "reward": {"xp": 10}}]}'),
+('sala-comunal-sonserina', 'Comunal da Sonserina', 'Sob as águas do Lago Negro, com tons de verde esmeralda.', 'common-room', 40, 85, '🐍', 1, 0.2, '{"events": [{"text": "Você viu a lula gigante passar pela janela! +20 XP", "reward": {"xp": 20}}]}'),
+('sala-de-transfiguracao', 'Sala de Transfiguração', 'Onde ratos viram taças e vice-versa.', 'classroom', 45, 45, '🐈', 3, 0.4, '{"events": [{"text": "A Prof. McGonagall te elogiou por uma transfiguração perfeita! +60 XP", "reward": {"xp": 60}}]}'),
+('ponte-suspensa', 'Ponte Suspensa', 'Uma ponte longa que balança com o vento.', 'bridge', 50, 5, '🌉', 4, 0.5, '{"events": [{"text": "Você quase tropeçou em uma tábua solta, mas foi rápido! +25 XP", "reward": {"xp": 25}}]}');
