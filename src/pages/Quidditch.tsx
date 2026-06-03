@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-
+import { Trophy, Wind, Target, Star } from "lucide-react";
 import EmojiIcon from "@/components/shared/EmojiIcon";
 const HOUSES = ["gryffindor", "slytherin", "ravenclaw", "hufflepuff"];
 const HOUSE_LABEL: Record<string, string> = { gryffindor: "🦁 Grifinória", slytherin: "🐍 Sonserina", ravenclaw: "🦅 Corvinal", hufflepuff: "🦡 Lufa-Lufa" };
@@ -92,9 +92,10 @@ export default function Quidditch() {
         const ps = players[m.id] || [];
         const me = ps.find(p => p.user_id === user?.id);
         return (
-          <Card key={m.id} className="p-4 bg-card/60 border-primary/30 space-y-3">
-            <div className="flex items-center justify-between">
-              <h3 className="font-heading text-xl">{HOUSE_LABEL[m.house_a]} vs {HOUSE_LABEL[m.house_b]}</h3>
+          <Card key={m.id} className="p-6 bg-gradient-to-br from-card to-background border-primary/30 space-y-4 shadow-xl relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 -rotate-45 translate-x-16 -translate-y-16 group-hover:scale-110 transition-transform" />
+            <div className="flex items-center justify-between relative z-10">
+              <h3 className="font-heading text-xl tracking-tight">{HOUSE_LABEL[m.house_a]} <span className="text-muted-foreground mx-1 opacity-50">vs</span> {HOUSE_LABEL[m.house_b]}</h3>
               <Badge>{m.status === "open" ? "Abertura" : "🟢 Em jogo"}</Badge>
             </div>
             <div className="grid grid-cols-2 text-center gap-2">

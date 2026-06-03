@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
@@ -64,15 +66,28 @@ export default function WorldEditor() {
             <Textarea placeholder="Descrição" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
             <Button onClick={submit}>Submeter</Button>
           </div>
-          {rooms.map(r => (
-            <div key={r.id} className="rounded-lg border border-primary/15 bg-card/30 p-3 flex justify-between">
-              <div>
-                <div className="font-heading text-primary">{r.name} <span className="text-xs text-foreground/50">[{r.status}]</span></div>
-                <div className="text-xs text-foreground/60">{r.description}</div>
-              </div>
-              <Button size="sm" variant="outline" onClick={() => vote("room", r.id)}>👍 {r.votes}</Button>
-            </div>
-          ))}
+          <AnimatePresence mode="popLayout">
+            {rooms.map(r => (
+              <motion.div 
+                layout
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                key={r.id} 
+                className="rounded-2xl border border-primary/20 bg-card/30 p-5 flex items-center justify-between group hover:border-primary/40 transition-all shadow-lg"
+              >
+                <div className="flex-1 min-w-0">
+                  <div className="font-heading text-lg text-primary flex items-center gap-2 truncate">
+                    {r.name} 
+                    <Badge variant="outline" className="text-[9px] uppercase px-2 py-0 h-4 opacity-60">{r.status}</Badge>
+                  </div>
+                  <div className="text-xs text-muted-foreground line-clamp-1 italic">{r.description}</div>
+                </div>
+                <Button size="sm" variant="ghost" className="hover:bg-primary/10 text-primary gap-2" onClick={() => vote("room", r.id)}>
+                   <span className="text-base">👍</span> <span className="font-heading">{r.votes}</span>
+                </Button>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </TabsContent>
 
         <TabsContent value="missions" className="space-y-3 pt-4">

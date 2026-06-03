@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, Users, Calendar, Swords } from "lucide-react";
+import { Trophy, Users, Calendar, Swords, User } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import SafeImage from "@/components/SafeImage";
 
 type Tournament = {
   id: string;
@@ -34,7 +36,8 @@ type Match = {
 export default function Tournaments() {
   const user = useAuth((s) => s.user);
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
-  const [participantsByT, setParticipantsByT] = useState<Record<string, string[]>>({});
+  const [participantsByT, setParticipantsByT] = useState<Record<string, any[]>>({});
+  const [profiles, setProfiles] = useState<Record<string, any>>({});
   const [matchesByT, setMatchesByT] = useState<Record<string, Match[]>>({});
   const [loading, setLoading] = useState(true);
 
@@ -51,13 +54,16 @@ export default function Tournaments() {
     if (ids.length) {
       const { data: parts } = await supabase
         .from("tournament_participants")
-        .select("tournament_id, user_id")
+        .select("tournament_id, user_id, profiles(full_name, username, avatar_url, house)")
         .in("tournament_id", ids);
-      const map: Record<string, string[]> = {};
+      const map: Record<string, any[]> = {};
+      const profs: Record<string, any> = {};
       (parts || []).forEach((p: any) => {
         (map[p.tournament_id] ||= []).push(p.user_id);
+        if (p.profiles) profs[p.user_id] = p.profiles;
       });
       setParticipantsByT(map);
+      setProfiles(profs);
 
       const { data: ms } = await supabase
         .from("tournament_matches")
@@ -175,11 +181,11 @@ export default function Tournaments() {
                       <span className="text-muted-foreground">R{m.round}</span>
                       <div className="flex-1 mx-3 text-center">
                         <span className={m.winner === m.player_a ? "text-primary font-bold" : ""}>
-                          {m.player_a?.slice(0, 8) || "?"}
+                          {profiles[m.player_a || ""]?.full_name || "Aguardando"}
                         </span>{" "}
                         vs{" "}
                         <span className={m.winner === m.player_b ? "text-primary font-bold" : ""}>
-                          {m.player_b?.slice(0, 8) || "?"}
+                          {profiles[m.player_b || ""]?.full_name || "Aguardando"}
                         </span>
                       </div>
                       {m.status !== "done" && user && (m.player_a === user.id || m.player_b === user.id) && (

@@ -6,7 +6,8 @@ import { toast } from "sonner";
 import { Swords, Shield, Zap, Sparkles, User } from "lucide-react";
 import MagicalEmoji from "@/components/shared/MagicalEmoji";
 import HouseCrest from "@/components/rpg/HouseCrest";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import SafeImage from "@/components/SafeImage";
 
 interface Spell {
   id: string;
@@ -173,8 +174,8 @@ export default function Duels() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="glass rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center">
-        <h1 className="font-heading text-2xl text-gold-gradient mb-2">Clube de Duelos</h1>
-        <p className="text-muted-foreground text-sm">Honra e coragem</p>
+        <h1 className="font-heading text-3xl text-gold-gradient mb-2 tracking-tighter">Clube de Duelos</h1>
+        <p className="text-muted-foreground text-xs uppercase tracking-widest opacity-70">Experiência imersiva de combate mágico</p>
       </div>
 
       {!activeDuel || activeDuel.status === 'completed' ? (

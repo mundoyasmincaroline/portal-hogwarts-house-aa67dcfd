@@ -59,7 +59,7 @@ export default function Diary() {
     <div className="max-w-3xl mx-auto space-y-6">
       <header className="text-center space-y-2">
         <div className="text-4xl"><EmojiIcon e="📔" /></div>
-        <h1 className="font-heading text-3xl sm:text-4xl text-gold-gradient">Diário Pessoal</h1>
+        <h1 className="font-heading text-3xl sm:text-4xl text-gold-gradient font-serif tracking-tighter">Diário Pessoal</h1>
         <p className="text-muted-foreground text-sm">Suas memórias, suas reflexões. Só você pode ler.</p>
       </header>
 
@@ -98,7 +98,8 @@ export default function Diary() {
         {entries.map(e => {
           const m = MOODS.find(x => x.v === e.mood) || MOODS[1];
           return (
-            <Card key={e.id} className="p-5 border-primary/20 hover:border-primary/40 transition-all">
+            <Card key={e.id} className="p-5 border-primary/20 bg-[#fdf5e6]/5 text-foreground hover:bg-[#fdf5e6]/10 transition-all shadow-lg relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-[url('https://www.transparenttextures.com/patterns/old-mathematics.png')] opacity-5 pointer-events-none" />
               <div className="flex items-start justify-between gap-3 mb-2">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
@@ -109,7 +110,7 @@ export default function Diary() {
                   </div>
                   <h3 className="font-heading text-lg text-foreground">{e.title}</h3>
                 </div>
-                <Button variant="ghost" size="icon" onClick={() => remove(e.id)} className="text-destructive shrink-0">
+                <Button variant="ghost" size="icon" onClick={() => { if (confirm("Deseja apagar esta memória?")) remove(e.id); }} className="text-destructive shrink-0">
                   <Trash2 size={14}/>
                 </Button>
               </div>

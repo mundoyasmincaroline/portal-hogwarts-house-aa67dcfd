@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { Swords, Heart, Sparkles, Shield, Skull } from "lucide-react";
-
+import SafeImage from "@/components/SafeImage";
 import EmojiIcon from "@/components/shared/EmojiIcon";
 type Spell = { id: string; code: string; name: string; type: string; damage: number; heal: number; shield: number; mp_cost: number; level_req: number; description: string; icon: string };
 type Match = any;
@@ -189,7 +189,7 @@ export default function DuelsPvP() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
           {opponents.map(o => (
             <button key={o.user_id} onClick={() => challenge(o.user_id)} className="flex items-center gap-3 p-3 rounded-xl border border-primary/20 bg-background/50 hover:border-primary hover:bg-primary/10 transition-all">
-              <img src={o.avatar_url || "/placeholder.svg"} alt="" className="w-10 h-10 rounded-full object-cover"/>
+              <SafeImage src={o.avatar_url || ""} alt="" className="w-10 h-10 rounded-full object-cover border border-primary/30"/>
               <div className="text-left">
                 <div className="font-heading text-sm">{o.full_name || "Bruxo"}</div>
                 <div className="text-[10px] text-foreground/60 uppercase">{o.house} · Nv {o.level || 1}</div>

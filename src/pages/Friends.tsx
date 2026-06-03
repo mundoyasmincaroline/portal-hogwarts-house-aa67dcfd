@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
+import SafeImage from "@/components/SafeImage";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
@@ -124,7 +125,7 @@ export default function Friends() {
         className="flex items-center gap-3 flex-1 min-w-0 text-left"
       >
         {row.other?.avatar_url ? (
-          <img src={row.other.avatar_url} className="w-12 h-12 rounded-full object-cover" alt="" />
+          <SafeImage src={row.other.avatar_url} className="w-12 h-12 rounded-full object-cover border border-primary/20" alt="" />
         ) : (
           <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center font-heading text-lg">
             {row.other?.full_name?.[0] || "?"}

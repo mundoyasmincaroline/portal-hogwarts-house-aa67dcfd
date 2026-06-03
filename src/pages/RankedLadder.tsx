@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
+import SafeImage from "@/components/SafeImage";
+import { Trophy, Medal, Crown, User } from "lucide-react";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 const DIV_COLORS: Record<string, string> = {
@@ -18,7 +21,12 @@ export default function RankedLadder() {
     const { data: s } = await (supabase as any).from("ranked_seasons").select("*").eq("active", true).maybeSingle();
     setSeason(s);
     if (s) {
-      const { data: p } = await (supabase as any).from("ranked_players").select("*").eq("season_id", s.id).order("mmr", { ascending: false }).limit(50);
+      const { data: p } = await (supabase as any)
+        .from("ranked_players")
+        .select("*, profiles(full_name, username, avatar_url, house)")
+        .eq("season_id", s.id)
+        .order("mmr", { ascending: false })
+        .limit(50);
       setPlayers(p || []);
       const { data: m } = await (supabase as any).from("ranked_matches").select("*").eq("season_id", s.id).order("reported_at", { ascending: false }).limit(10);
       setMatches(m || []);
@@ -46,10 +54,19 @@ export default function RankedLadder() {
         <h2 className="font-heading text-lg text-primary mb-3"><EmojiIcon e="🏆" /> Top 50</h2>
         <ol className="space-y-2">
           {players.map((p, i) => (
-            <li key={p.id} className="flex justify-between p-2 rounded bg-background/40">
-              <span>#{i + 1} <span className="text-xs text-foreground/60">{p.user_id.slice(0, 8)}</span></span>
-              <span className={`font-heading ${DIV_COLORS[p.division] || ""}`}>{p.division} · {p.mmr} MMR</span>
-              <span className="text-xs text-foreground/60">{p.wins}V/{p.losses}D</span>
+            <li key={p.id} className="flex items-center justify-between p-3 rounded-xl bg-background/40 border border-white/5 hover:border-primary/20 transition-all group">
+              <div className="flex items-center gap-3">
+                <span className="font-heading text-lg w-6 text-muted-foreground">#{i + 1}</span>
+                <SafeImage src={p.profiles?.avatar_url || ""} alt="" className="w-10 h-10 rounded-full border border-primary/20" />
+                <div>
+                   <div className="font-heading text-sm text-foreground group-hover:text-primary transition-colors">{p.profiles?.full_name || "Bruxo"}</div>
+                   <div className="text-[10px] text-muted-foreground uppercase">@{p.profiles?.username} · {p.profiles?.house}</div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className={`font-heading ${DIV_COLORS[p.division] || ""}`}>{p.division} · {p.mmr} MMR</div>
+                <div className="text-[10px] text-foreground/60">{p.wins}V / {p.losses}D</div>
+              </div>
             </li>
           ))}
           {players.length === 0 && <li className="text-sm text-foreground/60">Ninguém na ladder ainda. Reporte uma partida!</li>}

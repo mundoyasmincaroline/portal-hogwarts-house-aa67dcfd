@@ -186,7 +186,7 @@ export default function Clubs() {
             return (
               <article
                 key={club.id}
-                className="group relative overflow-hidden rounded-xl border border-border/60 bg-card/80 p-5 transition-all hover:border-primary/60 hover:shadow-[0_0_30px_-10px_hsl(var(--primary)/0.6)]"
+                className="group relative overflow-hidden rounded-xl border border-border/60 bg-card/80 p-5 transition-all hover:border-primary/60 hover:shadow-[0_0_30px_-10px_hsl(var(--primary)/0.6)] hover:-translate-y-1"
                 style={{ borderTopColor: club.color ?? undefined, borderTopWidth: 3 }}
               >
                 <div className="flex items-start justify-between">
@@ -242,7 +242,8 @@ export default function Clubs() {
 
         {/* Mentoria ativa */}
         {activeMentorship && (
-          <div className="rounded-xl border border-primary/40 bg-primary/5 p-5">
+          <div className="rounded-xl border border-primary/40 bg-primary/5 p-5 relative overflow-hidden group shadow-inner">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent pointer-events-none" />
             <div className="text-xs uppercase tracking-widest text-primary">
               {activeMentorship.mentor_id === user?.id ? "Você é mentor de" : "Seu mentor"}
             </div>
@@ -258,9 +259,9 @@ export default function Clubs() {
                   {activeMentorship.apprentice_levels_gained}
                 </div>
               </div>
-              <div className="rounded-lg bg-background/50 p-3">
-                <div className="text-xs text-foreground/60">XP bônus total</div>
-                <div className="font-heading text-xl text-primary">
+              <div className="rounded-lg bg-background/50 p-3 border border-primary/10 group-hover:border-primary/30 transition-colors">
+                <div className="text-[10px] uppercase tracking-wider text-foreground/40 mb-1">XP bônus total</div>
+                <div className="font-heading text-2xl text-primary drop-shadow-[0_0_8px_rgba(212,175,55,0.3)]">
                   +{activeMentorship.total_bonus_xp}
                 </div>
               </div>

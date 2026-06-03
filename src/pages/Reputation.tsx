@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Award, Heart, Skull, Star, TrendingUp } from "lucide-react";
+import { Award, Heart, Skull, Star, TrendingUp, User } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
+import SafeImage from "@/components/SafeImage";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 const TIERS = [
@@ -23,14 +25,26 @@ export default function Reputation() {
   const [received, setReceived] = useState<any[]>([]);
 
   const load = async () => {
-    const { data: rep } = await supabase.from("reputation").select("*").order("score", { ascending: false }).limit(20);
+    const { data: rep } = await supabase
+      .from("reputation")
+      .select("*, profiles(full_name, username, avatar_url, house)")
+      .order("score", { ascending: false })
+      .limit(20);
     setTop(rep ?? []);
     if (user) {
       const { data: my } = await supabase.from("reputation").select("*").eq("user_id", user.id).maybeSingle();
       setMyRep(my);
-      const { data: g } = await supabase.from("endorsements").select("*").eq("from_user", user.id).order("created_at", { ascending: false });
+      const { data: g } = await supabase
+        .from("endorsements")
+        .select("*, to_profiles:profiles!endorsements_to_user_fkey(full_name, username, avatar_url)")
+        .eq("from_user", user.id)
+        .order("created_at", { ascending: false });
       setGiven(g ?? []);
-      const { data: r } = await supabase.from("endorsements").select("*").eq("to_user", user.id).order("created_at", { ascending: false });
+      const { data: r } = await supabase
+        .from("endorsements")
+        .select("*, from_profiles:profiles!endorsements_from_user_fkey(full_name, username, avatar_url)")
+        .eq("to_user", user.id)
+        .order("created_at", { ascending: false });
       setReceived(r ?? []);
     }
   };
@@ -88,14 +102,14 @@ export default function Reputation() {
           <div className="space-y-2">
             {top.length === 0 ? <p className="text-xs text-muted-foreground text-center py-4">Ranking vazio</p> :
               top.map((r, i) => (
-                <div key={r.user_id} className="flex items-center gap-3 p-2 rounded-lg bg-secondary/30">
-                  <span className={`font-heading w-6 ${i<3?'text-yellow-400':'text-muted-foreground'}`}>#{i+1}</span>
-                  <Award size={16} className="text-primary"/>
+                <div key={r.user_id} className="flex items-center gap-3 p-3 rounded-xl bg-secondary/30 border border-white/5 hover:border-primary/20 transition-all group">
+                  <span className={`font-heading w-6 text-center ${i<3?'text-yellow-400':'text-muted-foreground'}`}>#{i+1}</span>
+                  <SafeImage src={r.profiles?.avatar_url || ""} alt="" className="w-10 h-10 rounded-full border border-primary/20" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm truncate">{r.user_id.slice(0,8)}...</p>
-                    <p className="text-[10px] text-primary">{r.title}</p>
+                    <p className="text-sm font-heading truncate group-hover:text-primary transition-colors">{r.profiles?.full_name || "Bruxo"}</p>
+                    <p className="text-[10px] text-muted-foreground uppercase">{r.title || "Iniciante"}</p>
                   </div>
-                  <span className="text-sm font-heading text-primary">{r.score}</span>
+                  <span className="text-sm font-heading text-primary bg-primary/10 px-3 py-1 rounded-full">{r.score}</span>
                 </div>
               ))
             }
@@ -107,15 +121,18 @@ export default function Reputation() {
           <h2 className="font-heading text-lg text-gold-gradient mb-3">Endossos Recebidos</h2>
           {received.length === 0 ? <p className="text-xs text-muted-foreground text-center py-4">Você ainda não recebeu endossos</p> :
             <div className="space-y-2 max-h-[200px] overflow-y-auto">
-              {received.map(e => (
-                <div key={e.id} className="p-2 rounded-lg bg-secondary/30">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs">{e.from_user.slice(0,8)}...</span>
-                    <Badge variant="outline" className="text-[10px]">{e.type==='respect'?'🫂 Respeito':e.type==='admiration'?'⭐ Admiração':'💀 Temor'}</Badge>
+                {received.map(e => (
+                  <div key={e.id} className="p-3 rounded-xl bg-secondary/30 border border-white/5 hover:border-primary/10 transition-all group">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <SafeImage src={e.from_profiles?.avatar_url || ""} alt="" className="w-6 h-6 rounded-full" />
+                        <span className="text-[10px] font-heading text-foreground group-hover:text-primary transition-colors">{e.from_profiles?.full_name}</span>
+                      </div>
+                      <Badge variant="outline" className="text-[9px] uppercase tracking-widest">{e.type==='respect'?'🫂 Respeito':e.type==='admiration'?'⭐ Admiração':'💀 Temor'}</Badge>
+                    </div>
+                    {e.note && <p className="text-[11px] text-muted-foreground italic pl-8">"{e.note}"</p>}
                   </div>
-                  {e.note && <p className="text-[11px] text-muted-foreground italic mt-1">"{e.note}"</p>}
-                </div>
-              ))}
+                ))}
             </div>
           }
           <h2 className="font-heading text-lg text-gold-gradient mb-3 mt-5">Endossos que Concedi</h2>
