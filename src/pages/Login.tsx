@@ -145,14 +145,27 @@ export default function Login() {
       <div className="glass-premium rounded-[2.5rem] p-10 w-[95%] max-w-md z-20 animate-fade-in-up border-primary/30 shadow-[0_40px_120px_rgba(0,0,0,0.95)] mx-auto hover:border-primary/50 transition-all duration-1000 bg-background/85 backdrop-blur-2xl">
         <div className="text-center mb-8">
           <h1 className="font-heading text-4xl text-gold-gradient mb-3">
-            {isRecoveryMode ? "Nova Senha" : "Entrar"}
+            {showFacialValidation ? "Identidade Mágica" : isRecoveryMode ? "Nova Senha" : "Entrar"}
           </h1>
           <p className="text-muted-foreground text-sm">
-            {isRecoveryMode ? "Defina sua nova senha mágica abaixo" : "Acesse o Portal Hogwarts House"}
+            {showFacialValidation ? "Valide sua essência para entrar no castelo" : isRecoveryMode ? "Defina sua nova senha mágica abaixo" : "Acesse o Portal Hogwarts House"}
           </p>
         </div>
 
-        {isRecoveryMode ? (
+        {showFacialValidation ? (
+          <div className="space-y-6">
+            <div className="bg-primary/5 border border-primary/20 rounded-2xl p-2">
+              <MagicFacialID 
+                mode="verify" 
+                onValidated={() => navigate("/dashboard", { replace: true })}
+                onCancel={() => setShowFacialValidation(false)}
+              />
+            </div>
+            <p className="text-[10px] text-center text-muted-foreground italic">
+              Este é um portal protegido pelo Ministério da Magia. Sua identidade é sua chave.
+            </p>
+          </div>
+        ) : isRecoveryMode ? (
           <form onSubmit={handleSetNewPassword} className="space-y-4">
             <div>
               <label className="text-sm font-heading text-muted-foreground block mb-1">Nova Senha</label>
