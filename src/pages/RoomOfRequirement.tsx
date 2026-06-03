@@ -109,7 +109,7 @@ export default function RoomOfRequirement() {
                 ? <Button size="sm" variant="outline" className="w-full" onClick={() => leave(r.id)}>Sair</Button>
                 : <Button size="sm" className="w-full" onClick={() => join(r.id)} disabled={ms.length >= r.max_members}>{ms.length >= r.max_members ? "Lotada" : "Entrar"}</Button>
               }
-            </Card>
+            </motion.div>
           );
           })}
         </AnimatePresence>
