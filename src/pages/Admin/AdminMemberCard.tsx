@@ -16,7 +16,7 @@ export interface MemberProfile {
   approved: boolean;
   online: boolean;
   last_seen?: string;
-  vip_plan?: string;
+  vip_plan?: "founder" | "premium" | "vip";
 }
 
 interface AdminMemberCardProps {
