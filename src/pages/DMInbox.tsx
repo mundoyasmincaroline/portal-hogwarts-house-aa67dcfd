@@ -3,6 +3,7 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { MessageCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import SafeImage from "@/components/SafeImage";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
