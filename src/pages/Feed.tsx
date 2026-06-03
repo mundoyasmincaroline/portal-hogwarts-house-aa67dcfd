@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { feedService } from "@/services/features/feedService";
 import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
 import { useAuth } from "@/lib/auth";
 import { type House } from "@/types";
@@ -23,7 +24,7 @@ const REACTIONS = ["⚡", "❤️", "🔥", "🦁", "🦅", "🐍", "🦡"];
 
 export default function Feed() {
   const { user } = useAuth();
-  const { posts, setPosts, loading, loadFeed } = useFeed();
+  const { posts, setPosts, loading, loadFeed, hasMore } = useFeed();
   const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
   const [houseStats, setHouseStats] = useState<Record<House, number>>({
     gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0,
@@ -108,6 +109,29 @@ export default function Feed() {
     setPosts((ps) => ps.map((p) => (p.id === postId ? { ...p, showComments: !p.showComments } : p)));
   };
 
+  const handleDeletePost = async (postId: string) => {
+    try {
+      await feedService.deletePost(postId);
+      setPosts(ps => ps.filter(p => p.id !== postId));
+      toast.success("Pergaminho desintegrado com sucesso.");
+    } catch (err: any) {
+      toast.error("Erro ao excluir post: " + err.message);
+    }
+  };
+
+  const handleDeleteComment = async (commentId: string) => {
+    try {
+      await feedService.deleteComment(commentId);
+      setPosts(ps => ps.map(p => ({
+        ...p,
+        comments: p.comments.filter(c => c.id !== commentId)
+      })));
+      toast.success("Comentário removido.");
+    } catch (err: any) {
+      toast.error("Erro ao excluir comentário.");
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-6 duration-1000">
       <MagicalDashboardHeader />
@@ -148,11 +172,25 @@ export default function Feed() {
                   onCommentDraftChange={(text: string) => setCommentDrafts(d => ({ ...d, [post.id]: text }))}
                   commentDraft={commentDrafts[post.id] || ""}
                   onSubmitComment={() => submitComment(post.id)}
+                  onDeletePost={handleDeletePost}
+                  onDeleteComment={handleDeleteComment}
                   reactions={REACTIONS}
                 />
               </ErrorBoundary>
             </div>
           ))}
+
+          {hasMore && (
+            <div className="flex justify-center py-8">
+              <button 
+                onClick={() => loadFeed(false)} 
+                disabled={loading}
+                className="px-8 py-3 rounded-2xl bg-primary/10 border border-primary/30 text-primary font-heading uppercase tracking-widest hover:bg-primary/20 transition-all disabled:opacity-50"
+              >
+                {loading ? "Invocando mais pergaminhos..." : "Carregar mais"}
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="lg:col-span-4 space-y-8 sticky top-8 h-fit">
