@@ -259,9 +259,20 @@ export default function ChatRoom() {
             supabase.from("user_roles").select("role").eq("user_id", payload.new.user_id).maybeSingle()
           ]);
           
-          if (userData) {
-            setMessages(prev => [...prev, { ...payload.new, profiles: userData, characters: charData, user_role: roleData?.role } as unknown as Message]);
-          }
+          const profileData = userData || { 
+            full_name: "Bruxo Desconhecido", 
+            username: "bruxo", 
+            house: "gryffindor", 
+            avatar_url: null,
+            vip_plan: null
+          };
+
+          setMessages(prev => [...prev, { 
+            ...payload.new, 
+            profiles: profileData, 
+            characters: charData, 
+            user_role: roleData?.role 
+          } as unknown as Message]);
         } catch (err) {
           console.error("Error processing realtime message:", err);
         }
@@ -299,6 +310,7 @@ export default function ChatRoom() {
       });
       if (!rollErr) {
         setInput("");
+        setIsSending(false);
         return;
       }
     }
@@ -556,7 +568,7 @@ export default function ChatRoom() {
             </div>
           ) : (
             <div className="flex flex-col gap-6">
-              {messages.slice().reverse().map((m) => {
+              {messages.map((m) => {
                 const profileData: any = m.characters || m.profiles || { full_name: "Bruxo Desconhecido", username: "desconhecido", house: "gryffindor", avatar_url: null };
                 const profileName = profileData.full_name || "Desconhecido";
                 const profileUser = profileData.username || "desconhecido";
