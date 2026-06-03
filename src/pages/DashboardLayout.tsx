@@ -116,6 +116,33 @@ export default function DashboardLayout() {
       finally { localStorage.removeItem("pending_avatar_upload"); }
     })();
   }, [user?.id]);
+  
+  // Faz upload da identidade facial pendente do cadastro
+  useEffect(() => {
+    if (!user?.id) return;
+    const dataUrl = localStorage.getItem("pending_facial_id");
+    if (!dataUrl) return;
+    (async () => {
+      try {
+        const res = await fetch(dataUrl);
+        const blob = await res.blob();
+        const path = `${user.id}/identity.jpg`;
+        const { error: upErr } = await supabase.storage
+          .from("facial-ids")
+          .upload(path, blob, { upsert: true, contentType: "image/jpeg", cacheControl: "3600" });
+        if (upErr) {
+          console.error("Pending facial ID upload failed:", upErr);
+          return;
+        }
+        const { data: { publicUrl } } = supabase.storage.from("facial-ids").getPublicUrl(path);
+        await supabase.from("profiles").update({ 
+          facial_identity_url: publicUrl,
+          facial_verification_enabled: true 
+        } as any).eq("user_id", user.id);
+      } catch (err) { console.error("Pending facial ID processing error:", err); }
+      finally { localStorage.removeItem("pending_facial_id"); }
+    })();
+  }, [user?.id]);
 
   useEffect(() => {
     if (!user) { setHasCharacters(null); return; }
