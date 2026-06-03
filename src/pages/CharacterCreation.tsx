@@ -36,6 +36,7 @@ const EMPTY = { full_name:"", avatar_url:"", age:"", blood_status:"", gender:"ma
   actor_faceclaim:"", wand:"", patronus:"", pet:"", favorite_class:"", favorite_spell:"",
   personality:"", strength:"", weakness:"", fears:"", dreams:"", quotes:"", instagram:"",
   background:"", physical_description:"", canon_era:"", canon_portrayed_by:"", canon_notes:"",
+  history:"", // Adicionando campo history explicitamente
   mother_id: null as string | null, father_id: null as string | null };
 
 export default function CharacterCreation({ onComplete, onCancel, canCancel }: Props) {
@@ -114,6 +115,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
     // Validação de campos obrigatórios
     const requiredFields = [
       { key: "full_name", label: "Nome" },
+      { key: "gender", label: "Gênero" },
       { key: "house", label: "Casa" },
       { key: "age", label: "Idade" },
       { key: "wand", label: "Varinha" },
@@ -305,14 +307,23 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
                 <div className="grid grid-cols-2 gap-3">
                   <FIELD label="Idade *" name="age" value={form.age} onChange={handleChange} type="number" />
                   <div className="space-y-1">
-                    <label className="text-xs font-heading text-muted-foreground">Casa *</label>
-                    <select name="house" value={form.house} onChange={handleChange} className="w-full bg-secondary/50 rounded-md px-3 py-2 text-sm border border-border">
-                      <option value="gryffindor">Grifinória</option>
-                      <option value="slytherin">Sonserina</option>
-                      <option value="ravenclaw">Corvinal</option>
-                      <option value="hufflepuff">Lufa-Lufa</option>
+                    <label className="text-xs font-heading text-muted-foreground">Gênero *</label>
+                    <select name="gender" value={form.gender} onChange={handleChange} className="w-full bg-secondary/50 rounded-md px-3 py-2 text-sm border border-border">
+                      <option value="male">Masculino</option>
+                      <option value="female">Feminino</option>
+                      <option value="non-binary">Não-binário</option>
+                      <option value="other">Outro</option>
                     </select>
                   </div>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-heading text-muted-foreground">Casa *</label>
+                  <select name="house" value={form.house} onChange={handleChange} className="w-full bg-secondary/50 rounded-md px-3 py-2 text-sm border border-border">
+                    <option value="gryffindor">Grifinória</option>
+                    <option value="slytherin">Sonserina</option>
+                    <option value="ravenclaw">Corvinal</option>
+                    <option value="hufflepuff">Lufa-Lufa</option>
+                  </select>
                 </div>
                 {!isOC && (
                   <>
