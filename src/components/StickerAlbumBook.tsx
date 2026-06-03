@@ -70,13 +70,11 @@ export default function StickerAlbumBook({ stickers, userStickers, onBuy, buying
 
               {/* Central Crest Area */}
               <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center space-y-6">
-                <div className="relative">
+                <div className="relative flex items-center justify-center">
                   <div className="absolute inset-0 bg-yellow-500/20 blur-[60px] animate-pulse" />
-                  <img 
-                    src="https://vignette.wikia.nocookie.net/harrypotter/images/a/ae/Hogwarts_crest.png/revision/latest?cb=20150116174149" 
-                    alt="Hogwarts Crest"
-                    className="w-32 sm:w-48 h-auto relative z-10 drop-shadow-[0_0_20px_rgba(234,179,8,0.5)] transition-transform group-hover:scale-110 duration-700"
-                  />
+                  <div className="w-32 h-32 sm:w-48 sm:h-48 relative z-10 drop-shadow-[0_0_20px_rgba(234,179,8,0.5)] transition-transform group-hover:scale-110 duration-700 flex items-center justify-center text-7xl sm:text-8xl">
+                    <span aria-label="Brasão de Hogwarts">🏰</span>
+                  </div>
                 </div>
                 
                 <div className="space-y-2">

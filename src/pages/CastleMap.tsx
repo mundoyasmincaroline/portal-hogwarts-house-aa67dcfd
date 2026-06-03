@@ -94,17 +94,19 @@ export default function CastleMap() {
         {rooms.map(r => {
           const locked = userLevel < r.unlock_level;
           const visited = !!visits[r.id];
+          const clampedX = Math.min(95, Math.max(5, r.pos_x));
+          const clampedY = Math.min(92, Math.max(8, r.pos_y));
           return (
             <button key={r.id}
-              style={{ left: `${r.pos_x}%`, top: `${r.pos_y}%` }}
+              style={{ left: `${clampedX}%`, top: `${clampedY}%` }}
               onClick={() => visit(r)}
-              className={`absolute -translate-x-1/2 -translate-y-1/2 group flex flex-col items-center transition-all hover:scale-110 ${locked ? "opacity-40" : ""}`}>
+              className={`absolute -translate-x-1/2 -translate-y-1/2 group flex flex-col items-center justify-center text-center transition-all hover:scale-110 ${locked ? "opacity-40" : ""}`}>
               <div className={`text-3xl sm:text-4xl drop-shadow-[0_0_15px_rgba(212,175,55,0.6)] transition-all ${
                 visited ? "scale-110" : ""
               } ${selected?.id === r.id ? "animate-pulse" : ""}`}>
                 {locked ? "🔒" : (r.emoji || "🏰")}
               </div>
-              <span className="mt-1 px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] sm:text-[10px] text-primary font-heading uppercase tracking-wider whitespace-nowrap border border-primary/30">
+              <span className="mt-1 px-2 py-0.5 rounded bg-black/70 backdrop-blur text-[9px] sm:text-[10px] text-primary font-heading uppercase tracking-wider border border-primary/30 max-w-[140px] truncate">
                 {r.name}
               </span>
             </button>

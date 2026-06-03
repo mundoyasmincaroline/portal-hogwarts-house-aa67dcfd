@@ -30,7 +30,7 @@ export function PostComposer({ bannedWords }: PostComposerProps) {
       let reason = hasBannedWord ? "Palavra proibida" : isAllCaps ? "Gritaria (CAPS LOCK)" : "Spam (letras repetidas)";
       toast.error(
         <div className="flex gap-3 items-center">
-          <img src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Filch" className="w-10 h-10 rounded-full border border-red-500 object-cover" />
+          <div className="w-10 h-10 rounded-full border border-red-500 bg-gradient-to-br from-red-950 to-black flex items-center justify-center text-lg shrink-0">🗝️</div>
           <div>
             <p className="font-bold text-red-500">Argus Filch</p>
             <p className="text-sm">Publicação bloqueada: {reason}</p>
