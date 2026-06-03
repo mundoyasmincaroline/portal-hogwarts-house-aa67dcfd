@@ -45,6 +45,7 @@ export default function Marketplace() {
   const [loading, setLoading] = useState(true);
   const [selectedSticker, setSelectedSticker] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [category, setCategory] = useState<string>("all");
   const [price, setPrice] = useState<string>("50");
 
   const load = async () => {
