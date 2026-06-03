@@ -93,8 +93,15 @@ export default function Quests() {
 
   const start = async (id: string) => {
     const { error } = await supabase.rpc("start_quest", { p_quest_id: id });
-    if (error) toast.error(error.message);
-    else {
+    if (error) {
+      const m = error.message.toLowerCase();
+      toast.error(
+        m.includes("rls") || m.includes("permission") ? "Você não tem permissão para iniciar esta quest."
+        : m.includes("duplicate") || m.includes("already") ? "Esta quest já foi iniciada."
+        : m.includes("level") ? "Seu nível ainda não é suficiente para esta quest."
+        : "Não foi possível iniciar agora. Tente novamente."
+      );
+    } else {
       toast.success("Aventura iniciada! 🗺️");
       load();
     }
@@ -102,8 +109,14 @@ export default function Quests() {
 
   const advance = async (id: string) => {
     const { data, error } = await supabase.rpc("complete_quest_step", { p_quest_id: id });
-    if (error) toast.error(error.message);
-    else {
+    if (error) {
+      const m = error.message.toLowerCase();
+      toast.error(
+        m.includes("rls") || m.includes("permission") ? "Você não tem permissão para esta etapa."
+        : m.includes("not found") ? "Etapa não encontrada."
+        : "Não foi possível concluir a etapa. Tente novamente."
+      );
+    } else {
       toast.success((data as any)?.completed ? "🏆 Quest concluída!" : "Etapa concluída!");
       load();
     }
