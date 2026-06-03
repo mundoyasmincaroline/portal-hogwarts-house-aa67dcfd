@@ -24,6 +24,7 @@ export default function StickerAlbum() {
   const [buyingId, setBuyingId] = useState<string | null>(null);
   const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
   const [activeRarity, setActiveRarity] = useState<"all" | "bronze" | "silver" | "gold">("all");
+  const [searchTerm, setSearchTerm] = useState("");
   const [openingPack, setOpeningPack] = useState(false);
   const [packReveal, setPackReveal] = useState<Sticker | null>(null);
   const [packPhase, setPackPhase] = useState<"idle" | "shaking" | "reveal">("idle");
@@ -114,7 +115,11 @@ export default function StickerAlbum() {
   const goldTotal   = stickers.filter(s => s.rarity === "gold").length;
 
   const filtered = stickers
-    .filter(s => activeRarity === "all" || s.rarity === activeRarity)
+    .filter(s => {
+      const matchesRarity = activeRarity === "all" || s.rarity === activeRarity;
+      const matchesSearch = s.character_name.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesRarity && matchesSearch;
+    })
     .sort((a, b) => RARITY_ORDER[b.rarity] - RARITY_ORDER[a.rarity]);
 
   if (loading) return <div className="text-center py-20 text-muted-foreground animate-pulse font-heading text-xl">Revelando o Álbum Encantado...</div>;
