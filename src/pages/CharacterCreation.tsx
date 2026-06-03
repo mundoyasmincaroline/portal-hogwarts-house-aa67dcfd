@@ -305,14 +305,23 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
                 <div className="grid grid-cols-2 gap-3">
                   <FIELD label="Idade *" name="age" value={form.age} onChange={handleChange} type="number" />
                   <div className="space-y-1">
-                    <label className="text-xs font-heading text-muted-foreground">Casa *</label>
-                    <select name="house" value={form.house} onChange={handleChange} className="w-full bg-secondary/50 rounded-md px-3 py-2 text-sm border border-border">
-                      <option value="gryffindor">Grifinória</option>
-                      <option value="slytherin">Sonserina</option>
-                      <option value="ravenclaw">Corvinal</option>
-                      <option value="hufflepuff">Lufa-Lufa</option>
+                    <label className="text-xs font-heading text-muted-foreground">Gênero *</label>
+                    <select name="gender" value={form.gender} onChange={handleChange} className="w-full bg-secondary/50 rounded-md px-3 py-2 text-sm border border-border">
+                      <option value="male">Masculino</option>
+                      <option value="female">Feminino</option>
+                      <option value="non-binary">Não-binário</option>
+                      <option value="other">Outro</option>
                     </select>
                   </div>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-heading text-muted-foreground">Casa *</label>
+                  <select name="house" value={form.house} onChange={handleChange} className="w-full bg-secondary/50 rounded-md px-3 py-2 text-sm border border-border">
+                    <option value="gryffindor">Grifinória</option>
+                    <option value="slytherin">Sonserina</option>
+                    <option value="ravenclaw">Corvinal</option>
+                    <option value="hufflepuff">Lufa-Lufa</option>
+                  </select>
                 </div>
                 {!isOC && (
                   <>
