@@ -86,7 +86,7 @@ export default function WandCrafting() {
 
       {wand && (
         <Card className="p-4 bg-primary/10 border-primary/40 space-y-2 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-2 opacity-20"><EmojiIcon e="✨" size="xl" /></div>
+          <div className="absolute top-0 right-0 p-2 opacity-20"><EmojiIcon e="✨" /></div>
           <h2 className="font-heading text-primary text-xl">Sua varinha atual</h2>
           <p className="text-sm capitalize">{wand.length_inches}" de <strong>{wand.wood}</strong> com núcleo de <strong>{wand.core}</strong>, {wand.flexibility}</p>
           <div className="flex gap-3 text-xs flex-wrap">
