@@ -115,6 +115,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
     // Validação de campos obrigatórios
     const requiredFields = [
       { key: "full_name", label: "Nome" },
+      { key: "gender", label: "Gênero" },
       { key: "house", label: "Casa" },
       { key: "age", label: "Idade" },
       { key: "wand", label: "Varinha" },
