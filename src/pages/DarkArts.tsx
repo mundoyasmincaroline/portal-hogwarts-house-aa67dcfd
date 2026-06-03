@@ -120,7 +120,7 @@ export default function DarkArts() {
                   <Badge variant="outline">+{s.corruption_cost} corrupção</Badge>
                   <Badge variant="outline">+{s.xp_reward} XP</Badge>
                 </div>
-                <Button variant="destructive" disabled={busy} className="w-full" onClick={() => cast(s.slug)}>Conjurar</Button>
+                <Button variant="destructive" disabled={busy} className="w-full" onClick={() => cast(s.slug, s.unforgivable)}>Conjurar</Button>
               </CardContent>
             </Card>
           ))}
