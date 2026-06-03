@@ -30,7 +30,7 @@ export function ActiveWizardsSidebar({ onlineUsers }: ActiveWizardsSidebarProps)
         {/* Yasmin Caroline - A Fundadora */}
         <div className="flex items-center gap-3 p-3 bg-white/5 border border-yellow-500/20 rounded-2xl group transition-all hover:border-yellow-500/40 hover:scale-[1.02]">
           <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 border border-yellow-500/30 relative">
-            <SafeImage src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Yasmin" className="w-full h-full object-cover" />
+            <SafeImage src="/characters/yas_oc.jpg" alt="Yasmin" className="w-full h-full object-cover" fallbackText="Yasmin" fallbackEmoji="✨" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[11px] text-yellow-500 font-bold font-heading uppercase tracking-wider">Yasmin Caroline</p>
@@ -41,8 +41,8 @@ export function ActiveWizardsSidebar({ onlineUsers }: ActiveWizardsSidebarProps)
 
         {/* Filch - O Vigilante */}
         <div className="flex items-center gap-3 p-3 bg-white/5 border border-red-500/10 rounded-2xl group opacity-60 hover:opacity-100 transition-all">
-          <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 border border-red-500/20 grayscale group-hover:grayscale-0 transition-all">
-            <SafeImage src="https://i.pinimg.com/736x/8e/31/b0/8e31b0a8801d4a04d55cc3b89b88cfbb.jpg" alt="Filch" className="w-full h-full object-cover" />
+          <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 border border-red-500/20 grayscale group-hover:grayscale-0 transition-all bg-gradient-to-br from-red-950/60 to-black flex items-center justify-center">
+            <span className="text-lg" aria-label="Filch">🗝️</span>
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[11px] text-red-500 font-bold font-heading uppercase tracking-wider">Argus Filch</p>

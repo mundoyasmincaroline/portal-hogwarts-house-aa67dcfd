@@ -4,6 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import { Sparkles, RefreshCw } from "lucide-react";
+import hogwartsMorning from "@/assets/hogwarts_morning.webp.asset.json";
+import hogwartsAfternoon from "@/assets/hogwarts_afternoon.webp.asset.json";
+import hogwartsNight from "@/assets/hogwarts_night.webp.asset.json";
 
 export default function CastleEntrance() {
   const [step, setStep] = useState(0);
@@ -73,9 +76,9 @@ export default function CastleEntrance() {
 
   const current = steps[step];
 
-  let bgUrl = "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=2000"; // Night sky/magic
-  if (timeOfDay === "morning") bgUrl = "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=2000"; // Morning light
-  else if (timeOfDay === "afternoon") bgUrl = "https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2000"; // Afternoon castle
+  let bgUrl = hogwartsNight.url;
+  if (timeOfDay === "morning") bgUrl = hogwartsMorning.url;
+  else if (timeOfDay === "afternoon") bgUrl = hogwartsAfternoon.url;
 
   return (
     <div className="fixed inset-0 bg-background/98 backdrop-blur-xl z-50 flex items-center justify-center p-4 overflow-hidden">
