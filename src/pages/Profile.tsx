@@ -9,8 +9,6 @@ import EditProfileButton from "@/components/profile/EditProfileButton";
 import { useProfile } from "@/hooks/features/useProfile";
 import { Button } from "@/components/ui/button";
 import { Wallet, Backpack, Trophy, History } from "lucide-react";
-import { Link } from "react-router-dom";
-import { Wallet, Backpack, Trophy, History } from "lucide-react";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function Profile() {
