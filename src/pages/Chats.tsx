@@ -160,7 +160,7 @@ export default function Chats() {
 
       <div className="relative group mb-8">
         <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-          <EmojiIcon e="🔍" size="sm" />
+          <EmojiIcon e="🔍" />
         </div>
         <input 
           type="text"
