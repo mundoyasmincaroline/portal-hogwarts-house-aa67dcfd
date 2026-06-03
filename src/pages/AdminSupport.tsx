@@ -57,7 +57,23 @@ export default function AdminSupport() {
     load();
   };
 
+  const deleteTicket = async (id: string) => {
+    if (!confirm("Excluir este chamado?")) return;
+    const { error } = await supabase.from("support_tickets").delete().eq("id", id);
+    if (error) return toast.error("Erro ao excluir");
+    toast.success("Chamado excluído");
+    load();
+  };
+
+  const markAsSpam = async (id: string) => {
+    const { error } = await supabase.from("support_tickets").update({ status: "fechado", priority: "low" } as any).eq("id", id);
+    if (error) return toast.error("Erro ao marcar como spam");
+    toast.success("Marcado como spam");
+    load();
+  };
+
   const sendResponse = async (ticket: Ticket) => {
+
     const text = (responses[ticket.id] ?? "").trim();
     if (text.length < 5) return toast.error("Resposta muito curta");
     const { data: { user } } = await supabase.auth.getUser();
@@ -150,15 +166,21 @@ export default function AdminSupport() {
                     {t.name} · <a href={`mailto:${t.email}`} className="hover:text-primary">{t.email}</a> · {new Date(t.created_at).toLocaleString("pt-BR")}
                   </p>
                 </div>
-                <Select value={t.status} onValueChange={(v) => updateStatus(t.id, v)}>
-                  <SelectTrigger className="w-[160px] h-8 text-xs"><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="aberto">Aberto</SelectItem>
-                    <SelectItem value="em_andamento">Em andamento</SelectItem>
-                    <SelectItem value="resolvido">Resolvido</SelectItem>
-                    <SelectItem value="fechado">Fechado</SelectItem>
-                  </SelectContent>
-                </Select>
+                  <div className="flex gap-2">
+                    <Select value={t.status} onValueChange={(v) => updateStatus(t.id, v)}>
+                      <SelectTrigger className="w-[140px] h-8 text-xs"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="aberto">Aberto</SelectItem>
+                        <SelectItem value="em_andamento">Em andamento</SelectItem>
+                        <SelectItem value="resolvido">Resolvido</SelectItem>
+                        <SelectItem value="fechado">Fechado</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Button size="icon" variant="ghost" className="h-8 w-8 text-destructive" onClick={() => deleteTicket(t.id)}>
+                      <EmojiIcon e="🗑️" />
+                    </Button>
+                  </div>
+
               </div>
 
               <div className="bg-secondary/30 rounded-lg p-3 text-sm text-foreground/90 whitespace-pre-wrap mb-3">
@@ -182,9 +204,15 @@ export default function AdminSupport() {
                     rows={3}
                     className="resize-none text-sm"
                   />
-                  <Button size="sm" variant="magical" onClick={() => sendResponse(t)}>
-                    Enviar resposta & marcar como resolvido
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="magical" onClick={() => sendResponse(t)}>
+                      Enviar resposta & marcar como resolvido
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => markAsSpam(t.id)}>
+                      Marcar como Spam
+                    </Button>
+                  </div>
+
                 </div>
               )}
             </div>
