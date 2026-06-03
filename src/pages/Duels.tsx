@@ -38,6 +38,8 @@ export default function Duels() {
   const [userSpells, setUserSpells] = useState<Spell[]>([]);
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
+  const [lastAction, setLastAction] = useState<{ type: 'damage' | 'shield'; target: 'challenger' | 'opponent' } | null>(null);
+  const actionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (!user) return;
