@@ -84,9 +84,13 @@ export default function WorldMap() {
             </div>
           </div>
           <p className="text-sm text-muted-foreground">{active.description}</p>
-          <div className="flex gap-2">
-            <Button asChild><Link to={`/dashboard/travel?to=${active.id}`}>✈️ Viajar ({active.travel_cost} G)</Link></Button>
-            {visited.has(active.id) && <Badge className="bg-green-500/20 text-green-300 self-center"><EmojiIcon e="✓" /> Já visitou</Badge>}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Button asChild className="flex-1 sm:flex-none"><Link to={`/dashboard/travel?to=${active.id}`}>✈️ Viajar Agora ({active.travel_cost} G)</Link></Button>
+            {visited.has(active.id) && (
+              <Badge className="bg-green-500/20 text-green-300 self-center px-4 py-2 border border-green-500/30">
+                <EmojiIcon e="✓" /> Já visitou este marco
+              </Badge>
+            )}
           </div>
         </Card>
       )}

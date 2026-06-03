@@ -42,13 +42,40 @@ export default function Greenhouse() {
     load();
   }
 
+  async function harvestAll() {
+    const readySlots = plots.filter(p => p.plant_id && p.ready_at && new Date(p.ready_at) <= new Date()).map(p => p.slot_number);
+    if (readySlots.length === 0) return toast.info("Nada para colher agora.");
+    
+    setLoading(true);
+    let count = 0;
+    for (const slot of readySlots) {
+      const { error } = await supabase.rpc("harvest_plot" as any, { p_slot: slot });
+      if (!error) count++;
+    }
+    setLoading(false);
+    toast.success(`${count} vasos colhidos com sucesso! 🌿`);
+    load();
+  }
+
   const slots = Array.from({ length: 6 }, (_, i) => i + 1);
 
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-6">
       <div>
-        <h1 className="font-heading text-3xl text-primary"><EmojiIcon e="🌿" /> Estufa de Herbologia</h1>
-        <p className="text-muted-foreground">Cultive ingredientes para suas poções. Você tem 6 vasos.</p>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+          <div>
+            <h1 className="font-heading text-3xl text-primary"><EmojiIcon e="🌿" /> Estufa de Herbologia</h1>
+            <p className="text-muted-foreground">Cultive ingredientes para suas poções. Você tem 6 vasos.</p>
+          </div>
+          <Button 
+            variant="magical" 
+            onClick={harvestAll} 
+            disabled={loading || !plots.some(p => p.plant_id && p.ready_at && new Date(p.ready_at) <= new Date())}
+            className="w-full sm:w-auto"
+          >
+            <EmojiIcon e="🌾" /> Colher Tudo
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

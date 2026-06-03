@@ -40,6 +40,7 @@ export default function CanonLessons() {
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState(true);
   const [attendedMap, setAttendedMap] = useState<Record<string, boolean>>({});
+  const [masteryMap, setMasteryMap] = useState<Record<string, number>>({});
   const [active, setActive] = useState<Lesson | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -58,11 +59,16 @@ export default function CanonLessons() {
     if (profile?.active_character_id) {
       const { data: att } = await supabase
         .from("lesson_attendance")
-        .select("lesson_id")
+        .select("lesson_id, mastery_score")
         .eq("character_id", profile.active_character_id);
       const map: Record<string, boolean> = {};
-      att?.forEach((a: any) => (map[a.lesson_id] = true));
+      const mMap: Record<string, number> = {};
+      att?.forEach((a: any) => {
+        map[a.lesson_id] = true;
+        mMap[a.lesson_id] = a.mastery_score || 0;
+      });
       setAttendedMap(map);
+      setMasteryMap(mMap);
     }
     setLoading(false);
   };
@@ -90,6 +96,7 @@ export default function CanonLessons() {
       `+${res?.xp_awarded ?? 0} XP · +${res?.galeons_awarded ?? 0} ⚜️ Galeões  ·  Maestria ${res?.mastery ?? mastery}`
     );
     setAttendedMap((prev) => ({ ...prev, [lesson.id]: true }));
+    setMasteryMap((prev) => ({ ...prev, [lesson.id]: res?.mastery ?? mastery }));
   };
 
   if (loading) return <div className="text-center py-10 font-serif italic">Convocando os professores...</div>;
@@ -202,11 +209,25 @@ export default function CanonLessons() {
 
                       <div className="pt-2">
                         {attended ? (
-                          <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-xl">
-                            <Award className="w-4 h-4 text-green-400" />
-                            <span className="text-[10px] font-heading uppercase tracking-widest text-green-400">
-                              Feitiço Aprendido
-                            </span>
+                          <div className="space-y-2">
+                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-xl">
+                              <Award className="w-4 h-4 text-green-400" />
+                              <span className="text-[10px] font-heading uppercase tracking-widest text-green-400">
+                                Feitiço Aprendido
+                              </span>
+                            </div>
+                            <div className="w-full max-w-[200px] space-y-1">
+                              <div className="flex justify-between text-[8px] uppercase tracking-tighter text-muted-foreground font-bold">
+                                <span>Maestria</span>
+                                <span>{masteryMap[l.id] || 0}%</span>
+                              </div>
+                              <div className="h-1 bg-white/5 rounded-full overflow-hidden border border-white/10">
+                                <div 
+                                  className="h-full bg-gradient-to-r from-green-500 to-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.4)] transition-all duration-1000"
+                                  style={{ width: `${masteryMap[l.id] || 0}%` }}
+                                />
+                              </div>
+                            </div>
                           </div>
                         ) : !profile?.active_character_id ? (
                           <p className="text-xs text-muted-foreground italic">Selecione um personagem para participar.</p>

@@ -28,8 +28,22 @@ export default function CastleMap() {
   const [visits, setVisits] = useState<Record<string, number>>({});
   const [selected, setSelected] = useState<Room | null>(null);
   const [eventMsg, setEventMsg] = useState<string | null>(null);
+  const [liveExplorers, setLiveExplorers] = useState<any[]>([]);
 
-  useEffect(() => { load(); }, [user?.id]);
+  useEffect(() => { 
+    load();
+    loadExplorers();
+  }, [user?.id]);
+
+  async function loadExplorers() {
+    // Busca perfis que ganharam XP recentemente (simulando atividade)
+    const { data } = await supabase
+      .from("profiles")
+      .select("username, avatar_url, full_name")
+      .order("updated_at", { ascending: false })
+      .limit(5);
+    setLiveExplorers(data || []);
+  }
 
   async function load() {
     const [r, v] = await Promise.all([
@@ -74,16 +88,34 @@ export default function CastleMap() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      <header className="text-center space-y-2">
-        <div className="text-4xl"><EmojiIcon e="🗺️" /></div>
-        <h1 className="font-heading text-3xl sm:text-4xl text-gold-gradient">Mapa do Castelo</h1>
-        <div className="flex flex-col items-center gap-2 mt-2">
-          <p className="text-muted-foreground text-sm max-w-md">Explore Hogwarts clicando nos ícones. Cada sala guarda segredos, XP e até Galeões escondidos!</p>
-          <div className="flex gap-3 text-[10px] uppercase tracking-widest font-heading text-primary/60">
-            <span className="flex items-center gap-1"><EmojiIcon e="🔒" size={12} /> Nível Insuficiente</span>
-            <span className="flex items-center gap-1"><EmojiIcon e="✨" size={12} /> Evento Aleatório</span>
+      <header className="flex flex-col md:flex-row justify-between items-center gap-6">
+        <div className="text-center md:text-left space-y-2">
+          <div className="text-4xl"><EmojiIcon e="🗺️" /></div>
+          <h1 className="font-heading text-3xl sm:text-4xl text-gold-gradient">Mapa do Castelo</h1>
+          <div className="flex flex-col items-center md:items-start gap-2 mt-2">
+            <p className="text-muted-foreground text-sm max-w-md">Explore Hogwarts clicando nos ícones. Cada sala guarda segredos, XP e até Galeões escondidos!</p>
+            <div className="flex gap-3 text-[10px] uppercase tracking-widest font-heading text-primary/60">
+              <span className="flex items-center gap-1"><EmojiIcon e="🔒" size={12} /> Nível Insuficiente</span>
+              <span className="flex items-center gap-1"><EmojiIcon e="✨" size={12} /> Evento Aleatório</span>
+            </div>
           </div>
         </div>
+
+        {liveExplorers.length > 0 && (
+          <div className="glass p-4 rounded-2xl border border-primary/20 bg-primary/5 flex flex-col items-center md:items-end gap-2">
+            <p className="text-[10px] font-heading text-primary uppercase tracking-widest font-bold">Exploradores Online</p>
+            <div className="flex -space-x-3 overflow-hidden">
+              {liveExplorers.map((ex, i) => (
+                <div key={i} className="inline-block h-8 w-8 rounded-full ring-2 ring-primary/20 overflow-hidden bg-black/40 group relative">
+                  <img src={ex.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${ex.username}`} alt={ex.username} className="h-full w-full object-cover" />
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <span className="text-[6px] text-white font-bold truncate px-1">@{ex.username}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </header>
 
       <div className="space-y-2">

@@ -26,6 +26,7 @@ export default function Classes() {
   const [loading, setLoading] = useState(true);
   const [submittingClass, setSubmittingClass] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [nextClassCountdown, setNextClassCountdown] = useState<string>("");
 
   // Time & Date calculations
   const now = new Date();
@@ -57,7 +58,44 @@ export default function Classes() {
 
   useEffect(() => {
     if (user && profile) loadClasses();
-  }, [user, profile]);
+  }, [user, profile, currentRotation, currentDay]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (classes.length === 0) return;
+      
+      const upcoming = classes
+        .filter(c => {
+          const [start] = c.time_slot.split("-");
+          const [h, m] = start.split(":").map(Number);
+          const startTime = new Date();
+          startTime.setHours(h, m, 0, 0);
+          return startTime > new Date();
+        })
+        .sort((a, b) => {
+          const [aStart] = a.time_slot.split("-");
+          const [bStart] = b.time_slot.split("-");
+          return aStart.localeCompare(bStart);
+        });
+
+      if (upcoming.length > 0) {
+        const [start] = upcoming[0].time_slot.split("-");
+        const [h, m] = start.split(":").map(Number);
+        const startTime = new Date();
+        startTime.setHours(h, m, 0, 0);
+        
+        const diff = startTime.getTime() - new Date().getTime();
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+        
+        setNextClassCountdown(`${hours}h ${mins}m ${secs}s`);
+      } else {
+        setNextClassCountdown("Sem mais aulas hoje");
+      }
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [classes]);
 
   const loadClasses = async () => {
     // Fetch classes for current day and rotation
@@ -182,6 +220,14 @@ export default function Classes() {
                 Semana <span className="text-white font-bold">{currentRotation}</span> do Rodízio
               </p>
             </div>
+            {nextClassCountdown && (
+              <div className="glass px-6 py-3 rounded-2xl border border-primary/20 flex items-center gap-3 bg-primary/5">
+                <Clock className="text-primary w-4 h-4 animate-pulse" />
+                <p className="text-xs font-serif italic text-white/80">
+                  Próxima Aula: <span className="text-primary font-bold font-mono">{nextClassCountdown}</span>
+                </p>
+              </div>
+            )}
           </div>
           
           <div className="pt-4 flex flex-col items-center justify-center gap-4">
