@@ -20,6 +20,7 @@ export default function DMInbox() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [threads, setThreads] = useState<DMThread[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -85,30 +86,43 @@ export default function DMInbox() {
       };
     }).sort((a, b) => new Date(b.last_at).getTime() - new Date(a.last_at).getTime());
 
-    setThreads(result);
-    setLoading(false);
-  };
+  const filteredThreads = threads.filter(t => 
+    t.partner_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    t.partner_username.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="max-w-xl mx-auto space-y-4 px-2 sm:px-0">
-      <div className="glass rounded-2xl p-5 sm:p-6 flex items-center gap-3">
-        <MessageCircle size={24} className="text-primary" />
-        <div>
-          <h1 className="font-heading text-xl text-gold-gradient">Corujoteca — Mensagens Diretas</h1>
-          <p className="text-xs text-muted-foreground">Suas conversas privadas mágicas</p>
+      <div className="glass rounded-2xl p-5 sm:p-6 flex flex-col gap-4">
+        <div className="flex items-center gap-3">
+          <MessageCircle size={24} className="text-primary" />
+          <div>
+            <h1 className="font-heading text-xl text-gold-gradient">Corujoteca — Mensagens Diretas</h1>
+            <p className="text-xs text-muted-foreground">Suas conversas privadas mágicas</p>
+          </div>
         </div>
+        
+        <Input 
+          placeholder="Procurar bruxo ou conversa..."
+          className="bg-background/50 border-primary/30"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </div>
 
       {loading ? (
         <p className="text-center text-muted-foreground py-10">Acordando as corujas...</p>
-      ) : threads.length === 0 ? (
+      ) : filteredThreads.length === 0 ? (
         <div className="glass rounded-2xl p-10 text-center">
           <div className="text-4xl mb-3"><EmojiIcon e="🦉" /></div>
-          <p className="text-muted-foreground text-sm">Nenhuma conversa ainda.<br />Visite o perfil de um membro e clique em "<EmojiIcon e="💬" /> Mensagem".</p>
+          <p className="text-muted-foreground text-sm">
+            {searchQuery ? "Nenhum bruxo encontrado com esse nome." : "Nenhuma conversa ainda."}<br />
+            {!searchQuery && "Visite o perfil de um membro e clique em \"💬 Mensagem\"."}
+          </p>
         </div>
       ) : (
         <div className="space-y-2">
-          {threads.map(t => (
+          {filteredThreads.map(t => (
             <div
               key={t.partner_id}
               onClick={() => navigate(`/dashboard/dm/${t.partner_id}`)}
