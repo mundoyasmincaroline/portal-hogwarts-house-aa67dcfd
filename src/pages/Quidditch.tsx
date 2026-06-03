@@ -211,8 +211,8 @@ export default function Quidditch() {
         {matches.map(m => {
           const ps = players[m.id] || [];
           const me = ps.find(p => p.user_id === user?.id);
-          const houseA = getHouseByTeamId(m.team1_id);
-          const houseB = getHouseByTeamId(m.team2_id);
+          const houseA = m.house_a;
+          const houseB = m.house_b;
 
           return (
             <Card key={m.id} className="p-6 bg-gradient-to-br from-card to-background border-primary/30 space-y-4 shadow-xl relative overflow-hidden group">
