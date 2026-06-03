@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Lock, MapPin } from "lucide-react";
+import { motion } from "framer-motion";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 interface Room {

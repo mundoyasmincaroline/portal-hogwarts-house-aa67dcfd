@@ -138,7 +138,7 @@ export default function Quests() {
 
         <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
           <Button 
-            variant={filterRegion === "all" ? "primary" : "outline"} 
+            variant={filterRegion === "all" ? "default" : "outline"} 
             size="sm" 
             onClick={() => setFilterRegion("all")}
             className="rounded-full"
@@ -148,7 +148,7 @@ export default function Quests() {
           {Object.keys(regionColor).map(r => (
             <Button 
               key={r}
-              variant={filterRegion === r ? "primary" : "outline"} 
+              variant={filterRegion === r ? "default" : "outline"} 
               size="sm" 
               onClick={() => setFilterRegion(r)}
               className="rounded-full capitalize"
@@ -157,7 +157,7 @@ export default function Quests() {
             </Button>
           ))}
           <Button 
-            variant={showCompleted ? "primary" : "outline"} 
+            variant={showCompleted ? "default" : "outline"} 
             size="sm" 
             onClick={() => setShowCompleted(!showCompleted)}
             className="rounded-full ml-4"
