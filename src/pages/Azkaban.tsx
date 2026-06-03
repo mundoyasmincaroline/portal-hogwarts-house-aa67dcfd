@@ -98,6 +98,7 @@ export default function Azkaban() {
             <div className="text-4xl sm:text-6xl font-heading text-white font-bold tracking-widest">{formatTime(timeLeft)}</div>
             <p className="text-blue-200/70 text-sm">Você foi enviado para Azkaban por inatividade excessiva. Aguarde o tempo acabar para ser libertado pelo Filch.</p>
             <div className="text-xs text-muted-foreground space-y-1">
+              <p>Libertação prevista: <span className="text-blue-300">{azkabanStatus?.release_at ? new Date(azkabanStatus.release_at).toLocaleString() : "Indefinida"}</span></p>
               <p>Motivo: <span className="text-blue-300">{azkabanStatus?.reason || "Inatividade"}</span></p>
               <p>Penalidade XP aplicada: <span className="text-red-400">-{azkabanStatus?.xp_penalty || 0} XP</span></p>
             </div>
