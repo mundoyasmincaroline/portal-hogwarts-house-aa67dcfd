@@ -111,8 +111,11 @@ export default function MagicFacialID({ onValidated, mode, referenceImage, onCan
                   exit={{ opacity: 0 }}
                   className="absolute inset-0 bg-primary/20 backdrop-blur-sm flex flex-col items-center justify-center text-white"
                 >
-                  <Loader2 className="w-12 h-12 animate-spin mb-4" />
-                  <p className="font-heading text-lg animate-pulse">Lendo Essência...</p>
+                  <div className="relative">
+                    <Loader2 className="w-16 h-16 animate-spin text-primary/80" />
+                    <Sparkles className="absolute inset-0 m-auto w-6 h-6 animate-pulse text-primary" />
+                  </div>
+                  <p className="font-heading text-lg mt-4 tracking-widest animate-pulse drop-shadow-[0_0_10px_rgba(212,175,55,0.5)]">Lendo Essência...</p>
                 </motion.div>
               )}
               {status === "success" && (
@@ -157,9 +160,9 @@ export default function MagicFacialID({ onValidated, mode, referenceImage, onCan
                 variant="magical" 
                 onClick={capture} 
                 disabled={!cameraReady || isValidating}
-                className="px-8"
+                className="px-8 shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_30px_rgba(212,175,55,0.5)] transition-all"
               >
-                <Camera className="mr-2 w-4 h-4" /> Validar Agora
+                <ShieldCheck className="mr-2 w-4 h-4" /> Validar Identidade
               </Button>
             </>
           ) : (

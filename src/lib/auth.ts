@@ -54,8 +54,10 @@ interface AuthState {
   user: User | null;
   profile: Profile | null;
   isAuthenticated: boolean;
+  isFaciallyValidated: boolean;
   isLoading: boolean;
   isAdmin: boolean;
+  setFaciallyValidated: (validated: boolean) => void;
   init: () => Promise<void>;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
@@ -83,8 +85,10 @@ export const useAuth = create<AuthState>((set, get) => ({
   user: null,
   profile: null,
   isAuthenticated: false,
+  isFaciallyValidated: false,
   isLoading: true,
   isAdmin: false,
+  setFaciallyValidated: (validated) => set({ isFaciallyValidated: validated }),
 
   init: async () => {
     try {
