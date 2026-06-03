@@ -9,7 +9,8 @@ import { toast } from "sonner";
 import HouseCrest from "@/components/rpg/HouseCrest";
 import MagicalParticles from "@/components/MagicalParticles";
 import AcceptanceLetter from "@/components/AcceptanceLetter";
-import { Sparkles, Feather, Droplet, Wand2, ArrowLeft } from "lucide-react";
+import { Sparkles, Feather, Droplet, Wand2, ArrowLeft, ShieldCheck } from "lucide-react";
+import MagicFacialID from "@/components/auth/MagicFacialID";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 /* ────────────────────────────────────────────────────────────
@@ -44,6 +45,7 @@ export default function Register() {
   const [step, setStep] = useState(0); // 0=convocação ... 6=carta
   const [loading, setLoading] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState("");
+  const [facialIdPreview, setFacialIdPreview] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -59,7 +61,7 @@ export default function Register() {
   const [captcha] = useState({ num1: Math.floor(Math.random() * 10) + 1, num2: Math.floor(Math.random() * 10) + 1 });
   const [captchaAnswer, setCaptchaAnswer] = useState("");
 
-  const totalSteps = 6; // não conta a carta final
+  const totalSteps = 7; // não conta a carta final
   const houses = Object.values(HOUSES);
 
   const next = () => setStep((s) => s + 1);
@@ -125,13 +127,17 @@ export default function Register() {
       wand_core: form.wandCore,
       house: form.house,
     }));
+
+    if (facialIdPreview) {
+      localStorage.setItem("pending_facial_id", facialIdPreview);
+    }
     
     if (form.referralCode.trim()) {
       localStorage.setItem("pending_referral", form.referralCode.trim().toLowerCase().replace("@", ""));
     }
 
     setLoading(false);
-    setStep(6); // carta de aceitação
+    setStep(8); // carta de aceitação final
     toast.success("Bruxo(a) registrado(a) com sucesso! ✨");
   };
 
@@ -165,10 +171,10 @@ export default function Register() {
 
       <div key={step} className="relative z-20 w-full max-w-xl animate-fade-in-up">
         {/* Progress bar discreta — some na convocação e na carta */}
-        {step > 0 && step < 6 && (
+        {step > 0 && step < 8 && (
           <div className="flex justify-center gap-1.5 mb-6">
-            {Array.from({ length: totalSteps - 1 }).map((_, i) => (
-              <div key={i} className={`h-0.5 w-10 rounded-full transition-all ${i + 1 <= (step === 7 ? 6 : step) ? "bg-primary" : "bg-white/15"}`} />
+            {Array.from({ length: totalSteps }).map((_, i) => (
+              <div key={i} className={`h-0.5 w-8 rounded-full transition-all ${i + 1 <= step ? "bg-primary" : "bg-white/15"}`} />
             ))}
           </div>
         )}
@@ -359,10 +365,41 @@ export default function Register() {
 
               <NavRow 
                 onBack={back} 
-                onNext={() => setStep(7)} 
+                onNext={() => setStep(6)} 
                 disabled={loading} 
-                labelNext={loading ? "Tecendo..." : "Ver Prévia da Carta"} 
+                labelNext={loading ? "Tecendo..." : "Continuar"} 
               />
+            </div>
+          )}
+
+          {/* ─── STEP 6 — RECONHECIMENTO FACIAL ─── */}
+          {step === 6 && (
+            <div className="space-y-4">
+              <header className="mb-4">
+                <ShieldCheck className="w-8 h-8 text-primary mb-2" />
+                <p className="text-xs uppercase tracking-[0.3em] text-primary/70">Pergaminho VI</p>
+                <h2 className="font-heading text-2xl text-foreground">Identidade Mágica</h2>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Para garantir a segurança do castelo, valide sua essência mágica.
+                </p>
+              </header>
+
+              <div className="glass bg-primary/5 border border-primary/20 rounded-2xl p-2">
+                <MagicFacialID 
+                  mode="enroll" 
+                  onValidated={(img) => {
+                    setFacialIdPreview(img);
+                    setStep(7);
+                  }} 
+                  onCancel={() => setStep(5)}
+                />
+              </div>
+
+              <div className="flex justify-center pt-2">
+                 <Button variant="ghost" className="text-[10px] text-muted-foreground hover:text-primary underline" onClick={() => setStep(7)}>
+                   Pular por enquanto (não recomendado)
+                 </Button>
+              </div>
             </div>
           )}
 
@@ -379,15 +416,15 @@ export default function Register() {
                 isPreview={true}
               />
               <div className="mt-4 flex justify-center">
-                <Button variant="ghost" className="text-muted-foreground hover:text-foreground text-xs" onClick={() => setStep(5)}>
-                  <ArrowLeft className="w-3 h-3 mr-1" /> Editar dados
+                <Button variant="ghost" className="text-muted-foreground hover:text-foreground text-xs" onClick={() => setStep(6)}>
+                  <ArrowLeft className="w-3 h-3 mr-1" /> Voltar
                 </Button>
               </div>
             </div>
           )}
 
-          {/* ─── STEP 6 — CARTA FINAL (PÓS-CADASTRO) ─── */}
-          {step === 6 && (
+          {/* ─── STEP 8 — CARTA FINAL (PÓS-CADASTRO) ─── */}
+          {step === 8 && (
             <AcceptanceLetter fullName={form.fullName} onContinue={() => navigate("/login")} />
           )}
         </div>

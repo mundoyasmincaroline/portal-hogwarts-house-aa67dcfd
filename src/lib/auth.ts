@@ -36,6 +36,8 @@ export interface Profile {
   current_session_id: string | null;
   wand_wood: string | null;
   wand_core: string | null;
+  facial_identity_url: string | null;
+  facial_verification_enabled: boolean;
 }
 
 export const isUserOnline = (profile: Partial<Profile> | null): boolean => {

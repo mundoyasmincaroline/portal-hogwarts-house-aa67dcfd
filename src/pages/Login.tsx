@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import MagicalParticles from "@/components/MagicalParticles";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, ShieldCheck } from "lucide-react";
+import MagicFacialID from "@/components/auth/MagicFacialID";
 import { toast } from "sonner";
 import { playDoorSound } from "@/services/core/soundService";
 
@@ -23,6 +24,10 @@ export default function Login() {
   // Recovery Mode State
   const [isRecoveryMode, setIsRecoveryMode] = useState(false);
   const [newPassword, setNewPassword] = useState("");
+  
+  // Facial Validation State
+  const [showFacialValidation, setShowFacialValidation] = useState(false);
+  const [pendingUser, setPendingUser] = useState<any>(null);
 
   // ── Cinematic time-based background ──
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -46,20 +51,20 @@ export default function Login() {
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "PASSWORD_RECOVERY") {
         setIsRecoveryMode(true);
-      } else if (session?.user && !isRecoveryMode) {
-        // Use replace to prevent back-button loops
+      } else if (session?.user && !isRecoveryMode && !showFacialValidation) {
+        // Se já está logado e não estamos no fluxo de validação facial, redireciona
         navigate("/dashboard", { replace: true });
       }
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user && !window.location.hash.includes("recovery")) {
+      if (session?.user && !window.location.hash.includes("recovery") && !showFacialValidation) {
         navigate("/dashboard", { replace: true });
       }
     });
 
     return () => { authListener.subscription.unsubscribe(); };
-  }, [navigate, isRecoveryMode]);
+  }, [navigate, isRecoveryMode, showFacialValidation]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,7 +78,15 @@ export default function Login() {
     setLoading(false);
     if (result.success) {
       playDoorSound();
-      // Wait for AuthInit/init to catch up if needed, though session is set
+      
+      // Antes de entrar, verificamos se precisa de validação facial
+      const { data: profile } = await supabase.from("profiles").select("facial_identity_url, facial_verification_enabled").eq("user_id", (await supabase.auth.getUser()).data.user?.id).maybeSingle();
+      
+      if (profile?.facial_verification_enabled && profile?.facial_identity_url) {
+        setShowFacialValidation(true);
+        return;
+      }
+
       navigate("/dashboard", { replace: true });
     } else {
       setError(result.error || "Credenciais inválidas. Tente novamente.");
@@ -132,14 +145,27 @@ export default function Login() {
       <div className="glass-premium rounded-[2.5rem] p-10 w-[95%] max-w-md z-20 animate-fade-in-up border-primary/30 shadow-[0_40px_120px_rgba(0,0,0,0.95)] mx-auto hover:border-primary/50 transition-all duration-1000 bg-background/85 backdrop-blur-2xl">
         <div className="text-center mb-8">
           <h1 className="font-heading text-4xl text-gold-gradient mb-3">
-            {isRecoveryMode ? "Nova Senha" : "Entrar"}
+            {showFacialValidation ? "Identidade Mágica" : isRecoveryMode ? "Nova Senha" : "Entrar"}
           </h1>
           <p className="text-muted-foreground text-sm">
-            {isRecoveryMode ? "Defina sua nova senha mágica abaixo" : "Acesse o Portal Hogwarts House"}
+            {showFacialValidation ? "Valide sua essência para entrar no castelo" : isRecoveryMode ? "Defina sua nova senha mágica abaixo" : "Acesse o Portal Hogwarts House"}
           </p>
         </div>
 
-        {isRecoveryMode ? (
+        {showFacialValidation ? (
+          <div className="space-y-6">
+            <div className="bg-primary/5 border border-primary/20 rounded-2xl p-2">
+              <MagicFacialID 
+                mode="verify" 
+                onValidated={() => navigate("/dashboard", { replace: true })}
+                onCancel={() => setShowFacialValidation(false)}
+              />
+            </div>
+            <p className="text-[10px] text-center text-muted-foreground italic">
+              Este é um portal protegido pelo Ministério da Magia. Sua identidade é sua chave.
+            </p>
+          </div>
+        ) : isRecoveryMode ? (
           <form onSubmit={handleSetNewPassword} className="space-y-4">
             <div>
               <label className="text-sm font-heading text-muted-foreground block mb-1">Nova Senha</label>
