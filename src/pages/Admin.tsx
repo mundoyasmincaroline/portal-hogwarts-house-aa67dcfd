@@ -97,20 +97,56 @@ export default function Admin() {
         <div className="mt-6">
           {tab === "members" && (
             <div className="space-y-4">
-              <div className="flex justify-end gap-2 mb-4">
-                <Button size="sm" variant={onlineFilter === "all" ? "magical" : "ghost"} onClick={() => setOnlineFilter("all")} className="text-[10px] px-space-md rounded-full">
-                  TODOS
-                </Button>
-                <Button size="sm" variant={onlineFilter === "online" ? "magical" : "ghost"} onClick={() => setOnlineFilter("online")} className="text-[10px] px-space-md rounded-full">
-                  ONLINE AGORA
-                </Button>
+              <div className="flex flex-col sm:flex-row gap-2 mb-4 bg-background/40 p-4 rounded-xl border border-white/5">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input 
+                    placeholder="Buscar por nome ou ID..." 
+                    className="pl-9 bg-background/50"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+                <select 
+                  className="bg-background/50 border border-input rounded-md px-3 py-2 text-xs"
+                  value={houseFilter}
+                  onChange={(e) => setHouseFilter(e.target.value)}
+                >
+                  <option value="all">Todas as Casas</option>
+                  {HOUSES.map(h => <option key={h.id} value={h.id}>{h.name}</option>)}
+                </select>
+                <select 
+                  className="bg-background/50 border border-input rounded-md px-3 py-2 text-xs"
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                >
+                  <option value="all">Todos Status</option>
+                  <option value="vip">VIPs</option>
+                  <option value="online">Online</option>
+                </select>
               </div>
+
               <div className="grid gap-4">
                 {members
-                  .filter(m => onlineFilter === "all" || isUserOnline(m as any))
-                  .map(m => <AdminMemberCard key={m.user_id} member={m} onClick={(uid, name) => setEditMember({ uid, name })} />)}
-                {members.filter(m => onlineFilter === "all" || isUserOnline(m as any)).length === 0 && (
-                  <p className="text-center py-10 text-muted-foreground text-sm italic">Nenhum bruxo encontrado nesta categoria.</p>
+                  .filter(m => {
+                    const matchesSearch = !searchQuery || m.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) || m.user_id.includes(searchQuery);
+                    const matchesHouse = houseFilter === "all" || m.house === houseFilter;
+                    const matchesStatus = statusFilter === "all" || (statusFilter === "online" && isUserOnline(m as any)) || (statusFilter === "vip" && m.vip_plan);
+                    const matchesOnlineFilter = onlineFilter === "all" || isUserOnline(m as any);
+                    return matchesSearch && matchesHouse && matchesStatus && matchesOnlineFilter;
+                  })
+                  .map(m => (
+                    <div key={m.user_id} className="relative group">
+                      <AdminMemberCard member={m} onClick={(uid, name) => setEditMember({ uid, name })} />
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                        <Button size="icon" variant="outline" className="h-8 w-8 bg-background/80" title="Gerir Galeões" onClick={() => setEditMember({ uid: m.user_id, name: m.full_name || 'Bruxo' })}>
+                          <Coins size={14} className="text-yellow-500" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                {members.length === 0 && !loading && (
+                  <p className="text-center py-10 text-muted-foreground text-sm italic">Nenhum bruxo encontrado com estes filtros.</p>
                 )}
               </div>
             </div>
