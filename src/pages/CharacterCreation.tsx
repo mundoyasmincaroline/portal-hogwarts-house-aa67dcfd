@@ -351,10 +351,12 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
           </div>
         </div>
 
-        <form onSubmit={e => { e.preventDefault(); handleSubmit(step); }} className="space-y-5">
+        <form onSubmit={e => { e.preventDefault(); if (formStep < 3) setFormStep(formStep + 1); else handleSubmit(step); }} className="space-y-5">
 
-          {/* FOTO */}
-          <SECTION title="Foto do Personagem" icon="📷">
+          {formStep === 1 && (
+            <>
+              {/* FOTO */}
+              <SECTION title="Foto do Personagem" icon="📷">
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <div className="relative w-24 h-24 rounded-full border-2 border-border overflow-hidden flex-shrink-0 bg-secondary flex items-center justify-center">
                 {avatarPreview || form.avatar_url
@@ -456,7 +458,11 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
                 placeholder="Ex: Timothée Chalamet" />
             )}
           </SECTION>
+          </>
+          )}
 
+          {formStep === 2 && (
+            <>
           {/* MAGIA */}
           <SECTION title="Magia e Atributos" icon="🪄">
             <div className="grid grid-cols-2 gap-3">
@@ -469,7 +475,11 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
             </div>
             <FIELD label="Feitiço Favorito" name="favorite_spell" value={form.favorite_spell} onChange={handleChange} placeholder="Ex: Expecto Patronum" />
           </SECTION>
+          </>
+          )}
 
+          {formStep === 3 && (
+            <>
           {/* PERSONALIDADE */}
           <SECTION title="Personalidade" icon="🧠">
             <FIELD label="Personalidade *" name="personality" value={form.personality} onChange={handleChange}
