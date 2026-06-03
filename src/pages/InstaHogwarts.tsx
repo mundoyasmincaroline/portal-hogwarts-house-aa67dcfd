@@ -331,8 +331,14 @@ export default function InstaHogwarts() {
                   className="relative group/preview inline-block"
                 >
                   <div className="absolute -inset-2 bg-primary/20 blur-xl rounded-3xl opacity-0 group-hover/preview:opacity-100 transition-opacity" />
-                  <div className="relative rounded-2xl overflow-hidden border-2 border-primary/30 shadow-2xl">
-                    <img src={URL.createObjectURL(selectedFile)} className="h-48 w-48 object-cover transition-transform group-hover/preview:scale-105" />
+                  <div className="relative rounded-2xl overflow-hidden border-2 border-primary/30 shadow-2xl bg-black">
+                    <motion.img 
+                      initial={{ scale: 1 }}
+                      animate={{ scale: 1.1 }}
+                      transition={{ duration: 10, repeat: Infinity, repeatType: "reverse", ease: "linear" }}
+                      src={URL.createObjectURL(selectedFile)} 
+                      className="h-48 w-48 object-cover opacity-80" 
+                    />
                     <button
                       className="absolute top-2 right-2 bg-black/60 hover:bg-red-500 backdrop-blur-md text-white rounded-full w-8 h-8 text-xs flex items-center justify-center transition-all border border-white/10"
                       onClick={() => setSelectedFile(null)}
