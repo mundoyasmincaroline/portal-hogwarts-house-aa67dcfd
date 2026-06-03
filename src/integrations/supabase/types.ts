@@ -4268,37 +4268,58 @@ export type Database = {
         Row: {
           created_at: string | null
           finished_at: string | null
+          house_a: string | null
+          house_b: string | null
           id: string
           scheduled_at: string
+          score_a: number | null
+          score_b: number | null
+          snitch_caught_by: string | null
+          started_at: string | null
           status: string | null
           team1_id: string | null
           team1_score: number | null
           team2_id: string | null
           team2_score: number | null
+          winner_house: string | null
           winner_id: string | null
         }
         Insert: {
           created_at?: string | null
           finished_at?: string | null
+          house_a?: string | null
+          house_b?: string | null
           id?: string
           scheduled_at: string
+          score_a?: number | null
+          score_b?: number | null
+          snitch_caught_by?: string | null
+          started_at?: string | null
           status?: string | null
           team1_id?: string | null
           team1_score?: number | null
           team2_id?: string | null
           team2_score?: number | null
+          winner_house?: string | null
           winner_id?: string | null
         }
         Update: {
           created_at?: string | null
           finished_at?: string | null
+          house_a?: string | null
+          house_b?: string | null
           id?: string
           scheduled_at?: string
+          score_a?: number | null
+          score_b?: number | null
+          snitch_caught_by?: string | null
+          started_at?: string | null
           status?: string | null
           team1_id?: string | null
           team1_score?: number | null
           team2_id?: string | null
           team2_score?: number | null
+          winner_house?: string | null
           winner_id?: string | null
         }
         Relationships: [
