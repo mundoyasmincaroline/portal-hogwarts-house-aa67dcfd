@@ -6,6 +6,37 @@ import { motion, AnimatePresence } from "framer-motion";
 import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function MaraudersGuide() {
   const [activePage, setActivePage] = useState(1);
+  const [sworn, setSworn] = useState(false);
+
+  if (!sworn) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8 p-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center space-y-4 max-w-md"
+        >
+          <div className="text-6xl mb-6 animate-float"><EmojiIcon e="📜" /></div>
+          <h1 className="font-heading text-3xl text-gold-gradient">O Mapa do Maroto</h1>
+          <p className="text-muted-foreground italic">"Os senhores Aluado, Rabicho, Almofadinhas e Pontas têm o prazer de apresentar..."</p>
+          <p className="text-xs text-primary/60 uppercase tracking-widest pt-4">Segredos aguardam os bruxos de boa vontade.</p>
+        </motion.div>
+        
+        <Button 
+          variant="magical" 
+          size="lg" 
+          onClick={() => {
+            setSworn(true);
+            toast.success("Juro solenemente não fazer nada de bom! ✨");
+          }}
+          className="px-12 py-8 h-auto text-xl rounded-2xl group relative overflow-hidden"
+        >
+          <span className="relative z-10">Eu juro solenemente não fazer nada de bom</span>
+          <div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+        </Button>
+      </div>
+    );
+  }
 
   const guidePages = [
     {

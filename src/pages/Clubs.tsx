@@ -184,10 +184,11 @@ export default function Clubs() {
             const joined = inClub(club.id);
             const full = myMemberships.length >= 2 && !joined;
             return (
-              <article
+              <motion.article
                 key={club.id}
-                className="group relative overflow-hidden rounded-xl border border-border/60 bg-card/80 p-5 transition-all hover:border-primary/60 hover:shadow-[0_0_30px_-10px_hsl(var(--primary)/0.6)] hover:-translate-y-1"
-                style={{ borderTopColor: club.color ?? undefined, borderTopWidth: 3 }}
+                whileHover={{ scale: 1.02, y: -4 }}
+                className="group relative overflow-hidden rounded-xl border border-border/60 bg-card/80 p-5 transition-all hover:border-primary/60 hover:shadow-[0_0_30px_-10px_hsl(var(--primary)/0.6)]"
+                style={{ borderTopColor: club.color ?? undefined, borderTopWidth: 4 }}
               >
                 <div className="flex items-start justify-between">
                   <div className="text-4xl">{club.emblem ?? "🎩"}</div>
@@ -346,7 +347,7 @@ export default function Clubs() {
                       </div>
                       <Button
                         size="sm"
-                        className="mt-3 w-full"
+                        className="mt-3 w-full bg-primary/20 border border-primary/30 text-primary hover:bg-primary/30"
                         onClick={() => handleRequestMentor(m.user_id)}
                         disabled={busy === m.user_id || alreadyRequested}
                       >
