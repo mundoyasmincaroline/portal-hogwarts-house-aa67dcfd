@@ -106,6 +106,7 @@ export default function MagicalMentor() {
   const [stepIndex, setStepIndex] = useState(0);
   const [showHouseGuide, setShowHouseGuide] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+  const [hasSeenGuide, setHasSeenGuide] = useState(true);
   
   const houseId = (profile?.house as House) || "gryffindor";
   const house = HOUSES[houseId];
@@ -150,13 +151,17 @@ export default function MagicalMentor() {
         started_at: mentorData.started_at || now,
         has_seen_initial_guide: false,
       });
+      setHasSeenGuide(false);
       setTimeout(() => setIsOpen(true), 2500);
+    } else {
+      setHasSeenGuide(true);
     }
     // Após ver o guia inicial: NÃO reabre sozinho. Usuário decide quando consultar.
   }, [profile?.user_id]);
 
   const handleClose = () => {
     writeState({ has_seen_initial_guide: true });
+    setHasSeenGuide(true);
     setIsOpen(false);
   };
 
@@ -198,10 +203,12 @@ export default function MagicalMentor() {
         className="fixed bottom-24 right-6 z-[60] w-14 h-14 rounded-full bg-gradient-to-br from-primary via-amber-600 to-primary-foreground shadow-[0_0_25px_rgba(212,175,55,0.4)] flex items-center justify-center text-white border-2 border-primary/50 group"
       >
         <BookOpen className="w-6 h-6 group-hover:animate-pulse" />
-        <span className="absolute -top-1 -right-1 flex h-4 w-4">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-4 w-4 bg-primary text-[10px] items-center justify-center font-bold">!</span>
-        </span>
+        {!hasSeenGuide && (
+          <span className="absolute -top-1 -right-1 flex h-4 w-4">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-4 w-4 bg-primary text-[10px] items-center justify-center font-bold">!</span>
+          </span>
+        )}
       </motion.button>
 
       <AnimatePresence>
@@ -219,7 +226,7 @@ export default function MagicalMentor() {
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="relative w-full max-w-lg glass-card overflow-hidden border-primary/30 shadow-[0_0_50px_rgba(212,175,55,0.2)]"
+              className="relative w-full max-w-lg max-h-[90dvh] overflow-y-auto glass-card border-primary/30 shadow-[0_0_50px_rgba(212,175,55,0.2)]"
             >
               {/* Header with House Colors */}
               <div className={`h-2 w-full bg-gradient-to-r from-transparent via-primary to-transparent opacity-50`} />
