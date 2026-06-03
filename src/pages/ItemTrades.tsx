@@ -28,6 +28,7 @@ export default function ItemTrades() {
   const [users, setUsers] = useState<any[]>([]);
   const [allItems, setAllItems] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // form
   const [recipient, setRecipient] = useState("");
