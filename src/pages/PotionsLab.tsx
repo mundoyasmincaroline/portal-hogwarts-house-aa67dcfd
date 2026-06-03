@@ -103,7 +103,7 @@ export default function PotionsLab() {
             />
             <div className="flex gap-2">
               <Button 
-                variant={filterDifficulty === "all" ? "primary" : "outline"} 
+                variant={filterDifficulty === "all" ? "default" : "outline"} 
                 size="sm" 
                 onClick={() => setFilterDifficulty("all")}
               >
@@ -112,7 +112,7 @@ export default function PotionsLab() {
               {[1, 2, 3, 4, 5].map(d => (
                 <Button 
                   key={d}
-                  variant={filterDifficulty === d ? "primary" : "outline"} 
+                  variant={filterDifficulty === d ? "default" : "outline"} 
                   size="sm" 
                   onClick={() => setFilterDifficulty(d)}
                 >
