@@ -31,6 +31,7 @@ import MagicalCelebration from "@/components/MagicalCelebration";
 import LevelUpCeremony from "@/components/LevelUpCeremony";
 import HouseGhost from "@/components/HouseGhost";
 import MagicalMentor from "@/components/shared/MagicalMentor";
+import { BirthdayGlobalCelebration } from "@/components/BirthdayGlobalCelebration";
 import { prefetchRoute } from "@/lib/routePrefetch";
 
 
@@ -328,6 +329,7 @@ export default function DashboardLayout() {
       <LevelUpCeremony />
       <HouseGhost />
       <MagicalMentor />
+      <BirthdayGlobalCelebration />
     </div>
 
   );
