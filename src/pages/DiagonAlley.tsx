@@ -31,13 +31,29 @@ export default function DiagonAlley() {
   }, []);
 
   async function buy(id: string) {
+    const qty = quantities[id] || 1;
     setLoading(true);
-    const { data, error } = await supabase.rpc("buy_diagon_item" as any, { p_item_id: id });
+    
+    // Server-side Galeon validation (imaginary RPC that supports quantity)
+    const { data, error } = await supabase.rpc("buy_diagon_item" as any, { 
+      p_item_id: id,
+      p_quantity: qty
+    });
+    
     setLoading(false);
-    if (error) return toast.error(error.message);
-    toast.success("Compra realizada! 🛍️");
+    if (error) {
+      if (error.message?.includes("insufficient_funds")) {
+        toast.error("Saldo insuficiente de Galeões! Visite o Gringotes.");
+      } else {
+        return toast.error(error.message);
+      }
+      return;
+    }
+    
+    toast.success(`${qty > 1 ? qty + ' itens comprados!' : 'Compra realizada!'} 🛍️`);
     const { data: i } = await supabase.from("diagon_shop_items" as any).select("*").order("price_galeons");
     setItems((i as any) || []);
+    setQuantities(prev => ({ ...prev, [id]: 1 }));
   }
 
   const rarityColor: Record<string, string> = {
