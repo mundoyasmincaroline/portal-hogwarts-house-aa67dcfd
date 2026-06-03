@@ -4,6 +4,7 @@ import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 const WOODS = [
@@ -55,10 +56,39 @@ export default function WandCrafting() {
         <p className="text-foreground/70 font-serif italic">A varinha escolhe o bruxo, mas você pode guiá-la.</p>
       </header>
 
+      <div className="flex justify-center py-8">
+        <motion.div 
+          animate={{ rotate: busy ? [0, -5, 5, 0] : [0, 2, -2, 0] }}
+          transition={{ repeat: Infinity, duration: busy ? 0.2 : 4 }}
+          className="relative group"
+        >
+          <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-150 group-hover:bg-primary/30 transition-colors" />
+          <div 
+            className="w-[300px] h-3 bg-amber-900 rounded-full relative z-10 shadow-2xl overflow-hidden"
+            style={{ 
+              backgroundColor: wood === 'teixo' ? '#2d2d2d' : wood === 'azevinho' ? '#5d4037' : '#8d6e63',
+              width: `${length * 20}px`,
+              filter: busy ? 'brightness(1.5)' : 'none'
+            }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          </div>
+          {busy && (
+            <motion.div 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: [0, 1, 0] }} 
+              transition={{ repeat: Infinity, duration: 0.5 }}
+              className="absolute -inset-4 border-2 border-primary/50 rounded-full z-20"
+            />
+          )}
+        </motion.div>
+      </div>
+
       {wand && (
-        <Card className="p-4 bg-primary/10 border-primary/40 space-y-2">
+        <Card className="p-4 bg-primary/10 border-primary/40 space-y-2 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-2 opacity-20"><EmojiIcon e="✨" size="xl" /></div>
           <h2 className="font-heading text-primary text-xl">Sua varinha atual</h2>
-          <p className="text-sm">{wand.length_inches}" de <strong>{wand.wood}</strong> com núcleo de <strong>{wand.core}</strong>, {wand.flexibility}</p>
+          <p className="text-sm capitalize">{wand.length_inches}" de <strong>{wand.wood}</strong> com núcleo de <strong>{wand.core}</strong>, {wand.flexibility}</p>
           <div className="flex gap-3 text-xs flex-wrap">
             <span className="text-red-400">⚔ +{wand.bonus_attack} Ataque</span>
             <span className="text-blue-400">🛡 +{wand.bonus_defense} Defesa</span>

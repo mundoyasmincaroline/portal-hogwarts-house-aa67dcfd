@@ -8,11 +8,11 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import EmojiIcon from "@/components/shared/EmojiIcon";
 const THEMES = [
-  { id: "estudo", icon: "📚", label: "Sala de Estudos" },
-  { id: "duelo", icon: "⚔️", label: "Arena de Duelos" },
-  { id: "festa", icon: "🎉", label: "Salão de Festas" },
-  { id: "treino", icon: "🏋️", label: "Treinamento" },
-  { id: "biblioteca", icon: "📖", label: "Biblioteca Oculta" },
+  { id: "estudo", icon: "📚", label: "Sala de Estudos", color: "from-blue-900/40 to-indigo-900/40" },
+  { id: "duelo", icon: "⚔️", label: "Arena de Duelos", color: "from-red-900/40 to-zinc-900/40" },
+  { id: "festa", icon: "🎉", label: "Salão de Festas", color: "from-amber-600/30 to-rose-900/40" },
+  { id: "treino", icon: "🏋️", label: "Treinamento", color: "from-emerald-900/40 to-teal-900/40" },
+  { id: "biblioteca", icon: "📖", label: "Biblioteca Oculta", color: "from-purple-900/40 to-slate-900/40" },
 ];
 
 export default function RoomOfRequirement() {
@@ -94,7 +94,7 @@ export default function RoomOfRequirement() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9 }}
               key={r.id} 
-              className="p-5 rounded-2xl bg-card/60 backdrop-blur-md border border-primary/20 space-y-3 shadow-2xl hover:border-primary/40 transition-all group"
+              className={`p-5 rounded-2xl bg-gradient-to-br ${t?.color || 'from-card to-background'} backdrop-blur-md border border-primary/20 space-y-3 shadow-2xl hover:border-primary/40 transition-all group`}
             >
               <div className="flex items-start justify-between">
                 <div>

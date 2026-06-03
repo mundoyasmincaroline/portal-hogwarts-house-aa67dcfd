@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 const ANIMALS = ["Cervo", "Lebre", "Lontra", "Raposa", "Lobo", "Coruja", "Lince", "Pantera", "Águia", "Cisne", "Cavalo", "Golfinho"];
@@ -87,9 +88,17 @@ export default function Patronus() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-4 space-y-6">
-      <header>
-        <h1 className="font-heading text-3xl text-primary">✨ Seu Patrono: {pat.animal}</h1>
+    <div className="max-w-2xl mx-auto p-4 space-y-6 relative overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-blue-500/5 mix-blend-overlay" />
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-400/10 via-transparent to-transparent opacity-30" />
+      </div>
+
+      <header className="relative z-10">
+        <h1 className="font-heading text-3xl text-primary flex items-center gap-2">
+          <motion.span animate={{ opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 3 }}>✨</motion.span>
+          Seu Patrono: {pat.animal}
+        </h1>
         <p className="text-foreground/70 font-serif italic">Maestria nv {pat.mastery_level} · Força corpórea {pat.form_strength}/100</p>
       </header>
 
