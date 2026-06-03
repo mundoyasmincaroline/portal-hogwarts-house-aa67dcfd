@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Swords, Shield, Zap, Sparkles, User } from "lucide-react";
 import MagicalEmoji from "@/components/shared/MagicalEmoji";
+import EmojiIcon from "@/components/shared/EmojiIcon";
 import HouseCrest from "@/components/rpg/HouseCrest";
 import { motion, AnimatePresence } from "framer-motion";
 import SafeImage from "@/components/SafeImage";
