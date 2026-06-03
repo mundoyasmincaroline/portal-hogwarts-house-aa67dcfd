@@ -181,6 +181,7 @@ export default function Marketplace() {
             </div>
           </DialogContent>
         </Dialog>
+        </div>
       </header>
 
       {loading && <p className="text-center text-muted-foreground">Carregando...</p>}
