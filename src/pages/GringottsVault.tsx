@@ -32,6 +32,10 @@ export default function GringottsVault() {
       return toast.error("Insira uma quantidade válida de Galeões.");
     }
     
+    if (rpc === "vault_withdraw" && (parseInt(amount) > (vault?.balance || 0))) {
+      return toast.error("Saldo insuficiente no cofre!");
+    }
+    
     setLoading(true);
     const { error } = await supabase.rpc(rpc as any, args);
     setLoading(false);

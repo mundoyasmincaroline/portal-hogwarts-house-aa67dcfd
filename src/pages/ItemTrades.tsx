@@ -85,6 +85,9 @@ export default function ItemTrades() {
   };
 
   const respond = async (id: string, accept: boolean) => {
+    if (accept && !confirm("Deseja realmente aceitar esta troca? Os itens e galeões serão transferidos permanentemente.")) return;
+    if (!accept && !confirm("Deseja recusar esta proposta?")) return;
+    
     const { error } = await supabase.rpc("respond_item_trade", { p_trade_id: id, p_accept: accept });
     if (error) return toast.error(error.message);
     toast.success(accept ? "✅ Troca concluída!" : "Troca recusada");
