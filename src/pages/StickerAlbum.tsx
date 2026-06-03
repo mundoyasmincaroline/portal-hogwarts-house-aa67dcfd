@@ -110,12 +110,41 @@ export default function StickerAlbum() {
         </div>
       </div>
 
-      <div className="glass p-8 rounded-2xl flex justify-between items-center">
-        <div>
-          <h3 className="font-heading text-2xl">Progresso: {pct}%</h3>
-          <p>{owned} de {total} cartas</p>
+      <div className="glass p-8 rounded-2xl space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h3 className="font-heading text-2xl">Progresso Global: {pct}%</h3>
+            <p className="text-sm text-muted-foreground">{owned} de {total} cartas colecionadas</p>
+          </div>
+          <Button variant="outline" onClick={handleShareAlbum} className="gap-2">
+            <Share2 className="w-4 h-4" /> Compartilhar
+          </Button>
         </div>
-        <Button variant="outline" onClick={handleShareAlbum}>Compartilhar</Button>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-white/5 pt-6">
+          {["bronze", "silver", "gold"].map((r) => {
+            const rTotal = stickers.filter(s => s.rarity === r).length;
+            const rOwned = stickers.filter(s => s.rarity === r && userStickers[s.id]).length;
+            const rPct = rTotal > 0 ? Math.round((rOwned / rTotal) * 100) : 0;
+            return (
+              <div key={r} className="flex flex-col gap-1">
+                <div className="flex justify-between text-xs font-heading uppercase tracking-widest">
+                  <span className={r === 'gold' ? 'text-yellow-400' : r === 'silver' ? 'text-gray-300' : 'text-amber-600'}>
+                    {r}
+                  </span>
+                  <span>{rOwned}/{rTotal}</span>
+                </div>
+                <div className="h-1.5 w-full bg-black/40 rounded-full overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${rPct}%` }}
+                    className={`h-full ${r === 'gold' ? 'bg-yellow-500' : r === 'silver' ? 'bg-gray-400' : 'bg-amber-700'}`}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       <StickerAlbumBook stickers={filtered} userStickers={userStickers} onBuy={buySticker} buyingId={buyingId} profileLevel={profile?.level || 1} profileXp={profile?.xp || 0} />
