@@ -15,21 +15,21 @@ const DynamicGreeting = memo(() => {
       setGreeting({
         title: "Bom dia!",
         desc: "O Salão Principal cheira a panquecas e café quente.",
-        img: "/src/assets/hogwarts_morning.webp",
+        img: morningImg,
         bg: "from-amber-500/20 to-orange-500/10"
       });
     } else if (hour >= 12 && hour < 18) {
       setGreeting({
         title: "Boa tarde!",
         desc: "As aulas de poções estão a todo vapor.",
-        img: "/src/assets/hogwarts_afternoon.webp",
+        img: afternoonImg,
         bg: "from-amber-700/20 to-yellow-600/10"
       });
     } else {
       setGreeting({
         title: "Boa noite!",
         desc: "Cuidado com os corredores escuros, os monitores estão rondando.",
-        img: "/src/assets/hogwarts_night.webp",
+        img: nightImg,
         bg: "from-blue-900/40 to-indigo-900/20"
       });
     }
