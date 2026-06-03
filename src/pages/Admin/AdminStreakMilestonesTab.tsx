@@ -120,12 +120,14 @@ export function AdminStreakMilestonesTab() {
 
         <div className="mt-6 p-4 rounded-xl border border-primary/30 bg-primary/5 space-y-3">
           <h3 className="font-heading text-sm text-primary"><EmojiIcon e="➕" /> Adicionar novo marco</h3>
-          <div className="grid grid-cols-12 gap-2">
-            <div className="col-span-2"><Input type="number" placeholder="Dias" value={novo.days_required || ""} onChange={e => setNovo({ ...novo, days_required: parseInt(e.target.value) || 0 })} /></div>
-            <div className="col-span-2"><Input type="number" placeholder="XP" value={novo.xp_bonus || ""} onChange={e => setNovo({ ...novo, xp_bonus: parseInt(e.target.value) || 0 })} /></div>
-            <div className="col-span-2"><Input type="number" placeholder="Galeões" value={novo.galeons_bonus || ""} onChange={e => setNovo({ ...novo, galeons_bonus: parseInt(e.target.value) || 0 })} /></div>
-            <div className="col-span-4"><Input placeholder="Rótulo (ex: Semana mágica)" value={novo.label} onChange={e => setNovo({ ...novo, label: e.target.value })} /></div>
-            <div className="col-span-2"><Button variant="magical" className="w-full" onClick={create}>Criar</Button></div>
+          <div className="flex flex-col md:grid md:grid-cols-12 gap-3 md:gap-2">
+            <div className="grid grid-cols-3 md:contents gap-2">
+              <div className="md:col-span-2"><Input type="number" placeholder="Dias" value={novo.days_required || ""} onChange={e => setNovo({ ...novo, days_required: parseInt(e.target.value) || 0 })} /></div>
+              <div className="md:col-span-2"><Input type="number" placeholder="XP" value={novo.xp_bonus || ""} onChange={e => setNovo({ ...novo, xp_bonus: parseInt(e.target.value) || 0 })} /></div>
+              <div className="md:col-span-2"><Input type="number" placeholder="Galeões" value={novo.galeons_bonus || ""} onChange={e => setNovo({ ...novo, galeons_bonus: parseInt(e.target.value) || 0 })} /></div>
+            </div>
+            <div className="md:col-span-4"><Input placeholder="Rótulo (ex: Semana mágica)" value={novo.label} onChange={e => setNovo({ ...novo, label: e.target.value })} /></div>
+            <div className="md:col-span-2"><Button variant="magical" className="w-full" onClick={create}>Criar</Button></div>
           </div>
         </div>
       </div>
