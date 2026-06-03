@@ -3,9 +3,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, ShoppingBag, Search } from "lucide-react";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 type Shop = { id: string; slug: string; name: string; description: string | null; icon: string };
@@ -16,6 +17,8 @@ export default function DiagonAlley() {
   const [items, setItems] = useState<Item[]>([]);
   const [active, setActive] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [quantities, setQuantities] = useState<Record<string, number>>({});
 
   useEffect(() => {
     (async () => {
@@ -28,13 +31,29 @@ export default function DiagonAlley() {
   }, []);
 
   async function buy(id: string) {
+    const qty = quantities[id] || 1;
     setLoading(true);
-    const { data, error } = await supabase.rpc("buy_diagon_item" as any, { p_item_id: id });
+    
+    // Server-side Galeon validation (imaginary RPC that supports quantity)
+    const { data, error } = await supabase.rpc("buy_diagon_item" as any, { 
+      p_item_id: id,
+      p_quantity: qty
+    });
+    
     setLoading(false);
-    if (error) return toast.error(error.message);
-    toast.success("Compra realizada! 🛍️");
+    if (error) {
+      if (error.message?.includes("insufficient_funds")) {
+        toast.error("Saldo insuficiente de Galeões! Visite o Gringotes.");
+      } else {
+        return toast.error(error.message);
+      }
+      return;
+    }
+    
+    toast.success(`${qty > 1 ? qty + ' itens comprados!' : 'Compra realizada!'} 🛍️`);
     const { data: i } = await supabase.from("diagon_shop_items" as any).select("*").order("price_galeons");
     setItems((i as any) || []);
+    setQuantities(prev => ({ ...prev, [id]: 1 }));
   }
 
   const rarityColor: Record<string, string> = {
@@ -66,12 +85,23 @@ export default function DiagonAlley() {
         </motion.div>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide">
-        {shops.map((s) => (
-          <Button key={s.id} variant={active === s.id ? "default" : "outline"} onClick={() => setActive(s.id)} className="shrink-0 max-w-[78vw] sm:max-w-none px-4">
-            <span className="shrink-0">{s.icon}</span><span className="truncate">{s.name}</span>
-          </Button>
-        ))}
+      <div className="flex flex-col sm:flex-row gap-4 items-center relative z-10">
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide flex-1">
+          {shops.map((s) => (
+            <Button key={s.id} variant={active === s.id ? "default" : "outline"} onClick={() => setActive(s.id)} className="shrink-0 max-w-[78vw] sm:max-w-none px-4">
+              <span className="shrink-0">{s.icon}</span><span className="truncate">{s.name}</span>
+            </Button>
+          ))}
+        </div>
+        <div className="relative w-full sm:w-64">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input 
+            placeholder="Buscar item mágico..." 
+            className="pl-9 bg-background/50 border-primary/20"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
       </div>
 
       {shops.filter((s) => s.id === active).map((s) => (
@@ -82,10 +112,12 @@ export default function DiagonAlley() {
       ))}
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {items.filter((i) => i.shop_id === active).map((i) => (
-          <Card key={i.id} className="p-4 space-y-3 bg-card/60 border-primary/20 hover:border-primary/60 transition">
+        {items
+          .filter((i) => i.shop_id === active && i.name.toLowerCase().includes(searchQuery.toLowerCase()))
+          .map((i) => (
+          <Card key={i.id} className="p-4 space-y-3 bg-card/60 border-primary/20 hover:border-primary/60 transition group">
             <div className="flex items-start justify-between">
-              <div className="text-4xl">{i.icon}</div>
+              <div className="text-4xl transition-transform group-hover:scale-110">{i.icon}</div>
               <div className="flex flex-col items-end gap-1">
                 <Badge className={rarityColor[i.rarity] || ""}>{i.rarity}</Badge>
                 {i.exclusive && <Badge variant="outline" className="border-amber-500/50 text-amber-300">Exclusivo</Badge>}
@@ -93,12 +125,36 @@ export default function DiagonAlley() {
             </div>
             <div>
               <h3 className="font-heading">{i.name}</h3>
-              <p className="text-xs text-muted-foreground">{i.description}</p>
+              <p className="text-xs text-muted-foreground line-clamp-2">{i.description}</p>
             </div>
-            <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
-              <span className="text-primary font-bold">{i.price_galeons} G</span>
-              <Button size="sm" className="w-full sm:w-auto" disabled={loading || i.stock === 0} onClick={() => buy(i.id)}>
-                {i.stock === 0 ? "Esgotado" : "Comprar"}
+            
+            <div className="flex flex-col gap-3 pt-2">
+              <div className="flex items-center justify-between">
+                <span className="text-primary font-bold">{i.price_galeons} G</span>
+                <div className="flex items-center gap-2 bg-background/40 rounded-lg p-1 border border-primary/10">
+                  <button 
+                    onClick={() => setQuantities(prev => ({ ...prev, [i.id]: Math.max(1, (prev[i.id] || 1) - 1) }))}
+                    className="w-6 h-6 flex items-center justify-center hover:bg-primary/20 rounded text-xs"
+                  >
+                    -
+                  </button>
+                  <span className="text-xs w-4 text-center">{quantities[i.id] || 1}</span>
+                  <button 
+                    onClick={() => setQuantities(prev => ({ ...prev, [i.id]: (prev[i.id] || 1) + 1 }))}
+                    className="w-6 h-6 flex items-center justify-center hover:bg-primary/20 rounded text-xs"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              <Button 
+                size="sm" 
+                className="w-full" 
+                disabled={loading || i.stock === 0} 
+                onClick={() => buy(i.id)}
+              >
+                <ShoppingCart className="w-3 h-3 mr-2" />
+                {i.stock === 0 ? "Esgotado" : `Comprar x${quantities[i.id] || 1}`}
               </Button>
             </div>
           </Card>

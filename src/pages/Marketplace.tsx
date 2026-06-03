@@ -45,6 +45,7 @@ export default function Marketplace() {
   const [loading, setLoading] = useState(true);
   const [selectedSticker, setSelectedSticker] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [category, setCategory] = useState<string>("all");
   const [price, setPrice] = useState<string>("50");
 
   const load = async () => {
@@ -133,9 +134,20 @@ export default function Marketplace() {
           </div>
         </div>
 
-        <div className="flex gap-2 w-full md:w-auto">
+        <div className="flex flex-wrap gap-2 w-full md:w-auto">
+          <select 
+            className="bg-background/50 border border-primary/20 rounded-md px-3 py-2 text-sm text-primary focus:outline-none focus:ring-1 focus:ring-primary/50"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="all">Todas categorias</option>
+            <option value="character">Personagens</option>
+            <option value="item">Itens</option>
+            <option value="beast">Criaturas</option>
+            <option value="rare">Raros</option>
+          </select>
           <Input 
-            placeholder="Buscar figurinha..." 
+            placeholder="Buscar item..." 
             className="max-w-xs bg-background/50"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -193,7 +205,11 @@ export default function Marketplace() {
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {listings
-          .filter(l => l.sticker?.character_name.toLowerCase().includes(searchQuery.toLowerCase()))
+          .filter(l => {
+            const matchesSearch = l.sticker?.character_name.toLowerCase().includes(searchQuery.toLowerCase());
+            const matchesCategory = category === "all" || l.sticker?.house.toLowerCase() === category.toLowerCase() || l.sticker?.rarity.toLowerCase() === category.toLowerCase();
+            return matchesSearch && matchesCategory;
+          })
           .map((l) => {
           const mine = user?.id === l.seller_id;
           return (

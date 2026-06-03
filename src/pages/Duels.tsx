@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import MagicalEmoji from "@/components/shared/MagicalEmoji";
 import EmojiIcon from "@/components/shared/EmojiIcon";
 import HouseCrest from "@/components/rpg/HouseCrest";
 import { motion, AnimatePresence } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
 import SafeImage from "@/components/SafeImage";
 
 interface Spell {
@@ -38,6 +39,8 @@ export default function Duels() {
   const [userSpells, setUserSpells] = useState<Spell[]>([]);
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
+  const [lastAction, setLastAction] = useState<{ type: 'damage' | 'shield'; target: 'challenger' | 'opponent' } | null>(null);
+  const actionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -137,11 +140,13 @@ export default function Duels() {
 
   const castSpell = async (spell: Spell) => {
     if (!activeDuel || !user || !profile) return;
+    
     // Toda a lógica (dano, turno, HP, XP) acontece na RPC server-side process_duel_turn
     const { data, error } = await (supabase.rpc as any)("process_duel_turn", {
       _duel_id: activeDuel.id,
       _spell_id: spell.id,
     });
+    
     if (error) {
       const msg = error.message || "";
       if (msg.includes("not_your_turn")) toast.error("Aguarde seu turno!");
@@ -149,12 +154,23 @@ export default function Duels() {
       else toast.error("Erro ao lançar feitiço: " + msg);
       return;
     }
+
+    // Visual feedback for turn action
+    const isChallenger = activeDuel.challenger_user_id === user.id;
+    const target = isChallenger ? 'opponent' : 'challenger';
+    const type = spell.base_defense > 0 ? 'shield' : 'damage';
+    
+    setLastAction({ type, target: type === 'shield' ? (isChallenger ? 'challenger' : 'opponent') : target });
+    if (actionTimeoutRef.current) clearTimeout(actionTimeoutRef.current);
+    actionTimeoutRef.current = setTimeout(() => setLastAction(null), 2000);
+
     if (data?.winner) {
       const iWon =
         (activeDuel.challenger_user_id === user.id && data.winner === 'challenger') ||
         (activeDuel.opponent_user_id === user.id && data.winner === 'opponent');
       toast.success(iWon ? "🏆 Vitória! +50 XP" : "💀 Derrota — o vencedor leva tudo.");
     }
+    
     setActiveDuel((prev: any) => prev ? {
       ...prev,
       challenger_hp: data.challenger_hp,
@@ -204,8 +220,29 @@ export default function Duels() {
 
              <motion.div 
                 animate={!myTurn ? { x: [0, -2, 2, -2, 2, 0] } : {}}
-                className={`glass rounded-3xl p-6 border-2 transition-all ${activeDuel.challenger_user_id === user?.id ? (myTurn ? 'border-primary shadow-[0_0_30px_rgba(212,175,55,0.2)]' : 'border-white/5') : (!myTurn ? 'border-primary shadow-[0_0_30px_rgba(212,175,55,0.2)]' : 'border-white/5')}`}
+                className={`glass rounded-3xl p-6 border-2 transition-all relative ${activeDuel.challenger_user_id === user?.id ? (myTurn ? 'border-primary shadow-[0_0_30px_rgba(212,175,55,0.2)]' : 'border-white/5') : (!myTurn ? 'border-primary shadow-[0_0_30px_rgba(212,175,55,0.2)]' : 'border-white/5')}`}
              >
+                <AnimatePresence>
+                  {lastAction?.target === 'challenger' && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ opacity: 1, scale: 1.2 }}
+                      exit={{ opacity: 0, scale: 1.5 }}
+                      className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none"
+                    >
+                      {lastAction.type === 'shield' ? (
+                        <div className="w-full h-full border-4 border-cyan-400/50 rounded-3xl bg-cyan-400/10 backdrop-blur-sm flex items-center justify-center">
+                          <Shield size={64} className="text-cyan-400 animate-pulse" />
+                        </div>
+                      ) : (
+                        <div className="w-full h-full border-4 border-red-500/50 rounded-3xl bg-red-500/10 backdrop-blur-sm flex items-center justify-center">
+                          <Zap size={64} className="text-red-500 animate-bounce" />
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
                 <div className="flex flex-col items-center gap-4 text-center">
                    <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}>
                      <HouseCrest house={profile?.house || 'gryffindor'} size="lg" />
@@ -213,15 +250,18 @@ export default function Duels() {
                    <h3 className="font-heading truncate w-full flex items-center justify-center gap-2">
                      Você {activeDuel.challenger_user_id === user?.id ? activeDuel.challenger_hp <= 20 && <EmojiIcon e="🩸" /> : activeDuel.opponent_hp <= 20 && <EmojiIcon e="🩸" />}
                    </h3>
+                   {((activeDuel.challenger_user_id === user?.id && activeDuel.current_turn === 'challenger') || (activeDuel.opponent_user_id === user?.id && activeDuel.current_turn === 'opponent')) && (
+                     <Badge className="animate-pulse bg-primary text-primary-foreground">SEU TURNO</Badge>
+                   )}
                    <div className="w-full space-y-1">
                       <div className="h-2 bg-black/60 rounded-full overflow-hidden">
                          <motion.div 
-                           initial={false}
-                           animate={{ 
-                             width: `${activeDuel.challenger_user_id === user?.id ? activeDuel.challenger_hp : activeDuel.opponent_hp}%`,
-                             backgroundColor: (activeDuel.challenger_user_id === user?.id ? activeDuel.challenger_hp : activeDuel.opponent_hp) < 30 ? "#ef4444" : "#22c55e"
-                           }} 
-                           className="h-full" 
+                            initial={false}
+                            animate={{ 
+                              width: `${activeDuel.challenger_user_id === user?.id ? activeDuel.challenger_hp : activeDuel.opponent_hp}%`,
+                              backgroundColor: (activeDuel.challenger_user_id === user?.id ? activeDuel.challenger_hp : activeDuel.opponent_hp) < 30 ? "#ef4444" : "#22c55e"
+                            }} 
+                            className="h-full" 
                          />
                       </div>
                    </div>
@@ -230,8 +270,29 @@ export default function Duels() {
 
              <motion.div 
                 animate={myTurn ? { x: [0, -2, 2, -2, 2, 0] } : {}}
-                className={`glass rounded-3xl p-6 border-2 transition-all ${activeDuel.opponent_user_id === user?.id ? (myTurn ? 'border-primary shadow-[0_0_30px_rgba(212,175,55,0.2)]' : 'border-white/5') : (!myTurn ? 'border-primary shadow-[0_0_30px_rgba(212,175,55,0.2)]' : 'border-white/5')}`}
+                className={`glass rounded-3xl p-6 border-2 transition-all relative ${activeDuel.opponent_user_id === user?.id ? (myTurn ? 'border-primary shadow-[0_0_30px_rgba(212,175,55,0.2)]' : 'border-white/5') : (!myTurn ? 'border-primary shadow-[0_0_30px_rgba(212,175,55,0.2)]' : 'border-white/5')}`}
              >
+                <AnimatePresence>
+                  {lastAction?.target === 'opponent' && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ opacity: 1, scale: 1.2 }}
+                      exit={{ opacity: 0, scale: 1.5 }}
+                      className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none"
+                    >
+                      {lastAction.type === 'shield' ? (
+                        <div className="w-full h-full border-4 border-cyan-400/50 rounded-3xl bg-cyan-400/10 backdrop-blur-sm flex items-center justify-center">
+                          <Shield size={64} className="text-cyan-400 animate-pulse" />
+                        </div>
+                      ) : (
+                        <div className="w-full h-full border-4 border-red-500/50 rounded-3xl bg-red-500/10 backdrop-blur-sm flex items-center justify-center">
+                          <Zap size={64} className="text-red-500 animate-bounce" />
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
                 <div className="flex flex-col items-center gap-4 text-center">
                    <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut", delay: 1 }}>
                      <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center border border-white/10"><User size={32} /></div>
@@ -239,15 +300,18 @@ export default function Duels() {
                    <h3 className="font-heading truncate w-full flex items-center justify-center gap-2">
                      Oponente {activeDuel.opponent_user_id === user?.id ? activeDuel.challenger_hp <= 20 && <EmojiIcon e="🩸" /> : activeDuel.opponent_hp <= 20 && <EmojiIcon e="🩸" />}
                    </h3>
+                   {((activeDuel.challenger_user_id === user?.id && activeDuel.current_turn === 'opponent') || (activeDuel.opponent_user_id === user?.id && activeDuel.current_turn === 'challenger')) && (
+                     <Badge variant="destructive" className="animate-pulse">TURNO DO OPONENTE</Badge>
+                   )}
                    <div className="w-full space-y-1">
                       <div className="h-2 bg-black/60 rounded-full overflow-hidden">
                          <motion.div 
-                           initial={false}
-                           animate={{ 
-                             width: `${activeDuel.opponent_user_id === user?.id ? activeDuel.opponent_hp : activeDuel.challenger_hp}%`,
-                             backgroundColor: (activeDuel.opponent_user_id === user?.id ? activeDuel.opponent_hp : activeDuel.challenger_hp) < 30 ? "#ef4444" : "#22c55e"
-                           }} 
-                           className="h-full" 
+                            initial={false}
+                            animate={{ 
+                              width: `${activeDuel.opponent_user_id === user?.id ? activeDuel.opponent_hp : activeDuel.challenger_hp}%`,
+                              backgroundColor: (activeDuel.opponent_user_id === user?.id ? activeDuel.opponent_hp : activeDuel.challenger_hp) < 30 ? "#ef4444" : "#22c55e"
+                            }} 
+                            className="h-full" 
                          />
                       </div>
                    </div>
