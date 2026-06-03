@@ -16,9 +16,11 @@ export default function PotionsLab() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [brews, setBrews] = useState<Brew[]>([]);
   const [plants, setPlants] = useState<Plant[]>([]);
+  const [inventory, setInventory] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterDifficulty, setFilterDifficulty] = useState<number | "all">("all");
+  const [showMissing, setShowMissing] = useState(false);
 
   async function load() {
     const [{ data: r }, { data: pl }, { data: { user } }] = await Promise.all([
