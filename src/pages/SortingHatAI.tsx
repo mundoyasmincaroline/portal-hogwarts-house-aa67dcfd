@@ -51,27 +51,37 @@ export default function SortingHatAI() {
         </p>
       </header>
 
-      <Card className="p-4 bg-card/60 border-primary/30 space-y-3 h-[60vh] overflow-y-auto">
-        {messages.map((m, i) => (
-          <div
-            key={i}
-            className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
-          >
-            <div
-              className={`max-w-[80%] rounded-lg px-3 py-2 ${
-                m.role === "user"
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-background/60 border border-primary/20 italic"
-              }`}
+      <Card className="p-6 bg-black/40 backdrop-blur-xl border-primary/20 space-y-4 h-[65vh] overflow-y-auto custom-scrollbar relative shadow-2xl rounded-[2.5rem]">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5 pointer-events-none" />
+        <AnimatePresence mode="popLayout">
+          {messages.map((m, i) => (
+            <motion.div
+              initial={{ opacity: 0, x: m.role === "user" ? 20 : -20, y: 10 }}
+              animate={{ opacity: 1, x: 0, y: 0 }}
+              key={i}
+              className={`flex ${m.role === "user" ? "justify-end" : "justify-start"} relative z-10`}
             >
-              {m.content}
-            </div>
-          </div>
-        ))}
+              <div
+                className={`max-w-[85%] rounded-2xl px-5 py-3 shadow-xl ${
+                  m.role === "user"
+                    ? "bg-primary text-primary-foreground font-heading text-sm"
+                    : "bg-[#1a1a1a] border border-primary/20 italic font-serif text-foreground/90 leading-relaxed text-base"
+                }`}
+              >
+                {m.content}
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
         {loading && (
-          <div className="text-muted-foreground italic text-sm animate-pulse">
-            O Chapéu murmura...
-          </div>
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-primary/60 italic text-xs animate-pulse flex items-center gap-2 font-heading tracking-widest pl-2"
+          >
+            <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" />
+            O Chapéu murmura pensamentos...
+          </motion.div>
         )}
         <div ref={endRef} />
       </Card>
