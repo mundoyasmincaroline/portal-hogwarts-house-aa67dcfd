@@ -194,13 +194,13 @@ export default function MaraudersGuide() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6 px-1 sm:px-0">
-      <div className="glass rounded-2xl p-6 sm:p-8 text-center relative overflow-hidden border border-primary/30">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/old-mathematics.png')] opacity-10"></div>
-        <div className="relative z-10">
+      <div className="rounded-2xl p-6 sm:p-8 text-center relative overflow-hidden border border-amber-800/30 bg-[#e3d5b0] shadow-xl">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/old-mathematics.png')] opacity-20"></div>
+        <div className="relative z-10 text-amber-950">
           <span className="text-5xl drop-shadow-md"><EmojiIcon e="📜" /></span>
-          <h1 className="font-heading text-3xl text-gold-gradient mt-4 mb-2">O Guia do Maroto</h1>
-          <p className="text-muted-foreground text-sm">Juro solenemente não fazer nada de bom.</p>
-          <p className="text-xs text-foreground/80 mt-1">Conheça as novas atualizações do castelo.</p>
+          <h1 className="font-heading text-3xl mt-4 mb-2 tracking-tighter">O Guia do Maroto</h1>
+          <p className="text-amber-800/80 text-sm italic">Juro solenemente não fazer nada de bom.</p>
+          <p className="text-xs text-amber-900/60 mt-1 uppercase tracking-[0.2em]">Conheça as novas atualizações do castelo.</p>
         </div>
       </div>
 

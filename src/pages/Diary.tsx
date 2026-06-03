@@ -59,7 +59,7 @@ export default function Diary() {
     <div className="max-w-3xl mx-auto space-y-6">
       <header className="text-center space-y-2">
         <div className="text-4xl"><EmojiIcon e="📔" /></div>
-        <h1 className="font-heading text-3xl sm:text-4xl text-gold-gradient">Diário Pessoal</h1>
+        <h1 className="font-heading text-3xl sm:text-4xl text-gold-gradient font-serif tracking-tighter">Diário Pessoal</h1>
         <p className="text-muted-foreground text-sm">Suas memórias, suas reflexões. Só você pode ler.</p>
       </header>
 
@@ -109,7 +109,7 @@ export default function Diary() {
                   </div>
                   <h3 className="font-heading text-lg text-foreground">{e.title}</h3>
                 </div>
-                <Button variant="ghost" size="icon" onClick={() => remove(e.id)} className="text-destructive shrink-0">
+                <Button variant="ghost" size="icon" onClick={() => { if (confirm("Deseja apagar esta memória?")) remove(e.id); }} className="text-destructive shrink-0">
                   <Trash2 size={14}/>
                 </Button>
               </div>

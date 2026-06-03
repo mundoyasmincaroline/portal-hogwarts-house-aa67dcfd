@@ -63,7 +63,7 @@ export default function ProphecyPage() {
         <p className="text-muted-foreground text-sm italic">Pergunte ao Oráculo. Mas cuidado — toda profecia tem um preço.</p>
       </header>
 
-      <Card className="p-6 border-primary/30 bg-gradient-to-br from-purple-950/20 via-card to-blue-950/20">
+      <Card className="p-6 border-primary/30 bg-gradient-to-br from-purple-950/40 via-card to-blue-950/40 shadow-[0_0_40px_rgba(139,92,246,0.2)]">
         <label className="block text-xs uppercase tracking-widest text-primary mb-2 font-heading">Sobre o que deseja saber?</label>
         <Input value={prompt} onChange={e => setPrompt(e.target.value)}
           placeholder="Ex: meu destino no Quadribol, amizades, viagem... (opcional)"
