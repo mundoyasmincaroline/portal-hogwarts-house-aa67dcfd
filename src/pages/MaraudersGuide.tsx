@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function MaraudersGuide() {
@@ -221,8 +222,9 @@ export default function MaraudersGuide() {
         ))}
       </div>
 
-      <div className="glass rounded-2xl p-5 sm:p-10 border border-border">
-        <div className="flex justify-between items-center mb-6 border-b border-border pb-4">
+      <div className="rounded-2xl p-5 sm:p-10 border border-amber-800/20 bg-[#f4ebd0] shadow-2xl relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/old-mathematics.png')] opacity-10 pointer-events-none"></div>
+        <div className="flex justify-between items-center mb-6 border-b border-amber-800/10 pb-4 relative z-10">
           <Button
             variant="outline"
             size="sm"
@@ -244,14 +246,23 @@ export default function MaraudersGuide() {
           </Button>
         </div>
 
-        <div className="animate-fade-in" key={activePage}>
+        <AnimatePresence mode="wait">
+          <motion.div 
+            key={activePage}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+            className="relative z-10"
+          >
           <h2 className="font-heading text-2xl text-foreground mb-6 flex items-center gap-3">
             {guidePages[activePage - 1].title}
           </h2>
           <div className="text-foreground/90 leading-relaxed">
             {guidePages[activePage - 1].content}
           </div>
-        </div>
+          </motion.div>
+        </AnimatePresence>
 
         {activePage === guidePages.length && (
           <div className="mt-10 text-center animate-fade-in-up">
