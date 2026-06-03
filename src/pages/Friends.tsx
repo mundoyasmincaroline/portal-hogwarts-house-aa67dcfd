@@ -5,9 +5,10 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import SafeImage from "@/components/SafeImage";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { UserPlus, Check, X, Ban, Trash2, Users } from "lucide-react";
+import { UserPlus, Check, X, Ban, Trash2, Users, MessageCircle } from "lucide-react";
 import HouseCrest from "@/components/rpg/HouseCrest";
 import EmojiIcon from "@/components/shared/EmojiIcon";
 interface FriendRow {
@@ -164,13 +165,24 @@ export default function Friends() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-10 px-2 sm:px-0">
-      <div className="glass rounded-2xl p-5 sm:p-6 border border-primary/20">
-        <h1 className="font-heading text-2xl sm:text-3xl text-gold-gradient flex items-center gap-3">
-          <Users /> Meus Amigos
-        </h1>
-        <p className="text-sm text-muted-foreground mt-2">
-          Gerencie seus pedidos, amigos e bloqueios.
-        </p>
+      <div className="glass rounded-2xl p-5 sm:p-6 border border-primary/20 space-y-4">
+        <div className="flex items-center justify-between">
+          <h1 className="font-heading text-2xl sm:text-3xl text-gold-gradient flex items-center gap-3">
+            <Users /> Meus Amigos
+          </h1>
+        </div>
+        <Input 
+          placeholder="Buscar amigo por nome..." 
+          className="bg-background/50 border-primary/30"
+          onChange={(e) => {
+            const q = e.target.value.toLowerCase();
+            if (!q) { load(); return; }
+            setRows(prev => prev.filter(r => 
+              r.other?.full_name?.toLowerCase().includes(q) || 
+              r.other?.username?.toLowerCase().includes(q)
+            ));
+          }}
+        />
       </div>
 
       <Tabs defaultValue="friends" className="w-full">
@@ -193,6 +205,9 @@ export default function Friends() {
           {friends.map((r) => (
             <Card key={r.id} row={r} actions={
               <>
+                <Button size="sm" variant="outline" onClick={() => navigate(`/dashboard/dm/${r.other?.user_id}`)}>
+                  <MessageCircle size={14} />
+                </Button>
                 <Button size="sm" variant="outline" onClick={() => { if (confirm("Remover amizade?")) remove(r.id); }}>
                   <Trash2 size={14} />
                 </Button>

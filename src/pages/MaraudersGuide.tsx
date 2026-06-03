@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
@@ -237,21 +238,32 @@ export default function MaraudersGuide() {
         </div>
       </div>
 
-      {/* Índice rápido */}
-      <div className="flex flex-wrap justify-center gap-2">
-        {guidePages.map((page, i) => (
-          <button
-            key={i}
-            onClick={() => setActivePage(i + 1)}
-            className={`text-xs px-3 py-1.5 rounded-full font-heading transition-all border ${
-              activePage === i + 1
-                ? "bg-primary/20 border-primary text-primary"
-                : "bg-background/70 backdrop-blur-md border-primary/30 text-foreground hover:border-primary/50"
-            }`}
-          >
-            {page.title.split(" ").slice(0, 2).join(" ")}
-          </button>
-        ))}
+      {/* Índice rápido com busca */}
+      <div className="flex flex-col gap-4 items-center">
+        <Input 
+          placeholder="Procurar tópico..." 
+          className="max-w-xs bg-background/50 border-primary/30"
+          onChange={(e) => {
+            const query = e.target.value.toLowerCase();
+            const index = guidePages.findIndex(p => p.title.toLowerCase().includes(query));
+            if (index !== -1) setActivePage(index + 1);
+          }}
+        />
+        <div className="flex flex-wrap justify-center gap-2">
+          {guidePages.map((page, i) => (
+            <button
+              key={i}
+              onClick={() => setActivePage(i + 1)}
+              className={`text-xs px-3 py-1.5 rounded-full font-heading transition-all border ${
+                activePage === i + 1
+                  ? "bg-primary/20 border-primary text-primary"
+                  : "bg-background/70 backdrop-blur-md border-primary/30 text-foreground hover:border-primary/50"
+              }`}
+            >
+              {page.title.split(" ").slice(0, 2).join(" ")}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="rounded-2xl p-5 sm:p-10 border border-amber-800/20 bg-[#f4ebd0] shadow-2xl relative overflow-hidden">
