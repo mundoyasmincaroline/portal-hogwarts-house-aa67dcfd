@@ -40,7 +40,7 @@ export default function CastleEntrance() {
       setLoading(false);
     }
     // Recarrega o perfil em memória e navega sem hard-reload (sem flash branco)
-    try { await fetchProfile?.(); } catch (_) { /* noop */ }
+    try { if (user?.id) await fetchProfile(user.id); } catch (_) { /* noop */ }
     navigate("/dashboard", { replace: true });
   };
 

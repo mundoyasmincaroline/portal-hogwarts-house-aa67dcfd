@@ -49,6 +49,7 @@ const regionColor: Record<string, string> = {
 
 export default function Quests() {
   const user = useAuth((s) => s.user);
+  const profile = useAuth((s) => s.profile);
   const [quests, setQuests] = useState<Quest[]>([]);
   const [steps, setSteps] = useState<Record<string, Step[]>>({});
   const [mine, setMine] = useState<Record<string, UserQuest>>({});
