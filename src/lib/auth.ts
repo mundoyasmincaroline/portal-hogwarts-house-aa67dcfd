@@ -34,6 +34,8 @@ export interface Profile {
   vip_expires_at: string | null;
   blood_locked: boolean;
   current_session_id: string | null;
+  wand_wood: string | null;
+  wand_core: string | null;
 }
 
 export const isUserOnline = (profile: Partial<Profile> | null): boolean => {
