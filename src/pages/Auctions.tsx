@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-
+import { motion, AnimatePresence } from "framer-motion";
+import { Timer, Gavel, ArrowUp } from "lucide-react";
 import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function Auctions() {
   const [items, setItems] = useState<any[]>([]);
