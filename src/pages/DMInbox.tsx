@@ -28,17 +28,17 @@ export default function DMInbox() {
     if (!user) return;
     loadThreads();
 
-    // Realtime: refresh inbox when new DM arrives
+    // Realtime: refresh inbox when new DM arrives or status changes
     const channelId = `dm_inbox:${user.id}:${Date.now()}:${Math.random().toString(36).slice(2)}`;
     const channel = supabase
       .channel(channelId)
       .on("postgres_changes", { 
-        event: "INSERT", 
+        event: "*", 
         schema: "public", 
         table: "dm_messages",
-        filter: `receiver_id=eq.${user.id}`
       }, () => loadThreads())
       .subscribe();
+
 
     return () => { supabase.removeChannel(channel); };
   }, [user]);

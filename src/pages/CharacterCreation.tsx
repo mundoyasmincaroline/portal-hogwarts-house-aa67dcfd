@@ -116,6 +116,18 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
     }
     setLoading(true);
     try {
+      // Check for unique name
+      const { data: existing } = await supabase.from("characters")
+        .select("id")
+        .ilike("full_name", form.full_name.trim())
+        .maybeSingle();
+
+      if (existing) {
+        toast.error("Este nome de personagem já está em uso!");
+        setLoading(false);
+        return;
+      }
+
       const { count } = await supabase.from("characters").select("*", { count:"exact", head: true }).eq("user_id", user.id);
       if ((count ?? 0) >= 2) { toast.error("Limite de 2 personagens atingido!"); setLoading(false); return; }
 

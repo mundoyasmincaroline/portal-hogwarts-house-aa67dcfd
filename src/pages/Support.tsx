@@ -20,12 +20,26 @@ const ticketSchema = z.object({
 });
 
 export default function Support() {
+  const [tab, setTab] = useState<"form" | "history">("form");
   const [form, setForm] = useState({
     name: "", email: "", subject: "", category: "geral", message: "",
   });
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [userTickets, setUserTickets] = useState<any[]>([]);
+
+  const fetchHistory = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    const { data } = await supabase
+      .from("support_tickets")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+    setUserTickets(data || []);
+  };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,17 +84,24 @@ export default function Support() {
           <ArrowLeft size={14} /> Voltar ao início
         </Link>
 
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 border border-primary/30 mb-4">
-            <LifeBuoy className="text-primary" size={26} />
-          </div>
-          <h1 className="font-heading text-3xl md:text-4xl text-gold-gradient mb-2">Suporte Hogwarts</h1>
-          <p className="text-sm text-muted-foreground">
-            Conte o que aconteceu — nossa equipe responde em até 24h.
-          </p>
+        <div className="flex gap-4 mb-8 border-b border-white/10">
+          <button
+            onClick={() => setTab("form")}
+            className={`pb-2 px-4 font-heading text-sm transition-all ${tab === "form" ? "text-primary border-b-2 border-primary" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            Novo Chamado
+          </button>
+          <button
+            onClick={() => { setTab("history"); fetchHistory(); }}
+            className={`pb-2 px-4 font-heading text-sm transition-all ${tab === "history" ? "text-primary border-b-2 border-primary" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            Meus Chamados
+          </button>
         </div>
 
-        {sent ? (
+        {tab === "form" ? (
+          sent ? (
+
           <div className="text-center py-10 space-y-4">
             <CheckCircle2 className="mx-auto text-green-500" size={56} />
             <h2 className="font-heading text-2xl text-gold-gradient">Sua coruja foi enviada!</h2>
@@ -174,8 +195,43 @@ export default function Support() {
               Atendimento: 24h em dias úteis · Privacidade garantida <EmojiIcon e="✦" />
             </p>
           </form>
+        )
+      ) : (
+
+          <div className="space-y-4">
+            {userTickets.length === 0 ? (
+              <p className="text-center text-muted-foreground py-10">Você ainda não enviou nenhum chamado.</p>
+            ) : (
+              <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                {userTickets.map(t => (
+                  <div key={t.id} className="glass rounded-xl p-4 border-white/5 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] uppercase tracking-widest text-primary font-bold">{t.category}</span>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full border ${
+                        t.status === "resolvido" ? "border-green-500 text-green-500 bg-green-500/10" :
+                        t.status === "aberto" ? "border-yellow-500 text-yellow-500 bg-yellow-500/10" :
+                        "border-muted text-muted-foreground"
+                      }`}>
+                        {t.status.toUpperCase()}
+                      </span>
+                    </div>
+                    <p className="font-heading text-sm">{t.subject}</p>
+                    <p className="text-xs text-muted-foreground line-clamp-2">{t.message}</p>
+                    {t.admin_response && (
+                      <div className="bg-primary/5 p-3 rounded-lg border-l-2 border-primary mt-3">
+                        <p className="text-[10px] text-primary font-heading mb-1">Resposta da Equipe:</p>
+                        <p className="text-xs italic text-foreground/90">{t.admin_response}</p>
+                      </div>
+                    )}
+                    <p className="text-[10px] text-muted-foreground text-right">{new Date(t.created_at).toLocaleDateString("pt-BR")}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         )}
       </div>
+
     </div>
   );
 }

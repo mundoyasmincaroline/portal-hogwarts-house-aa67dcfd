@@ -12,9 +12,11 @@ import PedidosTab from "@/components/PedidosTab";
 import { AdminStreakMilestonesTab } from "./Admin/AdminStreakMilestonesTab";
 import AdminKpiPanel from "@/components/admin/AdminKpiPanel";
 import AdminMemberModal from "@/components/admin/AdminMemberModal";
+import { AdminModerationTab } from "@/components/admin/AdminModerationTab";
+
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
-type Tab = "members" | "pending_members" | "challenges" | "monetization" | "pedidos" | "streak";
+type Tab = "members" | "monetization" | "pedidos" | "streak" | "moderation";
 
 export default function Admin() {
   const { isAdmin, user } = useAuth();
@@ -78,7 +80,9 @@ export default function Admin() {
           { key: "monetization", label: "Monetização" },
           { key: "pedidos", label: "Pedidos" },
           { key: "streak", label: "Sequência" },
+          { key: "moderation", label: "Moderação" },
         ] as { key: Tab; label: string }[]).map((t) => (
+
           <Button key={t.key} onClick={() => setTab(t.key)} variant={tab === t.key ? "magical" : "ghost"}>
             {t.label.toUpperCase()}
           </Button>
@@ -110,7 +114,9 @@ export default function Admin() {
           {tab === "monetization" && <AdminMonetizationTab members={members} fetchAll={fetchAll} />}
           {tab === "pedidos" && <PedidosTab />}
           {tab === "streak" && <AdminStreakMilestonesTab />}
+          {tab === "moderation" && <AdminModerationTab />}
         </div>
+
       )}
 
       {editMember && (

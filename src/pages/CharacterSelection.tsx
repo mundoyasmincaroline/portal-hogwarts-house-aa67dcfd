@@ -16,6 +16,8 @@ export default function CharacterSelection({ adminMode }: Props) {
   const [characters, setCharacters] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreation, setShowCreation] = useState(false);
+  const [selecting, setSelecting] = useState<string | null>(null);
+
 
   useEffect(() => {
     fetchCharacters();
@@ -38,6 +40,7 @@ export default function CharacterSelection({ adminMode }: Props) {
   };
 
   const selectCharacter = async (charId: string) => {
+    setSelecting(charId);
     const { error } = await supabase
       .from("profiles")
       .update({ active_character_id: charId } as any)
@@ -45,13 +48,19 @@ export default function CharacterSelection({ adminMode }: Props) {
 
     if (error) {
       toast.error("Erro ao assumir o personagem.");
+      setSelecting(null);
     } else {
       useAuth.setState((state) => ({
         profile: state.profile ? { ...state.profile, active_character_id: charId } : null
       }));
       toast.success("Personagem assumido com sucesso! ✨");
+      // Pequeno delay para garantir sincronia do estado
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     }
   };
+
 
   if (loading) return <div className="h-dvh flex items-center justify-center">Lendo registros mágicos...</div>;
 
@@ -76,6 +85,14 @@ export default function CharacterSelection({ adminMode }: Props) {
     <div className="relative min-h-screen p-6 flex flex-col items-center justify-center bg-black/40">
       <div className="absolute inset-0 bg-background/50 backdrop-blur-xl z-0" />
       <MagicalParticles />
+
+      {selecting && (
+        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background/80 backdrop-blur-md">
+          <div className="w-20 h-20 rounded-full border-t-2 border-primary animate-spin mb-4" />
+          <p className="font-heading text-xl text-gold-gradient animate-pulse">Entrando no castelo...</p>
+        </div>
+      )}
+
       
       <div className="relative z-10 max-w-4xl w-full">
         <div className="text-center mb-6 sm:mb-8 px-2">
