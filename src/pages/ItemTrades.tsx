@@ -28,6 +28,7 @@ export default function ItemTrades() {
   const [users, setUsers] = useState<any[]>([]);
   const [allItems, setAllItems] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // form
   const [recipient, setRecipient] = useState("");
@@ -58,6 +59,13 @@ export default function ItemTrades() {
     if (!recipient) return toast.error("Escolha um destinatário");
     if (!offItem && offGal <= 0) return toast.error("Ofereça um item ou galeões");
     if (!reqItem && reqGal <= 0) return toast.error("Peça um item ou galeões");
+
+    if (offItem) {
+      const hasItem = myItems.find(i => i.item.id === offItem && i.quantity >= offQty);
+      if (!hasItem) return toast.error("Você não possui a quantidade necessária deste item.");
+    }
+
+    setLoading(true);
     const { error } = await supabase.rpc("propose_item_trade", {
       p_recipient_id: recipient,
       p_offered_item: offItem || null,
@@ -68,6 +76,8 @@ export default function ItemTrades() {
       p_requested_gal: reqGal,
       p_message: msg || null,
     });
+    setLoading(false);
+
     if (error) return toast.error(error.message);
     toast.success("🤝 Proposta enviada!");
     setOpen(false); setRecipient(""); setOffItem(""); setOffGal(0); setReqItem(""); setReqGal(0); setMsg("");
