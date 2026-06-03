@@ -139,15 +139,18 @@ export default function Events() {
   return (
     <div className="max-w-5xl mx-auto space-y-8 sm:space-y-10 pb-20 px-2 sm:px-0">
       {/* Header */}
-      <div className="relative overflow-hidden rounded-2xl sm:rounded-[2.5rem] bg-gradient-to-br from-indigo-950 via-background to-black border border-primary/20 p-6 sm:p-12 text-center">
-        <div className="absolute inset-0 bg-[url('/hogwarts-castle-bg.jpg')] opacity-10 mix-blend-overlay pointer-events-none" />
+      <div className="relative overflow-hidden rounded-2xl sm:rounded-[2.5rem] bg-gradient-to-br from-indigo-950 via-background to-black border border-primary/20 p-6 sm:p-12 text-center shadow-[0_0_50px_rgba(99,102,241,0.1)]">
+        <div className="absolute inset-0 bg-texture-parchment opacity-10 mix-blend-overlay pointer-events-none" />
+        <div className="absolute -top-24 -left-24 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" />
+        
         <div className="relative z-10 space-y-4">
-          <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 px-4 py-1">
-            Programação Diária
+          <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 px-4 py-1 animate-bounce">
+            Programação do Dia: {new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}
           </Badge>
-          <h1 className="text-3xl sm:text-5xl font-heading text-gold-gradient">Eventos Mágicos</h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Participe dos desafios globais em horários específicos para ganhar recompensas épicas e fortalecer seu legado em Hogwarts.
+          <h1 className="text-3xl sm:text-5xl font-heading text-gold-gradient drop-shadow-sm">Eventos Mágicos</h1>
+          <p className="text-muted-foreground max-w-2xl mx-auto italic font-serif">
+            "O tempo é uma magia que não espera por ninguém. Esteja presente quando os sinos de Hogwarts tocarem."
           </p>
         </div>
       </div>

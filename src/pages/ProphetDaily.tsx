@@ -135,7 +135,7 @@ export default function ProphetDaily() {
               key={a.id} 
               className="p-8 rounded-[2rem] bg-[#f4ebd0] border-2 border-amber-900/10 shadow-2xl relative overflow-hidden group"
             >
-              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/old-mathematics.png')] opacity-10 pointer-events-none" />
+              <div className="absolute inset-0 bg-texture-parchment opacity-10 pointer-events-none" />
               <div className="flex items-center justify-between mb-4 relative z-10">
                 <Badge variant="outline" className="bg-amber-900/5 text-amber-900 border-amber-900/20 px-3 py-1 font-heading text-[10px] uppercase tracking-widest">
                   {a.category}
@@ -148,13 +148,21 @@ export default function ProphetDaily() {
               <div className="h-px w-full bg-amber-900/10 mb-6 relative z-10" />
               <p className="whitespace-pre-line text-sm leading-relaxed text-amber-900/80 font-serif italic relative z-10">{a.content}</p>
               
-              <div className="mt-8 flex justify-between items-center relative z-10">
-                <div className="flex gap-2">
-                  <Button variant="ghost" size="sm" className="text-amber-900/60 hover:text-amber-900">
-                    <Sparkles className="w-3 h-3 mr-1" /> Encantar
-                  </Button>
+              <div className="mt-8 flex justify-between items-center relative z-10 border-t border-amber-900/10 pt-4">
+                <div className="flex gap-4">
+                  <button className="flex items-center gap-1.5 text-amber-900/60 hover:text-amber-900 transition-colors group" onClick={() => toast.success("Notícia curtida! Seu interesse foi notado.")}>
+                    <Sparkles className="w-4 h-4 group-hover:scale-125 transition-transform text-amber-600" />
+                    <span className="text-[10px] font-heading uppercase">Encantar</span>
+                  </button>
+                  <button className="flex items-center gap-1.5 text-amber-900/60 hover:text-amber-900 transition-colors group" onClick={() => {
+                    navigator.clipboard.writeText(`${a.title}\n\nLeia mais n'O Profeta Diário: ${window.location.href}`);
+                    toast.success("Link da notícia copiado para o seu pergaminho!");
+                  }}>
+                    <Newspaper className="w-4 h-4 group-hover:scale-125 transition-transform text-amber-700" />
+                    <span className="text-[10px] font-heading uppercase">Compartilhar</span>
+                  </button>
                 </div>
-                <div className="text-[8px] font-heading text-amber-900/40 uppercase tracking-[0.3em]">Hogwarts House Press</div>
+                <div className="text-[8px] font-heading text-amber-900/30 uppercase tracking-[0.4em] font-bold">Hogwarts House Press</div>
               </div>
             </motion.div>
           ))}

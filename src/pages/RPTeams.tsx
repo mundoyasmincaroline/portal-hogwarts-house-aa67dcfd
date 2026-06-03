@@ -38,11 +38,14 @@ export default function RPTeams() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-6xl">
-      <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-        <div>
-          <h1 className="font-heading text-2xl sm:text-3xl text-gold-gradient"><EmojiIcon e="⚔️" /> Equipes de RP</h1>
-          <p className="text-sm text-muted-foreground">Forme alianças, cumpra missões coletivas, suba no ranking</p>
+    <div className="container mx-auto px-4 py-6 max-w-6xl space-y-6">
+      <div className="flex items-center justify-between flex-wrap gap-4 glass-premium p-6 rounded-[2rem] border-primary/20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-texture-parchment opacity-5" />
+        <div className="relative z-10">
+          <h1 className="font-heading text-2xl sm:text-4xl text-gold-gradient flex items-center gap-3">
+            <EmojiIcon e="⚔️" className="animate-pulse" /> Equipes de RP
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1 font-serif italic max-w-md">"Ninguém sobrevive sozinho em Hogwarts. Encontre sua equipe, jure lealdade e mude o rumo da história."</p>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>

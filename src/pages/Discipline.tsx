@@ -62,11 +62,27 @@ export default function Discipline() {
         </div>
       </div>
 
-      <Tabs defaultValue="detentions">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="detentions">🧹 Detenções {pendingDet.length > 0 && <Badge variant="destructive" className="ml-1 text-[9px]">{pendingDet.length}</Badge>}</TabsTrigger>
-          <TabsTrigger value="merits"><EmojiIcon e="🏆" /> Meus Méritos</TabsTrigger>
-          <TabsTrigger value="hall"><EmojiIcon e="📜" /> Hall de Honra</TabsTrigger>
+      <Tabs defaultValue="detentions" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-3 h-12 bg-black/40 border border-white/5 p-1 rounded-xl">
+          <TabsTrigger value="detentions" className="rounded-lg data-[state=active]:bg-primary/20 data-[state=active]:text-primary transition-all">
+            <div className="flex items-center gap-2">
+              <EmojiIcon e="🧹" className="hidden sm:block" /> 
+              <span>Detenções</span>
+              {pendingDet.length > 0 && <Badge variant="destructive" className="ml-1 px-1.5 h-4 text-[9px] animate-pulse">{pendingDet.length}</Badge>}
+            </div>
+          </TabsTrigger>
+          <TabsTrigger value="merits" className="rounded-lg data-[state=active]:bg-primary/20 data-[state=active]:text-primary transition-all">
+            <div className="flex items-center gap-2">
+              <EmojiIcon e="🏆" className="hidden sm:block" /> 
+              <span>Meus Méritos</span>
+            </div>
+          </TabsTrigger>
+          <TabsTrigger value="hall" className="rounded-lg data-[state=active]:bg-primary/20 data-[state=active]:text-primary transition-all">
+            <div className="flex items-center gap-2">
+              <EmojiIcon e="📜" className="hidden sm:block" /> 
+              <span>Honra</span>
+            </div>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="detentions" className="mt-4 space-y-2">

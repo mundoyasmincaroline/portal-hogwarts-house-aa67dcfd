@@ -180,15 +180,38 @@ export default function Challenges() {
           </div>
         )}
 
-        <Button
-          variant="magical"
-          size="sm"
-          className="font-heading text-xs w-full"
-          disabled={disabled}
-          onClick={() => openChallenge(c)}
-        >
-          {done ? "✅ Concluído" : pending ? "⏳ Em Avaliação" : c.type === 'social' ? "Enviar Link 🔗" : c.question ? "Responder Charada 🦉" : "Automática ⚙️"}
-        </Button>
+        <div className="flex flex-col gap-2">
+          <Button
+            variant="magical"
+            size="sm"
+            className="font-heading text-xs w-full"
+            disabled={disabled}
+            onClick={() => openChallenge(c)}
+          >
+            {done ? "✅ Concluído" : pending ? "⏳ Em Avaliação" : c.type === 'social' ? "Enviar Link 🔗" : c.question ? "Responder Charada 🦉" : "Executar Ação ⚙️"}
+          </Button>
+          {!disabled && !c.question && c.type !== 'social' && (
+             <Button 
+               variant="outline" 
+               size="sm" 
+               className="text-[10px] uppercase tracking-tighter h-7 border-primary/20 hover:bg-primary/5"
+               onClick={() => {
+                 const routes: Record<string, string> = {
+                   'duel': '/dashboard/duels',
+                   'shop': '/dashboard/store',
+                   'post': '/dashboard',
+                   'potion': '/dashboard/potions',
+                   'class': '/dashboard/classes',
+                   'explore': '/dashboard/castle-map'
+                 };
+                 const target = Object.keys(routes).find(k => c.description.toLowerCase().includes(k)) || 'dashboard';
+                 window.location.href = routes[target] || '/dashboard';
+               }}
+             >
+               Ir para o Local 🏃‍♂️
+             </Button>
+          )}
+        </div>
       </div>
     );
   };

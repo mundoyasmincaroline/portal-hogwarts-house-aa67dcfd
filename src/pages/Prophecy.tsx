@@ -108,22 +108,46 @@ export default function ProphecyPage() {
       </AnimatePresence>
 
       <div className="space-y-3">
-        {list.map(p => (
-          <Card key={p.id} className="p-6 border-primary/20 bg-gradient-to-br from-card to-purple-950/10">
-            <div className="flex items-start gap-4">
-              <div className="text-4xl animate-pulse drop-shadow-[0_0_8px_rgba(139,92,246,0.6)]">{p.symbol || "🔮"}</div>
-              <div className="flex-1 min-w-0">
-                {p.prompt && <p className="text-xs text-muted-foreground italic mb-2">Sobre: "{p.prompt}"</p>}
-                <p className="font-serif text-base text-foreground/95 whitespace-pre-wrap leading-relaxed italic">{p.prophecy_text}</p>
-                <p className="text-[10px] text-muted-foreground/60 mt-3 font-mono">
-                  {format(new Date(p.created_at), "dd MMM yyyy · HH:mm", { locale: ptBR })}
-                </p>
+        {list.map((p, idx) => (
+          <motion.div
+            key={p.id}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: idx * 0.1 }}
+          >
+            <Card className="p-6 border-primary/20 bg-gradient-to-br from-card to-purple-950/10 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-texture-parchment opacity-5" />
+              <div className="flex items-start gap-4 relative z-10">
+                <div className="text-4xl animate-pulse drop-shadow-[0_0_8px_rgba(139,92,246,0.6)] group-hover:scale-110 transition-transform">
+                  {p.symbol || "🔮"}
+                </div>
+                <div className="flex-1 min-w-0">
+                  {p.prompt && (
+                    <p className="text-[10px] uppercase tracking-widest text-primary/60 mb-1 font-heading">
+                      Insight solicitado: "{p.prompt}"
+                    </p>
+                  )}
+                  <p className="font-serif text-base text-foreground/95 whitespace-pre-wrap leading-relaxed italic border-l-2 border-primary/20 pl-4 py-1">
+                    {p.prophecy_text}
+                  </p>
+                  <div className="flex items-center justify-between mt-4">
+                    <p className="text-[10px] text-muted-foreground/60 font-mono">
+                      {format(new Date(p.created_at), "dd MMM yyyy · HH:mm", { locale: ptBR })}
+                    </p>
+                    <Button variant="ghost" size="sm" className="h-6 text-[10px] uppercase tracking-tighter opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => {
+                      navigator.clipboard.writeText(p.prophecy_text);
+                      toast.success("Profecia copiada para o pergaminho!");
+                    }}>
+                      Copiar
+                    </Button>
+                  </div>
+                </div>
               </div>
-            </div>
-          </Card>
+            </Card>
+          </motion.div>
         ))}
         {list.length === 0 && (
-          <div className="text-center py-12 text-muted-foreground italic text-sm">
+          <div className="text-center py-12 text-muted-foreground italic text-sm glass rounded-xl border-dashed border-primary/20">
             Nenhuma profecia ainda. As esferas estão paradas...
           </div>
         )}
