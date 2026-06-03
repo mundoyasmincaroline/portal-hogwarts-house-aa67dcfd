@@ -53,7 +53,7 @@ export default function SortingHatAI() {
           transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
           className="inline-block mb-4"
         >
-          <EmojiIcon e="🎩" size="xl" />
+          <EmojiIcon e="🎩" />
         </motion.div>
         <h1 className="font-heading text-4xl text-primary">Chapéu Seletor</h1>
         <p className="text-muted-foreground mt-2 italic">
