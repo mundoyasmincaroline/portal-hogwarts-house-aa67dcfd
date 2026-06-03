@@ -36,6 +36,8 @@ export default function Lineages() {
   const [heirGold, setHeirGold] = useState("0"); const [heirNote, setHeirNote] = useState("");
   const [busy, setBusy] = useState(false);
 
+  const [profileSearch, setProfileSearch] = useState("");
+
   const load = async () => {
     const { data: u } = await supabase.auth.getUser();
     const me = u.user?.id || null;
