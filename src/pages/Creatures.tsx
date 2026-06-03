@@ -75,10 +75,16 @@ export default function Creatures() {
                   </div>
                 </div>
                 <div className="space-y-1 text-xs">
-                  <div className="flex justify-between"><span>Vínculo</span><span>{m.bond}/100</span></div>
-                  <Progress value={m.bond} className="h-1.5" />
-                  <div className="flex justify-between"><span>Saciedade</span><span>{m.hunger}/100</span></div>
-                  <Progress value={m.hunger} className="h-1.5" />
+                  <div className="flex justify-between">
+                    <span>Vínculo</span>
+                    <span className={m.bond < 30 ? "text-red-400 font-bold" : m.bond < 60 ? "text-amber-400" : ""}>{m.bond}/100</span>
+                  </div>
+                  <Progress value={m.bond} className="h-1.5" indicatorClassName={m.bond < 30 ? "bg-red-500" : m.bond < 60 ? "bg-amber-500" : "bg-primary"} />
+                  <div className="flex justify-between">
+                    <span>Saciedade</span>
+                    <span className={m.hunger < 30 ? "text-red-400 font-bold" : m.hunger < 60 ? "text-amber-400" : ""}>{m.hunger}/100</span>
+                  </div>
+                  <Progress value={m.hunger} className="h-1.5" indicatorClassName={m.hunger < 30 ? "bg-red-500" : m.hunger < 60 ? "bg-amber-500" : "bg-primary"} />
                   <div className="flex justify-between"><span>Treino</span><span>Nv. {m.training_level}/10</span></div>
                 </div>
                 <div className="grid grid-cols-2 gap-2">

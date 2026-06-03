@@ -72,6 +72,11 @@ export default function MaraudersGuide() {
               <strong className="text-foreground block mb-1"><EmojiIcon e="💬" /> Mensagens Diretas (DM)</strong>
               <p>Clique em <strong>"Mensagens"</strong> no menu lateral ou visite o perfil de um membro e clique em <strong>"<EmojiIcon e="💬" /> Mensagem"</strong>. As conversas acontecem em tempo real — como WhatsApp, mas dentro do castelo! Você verá um badge com quantas mensagens não lidas tem.</p>
             </div>
+            <div className="pt-2">
+              <Button asChild variant="outline" size="sm" className="w-full text-[10px] uppercase tracking-widest rounded-xl border-primary/20 hover:bg-primary/10">
+                <Link to="/dashboard/instahogwarts">Ir para InstaHogwarts <EmojiIcon e="📸" /></Link>
+              </Button>
+            </div>
           </div>
         </div>
       )
@@ -93,6 +98,11 @@ export default function MaraudersGuide() {
             <div className="bg-secondary/50 p-3 rounded-xl border border-primary/20">
               <strong className="text-foreground"><EmojiIcon e="🦉" /> Enigmas (Quiz Mágico)</strong>
               <p className="text-sm text-muted-foreground mt-1">Clique no desafio com charada → responda corretamente → XP imediato! Errou? Aguarde o cooldown e tente de novo.</p>
+            </div>
+            <div className="pt-2">
+              <Button asChild variant="outline" size="sm" className="w-full text-[10px] uppercase tracking-widest rounded-xl border-primary/20 hover:bg-primary/10">
+                <Link to="/dashboard/challenges">Explorar Desafios <EmojiIcon e="⚔️" /></Link>
+              </Button>
             </div>
           </div>
         </div>
