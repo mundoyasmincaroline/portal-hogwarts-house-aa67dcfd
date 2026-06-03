@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import MagicalParticles from "@/components/MagicalParticles";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, ShieldCheck } from "lucide-react";
+import MagicFacialID from "@/components/auth/MagicFacialID";
 import { toast } from "sonner";
 import { playDoorSound } from "@/services/core/soundService";
 
