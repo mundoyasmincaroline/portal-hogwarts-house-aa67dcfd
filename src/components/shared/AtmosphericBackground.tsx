@@ -1,11 +1,11 @@
 import React from "react";
 import { useAtmosphere, TimeOfDay } from "@/hooks/core/useAtmosphere";
 import { motion, AnimatePresence } from "framer-motion";
-import dawnImg from "@/assets/hogwarts_dawn.jpg";
-import morningImg from "@/assets/hogwarts_morning.png";
-import afternoonImg from "@/assets/hogwarts_afternoon.png";
-import duskImg from "@/assets/hogwarts_dusk.jpg";
-import nightImg from "@/assets/hogwarts_night.png";
+import dawnImg from "@/assets/hogwarts_dawn.webp";
+import morningImg from "@/assets/hogwarts_morning.webp";
+import afternoonImg from "@/assets/hogwarts_afternoon.webp";
+import duskImg from "@/assets/hogwarts_dusk.webp";
+import nightImg from "@/assets/hogwarts_night.webp";
 
 const WeatherParticles: React.FC<{ weather: string }> = ({ weather }) => {
   if (weather === "clear") {
