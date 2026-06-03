@@ -32,6 +32,7 @@ export default function Feed() {
   const [activeChallenges, setActiveChallenges] = useState<{ id: string; title: string; xp_reward: number; type: string }[]>([]);
   const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
   const [bannedWords, setBannedWords] = useState<string[]>([]);
+  const [category, setCategory] = useState("all");
   
   const sidebarLoaded = useRef(false);
 
