@@ -8,6 +8,7 @@ import MagicalEmoji from "@/components/shared/MagicalEmoji";
 import EmojiIcon from "@/components/shared/EmojiIcon";
 import HouseCrest from "@/components/rpg/HouseCrest";
 import { motion, AnimatePresence } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
 import SafeImage from "@/components/SafeImage";
 
 interface Spell {
