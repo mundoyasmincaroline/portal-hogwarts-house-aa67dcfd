@@ -137,7 +137,7 @@ export default function Register() {
     }
 
     setLoading(false);
-    setStep(7); // carta de aceitação (incrementado pois adicionamos um step)
+    setStep(8); // carta de aceitação final
     toast.success("Bruxo(a) registrado(a) com sucesso! ✨");
   };
 
