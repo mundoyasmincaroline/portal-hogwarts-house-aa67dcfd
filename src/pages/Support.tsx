@@ -195,7 +195,9 @@ export default function Support() {
               Atendimento: 24h em dias úteis · Privacidade garantida <EmojiIcon e="✦" />
             </p>
           </form>
-        ) : (
+        )
+      ) : (
+
           <div className="space-y-4">
             {userTickets.length === 0 ? (
               <p className="text-center text-muted-foreground py-10">Você ainda não enviou nenhum chamado.</p>
