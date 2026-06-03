@@ -1,4 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
@@ -71,13 +72,26 @@ export default function Quidditch() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 space-y-6">
-      <header>
+    <div className="max-w-4xl mx-auto p-4 space-y-6 relative overflow-hidden min-h-screen">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <motion.div 
+          animate={{ 
+            x: [window.innerWidth + 100, -100],
+            y: [100, 200, 100, 300, 100],
+          }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          className="text-4xl absolute z-0 opacity-40 filter blur-[1px]"
+        >
+          ✨
+        </motion.div>
+      </div>
+
+      <header className="relative z-10">
         <h1 className="font-heading text-2xl sm:text-3xl text-primary"><EmojiIcon e="🧹" /> Quadribol</h1>
         <p className="text-foreground/70 font-serif italic">Voe pelos céus e defenda as cores da sua casa.</p>
       </header>
 
-      <Card className="p-4 bg-card/60 border-primary/30">
+      <Card className="p-4 bg-card/60 border-primary/30 relative z-10">
         <h2 className="font-heading text-primary mb-2">Criar nova partida</h2>
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-sm">Sua casa ({HOUSE_LABEL[profile?.house || ""] || "—"}) vs.</span>

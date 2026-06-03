@@ -192,32 +192,66 @@ export default function Duels() {
         <div className="space-y-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative">
              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 hidden sm:flex">
-                <div className="w-12 h-12 bg-zinc-900 border border-white/10 rounded-full flex items-center justify-center font-heading text-xl text-primary shadow-2xl">VS</div>
+                <motion.div 
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ repeat: Infinity, duration: 2 }}
+                  className="w-12 h-12 bg-zinc-900 border border-white/10 rounded-full flex items-center justify-center font-heading text-xl text-primary shadow-2xl"
+                >
+                  VS
+                </motion.div>
              </div>
 
-             <div className={`glass rounded-3xl p-6 border-2 transition-all ${activeDuel.challenger_user_id === user?.id ? (myTurn ? 'border-primary shadow-[0_0_30px_rgba(212,175,55,0.2)]' : 'border-white/5') : (!myTurn ? 'border-primary shadow-[0_0_30px_rgba(212,175,55,0.2)]' : 'border-white/5')}`}>
+             <motion.div 
+                animate={!myTurn ? { x: [0, -2, 2, -2, 2, 0] } : {}}
+                className={`glass rounded-3xl p-6 border-2 transition-all ${activeDuel.challenger_user_id === user?.id ? (myTurn ? 'border-primary shadow-[0_0_30px_rgba(212,175,55,0.2)]' : 'border-white/5') : (!myTurn ? 'border-primary shadow-[0_0_30px_rgba(212,175,55,0.2)]' : 'border-white/5')}`}
+             >
                 <div className="flex flex-col items-center gap-4 text-center">
-                   <HouseCrest house={profile?.house || 'gryffindor'} size="lg" />
-                   <h3 className="font-heading truncate w-full">Você</h3>
+                   <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}>
+                     <HouseCrest house={profile?.house || 'gryffindor'} size="lg" />
+                   </motion.div>
+                   <h3 className="font-heading truncate w-full flex items-center justify-center gap-2">
+                     Você {activeDuel.challenger_user_id === user?.id ? activeDuel.challenger_hp <= 20 && <EmojiIcon e="🩸" /> : activeDuel.opponent_hp <= 20 && <EmojiIcon e="🩸" />}
+                   </h3>
                    <div className="w-full space-y-1">
                       <div className="h-2 bg-black/60 rounded-full overflow-hidden">
-                         <motion.div animate={{ width: `${activeDuel.challenger_user_id === user?.id ? activeDuel.challenger_hp : activeDuel.opponent_hp}%` }} className="h-full bg-red-600" />
+                         <motion.div 
+                           initial={false}
+                           animate={{ 
+                             width: `${activeDuel.challenger_user_id === user?.id ? activeDuel.challenger_hp : activeDuel.opponent_hp}%`,
+                             backgroundColor: (activeDuel.challenger_user_id === user?.id ? activeDuel.challenger_hp : activeDuel.opponent_hp) < 30 ? "#ef4444" : "#22c55e"
+                           }} 
+                           className="h-full" 
+                         />
                       </div>
                    </div>
                 </div>
-             </div>
+             </motion.div>
 
-             <div className={`glass rounded-3xl p-6 border-2 transition-all ${activeDuel.opponent_user_id === user?.id ? (myTurn ? 'border-primary shadow-[0_0_30px_rgba(212,175,55,0.2)]' : 'border-white/5') : (!myTurn ? 'border-primary shadow-[0_0_30px_rgba(212,175,55,0.2)]' : 'border-white/5')}`}>
+             <motion.div 
+                animate={myTurn ? { x: [0, -2, 2, -2, 2, 0] } : {}}
+                className={`glass rounded-3xl p-6 border-2 transition-all ${activeDuel.opponent_user_id === user?.id ? (myTurn ? 'border-primary shadow-[0_0_30px_rgba(212,175,55,0.2)]' : 'border-white/5') : (!myTurn ? 'border-primary shadow-[0_0_30px_rgba(212,175,55,0.2)]' : 'border-white/5')}`}
+             >
                 <div className="flex flex-col items-center gap-4 text-center">
-                   <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center border border-white/10"><User size={32} /></div>
-                   <h3 className="font-heading truncate w-full">Oponente</h3>
+                   <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut", delay: 1 }}>
+                     <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center border border-white/10"><User size={32} /></div>
+                   </motion.div>
+                   <h3 className="font-heading truncate w-full flex items-center justify-center gap-2">
+                     Oponente {activeDuel.opponent_user_id === user?.id ? activeDuel.challenger_hp <= 20 && <EmojiIcon e="🩸" /> : activeDuel.opponent_hp <= 20 && <EmojiIcon e="🩸" />}
+                   </h3>
                    <div className="w-full space-y-1">
                       <div className="h-2 bg-black/60 rounded-full overflow-hidden">
-                         <motion.div animate={{ width: `${activeDuel.opponent_user_id === user?.id ? activeDuel.opponent_hp : activeDuel.challenger_hp}%` }} className="h-full bg-red-600" />
+                         <motion.div 
+                           initial={false}
+                           animate={{ 
+                             width: `${activeDuel.opponent_user_id === user?.id ? activeDuel.opponent_hp : activeDuel.challenger_hp}%`,
+                             backgroundColor: (activeDuel.opponent_user_id === user?.id ? activeDuel.opponent_hp : activeDuel.challenger_hp) < 30 ? "#ef4444" : "#22c55e"
+                           }} 
+                           className="h-full" 
+                         />
                       </div>
                    </div>
                 </div>
-             </div>
+             </motion.div>
           </div>
 
           <div className="glass rounded-2xl sm:rounded-[2.5rem] p-4 sm:p-8">
