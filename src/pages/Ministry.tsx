@@ -30,6 +30,8 @@ export default function Ministry() {
   const [myJobs, setMyJobs] = useState<Set<string>>(new Set());
   const [cooldowns, setCooldowns] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [reportStatus, setReportStatus] = useState<any[]>([]);
 
   async function load() {
     const [{ data: p }, { data: l }, { data: m }, { data: { user } }] = await Promise.all([
