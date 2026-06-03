@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
-import { Coins, Search, ShoppingBag, Loader2 } from "lucide-react";
+import { Coins, Search, ShoppingBag, Loader2, Map as MapIcon } from "lucide-react";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 const RARITY_STYLE: Record<string, string> = {
