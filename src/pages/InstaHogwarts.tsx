@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import HouseCrest from "@/components/rpg/HouseCrest";
 import SafeImage from "@/components/SafeImage";
 import { House } from "@/types";
-import { UserPlus, UserCheck, Heart, Users, Camera } from "lucide-react";
+import { UserPlus, UserCheck, Heart, Users, Camera, MessageSquare } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
@@ -331,8 +331,14 @@ export default function InstaHogwarts() {
                   className="relative group/preview inline-block"
                 >
                   <div className="absolute -inset-2 bg-primary/20 blur-xl rounded-3xl opacity-0 group-hover/preview:opacity-100 transition-opacity" />
-                  <div className="relative rounded-2xl overflow-hidden border-2 border-primary/30 shadow-2xl">
-                    <img src={URL.createObjectURL(selectedFile)} className="h-48 w-48 object-cover transition-transform group-hover/preview:scale-105" />
+                  <div className="relative rounded-2xl overflow-hidden border-2 border-primary/30 shadow-2xl bg-black">
+                    <motion.img 
+                      initial={{ scale: 1 }}
+                      animate={{ scale: 1.1 }}
+                      transition={{ duration: 10, repeat: Infinity, repeatType: "reverse", ease: "linear" }}
+                      src={URL.createObjectURL(selectedFile)} 
+                      className="h-48 w-48 object-cover opacity-80" 
+                    />
                     <button
                       className="absolute top-2 right-2 bg-black/60 hover:bg-red-500 backdrop-blur-md text-white rounded-full w-8 h-8 text-xs flex items-center justify-center transition-all border border-white/10"
                       onClick={() => setSelectedFile(null)}
@@ -387,142 +393,130 @@ export default function InstaHogwarts() {
             const isFollowingUser = followedUserIds.has(post.user_id);
             const isFollowingChar = disp.charId ? followedCharIds.has(disp.charId) : false;
             const hasLiked = post.likes.includes(user?.id || "");
-            const charFollowers = disp.charId ? (charFollowCounts[disp.charId] || 0) : 0;
 
             return (
-              <div key={post.id} className="relative group/post">
-                {/* Parchment Background Layer */}
-                <div className="absolute inset-0 bg-[#1a1612] rounded-[3rem] border-2 border-[#3d2e1e] shadow-[0_30px_100px_rgba(0,0,0,0.8)] -rotate-1 group-hover:rotate-0 transition-transform duration-700" />
+              <motion.div 
+                key={post.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="relative overflow-hidden bg-[#f4f1ea] rounded-sm shadow-[0_10px_30px_rgba(0,0,0,0.2)] border-b-4 border-black/10 group/card"
+              >
+                {/* Daily Prophet Newspaper Texture Overlay */}
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/old-map.png')] opacity-10 pointer-events-none mix-blend-multiply" />
                 
-                <div className="relative glass rounded-[3rem] overflow-hidden border border-white/10 flex flex-col transition-all duration-700 hover:border-primary/30">
-                  <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/parchment.png')] opacity-10 pointer-events-none mix-blend-overlay" />
-                  
-                  {/* Post Header */}
-                  <div className="p-6 flex items-center gap-4 border-b border-white/5 relative z-10">
-                    <div className="relative">
-                      <div className={`absolute -inset-1 rounded-full blur-md opacity-30 ${disp.house === 'gryffindor' ? 'bg-red-500' : disp.house === 'slytherin' ? 'bg-green-500' : disp.house === 'ravenclaw' ? 'bg-blue-500' : 'bg-yellow-500'}`} />
-                      <SafeImage
-                        src={disp.avatar}
-                        alt={disp.name}
-                        fallbackText={disp.name}
-                        className="relative w-12 h-12 rounded-full object-cover border-2 border-white/20 shrink-0"
-                      />
+                {/* Card Header (News Style) */}
+                <div className="p-6 border-b-2 border-black/80 mx-4 mt-4 flex justify-between items-end">
+                  <div className="space-y-1">
+                    <h2 className="font-heading text-3xl text-black uppercase tracking-tighter leading-none">
+                      {disp.name}
+                    </h2>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-bold bg-black text-white px-2 py-0.5 uppercase">
+                        {disp.type || "CIDADÃO"}
+                      </span>
+                      <span className="text-[10px] text-black/60 font-serif italic">
+                        {new Date(post.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long' })}
+                      </span>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <p className="font-heading text-lg text-white truncate drop-shadow-lg">{disp.name}</p>
-                        {disp.house && <HouseCrest house={disp.house} size="sm" />}
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-black/40">Edição Extra</p>
+                    <p className="text-xs font-serif italic font-bold text-black">Vol. {Math.floor(Math.random() * 99) + 1}</p>
+                  </div>
+                </div>
+
+                {/* Magical Photo (Image) */}
+                <div className="p-4 relative">
+                   <div className="relative aspect-square overflow-hidden bg-zinc-900 border-2 border-black/10 shadow-inner group/photo">
+                    <motion.img 
+                      initial={{ scale: 1.1 }}
+                      animate={{ scale: 1 }}
+                      transition={{ duration: 15, repeat: Infinity, repeatType: "reverse", ease: "linear" }}
+                      src={post.image_url} 
+                      alt="" 
+                      className="w-full h-full object-cover grayscale-[20%] sepia-[10%] group-hover/photo:grayscale-0 transition-all duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60 pointer-events-none" />
+                    
+                    {/* Floating Char Info */}
+                    <div className="absolute bottom-4 left-4 flex items-center gap-3">
+                      <div className="relative">
+                        <SafeImage src={disp.avatar} alt="" className="w-12 h-12 rounded-full border-2 border-white shadow-xl" />
+                        <div className="absolute -top-1 -right-1">
+                          <HouseCrest house={disp.house} size="xs" />
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted-foreground font-bold">
-                        <span className="text-primary">@{disp.username}</span>
-                        <span>·</span>
-                        <span className="opacity-50">{new Date(post.created_at).toLocaleDateString("pt-BR")}</span>
-                        {disp.charId && charFollowers > 0 && (
-                          <>
-                            <span>·</span>
-                            <span className="flex items-center gap-1 text-white/60">
-                              <Users size={10} className="text-primary" />
-                              {charFollowers} Bruxos
-                            </span>
-                          </>
-                        )}
+                      <div className="bg-black/60 backdrop-blur-md p-2 rounded-lg border border-white/20">
+                        <p className="text-[10px] font-heading text-white truncate max-w-[120px]">{disp.name}</p>
+                        <p className="text-[8px] text-primary uppercase font-bold tracking-widest">@{disp.username}</p>
                       </div>
                     </div>
 
-                    {!isMyPost && (
-                      <div className="flex flex-col gap-1.5 shrink-0">
-                        <button
-                          onClick={() => toggleFollowUser(post.user_id)}
-                          className={`flex items-center justify-center gap-2 px-4 py-1.5 rounded-full text-[9px] font-heading uppercase tracking-tighter transition-all border ${
-                            isFollowingUser
-                              ? "bg-white/5 text-white/40 border-white/10 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/30"
-                              : "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20 shadow-[0_5px_15px_rgba(212,175,55,0.1)]"
-                          }`}
-                        >
-                          {isFollowingUser ? <><UserCheck size={10} /> Seguindo</> : <><UserPlus size={10} /> Seguir Bruxo</>}
-                        </button>
-                        {disp.charId && (
-                          <button
-                            onClick={() => toggleFollowChar(disp.charId!, disp.charOwnerId)}
-                            className={`flex items-center justify-center gap-2 px-4 py-1.5 rounded-full text-[9px] font-heading uppercase tracking-tighter transition-all border ${
-                              isFollowingChar
-                                ? "bg-amber-500/20 text-amber-300 border-amber-500/40"
-                                : "bg-white/5 text-amber-500/80 border-white/10 hover:bg-amber-500/10 hover:border-amber-500/30"
-                            }`}
-                          >
-                            ⭐ {isFollowingChar ? "Seguindo Ficha" : "Seguir Ficha"}
-                          </button>
-                        )}
-                      </div>
+                    {/* Follow Action */}
+                    {!isMyPost && disp.charId && (
+                      <button 
+                        onClick={() => toggleFollowChar(disp.charId!, disp.charOwnerId)}
+                        className={`absolute top-4 right-4 p-2 rounded-full backdrop-blur-md transition-all ${isFollowingChar ? 'bg-primary text-primary-foreground' : 'bg-black/40 text-white hover:bg-black/60'}`}
+                      >
+                        {isFollowingChar ? <UserCheck size={18} /> : <UserPlus size={18} />}
+                      </button>
                     )}
                   </div>
+                </div>
 
-                  {/* The Cinematic Photo Frame */}
-                  <div className="relative w-full aspect-square bg-[#0a0a0a] flex items-center justify-center overflow-hidden group/img p-4">
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black z-10 opacity-40" />
-                    <div className="relative w-full h-full rounded-[2rem] overflow-hidden border-8 border-[#2a231d] shadow-inner group-hover:border-[#3d2e1e] transition-colors duration-700">
-                       {/* Sepia/Noise Filter Layer */}
-                       <div className="absolute inset-0 bg-[#5c4033] mix-blend-color opacity-10 pointer-events-none z-10" />
-                       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/felt.png')] opacity-20 pointer-events-none z-10" />
-                       
-                       <SafeImage
-                        src={post.image_url}
-                        alt="Post"
-                        className="w-full h-full object-cover transition-transform duration-[2s] group-hover/img:scale-110 grayscale-[30%] group-hover/img:grayscale-0"
-                        fallbackEmoji="📸"
-                      />
-                    </div>
+                {/* Content & Actions */}
+                <div className="p-6 pt-2 space-y-4">
+                  <div className="relative">
+                    <span className="absolute -left-2 top-0 text-4xl text-black/10 font-serif italic">"</span>
+                    <p className="text-black font-serif italic leading-relaxed text-sm px-4">
+                      {post.caption}
+                    </p>
+                    <span className="absolute -right-2 bottom-0 text-4xl text-black/10 font-serif italic rotate-180">"</span>
                   </div>
 
-                  {/* Spotify Player */}
                   {post.spotify_uri && (
-                    <div className="px-6 pt-4 relative z-10">
-                      <div className="glass rounded-[1.5rem] overflow-hidden border border-white/5 shadow-2xl">
-                        <iframe
-                          src={post.spotify_uri.replace("open.spotify.com", "open.spotify.com/embed")}
-                          width="100%" height="80" frameBorder="0" allow="encrypted-media"
-                          className="grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-500"
-                        />
+                    <div className="bg-black/5 p-3 rounded border-l-4 border-green-600 flex items-center gap-3 group/spotify transition-colors hover:bg-black/10">
+                      <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center animate-pulse">
+                         <div className="w-4 h-4 text-white"><EmojiIcon e="🎵" /></div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[10px] text-black/40 uppercase font-black tracking-widest leading-none mb-1">Trilha Sonora</p>
+                        <p className="text-xs font-serif font-bold text-black truncate">{post.spotify_uri}</p>
                       </div>
                     </div>
                   )}
 
-                  {/* Actions + Caption */}
-                  <div className="p-8 relative z-10 space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-6">
-                        <button
-                          onClick={() => toggleLike(post)}
-                          className={`flex items-center gap-3 transition-all hover:scale-110 group/heart ${hasLiked ? "text-red-500" : "text-white/40 hover:text-red-400"}`}
-                        >
-                          <div className={`p-3 rounded-2xl bg-white/5 border border-white/10 group-hover/heart:bg-red-500/10 group-hover/heart:border-red-500/30 transition-all shadow-inner ${hasLiked ? 'bg-red-500/20 border-red-500/40' : ''}`}>
-                             <Heart size={24} fill={hasLiked ? "currentColor" : "none"} className={hasLiked ? "animate-wiggle" : ""} />
-                          </div>
-                          <div className="text-left">
-                            <span className="text-xl font-heading leading-none block">{(post.likes ?? []).length}</span>
-                            <span className="text-[9px] uppercase tracking-widest font-bold opacity-60">Curtidas</span>
-                          </div>
-                        </button>
-                      </div>
+                  <div className="flex items-center justify-between pt-4 border-t border-black/10">
+                    <div className="flex items-center gap-6">
+                      <button 
+                        onClick={() => toggleLike(post)}
+                        className={`flex items-center gap-2 group/like transition-colors ${hasLiked ? 'text-red-600' : 'text-black/60 hover:text-red-600'}`}
+                      >
+                        <motion.div whileTap={{ scale: 1.5 }}>
+                          <Heart size={20} fill={hasLiked ? "currentColor" : "none"} className={hasLiked ? "animate-pulse" : ""} />
+                        </motion.div>
+                        <span className="text-xs font-bold">{post.likes.length} Curtidas</span>
+                      </button>
                       
-                      {!hasLiked && !isMyPost && (
-                        <div className="px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
-                          <span className="text-[10px] text-yellow-500 font-heading tracking-widest font-bold">+{XP_LIKE} XP AO CURTIR</span>
-                        </div>
-                      )}
-                    </div>
-
-                    {post.caption && (
-                      <div className="bg-white/5 rounded-[1.5rem] p-6 border border-white/5 shadow-inner">
-                        <p className="text-base leading-relaxed font-serif italic text-white/90 italic italic">
-                          <span className="font-heading text-primary not-italic text-sm uppercase tracking-widest mr-2">{disp.name}:</span>
-                          "{post.caption}"
-                        </p>
+                      <div className="flex items-center gap-2 text-black/60">
+                         <MessageSquare size={20} />
+                         <span className="text-xs font-bold">Comentar</span>
                       </div>
-                    )}
+                    </div>
+                    
+                    <button className="text-black/40 hover:text-black transition-colors">
+                      <EmojiIcon e="🔖" />
+                    </button>
                   </div>
                 </div>
-              </div>
+
+                {/* Decorative Elements */}
+                <div className="h-2 bg-black/5 flex">
+                  {Array.from({ length: 20 }).map((_, i) => (
+                    <div key={i} className="flex-1 border-r border-black/10" />
+                  ))}
+                </div>
+              </motion.div>
             );
           })
         )}

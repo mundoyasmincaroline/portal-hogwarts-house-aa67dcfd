@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
-import { Sparkles, Timer, CheckCircle2, Lock, Clock, Trophy, ChevronRight, Zap } from "lucide-react";
+import { Sparkles, Timer, CheckCircle2, Lock, Clock, Trophy, ChevronRight, Zap, Hourglass } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
@@ -178,8 +178,10 @@ export default function Events() {
                     {isCompleted ? <CheckCircle2 size={24} className="text-green-500" /> : <Timer size={24} />}
                   </div>
                   <div className="text-right">
-                    <p className="text-[10px] font-heading uppercase tracking-widest text-muted-foreground">Horário</p>
-                    <p className={`text-lg font-heading ${isActive ? "text-primary" : "text-foreground"}`}>{event.start}</p>
+                    <p className="text-[10px] font-heading uppercase tracking-widest text-muted-foreground flex items-center justify-end gap-1">
+                      <Hourglass size={10} className="animate-spin" /> Início
+                    </p>
+                    <p className={`text-lg font-heading ${isActive ? "text-primary shadow-[0_0_10px_rgba(212,175,55,0.4)]" : "text-foreground"}`}>{event.start}</p>
                   </div>
                 </div>
 

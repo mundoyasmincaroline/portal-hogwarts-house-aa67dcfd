@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { motion, AnimatePresence } from "framer-motion";
 import SafeImage from "@/components/SafeImage";
-import { Trophy, Medal, Crown, User } from "lucide-react";
+import { Trophy, Medal, Crown } from "lucide-react";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 const DIV_COLORS: Record<string, string> = {
@@ -43,23 +43,84 @@ export default function RankedLadder() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-4 sm:p-6 space-y-6">
-      <header>
-        <h1 className="font-heading text-2xl sm:text-3xl text-primary"><EmojiIcon e="🏅" /> Modo Ranqueado</h1>
-        <p className="text-foreground/70 font-serif italic">Suba de divisão: Bronze → Prata → Ouro → Diamante → Mestre → Auror.</p>
-        {season && <p className="text-xs text-foreground/60 mt-1">Temporada: {season.name} · Encerra em {new Date(season.ends_at).toLocaleDateString()}</p>}
+    <div className="max-w-4xl mx-auto p-4 sm:p-8 space-y-10">
+      <header className="relative p-8 rounded-[2rem] overflow-hidden border border-primary/20 bg-black/40 text-center">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-20" />
+        <div className="relative z-10 space-y-4">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 border border-primary/30 mb-2 animate-float shadow-[0_0_30px_rgba(212,175,55,0.2)]">
+            <Trophy size={40} className="text-primary" />
+          </div>
+          <h1 className="font-heading text-4xl sm:text-6xl text-gold-gradient drop-shadow-2xl">Modo Ranqueado</h1>
+          <p className="text-muted-foreground max-w-xl mx-auto font-serif italic italic italic">
+            "A verdadeira maestria não está no poder, mas na disciplina. Suba na hierarquia dos maiores bruxos de Hogwarts."
+          </p>
+          {season && (
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/20 border border-primary/40 text-[10px] text-primary uppercase font-bold tracking-widest">
+              Temporada: {season.name} · Expira em {new Date(season.ends_at).toLocaleDateString()}
+            </div>
+          )}
+        </div>
       </header>
+
+      {players.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="glass rounded-[2rem] p-8 border border-primary/30 bg-gradient-to-br from-primary/10 to-transparent flex items-center gap-6">
+            <div className="p-4 bg-black/40 rounded-2xl border border-primary/20 shadow-xl">
+              <Medal size={48} className={DIV_COLORS[players[0].division] || "text-primary"} />
+            </div>
+            <div>
+              <h3 className="text-xs font-heading text-primary uppercase tracking-[0.2em] mb-1">Seu Elo Atual</h3>
+              <p className="text-3xl font-heading text-foreground">{players[0].division}</p>
+              <div className="mt-4 w-48 h-2 bg-black/40 rounded-full overflow-hidden border border-white/5">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: "65%" }}
+                  className="h-full bg-primary shadow-[0_0_10px_rgba(212,175,55,0.5)]"
+                />
+              </div>
+              <p className="text-[10px] text-muted-foreground mt-2 uppercase tracking-widest">342 MMR para a próxima divisão</p>
+            </div>
+          </div>
+
+          <div className="glass rounded-[2rem] p-8 border border-white/10 bg-black/20 flex flex-col justify-center text-center">
+            <h3 className="text-xs font-heading text-muted-foreground uppercase tracking-[0.2em] mb-4">Estatísticas da Temporada</h3>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <p className="text-2xl font-heading text-green-500">12</p>
+                <p className="text-[9px] text-muted-foreground uppercase tracking-tighter">Vitórias</p>
+              </div>
+              <div>
+                <p className="text-2xl font-heading text-red-500">4</p>
+                <p className="text-[9px] text-muted-foreground uppercase tracking-tighter">Derrotas</p>
+              </div>
+              <div>
+                <p className="text-2xl font-heading text-primary">75%</p>
+                <p className="text-[9px] text-muted-foreground uppercase tracking-tighter">Taxa de Win</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <section className="rounded-xl border border-primary/30 bg-card/60 p-5">
         <h2 className="font-heading text-lg text-primary mb-3"><EmojiIcon e="🏆" /> Top 50</h2>
         <ol className="space-y-2">
           {players.map((p, i) => (
-            <li key={p.id} className="flex items-center justify-between p-3 rounded-xl bg-background/40 border border-white/5 hover:border-primary/20 transition-all group">
+            <li key={p.id} className="flex items-center justify-between p-3 rounded-xl bg-background/40 border border-white/5 hover:border-primary/20 transition-all group relative overflow-hidden">
+              <div className="absolute inset-y-0 left-0 w-1 bg-primary/20 group-hover:bg-primary transition-colors" />
               <div className="flex items-center gap-3">
                 <span className="font-heading text-lg w-6 text-muted-foreground">#{i + 1}</span>
-                <SafeImage src={p.profiles?.avatar_url || ""} alt="" className="w-10 h-10 rounded-full border border-primary/20" />
+                <div className="relative">
+                  <SafeImage src={p.profiles?.avatar_url || ""} alt="" className="w-12 h-12 rounded-full border-2 border-primary/20 group-hover:border-primary/50 transition-colors object-cover" />
+                  <div className="absolute -bottom-1 -right-1 bg-black rounded-full p-1 border border-primary/30">
+                    <Trophy size={10} className={DIV_COLORS[p.division] || ""} />
+                  </div>
+                </div>
                 <div>
-                   <div className="font-heading text-sm text-foreground group-hover:text-primary transition-colors">{p.profiles?.full_name || "Bruxo"}</div>
+                   <div className="font-heading text-sm text-foreground group-hover:text-primary transition-colors flex items-center gap-2">
+                     {p.profiles?.full_name || "Bruxo"}
+                     {i < 3 && <Crown size={12} className="text-yellow-500 animate-pulse" />}
+                   </div>
                    <div className="text-[10px] text-muted-foreground uppercase">@{p.profiles?.username} · {p.profiles?.house}</div>
                 </div>
               </div>

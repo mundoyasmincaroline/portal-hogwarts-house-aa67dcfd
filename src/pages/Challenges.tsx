@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
@@ -140,7 +141,8 @@ export default function Challenges() {
     const disabled = done || pending;
     
     return (
-      <div key={c.id} className={`glass rounded-xl p-5 transition-transform hover:scale-[1.01] ${isSpecial ? "ring-1 ring-primary/20" : ""} ${disabled ? "opacity-60" : ""}`}>
+      <div key={c.id} className={`relative glass rounded-xl p-5 transition-transform hover:scale-[1.01] overflow-hidden ${isSpecial ? "ring-1 ring-primary/20" : ""} ${disabled ? "opacity-60" : ""}`}>
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/old-map.png')] opacity-5 pointer-events-none" />
         <div className="flex items-start justify-between mb-3">
           <h3 className="font-heading text-foreground">{c.title}</h3>
           <div className="flex flex-col items-end gap-1">
@@ -164,8 +166,12 @@ export default function Challenges() {
                   <span>Progresso</span>
                   <span>{userProgress[c.id]}%</span>
                 </div>
-                <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
-                  <div className="h-full bg-primary transition-all duration-500 ease-out" style={{ width: `${userProgress[c.id]}%` }} />
+                <div className="h-2.5 w-full bg-black/40 rounded-full overflow-hidden border border-white/5 p-[1px]">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${userProgress[c.id]}%` }}
+                    className="h-full bg-gradient-to-r from-primary/50 via-primary to-primary/80 rounded-full shadow-[0_0_10px_rgba(212,175,55,0.4)]" 
+                  />
                 </div>
               </>
             ) : (

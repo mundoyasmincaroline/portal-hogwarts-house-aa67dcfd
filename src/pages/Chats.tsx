@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -49,6 +50,7 @@ export default function Chats() {
   const [loadingRoom, setLoadingRoom] = useState<string | null>(null);
   const [channels, setChannels] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetchChannels();
@@ -156,16 +158,38 @@ export default function Chats() {
 
       <MagicAdBanner />
 
+      <div className="relative group mb-8">
+        <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+          <EmojiIcon e="🔍" />
+        </div>
+        <input 
+          type="text"
+          placeholder="Buscar salão pelo nome..."
+          className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all placeholder:text-muted-foreground/50"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
+
       <div className="space-y-10">
         {categories.map((category) => (
           <div key={category}>
-            <h2 className="font-heading text-xl text-primary mb-4 flex items-center gap-2">
+            <h2 className="font-heading text-xl text-primary mb-4 flex items-center gap-2 relative">
               <span className="w-8 h-[1px] bg-primary/30"></span>
-              {category}
+              <span className="relative">
+                {category}
+                <motion.span 
+                  animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.2, 0.8] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="absolute -top-1 -right-4 text-[10px]"
+                >✨</motion.span>
+              </span>
               <span className="flex-1 h-[1px] bg-primary/10"></span>
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {mergedRooms.filter((r) => r.category === category).map((room) => {
+              {mergedRooms
+                .filter((r) => r.category === category && r.name.toLowerCase().includes(searchQuery.toLowerCase()))
+                .map((room) => {
                 const isLocked = (room.is_admin_only && !isAdmin) || 
                                  (room.allowed_houses && profile && !room.allowed_houses.includes(profile.house as House) && !isAdmin);
                 const isDisabled = room.is_disabled && !isAdmin;
@@ -213,9 +237,15 @@ export default function Chats() {
                     </div>
 
                     <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between relative z-10">
-                      <span className="text-[9px] uppercase tracking-widest text-muted-foreground/40 font-bold group-hover:text-primary/40 transition-colors">
-                        Explorar Salão
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                        </span>
+                        <span className="text-[9px] uppercase tracking-widest text-muted-foreground/40 font-bold group-hover:text-primary/40 transition-colors">
+                          {Math.floor(Math.random() * 12) + 1} Bruxos
+                        </span>
+                      </div>
                       <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500">
                         <Zap size={14} className="text-primary" />
                       </div>

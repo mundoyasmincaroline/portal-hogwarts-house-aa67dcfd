@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, Users, Calendar, Swords, User } from "lucide-react";
+import { Trophy, Users, Calendar, Swords, User, Coins } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import SafeImage from "@/components/SafeImage";
 
@@ -134,12 +134,12 @@ export default function Tournaments() {
               <div>
                 <div className="flex items-center gap-2">
                   <h2 className="font-heading text-2xl text-primary">{t.name}</h2>
-                  <Badge variant={t.status === "open" ? "default" : "secondary"}>
+                  <Badge variant={t.status === "open" ? "default" : "secondary"} className={t.status === "open" ? "animate-pulse" : ""}>
                     {t.status === "open"
-                      ? "Inscrições abertas"
+                      ? "Inscrições Abertas"
                       : t.status === "running"
-                      ? "Em andamento"
-                      : "Finalizado"}
+                      ? "Em Combate"
+                      : "Concluído"}
                   </Badge>
                 </div>
                 <p className="text-muted-foreground mt-1">{t.description}</p>
@@ -161,7 +161,7 @@ export default function Tournaments() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
               <Stat icon={<Users className="w-4 h-4" />} label="Participantes" value={`${parts.length}/${t.max_participants}`} />
               <Stat icon={<Trophy className="w-4 h-4" />} label="XP" value={`+${t.xp_prize}`} />
-              <Stat icon={<Trophy className="w-4 h-4" />} label="Galeões" value={`+${t.galeon_prize}`} />
+              <Stat icon={<Coins className="w-4 h-4 text-yellow-500" />} label="Galeões" value={`+${t.galeon_prize}`} />
               <Stat
                 icon={<Calendar className="w-4 h-4" />}
                 label="Início"
@@ -176,7 +176,11 @@ export default function Tournaments() {
                   {matches.map((m) => (
                     <div
                       key={m.id}
-                      className="flex items-center justify-between bg-background/40 rounded p-2 text-sm"
+                      className={`flex items-center justify-between rounded p-3 text-sm transition-all border ${
+                        user && (m.player_a === user.id || m.player_b === user.id) 
+                          ? "bg-primary/10 border-primary/40 shadow-[0_0_15px_rgba(212,175,55,0.1)]" 
+                          : "bg-background/40 border-white/5"
+                      }`}
                     >
                       <span className="text-muted-foreground">R{m.round}</span>
                       <div className="flex-1 mx-3 text-center">
