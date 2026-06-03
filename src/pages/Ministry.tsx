@@ -46,6 +46,9 @@ export default function Ministry() {
     if (user) {
       const { data: e } = await supabase.from("ministry_employees" as any).select("position_id").eq("user_id", user.id).eq("active", true);
       setMyJobs(new Set(((e as any) || []).map((x: any) => x.position_id)));
+      
+      const { data: reports } = await supabase.from("support_tickets" as any).select("*").eq("user_id", user.id).order("created_at", { ascending: false });
+      setReportStatus(reports || []);
     }
   }
   useEffect(() => { load(); }, []);
