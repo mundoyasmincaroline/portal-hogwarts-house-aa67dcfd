@@ -210,7 +210,25 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
       if ((count ?? 0) === 0) await reward(user.id, 'first_character');
       onComplete();
     } catch (e: any) {
-      toast.error(e.message || "Erro ao salvar ficha");
+      console.error("Erro ao criar personagem:", e);
+      let errorMessage = "Erro ao salvar ficha";
+      
+      if (e.message) {
+        if (e.message.includes("at most 5000 character")) {
+          errorMessage = "Algum campo de texto ultrapassou o limite permitido. Por favor, resuma sua história ou personalidade.";
+        } else if (e.message.includes("duplicate key")) {
+          errorMessage = "Este personagem já existe em nosso registro.";
+        } else {
+          // Tradução genérica para mensagens comuns em inglês, se houver
+          errorMessage = e.message
+            .replace("String must contain at most", "O texto deve conter no máximo")
+            .replace("character(s)", "caractere(s)")
+            .replace("Required", "Obrigatório")
+            .replace("Invalid input", "Entrada inválida");
+        }
+      }
+      
+      toast.error(errorMessage);
     } finally { setLoading(false); }
   };
 
