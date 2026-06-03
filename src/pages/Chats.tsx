@@ -136,7 +136,7 @@ export default function Chats() {
   return (
     <div className="max-w-6xl mx-auto space-y-8 sm:space-y-12 pb-20 px-4 sm:px-6">
       <div className="glass rounded-[2rem] sm:rounded-[3rem] p-8 sm:p-12 text-center relative overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-primary/20 group">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2070')] bg-cover bg-center opacity-10 group-hover:scale-105 transition-transform duration-1000 mix-blend-overlay"></div>
+        <div className="absolute inset-0 bg-[url('/hogwarts-castle-bg.jpg')] bg-cover bg-center opacity-10 group-hover:scale-105 transition-transform duration-1000 mix-blend-overlay"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-black/40"></div>
         <div className="relative z-10 space-y-4">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 border border-primary/30 mb-2 animate-float">

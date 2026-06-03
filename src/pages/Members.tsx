@@ -101,7 +101,7 @@ export default function Members() {
     <div className="max-w-6xl mx-auto space-y-6 pb-10 px-2 sm:px-0">
       {/* Header */}
       <div className="glass rounded-2xl sm:rounded-3xl p-4 sm:p-8 relative overflow-hidden border border-primary/20">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2070')] bg-cover bg-center opacity-10" />
+        <div className="absolute inset-0 bg-[url('/hogwarts-castle-bg.jpg')] bg-cover bg-center opacity-10" />
         <div className="relative z-10">
           <h1 className="font-heading text-2xl sm:text-4xl text-gold-gradient flex items-center gap-2 sm:gap-3">
             <Users size={36} /> Membros do Portal

@@ -149,7 +149,7 @@ export default function StickerTrades() {
       {/* ── HEADER MONSTER QUALITY ── */}
       <div className="relative glass rounded-2xl sm:rounded-[3rem] p-6 sm:p-10 md:p-16 text-center overflow-hidden border border-yellow-500/20 shadow-2xl group animate-in fade-in slide-in-from-top-10 duration-1000">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/40 via-black to-purple-900/40 opacity-60 z-0" />
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=2070')] bg-cover bg-center opacity-10 group-hover:scale-105 transition-transform duration-1000" />
+        <div className="absolute inset-0 bg-[url('/hogwarts-castle-bg.jpg')] bg-cover bg-center opacity-10 group-hover:scale-105 transition-transform duration-1000" />
         
         <div className="relative z-10 space-y-6">
           <div className="inline-flex items-center gap-4 bg-black/40 backdrop-blur-md border border-yellow-500/30 rounded-full px-6 py-2 shadow-2xl">
