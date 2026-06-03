@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/lib/auth";
@@ -12,7 +12,8 @@ import { playDoorSound } from "@/services/core/soundService";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { login, resetPassword } = useAuth();
+  const location = useLocation();
+  const { login, resetPassword, setFaciallyValidated, isFaciallyValidated } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -26,7 +27,7 @@ export default function Login() {
   const [newPassword, setNewPassword] = useState("");
   
   // Facial Validation State
-  const [showFacialValidation, setShowFacialValidation] = useState(false);
+  const [showFacialValidation, setShowFacialValidation] = useState(location.state?.facialRequired || false);
   const [pendingUser, setPendingUser] = useState<any>(null);
 
   // ── Cinematic time-based background ──
@@ -51,20 +52,22 @@ export default function Login() {
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "PASSWORD_RECOVERY") {
         setIsRecoveryMode(true);
-      } else if (session?.user && !isRecoveryMode && !showFacialValidation) {
-        // Se já está logado e não estamos no fluxo de validação facial, redireciona
-        navigate("/dashboard", { replace: true });
+      } else if (session?.user && !isRecoveryMode && !showFacialValidation && isFaciallyValidated) {
+        // Se já está logado, validado e não estamos no fluxo de recuperação, redireciona
+        const from = location.state?.from || "/dashboard";
+        navigate(from, { replace: true });
       }
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user && !window.location.hash.includes("recovery") && !showFacialValidation) {
-        navigate("/dashboard", { replace: true });
+      if (session?.user && !window.location.hash.includes("recovery") && !showFacialValidation && isFaciallyValidated) {
+        const from = location.state?.from || "/dashboard";
+        navigate(from, { replace: true });
       }
     });
 
     return () => { authListener.subscription.unsubscribe(); };
-  }, [navigate, isRecoveryMode, showFacialValidation]);
+  }, [navigate, isRecoveryMode, showFacialValidation, isFaciallyValidated, location.state]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -157,8 +160,20 @@ export default function Login() {
             <div className="bg-primary/5 border border-primary/20 rounded-2xl p-2">
               <MagicFacialID 
                 mode="verify" 
-                onValidated={() => navigate("/dashboard", { replace: true })}
-                onCancel={() => setShowFacialValidation(false)}
+                onValidated={() => {
+                  setFaciallyValidated(true);
+                  const from = location.state?.from || "/dashboard";
+                  navigate(from, { replace: true });
+                }}
+                onCancel={() => {
+                  if (location.state?.facialRequired) {
+                    // Se foi forçado pelo ProtectedRoute, voltar desloga o usuário ou vai para o início
+                    supabase.auth.signOut();
+                    navigate("/", { replace: true });
+                  } else {
+                    setShowFacialValidation(false);
+                  }
+                }}
               />
             </div>
             <p className="text-[10px] text-center text-muted-foreground italic">
