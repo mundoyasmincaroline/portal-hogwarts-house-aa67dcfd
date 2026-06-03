@@ -90,10 +90,23 @@ export default function DarkArts() {
         </CardContent>
       </Card>
 
-      <div>
-        <h2 className="font-heading text-xl mb-3">Grimório Proibido</h2>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="font-heading text-xl">Grimório Proibido</h2>
+          <div className="relative w-full max-w-xs">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/40" />
+            <Input 
+              placeholder="Buscar maldição..." 
+              value={spellSearch}
+              onChange={(e) => setSpellSearch(e.target.value)}
+              className="pl-9 bg-card/40 border-primary/20"
+            />
+          </div>
+        </div>
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-          {spells.map((s) => (
+          {spells
+            .filter(s => !spellSearch || s.name.toLowerCase().includes(spellSearch.toLowerCase()) || s.slug.toLowerCase().includes(spellSearch.toLowerCase()))
+            .map((s) => (
             <Card key={s.id} className={`border ${s.unforgivable ? "border-destructive/60" : "border-border/50"} bg-card/60`}>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 font-heading text-lg">
