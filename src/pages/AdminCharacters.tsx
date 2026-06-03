@@ -242,6 +242,8 @@ export default function AdminCharacters() {
   const [spells, setSpells] = useState<SpellRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingCharAdmin, setUploadingCharAdmin] = useState(false);
+  const [uploadingProfAdmin, setUploadingProfAdmin] = useState(false);
   const [query, setQuery] = useState("");
 
   const [characterOpen, setCharacterOpen] = useState(false);
