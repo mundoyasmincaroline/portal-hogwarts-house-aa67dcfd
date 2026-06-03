@@ -92,10 +92,16 @@ export default function ProphecyPage() {
             exit={{ opacity: 0, scale: 0.8 }}
             className="flex justify-center py-8"
           >
-            <div className="relative w-32 h-32">
+            <div className="relative w-32 h-32 flex items-center justify-center">
               <div className="absolute inset-0 bg-purple-500/20 rounded-full blur-2xl animate-pulse" />
               <div className="absolute inset-0 border-2 border-primary/30 rounded-full animate-spin-slow" />
-              <div className="absolute inset-0 flex items-center justify-center text-6xl">🔮</div>
+              <motion.div 
+                animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
+                transition={{ repeat: Infinity, duration: 3 }}
+                className="text-6xl filter drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]"
+              >
+                🔮
+              </motion.div>
             </div>
           </motion.div>
         )}

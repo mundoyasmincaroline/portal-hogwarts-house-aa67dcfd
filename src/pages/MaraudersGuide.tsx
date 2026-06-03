@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
@@ -240,15 +241,24 @@ export default function MaraudersGuide() {
 
       {/* Índice rápido com busca e links */}
       <div className="flex flex-col gap-4 items-center">
-        <Input 
-          placeholder="Procurar tópico (comandos, missões, VIP)..." 
-          className="max-w-xs bg-background/50 border-primary/30"
-          onChange={(e) => {
-            const query = e.target.value.toLowerCase();
-            const index = guidePages.findIndex(p => p.title.toLowerCase().includes(query));
-            if (index !== -1) setActivePage(index + 1);
-          }}
-        />
+        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-black/20 p-4 rounded-xl border border-primary/10 w-full">
+          <div className="relative w-full sm:w-auto flex-1">
+            <EmojiIcon e="🔍" className="absolute left-3 top-1/2 -translate-y-1/2 opacity-40" />
+            <Input 
+              placeholder="Procurar tópico (comandos, missões, VIP)..." 
+              className="pl-10 bg-background/50 border-primary/30"
+              onChange={(e) => {
+                const query = e.target.value.toLowerCase();
+                const index = guidePages.findIndex(p => p.title.toLowerCase().includes(query) || p.content.toString().toLowerCase().includes(query));
+                if (index !== -1) setActivePage(index + 1);
+              }}
+            />
+          </div>
+          <div className="flex items-center gap-2">
+             <Badge variant="outline" className="animate-pulse bg-primary/10 border-primary/30 text-primary">Novidade!</Badge>
+             <span className="text-[10px] text-muted-foreground uppercase tracking-wider">v.2.4.0</span>
+          </div>
+        </div>
         <div className="flex flex-wrap justify-center gap-2">
           {guidePages.map((page, i) => (
             <button

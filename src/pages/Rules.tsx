@@ -34,8 +34,8 @@ export default function Rules() {
         {/* Parchment Container */}
         <div className="relative bg-[#d4b996] rounded-sm shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-[6px] sm:border-[12px] border-[#8b7355] p-1 overflow-hidden min-h-[70vh] sm:min-h-[80vh]">
           {/* Paper Texture Overlay */}
-          <div className="absolute inset-0 opacity-40 mix-blend-multiply pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/parchment.png')]" />
-          <div className="absolute inset-0 opacity-20 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
+          <div className="absolute inset-0 opacity-40 mix-blend-multiply pointer-events-none bg-texture-parchment" />
+          <div className="absolute inset-0 opacity-20 pointer-events-none bg-texture-noise" />
           
           {/* Ink Borders */}
           <div className="absolute inset-4 border border-[#5d4037]/30 rounded-sm pointer-events-none" />

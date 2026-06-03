@@ -14,7 +14,15 @@ const MONTH_NAMES = [
 export default function MagicalCalendar() {
   const [birthdays, setBirthdays] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [filteredBirthdays, setFilteredBirthdays] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const filtered = birthdays.filter(b => 
+      b.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredBirthdays(filtered);
+  }, [searchTerm, birthdays]);
 
   useEffect(() => {
     const fetchBirthdays = async () => {
@@ -71,9 +79,8 @@ export default function MagicalCalendar() {
           ))
         ) : (
           MONTH_NAMES.map((month, index) => {
-            const monthBirthdays = birthdays.filter(b => 
-              new Date(b.birth_date).getMonth() === index && 
-              (searchTerm === "" || b.name.toLowerCase().includes(searchTerm.toLowerCase()))
+            const monthBirthdays = filteredBirthdays.filter(b => 
+              new Date(b.birth_date).getMonth() === index
             );
             const isCurrentMonth = index === currentMonth;
 
