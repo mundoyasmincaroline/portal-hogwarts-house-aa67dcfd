@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Scroll, ShieldAlert, Zap, Sparkles, Feather } from "lucide-react";
+import { Scroll, ShieldAlert, Zap, Sparkles, Feather, ChevronDown, ChevronUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import MagicalEmoji from "@/components/shared/MagicalEmoji";
@@ -10,6 +10,16 @@ export default function Rules() {
   const [revealed, setRevealed] = useState(false);
   const [sworn, setSworn] = useState(false);
   const navigate = useNavigate();
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    respeito: true,
+    etiqueta: false,
+    proibida: false,
+    spam: false
+  });
+
+  const toggleSection = (id: string) => {
+    setOpenSections(prev => ({ ...prev, [id]: !prev[id] }));
+  };
 
   const handleSwear = () => {
     setSworn(true);
@@ -72,46 +82,86 @@ export default function Rules() {
                   </p>
                 </div>
 
-                {/* Rules Content - Ink style */}
-                <div className="grid md:grid-cols-2 gap-8 text-[#3e2723]">
-                  <div className="space-y-8">
-                    <div className="space-y-2 border-l-2 border-[#5d4037]/20 pl-6">
-                      <h3 className="font-heading text-xl flex items-center gap-2">
-                        <span className="text-2xl opacity-60">I.</span> A Lei do Respeito
-                      </h3>
-                      <p className="text-sm font-serif italic leading-relaxed opacity-80">
-                        Bruxos e bruxas de todas as origens são bem-vindos. Ofensas, preconceitos ou desrespeito resultarão em banimento imediato para Azkaban. Aqui, a amizade é a magia mais forte.
-                      </p>
-                    </div>
-
-                    <div className="space-y-2 border-l-2 border-[#5d4037]/20 pl-6">
-                      <h3 className="font-heading text-xl flex items-center gap-2">
-                        <span className="text-2xl opacity-60">II.</span> O Código de Etiqueta
-                      </h3>
-                      <p className="text-sm font-serif italic leading-relaxed opacity-80">
-                        Calls são sagradas e realizadas apenas via Meet. Não interrompa o fluxo de magia com ligações de WhatsApp. A organização dos grupos é a ordem do castelo.
-                      </p>
-                    </div>
+                {/* Rules Content - Accordion style */}
+                <div className="space-y-4 text-[#3e2723]">
+                  {/* I. Respeito */}
+                  <div className="border-b border-[#5d4037]/20 pb-4">
+                    <button 
+                      onClick={() => toggleSection('respeito')}
+                      className="w-full flex items-center justify-between font-heading text-xl py-2 group/btn"
+                    >
+                      <span className="flex items-center gap-3">
+                        <span className="text-2xl opacity-40">I.</span> A Lei do Respeito
+                      </span>
+                      {openSections.respeito ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                    </button>
+                    {openSections.respeito && (
+                      <div className="mt-2 pl-10 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <p className="text-sm font-serif italic leading-relaxed opacity-80">
+                          Bruxos e bruxas de todas as origens são bem-vindos. Ofensas, preconceitos ou desrespeito resultarão em banimento imediato para Azkaban. Aqui, a amizade é a magia mais forte.
+                        </p>
+                      </div>
+                    )}
                   </div>
 
-                  <div className="space-y-8">
-                    <div className="space-y-2 border-l-2 border-[#5d4037]/20 pl-6">
-                      <h3 className="font-heading text-xl flex items-center gap-2 text-red-900">
-                        <span className="text-2xl opacity-60">III.</span> Seção Proibida (+18)
-                      </h3>
-                      <p className="text-sm font-serif italic leading-relaxed opacity-80">
-                        Conteúdos impróprios, palavras de baixo calão e temas adultos são estritamente proibidos. Mantenha a pureza do ambiente escolar.
-                      </p>
-                    </div>
+                  {/* II. Etiqueta */}
+                  <div className="border-b border-[#5d4037]/20 pb-4">
+                    <button 
+                      onClick={() => toggleSection('etiqueta')}
+                      className="w-full flex items-center justify-between font-heading text-xl py-2"
+                    >
+                      <span className="flex items-center gap-3">
+                        <span className="text-2xl opacity-40">II.</span> O Código de Etiqueta
+                      </span>
+                      {openSections.etiqueta ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                    </button>
+                    {openSections.etiqueta && (
+                      <div className="mt-2 pl-10 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <p className="text-sm font-serif italic leading-relaxed opacity-80">
+                          Calls são sagradas e realizadas apenas via Meet. Não interrompa o fluxo de magia com ligações de WhatsApp. A organização dos grupos é a ordem do castelo.
+                        </p>
+                      </div>
+                    )}
+                  </div>
 
-                    <div className="space-y-2 border-l-2 border-[#5d4037]/20 pl-6">
-                      <h3 className="font-heading text-xl flex items-center gap-2">
-                        <span className="text-2xl opacity-60">IV.</span> A Maldição do Spam
-                      </h3>
-                      <p className="text-sm font-serif italic leading-relaxed opacity-80">
-                        Evite o uso excessivo de mensagens repetidas e figurinhas. A clareza da comunicação é vital para nossos RPGs e aulas.
-                      </p>
-                    </div>
+                  {/* III. Proibida */}
+                  <div className="border-b border-[#5d4037]/20 pb-4">
+                    <button 
+                      onClick={() => toggleSection('proibida')}
+                      className="w-full flex items-center justify-between font-heading text-xl py-2 text-red-900"
+                    >
+                      <span className="flex items-center gap-3">
+                        <span className="text-2xl opacity-40 text-red-900/40">III.</span> Seção Proibida (+18)
+                      </span>
+                      {openSections.proibida ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                    </button>
+                    {openSections.proibida && (
+                      <div className="mt-2 pl-10 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <p className="text-sm font-serif italic leading-relaxed opacity-80">
+                          Conteúdos impróprios, palavras de baixo calão e temas adultos são estritamente proibidos. Mantenha a pureza do ambiente escolar.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* IV. Spam */}
+                  <div className="border-b border-[#5d4037]/20 pb-4">
+                    <button 
+                      onClick={() => toggleSection('spam')}
+                      className="w-full flex items-center justify-between font-heading text-xl py-2"
+                    >
+                      <span className="flex items-center gap-3">
+                        <span className="text-2xl opacity-40">IV.</span> A Maldição do Spam
+                      </span>
+                      {openSections.spam ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                    </button>
+                    {openSections.spam && (
+                      <div className="mt-2 pl-10 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <p className="text-sm font-serif italic leading-relaxed opacity-80">
+                          Evite o uso excessivo de mensagens repetidas e figurinhas. A clareza da comunicação é vital para nossos RPGs e aulas.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
 

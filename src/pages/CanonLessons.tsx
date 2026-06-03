@@ -41,6 +41,7 @@ export default function CanonLessons() {
   const [loading, setLoading] = useState(true);
   const [attendedMap, setAttendedMap] = useState<Record<string, boolean>>({});
   const [active, setActive] = useState<Lesson | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const load = async () => {
     setLoading(true);
@@ -114,15 +115,38 @@ export default function CanonLessons() {
       <div className="grid lg:grid-cols-[1fr_320px] gap-6">
         {/* LESSONS LIST */}
         <div className="space-y-4">
-          {lessons.length === 0 ? (
+          <div className="relative group w-full mb-6">
+            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-primary/40 group-focus-within:text-primary transition-colors">
+              <Wand2 size={18} />
+            </div>
+            <input
+              type="text"
+              placeholder="Procurar feitiço ou mestre..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full bg-black/40 border border-white/10 rounded-2xl py-3 pl-12 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-all font-serif italic text-white shadow-2xl"
+            />
+          </div>
+
+          {lessons.filter(l => 
+            l.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+            l.professor?.canon_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            l.spell?.name.toLowerCase().includes(searchTerm.toLowerCase())
+          ).length === 0 ? (
             <div className="glass rounded-2xl p-12 text-center border border-white/10">
               <BookOpen className="w-12 h-12 text-white/20 mx-auto mb-4" />
               <p className="font-serif italic text-muted-foreground">
-                Nenhum mestre está dando aula agora. Volte em breve.
+                {searchTerm ? `"Nenhum segredo encontrado para '${searchTerm}'..."` : "Nenhum mestre está dando aula agora. Volte em breve."}
               </p>
             </div>
           ) : (
-            lessons.map((l) => {
+            lessons
+              .filter(l => 
+                l.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                l.professor?.canon_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                l.spell?.name.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .map((l) => {
               const attended = attendedMap[l.id];
               return (
                 <article

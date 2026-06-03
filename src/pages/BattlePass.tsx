@@ -115,11 +115,26 @@ export default function BattlePass() {
   const levels = Array.from(new Set(rewards.map((r) => r.level_required))).sort((a, b) => a - b);
   const claimedSet = new Set((progress?.claimed_rewards as any[])?.map(String) ?? []);
   const currentLevel = progress?.current_level ?? 1;
+  const currentXP = progress?.current_xp ?? 0;
+  
+  // Logic for next level XP
+  // Assuming 1000 XP per level for simplicity, or we can use a dynamic formula
+  const xpPerLevel = 1000;
+  const xpInCurrentLevel = currentXP % xpPerLevel;
+  const xpNeededForNext = xpPerLevel - xpInCurrentLevel;
+  const levelProgressPct = Math.round((xpInCurrentLevel / xpPerLevel) * 100);
+
   const maxLevel = Math.max(...levels, 1);
-  const pct = Math.min(100, Math.round((currentLevel / maxLevel) * 100));
+  const totalProgressPct = Math.min(100, Math.round((currentLevel / maxLevel) * 100));
+  
   const daysLeft = Math.max(
     0,
     Math.ceil((new Date(pass.end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+  );
+
+  const hoursLeft = Math.max(
+    0,
+    Math.floor((new Date(pass.end_date).getTime() - Date.now()) / (1000 * 60 * 60)) % 24
   );
 
   return (
@@ -141,7 +156,7 @@ export default function BattlePass() {
             </p>
             <div className="flex flex-wrap gap-3 justify-center md:justify-start pt-2">
               <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs flex items-center gap-2 text-white/70">
-                <Calendar className="w-3 h-3" /> {daysLeft} dias restantes
+                <Calendar className="w-3 h-3" /> {daysLeft}d {hoursLeft}h restantes
               </span>
               <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs flex items-center gap-2 text-white/70">
                 <Trophy className="w-3 h-3" /> Nível atual {currentLevel}/{maxLevel}
@@ -161,14 +176,17 @@ export default function BattlePass() {
           </div>
 
           <div className="md:w-72 w-full glass rounded-2xl p-6 border border-primary/30 bg-black/40 text-center space-y-3">
-            <p className="text-[10px] uppercase tracking-widest text-primary/80">Progresso da Temporada</p>
-            <p className="font-heading text-5xl text-gold-gradient">{pct}%</p>
+            <p className="text-[10px] uppercase tracking-widest text-primary/80">Progresso do Nível {currentLevel}</p>
+            <p className="font-heading text-5xl text-gold-gradient">{levelProgressPct}%</p>
             <div className="h-2 rounded-full bg-white/10 overflow-hidden">
               <div
                 className="h-full bg-gradient-to-r from-primary to-yellow-400 transition-all duration-700"
-                style={{ width: `${pct}%` }}
+                style={{ width: `${levelProgressPct}%` }}
               />
             </div>
+            <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-widest">
+              {xpInCurrentLevel} / {xpPerLevel} XP para o Nível {currentLevel + 1}
+            </p>
             <p className="text-xs text-muted-foreground font-serif italic">
               Suba de nível através de XP em qualquer atividade do portal.
             </p>

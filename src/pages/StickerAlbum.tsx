@@ -24,6 +24,7 @@ export default function StickerAlbum() {
   const [buyingId, setBuyingId] = useState<string | null>(null);
   const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
   const [activeRarity, setActiveRarity] = useState<"all" | "bronze" | "silver" | "gold">("all");
+  const [searchTerm, setSearchTerm] = useState("");
   const [openingPack, setOpeningPack] = useState(false);
   const [packReveal, setPackReveal] = useState<Sticker | null>(null);
   const [packPhase, setPackPhase] = useState<"idle" | "shaking" | "reveal">("idle");
@@ -114,7 +115,11 @@ export default function StickerAlbum() {
   const goldTotal   = stickers.filter(s => s.rarity === "gold").length;
 
   const filtered = stickers
-    .filter(s => activeRarity === "all" || s.rarity === activeRarity)
+    .filter(s => {
+      const matchesRarity = activeRarity === "all" || s.rarity === activeRarity;
+      const matchesSearch = s.character_name.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesRarity && matchesSearch;
+    })
     .sort((a, b) => RARITY_ORDER[b.rarity] - RARITY_ORDER[a.rarity]);
 
   if (loading) return <div className="text-center py-20 text-muted-foreground animate-pulse font-heading text-xl">Revelando o Álbum Encantado...</div>;
@@ -279,6 +284,44 @@ export default function StickerAlbum() {
         </div>
       )}
 
+      {/* ── SEARCH & FILTER ── */}
+      <div className="flex flex-col md:flex-row gap-6 items-center justify-between glass p-6 rounded-[2rem] border-white/10">
+        <div className="relative w-full md:max-w-md group">
+          <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-primary/40 group-focus-within:text-primary transition-colors">
+            <EmojiIcon e="🔍" />
+          </div>
+          <input
+            type="text"
+            placeholder="Procurar personagem..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full bg-black/40 border border-white/10 rounded-2xl py-3 pl-12 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-all font-serif italic"
+          />
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-3">
+          {(["all", "bronze", "silver", "gold"] as const).map((r) => (
+            <button
+              key={r}
+              onClick={() => setActiveRarity(r)}
+              className={`px-6 py-2 rounded-xl text-[10px] font-heading uppercase tracking-widest border transition-all ${
+                activeRarity === r
+                  ? "bg-primary/20 border-primary text-primary shadow-[0_0_15px_rgba(212,175,55,0.3)]"
+                  : "bg-white/5 border-white/10 text-muted-foreground hover:border-white/30"
+              }`}
+            >
+              {r === "all" ? "Todas" : r}
+              {r !== "all" && (
+                <span className="ml-2 opacity-60">
+                  ({r === "bronze" ? bronzeOwned : r === "silver" ? silverOwned : goldOwned}/
+                  {r === "bronze" ? bronzeTotal : r === "silver" ? silverTotal : goldTotal})
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* ── STATS & PROGRESS ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 glass rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-10 space-y-8 border border-white/5 bg-gradient-to-br from-white/5 to-transparent relative overflow-hidden group">
@@ -305,37 +348,18 @@ export default function StickerAlbum() {
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
                 </div>
             </div>
-
-            <div className="grid grid-cols-3 gap-6 pt-4">
-                {[
-                    { label: "Bronze", owned: bronzeOwned, total: bronzeTotal, color: "text-amber-600", bg: "bg-amber-950/20 border-amber-800/30", icon: "🥉" },
-                    { label: "Prata", owned: silverOwned, total: silverTotal, color: "text-slate-200", bg: "bg-slate-800/20 border-slate-400/20", icon: "🥈" },
-                    { label: "Ouro", owned: goldOwned, total: goldTotal, color: "text-yellow-400", bg: "bg-yellow-950/20 border-yellow-500/30", icon: "🥇" },
-                ].map(r => (
-                    <div key={r.label} className={`rounded-[1.5rem] sm:rounded-[2.5rem] p-5 sm:p-8 text-center border-2 backdrop-blur-md transition-all duration-500 hover:scale-[1.05] hover:shadow-2xl group/card relative overflow-hidden ${r.bg}`}>
-                        <div className="absolute inset-0 bg-white/[0.02] opacity-0 group-hover/card:opacity-100 transition-opacity" />
-                        <div className="text-4xl mb-4 relative z-10 transition-transform group-hover/card:scale-125 duration-500">{r.icon}</div>
-                        <p className={`font-heading text-3xl sm:text-4xl mb-1 relative z-10 ${r.color}`}>{r.owned}<span className="text-xl opacity-40">/{r.total}</span></p>
-                        <p className="text-[10px] text-muted-foreground uppercase tracking-[0.3em] font-bold relative z-10">{r.label}</p>
-                    </div>
-                ))}
-            </div>
         </div>
 
-        <div className="glass rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-10 flex flex-col items-center justify-center text-center gap-6 sm:gap-8 border border-white/5 bg-gradient-to-t from-black/40 to-white/5 relative group">
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-20 group-hover:scale-110 transition-transform duration-1000" />
-            <MagicalEmoji icon={RefreshCw} size="md" glowColor="rgba(255, 255, 255, 0.2)" className="group-hover:rotate-180 transition-transform duration-1000" />
-            <div className="space-y-3 relative z-10">
-                <h3 className="font-heading text-2xl text-foreground">Mercado de Trocas</h3>
-                <p className="text-sm text-muted-foreground font-serif italic">"Um Galeão por uma história, uma carta por um amigo."</p>
+        <div className="glass rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-10 flex flex-col items-center justify-center text-center gap-4 border border-white/5 bg-gradient-to-t from-black/40 to-white/5 relative group">
+            <h3 className="font-heading text-xl text-foreground relative z-10">Opções de Álbum</h3>
+            <div className="w-full flex flex-col gap-3 relative z-10">
+                <Button variant="plaque" className="w-full min-h-12 h-auto rounded-2xl border-white/10 px-4" onClick={() => navigate("/dashboard/trades")}>
+                    Mercado de Trocas <EmojiIcon e="🏪" />
+                </Button>
+                <Button variant="outline" className="w-full min-h-12 h-auto rounded-2xl border-yellow-500/30 text-yellow-300 hover:bg-yellow-500/10 px-4" onClick={handleShareAlbum}>
+                    <Share2 size={16} className="mr-2" /> Compartilhar Álbum
+                </Button>
             </div>
-            <Button variant="plaque" className="w-full min-h-14 h-auto rounded-2xl border-white/10 px-4" onClick={() => navigate("/dashboard/trades")}>
-                Acessar Mercado <EmojiIcon e="🏪" />
-            </Button>
-            <Button variant="outline" className="w-full min-h-12 h-auto rounded-2xl border-yellow-500/30 text-yellow-300 hover:bg-yellow-500/10 px-4" onClick={handleShareAlbum}>
-                <Share2 size={16} className="mr-2" /> Compartilhar Álbum
-            </Button>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Trocas seguras auditadas por Gringotts</p>
         </div>
       </div>
 
@@ -349,26 +373,40 @@ export default function StickerAlbum() {
         profileXp={profile?.xp || 0}
       />
 
-      {/* ── FILTERS ── */}
-      <div className="flex justify-center py-4">
-          <div className="glass p-1.5 sm:p-2 rounded-full border border-white/5 bg-black/40 backdrop-blur-2xl inline-flex flex-wrap justify-center gap-1.5 sm:gap-3">
-            {(["all", "gold", "silver", "bronze"] as const).map(r => (
-            <button key={r} onClick={() => setActiveRarity(r)}
-                className={`px-3 sm:px-8 py-2 sm:py-3 rounded-full text-[10px] sm:text-xs font-bold font-heading transition-all duration-500 relative overflow-hidden group ${
-                activeRarity === r
-                    ? r === "gold" ? "bg-yellow-400 text-black shadow-lg shadow-yellow-400/20"
-                    : r === "silver" ? "bg-slate-200 text-black shadow-lg shadow-white/10"
-                    : r === "bronze" ? "bg-amber-700 text-white shadow-lg shadow-amber-900/20"
-                    : "bg-primary text-white shadow-lg shadow-primary/20"
-                    : "bg-transparent text-muted-foreground hover:bg-white/5 hover:text-white"
-                }`}>
-                <span className="relative z-10 uppercase tracking-[0.04em] sm:tracking-widest">
-                    {r === "all" ? "✨ Todas" : r === "gold" ? "🥇 Ouro" : r === "silver" ? "🥈 Prata" : "🥉 Bronze"}
-                </span>
-                {activeRarity === r && <div className="absolute inset-0 bg-white/10 animate-pulse" />}
-            </button>
+      {/* ── GRID VIEW (FALLBACK) ── */}
+      <div className="space-y-6">
+        <h2 className="font-heading text-2xl text-white uppercase tracking-widest border-b border-white/10 pb-4">Galeria de Colecionador</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+          <AnimatePresence mode="popLayout">
+            {filtered.map((s) => (
+              <motion.div
+                layout
+                key={s.id}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.4 }}
+              >
+                <StickerCard 
+                  sticker={s} 
+                  owned={!!userStickers[s.id]} 
+                  onBuy={() => buySticker(s)}
+                  buying={buyingId === s.id}
+                  onShare={() => handleShareSticker(s)}
+                  failedImage={failedImages[s.id]}
+                  onImageError={() => setFailedImages(prev => ({ ...prev, [s.id]: true }))}
+                />
+              </motion.div>
             ))}
+          </AnimatePresence>
+        </div>
+
+        {filtered.length === 0 && (
+          <div className="text-center py-20 glass rounded-[2rem] border-white/5">
+            <EmojiIcon e="📜" />
+            <p className="text-muted-foreground font-serif italic">"Nenhuma lembrança encontrada com este nome..."</p>
           </div>
+        )}
       </div>
 
       {completedBanner && (
@@ -385,6 +423,83 @@ export default function StickerAlbum() {
             </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function StickerCard({ 
+  sticker, 
+  owned, 
+  onBuy, 
+  buying, 
+  onShare,
+  failedImage,
+  onImageError
+}: { 
+  sticker: Sticker, 
+  owned: boolean, 
+  onBuy: () => void, 
+  buying: boolean, 
+  onShare: () => void,
+  failedImage?: boolean,
+  onImageError: () => void
+}) {
+  return (
+    <div className={`relative group/card aspect-[3/4] rounded-2xl overflow-hidden border-2 transition-all duration-500 ${
+      owned 
+        ? sticker.rarity === 'gold' ? "border-yellow-400 shadow-[0_0_20px_rgba(234,179,8,0.2)]" 
+          : sticker.rarity === 'silver' ? "border-slate-300 shadow-[0_0_20px_rgba(203,213,225,0.1)]"
+          : "border-amber-700"
+        : "border-white/5 opacity-40 grayscale blur-[1px] hover:blur-0 hover:grayscale-0 hover:opacity-100"
+    }`}>
+      <div className="absolute inset-0 z-0">
+        {!failedImage ? (
+          <img 
+            src={sticker.image_url || "/placeholder.svg"} 
+            alt={sticker.character_name}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-110"
+            onError={onImageError}
+          />
+        ) : (
+          <div className="w-full h-full bg-black/60 flex flex-col items-center justify-center p-4 text-center">
+            <EmojiIcon e="❓" />
+            <p className="text-[8px] font-heading uppercase tracking-tighter text-white/40">Mistério Mágico</p>
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+      </div>
+
+      <div className="absolute inset-0 z-10 p-3 flex flex-col justify-end">
+        <h4 className="font-heading text-[10px] sm:text-xs text-white truncate drop-shadow-md">{sticker.character_name}</h4>
+        <p className={`text-[8px] uppercase tracking-widest font-bold ${
+          sticker.rarity === 'gold' ? "text-yellow-400" : sticker.rarity === 'silver' ? "text-slate-300" : "text-amber-600"
+        }`}>
+          {sticker.rarity}
+        </p>
+        
+        {owned ? (
+          <button 
+            onClick={onShare}
+            className="absolute top-2 right-2 p-1.5 bg-black/60 backdrop-blur-md rounded-lg border border-white/10 opacity-0 group-hover/card:opacity-100 transition-all"
+          >
+            <Share2 size={10} className="text-white" />
+          </button>
+        ) : (
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm opacity-0 group-hover/card:opacity-100 transition-all flex flex-col items-center justify-center p-2 text-center">
+             <p className="text-[8px] font-heading text-primary uppercase tracking-widest mb-1">Bloqueado</p>
+             <p className="font-heading text-sm text-white mb-2">{RARITY_COST[sticker.rarity]} XP</p>
+             <Button 
+               size="sm" 
+               variant="magical" 
+               className="h-7 rounded-lg text-[8px] w-full px-1"
+               onClick={onBuy}
+               disabled={buying}
+             >
+               {buying ? "..." : "Liberar"}
+             </Button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

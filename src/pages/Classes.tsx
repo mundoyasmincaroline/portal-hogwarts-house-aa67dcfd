@@ -24,6 +24,7 @@ export default function Classes() {
   const [attendedMap, setAttendedMap] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
   const [submittingClass, setSubmittingClass] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Time & Date calculations
   const now = new Date();
@@ -190,20 +191,44 @@ export default function Classes() {
         </div>
       </div>
 
+      {/* ── SEARCH BAR ── */}
+      <div className="relative group max-w-md mx-auto w-full">
+        <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-primary/40 group-focus-within:text-primary transition-colors">
+          <BookOpen size={18} />
+        </div>
+        <input
+          type="text"
+          placeholder="Procurar matéria ou professor..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full bg-black/40 border border-white/10 rounded-2xl py-3 pl-12 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-all font-serif italic text-white"
+        />
+      </div>
+
       {/* ── CLASSES GRID ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {classes.length === 0 ? (
+        {classes.filter(c => 
+          c.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+          c.professor.toLowerCase().includes(searchTerm.toLowerCase())
+        ).length === 0 ? (
           <div className="col-span-full relative glass rounded-2xl sm:rounded-[3rem] p-12 sm:p-24 text-center border border-white/5 shadow-2xl overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent" />
             <div className="relative z-10">
               <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/10 group-hover:scale-110 transition-transform">
                  <BookOpen size={40} className="text-white/20" />
               </div>
-              <p className="text-muted-foreground font-serif italic text-lg italic">"Não há aulas programadas para hoje em seus pergaminhos."</p>
+              <p className="text-muted-foreground font-serif italic text-lg italic">
+                {searchTerm ? `"Nenhum pergaminho encontrado para '${searchTerm}'..."` : `"Não há aulas programadas para hoje em seus pergaminhos."`}
+              </p>
             </div>
           </div>
         ) : (
-          classes.map(cls => {
+          classes
+            .filter(c => 
+              c.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+              c.professor.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map(cls => {
             const active = isClassActive(cls.time_slot);
             const attended = attendedMap[cls.id];
             
