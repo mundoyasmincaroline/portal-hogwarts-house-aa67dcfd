@@ -137,7 +137,7 @@ export default function Exams() {
             <DialogTitle className="flex justify-between items-center">
               <span>{current?.title}</span>
               {timer > 0 && (
-                <Badge variant="outline" className={`font-mono ${timer < 60 ? "text-red-500 animate-pulse" : "text-primary"}`}>
+                <Badge variant="outline" className={`font-mono transition-all duration-300 ${timer < 60 ? "text-red-500 animate-pulse bg-red-500/10 scale-110" : "text-primary"}`}>
                   <Clock size={12} className="mr-1" />
                   {Math.floor(timer / 60)}:{(timer % 60).toString().padStart(2, '0')}
                 </Badge>
