@@ -58,7 +58,7 @@ export default function Login() {
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user && !window.location.hash.includes("recovery")) {
+      if (session?.user && !window.location.hash.includes("recovery") && !showFacialValidation) {
         navigate("/dashboard", { replace: true });
       }
     });
