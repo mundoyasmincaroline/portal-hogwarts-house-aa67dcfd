@@ -82,12 +82,20 @@ export default function RoomOfRequirement() {
       </Card>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {rooms.map(r => {
+        <AnimatePresence>
+          {rooms.map(r => {
           const ms = members[r.id] || [];
           const joined = ms.some(m => m.user_id === user?.id);
           const t = THEMES.find(x => x.id === r.theme);
           return (
-            <Card key={r.id} className="p-4 bg-card/60 border-primary/30 space-y-2">
+            <motion.div 
+              layout
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              key={r.id} 
+              className="p-5 rounded-2xl bg-card/60 backdrop-blur-md border border-primary/20 space-y-3 shadow-2xl hover:border-primary/40 transition-all group"
+            >
               <div className="flex items-start justify-between">
                 <div>
                   <h3 className="font-heading text-lg text-primary">{t?.icon} {r.name}</h3>
@@ -103,7 +111,8 @@ export default function RoomOfRequirement() {
               }
             </Card>
           );
-        })}
+          })}
+        </AnimatePresence>
       </div>
 
       {rooms.length === 0 && <p className="text-center text-foreground/60">Nenhuma sala ativa. Manifeste a primeira!</p>}
