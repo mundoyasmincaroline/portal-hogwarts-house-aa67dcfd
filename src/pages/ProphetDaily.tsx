@@ -5,7 +5,9 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Newspaper, RefreshCw } from "lucide-react";
+import { Newspaper, RefreshCw, Sparkles, Zap } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import EmojiIcon from "@/components/shared/EmojiIcon";
 
 type Article = {
   id: string;
@@ -98,21 +100,36 @@ export default function ProphetDaily() {
         </Card>
       )}
 
-      <div className="space-y-4">
-        {articles.map((a) => (
-          <Card key={a.id} className="p-6 bg-card/60 border-primary/30">
-            <div className="flex items-center gap-2 mb-2">
-              <Badge variant="outline" className="text-xs">
-                {a.category}
-              </Badge>
-              <span className="text-xs text-muted-foreground">
-                {new Date(a.generated_at).toLocaleString("pt-BR")}
-              </span>
-            </div>
-            <h2 className="font-heading text-2xl text-primary mb-3">{a.title}</h2>
-            <p className="whitespace-pre-line text-sm leading-relaxed">{a.content}</p>
-          </Card>
-        ))}
+      <div className="space-y-6">
+        <AnimatePresence mode="popLayout">
+          {articles.map((a, i) => (
+            <motion.div
+              layout
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05 }}
+              key={a.id} 
+              className="p-8 rounded-[2rem] bg-[#f4ebd0] border-2 border-amber-900/10 shadow-2xl relative overflow-hidden group"
+            >
+              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/old-mathematics.png')] opacity-10 pointer-events-none" />
+              <div className="flex items-center justify-between mb-4 relative z-10">
+                <Badge variant="outline" className="bg-amber-900/5 text-amber-900 border-amber-900/20 px-3 py-1 font-heading text-[10px] uppercase tracking-widest">
+                  {a.category}
+                </Badge>
+                <span className="text-[10px] font-mono text-amber-900/60 uppercase tracking-tighter">
+                  {new Date(a.generated_at).toLocaleString("pt-BR")}
+                </span>
+              </div>
+              <h2 className="font-heading text-3xl text-amber-950 mb-4 tracking-tighter leading-tight relative z-10 group-hover:text-amber-800 transition-colors">{a.title}</h2>
+              <div className="h-px w-full bg-amber-900/10 mb-6 relative z-10" />
+              <p className="whitespace-pre-line text-sm leading-relaxed text-amber-900/80 font-serif italic relative z-10">{a.content}</p>
+              
+              <div className="mt-8 flex justify-end relative z-10">
+                <div className="text-[8px] font-heading text-amber-900/40 uppercase tracking-[0.3em]">Hogwarts House Press</div>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
     </div>
   );
