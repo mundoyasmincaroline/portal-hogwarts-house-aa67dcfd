@@ -51,8 +51,8 @@ export default function Login() {
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "PASSWORD_RECOVERY") {
         setIsRecoveryMode(true);
-      } else if (session?.user && !isRecoveryMode) {
-        // Use replace to prevent back-button loops
+      } else if (session?.user && !isRecoveryMode && !showFacialValidation) {
+        // Se já está logado e não estamos no fluxo de validação facial, redireciona
         navigate("/dashboard", { replace: true });
       }
     });
