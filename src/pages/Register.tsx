@@ -365,10 +365,41 @@ export default function Register() {
 
               <NavRow 
                 onBack={back} 
-                onNext={() => setStep(7)} 
+                onNext={() => setStep(6)} 
                 disabled={loading} 
-                labelNext={loading ? "Tecendo..." : "Ver Prévia da Carta"} 
+                labelNext={loading ? "Tecendo..." : "Continuar"} 
               />
+            </div>
+          )}
+
+          {/* ─── STEP 6 — RECONHECIMENTO FACIAL ─── */}
+          {step === 6 && (
+            <div className="space-y-4">
+              <header className="mb-4">
+                <ShieldCheck className="w-8 h-8 text-primary mb-2" />
+                <p className="text-xs uppercase tracking-[0.3em] text-primary/70">Pergaminho VI</p>
+                <h2 className="font-heading text-2xl text-foreground">Identidade Mágica</h2>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Para garantir a segurança do castelo, valide sua essência mágica.
+                </p>
+              </header>
+
+              <div className="glass bg-primary/5 border border-primary/20 rounded-2xl p-2">
+                <MagicFacialID 
+                  mode="enroll" 
+                  onValidated={(img) => {
+                    setFacialIdPreview(img);
+                    setStep(7);
+                  }} 
+                  onCancel={() => setStep(5)}
+                />
+              </div>
+
+              <div className="flex justify-center pt-2">
+                 <Button variant="ghost" className="text-[10px] text-muted-foreground hover:text-primary underline" onClick={() => setStep(7)}>
+                   Pular por enquanto (não recomendado)
+                 </Button>
+              </div>
             </div>
           )}
 
@@ -385,15 +416,15 @@ export default function Register() {
                 isPreview={true}
               />
               <div className="mt-4 flex justify-center">
-                <Button variant="ghost" className="text-muted-foreground hover:text-foreground text-xs" onClick={() => setStep(5)}>
-                  <ArrowLeft className="w-3 h-3 mr-1" /> Editar dados
+                <Button variant="ghost" className="text-muted-foreground hover:text-foreground text-xs" onClick={() => setStep(6)}>
+                  <ArrowLeft className="w-3 h-3 mr-1" /> Voltar
                 </Button>
               </div>
             </div>
           )}
 
-          {/* ─── STEP 6 — CARTA FINAL (PÓS-CADASTRO) ─── */}
-          {step === 6 && (
+          {/* ─── STEP 8 — CARTA FINAL (PÓS-CADASTRO) ─── */}
+          {step === 8 && (
             <AcceptanceLetter fullName={form.fullName} onContinue={() => navigate("/login")} />
           )}
         </div>
