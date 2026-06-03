@@ -85,6 +85,9 @@ export default function DMInbox() {
         unread: info.unread,
       };
     }).sort((a, b) => new Date(b.last_at).getTime() - new Date(a.last_at).getTime());
+    setThreads(result);
+    setLoading(false);
+  };
 
   const filteredThreads = threads.filter(t => 
     t.partner_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
