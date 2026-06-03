@@ -82,31 +82,33 @@ export function AdminStreakMilestonesTab() {
         {loading ? (
           <p className="text-center text-muted-foreground animate-pulse">Carregando marcos...</p>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {items.map(m => (
-              <div key={m.id} className="grid grid-cols-12 gap-2 items-center p-3 rounded-xl border border-border/50 bg-card/30">
-                <div className="col-span-2">
-                  <label className="text-[10px] uppercase text-muted-foreground">Dias</label>
-                  <Input type="number" value={m.days_required}
-                    onChange={e => updateField(m.id, "days_required", parseInt(e.target.value) || 0)} />
+              <div key={m.id} className="flex flex-col md:grid md:grid-cols-12 gap-3 md:gap-2 p-4 md:p-3 rounded-xl border border-border/50 bg-card/30">
+                <div className="grid grid-cols-3 md:contents gap-2">
+                  <div className="md:col-span-2">
+                    <label className="text-[10px] uppercase text-muted-foreground block mb-1">Dias</label>
+                    <Input type="number" value={m.days_required}
+                      onChange={e => updateField(m.id, "days_required", parseInt(e.target.value) || 0)} />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="text-[10px] uppercase text-muted-foreground block mb-1">XP</label>
+                    <Input type="number" value={m.xp_bonus}
+                      onChange={e => updateField(m.id, "xp_bonus", parseInt(e.target.value) || 0)} />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="text-[10px] uppercase text-muted-foreground block mb-1">Galeões</label>
+                    <Input type="number" value={m.galeons_bonus}
+                      onChange={e => updateField(m.id, "galeons_bonus", parseInt(e.target.value) || 0)} />
+                  </div>
                 </div>
-                <div className="col-span-2">
-                  <label className="text-[10px] uppercase text-muted-foreground">XP</label>
-                  <Input type="number" value={m.xp_bonus}
-                    onChange={e => updateField(m.id, "xp_bonus", parseInt(e.target.value) || 0)} />
-                </div>
-                <div className="col-span-2">
-                  <label className="text-[10px] uppercase text-muted-foreground">Galeões</label>
-                  <Input type="number" value={m.galeons_bonus}
-                    onChange={e => updateField(m.id, "galeons_bonus", parseInt(e.target.value) || 0)} />
-                </div>
-                <div className="col-span-4">
-                  <label className="text-[10px] uppercase text-muted-foreground">Rótulo</label>
+                <div className="md:col-span-4">
+                  <label className="text-[10px] uppercase text-muted-foreground block mb-1">Rótulo</label>
                   <Input value={m.label} onChange={e => updateField(m.id, "label", e.target.value)} />
                 </div>
-                <div className="col-span-2 flex flex-col gap-1 pt-4">
-                  <Button size="sm" variant="magical" onClick={() => save(m)}>Salvar</Button>
-                  <Button size="sm" variant="ghost" onClick={() => { updateField(m.id, "active", !m.active); save({ ...m, active: !m.active }); }}>
+                <div className="md:col-span-2 flex md:flex-col gap-2 pt-2 md:pt-4">
+                  <Button size="sm" variant="magical" className="flex-1 md:w-full" onClick={() => save(m)}>Salvar</Button>
+                  <Button size="sm" variant="ghost" className="flex-1 md:w-full" onClick={() => { updateField(m.id, "active", !m.active); save({ ...m, active: !m.active }); }}>
                     {m.active ? "Desativar" : "Ativar"}
                   </Button>
                   <Button size="sm" variant="destructive" onClick={() => remove(m.id)}><EmojiIcon e="🗑️" /></Button>
@@ -118,12 +120,14 @@ export function AdminStreakMilestonesTab() {
 
         <div className="mt-6 p-4 rounded-xl border border-primary/30 bg-primary/5 space-y-3">
           <h3 className="font-heading text-sm text-primary"><EmojiIcon e="➕" /> Adicionar novo marco</h3>
-          <div className="grid grid-cols-12 gap-2">
-            <div className="col-span-2"><Input type="number" placeholder="Dias" value={novo.days_required || ""} onChange={e => setNovo({ ...novo, days_required: parseInt(e.target.value) || 0 })} /></div>
-            <div className="col-span-2"><Input type="number" placeholder="XP" value={novo.xp_bonus || ""} onChange={e => setNovo({ ...novo, xp_bonus: parseInt(e.target.value) || 0 })} /></div>
-            <div className="col-span-2"><Input type="number" placeholder="Galeões" value={novo.galeons_bonus || ""} onChange={e => setNovo({ ...novo, galeons_bonus: parseInt(e.target.value) || 0 })} /></div>
-            <div className="col-span-4"><Input placeholder="Rótulo (ex: Semana mágica)" value={novo.label} onChange={e => setNovo({ ...novo, label: e.target.value })} /></div>
-            <div className="col-span-2"><Button variant="magical" className="w-full" onClick={create}>Criar</Button></div>
+          <div className="flex flex-col md:grid md:grid-cols-12 gap-3 md:gap-2">
+            <div className="grid grid-cols-3 md:contents gap-2">
+              <div className="md:col-span-2"><Input type="number" placeholder="Dias" value={novo.days_required || ""} onChange={e => setNovo({ ...novo, days_required: parseInt(e.target.value) || 0 })} /></div>
+              <div className="md:col-span-2"><Input type="number" placeholder="XP" value={novo.xp_bonus || ""} onChange={e => setNovo({ ...novo, xp_bonus: parseInt(e.target.value) || 0 })} /></div>
+              <div className="md:col-span-2"><Input type="number" placeholder="Galeões" value={novo.galeons_bonus || ""} onChange={e => setNovo({ ...novo, galeons_bonus: parseInt(e.target.value) || 0 })} /></div>
+            </div>
+            <div className="md:col-span-4"><Input placeholder="Rótulo (ex: Semana mágica)" value={novo.label} onChange={e => setNovo({ ...novo, label: e.target.value })} /></div>
+            <div className="md:col-span-2"><Button variant="magical" className="w-full" onClick={create}>Criar</Button></div>
           </div>
         </div>
       </div>
