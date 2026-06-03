@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function MaraudersGuide() {

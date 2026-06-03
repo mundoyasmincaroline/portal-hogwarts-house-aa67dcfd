@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { UserPlus, Check, X, Ban, Trash2, Users } from "lucide-react";
-
+import HouseCrest from "@/components/rpg/HouseCrest";
 import EmojiIcon from "@/components/shared/EmojiIcon";
 interface FriendRow {
   id: string;
