@@ -10,6 +10,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
+import { motion, AnimatePresence } from "framer-motion";
 interface Prophecy { id: string; prompt: string | null; prophecy_text: string; symbol: string | null; created_at: string; }
 
 export default function ProphecyPage() {
@@ -69,10 +70,36 @@ export default function ProphecyPage() {
           placeholder="Ex: meu destino no Quadribol, amizades, viagem... (opcional)"
           maxLength={200} disabled={generating}/>
         <Button variant="magical" size="lg" className="w-full mt-4" onClick={generate} disabled={generating}>
-          {generating ? <><Loader2 className="mr-2 animate-spin" size={18}/> Consultando esferas...</>
-            : <><Sparkles className="mr-2" size={18}/> Invocar Profecia</>}
+          {generating ? (
+            <motion.div 
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              className="flex items-center"
+            >
+              <EmojiIcon e="🔮" className="mr-2" /> Consultando esferas...
+            </motion.div>
+          ) : (
+            <><Sparkles className="mr-2" size={18}/> Invocar Profecia</>
+          )}
         </Button>
       </Card>
+
+      <AnimatePresence>
+        {generating && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            className="flex justify-center py-8"
+          >
+            <div className="relative w-32 h-32">
+              <div className="absolute inset-0 bg-purple-500/20 rounded-full blur-2xl animate-pulse" />
+              <div className="absolute inset-0 border-2 border-primary/30 rounded-full animate-spin-slow" />
+              <div className="absolute inset-0 flex items-center justify-center text-6xl">🔮</div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="space-y-3">
         {list.map(p => (

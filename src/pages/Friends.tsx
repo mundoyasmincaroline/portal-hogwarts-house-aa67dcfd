@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { UserPlus, Check, X, Ban, Trash2, Users } from "lucide-react";
-
+import HouseCrest from "@/components/rpg/HouseCrest";
 import EmojiIcon from "@/components/shared/EmojiIcon";
 interface FriendRow {
   id: string;
@@ -119,27 +120,46 @@ export default function Friends() {
   const blocked = rows.filter((r) => r.status === "blocked" && r.user_id === user.id);
 
   const Card = ({ row, actions }: { row: FriendRow; actions: React.ReactNode }) => (
-    <div className="glass rounded-xl p-4 flex items-center gap-3 border border-border/50">
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ scale: 1.01, backgroundColor: "rgba(255, 255, 255, 0.03)" }}
+      className={`glass rounded-xl p-4 flex items-center gap-3 border transition-all ${
+        row.other?.house === 'gryffindor' ? 'border-red-500/20' :
+        row.other?.house === 'slytherin' ? 'border-green-500/20' :
+        row.other?.house === 'ravenclaw' ? 'border-blue-500/20' :
+        row.other?.house === 'hufflepuff' ? 'border-yellow-500/20' : 'border-border/50'
+      }`}
+    >
       <button
         onClick={() => row.other && navigate(`/dashboard/profile/${row.other.user_id}`)}
         className="flex items-center gap-3 flex-1 min-w-0 text-left"
       >
-        {row.other?.avatar_url ? (
-          <SafeImage src={row.other.avatar_url} className="w-12 h-12 rounded-full object-cover border border-primary/20" alt="" />
-        ) : (
-          <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center font-heading text-lg">
-            {row.other?.full_name?.[0] || "?"}
-          </div>
-        )}
+        <div className="relative">
+          {row.other?.avatar_url ? (
+            <SafeImage src={row.other.avatar_url} className="w-12 h-12 rounded-full object-cover border border-primary/20" alt="" />
+          ) : (
+            <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center font-heading text-lg">
+              {row.other?.full_name?.[0] || "?"}
+            </div>
+          )}
+          {row.other?.house && (
+            <div className="absolute -bottom-1 -right-1 scale-75">
+              <HouseCrest house={row.other.house as any} size="xs" />
+            </div>
+          )}
+        </div>
         <div className="min-w-0 flex-1">
           <p className="font-heading text-sm truncate">{row.other?.full_name || "Bruxo desconhecido"}</p>
-          <p className="text-xs text-muted-foreground truncate">
-            @{row.other?.username} • Nv. {row.other?.level} • {row.other?.house}
-          </p>
+          <div className="flex items-center gap-2">
+            <p className="text-xs text-muted-foreground truncate">
+              @{row.other?.username} • Nv. {row.other?.level}
+            </p>
+          </div>
         </div>
       </button>
       <div className="flex gap-2 shrink-0">{actions}</div>
-    </div>
+    </motion.div>
   );
 
   return (

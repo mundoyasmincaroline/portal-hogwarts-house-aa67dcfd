@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
@@ -25,12 +26,24 @@ const MOODS = [
 export default function Diary() {
   const { user } = useAuth();
   const [entries, setEntries] = useState<Entry[]>([]);
+  const [filteredEntries, setFilteredEntries] = useState<Entry[]>([]);
   const [creating, setCreating] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [mood, setMood] = useState("neutral");
+  const [search, setSearch] = useState("");
 
   useEffect(() => { load(); }, [user?.id]);
+
+  useEffect(() => {
+    const q = search.toLowerCase();
+    setFilteredEntries(
+      entries.filter(e => 
+        e.title.toLowerCase().includes(q) || 
+        e.content.toLowerCase().includes(q)
+      )
+    );
+  }, [search, entries]);
 
   async function load() {
     if (!user) return;
@@ -63,11 +76,27 @@ export default function Diary() {
         <p className="text-muted-foreground text-sm">Suas memórias, suas reflexões. Só você pode ler.</p>
       </header>
 
-      {!creating ? (
-        <Button variant="magical" size="lg" className="w-full" onClick={() => setCreating(true)}>
-          <Plus className="mr-2" size={18}/> Nova Página
-        </Button>
-      ) : (
+      <div className="flex flex-col sm:flex-row gap-2">
+        <Input 
+          placeholder="Buscar memórias..." 
+          value={search} 
+          onChange={e => setSearch(e.target.value)}
+          className="bg-[#fdf5e6]/5 border-primary/20"
+        />
+        {!creating && (
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="shrink-0"
+          >
+            <Button variant="magical" size="lg" className="w-full sm:w-auto animate-pulse-subtle" onClick={() => setCreating(true)}>
+              <Plus className="mr-2" size={18}/> Nova Página
+            </Button>
+          </motion.div>
+        )}
+      </div>
+
+      {creating && (
         <Card className="p-5 space-y-3 border-primary/30">
           <Input placeholder="Título da página..." value={title} onChange={e => setTitle(e.target.value)} maxLength={120}/>
           <Textarea placeholder="O que aconteceu hoje em Hogwarts?" value={content} onChange={e => setContent(e.target.value)} rows={6} maxLength={4000}/>
@@ -88,14 +117,14 @@ export default function Diary() {
         </Card>
       )}
 
-      <div className="space-y-3">
-        {entries.length === 0 && (
+      <div className="space-y-4">
+        {filteredEntries.length === 0 && (
           <div className="text-center py-12 text-muted-foreground">
             <BookOpen className="mx-auto mb-3 opacity-40" size={40}/>
-            <p className="text-sm italic">Seu diário ainda está em branco...</p>
+            <p className="text-sm italic">{search ? "Nenhuma memória corresponde à busca..." : "Seu diário ainda está em branco..."}</p>
           </div>
         )}
-        {entries.map(e => {
+        {filteredEntries.map(e => {
           const m = MOODS.find(x => x.v === e.mood) || MOODS[1];
           return (
             <Card key={e.id} className="p-5 border-primary/20 bg-[#fdf5e6]/5 text-foreground hover:bg-[#fdf5e6]/10 transition-all shadow-lg relative overflow-hidden group">
