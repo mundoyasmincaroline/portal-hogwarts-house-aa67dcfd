@@ -64,6 +64,8 @@ interface AuthState {
     house: House;
     avatarUrl?: string;
     bloodStatus?: string;
+    wandWood?: string;
+    wandCore?: string;
   }) => Promise<{ success: boolean; error?: string }>;
   fetchProfile: (userId: string) => Promise<void>;
   checkAdmin: (userId: string) => Promise<boolean>;
@@ -192,7 +194,7 @@ export const useAuth = create<AuthState>((set, get) => ({
     set({ user: null, profile: null, isAuthenticated: false, isAdmin: false });
   },
 
-  register: async ({ email, password, fullName, username, age, house, avatarUrl, bloodStatus }) => {
+  register: async ({ email, password, fullName, username, age, house, avatarUrl, bloodStatus, wandWood, wandCore }) => {
     if (age < 13 || age > 17) {
       return { success: false, error: "Apenas bruxos de 13 a 17 anos podem se matricular." };
     }
@@ -209,6 +211,8 @@ export const useAuth = create<AuthState>((set, get) => ({
           house,
           avatar_url: avatarUrl || null,
           blood_status: bloodStatus || null,
+          wand_wood: wandWood || null,
+          wand_core: wandCore || null,
         },
       },
     });
