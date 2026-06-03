@@ -11,6 +11,7 @@ import { AdminMonetizationTab } from "./Admin/AdminMonetizationTab";
 import PedidosTab from "@/components/PedidosTab";
 import { AdminStreakMilestonesTab } from "./Admin/AdminStreakMilestonesTab";
 import AdminKpiPanel from "@/components/admin/AdminKpiPanel";
+import AdminMemberModal from "@/components/admin/AdminMemberModal";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 type Tab = "members" | "pending_members" | "challenges" | "monetization" | "pedidos" | "streak";
@@ -22,10 +23,12 @@ export default function Admin() {
   const [members, setMembers] = useState<MemberProfile[]>([]);
   const [onlineFilter, setOnlineFilter] = useState<"all" | "online">("all");
   const [loading, setLoading] = useState(true);
+  const [editMember, setEditMember] = useState<{ uid: string; name: string } | null>(null);
 
   const fetchAll = useCallback(async () => {
     setLoading(true);
-    const { data: m } = await supabase.from("profiles").select("*").eq("approved", true).order("created_at", { ascending: false });
+    const { data: m, error } = await supabase.from("profiles").select("*").eq("approved", true).order("created_at", { ascending: false });
+    if (error) toast.error("Erro ao carregar membros: " + error.message);
     if (m) setMembers(m as unknown as MemberProfile[]);
     setLoading(false);
   }, []);
@@ -97,7 +100,7 @@ export default function Admin() {
               <div className="grid gap-4">
                 {members
                   .filter(m => onlineFilter === "all" || isUserOnline(m as any))
-                  .map(m => <AdminMemberCard key={m.user_id} member={m} onClick={() => navigate(`/dashboard/profile/${m.user_id}`)} />)}
+                  .map(m => <AdminMemberCard key={m.user_id} member={m} onClick={(uid, name) => setEditMember({ uid, name })} />)}
                 {members.filter(m => onlineFilter === "all" || isUserOnline(m as any)).length === 0 && (
                   <p className="text-center py-10 text-muted-foreground text-sm italic">Nenhum bruxo encontrado nesta categoria.</p>
                 )}
@@ -108,6 +111,15 @@ export default function Admin() {
           {tab === "pedidos" && <PedidosTab />}
           {tab === "streak" && <AdminStreakMilestonesTab />}
         </div>
+      )}
+
+      {editMember && (
+        <AdminMemberModal
+          memberId={editMember.uid}
+          memberName={editMember.name}
+          onClose={() => setEditMember(null)}
+          onSaved={fetchAll}
+        />
       )}
     </div>
   );
