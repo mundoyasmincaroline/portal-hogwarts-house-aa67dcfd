@@ -13,6 +13,7 @@ const MONTH_NAMES = [
 
 export default function MagicalCalendar() {
   const [birthdays, setBirthdays] = useState<any[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -41,13 +42,26 @@ export default function MagicalCalendar() {
     <div className="max-w-6xl mx-auto space-y-12 pb-20 animate-in fade-in duration-1000 px-4 sm:px-6">
       <MagicalDashboardHeader />
       
-      <div className="space-y-4 text-center sm:text-left">
-        <h1 className="text-4xl sm:text-6xl font-heading text-gold-gradient tracking-tighter drop-shadow-[0_10px_20px_rgba(212,175,55,0.3)]">
-          Calendário Mágico
-        </h1>
-        <p className="text-foreground/85 text-sm sm:text-base italic uppercase tracking-[0.28em] font-light">
-          Registros ancestrais de nascimentos lendários
-        </p>
+      <div className="space-y-6 text-center sm:text-left">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div>
+            <h1 className="text-4xl sm:text-6xl font-heading text-gold-gradient tracking-tighter drop-shadow-[0_10px_20px_rgba(212,175,55,0.3)]">
+              Calendário Mágico
+            </h1>
+            <p className="text-foreground/85 text-sm sm:text-base italic uppercase tracking-[0.28em] font-light">
+              Registros ancestrais de nascimentos lendários
+            </p>
+          </div>
+          <div className="w-full sm:w-64">
+            <input 
+              type="text" 
+              placeholder="Buscar personagem..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full bg-black/40 border border-primary/30 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-primary transition-all text-foreground"
+            />
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -57,7 +71,10 @@ export default function MagicalCalendar() {
           ))
         ) : (
           MONTH_NAMES.map((month, index) => {
-            const monthBirthdays = birthdays.filter(b => new Date(b.birth_date).getMonth() === index);
+            const monthBirthdays = birthdays.filter(b => 
+              new Date(b.birth_date).getMonth() === index && 
+              (searchTerm === "" || b.name.toLowerCase().includes(searchTerm.toLowerCase()))
+            );
             const isCurrentMonth = index === currentMonth;
 
             return (

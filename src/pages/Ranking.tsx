@@ -39,6 +39,7 @@ export default function Ranking() {
   const [members, setMembers] = useState<RankMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<"geral" | "casas">("geral");
+  const [houseFilter, setHouseFilter] = useState<House | "all">("all");
   const [housePoints, setHousePoints] = useState<Record<string, number>>({});
 
   useEffect(() => {
@@ -72,8 +73,9 @@ export default function Ranking() {
     }
   };
 
-  const top3 = members.slice(0, 3);
-  const rest = members.slice(3);
+  const filteredMembers = houseFilter === "all" ? members : members.filter(m => m.house === houseFilter);
+  const top3 = filteredMembers.slice(0, 3);
+  const rest = filteredMembers.slice(3);
 
   const vipBadge = (plan?: string) => {
     if (plan === "founder") return <span className="text-[9px] font-heading px-1.5 py-0.5 rounded-full bg-gradient-to-r from-yellow-600 to-amber-400 text-black"><EmojiIcon e="👑" /></span>;
@@ -110,6 +112,30 @@ export default function Ranking() {
           </button>
         ))}
       </div>
+
+      {tab === "geral" && (
+        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+          <button 
+            onClick={() => setHouseFilter("all")}
+            className={`px-3 py-1 rounded-full text-[10px] font-heading uppercase tracking-widest transition-all border ${
+              houseFilter === "all" ? "bg-primary/20 border-primary text-primary" : "bg-background/40 border-primary/20 text-muted-foreground hover:border-primary/40"
+            }`}
+          >
+            Todos
+          </button>
+          {Object.entries(HOUSES).map(([id, house]) => (
+            <button 
+              key={id}
+              onClick={() => setHouseFilter(id as House)}
+              className={`px-3 py-1 rounded-full text-[10px] font-heading uppercase tracking-widest transition-all border whitespace-nowrap ${
+                houseFilter === id ? "bg-primary/20 border-primary text-primary" : "bg-background/40 border-primary/20 text-muted-foreground hover:border-primary/40"
+              }`}
+            >
+              {house.name}
+            </button>
+          ))}
+        </div>
+      )}
 
       {loading ? (
         <div className="glass rounded-2xl p-16 text-center">
@@ -175,7 +201,7 @@ export default function Ranking() {
               <span className="font-heading text-sm text-primary">Ranking Completo</span>
               <span className="ml-auto text-xs text-muted-foreground">{members.length} bruxos</span>
             </div>
-            {members.map((m, i) => {
+            {rest.map((m, i) => {
               const levelInfo = getLevelFromXP(m.xp);
               const online = isUserOnline(m as any);
               const colors = HOUSE_COLORS[m.house] || HOUSE_COLORS.gryffindor;

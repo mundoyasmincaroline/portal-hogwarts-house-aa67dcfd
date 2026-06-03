@@ -28,9 +28,14 @@ export default function GringottsVault() {
   useEffect(() => { load(); }, []);
 
   async function call(rpc: string, args: any = {}) {
+    if (rpc === "vault_deposit" && (parseInt(amount) <= 0 || isNaN(parseInt(amount)))) {
+      return toast.error("Insira uma quantidade válida de Galeões.");
+    }
+    
     setLoading(true);
     const { error } = await supabase.rpc(rpc as any, args);
     setLoading(false);
+    
     if (error) return toast.error(error.message);
     toast.success("Operação concluída! 🪙");
     setAmount("");
