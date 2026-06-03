@@ -310,6 +310,7 @@ export default function ChatRoom() {
       });
       if (!rollErr) {
         setInput("");
+        setIsSending(false);
         return;
       }
     }
