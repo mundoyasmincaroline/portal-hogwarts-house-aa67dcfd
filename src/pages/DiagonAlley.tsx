@@ -85,12 +85,23 @@ export default function DiagonAlley() {
         </motion.div>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide">
-        {shops.map((s) => (
-          <Button key={s.id} variant={active === s.id ? "default" : "outline"} onClick={() => setActive(s.id)} className="shrink-0 max-w-[78vw] sm:max-w-none px-4">
-            <span className="shrink-0">{s.icon}</span><span className="truncate">{s.name}</span>
-          </Button>
-        ))}
+      <div className="flex flex-col sm:flex-row gap-4 items-center relative z-10">
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide flex-1">
+          {shops.map((s) => (
+            <Button key={s.id} variant={active === s.id ? "default" : "outline"} onClick={() => setActive(s.id)} className="shrink-0 max-w-[78vw] sm:max-w-none px-4">
+              <span className="shrink-0">{s.icon}</span><span className="truncate">{s.name}</span>
+            </Button>
+          ))}
+        </div>
+        <div className="relative w-full sm:w-64">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input 
+            placeholder="Buscar item mágico..." 
+            className="pl-9 bg-background/50 border-primary/20"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
       </div>
 
       {shops.filter((s) => s.id === active).map((s) => (
