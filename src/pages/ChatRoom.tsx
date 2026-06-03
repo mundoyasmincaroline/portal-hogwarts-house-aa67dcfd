@@ -259,9 +259,20 @@ export default function ChatRoom() {
             supabase.from("user_roles").select("role").eq("user_id", payload.new.user_id).maybeSingle()
           ]);
           
-          if (userData) {
-            setMessages(prev => [...prev, { ...payload.new, profiles: userData, characters: charData, user_role: roleData?.role } as unknown as Message]);
-          }
+          const profileData = userData || { 
+            full_name: "Bruxo Desconhecido", 
+            username: "bruxo", 
+            house: "gryffindor", 
+            avatar_url: null,
+            vip_plan: null
+          };
+
+          setMessages(prev => [...prev, { 
+            ...payload.new, 
+            profiles: profileData, 
+            characters: charData, 
+            user_role: roleData?.role 
+          } as unknown as Message]);
         } catch (err) {
           console.error("Error processing realtime message:", err);
         }
