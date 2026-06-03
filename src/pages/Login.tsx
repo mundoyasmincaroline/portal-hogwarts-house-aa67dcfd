@@ -64,7 +64,7 @@ export default function Login() {
     });
 
     return () => { authListener.subscription.unsubscribe(); };
-  }, [navigate, isRecoveryMode]);
+  }, [navigate, isRecoveryMode, showFacialValidation]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
