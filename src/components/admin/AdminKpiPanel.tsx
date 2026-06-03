@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Users, UserCheck, Sparkles, AlertTriangle, ShoppingBag, Trophy, Coins } from "lucide-react";
@@ -15,6 +16,7 @@ type KPI = {
 
 export default function AdminKpiPanel() {
   const [k, setK] = useState<KPI | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
@@ -26,18 +28,13 @@ export default function AdminKpiPanel() {
   if (!k) return null;
 
   const items = [
-    { icon: Users, label: "Bruxos totais", value: k.total_wizards, color: "text-blue-400" },
-    { icon: UserCheck, label: "Aprovados", value: k.approved_wizards, color: "text-green-400" },
-    { icon: Sparkles, label: "Novos (7d)", value: k.new_week, color: "text-pink-400" },
-    { icon: AlertTriangle, label: "Sinalizações (7d)", value: k.flags_week, color: "text-red-400" },
-    { icon: ShoppingBag, label: "Mercado ativo", value: k.market_active, color: "text-purple-400" },
-    { icon: Trophy, label: "Torneios ativos", value: k.tournaments_active, color: "text-yellow-400" },
-    {
-      icon: Coins,
-      label: "Receita do mês",
-      value: `R$ ${Number(k.revenue_month_brl || 0).toFixed(2)}`,
-      color: "text-emerald-400",
-    },
+    { icon: Users, label: "Bruxos totais", value: k.total_wizards ?? 0, color: "text-blue-400", to: "/dashboard/admin" },
+    { icon: UserCheck, label: "Aprovados", value: k.approved_wizards ?? 0, color: "text-green-400", to: "/dashboard/admin" },
+    { icon: Sparkles, label: "Novos (7d)", value: k.new_week ?? 0, color: "text-pink-400", to: "/dashboard/admin/analytics" },
+    { icon: AlertTriangle, label: "Sinalizações (7d)", value: k.flags_week ?? 0, color: "text-red-400", to: "/dashboard/admin/support" },
+    { icon: ShoppingBag, label: "Mercado ativo", value: k.market_active ?? 0, color: "text-purple-400", to: "/dashboard/admin?tab=monetization" },
+    { icon: Trophy, label: "Torneios ativos", value: k.tournaments_active ?? 0, color: "text-yellow-400", to: "/dashboard/admin/analytics" },
+    { icon: Coins, label: "Receita do mês", value: `R$ ${Number(k.revenue_month_brl || 0).toFixed(2)}`, color: "text-emerald-400", to: "/dashboard/admin/finance" },
   ];
 
   return (
@@ -49,13 +46,17 @@ export default function AdminKpiPanel() {
         {items.map((it) => {
           const Icon = it.icon;
           return (
-            <div key={it.label} className="bg-background/40 rounded p-3 text-center">
+            <button
+              key={it.label}
+              onClick={() => navigate(it.to)}
+              className="bg-background/40 rounded p-3 text-center hover:bg-background/70 hover:border-primary/40 border border-transparent transition-all hover:-translate-y-0.5 cursor-pointer"
+            >
               <Icon className={`w-5 h-5 mx-auto ${it.color}`} />
               <p className="text-lg font-bold mt-1">{it.value}</p>
               <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
                 {it.label}
               </p>
-            </div>
+            </button>
           );
         })}
       </div>
