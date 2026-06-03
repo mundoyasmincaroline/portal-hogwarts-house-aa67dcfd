@@ -1,6 +1,9 @@
 import { useState, useEffect, memo } from "react";
 import { useAuth } from "@/lib/auth";
 import { Sparkles } from "lucide-react";
+import morningImg from "@/assets/hogwarts_morning.webp";
+import afternoonImg from "@/assets/hogwarts_afternoon.webp";
+import nightImg from "@/assets/hogwarts_night.webp";
 
 const DynamicGreeting = memo(() => {
   const { profile } = useAuth();
