@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { feedService } from "@/services/features/feedService";
 import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { type House } from "@/types";
 import { HOUSES } from "@/types/house";
