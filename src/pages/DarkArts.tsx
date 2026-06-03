@@ -21,6 +21,8 @@ export default function DarkArts() {
   const [vessel, setVessel] = useState("");
   const [desc, setDesc] = useState("");
   const [busy, setBusy] = useState(false);
+  const [spellSearch, setSpellSearch] = useState("");
+  const [showVignette, setShowVignette] = useState(false);
 
   const load = async () => {
     const { data: u } = await supabase.auth.getUser();
