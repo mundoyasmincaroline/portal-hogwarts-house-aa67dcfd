@@ -102,37 +102,50 @@ export default function PotionsLab() {
         </TabsContent>
 
         <TabsContent value="recipes" className="mt-4 space-y-4">
-          <div className="flex flex-wrap gap-4 items-center mb-4">
-            <Input 
-              placeholder="Procurar receita..." 
-              className="max-w-xs bg-background/50"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <div className="flex gap-2">
-              <Button 
-                variant={filterDifficulty === "all" ? "default" : "outline"} 
-                size="sm" 
-                onClick={() => setFilterDifficulty("all")}
-              >
-                Todas
-              </Button>
-              {[1, 2, 3, 4, 5].map(d => (
+          <div className="flex flex-wrap gap-4 items-center justify-between mb-4">
+            <div className="flex flex-wrap gap-2 items-center">
+              <Input 
+                placeholder="Procurar receita..." 
+                className="max-w-xs bg-background/50"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <div className="flex gap-1">
                 <Button 
-                  key={d}
-                  variant={filterDifficulty === d ? "default" : "outline"} 
+                  variant={filterDifficulty === "all" ? "default" : "outline"} 
                   size="sm" 
-                  onClick={() => setFilterDifficulty(d)}
+                  onClick={() => setFilterDifficulty("all")}
                 >
-                  {d}★
+                  Todas
                 </Button>
-              ))}
+                {[1, 2, 3, 4, 5].map(d => (
+                  <Button 
+                    key={d}
+                    variant={filterDifficulty === d ? "default" : "outline"} 
+                    size="sm" 
+                    onClick={() => setFilterDifficulty(d)}
+                  >
+                    {d}★
+                  </Button>
+                ))}
+              </div>
             </div>
+            <Button 
+              variant={showMissing ? "destructive" : "outline"} 
+              size="sm" 
+              onClick={() => setShowMissing(!showMissing)}
+            >
+              {showMissing ? "Ver Todas" : "Ver Faltantes"}
+            </Button>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             {recipes
               .filter(r => r.name.toLowerCase().includes(searchQuery.toLowerCase()))
               .filter(r => filterDifficulty === "all" || r.difficulty === filterDifficulty)
+              .filter(r => {
+                if (!showMissing) return true;
+                return Object.entries(r.ingredients).some(([slug, qty]) => (inventory[slug] || 0) < qty);
+              })
               .map((r) => (
             <Card key={r.id} className="p-4 space-y-2 bg-card/60 border-primary/20">
               <div className="flex items-start justify-between">
