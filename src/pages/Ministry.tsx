@@ -86,10 +86,11 @@ export default function Ministry() {
       </div>
 
       <Tabs defaultValue="cargos">
-        <TabsList>
+        <TabsList className="bg-background/40 border border-primary/20">
           <TabsTrigger value="cargos">Cargos</TabsTrigger>
           <TabsTrigger value="missoes">Missões</TabsTrigger>
-          <TabsTrigger value="leis">Leis Bruxas</TabsTrigger>
+          <TabsTrigger value="leis">Decretos e Leis</TabsTrigger>
+          <TabsTrigger value="status">Status de Solicitações</TabsTrigger>
         </TabsList>
 
         <TabsContent value="cargos" className="grid gap-4 md:grid-cols-2 mt-4">
