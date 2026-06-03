@@ -112,10 +112,12 @@ export default function DiagonAlley() {
       ))}
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {items.filter((i) => i.shop_id === active).map((i) => (
-          <Card key={i.id} className="p-4 space-y-3 bg-card/60 border-primary/20 hover:border-primary/60 transition">
+        {items
+          .filter((i) => i.shop_id === active && i.name.toLowerCase().includes(searchQuery.toLowerCase()))
+          .map((i) => (
+          <Card key={i.id} className="p-4 space-y-3 bg-card/60 border-primary/20 hover:border-primary/60 transition group">
             <div className="flex items-start justify-between">
-              <div className="text-4xl">{i.icon}</div>
+              <div className="text-4xl transition-transform group-hover:scale-110">{i.icon}</div>
               <div className="flex flex-col items-end gap-1">
                 <Badge className={rarityColor[i.rarity] || ""}>{i.rarity}</Badge>
                 {i.exclusive && <Badge variant="outline" className="border-amber-500/50 text-amber-300">Exclusivo</Badge>}
@@ -123,12 +125,36 @@ export default function DiagonAlley() {
             </div>
             <div>
               <h3 className="font-heading">{i.name}</h3>
-              <p className="text-xs text-muted-foreground">{i.description}</p>
+              <p className="text-xs text-muted-foreground line-clamp-2">{i.description}</p>
             </div>
-            <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
-              <span className="text-primary font-bold">{i.price_galeons} G</span>
-              <Button size="sm" className="w-full sm:w-auto" disabled={loading || i.stock === 0} onClick={() => buy(i.id)}>
-                {i.stock === 0 ? "Esgotado" : "Comprar"}
+            
+            <div className="flex flex-col gap-3 pt-2">
+              <div className="flex items-center justify-between">
+                <span className="text-primary font-bold">{i.price_galeons} G</span>
+                <div className="flex items-center gap-2 bg-background/40 rounded-lg p-1 border border-primary/10">
+                  <button 
+                    onClick={() => setQuantities(prev => ({ ...prev, [i.id]: Math.max(1, (prev[i.id] || 1) - 1) }))}
+                    className="w-6 h-6 flex items-center justify-center hover:bg-primary/20 rounded text-xs"
+                  >
+                    -
+                  </button>
+                  <span className="text-xs w-4 text-center">{quantities[i.id] || 1}</span>
+                  <button 
+                    onClick={() => setQuantities(prev => ({ ...prev, [i.id]: (prev[i.id] || 1) + 1 }))}
+                    className="w-6 h-6 flex items-center justify-center hover:bg-primary/20 rounded text-xs"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              <Button 
+                size="sm" 
+                className="w-full" 
+                disabled={loading || i.stock === 0} 
+                onClick={() => buy(i.id)}
+              >
+                <ShoppingCart className="w-3 h-3 mr-2" />
+                {i.stock === 0 ? "Esgotado" : `Comprar x${quantities[i.id] || 1}`}
               </Button>
             </div>
           </Card>
