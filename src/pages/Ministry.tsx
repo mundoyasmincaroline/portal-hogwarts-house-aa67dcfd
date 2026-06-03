@@ -26,6 +26,7 @@ export default function Ministry() {
   const [laws, setLaws] = useState<Law[]>([]);
   const [missions, setMissions] = useState<Mission[]>([]);
   const [myJobs, setMyJobs] = useState<Set<string>>(new Set());
+  const [cooldowns, setCooldowns] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(false);
 
   async function load() {
@@ -55,10 +56,18 @@ export default function Ministry() {
   }
 
   async function doMission(id: string) {
+    if (cooldowns[id] && Date.now() < cooldowns[id]) {
+      return toast.error("Aguarde o tempo de cooldown para esta missão!");
+    }
+    
     setLoading(true);
     const { error } = await supabase.rpc("complete_ministry_mission" as any, { p_mission_id: id });
     setLoading(false);
+    
     if (error) return toast.error(error.message);
+    
+    // Set 5 minute cooldown
+    setCooldowns(prev => ({ ...prev, [id]: Date.now() + 5 * 60 * 1000 }));
     toast.success("Missão cumprida! ⚖️");
   }
 
@@ -115,7 +124,14 @@ export default function Ministry() {
               <p className="text-sm text-muted-foreground">{m.description}</p>
               <div className="flex items-center justify-between pt-2">
                 <span className="text-xs text-primary">+{m.xp_reward} XP · +{m.galeon_reward} G</span>
-                <Button size="sm" disabled={loading} onClick={() => doMission(m.id)}>Cumprir</Button>
+                <Button 
+                  size="sm" 
+                  disabled={loading} 
+                  onClick={() => doMission(m.id)}
+                  className="bg-primary/80 hover:bg-primary"
+                >
+                  {loading ? "Processando..." : "Cumprir Missão"}
+                </Button>
               </div>
             </Card>
           ))}

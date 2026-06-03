@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -183,10 +184,24 @@ export default function Classes() {
             </div>
           </div>
           
-          <div className="pt-4 flex items-center justify-center gap-2">
-            <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-primary/50" />
-            <span className="font-heading text-primary uppercase tracking-[0.3em] text-[10px] font-bold">{currentDay}</span>
-            <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-primary/50" />
+          <div className="pt-4 flex flex-col items-center justify-center gap-4">
+            <div className="flex items-center gap-2">
+              <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-primary/50" />
+              <span className="font-heading text-primary uppercase tracking-[0.3em] text-[10px] font-bold">{currentDay}</span>
+              <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-primary/50" />
+            </div>
+            
+            {classes.some(c => isClassActive(c.time_slot) && !attendedMap[c.id]) && (
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-primary/20 border border-primary/40 px-4 py-1.5 rounded-full"
+              >
+                <p className="text-[10px] font-heading text-primary uppercase tracking-widest animate-pulse">
+                  ⚡ Aula em andamento! Entre na sala agora.
+                </p>
+              </motion.div>
+            )}
           </div>
         </div>
       </div>

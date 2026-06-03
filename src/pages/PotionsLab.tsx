@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
@@ -16,6 +17,7 @@ export default function PotionsLab() {
   const [brews, setBrews] = useState<Brew[]>([]);
   const [plants, setPlants] = useState<Plant[]>([]);
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   async function load() {
     const [{ data: r }, { data: pl }, { data: { user } }] = await Promise.all([
@@ -62,8 +64,8 @@ export default function PotionsLab() {
 
       <Tabs defaultValue="brewing">
         <TabsList>
-          <TabsTrigger value="brewing">No Caldeirão</TabsTrigger>
-          <TabsTrigger value="recipes">Receitas</TabsTrigger>
+          <TabsTrigger value="brewing">No Caldeirão ({brews.filter(b => b.status === "brewing").length})</TabsTrigger>
+          <TabsTrigger value="recipes">Receitas ({recipes.length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="brewing" className="space-y-3 mt-4">
@@ -90,8 +92,17 @@ export default function PotionsLab() {
           })}
         </TabsContent>
 
-        <TabsContent value="recipes" className="grid gap-4 md:grid-cols-2 mt-4">
-          {recipes.map((r) => (
+        <TabsContent value="recipes" className="mt-4 space-y-4">
+          <Input 
+            placeholder="Procurar receita..." 
+            className="max-w-xs bg-background/50"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <div className="grid gap-4 md:grid-cols-2">
+            {recipes
+              .filter(r => r.name.toLowerCase().includes(searchQuery.toLowerCase()))
+              .map((r) => (
             <Card key={r.id} className="p-4 space-y-2 bg-card/60 border-primary/20">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
@@ -117,6 +128,7 @@ export default function PotionsLab() {
               </div>
             </Card>
           ))}
+          </div>
         </TabsContent>
       </Tabs>
     </div>

@@ -148,7 +148,12 @@ export default function ProphetDaily() {
               <div className="h-px w-full bg-amber-900/10 mb-6 relative z-10" />
               <p className="whitespace-pre-line text-sm leading-relaxed text-amber-900/80 font-serif italic relative z-10">{a.content}</p>
               
-              <div className="mt-8 flex justify-end relative z-10">
+              <div className="mt-8 flex justify-between items-center relative z-10">
+                <div className="flex gap-2">
+                  <Button variant="ghost" size="sm" className="text-amber-900/60 hover:text-amber-900">
+                    <Sparkles className="w-3 h-3 mr-1" /> Encantar
+                  </Button>
+                </div>
                 <div className="text-[8px] font-heading text-amber-900/40 uppercase tracking-[0.3em]">Hogwarts House Press</div>
               </div>
             </motion.div>
