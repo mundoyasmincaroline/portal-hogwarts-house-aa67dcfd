@@ -36,11 +36,11 @@ export default function Login() {
   else if (hour >= 7 && hour < 12) timeOfDay = "morning";
   else if (hour >= 12 && hour < 17) timeOfDay = "afternoon";
   else if (hour >= 17 && hour < 19) timeOfDay = "dusk";
-  let bgUrl = new URL('../assets/hogwarts_night.png', import.meta.url).href;
-  if (timeOfDay === "morning") bgUrl = new URL('../assets/hogwarts_morning.png', import.meta.url).href;
-  else if (timeOfDay === "afternoon") bgUrl = new URL('../assets/hogwarts_afternoon.png', import.meta.url).href;
-  else if (timeOfDay === "dawn") bgUrl = new URL('../assets/hogwarts_dawn.jpg', import.meta.url).href;
-  else if (timeOfDay === "dusk") bgUrl = new URL('../assets/hogwarts_dusk.jpg', import.meta.url).href;
+  let bgUrl = new URL('../assets/hogwarts_night.webp', import.meta.url).href;
+  if (timeOfDay === "morning") bgUrl = new URL('../assets/hogwarts_morning.webp', import.meta.url).href;
+  else if (timeOfDay === "afternoon") bgUrl = new URL('../assets/hogwarts_afternoon.webp', import.meta.url).href;
+  else if (timeOfDay === "dawn") bgUrl = new URL('../assets/hogwarts_dawn.webp', import.meta.url).href;
+  else if (timeOfDay === "dusk") bgUrl = new URL('../assets/hogwarts_dusk.webp', import.meta.url).href;
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
