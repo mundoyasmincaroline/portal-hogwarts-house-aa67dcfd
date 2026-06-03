@@ -240,9 +240,21 @@ export default function Quests() {
                     {currentStep.action_hint && (
                       <p className="text-xs text-primary/80">💡 {currentStep.action_hint}</p>
                     )}
-                    <Button size="sm" onClick={() => advance(q.id)}>
-                      Concluir etapa (+{currentStep.xp_reward} XP)
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button size="sm" onClick={() => advance(q.id)}>
+                        Concluir etapa (+{currentStep.xp_reward} XP)
+                      </Button>
+                      {currentStep.description.toLowerCase().includes("poção") && (
+                        <Button size="sm" variant="outline" onClick={() => window.location.href='/dashboard/potions'}>
+                          <EmojiIcon e="🧪" /> Laboratório
+                        </Button>
+                      )}
+                      {currentStep.description.toLowerCase().includes("estufa") && (
+                        <Button size="sm" variant="outline" onClick={() => window.location.href='/dashboard/greenhouse'}>
+                          <EmojiIcon e="🌿" /> Estufa
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
