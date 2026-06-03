@@ -102,15 +102,27 @@ export default function Reputation() {
           <div className="space-y-2">
             {top.length === 0 ? <p className="text-xs text-muted-foreground text-center py-4">Ranking vazio</p> :
               top.map((r, i) => (
-                <div key={r.user_id} className="flex items-center gap-3 p-3 rounded-xl bg-secondary/30 border border-white/5 hover:border-primary/20 transition-all group">
-                  <span className={`font-heading w-6 text-center ${i<3?'text-yellow-400':'text-muted-foreground'}`}>#{i+1}</span>
-                  <SafeImage src={r.profiles?.avatar_url || ""} alt="" className="w-10 h-10 rounded-full border border-primary/20" />
+                <Link 
+                  key={r.user_id} 
+                  to={`/dashboard/profile/${r.user_id}`}
+                  className="flex items-center gap-3 p-3 rounded-xl bg-secondary/30 border border-white/5 hover:border-primary/40 hover:bg-primary/5 transition-all group cursor-pointer"
+                >
+                  <span className={`font-heading w-6 text-center ${i<3?'text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.4)]':'text-muted-foreground'}`}>
+                    {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i+1}`}
+                  </span>
+                  <SafeImage src={r.profiles?.avatar_url || ""} alt="" className="w-10 h-10 rounded-full border-2 border-primary/20 group-hover:border-primary/50 transition-colors" />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-heading truncate group-hover:text-primary transition-colors">{r.profiles?.full_name || "Bruxo"}</p>
-                    <p className="text-[10px] text-muted-foreground uppercase">{r.title || "Iniciante"}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-[9px] text-muted-foreground uppercase tracking-widest">{r.title || "Iniciante"}</p>
+                      <Badge className="h-3 text-[7px] px-1 bg-primary/10 text-primary border-none uppercase">{r.profiles?.house || "Hogwarts"}</Badge>
+                    </div>
                   </div>
-                  <span className="text-sm font-heading text-primary bg-primary/10 px-3 py-1 rounded-full">{r.score}</span>
-                </div>
+                  <div className="text-right">
+                    <span className="text-sm font-heading text-primary block">{r.score}</span>
+                    <p className="text-[8px] text-muted-foreground uppercase">Prestígio</p>
+                  </div>
+                </Link>
               ))
             }
           </div>

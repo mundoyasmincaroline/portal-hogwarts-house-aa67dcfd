@@ -50,12 +50,17 @@ export default function HallOfFame() {
   const filtered = (cat: string) => cat === "all" ? rows : rows.filter((r) => r.category === cat);
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center gap-3">
-        <Crown className="h-8 w-8 text-primary" />
-        <div>
-          <h1 className="font-heading text-3xl">Hall da Fama</h1>
-          <p className="text-sm text-foreground/60">Os campeões cujos nomes foram gravados em ouro.</p>
+    <div className="p-4 sm:p-8 space-y-8 max-w-7xl mx-auto">
+      <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-yellow-900/20 via-background to-black border border-yellow-500/20 p-8 sm:p-12 text-center shadow-[0_0_50px_rgba(234,179,8,0.1)]">
+        <div className="absolute inset-0 bg-texture-parchment opacity-10 mix-blend-overlay pointer-events-none" />
+        <div className="relative z-10 space-y-3">
+          <div className="inline-flex p-3 rounded-2xl bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 mb-2">
+            <Crown size={40} className="animate-float" />
+          </div>
+          <h1 className="font-heading text-4xl sm:text-6xl text-gold-gradient tracking-tighter">Hall da Fama</h1>
+          <p className="text-muted-foreground max-w-xl mx-auto text-sm sm:text-base italic font-serif opacity-80">
+            "Para aqueles cujas ações ecoarão pelos séculos nas paredes de pedra deste castelo."
+          </p>
         </div>
       </div>
       <Tabs defaultValue="all">

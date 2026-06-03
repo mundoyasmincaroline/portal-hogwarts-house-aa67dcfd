@@ -112,14 +112,25 @@ export default function TravelJournal() {
         {entries.map((e) => {
           const l = locs.find((x) => x.id === e.location_id);
           return (
-            <Card key={e.id} className="p-4 bg-card/60 border-primary/20">
-              <div className="flex items-start justify-between mb-2">
-                <div>
-                  <h3 className="font-heading text-lg">{e.mood} {e.title}</h3>
-                  <p className="text-xs text-muted-foreground">
-                    {l && <span>{l.icon} {l.name} · </span>}
-                    {new Date(e.created_at).toLocaleString("pt-BR")}
-                  </p>
+            <Card key={e.id} className="p-5 bg-card/60 border-primary/20 hover:border-primary/40 transition-all relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-16 h-16 bg-primary/5 rounded-bl-full flex items-center justify-center -mr-4 -mt-4 group-hover:bg-primary/10 transition-colors">
+                <span className="text-xl rotate-12 opacity-30 group-hover:opacity-100 transition-opacity">📌</span>
+              </div>
+              <div className="flex items-start justify-between mb-3">
+                <div className="relative z-10">
+                  <h3 className="font-heading text-lg text-primary flex items-center gap-2">
+                    {e.mood} {e.title}
+                  </h3>
+                  <div className="flex items-center gap-2 mt-1">
+                    {l && (
+                      <Badge variant="outline" className="text-[9px] uppercase tracking-widest bg-primary/5 text-primary border-primary/20">
+                        {l.icon} {l.name}
+                      </Badge>
+                    )}
+                    <p className="text-[10px] text-muted-foreground font-mono">
+                      {new Date(e.created_at).toLocaleString("pt-BR")}
+                    </p>
+                  </div>
                 </div>
                 <Button size="sm" variant="ghost" onClick={() => del(e.id)}><EmojiIcon e="🗑️" /></Button>
               </div>
