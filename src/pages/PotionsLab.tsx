@@ -16,9 +16,11 @@ export default function PotionsLab() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [brews, setBrews] = useState<Brew[]>([]);
   const [plants, setPlants] = useState<Plant[]>([]);
+  const [inventory, setInventory] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterDifficulty, setFilterDifficulty] = useState<number | "all">("all");
+  const [showMissing, setShowMissing] = useState(false);
 
   async function load() {
     const [{ data: r }, { data: pl }, { data: { user } }] = await Promise.all([
@@ -29,8 +31,14 @@ export default function PotionsLab() {
     setRecipes((r as any) || []);
     setPlants((pl as any) || []);
     if (user) {
-      const { data: b } = await supabase.from("user_potions" as any).select("*").eq("user_id", user.id).order("started_at", { ascending: false }).limit(10);
+      const [{ data: b }, { data: inv }] = await Promise.all([
+        supabase.from("user_potions" as any).select("*").eq("user_id", user.id).order("started_at", { ascending: false }).limit(15),
+        supabase.from("user_inventory" as any).select("item_slug, quantity").eq("user_id", user.id)
+      ]);
       setBrews((b as any) || []);
+      const invMap: Record<string, number> = {};
+      (inv || []).forEach((i: any) => invMap[i.item_slug] = i.quantity);
+      setInventory(invMap);
     }
   }
   useEffect(() => { load(); }, []);
@@ -94,37 +102,50 @@ export default function PotionsLab() {
         </TabsContent>
 
         <TabsContent value="recipes" className="mt-4 space-y-4">
-          <div className="flex flex-wrap gap-4 items-center mb-4">
-            <Input 
-              placeholder="Procurar receita..." 
-              className="max-w-xs bg-background/50"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <div className="flex gap-2">
-              <Button 
-                variant={filterDifficulty === "all" ? "default" : "outline"} 
-                size="sm" 
-                onClick={() => setFilterDifficulty("all")}
-              >
-                Todas
-              </Button>
-              {[1, 2, 3, 4, 5].map(d => (
+          <div className="flex flex-wrap gap-4 items-center justify-between mb-4">
+            <div className="flex flex-wrap gap-2 items-center">
+              <Input 
+                placeholder="Procurar receita..." 
+                className="max-w-xs bg-background/50"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <div className="flex gap-1">
                 <Button 
-                  key={d}
-                  variant={filterDifficulty === d ? "default" : "outline"} 
+                  variant={filterDifficulty === "all" ? "default" : "outline"} 
                   size="sm" 
-                  onClick={() => setFilterDifficulty(d)}
+                  onClick={() => setFilterDifficulty("all")}
                 >
-                  {d}★
+                  Todas
                 </Button>
-              ))}
+                {[1, 2, 3, 4, 5].map(d => (
+                  <Button 
+                    key={d}
+                    variant={filterDifficulty === d ? "default" : "outline"} 
+                    size="sm" 
+                    onClick={() => setFilterDifficulty(d)}
+                  >
+                    {d}★
+                  </Button>
+                ))}
+              </div>
             </div>
+            <Button 
+              variant={showMissing ? "destructive" : "outline"} 
+              size="sm" 
+              onClick={() => setShowMissing(!showMissing)}
+            >
+              {showMissing ? "Ver Todas" : "Ver Faltantes"}
+            </Button>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             {recipes
               .filter(r => r.name.toLowerCase().includes(searchQuery.toLowerCase()))
               .filter(r => filterDifficulty === "all" || r.difficulty === filterDifficulty)
+              .filter(r => {
+                if (!showMissing) return true;
+                return Object.entries(r.ingredients).some(([slug, qty]) => (inventory[slug] || 0) < qty);
+              })
               .map((r) => (
             <Card key={r.id} className="p-4 space-y-2 bg-card/60 border-primary/20">
               <div className="flex items-start justify-between">
@@ -142,7 +163,12 @@ export default function PotionsLab() {
                 <span className="text-muted-foreground">Ingredientes: </span>
                 {Object.entries(r.ingredients).map(([slug, qty]) => {
                   const p = ingName(slug);
-                  return <span key={slug} className="mr-2">{p?.icon} {p?.name || slug} ×{qty}</span>;
+                  const has = inventory[slug] || 0;
+                  return (
+                    <span key={slug} className={`mr-2 ${has < qty ? "text-destructive" : "text-green-500"}`}>
+                      {p?.icon} {p?.name || slug} ({has}/{qty})
+                    </span>
+                  );
                 })}
               </div>
               <div className="flex items-center justify-between pt-2">

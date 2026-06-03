@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { feedService } from "@/services/features/feedService";
 import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { type House } from "@/types";
 import { HOUSES } from "@/types/house";
@@ -32,6 +33,7 @@ export default function Feed() {
   const [activeChallenges, setActiveChallenges] = useState<{ id: string; title: string; xp_reward: number; type: string }[]>([]);
   const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
   const [bannedWords, setBannedWords] = useState<string[]>([]);
+  const [category, setCategory] = useState("all");
   
   const sidebarLoaded = useRef(false);
 
@@ -143,6 +145,19 @@ export default function Feed() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-8 space-y-8">
+          <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+            {["all", "social", "conquistas", "global"].map((c) => (
+              <Button
+                key={c}
+                variant={category === c ? "default" : "outline"}
+                size="sm"
+                onClick={() => setCategory(c)}
+                className="capitalize rounded-full min-w-[100px]"
+              >
+                {c}
+              </Button>
+            ))}
+          </div>
           <PostComposer bannedWords={bannedWords} />
 
           {loading && <p className="text-center text-foreground/80 text-sm py-6">Carregando feed...</p>}

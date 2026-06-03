@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
-import { Skull, Flame } from "lucide-react";
+import { Skull, Flame, Search } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface DarkSpell { id:string; slug:string; name:string; description:string|null; corruption_cost:number; xp_reward:number; unforgivable:boolean; level_req:number; }
 interface Corruption { user_id:string; corruption:number; alignment:string; }
@@ -20,6 +21,8 @@ export default function DarkArts() {
   const [vessel, setVessel] = useState("");
   const [desc, setDesc] = useState("");
   const [busy, setBusy] = useState(false);
+  const [spellSearch, setSpellSearch] = useState("");
+  const [showVignette, setShowVignette] = useState(false);
 
   const load = async () => {
     const { data: u } = await supabase.auth.getUser();
@@ -36,8 +39,12 @@ export default function DarkArts() {
 
   useEffect(() => { load(); }, []);
 
-  const cast = async (slug: string) => {
+  const cast = async (slug: string, unforgivable: boolean) => {
     setBusy(true);
+    if (unforgivable) {
+      setShowVignette(true);
+      setTimeout(() => setShowVignette(false), 2000);
+    }
     const { error } = await supabase.rpc("cast_dark_spell", { p_spell: slug });
     setBusy(false);
     if (error) { toast.error(error.message); return; }
@@ -56,7 +63,17 @@ export default function DarkArts() {
   };
 
   return (
-    <div className="p-4 sm:p-6 space-y-6">
+    <div className="p-4 sm:p-6 space-y-6 relative overflow-hidden">
+      <AnimatePresence>
+        {showVignette && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 pointer-events-none bg-[radial-gradient(circle_at_center,_transparent_0%,_rgba(0,0,0,0.95)_100%)] shadow-[inset_0_0_100px_rgba(0,0,0,1)]"
+          />
+        )}
+      </AnimatePresence>
       <div className="flex items-center gap-3 flex-wrap">
         <Skull className="h-8 w-8 text-primary" />
         <div>
@@ -73,10 +90,23 @@ export default function DarkArts() {
         </CardContent>
       </Card>
 
-      <div>
-        <h2 className="font-heading text-xl mb-3">Grimório Proibido</h2>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="font-heading text-xl">Grimório Proibido</h2>
+          <div className="relative w-full max-w-xs">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/40" />
+            <Input 
+              placeholder="Buscar maldição..." 
+              value={spellSearch}
+              onChange={(e) => setSpellSearch(e.target.value)}
+              className="pl-9 bg-card/40 border-primary/20"
+            />
+          </div>
+        </div>
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-          {spells.map((s) => (
+          {spells
+            .filter(s => !spellSearch || s.name.toLowerCase().includes(spellSearch.toLowerCase()) || s.slug.toLowerCase().includes(spellSearch.toLowerCase()))
+            .map((s) => (
             <Card key={s.id} className={`border ${s.unforgivable ? "border-destructive/60" : "border-border/50"} bg-card/60`}>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 font-heading text-lg">
@@ -90,7 +120,7 @@ export default function DarkArts() {
                   <Badge variant="outline">+{s.corruption_cost} corrupção</Badge>
                   <Badge variant="outline">+{s.xp_reward} XP</Badge>
                 </div>
-                <Button variant="destructive" disabled={busy} className="w-full" onClick={() => cast(s.slug)}>Conjurar</Button>
+                <Button variant="destructive" disabled={busy} className="w-full" onClick={() => cast(s.slug, s.unforgivable)}>Conjurar</Button>
               </CardContent>
             </Card>
           ))}

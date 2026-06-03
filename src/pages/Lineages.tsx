@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Crown, TreeDeciduous, Handshake, Scroll } from "lucide-react";
+import { Crown, TreeDeciduous, Handshake, Scroll, Search } from "lucide-react";
 
 interface Family { id:string; name:string; motto:string|null; crest_emoji:string|null; blood_status:string; founder_id:string; }
 interface Member { family_id:string; user_id:string; role:string; full_name?:string; }
@@ -35,6 +35,8 @@ export default function Lineages() {
   const [heirTarget, setHeirTarget] = useState(""); const [heirItem, setHeirItem] = useState("");
   const [heirGold, setHeirGold] = useState("0"); const [heirNote, setHeirNote] = useState("");
   const [busy, setBusy] = useState(false);
+
+  const [profileSearch, setProfileSearch] = useState("");
 
   const load = async () => {
     const { data: u } = await supabase.auth.getUser();
@@ -138,7 +140,10 @@ export default function Lineages() {
     toast.success("Herança declarada."); setHeirItem(""); setHeirGold("0"); setHeirNote(""); load();
   };
 
-  const otherProfiles = profiles.filter((p) => p.user_id !== uid);
+  const otherProfiles = profiles.filter((p) => 
+    p.user_id !== uid && 
+    (!profileSearch || p.full_name?.toLowerCase().includes(profileSearch.toLowerCase()))
+  );
 
   return (
     <div className="p-6 space-y-6">
@@ -169,7 +174,7 @@ export default function Lineages() {
                   return (
                     <>
                       <div className="flex items-center gap-3">
-                        <span className="text-3xl">{f.crest_emoji}</span>
+                        <span className="text-4xl animate-bounce">{f.crest_emoji}</span>
                         <div>
                           <h3 className="font-heading text-xl">{f.name}</h3>
                           <p className="text-xs italic text-foreground/60">"{f.motto || '—'}"</p>
@@ -239,26 +244,37 @@ export default function Lineages() {
         <TabsContent value="tree" className="mt-4 space-y-4">
           <Card className="border-primary/30 bg-card/60">
             <CardHeader><CardTitle className="font-heading">Registrar Relação</CardTitle></CardHeader>
-            <CardContent className="flex flex-col md:flex-row gap-2">
-              <Select value={relTarget} onValueChange={setRelTarget}>
-                <SelectTrigger className="md:w-64"><SelectValue placeholder="Selecione um bruxo" /></SelectTrigger>
-                <SelectContent>
-                  {otherProfiles.map((p) => <SelectItem key={p.user_id} value={p.user_id}>{p.full_name || "Bruxo"}</SelectItem>)}
-                </SelectContent>
-              </Select>
-              <Select value={relKind} onValueChange={setRelKind}>
-                <SelectTrigger className="md:w-48"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="pai">Pai</SelectItem>
-                  <SelectItem value="mae">Mãe</SelectItem>
-                  <SelectItem value="filho">Filho(a)</SelectItem>
-                  <SelectItem value="irmao">Irmão/Irmã</SelectItem>
-                  <SelectItem value="padrinho">Padrinho</SelectItem>
-                  <SelectItem value="madrinha">Madrinha</SelectItem>
-                  <SelectItem value="afilhado">Afilhado(a)</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button onClick={addRelation} disabled={busy}>Registrar</Button>
+            <CardContent className="space-y-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input 
+                  placeholder="Procurar bruxo..." 
+                  value={profileSearch}
+                  onChange={(e) => setProfileSearch(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+              <div className="flex flex-col md:flex-row gap-2">
+                <Select value={relTarget} onValueChange={setRelTarget}>
+                  <SelectTrigger className="md:w-64"><SelectValue placeholder="Selecione um bruxo" /></SelectTrigger>
+                  <SelectContent>
+                    {otherProfiles.map((p) => <SelectItem key={p.user_id} value={p.user_id}>{p.full_name || "Bruxo"}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+                <Select value={relKind} onValueChange={setRelKind}>
+                  <SelectTrigger className="md:w-48"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pai">Pai</SelectItem>
+                    <SelectItem value="mae">Mãe</SelectItem>
+                    <SelectItem value="filho">Filho(a)</SelectItem>
+                    <SelectItem value="irmao">Irmão/Irmã</SelectItem>
+                    <SelectItem value="padrinho">Padrinho</SelectItem>
+                    <SelectItem value="madrinha">Madrinha</SelectItem>
+                    <SelectItem value="afilhado">Afilhado(a)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button onClick={addRelation} disabled={busy}>Registrar</Button>
+              </div>
             </CardContent>
           </Card>
           <Card className="border-border/50 bg-card/60">
