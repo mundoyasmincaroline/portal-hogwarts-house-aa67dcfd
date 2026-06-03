@@ -64,10 +64,10 @@ export default function WandCrafting() {
         >
           <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-150 group-hover:bg-primary/30 transition-colors" />
           <div 
-            className="w-[300px] h-3 bg-amber-900 rounded-full relative z-10 shadow-2xl overflow-hidden"
+            className="h-3 bg-amber-900 rounded-full relative z-10 shadow-2xl overflow-hidden"
             style={{ 
               backgroundColor: wood === 'teixo' ? '#2d2d2d' : wood === 'azevinho' ? '#5d4037' : '#8d6e63',
-              width: `${length * 20}px`,
+              width: `${Number(length) * 20}px`,
               filter: busy ? 'brightness(1.5)' : 'none'
             }}
           >
