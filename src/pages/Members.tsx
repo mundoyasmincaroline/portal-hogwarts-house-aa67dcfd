@@ -189,20 +189,24 @@ export default function Members() {
                 {onlineMembers.length > 0 ? "Outros membros" : "Todos os membros"} ({offlineMembers.length})
               </h2>
               <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-                {offlineMembers.map((m, idx) => (
-                  <motion.div
-                    key={m.user_id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: (idx + onlineMembers.length) * 0.02 }}
-                  >
-                    <MemberCard
-                      member={m}
-                      friendshipStatus={friendships[m.user_id] || "none"}
-                      onFriendshipChange={loadMembers}
-                    />
-                  </motion.div>
-                ))}
+                <AnimatePresence mode="popLayout">
+                  {offlineMembers.map((m, idx) => (
+                    <motion.div
+                      key={m.user_id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ delay: (idx + onlineMembers.length) * 0.02 }}
+                    >
+                      <MemberCard
+                        member={m}
+                        friendshipStatus={friendships[m.user_id] || "none"}
+                        onFriendshipChange={loadMembers}
+                      />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </div>
             </div>
           )}
