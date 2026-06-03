@@ -115,7 +115,14 @@ export default function Ministry() {
               <p className="text-sm text-muted-foreground">{m.description}</p>
               <div className="flex items-center justify-between pt-2">
                 <span className="text-xs text-primary">+{m.xp_reward} XP · +{m.galeon_reward} G</span>
-                <Button size="sm" disabled={loading} onClick={() => doMission(m.id)}>Cumprir</Button>
+                <Button 
+                  size="sm" 
+                  disabled={loading} 
+                  onClick={() => doMission(m.id)}
+                  className="bg-primary/80 hover:bg-primary"
+                >
+                  {loading ? "Processando..." : "Cumprir Missão"}
+                </Button>
               </div>
             </Card>
           ))}

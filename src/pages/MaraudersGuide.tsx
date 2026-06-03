@@ -238,10 +238,10 @@ export default function MaraudersGuide() {
         </div>
       </div>
 
-      {/* Índice rápido com busca */}
+      {/* Índice rápido com busca e links */}
       <div className="flex flex-col gap-4 items-center">
         <Input 
-          placeholder="Procurar tópico..." 
+          placeholder="Procurar tópico (comandos, missões, VIP)..." 
           className="max-w-xs bg-background/50 border-primary/30"
           onChange={(e) => {
             const query = e.target.value.toLowerCase();
