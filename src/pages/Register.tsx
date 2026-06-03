@@ -94,12 +94,16 @@ export default function Register() {
       bloodStatus: form.blood || undefined,
     });
 
+    if (!result.success) {
+      setLoading(false);
+      toast.error(result.error || "Erro ao criar conta");
+      setErrors({ general: result.error || "Erro ao criar conta" });
+      return;
+    }
+
     // Se o usuário escolheu um arquivo de avatar, guardamos para upload após o primeiro login
-    // (RLS do storage exige sessão ativa). O blood_status já é gravado via metadata pelo trigger.
-    if (result.success && avatarFile) {
+    if (avatarFile) {
       try {
-        // Comprime a imagem antes de salvar no localStorage (cota ~5MB).
-        // Original em base64 pode ser ~33% maior que o arquivo cru e estourar a cota.
         const compressed = await compressImageToDataUrl(avatarFile, 800, 0.85);
         try {
           localStorage.setItem("pending_avatar_upload", JSON.stringify({
@@ -107,17 +111,9 @@ export default function Register() {
             name: avatarFile.name,
           }));
         } catch (quotaErr) {
-          console.warn("localStorage quota excedida ao salvar avatar pendente", quotaErr);
-          toast.warning("Não foi possível guardar sua foto agora. Você poderá enviá-la na ficha do personagem.");
+          console.warn("localStorage quota excedida", quotaErr);
         }
       } catch { /* ignore */ }
-    }
-
-    setLoading(false);
-    if (!result.success) {
-      toast.error(result.error || "Erro ao criar conta");
-      setErrors({ general: result.error || "Erro ao criar conta" });
-      return;
     }
 
     // Rito guardado pra primeira ficha (CharacterCreation lê como rascunho)
@@ -127,9 +123,12 @@ export default function Register() {
       wand_core: form.wandCore,
       house: form.house,
     }));
+    
     if (form.referralCode.trim()) {
       localStorage.setItem("pending_referral", form.referralCode.trim().toLowerCase().replace("@", ""));
     }
+
+    setLoading(false);
     setStep(6); // carta de aceitação
     toast.success("Bruxo(a) registrado(a) com sucesso! ✨");
   };

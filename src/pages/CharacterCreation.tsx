@@ -110,10 +110,32 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
 
   const handleSubmit = async () => {
     if (!user) return;
-    if (!form.full_name || !form.house) {
-      toast.error("Por favor, preencha o nome e selecione uma Casa.");
+    
+    // Validação de campos obrigatórios
+    const requiredFields = [
+      { key: "full_name", label: "Nome" },
+      { key: "house", label: "Casa" },
+      { key: "age", label: "Idade" },
+      { key: "wand", label: "Varinha" },
+      { key: "patronus", label: "Patrono" },
+      { key: "personality", label: "Personalidade" },
+      { key: "strength", label: "Força" },
+      { key: "weakness", label: "Fraqueza" },
+    ];
+
+    if (step === "canon") {
+      requiredFields.push(
+        { key: "canon_era", label: "Era" },
+        { key: "canon_portrayed_by", label: "Ator/Atriz" }
+      );
+    }
+
+    const missing = requiredFields.find(f => !form[f.key as keyof typeof form]);
+    if (missing) {
+      toast.error(`Por favor, preencha o campo obrigatório: ${missing.label}`);
       return;
     }
+
     setLoading(true);
     try {
       // Check for unique name
@@ -142,14 +164,16 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
       }
 
       const pairId = relationshipStatus === "paired" ? (selectedPair?.id || null) : null;
-      const { data: char, error } = await supabase.from("characters").insert({
+      
+      const insertData: any = {
         user_id: user.id,
         character_type: step,
         gender: form.gender,
         house: form.house,
         full_name: form.full_name,
         avatar_url: avatarUrl,
-        age: form.age ? parseInt(form.age) : null,
+        age: parseInt(form.age as string),
+        age_category: parseInt(form.age as string) >= 17 ? 'adult' : 'student',
         blood_status: form.blood_status,
         actor_faceclaim: form.actor_faceclaim,
         wand: form.wand,
@@ -170,7 +194,14 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
         canon_portrayed_by: step === "canon" ? form.canon_portrayed_by : null,
         pair_character_id: pairId,
         relationship_status: pairId ? "paired" : "single",
-      } as any).select("id").single();
+        blood_locked: true
+      };
+
+      const { data: char, error } = await supabase
+        .from("characters")
+        .insert(insertData)
+        .select("id")
+        .single();
 
       if (error) throw error;
       await supabase.from("profiles").update({ active_character_id: char!.id, has_seen_intro: false } as any).eq("user_id", user.id);
