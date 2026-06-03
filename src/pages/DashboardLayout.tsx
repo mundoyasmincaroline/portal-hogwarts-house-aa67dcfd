@@ -31,6 +31,7 @@ import MagicalCelebration from "@/components/MagicalCelebration";
 import LevelUpCeremony from "@/components/LevelUpCeremony";
 import HouseGhost from "@/components/HouseGhost";
 import MagicalMentor from "@/components/shared/MagicalMentor";
+import { prefetchRoute } from "@/lib/routePrefetch";
 
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
@@ -38,6 +39,9 @@ const NavItem = memo(({ item, isActive, dmUnread, onClick }: { item: any, isActi
   <Link
     to={item.path}
     onClick={onClick}
+    onMouseEnter={() => prefetchRoute(item.path)}
+    onTouchStart={() => prefetchRoute(item.path)}
+    onFocus={() => prefetchRoute(item.path)}
     className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group relative overflow-hidden border ${
       isActive 
         ? "bg-primary/15 text-primary font-bold border-primary/40 shadow-[0_0_25px_rgba(212,175,55,0.18)]" 
