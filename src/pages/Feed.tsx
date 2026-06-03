@@ -144,6 +144,19 @@ export default function Feed() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-8 space-y-8">
+          <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+            {["all", "social", "conquistas", "global"].map((c) => (
+              <Button
+                key={c}
+                variant={category === c ? "default" : "outline"}
+                size="sm"
+                onClick={() => setCategory(c)}
+                className="capitalize rounded-full min-w-[100px]"
+              >
+                {c}
+              </Button>
+            ))}
+          </div>
           <PostComposer bannedWords={bannedWords} />
 
           {loading && <p className="text-center text-foreground/80 text-sm py-6">Carregando feed...</p>}
