@@ -75,8 +75,21 @@ export default function HallOfFame() {
               </Card>
             ) : (
               <div className="grid gap-3 md:grid-cols-2">
-                {filtered(c.key).map((r) => (
-                  <Card key={r.id} className="border-primary/30 bg-card/60">
+                {filtered(c.key).map((r, idx) => (
+                  <Card key={r.id} className={`border-primary/30 bg-card/60 relative overflow-hidden ${
+                    idx === 0 ? "border-yellow-500/50 bg-yellow-500/5" : 
+                    idx === 1 ? "border-gray-400/50 bg-gray-400/5" :
+                    idx === 2 ? "border-amber-700/50 bg-amber-700/5" : ""
+                  }`}>
+                    {idx < 3 && (
+                      <div className={`absolute top-0 right-0 p-2 ${
+                        idx === 0 ? "text-yellow-500" :
+                        idx === 1 ? "text-gray-400" :
+                        "text-amber-700"
+                      }`}>
+                        <Crown className="w-4 h-4" />
+                      </div>
+                    )}
                     <CardHeader className="flex flex-row items-center gap-3">
                       <Award className="h-6 w-6 text-primary" />
                       <div>
