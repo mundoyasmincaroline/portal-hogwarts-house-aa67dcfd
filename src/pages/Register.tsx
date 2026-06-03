@@ -127,13 +127,17 @@ export default function Register() {
       wand_core: form.wandCore,
       house: form.house,
     }));
+
+    if (facialIdPreview) {
+      localStorage.setItem("pending_facial_id", facialIdPreview);
+    }
     
     if (form.referralCode.trim()) {
       localStorage.setItem("pending_referral", form.referralCode.trim().toLowerCase().replace("@", ""));
     }
 
     setLoading(false);
-    setStep(6); // carta de aceitação
+    setStep(7); // carta de aceitação (incrementado pois adicionamos um step)
     toast.success("Bruxo(a) registrado(a) com sucesso! ✨");
   };
 
