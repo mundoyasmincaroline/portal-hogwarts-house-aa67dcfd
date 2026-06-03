@@ -115,6 +115,19 @@ export default function Chapters() {
         <p className="text-muted-foreground text-sm">Sua jornada narrativa. Cada escolha molda seu destino.</p>
       </header>
 
+      <div className="space-y-2 mb-6">
+        <div className="flex justify-between text-[10px] uppercase tracking-widest text-primary/60 font-heading">
+          <span>Sua Jornada</span>
+          <span>{Object.keys(progress).length} de {chapters.length} Capítulos</span>
+        </div>
+        <div className="h-1.5 bg-primary/10 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-primary transition-all duration-1000" 
+            style={{ width: `${(Object.keys(progress).length / Math.max(1, chapters.length)) * 100}%` }}
+          />
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {chapters.map(ch => {
           const done = !!progress[ch.id];

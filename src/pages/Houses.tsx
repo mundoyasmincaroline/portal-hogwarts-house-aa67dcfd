@@ -143,6 +143,31 @@ export default function Houses() {
               );
             })}
           </div>
+          
+          <div className="glass rounded-2xl p-6 border-white/5 shadow-xl bg-card/40">
+            <h2 className="font-heading text-xl text-primary mb-4 flex items-center gap-2">
+              <EmojiIcon e="📜" /> Atividades Recentes das Casas
+            </h2>
+            <div className="space-y-3">
+              {[
+                { house: "gryffindor", user: "Harry", points: 50, reason: "Bravura na Floresta" },
+                { house: "slytherin", user: "Draco", points: 30, reason: "Destaque em Poções" },
+                { house: "ravenclaw", user: "Luna", points: 40, reason: "Adivinhação Correta" },
+                { house: "hufflepuff", user: "Cedric", points: 45, reason: "Fair Play no Campo" }
+              ].map((log, i) => (
+                <div key={i} className="flex items-center justify-between text-xs p-2 rounded-lg bg-white/5 border border-white/5">
+                  <div className="flex items-center gap-2">
+                    <HouseCrest house={log.house as House} size="xs" />
+                    <span className="font-heading">{log.user}</span>
+                    <span className="text-muted-foreground">{log.reason}</span>
+                  </div>
+                  <span className={`font-bold ${log.points > 0 ? "text-green-400" : "text-red-400"}`}>
+                    {log.points > 0 ? "+" : ""}{log.points} pts
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         </>
       )}
     </div>

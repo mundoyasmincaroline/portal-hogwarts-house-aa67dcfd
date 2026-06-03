@@ -42,6 +42,7 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
   const { user, profile } = useAuth();
   // Step: "select" | "oc" | "canon"
   const [step, setStep] = useState<"select"|"oc"|"canon">("select");
+  const [formStep, setFormStep] = useState(1); // 1: Identity, 2: Magic, 3: Bio
   const [form, setForm] = useState({ ...EMPTY });
   const [avatarFile, setAvatarFile] = useState<File|null>(null);
   const [avatarPreview, setAvatarPreview] = useState("");
@@ -332,18 +333,21 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
       <MagicalParticles />
       <div className="relative z-10 max-w-2xl mx-auto py-8">
 
-        {/* Header */}
+        {/* Header & Progress */}
         <div className="flex items-center gap-4 mb-8">
-          <button onClick={() => setStep("select")} className="p-2 rounded-xl glass border border-border hover:border-primary/50 transition-colors">
+          <button onClick={() => { if(formStep > 1) setFormStep(formStep - 1); else setStep("select"); }} className="p-2 rounded-xl glass border border-border hover:border-primary/50 transition-colors">
             <ChevronLeft size={20} />
           </button>
-          <div>
-            <h1 className={`font-heading text-3xl ${accentClass.split(" ")[0]}`}>
-              {isOC ? "⭐ Ficha de Personagem OC" : "📖 Ficha de Personagem Canon"}
-            </h1>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              {isOC ? "Crie seu personagem original e único" : "Registre seu personagem canônico da saga"}
-            </p>
+          <div className="flex-1">
+            <div className="flex items-center justify-between mb-1">
+              <h1 className={`font-heading text-2xl ${accentClass.split(" ")[0]}`}>
+                {isOC ? "⭐ Personagem OC" : "📖 Personagem Canon"}
+              </h1>
+              <span className="text-[10px] font-heading uppercase tracking-widest text-muted-foreground">Passo {formStep} de 3</span>
+            </div>
+            <div className="h-1 bg-border rounded-full overflow-hidden">
+              <div className={`h-full transition-all duration-500 bg-primary`} style={{ width: `${(formStep / 3) * 100}%` }} />
+            </div>
           </div>
         </div>
 

@@ -60,7 +60,8 @@ export default function NPCChat() {
       toast.error(e.message || "Falha ao falar com a IA");
       setMessages(messages);
     } finally {
-      setSending(false);
+  const [sending, setSending] = useState(false);
+  const [showStarters, setShowStarters] = useState(true);
     }
   }
 
@@ -104,6 +105,16 @@ export default function NPCChat() {
           )}
         </div>
       </Card>
+
+      {showStarters && messages.length === 0 && npc && (
+        <div className="flex flex-wrap gap-2 mb-3">
+          {["Olá!", "Quem é você?", "Me conte um segredo.", "Como está o castelo?"].map((s) => (
+            <Button key={s} variant="outline" size="xs" className="text-[10px] rounded-full" onClick={() => { setInput(s); setShowStarters(false); }}>
+              {s}
+            </Button>
+          ))}
+        </div>
+      )}
 
       <div className="flex gap-2 mt-3">
         <Input value={input} onChange={e => setInput(e.target.value)}

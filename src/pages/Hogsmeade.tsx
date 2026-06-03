@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
-import { Coins, Search, ShoppingBag } from "lucide-react";
+import { Coins, Search, ShoppingBag, Loader2 } from "lucide-react";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 const RARITY_STYLE: Record<string, string> = {
@@ -35,6 +35,7 @@ export default function Hogsmeade() {
   const [category, setCategory] = useState("all");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
+  const [buyingId, setBuyingId] = useState<string | null>(null);
 
   const load = async () => {
     const { data } = await supabase
@@ -51,9 +52,11 @@ export default function Hogsmeade() {
   useEffect(() => { load(); }, [user?.id]);
 
   const buy = async (id: string, name: string) => {
+    setBuyingId(id);
     setLoading(true);
     const { data, error } = await supabase.rpc("buy_hogsmeade_item", { p_item_id: id, p_qty: 1 });
     setLoading(false);
+    setBuyingId(null);
     if (error) return toast.error(error.message);
     toast.success(`✨ ${name} adquirido!`);
     load();
@@ -126,12 +129,19 @@ export default function Hogsmeade() {
             </div>
             <Button
               size="sm"
-              className="w-full"
+              className={`w-full transition-all ${buyingId === item.id ? "scale-95 opacity-50" : ""}`}
               disabled={loading || galeons < item.price_galeons}
               onClick={() => buy(item.id, item.name)}
+              variant={galeons < item.price_galeons ? "outline" : "default"}
             >
-              <ShoppingBag size={14} className="mr-1" />
-              {galeons < item.price_galeons ? "Sem Galeões" : "Comprar"}
+              {buyingId === item.id ? (
+                <Loader2 className="animate-spin" size={14} />
+              ) : (
+                <>
+                  <ShoppingBag size={14} className="mr-1" />
+                  {galeons < item.price_galeons ? "Sem Galeões" : "Comprar"}
+                </>
+              )}
             </Button>
           </div>
         ))}
