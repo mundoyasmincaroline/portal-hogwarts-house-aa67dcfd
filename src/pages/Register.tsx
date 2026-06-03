@@ -157,7 +157,7 @@ export default function Register() {
   return (
     <div className="relative min-h-screen flex items-center justify-center px-4 py-12 overflow-hidden">
       <div className="absolute inset-0 z-0">
-        <img src="https://images.unsplash.com/photo-1547756536-cde3673fa2e5?auto=format&fit=crop&q=80&w=2000" className="w-full h-full object-cover opacity-20 grayscale scale-110" alt="" />
+        <img src="/hogwarts-castle-bg.jpg" className="w-full h-full object-cover opacity-20 grayscale scale-110" alt="" loading="lazy" />
         <div className="absolute inset-0 bg-gradient-to-br from-black via-black/85 to-blue-950/40" />
       </div>
       <MagicalParticles />

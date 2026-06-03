@@ -139,7 +139,7 @@ export default function Events() {
     <div className="max-w-5xl mx-auto space-y-8 sm:space-y-10 pb-20 px-2 sm:px-0">
       {/* Header */}
       <div className="relative overflow-hidden rounded-2xl sm:rounded-[2.5rem] bg-gradient-to-br from-indigo-950 via-background to-black border border-primary/20 p-6 sm:p-12 text-center">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1510137600163-2729bc6959a6?q=80&w=2000')] opacity-10 mix-blend-overlay pointer-events-none" />
+        <div className="absolute inset-0 bg-[url('/hogwarts-castle-bg.jpg')] opacity-10 mix-blend-overlay pointer-events-none" />
         <div className="relative z-10 space-y-4">
           <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 px-4 py-1">
             Programação Diária

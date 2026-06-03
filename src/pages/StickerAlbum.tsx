@@ -124,7 +124,7 @@ export default function StickerAlbum() {
       {/* ── HEADER MONSTER QUALITY ── */}
       <div className="relative overflow-hidden rounded-[2rem] sm:rounded-[4rem] border border-yellow-500/20 shadow-2xl group min-h-[300px] flex items-center justify-center">
         <div className="absolute inset-0 bg-gradient-to-br from-[#1a0f02] via-[#2a1b0a] to-[#0a121a] z-0" />
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618944847823-72c1cce8a8e1?q=80&w=2070')] bg-cover bg-center opacity-20 group-hover:scale-105 transition-transform duration-[4000ms] mix-blend-overlay" />
+        <div className="absolute inset-0 bg-[url('/hogwarts-castle-bg.jpg')] bg-cover bg-center opacity-20 group-hover:scale-105 transition-transform duration-[4000ms] mix-blend-overlay" />
         
         <div className="relative z-10 p-6 sm:p-12 md:p-16 text-center space-y-8 w-full">
           <div className="flex flex-col items-center gap-4">

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import MagicalIcon from "@/components/shared/MagicalIcon";
 import MagicalEmoji from "@/components/shared/MagicalEmoji";
 import SafeImage from "./SafeImage";
+import hogwartsCastle from "@/assets/hogwarts-castle.jpg";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 const MAP_LOCATIONS = [
@@ -28,9 +29,10 @@ export default function MaraudersMap({ isOpen, onClose }: { isOpen: boolean; onC
         {/* Hogwarts Blueprint Background */}
         <div className="absolute inset-0 z-0">
            <img 
-             src="https://images.unsplash.com/photo-1547756536-cde3673fa2e5?auto=format&fit=crop&q=80&w=2000" 
+             src={hogwartsCastle}
              className="w-full h-full object-cover opacity-20 grayscale" 
-             alt="Hogwarts Map"
+             alt="Mapa de Hogwarts"
+             loading="lazy"
            />
            <div className="absolute inset-0 bg-[#f4e4bc]/60 mix-blend-overlay" />
         </div>
