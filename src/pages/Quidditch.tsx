@@ -232,11 +232,11 @@ export default function Quidditch() {
               <div className="grid grid-cols-2 text-center gap-4">
                 <div className="p-3 rounded bg-primary/5 border border-primary/20">
                   <div className="text-xs text-muted-foreground mb-1">{HOUSE_LABEL[houseA]}</div>
-                  <div className="text-4xl font-heading text-primary">{m.team1_score || 0}</div>
+                  <div className="text-4xl font-heading text-primary">{m.score_a || 0}</div>
                 </div>
                 <div className="p-3 rounded bg-primary/5 border border-primary/20">
                   <div className="text-xs text-muted-foreground mb-1">{HOUSE_LABEL[houseB]}</div>
-                  <div className="text-4xl font-heading text-primary">{m.team2_score || 0}</div>
+                  <div className="text-4xl font-heading text-primary">{m.score_b || 0}</div>
                 </div>
               </div>
 
