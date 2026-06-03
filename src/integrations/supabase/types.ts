@@ -3918,6 +3918,8 @@ export type Database = {
           blood_locked: boolean | null
           created_at: string
           current_session_id: string | null
+          facial_identity_url: string | null
+          facial_verification_enabled: boolean | null
           full_name: string
           galeons: number | null
           has_accepted_rules: boolean | null
@@ -3954,6 +3956,8 @@ export type Database = {
           blood_locked?: boolean | null
           created_at?: string
           current_session_id?: string | null
+          facial_identity_url?: string | null
+          facial_verification_enabled?: boolean | null
           full_name?: string
           galeons?: number | null
           has_accepted_rules?: boolean | null
@@ -3990,6 +3994,8 @@ export type Database = {
           blood_locked?: boolean | null
           created_at?: string
           current_session_id?: string | null
+          facial_identity_url?: string | null
+          facial_verification_enabled?: boolean | null
           full_name?: string
           galeons?: number | null
           has_accepted_rules?: boolean | null
