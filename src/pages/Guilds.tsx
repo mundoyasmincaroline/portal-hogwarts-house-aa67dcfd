@@ -71,16 +71,24 @@ export default function Guilds() {
 
       <section className="space-y-3">
         <h2 className="font-heading text-lg text-primary">Guildas Ativas</h2>
-        {guilds.map(g => (
-          <div key={g.id} className="flex items-center gap-3 p-4 rounded-lg border border-primary/15 bg-card/40">
-            <div className="text-3xl">{g.emblem}</div>
-            <div className="flex-1">
-              <div className="font-heading text-primary">{g.name}</div>
-              <div className="text-xs text-foreground/60">{g.house} · {g.total_xp} XP</div>
-            </div>
-            <Button size="sm" variant="outline" onClick={() => join(g.id)}>Entrar</Button>
-          </div>
-        ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {guilds.map(g => (
+            <motion.div 
+              layout
+              key={g.id} 
+              className="flex items-center gap-4 p-5 rounded-[2rem] border border-primary/20 bg-card/40 backdrop-blur-md hover:border-primary/50 hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)] transition-all group"
+            >
+              <div className="text-4xl bg-primary/10 w-16 h-16 rounded-2xl flex items-center justify-center border border-primary/20 group-hover:rotate-6 transition-transform">{g.emblem}</div>
+              <div className="flex-1 min-w-0">
+                <div className="font-heading text-xl text-primary truncate">{g.name}</div>
+                <div className="text-[10px] text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                  <Shield size={10} className="text-primary/60" /> {g.house} · {g.total_xp} XP
+                </div>
+              </div>
+              <Button size="sm" variant="magical" onClick={() => join(g.id)} className="rounded-xl px-6">Entrar</Button>
+            </motion.div>
+          ))}
+        </div>
         {guilds.length === 0 && <p className="text-sm text-foreground/60">Nenhuma guilda ativa. Seja o primeiro a fundar.</p>}
       </section>
     </div>
