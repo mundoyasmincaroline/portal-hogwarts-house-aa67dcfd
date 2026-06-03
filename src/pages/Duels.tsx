@@ -251,7 +251,7 @@ export default function Duels() {
                      Você {activeDuel.challenger_user_id === user?.id ? activeDuel.challenger_hp <= 20 && <EmojiIcon e="🩸" /> : activeDuel.opponent_hp <= 20 && <EmojiIcon e="🩸" />}
                    </h3>
                    {((activeDuel.challenger_user_id === user?.id && activeDuel.current_turn === 'challenger') || (activeDuel.opponent_user_id === user?.id && activeDuel.current_turn === 'opponent')) && (
-                     <Badge variant="magical" className="animate-pulse">SEU TURNO</Badge>
+                     <Badge className="animate-pulse bg-primary text-primary-foreground">SEU TURNO</Badge>
                    )}
                    <div className="w-full space-y-1">
                       <div className="h-2 bg-black/60 rounded-full overflow-hidden">
