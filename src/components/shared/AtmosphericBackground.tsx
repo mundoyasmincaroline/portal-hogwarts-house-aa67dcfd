@@ -64,9 +64,9 @@ export const AtmosphericBackground: React.FC = () => {
       </AnimatePresence>
 
 
-      {/* Starfield only at night/dawn */}
+      {/* Starfield only at night/dawn — local CSS, no network */}
       {(timeOfDay === "night" || timeOfDay === "dawn") && (
-        <div className="absolute inset-0 opacity-40 mix-blend-screen bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] animate-pulse" />
+        <div className="absolute inset-0 opacity-50 mix-blend-screen bg-[radial-gradient(1px_1px_at_15%_22%,#fff,transparent),radial-gradient(1px_1px_at_42%_67%,#fff,transparent),radial-gradient(1px_1px_at_78%_31%,#fff,transparent),radial-gradient(1px_1px_at_88%_85%,#fff,transparent),radial-gradient(1px_1px_at_27%_88%,#fff,transparent)] animate-pulse" />
       )}
 
       {/* Weather Effects */}
@@ -80,7 +80,7 @@ export const AtmosphericBackground: React.FC = () => {
         <div className="absolute inset-0 opacity-60 bg-gradient-to-t from-slate-800/70 via-slate-700/20 to-transparent blur-2xl animate-pulse" />
       )}
       {weather === "snowy" && (
-        <div className="absolute inset-0 opacity-40 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] mix-blend-screen" />
+        <div className="absolute inset-0 opacity-40 bg-[radial-gradient(1px_1px_at_20%_30%,#fff,transparent),radial-gradient(1px_1px_at_60%_70%,#fff,transparent),radial-gradient(1px_1px_at_80%_20%,#fff,transparent)] mix-blend-screen" />
       )}
     </div>
   );
