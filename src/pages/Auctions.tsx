@@ -14,7 +14,14 @@ export default function Auctions() {
     const { data } = await (supabase as any).from("auctions").select("*").eq("status", "open").order("ends_at");
     setItems(data || []);
   };
-  useEffect(() => { load(); }, []);
+  useEffect(() => { 
+    load();
+    const channel = supabase
+      .channel("public:auctions")
+      .on("postgres_changes", { event: "*", schema: "public", table: "auctions" }, () => load())
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, []);
 
   const place = async (id: string) => {
     const amount = parseInt(bid[id] || "0", 10);
