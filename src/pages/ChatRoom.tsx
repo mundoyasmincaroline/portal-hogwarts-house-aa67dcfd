@@ -567,7 +567,7 @@ export default function ChatRoom() {
             </div>
           ) : (
             <div className="flex flex-col gap-6">
-              {messages.slice().reverse().map((m) => {
+              {messages.map((m) => {
                 const profileData: any = m.characters || m.profiles || { full_name: "Bruxo Desconhecido", username: "desconhecido", house: "gryffindor", avatar_url: null };
                 const profileName = profileData.full_name || "Desconhecido";
                 const profileUser = profileData.username || "desconhecido";
