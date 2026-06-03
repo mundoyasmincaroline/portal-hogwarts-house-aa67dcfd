@@ -3,9 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { motion, AnimatePresence } from "framer-motion";
 import SafeImage from "@/components/SafeImage";
-import { Trophy, Medal, Crown, User } from "lucide-react";
+import { Trophy, Medal, Crown } from "lucide-react";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 const DIV_COLORS: Record<string, string> = {
