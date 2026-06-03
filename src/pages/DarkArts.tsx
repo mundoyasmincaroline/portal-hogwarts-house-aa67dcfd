@@ -39,8 +39,12 @@ export default function DarkArts() {
 
   useEffect(() => { load(); }, []);
 
-  const cast = async (slug: string) => {
+  const cast = async (slug: string, unforgivable: boolean) => {
     setBusy(true);
+    if (unforgivable) {
+      setShowVignette(true);
+      setTimeout(() => setShowVignette(false), 2000);
+    }
     const { error } = await supabase.rpc("cast_dark_spell", { p_spell: slug });
     setBusy(false);
     if (error) { toast.error(error.message); return; }
