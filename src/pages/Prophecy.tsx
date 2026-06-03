@@ -78,7 +78,7 @@ export default function ProphecyPage() {
         {list.map(p => (
           <Card key={p.id} className="p-6 border-primary/20 bg-gradient-to-br from-card to-purple-950/10">
             <div className="flex items-start gap-4">
-              <div className="text-4xl animate-pulse">{p.symbol || "🔮"}</div>
+              <div className="text-4xl animate-pulse drop-shadow-[0_0_8px_rgba(139,92,246,0.6)]">{p.symbol || "🔮"}</div>
               <div className="flex-1 min-w-0">
                 {p.prompt && <p className="text-xs text-muted-foreground italic mb-2">Sobre: "{p.prompt}"</p>}
                 <p className="font-serif text-base text-foreground/95 whitespace-pre-wrap leading-relaxed italic">{p.prophecy_text}</p>

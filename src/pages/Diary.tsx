@@ -98,7 +98,8 @@ export default function Diary() {
         {entries.map(e => {
           const m = MOODS.find(x => x.v === e.mood) || MOODS[1];
           return (
-            <Card key={e.id} className="p-5 border-primary/20 hover:border-primary/40 transition-all">
+            <Card key={e.id} className="p-5 border-primary/20 bg-[#fdf5e6]/5 text-foreground hover:bg-[#fdf5e6]/10 transition-all shadow-lg relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-[url('https://www.transparenttextures.com/patterns/old-mathematics.png')] opacity-5 pointer-events-none" />
               <div className="flex items-start justify-between gap-3 mb-2">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
