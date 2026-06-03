@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
@@ -10,6 +11,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import MagicalGaleon from "@/components/shared/MagicalGaleon";
 import SafeImage from "@/components/SafeImage";
@@ -24,6 +26,7 @@ interface FinanceStats {
 }
 
 export default function AdminFinance() {
+  const navigate = useNavigate();
   const [stats, setStats] = useState<FinanceStats>({
     totalRevenue: 0, totalGaleons: 0, totalOrders: 0, activeVips: 0,
     revenueByDay: [], ordersByType: []
@@ -32,6 +35,8 @@ export default function AdminFinance() {
   const [showAll, setShowAll] = useState(false);
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [vipUsers, setVipUsers] = useState<any[]>([]);
+  const [drill, setDrill] = useState<null | "revenue" | "galeons" | "orders" | "vips">(null);
 
   useEffect(() => {
     loadFinanceData();
@@ -74,7 +79,12 @@ export default function AdminFinance() {
       const ordersByType = Object.entries(typeMap).map(([name, value]) => ({ name, value }));
 
       // Active VIPs (simplified check)
-      const { count: vips } = await supabase.from("profiles").select("*", { count: "exact", head: true }).not("vip_plan", "is", null);
+      const { data: vipList, count: vips } = await supabase
+        .from("profiles")
+        .select("user_id, full_name, username, avatar_url, vip_plan, vip_expires_at, galeons", { count: "exact" })
+        .not("vip_plan", "is", null)
+        .order("vip_expires_at", { ascending: false });
+      setVipUsers(vipList || []);
 
       setStats({
         totalRevenue,
@@ -91,6 +101,62 @@ export default function AdminFinance() {
       setLoading(false);
     }
   };
+
+  const drillData = (() => {
+    if (!drill) return { title: "", subtitle: "", items: [] as any[] };
+    if (drill === "vips") {
+      return {
+        title: "VIPs Ativos",
+        subtitle: `${vipUsers.length} bruxos com plano VIP ativo`,
+        items: vipUsers.map(u => ({
+          user_id: u.user_id,
+          name: u.full_name,
+          sub: `@${u.username} • ${u.vip_plan?.toUpperCase()} • Expira: ${u.vip_expires_at ? new Date(u.vip_expires_at).toLocaleDateString("pt-BR") : "—"}`,
+          right: <span className="text-purple-400 font-bold text-xs uppercase">{u.vip_plan}</span>,
+          avatar: u.avatar_url,
+        })),
+      };
+    }
+    const paid = orders.filter(o => o.status === "paid");
+    if (drill === "revenue") {
+      return {
+        title: "Receita Total — Compradores",
+        subtitle: `${paid.length} transações pagas`,
+        items: paid.map(o => ({
+          user_id: o.user_id,
+          name: o.profiles?.full_name || "Desconhecido",
+          sub: `${o.package_id?.replace("vip_", "VIP ").replace(/_/g, " ")} • ${new Date(o.paid_at || o.created_at).toLocaleString("pt-BR")}`,
+          right: <span className="text-green-400 font-bold">R$ {(o.amount_brl || 0).toFixed(2)}</span>,
+          avatar: o.profiles?.avatar_url,
+        })),
+      };
+    }
+    if (drill === "galeons") {
+      const onlyGal = paid.filter(o => (o.galeons || 0) > 0);
+      return {
+        title: "Galeões Vendidos — Compradores",
+        subtitle: `${onlyGal.reduce((s, o) => s + (o.galeons || 0), 0).toLocaleString()} galeões em ${onlyGal.length} compras`,
+        items: onlyGal.map(o => ({
+          user_id: o.user_id,
+          name: o.profiles?.full_name || "Desconhecido",
+          sub: `${new Date(o.paid_at || o.created_at).toLocaleString("pt-BR")} • R$ ${(o.amount_brl || 0).toFixed(2)}`,
+          right: <span className="text-yellow-500 font-bold">🪙 {o.galeons}</span>,
+          avatar: o.profiles?.avatar_url,
+        })),
+      };
+    }
+    return {
+      title: "Vendas Concluídas",
+      subtitle: `${paid.length} ordens pagas`,
+      items: paid.map(o => ({
+        user_id: o.user_id,
+        name: o.profiles?.full_name || "Desconhecido",
+        sub: `${o.package_id?.replace("vip_", "VIP ").replace(/_/g, " ")} • ${new Date(o.paid_at || o.created_at).toLocaleString("pt-BR")}`,
+        right: <span className="text-green-400 font-bold">R$ {(o.amount_brl || 0).toFixed(2)}</span>,
+        avatar: o.profiles?.avatar_url,
+      })),
+    };
+  })();
 
   const COLORS = ["#f59e0b", "#a855f7", "#3b82f6", "#ef4444"];
 
@@ -127,10 +193,10 @@ export default function AdminFinance() {
 
       {/* ── KPI CARDS ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
-        <KPIItem title="Receita Total" value={`R$ ${stats.totalRevenue.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`} icon={DollarSign} color="text-green-500" />
-        <KPIItem title="Galeões Vendidos" value={stats.totalGaleons.toLocaleString()} icon={Coins} color="text-yellow-500" />
-        <KPIItem title="Vendas Concluídas" value={stats.totalOrders.toString()} icon={TrendingUp} color="text-blue-500" />
-        <KPIItem title="VIPs Ativos" value={stats.activeVips.toString()} icon={Crown} color="text-purple-500" />
+        <KPIItem title="Receita Total" value={`R$ ${stats.totalRevenue.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`} icon={DollarSign} color="text-green-500" onClick={() => setDrill("revenue")} />
+        <KPIItem title="Galeões Vendidos" value={stats.totalGaleons.toLocaleString()} icon={Coins} color="text-yellow-500" onClick={() => setDrill("galeons")} />
+        <KPIItem title="Vendas Concluídas" value={stats.totalOrders.toString()} icon={TrendingUp} color="text-blue-500" onClick={() => setDrill("orders")} />
+        <KPIItem title="VIPs Ativos" value={stats.activeVips.toString()} icon={Crown} color="text-purple-500" onClick={() => setDrill("vips")} />
       </div>
 
       {/* ── CHARTS SECTION ── */}
@@ -272,7 +338,7 @@ export default function AdminFinance() {
                       o.status === "pending" ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" : 
                       "bg-red-500/20 text-red-400 border-red-500/30"
                     }`}>
-                      {o.status === "paid" ? "OK" : o.status === "pending" ? "PEN" : "ERRO"}
+                      {o.status === "paid" ? "Pago" : o.status === "pending" ? "Pendente" : "Falhou"}
                     </span>
                   </td>
                   <td className="px-4 sm:px-8 py-6 text-right hidden lg:table-cell">
@@ -301,18 +367,55 @@ export default function AdminFinance() {
           </div>
         )}
       </Card>
+
+      {/* ── KPI DRILL-DOWN DIALOG ── */}
+      <Dialog open={!!drill} onOpenChange={(o) => !o && setDrill(null)}>
+        <DialogContent className="max-w-2xl glass border-white/10 bg-black/90 backdrop-blur-3xl">
+          <DialogHeader>
+            <DialogTitle className="font-heading text-2xl text-gold-gradient">{drillData.title}</DialogTitle>
+            <DialogDescription className="text-muted-foreground italic">{drillData.subtitle}</DialogDescription>
+          </DialogHeader>
+          <div className="max-h-[60vh] overflow-y-auto divide-y divide-white/5">
+            {drillData.items.length === 0 ? (
+              <p className="text-center py-12 text-muted-foreground italic">Nenhum registro encontrado.</p>
+            ) : drillData.items.map((it, i) => (
+              <button
+                key={i}
+                onClick={() => { setDrill(null); navigate(`/dashboard/profile/${it.user_id}`); }}
+                className="w-full flex items-center gap-3 p-3 hover:bg-white/5 rounded-lg text-left transition-colors"
+              >
+                <div className="w-10 h-10 rounded-full border border-white/10 overflow-hidden shrink-0">
+                  <SafeImage src={it.avatar} alt={it.name} className="w-full h-full object-cover" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold text-white truncate">{it.name}</p>
+                  <p className="text-xs text-muted-foreground truncate">{it.sub}</p>
+                </div>
+                <div className="shrink-0">{it.right}</div>
+              </button>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
 
-function KPIItem({ title, value, icon: Icon, color }: any) {
+function KPIItem({ title, value, icon: Icon, color, onClick }: any) {
   return (
-    <Card className="glass rounded-[2rem] p-6 border-white/10 bg-black/40 hover:border-primary/30 transition-all group overflow-hidden relative">
+    <Card
+      onClick={onClick}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={(e) => { if (onClick && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); onClick(); } }}
+      className={`glass rounded-[2rem] p-6 border-white/10 bg-black/40 hover:border-primary/50 transition-all group overflow-hidden relative ${onClick ? "cursor-pointer hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-primary/10" : ""}`}
+    >
       <div className="absolute top-0 right-0 w-24 h-24 bg-current opacity-5 blur-2xl group-hover:opacity-10 transition-opacity -mr-8 -mt-8" style={{ color: color.replace('text-', '') }} />
       <div className="flex justify-between items-start mb-4 relative z-10">
         <div className={`p-3 rounded-2xl bg-white/5 border border-white/10 ${color}`}>
           <Icon size={24} />
         </div>
+        {onClick && <span className="text-[9px] uppercase tracking-widest text-primary/60 group-hover:text-primary transition-colors font-bold">Ver lista →</span>}
       </div>
       <div className="relative z-10">
         <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1 font-bold">{title}</p>
