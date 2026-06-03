@@ -184,7 +184,10 @@ export default function DashboardLayout() {
   if (!isAdmin && !profile.has_accepted_rules) return <ProtectedRoute adminOnly={false}><RulesAgreement /></ProtectedRoute>;
   // Admin pode pular a seleção de personagem via flag persistido em localStorage
   const adminSkippedCharacter = isAdmin && user && typeof window !== "undefined" && localStorage.getItem(`admin_skip_character_${user.id}`) === "true";
-  if (hasCharacters === false && !profile.active_character_id && !adminSkippedCharacter) return <ProtectedRoute adminOnly={false}><CharacterSelection adminMode={isAdmin} /></ProtectedRoute>;
+  // BLOCKER FIX: gate por OR + tratar null (erro de fetch) como sem personagem para não vazar usuário pro dashboard quebrado
+  if ((hasCharacters !== true || !profile.active_character_id) && !adminSkippedCharacter) {
+    return <ProtectedRoute adminOnly={false}><CharacterSelection adminMode={isAdmin} /></ProtectedRoute>;
+  }
   // Cena cinematográfica de entrada no castelo — exibida uma única vez após a primeira ficha
   if (!isAdmin && profile.active_character_id && (profile as any).has_seen_intro === false) {
     return <ProtectedRoute adminOnly={false}><CastleEntrance /></ProtectedRoute>;
