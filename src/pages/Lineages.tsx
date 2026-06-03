@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Crown, TreeDeciduous, Handshake, Scroll } from "lucide-react";
+import { Crown, TreeDeciduous, Handshake, Scroll, Search } from "lucide-react";
 
 interface Family { id:string; name:string; motto:string|null; crest_emoji:string|null; blood_status:string; founder_id:string; }
 interface Member { family_id:string; user_id:string; role:string; full_name?:string; }
