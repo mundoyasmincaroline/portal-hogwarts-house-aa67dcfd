@@ -9,7 +9,7 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute({ children, adminOnly = false }: ProtectedRouteProps) {
-  const { user, isAdmin, isLoading, isAuthenticated } = useAuth();
+  const { user, profile, isAdmin, isLoading, isAuthenticated, isFaciallyValidated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -19,13 +19,18 @@ export default function ProtectedRoute({ children, adminOnly = false }: Protecte
     if (!isLoading) {
       if (!isAuthenticated) {
         if (isMounted) navigate("/login", { state: { from: location.pathname }, replace: true });
-      } else if (adminOnly && !isAdmin) {
-        if (isMounted) navigate("/dashboard", { replace: true });
+      } else {
+        // Check facial validation if enabled
+        if (profile?.facial_verification_enabled && !isFaciallyValidated) {
+          if (isMounted) navigate("/login", { state: { from: location.pathname, facialRequired: true }, replace: true });
+        } else if (adminOnly && !isAdmin) {
+          if (isMounted) navigate("/dashboard", { replace: true });
+        }
       }
     }
 
     return () => { isMounted = false; };
-  }, [isLoading, isAuthenticated, isAdmin, adminOnly, navigate, location.pathname]);
+  }, [isLoading, isAuthenticated, isAdmin, adminOnly, navigate, location.pathname, profile?.facial_verification_enabled, isFaciallyValidated]);
 
   if (isLoading) {
     return (
