@@ -19,6 +19,7 @@ export default function NPCChat() {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
+  const [showStarters, setShowStarters] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { load(); }, [slug, user?.id]);
@@ -109,7 +110,7 @@ export default function NPCChat() {
       {showStarters && messages.length === 0 && npc && (
         <div className="flex flex-wrap gap-2 mb-3">
           {["Olá!", "Quem é você?", "Me conte um segredo.", "Como está o castelo?"].map((s) => (
-            <Button key={s} variant="outline" size="xs" className="text-[10px] rounded-full" onClick={() => { setInput(s); setShowStarters(false); }}>
+            <Button key={s} variant="outline" size="sm" className="text-[10px] rounded-full h-7 px-3" onClick={() => { setInput(s); setShowStarters(false); }}>
               {s}
             </Button>
           ))}
