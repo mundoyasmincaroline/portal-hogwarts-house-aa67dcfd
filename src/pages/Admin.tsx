@@ -113,7 +113,7 @@ export default function Admin() {
                   onChange={(e) => setHouseFilter(e.target.value)}
                 >
                   <option value="all">Todas as Casas</option>
-                  {HOUSES.map(h => <option key={h.id} value={h.id}>{h.name}</option>)}
+                  {Object.values(HOUSES).map(h => <option key={h.id} value={h.id}>{h.name}</option>)}
                 </select>
                 <select 
                   className="bg-background/50 border border-input rounded-md px-3 py-2 text-xs"
