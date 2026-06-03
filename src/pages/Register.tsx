@@ -171,10 +171,10 @@ export default function Register() {
 
       <div key={step} className="relative z-20 w-full max-w-xl animate-fade-in-up">
         {/* Progress bar discreta — some na convocação e na carta */}
-        {step > 0 && step < 6 && (
+        {step > 0 && step < 8 && (
           <div className="flex justify-center gap-1.5 mb-6">
-            {Array.from({ length: totalSteps - 1 }).map((_, i) => (
-              <div key={i} className={`h-0.5 w-10 rounded-full transition-all ${i + 1 <= (step === 7 ? 6 : step) ? "bg-primary" : "bg-white/15"}`} />
+            {Array.from({ length: totalSteps }).map((_, i) => (
+              <div key={i} className={`h-0.5 w-8 rounded-full transition-all ${i + 1 <= step ? "bg-primary" : "bg-white/15"}`} />
             ))}
           </div>
         )}
