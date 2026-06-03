@@ -4,7 +4,9 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { Search, FileText, ClipboardList } from "lucide-react";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 type Position = { id: string; name: string; department: string; description: string | null; min_level: number; salary_galeons: number; icon: string };
