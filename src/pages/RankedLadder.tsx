@@ -134,9 +134,30 @@ export default function RankedLadder() {
         </ol>
       </section>
 
-      <div className="flex gap-2">
-        <Button onClick={() => reportTest(true)} className="flex-1">Reportar Vitória</Button>
-        <Button onClick={() => reportTest(false)} variant="outline" className="flex-1">Reportar Derrota</Button>
+      <div className="flex flex-col sm:flex-row gap-4 p-8 rounded-[2rem] border border-primary/20 bg-primary/5 shadow-inner">
+        <div className="flex-1 space-y-2">
+          <h3 className="font-heading text-lg text-primary flex items-center gap-2">
+            <EmojiIcon e="⚔️" /> Reportar Partida
+          </h3>
+          <p className="text-xs text-muted-foreground italic font-serif italic">
+            Participe de duelos ou atividades PvP e registre o resultado aqui para subir no ranking.
+          </p>
+        </div>
+        <div className="flex gap-2 shrink-0">
+          <Button 
+            onClick={() => reportTest(true)} 
+            className="px-8 h-12 rounded-xl bg-green-600 hover:bg-green-500 shadow-[0_0_20px_rgba(22,163,74,0.3)] transition-all active:scale-95"
+          >
+            Vitória ✨
+          </Button>
+          <Button 
+            onClick={() => reportTest(false)} 
+            variant="outline" 
+            className="px-8 h-12 rounded-xl border-red-500/50 text-red-500 hover:bg-red-500/10 active:scale-95"
+          >
+            Derrota 🥀
+          </Button>
+        </div>
       </div>
 
       <section>
