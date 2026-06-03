@@ -140,7 +140,10 @@ export default function Lineages() {
     toast.success("Herança declarada."); setHeirItem(""); setHeirGold("0"); setHeirNote(""); load();
   };
 
-  const otherProfiles = profiles.filter((p) => p.user_id !== uid);
+  const otherProfiles = profiles.filter((p) => 
+    p.user_id !== uid && 
+    (!profileSearch || p.full_name?.toLowerCase().includes(profileSearch.toLowerCase()))
+  );
 
   return (
     <div className="p-6 space-y-6">
