@@ -31,8 +31,14 @@ export default function PotionsLab() {
     setRecipes((r as any) || []);
     setPlants((pl as any) || []);
     if (user) {
-      const { data: b } = await supabase.from("user_potions" as any).select("*").eq("user_id", user.id).order("started_at", { ascending: false }).limit(10);
+      const [{ data: b }, { data: inv }] = await Promise.all([
+        supabase.from("user_potions" as any).select("*").eq("user_id", user.id).order("started_at", { ascending: false }).limit(15),
+        supabase.from("user_inventory" as any).select("item_slug, quantity").eq("user_id", user.id)
+      ]);
       setBrews((b as any) || []);
+      const invMap: Record<string, number> = {};
+      (inv || []).forEach((i: any) => invMap[i.item_slug] = i.quantity);
+      setInventory(invMap);
     }
   }
   useEffect(() => { load(); }, []);
