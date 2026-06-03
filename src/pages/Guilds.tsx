@@ -145,16 +145,25 @@ export default function Guilds() {
           <AnimatePresence mode="popLayout">
             {guilds
               .filter(g => g.name.toLowerCase().includes(searchTerm.toLowerCase()))
-              .map(g => (
+              .map((g, idx) => (
               <motion.div 
                 layout
                 key={g.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="flex items-center gap-4 p-5 rounded-[2rem] border border-primary/20 bg-card/40 backdrop-blur-md hover:border-primary/50 hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)] transition-all group"
+                className={`flex items-center gap-4 p-5 rounded-[2rem] border backdrop-blur-md hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)] transition-all group relative overflow-hidden ${
+                  idx === 0 ? "border-yellow-500/50 bg-yellow-500/5" : "border-primary/20 bg-card/40"
+                }`}
               >
-                <div className="text-4xl bg-primary/10 w-16 h-16 rounded-2xl flex items-center justify-center border border-primary/20 group-hover:rotate-6 transition-transform shadow-inner">{g.emblem}</div>
+                {idx === 0 && (
+                  <div className="absolute top-0 right-0 p-3 text-yellow-500">
+                    <Trophy className="w-5 h-5 animate-float" />
+                  </div>
+                )}
+                <div className={`text-4xl w-16 h-16 rounded-2xl flex items-center justify-center border transition-transform shadow-inner group-hover:rotate-6 ${
+                  idx === 0 ? "bg-yellow-500/20 border-yellow-500/40" : "bg-primary/10 border-primary/20"
+                }`}>{g.emblem}</div>
                 <div className="flex-1 min-w-0">
                   <div className="font-heading text-xl text-primary truncate drop-shadow-sm">{g.name}</div>
                   <div className="text-[10px] text-muted-foreground uppercase tracking-widest flex items-center gap-2 mt-1">
