@@ -44,6 +44,7 @@ export default function Marketplace() {
   const [owned, setOwned] = useState<OwnedSticker[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSticker, setSelectedSticker] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [price, setPrice] = useState<string>("50");
 
   const load = async () => {
@@ -132,8 +133,14 @@ export default function Marketplace() {
           </div>
         </div>
 
-
-        <Dialog>
+        <div className="flex gap-2 w-full md:w-auto">
+          <Input 
+            placeholder="Buscar figurinha..." 
+            className="max-w-xs bg-background/50"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <Dialog>
           <DialogTrigger asChild>
             <Button>
               <Plus className="w-4 h-4 mr-1" /> Novo anúncio
@@ -184,7 +191,9 @@ export default function Marketplace() {
       )}
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {listings.map((l) => {
+        {listings
+          .filter(l => l.sticker?.character_name.toLowerCase().includes(searchQuery.toLowerCase()))
+          .map((l) => {
           const mine = user?.id === l.seller_id;
           return (
             <Card key={l.id} className="p-4 bg-card/60 border-primary/20 space-y-3">
