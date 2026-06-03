@@ -3,6 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
+import { Swords, Zap, Heart, Trophy } from "lucide-react";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function RaidBoss() {

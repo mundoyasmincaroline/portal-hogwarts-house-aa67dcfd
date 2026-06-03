@@ -4,6 +4,8 @@ import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
+import { Swords, Shield, Trophy, Users, Plus } from "lucide-react";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function Guilds() {

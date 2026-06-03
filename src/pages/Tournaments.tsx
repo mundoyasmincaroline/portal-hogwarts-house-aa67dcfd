@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, Users, Calendar, Swords } from "lucide-react";
+import { Trophy, Users, Calendar, Swords, User } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import SafeImage from "@/components/SafeImage";
 
 type Tournament = {
   id: string;
