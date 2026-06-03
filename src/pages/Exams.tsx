@@ -46,7 +46,7 @@ export default function Exams() {
         setTimer(prev => {
           if (prev <= 1) {
             clearInterval(interval);
-            // Auto submit or message? For now just stay at 0
+            submit();
             return 0;
           }
           return prev - 1;
