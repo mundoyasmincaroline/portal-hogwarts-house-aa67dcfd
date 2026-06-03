@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-
+import { motion, AnimatePresence } from "framer-motion";
 import EmojiIcon from "@/components/shared/EmojiIcon";
 const THEMES = [
   { id: "estudo", icon: "📚", label: "Sala de Estudos" },

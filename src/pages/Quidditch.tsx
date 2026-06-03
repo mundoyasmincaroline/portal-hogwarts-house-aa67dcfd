@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-
+import { Trophy, Wind, Target, Star } from "lucide-react";
 import EmojiIcon from "@/components/shared/EmojiIcon";
 const HOUSES = ["gryffindor", "slytherin", "ravenclaw", "hufflepuff"];
 const HOUSE_LABEL: Record<string, string> = { gryffindor: "🦁 Grifinória", slytherin: "🐍 Sonserina", ravenclaw: "🦅 Corvinal", hufflepuff: "🦡 Lufa-Lufa" };

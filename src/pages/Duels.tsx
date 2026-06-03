@@ -6,7 +6,8 @@ import { toast } from "sonner";
 import { Swords, Shield, Zap, Sparkles, User } from "lucide-react";
 import MagicalEmoji from "@/components/shared/MagicalEmoji";
 import HouseCrest from "@/components/rpg/HouseCrest";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import SafeImage from "@/components/SafeImage";
 
 interface Spell {
   id: string;
