@@ -8,6 +8,7 @@ import HouseCrest from "@/components/rpg/HouseCrest";
 import SafeImage from "@/components/SafeImage";
 import { House } from "@/types";
 import { UserPlus, UserCheck, Heart, Users, Camera } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 interface Character {

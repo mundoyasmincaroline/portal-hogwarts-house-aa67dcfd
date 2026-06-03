@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Sparkles, Timer, CheckCircle2, Lock, Clock, Trophy, ChevronRight, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import MagicalEmoji from "@/components/shared/MagicalEmoji";
 
