@@ -17,6 +17,8 @@ export default function DiagonAlley() {
   const [items, setItems] = useState<Item[]>([]);
   const [active, setActive] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [quantities, setQuantities] = useState<Record<string, number>>({});
 
   useEffect(() => {
     (async () => {
