@@ -78,7 +78,15 @@ export default function Login() {
     setLoading(false);
     if (result.success) {
       playDoorSound();
-      // Wait for AuthInit/init to catch up if needed, though session is set
+      
+      // Antes de entrar, verificamos se precisa de validação facial
+      const { data: profile } = await supabase.from("profiles").select("facial_identity_url, facial_verification_enabled").eq("user_id", (await supabase.auth.getUser()).data.user?.id).maybeSingle();
+      
+      if (profile?.facial_verification_enabled && profile?.facial_identity_url) {
+        setShowFacialValidation(true);
+        return;
+      }
+
       navigate("/dashboard", { replace: true });
     } else {
       setError(result.error || "Credenciais inválidas. Tente novamente.");
