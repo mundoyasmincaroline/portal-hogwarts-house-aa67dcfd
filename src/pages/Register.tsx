@@ -61,7 +61,7 @@ export default function Register() {
   const [captcha] = useState({ num1: Math.floor(Math.random() * 10) + 1, num2: Math.floor(Math.random() * 10) + 1 });
   const [captchaAnswer, setCaptchaAnswer] = useState("");
 
-  const totalSteps = 6; // não conta a carta final
+  const totalSteps = 7; // não conta a carta final
   const houses = Object.values(HOUSES);
 
   const next = () => setStep((s) => s + 1);
