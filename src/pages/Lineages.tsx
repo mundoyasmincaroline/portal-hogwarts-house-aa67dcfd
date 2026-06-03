@@ -174,7 +174,7 @@ export default function Lineages() {
                   return (
                     <>
                       <div className="flex items-center gap-3">
-                        <span className="text-3xl">{f.crest_emoji}</span>
+                        <span className="text-4xl animate-bounce">{f.crest_emoji}</span>
                         <div>
                           <h3 className="font-heading text-xl">{f.name}</h3>
                           <p className="text-xs italic text-foreground/60">"{f.motto || '—'}"</p>
