@@ -124,7 +124,8 @@ export default function Quests() {
       {quests.map((q) => {
         const myProg = mine[q.id];
         const qSteps = steps[q.id] || [];
-        const locked = !user || false;
+        const userLevel = (profile as any)?.level ?? 0;
+        const locked = !user || userLevel < (q.min_level || 0);
         const total = qSteps.length || 1;
         const progress = myProg ? Math.min(100, ((myProg.completed ? total : myProg.current_step - 1) / total) * 100) : 0;
         const currentStep = qSteps.find((s) => s.step_order === (myProg?.current_step || 1));
@@ -153,8 +154,18 @@ export default function Quests() {
               </div>
               <div className="flex flex-col gap-2 items-end">
                 {!myProg && (
-                  <Button onClick={() => start(q.id)} disabled={locked}>
-                    {locked ? <><Lock className="w-4 h-4 mr-1" /> Entre</> : "Iniciar"}
+                  <Button
+                    onClick={() => start(q.id)}
+                    disabled={locked}
+                    title={locked && user ? `Requer nível ${q.min_level}` : undefined}
+                  >
+                    {!user ? (
+                      <><Lock className="w-4 h-4 mr-1" /> Entre</>
+                    ) : locked ? (
+                      <><Lock className="w-4 h-4 mr-1" /> Nível {q.min_level}</>
+                    ) : (
+                      "Iniciar"
+                    )}
                   </Button>
                 )}
                 {myProg?.completed && (

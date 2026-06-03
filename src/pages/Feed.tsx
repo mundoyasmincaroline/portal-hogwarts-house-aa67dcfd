@@ -109,6 +109,7 @@ export default function Feed() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-6 duration-1000">
+      <MagicalDashboardHeader />
       <div className="space-y-4 text-center sm:text-left">
         <h1 className="text-4xl sm:text-6xl font-heading text-gold-gradient tracking-tighter drop-shadow-[0_10px_20px_rgba(212,175,55,0.3)]">Salão Principal</h1>
         <p className="text-foreground/85 text-sm sm:text-base italic uppercase tracking-[0.28em] font-light">Os pergaminhos que narram a história do castelo</p>
