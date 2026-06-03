@@ -149,7 +149,7 @@ export default function DashboardLayout() {
   useEffect(() => {
     if (!user) { setHasCharacters(null); return; }
     let cancelled = false;
-    (async () => {
+    const run = async () => {
       try {
         const { count, error } = await supabase
           .from("characters")
@@ -165,8 +165,17 @@ export default function DashboardLayout() {
         console.error("[DashboardLayout] character count threw:", err);
         if (!cancelled) setHasCharacters(null);
       }
-    })();
-    return () => { cancelled = true; };
+    };
+    run();
+    const ch = supabase
+      .channel(`dash-characters-${user.id}-${Date.now()}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "characters", filter: `user_id=eq.${user.id}` },
+        () => { run(); }
+      )
+      .subscribe();
+    return () => { cancelled = true; supabase.removeChannel(ch); };
   }, [user?.id]);
 
   useEffect(() => {
