@@ -5,7 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
-import { BookOpen, Sparkles, Zap } from "lucide-react";
+import { BookOpen, Sparkles, Zap, Wand2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function Grimoire() {
@@ -34,8 +35,15 @@ export default function Grimoire() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-6xl">
-      <div className="mb-6">
+    <div className="container mx-auto px-4 py-6 max-w-6xl relative overflow-hidden min-h-screen">
+      <div className="absolute inset-0 pointer-events-none opacity-5">
+        <div className="absolute top-10 left-10 text-4xl rotate-12">ᚦ</div>
+        <div className="absolute bottom-20 right-10 text-4xl -rotate-12">ᚫ</div>
+        <div className="absolute top-1/2 left-1/4 text-4xl rotate-45">ᚱ</div>
+        <div className="absolute top-1/3 right-1/4 text-4xl -rotate-45">ᚠ</div>
+      </div>
+
+      <div className="mb-6 relative z-10">
         <h1 className="font-heading text-3xl text-gold-gradient flex items-center gap-2"><BookOpen/> Grimório Pessoal</h1>
         <p className="text-sm text-muted-foreground">Pratique seus feitiços para aumentar a maestria</p>
       </div>
