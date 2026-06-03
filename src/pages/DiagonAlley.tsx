@@ -4,6 +4,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
+import { ShoppingCart } from "lucide-react";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 type Shop = { id: string; slug: string; name: string; description: string | null; icon: string };
@@ -43,10 +45,25 @@ export default function DiagonAlley() {
   };
 
   return (
-    <div className="p-4 sm:p-6 space-y-6">
-      <div>
-        <h1 className="font-heading text-2xl sm:text-3xl text-primary"><EmojiIcon e="🛍️" /> Beco Diagonal</h1>
-        <p className="text-muted-foreground">A rua mágica mais famosa do mundo bruxo.</p>
+    <div className="p-4 sm:p-6 space-y-6 relative overflow-hidden min-h-screen">
+      <div className="flex items-end justify-between gap-3 relative z-10">
+        <div>
+          <h1 className="font-heading text-2xl sm:text-3xl text-primary"><EmojiIcon e="🛍️" /> Beco Diagonal</h1>
+          <p className="text-muted-foreground">A rua mágica mais famosa do mundo bruxo.</p>
+        </div>
+        <motion.div 
+          whileHover={{ scale: 1.1 }}
+          className="relative bg-primary/20 p-3 rounded-full border border-primary/30 cursor-help"
+        >
+          <ShoppingCart className="w-6 h-6 text-primary" />
+          <motion.span 
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold"
+          >
+            0
+          </motion.span>
+        </motion.div>
       </div>
 
       <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-hide">

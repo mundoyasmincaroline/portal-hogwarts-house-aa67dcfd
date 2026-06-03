@@ -64,10 +64,10 @@ export default function WandCrafting() {
         >
           <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-150 group-hover:bg-primary/30 transition-colors" />
           <div 
-            className="w-[300px] h-3 bg-amber-900 rounded-full relative z-10 shadow-2xl overflow-hidden"
+            className="h-3 bg-amber-900 rounded-full relative z-10 shadow-2xl overflow-hidden"
             style={{ 
               backgroundColor: wood === 'teixo' ? '#2d2d2d' : wood === 'azevinho' ? '#5d4037' : '#8d6e63',
-              width: `${length * 20}px`,
+              width: `${Number(length) * 20}px`,
               filter: busy ? 'brightness(1.5)' : 'none'
             }}
           >
@@ -86,7 +86,7 @@ export default function WandCrafting() {
 
       {wand && (
         <Card className="p-4 bg-primary/10 border-primary/40 space-y-2 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-2 opacity-20"><EmojiIcon e="✨" size="xl" /></div>
+          <div className="absolute top-0 right-0 p-2 opacity-20"><EmojiIcon e="✨" /></div>
           <h2 className="font-heading text-primary text-xl">Sua varinha atual</h2>
           <p className="text-sm capitalize">{wand.length_inches}" de <strong>{wand.wood}</strong> com núcleo de <strong>{wand.core}</strong>, {wand.flexibility}</p>
           <div className="flex gap-3 text-xs flex-wrap">

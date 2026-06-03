@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
+import { Lock, History, Coins } from "lucide-react";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function Gringotts() {
@@ -12,6 +14,7 @@ export default function Gringotts() {
   const [holdings, setHoldings] = useState<any[]>([]);
   const [amount, setAmount] = useState("100");
   const [shares, setShares] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(true);
 
   const load = async () => {
     const { data: l } = await (supabase as any).from("bank_loans").select("*").order("created_at", { ascending: false });
@@ -20,6 +23,7 @@ export default function Gringotts() {
     setStocks(s || []);
     const { data: h } = await (supabase as any).from("stock_holdings").select("*");
     setHoldings(h || []);
+    setLoading(false);
   };
   useEffect(() => { load(); }, []);
 
@@ -43,10 +47,42 @@ export default function Gringotts() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
-      <header>
-        <h1 className="font-heading text-2xl sm:text-3xl text-primary"><EmojiIcon e="🏦" /> Banco de Gringotts</h1>
-        <p className="text-foreground/70 font-serif italic">Empréstimos e investimentos no mercado bruxo.</p>
+    <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6 relative overflow-hidden">
+      <AnimatePresence>
+        {!loading && (
+          <motion.div 
+            initial={{ scale: 1, opacity: 1 }}
+            animate={{ scale: 0, opacity: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="fixed inset-0 z-[100] bg-zinc-950 flex items-center justify-center pointer-events-none"
+          >
+            <div className="text-center">
+              <motion.div 
+                animate={{ rotate: [0, 180, 360] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              >
+                <Lock size={80} className="text-primary mb-4" />
+              </motion.div>
+              <h2 className="font-heading text-2xl text-primary">Abrindo Cofre...</h2>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <header className="flex items-center justify-between">
+        <div>
+          <h1 className="font-heading text-2xl sm:text-3xl text-primary flex items-center gap-2"><EmojiIcon e="🏦" /> Banco de Gringotts</h1>
+          <p className="text-foreground/70 font-serif italic">Empréstimos e investimentos no mercado bruxo.</p>
+        </div>
+        <div className="flex gap-2">
+          <motion.div 
+            whileHover={{ scale: 1.05 }}
+            className="bg-primary/10 border border-primary/30 p-2 rounded-xl flex items-center gap-2"
+          >
+            <Coins className="text-yellow-500" />
+            <span className="font-heading text-lg">1.250</span>
+          </motion.div>
+        </div>
       </header>
       <Tabs defaultValue="loans">
         <TabsList>

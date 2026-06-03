@@ -43,9 +43,19 @@ export default function SortingHatAI() {
   };
 
   return (
-    <div className="container mx-auto max-w-2xl px-4 py-8 space-y-4">
-      <header className="text-center">
-        <h1 className="font-heading text-4xl text-primary"><EmojiIcon e="🎩" /> Chapéu Seletor</h1>
+    <div className="container mx-auto max-w-2xl px-4 py-8 space-y-4 relative overflow-hidden">
+      <header className="text-center relative z-10">
+        <motion.div 
+          animate={{ 
+            rotate: [0, -5, 5, 0],
+            y: [0, -10, 0]
+          }}
+          transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
+          className="inline-block mb-4"
+        >
+          <EmojiIcon e="🎩" />
+        </motion.div>
+        <h1 className="font-heading text-4xl text-primary">Chapéu Seletor</h1>
         <p className="text-muted-foreground mt-2 italic">
           "Não há nada escondido em sua cabeça que eu não veja..."
         </p>
