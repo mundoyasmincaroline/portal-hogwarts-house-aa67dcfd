@@ -139,11 +139,13 @@ export default function Duels() {
 
   const castSpell = async (spell: Spell) => {
     if (!activeDuel || !user || !profile) return;
+    
     // Toda a lógica (dano, turno, HP, XP) acontece na RPC server-side process_duel_turn
     const { data, error } = await (supabase.rpc as any)("process_duel_turn", {
       _duel_id: activeDuel.id,
       _spell_id: spell.id,
     });
+    
     if (error) {
       const msg = error.message || "";
       if (msg.includes("not_your_turn")) toast.error("Aguarde seu turno!");
@@ -151,12 +153,23 @@ export default function Duels() {
       else toast.error("Erro ao lançar feitiço: " + msg);
       return;
     }
+
+    // Visual feedback for turn action
+    const isChallenger = activeDuel.challenger_user_id === user.id;
+    const target = isChallenger ? 'opponent' : 'challenger';
+    const type = spell.base_defense > 0 ? 'shield' : 'damage';
+    
+    setLastAction({ type, target: type === 'shield' ? (isChallenger ? 'challenger' : 'opponent') : target });
+    if (actionTimeoutRef.current) clearTimeout(actionTimeoutRef.current);
+    actionTimeoutRef.current = setTimeout(() => setLastAction(null), 2000);
+
     if (data?.winner) {
       const iWon =
         (activeDuel.challenger_user_id === user.id && data.winner === 'challenger') ||
         (activeDuel.opponent_user_id === user.id && data.winner === 'opponent');
       toast.success(iWon ? "🏆 Vitória! +50 XP" : "💀 Derrota — o vencedor leva tudo.");
     }
+    
     setActiveDuel((prev: any) => prev ? {
       ...prev,
       challenger_hp: data.challenger_hp,
