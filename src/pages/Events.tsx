@@ -232,13 +232,18 @@ export default function Events() {
           );
         })}
         {!loading && dailyEvents.length === 0 && (
-          <div className="col-span-full glass rounded-2xl sm:rounded-[2rem] p-12 sm:p-16 text-center border border-white/5">
-            <div className="text-6xl mb-4"><EmojiIcon e="🌙" /></div>
-            <p className="font-heading text-xl text-foreground">Nenhum evento mágico hoje</p>
-            <p className="text-sm text-muted-foreground italic font-serif mt-2 max-w-md mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="col-span-full glass rounded-[2rem] p-12 sm:p-20 text-center border border-white/5 shadow-2xl relative overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
+            <div className="text-7xl mb-6 animate-float drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]"><EmojiIcon e="🌙" /></div>
+            <p className="font-heading text-2xl text-foreground tracking-tight">Nenhum evento mágico hoje</p>
+            <p className="text-sm text-muted-foreground italic font-serif mt-4 max-w-md mx-auto opacity-70">
               "Até os dementadores precisam de um dia de folga. Volte amanhã para novas celebrações em Hogwarts!"
             </p>
-          </div>
+          </motion.div>
         )}
       </div>
 

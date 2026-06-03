@@ -205,14 +205,24 @@ export default function Challenges() {
 
       {daily.length > 0 && (
         <div>
-          <h2 className="font-heading text-lg text-foreground mb-3"><EmojiIcon e="📅" /> Missões Diárias</h2>
+          <h2 className="font-heading text-xl text-primary mb-4 flex items-center gap-3">
+            <span className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20 shadow-inner">
+              <EmojiIcon e="📅" />
+            </span> 
+            Missões Diárias
+          </h2>
           <div className="grid md:grid-cols-2 gap-4">{daily.map((c) => renderCard(c))}</div>
         </div>
       )}
 
       {weekly.length > 0 && (
         <div>
-          <h2 className="font-heading text-lg text-foreground mb-3"><EmojiIcon e="🏆" /> Desafios Semanais</h2>
+          <h2 className="font-heading text-xl text-primary mb-4 flex items-center gap-3">
+            <span className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20 shadow-inner">
+              <EmojiIcon e="🏆" />
+            </span> 
+            Desafios Semanais
+          </h2>
           <div className="grid md:grid-cols-2 gap-4">{weekly.map((c) => renderCard(c, true))}</div>
         </div>
       )}
