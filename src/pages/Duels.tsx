@@ -220,8 +220,29 @@ export default function Duels() {
 
              <motion.div 
                 animate={!myTurn ? { x: [0, -2, 2, -2, 2, 0] } : {}}
-                className={`glass rounded-3xl p-6 border-2 transition-all ${activeDuel.challenger_user_id === user?.id ? (myTurn ? 'border-primary shadow-[0_0_30px_rgba(212,175,55,0.2)]' : 'border-white/5') : (!myTurn ? 'border-primary shadow-[0_0_30px_rgba(212,175,55,0.2)]' : 'border-white/5')}`}
+                className={`glass rounded-3xl p-6 border-2 transition-all relative ${activeDuel.challenger_user_id === user?.id ? (myTurn ? 'border-primary shadow-[0_0_30px_rgba(212,175,55,0.2)]' : 'border-white/5') : (!myTurn ? 'border-primary shadow-[0_0_30px_rgba(212,175,55,0.2)]' : 'border-white/5')}`}
              >
+                <AnimatePresence>
+                  {lastAction?.target === 'challenger' && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ opacity: 1, scale: 1.2 }}
+                      exit={{ opacity: 0, scale: 1.5 }}
+                      className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none"
+                    >
+                      {lastAction.type === 'shield' ? (
+                        <div className="w-full h-full border-4 border-cyan-400/50 rounded-3xl bg-cyan-400/10 backdrop-blur-sm flex items-center justify-center">
+                          <Shield size={64} className="text-cyan-400 animate-pulse" />
+                        </div>
+                      ) : (
+                        <div className="w-full h-full border-4 border-red-500/50 rounded-3xl bg-red-500/10 backdrop-blur-sm flex items-center justify-center">
+                          <Zap size={64} className="text-red-500 animate-bounce" />
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
                 <div className="flex flex-col items-center gap-4 text-center">
                    <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}>
                      <HouseCrest house={profile?.house || 'gryffindor'} size="lg" />
@@ -229,15 +250,18 @@ export default function Duels() {
                    <h3 className="font-heading truncate w-full flex items-center justify-center gap-2">
                      Você {activeDuel.challenger_user_id === user?.id ? activeDuel.challenger_hp <= 20 && <EmojiIcon e="🩸" /> : activeDuel.opponent_hp <= 20 && <EmojiIcon e="🩸" />}
                    </h3>
+                   {((activeDuel.challenger_user_id === user?.id && activeDuel.current_turn === 'challenger') || (activeDuel.opponent_user_id === user?.id && activeDuel.current_turn === 'opponent')) && (
+                     <Badge variant="magical" className="animate-pulse">SEU TURNO</Badge>
+                   )}
                    <div className="w-full space-y-1">
                       <div className="h-2 bg-black/60 rounded-full overflow-hidden">
                          <motion.div 
-                           initial={false}
-                           animate={{ 
-                             width: `${activeDuel.challenger_user_id === user?.id ? activeDuel.challenger_hp : activeDuel.opponent_hp}%`,
-                             backgroundColor: (activeDuel.challenger_user_id === user?.id ? activeDuel.challenger_hp : activeDuel.opponent_hp) < 30 ? "#ef4444" : "#22c55e"
-                           }} 
-                           className="h-full" 
+                            initial={false}
+                            animate={{ 
+                              width: `${activeDuel.challenger_user_id === user?.id ? activeDuel.challenger_hp : activeDuel.opponent_hp}%`,
+                              backgroundColor: (activeDuel.challenger_user_id === user?.id ? activeDuel.challenger_hp : activeDuel.opponent_hp) < 30 ? "#ef4444" : "#22c55e"
+                            }} 
+                            className="h-full" 
                          />
                       </div>
                    </div>
