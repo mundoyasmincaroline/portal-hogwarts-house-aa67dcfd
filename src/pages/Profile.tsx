@@ -1,12 +1,14 @@
 import { useEffect } from "react";
 import { useAuth } from "@/lib/auth";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { ProfileAboutTab } from "./Profile/ProfileAboutTab";
 import SafeImage from "@/components/SafeImage";
 import CharacterSheetView from "@/components/profile/CharacterSheetView";
 import ProfileAlbum from "@/components/profile/ProfileAlbum";
 import EditProfileButton from "@/components/profile/EditProfileButton";
 import { useProfile } from "@/hooks/features/useProfile";
+import { Button } from "@/components/ui/button";
+import { Wallet, Backpack, Trophy, History } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Wallet, Backpack, Trophy, History } from "lucide-react";
 
