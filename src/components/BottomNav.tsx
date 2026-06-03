@@ -1,6 +1,7 @@
 import { Home, MessageSquare, Trophy, ShoppingBag, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
+import { prefetchRoute } from "@/lib/routePrefetch";
 
 const MOBILE_NAV = [
   { icon: <Home size={20} />, label: "Início", path: "/dashboard" },
@@ -26,6 +27,8 @@ export default function BottomNav() {
               key={item.path}
               to={item.path}
               aria-label={item.label}
+              onTouchStart={() => prefetchRoute(item.path)}
+              onMouseEnter={() => prefetchRoute(item.path)}
               className={`relative flex flex-col items-center justify-center gap-0.5 min-w-[56px] h-14 rounded-2xl transition-all duration-300 ${
                 isActive ? "text-primary scale-105 bg-primary/10" : "text-foreground/70 active:scale-90 hover:text-primary/90"
               }`}
