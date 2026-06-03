@@ -23,8 +23,9 @@ export default function StickerAlbum() {
   const { stickers, userStickers, loading, loadAlbum, buySticker: handleBuySticker } = useStickers();
   const [buyingId, setBuyingId] = useState<string | null>(null);
   const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
-  const [activeRarity, setActiveRarity] = useState<"all" | "bronze" | "silver" | "gold">("all");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [activeRarity, setActiveRarity] = useState<\"all\" | \"bronze\" | \"silver\" | \"gold\">(\"all\");
+  const [activeHouse, setActiveHouse] = useState<string>(\"all\");
+  const [searchTerm, setSearchTerm] = useState(\"\");
   const [openingPack, setOpeningPack] = useState(false);
   const [packReveal, setPackReveal] = useState<Sticker | null>(null);
   const [packPhase, setPackPhase] = useState<"idle" | "shaking" | "reveal">("idle");
@@ -116,9 +117,10 @@ export default function StickerAlbum() {
 
   const filtered = stickers
     .filter(s => {
-      const matchesRarity = activeRarity === "all" || s.rarity === activeRarity;
+      const matchesRarity = activeRarity === \"all\" || s.rarity === activeRarity;
+      const matchesHouse = activeHouse === \"all\" || (s as any).house === activeHouse;
       const matchesSearch = s.character_name.toLowerCase().includes(searchTerm.toLowerCase());
-      return matchesRarity && matchesSearch;
+      return matchesRarity && matchesHouse && matchesSearch;
     })
     .sort((a, b) => RARITY_ORDER[b.rarity] - RARITY_ORDER[a.rarity]);
 
@@ -317,6 +319,22 @@ export default function StickerAlbum() {
                   {r === "bronze" ? bronzeTotal : r === "silver" ? silverTotal : goldTotal})
                 </span>
               )}
+            </button>
+          ))}
+        </div>
+
+        <div className=\"flex flex-wrap justify-center gap-3\">
+          {([\"all\", \"gryffindor\", \"slytherin\", \"ravenclaw\", \"hufflepuff\"] as const).map((h) => (
+            <button
+              key={h}
+              onClick={() => setActiveHouse(h)}
+              className={`px-4 py-2 rounded-xl text-[10px] font-heading uppercase tracking-widest border transition-all ${
+                activeHouse === h
+                  ? \"bg-primary/20 border-primary text-primary shadow-[0_0_15px_rgba(212,175,55,0.3)]\"
+                  : \"bg-white/5 border-white/10 text-muted-foreground hover:border-white/30\"
+              }`}
+            >
+              {h === \"all\" ? \"Casas\" : h}
             </button>
           ))}
         </div>

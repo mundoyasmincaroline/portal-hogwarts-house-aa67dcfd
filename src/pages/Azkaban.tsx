@@ -40,13 +40,15 @@ export default function Azkaban() {
     const t = setInterval(() => setTimeLeft(p => {
       if (p <= 1) {
         clearInterval(t);
-        // Liberta automaticamente: marca registro como inativo e atualiza estado
         if (user && azkabanStatus?.id) {
-          supabase.from("azkaban_status").update({ active: false } as never).eq("id", azkabanStatus.id).then(() => {
+          supabase.from(\"azkaban_status\").update({ active: false } as never).eq(\"id\", azkabanStatus.id).then(() => {
             setAzkabanStatus(null);
+            toast.success(\"Você foi libertado de Azkaban! ✨\");
+            navigate(\"/dashboard\");
           });
         } else {
           setAzkabanStatus(null);
+          navigate(\"/dashboard\");
         }
         return 0;
       }
