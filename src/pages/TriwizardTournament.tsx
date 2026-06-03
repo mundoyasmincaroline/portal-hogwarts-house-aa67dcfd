@@ -37,6 +37,7 @@ export default function TriwizardTournament() {
   const [trials, setTrials] = useState<Trial[]>([]);
   const [loading, setLoading] = useState(true);
   const [attempting, setAttempting] = useState<string | null>(null);
+  const [cooldown, setCooldown] = useState<Record<string, number>>({});
 
   const load = async () => {
     setLoading(true);
@@ -61,10 +62,15 @@ export default function TriwizardTournament() {
   useEffect(() => { load(); }, []);
 
   const attempt = async (id: string) => {
+    if (cooldown[id] && Date.now() < cooldown[id]) {
+      toast.error("Você precisa descansar antes da próxima prova!");
+      return;
+    }
     setAttempting(id);
     const { data, error } = await supabase.rpc("attempt_trial", { p_trial: id });
     setAttempting(null);
     if (error) { toast.error(error.message); return; }
+    setCooldown(prev => ({ ...prev, [id]: Date.now() + 60000 })); // 1 min cooldown
     const a = data as { success: boolean; score: number };
     toast[a.success ? "success" : "error"](
       a.success ? `Triunfo! +${a.score} pontos` : `Falhou na prova (+${a.score} pts).`
@@ -111,10 +117,10 @@ export default function TriwizardTournament() {
               </div>
               <Button
                 className="w-full"
-                disabled={attempting === t.id}
+                disabled={attempting === t.id || (cooldown[t.id] && Date.now() < cooldown[t.id])}
                 onClick={() => attempt(t.id)}
               >
-                {attempting === t.id ? "Enfrentando..." : "Enfrentar Prova"}
+                {attempting === t.id ? "Enfrentando..." : (cooldown[t.id] && Date.now() < cooldown[t.id]) ? "Descansando..." : "Enfrentar Prova"}
               </Button>
             </CardContent>
           </Card>
