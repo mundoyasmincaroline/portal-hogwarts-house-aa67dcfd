@@ -224,7 +224,7 @@ export default function Clubs() {
                     </Button>
                   )}
                 </div>
-              </article>
+              </motion.article>
             );
           })}
         </div>
