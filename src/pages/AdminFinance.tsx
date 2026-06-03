@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import MagicalGaleon from "@/components/shared/MagicalGaleon";
 import SafeImage from "@/components/SafeImage";
@@ -369,34 +368,57 @@ export default function AdminFinance() {
       </Card>
 
       {/* ── KPI DRILL-DOWN DIALOG ── */}
-      <Dialog open={!!drill} onOpenChange={(o) => !o && setDrill(null)}>
-        <DialogContent className="max-w-2xl glass border-white/10 bg-black/90 backdrop-blur-3xl">
-          <DialogHeader>
-            <DialogTitle className="font-heading text-2xl text-gold-gradient">{drillData.title}</DialogTitle>
-            <DialogDescription className="text-muted-foreground italic">{drillData.subtitle}</DialogDescription>
-          </DialogHeader>
-          <div className="max-h-[60vh] overflow-y-auto divide-y divide-white/5">
-            {drillData.items.length === 0 ? (
-              <p className="text-center py-12 text-muted-foreground italic">Nenhum registro encontrado.</p>
-            ) : drillData.items.map((it, i) => (
+      {drill && (
+        <div
+          className="fixed inset-0 z-[1200] flex items-center justify-center p-4 animate-in fade-in duration-200"
+          role="dialog"
+          aria-modal="true"
+          onClick={(e) => { if (e.target === e.currentTarget) setDrill(null); }}
+        >
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/85 backdrop-blur-md" aria-hidden="true" />
+
+          {/* Panel */}
+          <div className="relative w-full max-w-2xl bg-[#0a0604] border border-primary/30 rounded-3xl shadow-[0_30px_120px_rgba(0,0,0,0.85)] overflow-hidden animate-in zoom-in-95 duration-200">
+            {/* Header */}
+            <div className="flex items-start justify-between gap-4 p-6 border-b border-white/10 bg-gradient-to-br from-primary/10 to-transparent">
+              <div className="min-w-0">
+                <h2 className="font-heading text-2xl text-gold-gradient truncate">{drillData.title}</h2>
+                <p className="text-sm text-muted-foreground italic mt-1">{drillData.subtitle}</p>
+              </div>
               <button
-                key={i}
-                onClick={() => { setDrill(null); navigate(`/dashboard/profile/${it.user_id}`); }}
-                className="w-full flex items-center gap-3 p-3 hover:bg-white/5 rounded-lg text-left transition-colors"
+                onClick={() => setDrill(null)}
+                aria-label="Fechar"
+                className="shrink-0 w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-muted-foreground hover:text-primary transition-colors"
               >
-                <div className="w-10 h-10 rounded-full border border-white/10 overflow-hidden shrink-0">
-                  <SafeImage src={it.avatar} alt={it.name} className="w-full h-full object-cover" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-white truncate">{it.name}</p>
-                  <p className="text-xs text-muted-foreground truncate">{it.sub}</p>
-                </div>
-                <div className="shrink-0">{it.right}</div>
+                ✕
               </button>
-            ))}
+            </div>
+
+            {/* List */}
+            <div className="max-h-[65vh] overflow-y-auto divide-y divide-white/5 p-2">
+              {(drillData.items || []).length === 0 ? (
+                <p className="text-center py-12 text-muted-foreground italic">Nenhum registro encontrado.</p>
+              ) : drillData.items.map((it, i) => (
+                <button
+                  key={i}
+                  onClick={() => { setDrill(null); navigate(`/dashboard/profile/${it.user_id}`); }}
+                  className="w-full flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl text-left transition-colors"
+                >
+                  <div className="w-10 h-10 rounded-full border border-white/10 overflow-hidden shrink-0">
+                    <SafeImage src={it.avatar} alt={it.name} className="w-full h-full object-cover" fallbackText={it.name} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-white truncate">{it.name}</p>
+                    <p className="text-xs text-muted-foreground truncate">{it.sub}</p>
+                  </div>
+                  <div className="shrink-0">{it.right}</div>
+                </button>
+              ))}
+            </div>
           </div>
-        </DialogContent>
-      </Dialog>
+        </div>
+      )}
     </div>
   );
 }
