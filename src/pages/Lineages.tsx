@@ -244,26 +244,37 @@ export default function Lineages() {
         <TabsContent value="tree" className="mt-4 space-y-4">
           <Card className="border-primary/30 bg-card/60">
             <CardHeader><CardTitle className="font-heading">Registrar Relação</CardTitle></CardHeader>
-            <CardContent className="flex flex-col md:flex-row gap-2">
-              <Select value={relTarget} onValueChange={setRelTarget}>
-                <SelectTrigger className="md:w-64"><SelectValue placeholder="Selecione um bruxo" /></SelectTrigger>
-                <SelectContent>
-                  {otherProfiles.map((p) => <SelectItem key={p.user_id} value={p.user_id}>{p.full_name || "Bruxo"}</SelectItem>)}
-                </SelectContent>
-              </Select>
-              <Select value={relKind} onValueChange={setRelKind}>
-                <SelectTrigger className="md:w-48"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="pai">Pai</SelectItem>
-                  <SelectItem value="mae">Mãe</SelectItem>
-                  <SelectItem value="filho">Filho(a)</SelectItem>
-                  <SelectItem value="irmao">Irmão/Irmã</SelectItem>
-                  <SelectItem value="padrinho">Padrinho</SelectItem>
-                  <SelectItem value="madrinha">Madrinha</SelectItem>
-                  <SelectItem value="afilhado">Afilhado(a)</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button onClick={addRelation} disabled={busy}>Registrar</Button>
+            <CardContent className="space-y-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input 
+                  placeholder="Procurar bruxo..." 
+                  value={profileSearch}
+                  onChange={(e) => setProfileSearch(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+              <div className="flex flex-col md:flex-row gap-2">
+                <Select value={relTarget} onValueChange={setRelTarget}>
+                  <SelectTrigger className="md:w-64"><SelectValue placeholder="Selecione um bruxo" /></SelectTrigger>
+                  <SelectContent>
+                    {otherProfiles.map((p) => <SelectItem key={p.user_id} value={p.user_id}>{p.full_name || "Bruxo"}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+                <Select value={relKind} onValueChange={setRelKind}>
+                  <SelectTrigger className="md:w-48"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pai">Pai</SelectItem>
+                    <SelectItem value="mae">Mãe</SelectItem>
+                    <SelectItem value="filho">Filho(a)</SelectItem>
+                    <SelectItem value="irmao">Irmão/Irmã</SelectItem>
+                    <SelectItem value="padrinho">Padrinho</SelectItem>
+                    <SelectItem value="madrinha">Madrinha</SelectItem>
+                    <SelectItem value="afilhado">Afilhado(a)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button onClick={addRelation} disabled={busy}>Registrar</Button>
+              </div>
             </CardContent>
           </Card>
           <Card className="border-border/50 bg-card/60">
