@@ -36,6 +36,7 @@ const EMPTY = { full_name:"", avatar_url:"", age:"", blood_status:"", gender:"ma
   actor_faceclaim:"", wand:"", patronus:"", pet:"", favorite_class:"", favorite_spell:"",
   personality:"", strength:"", weakness:"", fears:"", dreams:"", quotes:"", instagram:"",
   background:"", physical_description:"", canon_era:"", canon_portrayed_by:"", canon_notes:"",
+  history:"", // Adicionando campo history explicitamente
   mother_id: null as string | null, father_id: null as string | null };
 
 export default function CharacterCreation({ onComplete, onCancel, canCancel }: Props) {

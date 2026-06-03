@@ -160,7 +160,7 @@ const characterSchema = z.object({
   full_name: z.string().trim().min(2, "Informe o nome da ficha.").max(120),
   character_type: z.enum(["oc", "canon"]),
   house: z.enum(["gryffindor", "slytherin", "ravenclaw", "hufflepuff"]),
-  gender: z.string().max(30).nullable().optional(),
+  gender: z.string().max(50).nullable().optional(),
   age: z.coerce.number().int().min(1).max(300).nullable().optional(),
   school_year: z.coerce.number().int().min(1).max(7).nullable().optional(),
   avatar_url: z.string().trim().max(500).nullable().optional(),
