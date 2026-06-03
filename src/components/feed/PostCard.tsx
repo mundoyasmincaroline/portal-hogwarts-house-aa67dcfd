@@ -120,14 +120,21 @@ const PostCard = memo(({
     <div className="flex flex-wrap items-center gap-2 pt-2">
       <div className="flex flex-wrap gap-2">
         {post.reactions.map((r: any) => (
-          <button
+          <motion.button
             key={r.emoji}
+            whileTap={{ scale: 0.8 }}
             onClick={() => onToggleReaction(post.id, r.emoji, r.mine)}
             className={`px-3 sm:px-4 py-1.5 rounded-2xl text-[10px] sm:text-xs transition-all duration-300 flex items-center gap-1 sm:gap-1.5 active:scale-90 ${r.mine ? "bg-primary/20 text-primary border border-primary/40 shadow-[0_5px_15px_rgba(212,175,55,0.2)]" : "glass hover:bg-white/5 border-white/5"}`}
           >
-            <span className="text-sm">{r.emoji}</span>
+            <motion.span 
+              initial={false}
+              animate={r.mine ? { scale: [1, 1.5, 1], rotate: [0, 20, -20, 0] } : {}}
+              className="text-sm"
+            >
+              {r.emoji === '⚡' && r.mine ? '✨' : r.emoji}
+            </motion.span>
             <span className="font-bold">{r.count}</span>
-          </button>
+          </motion.button>
         ))}
       </div>
 
