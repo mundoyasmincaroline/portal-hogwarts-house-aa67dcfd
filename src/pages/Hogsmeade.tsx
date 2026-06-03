@@ -70,9 +70,16 @@ export default function Hogsmeade() {
   return (
     <div className="container mx-auto px-4 py-6 max-w-6xl">
       <div className="flex items-start justify-between flex-wrap gap-4 mb-6">
-        <div>
-          <h1 className="font-heading text-2xl sm:text-3xl text-gold-gradient"><EmojiIcon e="🏪" /> Vila de Hogsmeade</h1>
-          <p className="text-sm text-muted-foreground">Compre itens mágicos com seus Galeões</p>
+        <div className="flex flex-col gap-1">
+          <h1 className="font-heading text-2xl sm:text-3xl text-gold-gradient flex items-center gap-2">
+            <EmojiIcon e="🏪" /> Vila de Hogsmeade
+          </h1>
+          <div className="flex items-center gap-2">
+            <p className="text-sm text-muted-foreground">Compre itens mágicos com seus Galeões</p>
+            <Button variant="link" size="sm" className="h-auto p-0 text-primary" onClick={() => window.location.href='/dashboard/world-map'}>
+              <MapIcon size={14} className="mr-1" /> Mapa Mundial
+            </Button>
+          </div>
         </div>
         <div className="glass-premium rounded-xl px-4 py-2 flex items-center gap-2">
           <Coins className="text-primary" size={20} />
