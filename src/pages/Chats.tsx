@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -159,7 +160,7 @@ export default function Chats() {
 
       <div className="relative group mb-8">
         <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-          <EmojiIcon e="🔍" size="sm" className="opacity-40 group-focus-within:opacity-100 transition-opacity" />
+          <EmojiIcon e="🔍" size="sm" />
         </div>
         <input 
           type="text"

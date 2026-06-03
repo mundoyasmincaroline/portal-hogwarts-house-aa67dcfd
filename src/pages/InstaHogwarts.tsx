@@ -393,6 +393,132 @@ export default function InstaHogwarts() {
             const isFollowingUser = followedUserIds.has(post.user_id);
             const isFollowingChar = disp.charId ? followedCharIds.has(disp.charId) : false;
             const hasLiked = post.likes.includes(user?.id || "");
+
+            return (
+              <motion.div 
+                key={post.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="relative overflow-hidden bg-[#f4f1ea] rounded-sm shadow-[0_10px_30px_rgba(0,0,0,0.2)] border-b-4 border-black/10 group/card"
+              >
+                {/* Daily Prophet Newspaper Texture Overlay */}
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/old-map.png')] opacity-10 pointer-events-none mix-blend-multiply" />
+                
+                {/* Card Header (News Style) */}
+                <div className="p-6 border-b-2 border-black/80 mx-4 mt-4 flex justify-between items-end">
+                  <div className="space-y-1">
+                    <h2 className="font-heading text-3xl text-black uppercase tracking-tighter leading-none">
+                      {disp.name}
+                    </h2>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-bold bg-black text-white px-2 py-0.5 uppercase">
+                        {disp.type || "CIDADÃO"}
+                      </span>
+                      <span className="text-[10px] text-black/60 font-serif italic">
+                        {new Date(post.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long' })}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-black/40">Edição Extra</p>
+                    <p className="text-xs font-serif italic font-bold text-black">Vol. {Math.floor(Math.random() * 99) + 1}</p>
+                  </div>
+                </div>
+
+                {/* Magical Photo (Image) */}
+                <div className="p-4 relative">
+                   <div className="relative aspect-square overflow-hidden bg-zinc-900 border-2 border-black/10 shadow-inner group/photo">
+                    <motion.img 
+                      initial={{ scale: 1.1 }}
+                      animate={{ scale: 1 }}
+                      transition={{ duration: 15, repeat: Infinity, repeatType: "reverse", ease: "linear" }}
+                      src={post.image_url} 
+                      alt="" 
+                      className="w-full h-full object-cover grayscale-[20%] sepia-[10%] group-hover/photo:grayscale-0 transition-all duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60 pointer-events-none" />
+                    
+                    {/* Floating Char Info */}
+                    <div className="absolute bottom-4 left-4 flex items-center gap-3">
+                      <div className="relative">
+                        <SafeImage src={disp.avatar} alt="" className="w-12 h-12 rounded-full border-2 border-white shadow-xl" />
+                        <div className="absolute -top-1 -right-1">
+                          <HouseCrest house={disp.house} size="xs" />
+                        </div>
+                      </div>
+                      <div className="bg-black/60 backdrop-blur-md p-2 rounded-lg border border-white/20">
+                        <p className="text-[10px] font-heading text-white truncate max-w-[120px]">{disp.name}</p>
+                        <p className="text-[8px] text-primary uppercase font-bold tracking-widest">@{disp.username}</p>
+                      </div>
+                    </div>
+
+                    {/* Follow Action */}
+                    {!isMyPost && disp.charId && (
+                      <button 
+                        onClick={() => toggleFollowChar(disp.charId!, disp.charOwnerId)}
+                        className={`absolute top-4 right-4 p-2 rounded-full backdrop-blur-md transition-all ${isFollowingChar ? 'bg-primary text-primary-foreground' : 'bg-black/40 text-white hover:bg-black/60'}`}
+                      >
+                        {isFollowingChar ? <UserCheck size={18} /> : <UserPlus size={18} />}
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Content & Actions */}
+                <div className="p-6 pt-2 space-y-4">
+                  <div className="relative">
+                    <span className="absolute -left-2 top-0 text-4xl text-black/10 font-serif italic">"</span>
+                    <p className="text-black font-serif italic leading-relaxed text-sm px-4">
+                      {post.caption}
+                    </p>
+                    <span className="absolute -right-2 bottom-0 text-4xl text-black/10 font-serif italic rotate-180">"</span>
+                  </div>
+
+                  {post.spotify_uri && (
+                    <div className="bg-black/5 p-3 rounded border-l-4 border-green-600 flex items-center gap-3 group/spotify transition-colors hover:bg-black/10">
+                      <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center animate-pulse">
+                         <div className="w-4 h-4 text-white"><EmojiIcon e="🎵" /></div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[10px] text-black/40 uppercase font-black tracking-widest leading-none mb-1">Trilha Sonora</p>
+                        <p className="text-xs font-serif font-bold text-black truncate">{post.spotify_uri}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex items-center justify-between pt-4 border-t border-black/10">
+                    <div className="flex items-center gap-6">
+                      <button 
+                        onClick={() => toggleLike(post)}
+                        className={`flex items-center gap-2 group/like transition-colors ${hasLiked ? 'text-red-600' : 'text-black/60 hover:text-red-600'}`}
+                      >
+                        <motion.div whileTap={{ scale: 1.5 }}>
+                          <Heart size={20} fill={hasLiked ? "currentColor" : "none"} className={hasLiked ? "animate-pulse" : ""} />
+                        </motion.div>
+                        <span className="text-xs font-bold">{post.likes.length} Curtidas</span>
+                      </button>
+                      
+                      <div className="flex items-center gap-2 text-black/60">
+                         <MessageSquare size={20} />
+                         <span className="text-xs font-bold">Comentar</span>
+                      </div>
+                    </div>
+                    
+                    <button className="text-black/40 hover:text-black transition-colors">
+                      <EmojiIcon e="🔖" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Decorative Elements */}
+                <div className="h-2 bg-black/5 flex">
+                  {Array.from({ length: 20 }).map((_, i) => (
+                    <div key={i} className="flex-1 border-r border-black/10" />
+                  ))}
+                </div>
+              </motion.div>
+            );
+          })
             const charFollowers = disp.charId ? (charFollowCounts[disp.charId] || 0) : 0;
 
             return (
