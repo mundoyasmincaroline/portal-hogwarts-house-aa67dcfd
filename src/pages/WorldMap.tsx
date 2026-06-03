@@ -40,14 +40,15 @@ export default function WorldMap() {
         {locs.map((l) => {
           const isCurrent = currentId === l.id;
           const isVisited = visited.has(l.id);
+          const isSelected = active?.id === l.id;
           return (
             <button
               key={l.id}
               onClick={() => setActive(l)}
               className="absolute -translate-x-1/2 -translate-y-1/2 group"
-              style={{ left: `${l.pos_x}%`, top: `${l.pos_y}%` }}
+              style={{ left: `${l.pos_x}%`, top: `${l.pos_y}%`, zIndex: isSelected ? 20 : 10 }}
             >
-              <div className={`text-3xl transition-all hover:scale-150 drop-shadow-lg ${isCurrent ? "animate-pulse" : ""} ${isVisited ? "" : "grayscale opacity-70"}`}>
+              <div className={`text-3xl transition-all duration-300 ${isSelected ? "scale-150 drop-shadow-[0_0_15px_rgba(212,175,55,0.8)]" : "hover:scale-125"} ${isCurrent ? "animate-bounce" : ""} ${isVisited ? "" : "grayscale opacity-50"}`}>
                 {l.icon}
               </div>
               <div className="absolute left-1/2 -translate-x-1/2 mt-1 text-[10px] font-heading whitespace-nowrap bg-background/80 px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition">
@@ -58,6 +59,17 @@ export default function WorldMap() {
           );
         })}
       </Card>
+
+      {visited.size > 0 && (
+        <div className="flex gap-2 flex-wrap items-center">
+          <span className="text-xs text-muted-foreground font-heading uppercase tracking-widest">Explorado:</span>
+          {locs.filter(l => visited.has(l.id)).map(l => (
+            <Badge key={l.id} variant="secondary" className="text-[10px] cursor-pointer" onClick={() => setActive(l)}>
+              {l.icon} {l.name}
+            </Badge>
+          ))}
+        </div>
+      )}
 
       {active && (
         <Card className="p-4 bg-card/60 border-primary/30 space-y-3">

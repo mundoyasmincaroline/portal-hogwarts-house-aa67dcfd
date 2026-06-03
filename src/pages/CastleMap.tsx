@@ -85,6 +85,20 @@ export default function CastleMap() {
         </div>
       </header>
 
+      <div className="space-y-2">
+        <div className="flex justify-between text-xs font-heading text-primary/80">
+          <span>Progresso de Exploração</span>
+          <span>{Object.keys(visits).length} / {rooms.length} Salas</span>
+        </div>
+        <div className="h-2 bg-primary/10 rounded-full overflow-hidden border border-primary/20">
+          <motion.div 
+            initial={{ width: 0 }}
+            animate={{ width: `${(Object.keys(visits).length / Math.max(1, rooms.length)) * 100}%` }}
+            className="h-full bg-gradient-to-r from-amber-600 to-yellow-400 shadow-[0_0_10px_rgba(212,175,55,0.4)]"
+          />
+        </div>
+      </div>
+
 
       <Card className="relative w-full aspect-[16/10] bg-gradient-to-br from-amber-950/40 via-stone-900/60 to-slate-950/80 border-2 border-primary/30 overflow-hidden">
         {/* Castle silhouette decoration */}

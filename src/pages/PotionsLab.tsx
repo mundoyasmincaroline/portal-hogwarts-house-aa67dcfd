@@ -18,6 +18,7 @@ export default function PotionsLab() {
   const [plants, setPlants] = useState<Plant[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [filterDifficulty, setFilterDifficulty] = useState<number | "all">("all");
 
   async function load() {
     const [{ data: r }, { data: pl }, { data: { user } }] = await Promise.all([
@@ -74,7 +75,7 @@ export default function PotionsLab() {
             const r = recipes.find((x) => x.id === b.recipe_id);
             const ready = new Date(b.ready_at) <= new Date();
             return (
-              <Card key={b.id} className="p-4 flex items-center justify-between bg-card/60 border-primary/20">
+              <Card key={b.id} className={`p-4 flex items-center justify-between transition-all ${ready ? "bg-primary/10 border-primary animate-pulse" : "bg-card/60 border-primary/20"}`}>
                 <div className="flex items-center gap-3">
                   <div className="text-3xl">{r?.icon || "🧪"}</div>
                   <div>
@@ -93,15 +94,37 @@ export default function PotionsLab() {
         </TabsContent>
 
         <TabsContent value="recipes" className="mt-4 space-y-4">
-          <Input 
-            placeholder="Procurar receita..." 
-            className="max-w-xs bg-background/50"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+          <div className="flex flex-wrap gap-4 items-center mb-4">
+            <Input 
+              placeholder="Procurar receita..." 
+              className="max-w-xs bg-background/50"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <div className="flex gap-2">
+              <Button 
+                variant={filterDifficulty === "all" ? "primary" : "outline"} 
+                size="sm" 
+                onClick={() => setFilterDifficulty("all")}
+              >
+                Todas
+              </Button>
+              {[1, 2, 3, 4, 5].map(d => (
+                <Button 
+                  key={d}
+                  variant={filterDifficulty === d ? "primary" : "outline"} 
+                  size="sm" 
+                  onClick={() => setFilterDifficulty(d)}
+                >
+                  {d}★
+                </Button>
+              ))}
+            </div>
+          </div>
           <div className="grid gap-4 md:grid-cols-2">
             {recipes
               .filter(r => r.name.toLowerCase().includes(searchQuery.toLowerCase()))
+              .filter(r => filterDifficulty === "all" || r.difficulty === filterDifficulty)
               .map((r) => (
             <Card key={r.id} className="p-4 space-y-2 bg-card/60 border-primary/20">
               <div className="flex items-start justify-between">
