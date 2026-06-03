@@ -51,6 +51,14 @@ export default function RankedLadder() {
             <Trophy size={40} className="text-primary" />
           </div>
           <h1 className="font-heading text-4xl sm:text-6xl text-gold-gradient drop-shadow-2xl">Modo Ranqueado</h1>
+          <div className="flex justify-center gap-3 flex-wrap">
+             {Object.keys(DIV_COLORS).map(div => (
+               <div key={div} className="flex items-center gap-1.5 bg-white/5 px-2 py-1 rounded-md border border-white/10">
+                 <Medal size={12} className={DIV_COLORS[div]} />
+                 <span className="text-[10px] text-muted-foreground uppercase">{div}</span>
+               </div>
+             ))}
+          </div>
           <p className="text-muted-foreground max-w-xl mx-auto font-serif italic italic italic">
             "A verdadeira maestria não está no poder, mas na disciplina. Suba na hierarquia dos maiores bruxos de Hogwarts."
           </p>

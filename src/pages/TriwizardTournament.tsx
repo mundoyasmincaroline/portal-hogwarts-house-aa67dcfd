@@ -63,7 +63,8 @@ export default function TriwizardTournament() {
 
   const attempt = async (id: string) => {
     if (cooldown[id] && Date.now() < cooldown[id]) {
-      toast.error("Você precisa descansar antes da próxima prova!");
+      const remaining = Math.ceil((cooldown[id] - Date.now()) / 1000);
+      toast.error(`Aguarde ${remaining}s para recuperar suas energias mágicas!`);
       return;
     }
     setAttempting(id);
@@ -72,9 +73,11 @@ export default function TriwizardTournament() {
     if (error) { toast.error(error.message); return; }
     setCooldown(prev => ({ ...prev, [id]: Date.now() + 60000 })); // 1 min cooldown
     const a = data as { success: boolean; score: number };
-    toast[a.success ? "success" : "error"](
-      a.success ? `Triunfo! +${a.score} pontos` : `Falhou na prova (+${a.score} pts).`
-    );
+    if (a.success) {
+      toast.success(`Triunfo! +${a.score} pontos conquistados para sua glória!`);
+    } else {
+      toast.error(`Falhou na prova. A magia foi instável... (+${a.score} pts de esforço).`);
+    }
   };
 
   if (loading) return <div className="p-8 text-foreground/60">Convocando juízes...</div>;

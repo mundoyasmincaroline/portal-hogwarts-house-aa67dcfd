@@ -120,7 +120,7 @@ export default function ProphetDaily() {
           transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
           className="whitespace-nowrap font-heading text-xs text-primary uppercase tracking-widest"
         >
-          +++ URGENTE: AVISTAMENTOS DE TESTRÁLIOS NOS CAMPOS DE HOGWARTS +++ MINISTÉRIO DA MAGIA ALERTA PARA POSSÍVEIS ATAQUES DE COMERÇAIS DA MORTE +++
+          +++ URGENTE: AVISTAMENTOS DE TESTRÁLIOS NOS CAMPOS DE HOGWARTS +++ MINISTÉRIO DA MAGIA ALERTA PARA POSSÍVEIS ATAQUES DE COMERÇAIS DA MORTE +++ NOTÍCIA EXTRA: NOVO LOTE DE VARINHAS CHEGA À OLIVARAS +++
         </motion.div>
       </div>
 
