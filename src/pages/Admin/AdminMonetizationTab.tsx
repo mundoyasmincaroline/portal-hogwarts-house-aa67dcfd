@@ -35,11 +35,12 @@ export const AdminMonetizationTab = memo(({ members, fetchAll }: { members: any[
     if (!member) { toast.error("Membro não encontrado."); return; }
     if (!confirm(`Creditar ${galeonAmount} Galeões para ${member.full_name}? Esta ação não pode ser desfeita.`)) return;
     setCrediting(true);
-    // Re-lê valor atual para evitar race com outras transações
-    const { data: fresh } = await supabase.from("profiles").select("galeons").eq("user_id", galeonTarget).single();
-    const current = (fresh as any)?.galeons || 0;
-    const { error } = await supabase.from("profiles").update({ galeons: current + galeonAmount } as any).eq("user_id", galeonTarget);
-    if (error) { toast.error("Erro ao creditar Galeões."); }
+    // Crédito atômico via RPC — previne race conditions com webhooks e recompensas
+    const { error } = await supabase.rpc("credit_galeons_atomic", {
+      _user_id: galeonTarget,
+      _amount: galeonAmount,
+    } as any);
+    if (error) { toast.error("Erro ao creditar Galeões: " + error.message); }
     else {
       toast.success(`🪙 ${galeonAmount} Galeões creditados para ${member.full_name}!`);
       setGaleonTarget(""); setGaleonAmount(0);
