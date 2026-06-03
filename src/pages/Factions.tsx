@@ -4,9 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Shield, Skull } from "lucide-react";
+import { Shield, Skull, HelpCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-interface Faction { id:string; slug:string; name:string; alignment:string; description:string|null; motto:string|null; hq_name:string|null; }
+interface Faction { id:string; slug:string; name:string; alignment:string; description:string|null; motto:string|null; hq_name:string|null; loyalty:number; }
 interface UserFaction { user_id:string; faction_id:string; rank:string; loyalty:number; }
 interface Mission { id:string; faction_id:string; name:string; briefing:string|null; difficulty:number; xp_reward:number; galleon_reward:number; loyalty_reward:number; }
 
@@ -16,6 +17,7 @@ export default function Factions() {
   const [missions, setMissions] = useState<Mission[]>([]);
   const [completed, setCompleted] = useState<Set<string>>(new Set());
   const [busy, setBusy] = useState(false);
+  const navigate = useNavigate();
 
   const load = async () => {
     const { data: u } = await supabase.auth.getUser();
@@ -57,12 +59,22 @@ export default function Factions() {
   };
 
   const currentFaction = factions.find((f) => f.id === membership?.faction_id);
+  const totalLoyalty = factions.reduce((acc, f) => acc + (f.loyalty || 0), 0);
 
   return (
     <div className="p-4 sm:p-6 space-y-6">
-      <div>
-        <h1 className="font-heading text-2xl sm:text-3xl">Facções da Guerra Bruxa</h1>
-        <p className="text-sm text-foreground/60">Escolha um lado. Sua lealdade definirá seu destino.</p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="font-heading text-2xl sm:text-3xl">Facções da Guerra Bruxa</h1>
+          <p className="text-sm text-foreground/60">Escolha um lado. Sua lealdade definirá seu destino.</p>
+        </div>
+        <div className="w-64 space-y-1">
+          <p className="text-xs font-heading">Progresso da Guerra Global</p>
+          <div className="flex h-4 overflow-hidden rounded-full border border-border">
+            <div className="bg-destructive" style={{ width: `${(factions.find(f => f.alignment === 'dark')?.loyalty || 0) / (totalLoyalty || 1) * 100}%` }} />
+            <div className="bg-primary" style={{ width: `${(factions.find(f => f.alignment === 'light')?.loyalty || 0) / (totalLoyalty || 1) * 100}%` }} />
+          </div>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -80,7 +92,10 @@ export default function Factions() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <p className="text-sm text-foreground/70">{f.description}</p>
-                <p className="text-xs text-foreground/60">QG: {f.hq_name}</p>
+                <div className="flex justify-between items-center text-xs text-foreground/60">
+                  <p>QG: {f.hq_name}</p>
+                  <Badge variant="outline">{f.loyalty} pontos de influência</Badge>
+                </div>
                 {isMine ? (
                   <Badge variant="secondary">Membro · {membership?.rank} · {membership?.loyalty} lealdade</Badge>
                 ) : (
