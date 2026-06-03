@@ -395,10 +395,10 @@ export default function Register() {
                 />
               </div>
 
-              <div className="flex justify-center pt-2">
-                 <Button variant="ghost" className="text-[10px] text-muted-foreground hover:text-primary underline" onClick={() => setStep(7)}>
-                   Pular por enquanto (não recomendado)
-                 </Button>
+              <div className="text-center pt-4">
+                 <p className="text-[10px] text-muted-foreground/60 italic">
+                   Sua essência é única e necessária para o registro no Livro de Nomes.
+                 </p>
               </div>
             </div>
           )}
