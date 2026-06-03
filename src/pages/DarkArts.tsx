@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
-import { Skull, Flame } from "lucide-react";
+import { Skull, Flame, Search } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface DarkSpell { id:string; slug:string; name:string; description:string|null; corruption_cost:number; xp_reward:number; unforgivable:boolean; level_req:number; }
 interface Corruption { user_id:string; corruption:number; alignment:string; }
