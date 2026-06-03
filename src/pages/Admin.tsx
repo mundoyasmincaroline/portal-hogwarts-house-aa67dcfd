@@ -25,6 +25,9 @@ export default function Admin() {
   const [tab, setTab] = useState<Tab>("members");
   const [members, setMembers] = useState<MemberProfile[]>([]);
   const [onlineFilter, setOnlineFilter] = useState<"all" | "online">("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [houseFilter, setHouseFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [loading, setLoading] = useState(true);
   const [editMember, setEditMember] = useState<{ uid: string; name: string } | null>(null);
 
