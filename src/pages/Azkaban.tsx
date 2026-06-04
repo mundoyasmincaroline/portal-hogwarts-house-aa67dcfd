@@ -98,7 +98,7 @@ export default function Azkaban() {
             <div className="text-4xl sm:text-7xl font-heading text-white font-bold tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.4)]">{formatTime(timeLeft)}</div>
             <div className="flex flex-col gap-2">
               <p className="text-blue-200/70 text-sm">Você foi enviado para Azkaban por inatividade excessiva. Aguarde o tempo acabar para ser libertado pelo Filch.</p>
-              <Button variant="outline" size="sm" onClick={() => navigate("/dashboard/support")} className="w-fit mx-auto border-blue-500/30 text-blue-300 hover:bg-blue-500/10">
+              <Button variant="outline" size="sm" onClick={() => navigate("/support")} className="w-fit mx-auto border-blue-500/30 text-blue-300 hover:bg-blue-500/10">
                 <Shield className="w-4 h-4 mr-1" /> Apelar ao Ministério
               </Button>
             </div>
