@@ -22,8 +22,7 @@ function Countdown({ to }: { to: string }) {
 }
 
 export default function LiveEvents() {
-  const { user } = useAuth();
-  const isAdmin = (user as any)?.role === 'admin' || (user as any)?.username === 'mundoyasmincaroline';
+  const { user, isAdmin } = useAuth();
   const [events, setEvents] = useState<any[]>([]);
   const [rsvps, setRsvps] = useState<Record<string,string>>({});
   const [open, setOpen] = useState(false);
