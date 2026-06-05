@@ -85,7 +85,7 @@ export default function StickerAlbum() {
       <div className="relative overflow-hidden rounded-[2rem] border border-yellow-500/20 p-12 text-center bg-[#1a0f02]">
         <h1 className="font-heading text-4xl sm:text-6xl text-gold-gradient">{completedBanner ? "🏆 ÁLBUM LENDÁRIO 🏆" : "Álbum de Magia"}</h1>
         <div className="flex justify-center gap-4 mt-8">
-           <Button variant="magical" size="lg" onClick={openSurprisePack} disabled={openingPack || profile.xp < PACK_COST}>Abrir Pacote ({PACK_COST} XP)</Button>
+           <Button variant="magical" size="lg" onClick={openSurprisePack} disabled={openingPack || (profile?.xp ?? 0) < PACK_COST}>Abrir Pacote ({PACK_COST} XP)</Button>
         </div>
       </div>
 
