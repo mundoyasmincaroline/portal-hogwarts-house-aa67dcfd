@@ -70,9 +70,9 @@ export default function Feed() {
     });
   }, [loadFeed, loadSidebar]);
 
-  useRealtime("posts", "*", loadFeed);
-  useRealtime("post_comments", "*", loadFeed);
-  useRealtime("post_reactions", "*", loadFeed);
+  useRealtime("posts", "*", () => loadFeed(true, true));
+  useRealtime("post_comments", "*", () => loadFeed(true, true));
+  useRealtime("post_reactions", "*", () => loadFeed(true, true));
 
   const toggleReaction = async (postId: string, emoji: string, mine: boolean) => {
     if (!user) return;
