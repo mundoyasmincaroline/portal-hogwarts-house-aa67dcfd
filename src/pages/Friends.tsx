@@ -174,14 +174,8 @@ export default function Friends() {
         <Input 
           placeholder="Buscar amigo por nome..." 
           className="bg-background/50 border-primary/30"
-          onChange={(e) => {
-            const q = e.target.value.toLowerCase();
-            if (!q) { load(); return; }
-            setRows(prev => prev.filter(r => 
-              r.other?.full_name?.toLowerCase().includes(q) || 
-              r.other?.username?.toLowerCase().includes(q)
-            ));
-          }}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
 
