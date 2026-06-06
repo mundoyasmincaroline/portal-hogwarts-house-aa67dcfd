@@ -45,8 +45,9 @@ export default function Chapters() {
   async function pickChoice(choice: Choice, chapter: Chapter) {
     if (!user) return;
     try {
+      const choiceId = choice.id.startsWith("auto-") ? null : choice.id;
       await supabase.from("story_progress" as any).upsert({
-        user_id: user.id, chapter_id: chapter.id, choice_id: choice.id,
+        user_id: user.id, chapter_id: chapter.id, choice_id: choiceId,
       }, { onConflict: "user_id,chapter_id" });
 
       const xpGain = chapter.rewards_xp + (choice.xp_bonus || 0);
