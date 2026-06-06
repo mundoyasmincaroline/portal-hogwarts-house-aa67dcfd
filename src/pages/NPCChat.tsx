@@ -61,8 +61,7 @@ export default function NPCChat() {
       toast.error(e.message || "Falha ao falar com a IA");
       setMessages(messages);
     } finally {
-  const [sending, setSending] = useState(false);
-  const [showStarters, setShowStarters] = useState(true);
+      setSending(false);
     }
   }
 

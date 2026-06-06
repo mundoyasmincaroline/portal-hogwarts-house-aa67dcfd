@@ -54,7 +54,7 @@ export default function Exams() {
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [current, timer]);
+  }, [current, timer > 0]);
 
   const start = async (exam: any) => {
     const { data } = await supabase.from("exam_questions").select("*").eq("exam_id", exam.id).order("order_idx");
