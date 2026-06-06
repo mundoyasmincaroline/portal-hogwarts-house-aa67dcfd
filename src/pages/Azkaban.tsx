@@ -55,7 +55,7 @@ export default function Azkaban() {
       return p - 1;
     }), 1000);
     return () => clearInterval(t);
-  }, [timeLeft, user, azkabanStatus?.id, navigate]);
+  }, [timeLeft > 0, user, azkabanStatus?.id, navigate]);
 
   const formatTime = (s: number) => {
     const m = Math.floor(s / 60);
