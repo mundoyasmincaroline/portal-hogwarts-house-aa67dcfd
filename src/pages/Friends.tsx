@@ -33,6 +33,7 @@ export default function Friends() {
   const [rows, setRows] = useState<FriendRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const load = async () => {
     if (!user) return;
@@ -115,10 +116,14 @@ export default function Friends() {
 
   if (!user) return null;
 
-  const friends = rows.filter((r) => r.status === "accepted");
-  const incoming = rows.filter((r) => r.status === "pending" && r.friend_id === user.id);
-  const outgoing = rows.filter((r) => r.status === "pending" && r.user_id === user.id);
-  const blocked = rows.filter((r) => r.status === "blocked" && r.user_id === user.id);
+  const q = searchQuery.trim().toLowerCase();
+  const matchSearch = (r: FriendRow) => !q ||
+    r.other?.full_name?.toLowerCase().includes(q) ||
+    r.other?.username?.toLowerCase().includes(q);
+  const friends = rows.filter((r) => r.status === "accepted" && matchSearch(r));
+  const incoming = rows.filter((r) => r.status === "pending" && r.friend_id === user.id && matchSearch(r));
+  const outgoing = rows.filter((r) => r.status === "pending" && r.user_id === user.id && matchSearch(r));
+  const blocked = rows.filter((r) => r.status === "blocked" && r.user_id === user.id && matchSearch(r));
 
   const Card = ({ row, actions }: { row: FriendRow; actions: React.ReactNode }) => (
     <motion.div 
