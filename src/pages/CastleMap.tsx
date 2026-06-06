@@ -23,7 +23,7 @@ const EVENTS = [
 ];
 
 export default function CastleMap() {
-  const { user, profile } = useAuth();
+  const { user, profile, updateProfile } = useAuth();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [visits, setVisits] = useState<Record<string, number>>({});
   const [selected, setSelected] = useState<Room | null>(null);
@@ -75,10 +75,10 @@ export default function CastleMap() {
       const ev = EVENTS[Math.floor(Math.random() * EVENTS.length)];
       setEventMsg(ev.text);
       if (ev.reward.xp || ev.reward.galeons) {
-        await supabase.from("profiles").update({
+        await updateProfile({
           xp: (profile?.xp || 0) + (ev.reward.xp || 0),
           galeons: (profile?.galeons || 0) + (ev.reward.galeons || 0),
-        }).eq("user_id", user.id);
+        });
       }
     }
     load();

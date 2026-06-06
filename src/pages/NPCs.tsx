@@ -40,6 +40,14 @@ export default function NPCs() {
         <p className="text-muted-foreground text-sm">Converse com personagens icônicos. Eles têm vida, memória e opiniões.</p>
       </header>
 
+      {npcs.length === 0 && (
+        <div className="text-center py-16 space-y-3">
+          <div className="text-6xl opacity-30"><EmojiIcon e="🖼️" /></div>
+          <p className="font-heading text-xl text-muted-foreground">Os retratos ainda dormem...</p>
+          <p className="text-xs text-muted-foreground/60 italic">Novos personagens serão convocados em breve.</p>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {npcs.map(n => (
           <Card key={n.id}

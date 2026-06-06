@@ -45,8 +45,9 @@ export default function Chapters() {
   async function pickChoice(choice: Choice, chapter: Chapter) {
     if (!user) return;
     try {
+      const choiceId = choice.id.startsWith("auto-") ? null : choice.id;
       await supabase.from("story_progress" as any).upsert({
-        user_id: user.id, chapter_id: chapter.id, choice_id: choice.id,
+        user_id: user.id, chapter_id: chapter.id, choice_id: choiceId,
       }, { onConflict: "user_id,chapter_id" });
 
       const xpGain = chapter.rewards_xp + (choice.xp_bonus || 0);
@@ -90,6 +91,12 @@ export default function Chapters() {
           ) : (
             <div className="space-y-3 border-t border-primary/20 pt-6">
               <h3 className="font-heading text-sm uppercase tracking-widest text-primary mb-4 text-center">O que você faz?</h3>
+              {myChoices.length === 0 && (
+                <Button variant="magical" size="lg" className="w-full"
+                  onClick={() => pickChoice({ id: `auto-${active.id}`, chapter_id: active.id, label: "Concluir capítulo", outcome_text: null, next_chapter_slug: null, xp_bonus: 0, display_order: 0 } as Choice, active)}>
+                  <Check className="mr-2" size={16} /> Concluir capítulo
+                </Button>
+              )}
               {myChoices.map(c => (
                 <Button key={c.id} variant="magical" size="lg"
                   className="w-full justify-start text-left h-auto py-4 whitespace-normal"

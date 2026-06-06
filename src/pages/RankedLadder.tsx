@@ -59,7 +59,7 @@ export default function RankedLadder() {
                </div>
              ))}
           </div>
-          <p className="text-muted-foreground max-w-xl mx-auto font-serif italic italic italic">
+          <p className="text-muted-foreground max-w-xl mx-auto font-serif italic">
             "A verdadeira maestria não está no poder, mas na disciplina. Suba na hierarquia dos maiores bruxos de Hogwarts."
           </p>
           {season && (

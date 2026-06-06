@@ -74,7 +74,11 @@ export function useFeed() {
         setPosts(enriched);
         setOffset(LIMIT);
       } else {
-        setPosts(prev => [...prev, ...enriched]);
+        setPosts(prev => {
+          const existingIds = new Set(prev.map(p => p.id));
+          const fresh = enriched.filter(p => !existingIds.has(p.id));
+          return [...prev, ...fresh];
+        });
         setOffset(prev => prev + LIMIT);
       }
     } catch (error: any) {

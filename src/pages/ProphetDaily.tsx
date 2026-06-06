@@ -59,7 +59,8 @@ export default function ProphetDaily() {
       return;
     }
     try {
-      const raw = (data as any).content as string;
+      const raw = (data as any)?.content as string | undefined;
+      if (!raw) throw new Error("Resposta vazia da IA");
       const json = JSON.parse(raw.replace(/^```json\s*/, "").replace(/```$/, "").trim());
       const { error: insErr } = await supabase.from("prophet_articles").insert({
         title: json.title,
