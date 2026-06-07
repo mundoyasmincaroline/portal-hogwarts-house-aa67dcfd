@@ -22,6 +22,7 @@ export default function NPCs() {
   const [npcs, setNpcs] = useState<NPC[]>([]);
   const [loading, setLoading] = useState(true);
   const nav = useNavigate();
+  const openNpc = (slug: string) => nav(`/dashboard/npc/${slug}`);
 
   useEffect(() => {
     supabase.from("npcs" as any).select("*").eq("is_active", true).then(r => {
@@ -51,8 +52,11 @@ export default function NPCs() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {npcs.map(n => (
           <Card key={n.id}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") openNpc(n.slug); }}
             className={`p-5 cursor-pointer hover:scale-[1.03] transition-all border-2 ${n.house ? HOUSE_COLOR[n.house] : "border-primary/30 bg-primary/5"}`}
-            onClick={() => nav(`/dashboard/npc/${n.slug}`)}>
+            onClick={() => openNpc(n.slug)}>
             <div className="flex items-start gap-3">
               <div className="text-5xl">{n.avatar_emoji || "🧙"}</div>
               <div className="flex-1 min-w-0">
@@ -62,7 +66,7 @@ export default function NPCs() {
               </div>
             </div>
             <p className="text-xs text-muted-foreground italic mt-3 line-clamp-2">{n.personality}</p>
-            <div className="mt-3 flex items-center gap-1 text-primary text-xs font-heading uppercase tracking-wider">
+            <div className="mt-3 flex items-center gap-1 text-primary text-xs font-heading uppercase tracking-wider" onClick={() => openNpc(n.slug)}>
               <MessageCircle size={12} /> Conversar
             </div>
           </Card>
