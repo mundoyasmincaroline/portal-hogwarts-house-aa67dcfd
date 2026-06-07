@@ -257,6 +257,7 @@ const App = () => {
                   <Route path="npcs" element={<NPCs />} />
                   <Route path="npc/:slug" element={<NPCChat />} />
                   <Route path="diary" element={<Diary />} />
+                  <Route path="referrals" element={<Referrals />} />
                   <Route path="prophecy" element={<Prophecy />} />
                   <Route path="castle-map" element={<CastleMap />} />
                   <Route path="rp-teams" element={<RPTeams />} />
