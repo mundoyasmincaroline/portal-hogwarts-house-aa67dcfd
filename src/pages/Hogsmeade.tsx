@@ -30,6 +30,7 @@ const CATEGORIES = [
 ];
 
 export default function Hogsmeade() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [items, setItems] = useState<any[]>([]);
   const [galeons, setGaleons] = useState(0);
