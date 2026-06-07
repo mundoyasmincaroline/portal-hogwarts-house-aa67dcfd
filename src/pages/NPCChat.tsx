@@ -35,12 +35,14 @@ export default function NPCChat() {
     setMessages(((conv as any)?.messages as Msg[]) || []);
   }
 
-  async function send() {
-    if (!input.trim() || !npc || !user || sending) return;
-    const userMsg: Msg = { role: "user", content: input.trim() };
+  async function send(messageOverride?: string) {
+    const content = (messageOverride ?? input).trim();
+    if (!content || !npc || !user || sending) return;
+    const userMsg: Msg = { role: "user", content };
     const newMsgs = [...messages, userMsg];
     setMessages(newMsgs);
     setInput("");
+    setShowStarters(false);
     setSending(true);
     try {
       const { data, error } = await supabase.functions.invoke("magical-ai", {
@@ -50,7 +52,7 @@ export default function NPCChat() {
           messages: newMsgs.map(m => ({ role: m.role, content: m.content })),
         },
       });
-      if (error) throw error;
+      if (error || (data as any)?.error) throw new Error((data as any)?.error || error?.message || "Falha ao falar com a IA");
       const reply = (data as any)?.content || "...";
       const final = [...newMsgs, { role: "assistant" as const, content: reply }];
       setMessages(final);
@@ -109,7 +111,7 @@ export default function NPCChat() {
       {showStarters && messages.length === 0 && npc && (
         <div className="flex flex-wrap gap-2 mb-3">
           {["Olá!", "Quem é você?", "Me conte um segredo.", "Como está o castelo?"].map((s) => (
-            <Button key={s} variant="outline" size="sm" className="text-[10px] rounded-full h-7 px-3" onClick={() => { setInput(s); setShowStarters(false); }}>
+            <Button key={s} variant="outline" size="sm" className="text-[10px] rounded-full h-7 px-3" onClick={() => send(s)} disabled={sending}>
               {s}
             </Button>
           ))}
