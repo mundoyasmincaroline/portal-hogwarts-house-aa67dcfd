@@ -106,6 +106,12 @@ export default function ItemTrades() {
         <Badge className={STATUS_STYLE[t.status]}>{t.status}</Badge>
         <span className="text-[10px] text-muted-foreground">{new Date(t.created_at).toLocaleDateString("pt-BR")}</span>
       </div>
+      <p className="text-xs text-muted-foreground mb-2">
+        {isSent ? "Para " : "De "}
+        <span className="text-primary font-heading">
+          @{(users.find(u => u.user_id === (isSent ? t.recipient_id : t.sender_id))?.username) || (isSent ? t.recipient_id : t.sender_id)?.slice(0,8) || "bruxo"}
+        </span>
+      </p>
       <div className="grid grid-cols-[1fr_auto_1fr] gap-3 items-center text-sm">
         <div className="text-center p-3 bg-secondary/30 rounded-lg">
           <p className="text-[10px] text-muted-foreground mb-1">Oferece</p>
