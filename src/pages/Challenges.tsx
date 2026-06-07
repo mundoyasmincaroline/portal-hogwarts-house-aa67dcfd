@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,6 +22,7 @@ interface Challenge {
 
 export default function Challenges() {
   const { user, profile, fetchProfile } = useAuth();
+  const navigate = useNavigate();
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
   const [pendingIds, setPendingIds] = useState<Set<string>>(new Set());
@@ -202,8 +204,8 @@ export default function Challenges() {
                    'class': '/dashboard/classes',
                    'explore': '/dashboard/castle-map'
                  };
-                 const target = Object.keys(routes).find(k => c.description.toLowerCase().includes(k)) || 'dashboard';
-                 window.location.href = routes[target] || '/dashboard';
+                 const target = Object.keys(routes).find(k => c.description.toLowerCase().includes(k));
+                 navigate(target ? routes[target] : '/dashboard');
                }}
              >
                Ir para o Local 🏃‍♂️
