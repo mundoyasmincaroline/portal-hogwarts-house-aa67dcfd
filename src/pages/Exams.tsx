@@ -40,21 +40,25 @@ export default function Exams() {
   useEffect(() => { load(); }, [user?.id]);
 
   useEffect(() => {
-    let interval: any;
-    if (current && timer > 0) {
-      interval = setInterval(() => {
-        setTimer(prev => {
-          if (prev <= 1) {
-            clearInterval(interval);
-            submit();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
+    if (!current || timer <= 0) return;
+    const interval = setInterval(() => {
+      setTimer(prev => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
     return () => clearInterval(interval);
-  }, [current, timer > 0]);
+  }, [current?.id]);
+
+  // Auto-submit when timer reaches 0
+  useEffect(() => {
+    if (current && timer === 0 && questions.length > 0) {
+      submit();
+    }
+  }, [timer]);
 
   const start = async (exam: any) => {
     const { data } = await supabase.from("exam_questions").select("*").eq("exam_id", exam.id).order("order_idx");

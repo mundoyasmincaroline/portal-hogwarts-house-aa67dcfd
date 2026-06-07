@@ -177,7 +177,10 @@ export default function DuelsPvP() {
               <span className="text-sm">Desafio recebido</span>
               <div className="flex gap-2">
                 <Button size="sm" onClick={() => accept(m.id)}>Aceitar</Button>
-                <Button size="sm" variant="outline" onClick={() => (supabase as any).rpc("forfeit_duel", { p_match: m.id }).then(loadActive)}>Recusar</Button>
+                <Button size="sm" variant="outline" onClick={async () => {
+                  const { error } = await (supabase as any).rpc("forfeit_duel", { p_match: m.id });
+                  if (error) toast.error(error.message); else loadActive();
+                }}>Recusar</Button>
               </div>
             </div>
           ))}

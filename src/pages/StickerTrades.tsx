@@ -136,9 +136,14 @@ export default function StickerTrades() {
   };
 
   const cancelTrade = async (tradeId: string) => {
-    await supabase.from("sticker_trades").update({ status: "cancelled" } as never).eq("id", tradeId);
-    toast.info("Oferta cancelada.");
-    loadData();
+    if (!user) return;
+    const { error } = await supabase
+      .from("sticker_trades")
+      .update({ status: "cancelled" } as never)
+      .eq("id", tradeId)
+      .eq("offerer_id", user.id);
+    if (error) toast.error(error.message);
+    else { toast.info("Oferta cancelada."); loadData(); }
   };
 
   const myTrades = trades.filter(t => t.offerer_id === user?.id);

@@ -25,7 +25,9 @@ export default function Auctions() {
 
   const place = async (id: string) => {
     const amount = parseInt(bid[id] || "0", 10);
-    if (!amount) return;
+    if (!amount) return toast.error("Digite um valor de lance");
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return toast.error("Faça login para dar lances");
     const { error } = await (supabase as any).rpc("place_auction_bid", { p_auction_id: id, p_amount: amount });
     if (error) toast.error(error.message); else { toast.success("Lance enviado!"); load(); }
   };

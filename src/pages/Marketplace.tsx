@@ -207,8 +207,12 @@ export default function Marketplace() {
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {listings
           .filter(l => {
-            const matchesSearch = l.sticker?.character_name.toLowerCase().includes(searchQuery.toLowerCase());
-            const matchesCategory = category === "all" || l.sticker?.house.toLowerCase() === category.toLowerCase() || l.sticker?.rarity.toLowerCase() === category.toLowerCase();
+            const matchesSearch = l.sticker?.character_name?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false;
+            const rarity = l.sticker?.rarity?.toLowerCase() ?? "";
+            const matchesCategory = category === "all"
+              || (category === "rare" && ["gold", "silver", "legendary", "epic"].includes(rarity))
+              || rarity === category.toLowerCase()
+              || l.sticker?.house?.toLowerCase() === category.toLowerCase();
             return matchesSearch && matchesCategory;
           })
           .map((l) => {

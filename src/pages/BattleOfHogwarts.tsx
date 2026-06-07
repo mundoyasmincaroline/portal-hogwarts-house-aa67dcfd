@@ -14,6 +14,8 @@ export default function BattleOfHogwarts() {
   const [battle, setBattle] = useState<Battle | null>(null);
   const [board, setBoard] = useState<Contribution[]>([]);
   const [busy, setBusy] = useState(false);
+  const [cooldownUntil, setCooldownUntil] = useState<number>(0);
+  const [now, setNow] = useState(Date.now());
 
   const load = async () => {
     const { data: b } = await supabase.from("battle_of_hogwarts").select("*").order("started_at", { ascending: false }).limit(1).maybeSingle();
@@ -30,13 +32,19 @@ export default function BattleOfHogwarts() {
   };
 
   useEffect(() => { load(); const id = setInterval(load, 5000); return () => clearInterval(id); }, []);
+  useEffect(() => { const id = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(id); }, []);
 
   const attack = async () => {
     if (!battle) return;
+    if (Date.now() < cooldownUntil) {
+      toast.error(`Aguarde ${Math.ceil((cooldownUntil - Date.now())/1000)}s para o próximo ataque.`);
+      return;
+    }
     setBusy(true);
     const { data, error } = await supabase.rpc("attack_voldemort", { p_battle: battle.id, p_spell: "stupefy" });
     setBusy(false);
     if (error) { toast.error(error.message); return; }
+    setCooldownUntil(Date.now() + 30000);
     const r = data as any;
     toast.success(`Você causou ${r.damage} de dano!`);
     load();
@@ -65,8 +73,8 @@ export default function BattleOfHogwarts() {
         <CardContent className="space-y-3">
           <Progress value={pct} className="h-4" />
           <p className="text-sm text-foreground/70">{Number(battle.voldemort_hp).toLocaleString()} / {Number(battle.voldemort_max_hp).toLocaleString()} HP</p>
-          <Button variant="destructive" size="lg" disabled={busy || battle.status !== "active"} onClick={attack}>
-            {battle.status === "active" ? "⚡ Atacar (cooldown 30s)" : "Batalha encerrada"}
+          <Button variant="destructive" size="lg" disabled={busy || battle.status !== "active" || now < cooldownUntil} onClick={attack}>
+            {battle.status !== "active" ? "Batalha encerrada" : now < cooldownUntil ? `⏳ Aguarde ${Math.ceil((cooldownUntil - now)/1000)}s` : "⚡ Atacar (cooldown 30s)"}
           </Button>
         </CardContent>
       </Card>

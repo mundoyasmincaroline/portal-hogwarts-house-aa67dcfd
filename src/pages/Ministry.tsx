@@ -76,6 +76,7 @@ export default function Ministry() {
     // Set 5 minute cooldown
     setCooldowns(prev => ({ ...prev, [id]: Date.now() + 5 * 60 * 1000 }));
     toast.success("Missão cumprida! ⚖️");
+    load();
   }
 
   return (
@@ -200,7 +201,7 @@ export default function Ministry() {
                 </div>
                 <div className="text-right flex flex-col items-end gap-1">
                   <span className="text-[10px] text-muted-foreground">{new Date(r.created_at).toLocaleDateString()}</span>
-                  <Button variant="ghost" size="sm" className="h-7 text-[10px] hover:bg-primary/10">Ver Detalhes</Button>
+                  <Button variant="ghost" size="sm" className="h-7 text-[10px] hover:bg-primary/10" disabled title="Em breve">Ver Detalhes</Button>
                 </div>
               </Card>
             ))}
