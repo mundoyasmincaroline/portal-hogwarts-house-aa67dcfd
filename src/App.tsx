@@ -192,6 +192,7 @@ const App = () => {
                   <Route path="canon-lessons" element={<CanonLessons />} />
                   <Route path="battle-pass" element={<BattlePass />} />
                   <Route path="clubs" element={<Clubs />} />
+                  <Route path="clubs/:id" element={<Lounge scope="club" />} />
                   <Route path="houses" element={<Houses />} />
                   <Route path="ranking" element={<Ranking />} />
                   <Route path="challenges" element={<Challenges />} />
@@ -248,6 +249,7 @@ const App = () => {
                   <Route path="duels-pvp" element={<DuelsPvP />} />
                   <Route path="quidditch" element={<Quidditch />} />
                   <Route path="room" element={<RoomOfRequirement />} />
+                  <Route path="room/:id" element={<Lounge scope="room" />} />
                   <Route path="wand" element={<WandCrafting />} />
                   <Route path="patronus" element={<Patronus />} />
                   <Route path="chapters" element={<Chapters />} />
