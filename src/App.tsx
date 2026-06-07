@@ -63,6 +63,7 @@ const RankedLadder = lazy(() => import("./pages/RankedLadder"));
 const DuelsPvP = lazy(() => import("./pages/DuelsPvP"));
 const Quidditch = lazy(() => import("./pages/Quidditch"));
 const RoomOfRequirement = lazy(() => import("./pages/RoomOfRequirement"));
+const Lounge = lazy(() => import("./pages/Lounge"));
 const WandCrafting = lazy(() => import("./pages/WandCrafting"));
 const Patronus = lazy(() => import("./pages/Patronus"));
 const Chapters = lazy(() => import("./pages/Chapters"));
@@ -191,6 +192,7 @@ const App = () => {
                   <Route path="canon-lessons" element={<CanonLessons />} />
                   <Route path="battle-pass" element={<BattlePass />} />
                   <Route path="clubs" element={<Clubs />} />
+                  <Route path="clubs/:id" element={<Lounge scope="club" />} />
                   <Route path="houses" element={<Houses />} />
                   <Route path="ranking" element={<Ranking />} />
                   <Route path="challenges" element={<Challenges />} />
@@ -247,6 +249,7 @@ const App = () => {
                   <Route path="duels-pvp" element={<DuelsPvP />} />
                   <Route path="quidditch" element={<Quidditch />} />
                   <Route path="room" element={<RoomOfRequirement />} />
+                  <Route path="room/:id" element={<Lounge scope="room" />} />
                   <Route path="wand" element={<WandCrafting />} />
                   <Route path="patronus" element={<Patronus />} />
                   <Route path="chapters" element={<Chapters />} />

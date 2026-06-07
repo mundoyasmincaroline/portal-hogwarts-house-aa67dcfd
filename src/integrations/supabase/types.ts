@@ -3084,6 +3084,33 @@ export type Database = {
         }
         Relationships: []
       }
+      lounge_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          scope: string
+          scope_id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          scope: string
+          scope_id: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          scope?: string
+          scope_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       magical_alliances: {
         Row: {
           alliance_type: string
