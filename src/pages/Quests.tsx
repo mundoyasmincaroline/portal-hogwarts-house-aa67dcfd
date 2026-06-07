@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -50,6 +51,7 @@ const regionColor: Record<string, string> = {
 export default function Quests() {
   const user = useAuth((s) => s.user);
   const profile = useAuth((s) => s.profile);
+  const navigate = useNavigate();
   const [quests, setQuests] = useState<Quest[]>([]);
   const [steps, setSteps] = useState<Record<string, Step[]>>({});
   const [mine, setMine] = useState<Record<string, UserQuest>>({});
@@ -245,12 +247,12 @@ export default function Quests() {
                         Concluir etapa (+{currentStep.xp_reward} XP)
                       </Button>
                       {currentStep.description.toLowerCase().includes("poção") && (
-                        <Button size="sm" variant="outline" onClick={() => window.location.href='/dashboard/potions'}>
+                        <Button size="sm" variant="outline" onClick={() => navigate('/dashboard/potions')}>
                           <EmojiIcon e="🧪" /> Laboratório
                         </Button>
                       )}
                       {currentStep.description.toLowerCase().includes("estufa") && (
-                        <Button size="sm" variant="outline" onClick={() => window.location.href='/dashboard/greenhouse'}>
+                        <Button size="sm" variant="outline" onClick={() => navigate('/dashboard/greenhouse')}>
                           <EmojiIcon e="🌿" /> Estufa
                         </Button>
                       )}
