@@ -74,7 +74,10 @@ export default function GringottsStore() {
   const { user, profile } = useAuth();
   const { items, owned, loading, buyItem: handleBuyItem, galeons } = useStore();
   const [buyingIdLocal, setBuyingIdLocal] = useState<string | null>(null);
-  const [tab, setTab] = useState("featured");
+  const [tab, setTab] = useState(() => {
+    const t = new URLSearchParams(window.location.search).get("tab");
+    return t || "featured";
+  });
   const [buyingPackageId, setBuyingPackageId] = useState<string | null>(null);
   const [previewItem, setPreviewItem] = useState<StoreItem | null>(null);
 

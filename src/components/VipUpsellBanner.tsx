@@ -92,8 +92,8 @@ export default function VipUpsellBanner({ currentVip, galeons = 0, username }: P
         {/* Plan cards */}
         <div className="grid grid-cols-1 @[480px]:grid-cols-3 gap-3 @[420px]:gap-4 mb-6 @[420px]:mb-8">
           {PLANS.map(plan => (
-            <div key={plan.id}
-              className={`relative rounded-2xl @[420px]:rounded-[2rem] border ${plan.border} bg-gradient-to-br ${plan.color} p-4 @[420px]:p-6 text-center shadow-lg transition-all duration-500 hover:scale-[1.02] hover:shadow-primary/20 group/plan`}>
+            <Link key={plan.id} to={`/dashboard/store?tab=vip&plan=${plan.id}`}
+              className={`relative rounded-2xl @[420px]:rounded-[2rem] border ${plan.border} bg-gradient-to-br ${plan.color} p-4 @[420px]:p-6 text-center shadow-lg transition-all duration-500 hover:scale-[1.02] hover:shadow-primary/20 group/plan cursor-pointer block`}>
               {plan.highlight && (
                 <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-400 text-slate-900 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
                   Popular
@@ -112,7 +112,7 @@ export default function VipUpsellBanner({ currentVip, galeons = 0, username }: P
                   <MagicalGaleon size="xs" />
                 </div>
               )}
-            </div>
+            </Link>
           ))}
         </div>
 
