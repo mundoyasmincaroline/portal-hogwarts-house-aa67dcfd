@@ -33,19 +33,18 @@ export default function DiagonAlley() {
   async function buy(id: string) {
     const qty = quantities[id] || 1;
     setLoading(true);
-    
-    // Server-side Galeon validation (imaginary RPC that supports quantity)
-    const { data, error } = await supabase.rpc("buy_diagon_item" as any, { 
-      p_item_id: id,
-      p_quantity: qty
-    });
-    
+
+    let lastError: any = null;
+    for (let n = 0; n < qty; n++) {
+      const { error } = await supabase.rpc("buy_diagon_item" as any, { p_item_id: id });
+      if (error) { lastError = error; break; }
+    }
     setLoading(false);
-    if (error) {
-      if (error.message?.includes("insufficient_funds")) {
+    if (lastError) {
+      if (lastError.message?.includes("insufficient_funds")) {
         toast.error("Saldo insuficiente de Galeões! Visite o Gringotes.");
       } else {
-        return toast.error(error.message);
+        toast.error(lastError.message);
       }
       return;
     }

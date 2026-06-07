@@ -40,16 +40,9 @@ export default function Azkaban() {
     const t = setInterval(() => setTimeLeft(p => {
       if (p <= 1) {
         clearInterval(t);
-        if (user && azkabanStatus?.id) {
-          supabase.from("azkaban_status").update({ active: false } as never).eq("id", azkabanStatus.id).then(() => {
-            setAzkabanStatus(null);
-            toast.success("Você foi libertado de Azkaban! ✨");
-            navigate("/dashboard");
-          });
-        } else {
-          setAzkabanStatus(null);
-          navigate("/dashboard");
-        }
+        setAzkabanStatus(null);
+        toast.success("Você foi libertado de Azkaban! ✨");
+        navigate("/dashboard");
         return 0;
       }
       return p - 1;

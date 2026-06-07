@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/lib/auth";
@@ -29,6 +30,7 @@ const CATEGORIES = [
 ];
 
 export default function Hogsmeade() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [items, setItems] = useState<any[]>([]);
   const [galeons, setGaleons] = useState(0);
@@ -76,7 +78,7 @@ export default function Hogsmeade() {
           </h1>
           <div className="flex items-center gap-2">
             <p className="text-sm text-muted-foreground">Compre itens mágicos com seus Galeões</p>
-            <Button variant="link" size="sm" className="h-auto p-0 text-primary" onClick={() => window.location.href='/dashboard/world-map'}>
+            <Button variant="link" size="sm" className="h-auto p-0 text-primary" onClick={() => navigate('/dashboard/world-map')}>
               <MapIcon size={14} className="mr-1" /> Mapa Mundial
             </Button>
           </div>
