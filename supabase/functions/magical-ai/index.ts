@@ -62,7 +62,7 @@ Deno.serve(async (req) => {
     const character = body.character || '';
     const context = body.context || '';
 
-    if (!SYSTEM_PROMPTS[mode]) {
+    if (!(mode in SYSTEM_PROMPTS)) {
       return new Response(JSON.stringify({ error: 'modo inválido' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
