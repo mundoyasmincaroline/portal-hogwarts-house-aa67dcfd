@@ -133,7 +133,9 @@ export default function DarkArts() {
           <CardContent className="space-y-3 pt-6">
             <Input placeholder="Nome do receptáculo (ex: Diário negro)" value={vessel} onChange={(e) => setVessel(e.target.value)} />
             <Textarea placeholder="Descrição do objeto..." value={desc} onChange={(e) => setDesc(e.target.value)} />
-            <Button variant="destructive" disabled={busy} onClick={createHorcrux}>Fragmentar a Alma</Button>
+            <Button variant="destructive" disabled={busy || (corruption?.corruption ?? 0) < 30 || !vessel.trim()} onClick={createHorcrux}>
+              {(corruption?.corruption ?? 0) < 30 ? `Corrupção insuficiente (${corruption?.corruption ?? 0}/30)` : "Fragmentar a Alma"}
+            </Button>
           </CardContent>
         </Card>
         <div className="mt-4 grid gap-2 md:grid-cols-2">
