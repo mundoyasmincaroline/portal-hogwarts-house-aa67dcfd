@@ -45,7 +45,8 @@ export default function TriwizardTournament() {
       .from("tournaments")
       .select("*")
       .eq("format", "triwizard")
-      .eq("status", "active")
+      .in("status", ["open", "running"])
+      .order("created_at", { ascending: false })
       .maybeSingle();
     setTournament(t as Tournament | null);
     if (t) {

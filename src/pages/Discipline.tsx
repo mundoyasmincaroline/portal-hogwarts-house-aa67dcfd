@@ -19,7 +19,7 @@ export default function Discipline() {
     const [d, m, am] = await Promise.all([
       supabase.from("detentions").select("*").eq("user_id", user.id).order("created_at", { ascending: false }),
       supabase.from("merits").select("*").eq("user_id", user.id).order("created_at", { ascending: false }),
-      supabase.from("merits").select("*").order("created_at", { ascending: false }).limit(20),
+supabase.from("merits").select("*, profile:profiles(display_name,username)").order("created_at", { ascending: false }).limit(20),
     ]);
     setDetentions(d.data ?? []); setMerits(m.data ?? []); setAllMerits(am.data ?? []);
   };
@@ -127,7 +127,7 @@ export default function Discipline() {
             <div key={m.id} className="glass-premium rounded-xl p-3 flex items-center gap-3">
               <Trophy className="text-yellow-400" size={18}/>
               <div className="flex-1 min-w-0">
-                <p className="text-sm truncate">Bruxo {m.user_id.slice(0,8)}</p>
+<p className="text-sm truncate">{m.profile?.display_name ?? m.profile?.username ?? `Bruxo ${m.user_id.slice(0,8)}`}</p>
                 <p className="text-[11px] text-muted-foreground line-clamp-1">{m.reason}</p>
               </div>
               <Badge className="bg-primary/20 text-primary">+{m.points}</Badge>

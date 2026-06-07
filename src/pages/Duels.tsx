@@ -51,7 +51,8 @@ export default function Duels() {
   }, [user]);
 
   const loadUserSpells = async () => {
-    const { data } = await supabase.from("spells").select("*").lte("min_year", 1);
+    const year = (profile as any)?.year ?? 7;
+    const { data } = await supabase.from("spells").select("*").lte("min_year", year);
     setUserSpells(data || []);
   };
 
@@ -78,6 +79,7 @@ export default function Duels() {
         "postgres_changes",
         { event: "*", schema: "public", table: "duels" },
         (payload) => {
+          if (payload.eventType === "DELETE") { setActiveDuel(null); return; }
           const updatedDuel = payload.new as Duel;
           if (updatedDuel.challenger_user_id === user?.id || updatedDuel.opponent_user_id === user?.id) {
             setActiveDuel(updatedDuel);

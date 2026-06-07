@@ -96,6 +96,8 @@ export default function Quidditch() {
       const { error } = await supabase.from("quidditch_matches").insert({ 
         house_a: profile.house, 
         house_b: houseB, 
+        team1_id: teamA.id,
+        team2_id: teamB.id,
         status: "open",
         scheduled_at: new Date().toISOString()
       });

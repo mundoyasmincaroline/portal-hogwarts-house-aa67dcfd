@@ -32,6 +32,9 @@ export default function GringottsVault() {
       return toast.error("Insira uma quantidade válida de Galeões.");
     }
     
+    if (rpc === "vault_withdraw" && (parseInt(amount) <= 0 || isNaN(parseInt(amount)))) {
+      return toast.error("Insira uma quantidade válida de Galeões.");
+    }
     if (rpc === "vault_withdraw" && (parseInt(amount) > (vault?.balance || 0))) {
       return toast.error("Saldo insuficiente no cofre!");
     }
