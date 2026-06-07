@@ -7,8 +7,10 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lock, History, Coins } from "lucide-react";
 
+import { useAuth } from "@/lib/auth";
 import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function Gringotts() {
+  const { profile } = useAuth();
   const [loans, setLoans] = useState<any[]>([]);
   const [stocks, setStocks] = useState<any[]>([]);
   const [holdings, setHoldings] = useState<any[]>([]);
@@ -80,7 +82,7 @@ export default function Gringotts() {
             className="bg-primary/10 border border-primary/30 p-2 rounded-xl flex items-center gap-2"
           >
             <Coins className="text-yellow-500" />
-            <span className="font-heading text-lg">1.250</span>
+            <span className="font-heading text-lg">{(profile?.galeons ?? 0).toLocaleString("pt-BR")}</span>
           </motion.div>
         </div>
       </header>
