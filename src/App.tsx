@@ -70,6 +70,7 @@ const Chapters = lazy(() => import("./pages/Chapters"));
 const NPCs = lazy(() => import("./pages/NPCs"));
 const NPCChat = lazy(() => import("./pages/NPCChat"));
 const Diary = lazy(() => import("./pages/Diary"));
+const Referrals = lazy(() => import("./pages/Referrals"));
 const Prophecy = lazy(() => import("./pages/Prophecy"));
 const CastleMap = lazy(() => import("./pages/CastleMap"));
 const Support = lazy(() => import("./pages/Support"));
