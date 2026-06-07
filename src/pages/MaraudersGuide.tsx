@@ -259,7 +259,8 @@ export default function MaraudersGuide() {
               className="pl-10 bg-background/50 border-primary/30"
               onChange={(e) => {
                 const query = e.target.value.toLowerCase();
-                const index = guidePages.findIndex(p => p.title.toLowerCase().includes(query) || p.content.toString().toLowerCase().includes(query));
+                if (!query) return;
+                const index = guidePages.findIndex(p => p.title.toLowerCase().includes(query));
                 if (index !== -1) setActivePage(index + 1);
               }}
             />
