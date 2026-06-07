@@ -31,13 +31,18 @@ export default function MonthlyCheckInCalendar() {
       const end = `${year}-${String(month + 1).padStart(2, "0")}-${String(daysInMonth).padStart(2, "0")}`;
       const [{ data: claims }, { data: m }, { data: p }] = await Promise.all([
         (supabase as any).from("rp_daily_claims").select("claim_date").eq("user_id", user.id).gte("claim_date", start).lte("claim_date", end),
-        (supabase as any).from("rp_streak_milestones").select("milestone, xp_reward, galeons_reward, label").eq("active", true).order("milestone"),
+        (supabase as any).from("rp_streak_milestones").select("days_required, xp_bonus, galeons_bonus, label").eq("active", true).order("days_required"),
         (supabase as any).from("profiles").select("rp_streak_current").eq("user_id", user.id).maybeSingle(),
       ]);
       const set = new Set<number>();
       (claims ?? []).forEach((c: any) => set.add(Number(c.claim_date.split("-")[2])));
       setClaimedDays(set);
-      setMilestones((m ?? []) as Milestone[]);
+      setMilestones(((m ?? []) as any[]).map((r) => ({
+        milestone: r.days_required,
+        xp_reward: r.xp_bonus,
+        galeons_reward: r.galeons_bonus,
+        label: r.label,
+      })));
       setStreak(p?.rp_streak_current ?? 0);
       setLoading(false);
     })();
