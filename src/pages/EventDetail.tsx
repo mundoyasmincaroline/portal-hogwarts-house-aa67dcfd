@@ -51,7 +51,10 @@ export default function EventDetail() {
 
   const rsvp = async () => {
     if (!user) return;
-    await supabase.from("event_attendees").insert([{ event_id: id, user_id: user.id, rsvp:'going' }] as any);
+    const { error } = await supabase
+      .from("event_attendees")
+      .upsert([{ event_id: id, user_id: user.id, rsvp: 'going' }] as any, { onConflict: 'event_id,user_id' });
+    if (error) return toast.error(error.message);
     toast.success("Presença confirmada ✨"); load();
   };
 

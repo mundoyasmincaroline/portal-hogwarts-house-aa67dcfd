@@ -79,7 +79,7 @@ export default function Events() {
             }
         }
         setDailyEvents(events);
-        if (user) loadHistory();
+        if (user) loadHistory(); else setLoading(false);
     };
 
     loadEvents();
@@ -129,6 +129,10 @@ export default function Events() {
       }
       const { error: xpErr } = await (supabase.rpc as any)("award_xp_action", { _action: "event", _user_id: user.id, _xp: event.xp });
       if (xpErr) console.warn("XP do evento não creditado:", xpErr.message);
+      if (event.galeons > 0) {
+        const { error: goldErr } = await (supabase.rpc as any)("add_galeons", { _user_id: user.id, _amount: event.galeons });
+        if (goldErr) console.warn("Galeões não creditados:", goldErr.message);
+      }
       setCompletedToday(prev => prev.includes(event.id) ? prev : [...prev, event.id]);
       toast.success(`🎉 +${event.xp} XP & +${event.galeons} Galeões! Participação registrada!`);
     } catch (e: any) {

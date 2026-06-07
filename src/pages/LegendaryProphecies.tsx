@@ -59,7 +59,13 @@ export default function LegendaryProphecies() {
   };
 
   const fulfill = async (id: string) => {
-    const { error } = await supabase.from("legendary_prophecies").update({ fulfilled: true, fulfilled_at: new Date().toISOString() }).eq("id", id);
+    const { data: u } = await supabase.auth.getUser();
+    if (!u.user) return toast.error("Faça login");
+    const { error } = await supabase
+      .from("legendary_prophecies")
+      .update({ fulfilled: true, fulfilled_at: new Date().toISOString() })
+      .eq("id", id)
+      .eq("user_id", u.user.id);
     if (error) { toast.error(error.message); return; }
     toast.success("Profecia cumprida!");
     load();
