@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
@@ -42,6 +43,7 @@ interface Mentorship {
 
 export default function Clubs() {
   const { user, profile } = useAuth();
+  const navigate = useNavigate();
   const [clubs, setClubs] = useState<Club[]>([]);
   const [myMemberships, setMyMemberships] = useState<Membership[]>([]);
   const [allMembers, setAllMembers] = useState<Membership[]>([]);
@@ -107,7 +109,7 @@ export default function Clubs() {
     setBusy(clubId);
     const { error } = await supabase.rpc("join_club", { p_club_id: clubId });
     if (error) toast.error(error.message);
-    else { toast.success("Você entrou no clube! 🎓"); await load(); }
+    else { toast.success("Você entrou no clube! 🎓"); await load(); navigate(`/dashboard/clubs/${clubId}`); }
     setBusy(null);
   };
 
@@ -203,8 +205,16 @@ export default function Clubs() {
                   {club.meeting_day && <div>📅 {club.meeting_day}</div>}
                   {club.founded_by && <div>👤 {club.founded_by}</div>}
                 </div>
-                <div className="mt-4">
+                <div className="mt-4 space-y-2">
                   {joined ? (
+                    <>
+                    <Button
+                      size="sm"
+                      className="w-full"
+                      onClick={() => navigate(`/dashboard/clubs/${club.id}`)}
+                    >
+                      Entrar no salão ✨
+                    </Button>
                     <Button
                       variant="outline"
                       size="sm"
@@ -214,6 +224,7 @@ export default function Clubs() {
                     >
                       <LogOut className="mr-1 h-3 w-3" /> Sair do clube
                     </Button>
+                    </>
                   ) : (
                     <Button
                       size="sm"
