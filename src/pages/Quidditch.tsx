@@ -36,7 +36,11 @@ export default function Quidditch() {
   const [players, setPlayers] = useState<Record<string, any[]>>({});
   const [teams, setTeams] = useState<any[]>([]);
   const [creating, setCreating] = useState(false);
-  const [houseB, setHouseB] = useState("slytherin");
+  const [houseB, setHouseB] = useState<string>("slytherin");
+
+  useEffect(() => {
+    if (profile?.house === "slytherin") setHouseB("gryffindor");
+  }, [profile?.house]);
 
   const load = useCallback(async () => {
     // 1. Carregar times para saber os IDs das casas

@@ -121,8 +121,6 @@ export default function Challenges() {
       setActiveEnigma(null);
       return;
     }
-    // Pontos da casa (mantém side-effect que a RPC não cobre)
-    await supabase.from("house_points").insert({ house: profile.house, points: c.xp_reward, reason: `Desafio: ${c.title}`, awarded_by: user.id } as never);
     await fetchProfile(user.id);
     toast.success(`Resposta correta! +${result.xp ?? c.xp_reward} XP! ⚡ Pontos para ${profile.house}!`);
     setCompletedIds((s) => new Set([...s, c.id]));
