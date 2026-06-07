@@ -43,6 +43,51 @@ export default function MaraudersGuide() {
 
   const guidePages = [
     {
+      title: "🪄 Primeiros Passos — Bem-vindo a Hogwarts",
+      content: (
+        <div className="space-y-4">
+          <p>Antes de qualquer feitiço, ambiente-se. Faça estes 5 passos para destravar tudo:</p>
+          <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground bg-secondary/50 p-4 rounded-xl border border-primary/20">
+            <li><strong>Complete seu perfil:</strong> Menu → <Link to="/dashboard/profile" className="text-primary underline">Perfil</Link>. Adicione bio, avatar, casa e tipo sanguíneo. Cada campo dá XP.</li>
+            <li><strong>Crie seu personagem (OC):</strong> Menu → Perfil → Personagens. Seu OC é quem aparece nos RPs e duelos.</li>
+            <li><strong>Escolha sua varinha:</strong> Visite <Link to="/dashboard/wand" className="text-primary underline">Olivaras</Link> e forje a sua. Cada combinação tem bônus único.</li>
+            <li><strong>Descubra seu Patrono:</strong> <Link to="/dashboard/patronus" className="text-primary underline">Patrono</Link> revela seu animal-guia e desbloqueia a defesa contra Dementadores.</li>
+            <li><strong>Faça login todo dia:</strong> O check-in mensal acumula XP, Galeões e itens raros. Não quebre a sequência!</li>
+          </ol>
+          <p className="text-xs text-primary italic">Dica: assim que terminar esses 5 passos, você já estará no Nível 3 e poderá entrar em Clubes, Duelos PvP e Quadribol.</p>
+        </div>
+      ),
+    },
+    {
+      title: "🗺️ Navegando o Castelo",
+      content: (
+        <div className="space-y-4">
+          <p>O Portal é gigante. Use o menu lateral (ou o ícone de menu no celular) para se localizar. As áreas estão divididas em quatro grupos:</p>
+          <div className="grid sm:grid-cols-2 gap-3 text-sm">
+            <div className="bg-secondary/50 p-3 rounded-xl border border-primary/20">
+              <strong className="text-blue-400"><EmojiIcon e="🏰" /> Mundo Bruxo</strong>
+              <p className="text-muted-foreground text-xs mt-1">Castelo, Mapa, Diário, Crônicas, NPCs e Profecias — o cenário e a lore.</p>
+            </div>
+            <div className="bg-secondary/50 p-3 rounded-xl border border-primary/20">
+              <strong className="text-purple-400"><EmojiIcon e="⚔️" /> Atividades</strong>
+              <p className="text-muted-foreground text-xs mt-1">Duelos, Quadribol, Desafios, Torneios, Aulas e RPGs — onde a ação acontece.</p>
+            </div>
+            <div className="bg-secondary/50 p-3 rounded-xl border border-primary/20">
+              <strong className="text-yellow-400"><EmojiIcon e="💰" /> Economia &amp; Itens</strong>
+              <p className="text-muted-foreground text-xs mt-1">Lojas, Mercado, Leilões, Cofre, Inventário e Pacto Mágico.</p>
+            </div>
+            <div className="bg-secondary/50 p-3 rounded-xl border border-primary/20">
+              <strong className="text-red-400"><EmojiIcon e="🦁" /> Hogwarts</strong>
+              <p className="text-muted-foreground text-xs mt-1">Ranking, Casas, Regras, Azkaban e Ministério — a estrutura social.</p>
+            </div>
+          </div>
+          <Button asChild variant="outline" size="sm" className="w-full">
+            <Link to="/dashboard/castle-map">Abrir Mapa do Castelo <EmojiIcon e="🗺️" /></Link>
+          </Button>
+        </div>
+      ),
+    },
+    {
       title: "🔮 A Magia do Roleplay no Chat",
       content: (
         <div className="space-y-4">
@@ -57,6 +102,100 @@ export default function MaraudersGuide() {
           <p className="text-xs text-primary italic mt-2">Dica: O Chat também possui a "Penseira". No canto superior direito da sala, você pode escolher uma data antiga para ler as fofocas de ontem!</p>
         </div>
       )
+    },
+    {
+      title: "⚔️ Duelos & Combate — Aprenda a Lutar",
+      content: (
+        <div className="space-y-4">
+          <p>Hogwarts tem três modalidades de combate. Comece pelo modo solo antes de desafiar outros bruxos:</p>
+          <div className="space-y-3 text-sm">
+            <div className="bg-secondary/50 p-3 rounded-xl border border-primary/20">
+              <strong className="text-foreground"><EmojiIcon e="🎯" /> Duelos Solo</strong>
+              <p className="text-muted-foreground">Pratique contra bots em <Link to="/dashboard/duels" className="text-primary underline">Duelos</Link>. Escolha um feitiço da sua mochila e descubra seu estilo de combate.</p>
+            </div>
+            <div className="bg-secondary/50 p-3 rounded-xl border border-primary/20">
+              <strong className="text-foreground"><EmojiIcon e="⚡" /> Duelos PvP</strong>
+              <p className="text-muted-foreground">Em <Link to="/dashboard/duels-pvp" className="text-primary underline">Duelos PvP</Link> você desafia bruxos reais em tempo real. Cada vitória sobe seu ranking.</p>
+            </div>
+            <div className="bg-secondary/50 p-3 rounded-xl border border-primary/20">
+              <strong className="text-foreground"><EmojiIcon e="🏆" /> Ranqueado &amp; Torneios</strong>
+              <p className="text-muted-foreground">Quando atingir Nv 5, entre em <Link to="/dashboard/ranked" className="text-primary underline">Ranqueado</Link>, <Link to="/dashboard/tournaments" className="text-primary underline">Torneios</Link> e o lendário <Link to="/dashboard/triwizard" className="text-primary underline">Torneio Tribruxo</Link>.</p>
+            </div>
+            <div className="bg-secondary/50 p-3 rounded-xl border border-red-500/20">
+              <strong className="text-red-400"><EmojiIcon e="🐉" /> Chefe Raid</strong>
+              <p className="text-muted-foreground">Junte-se a outros bruxos no <Link to="/dashboard/raid" className="text-primary underline">Chefe Raid</Link> para derrotar bosses coletivos e ganhar prêmios épicos.</p>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "🧹 Quadribol & Equipes",
+      content: (
+        <div className="space-y-4">
+          <p>O esporte oficial de Hogwarts. Veja como entrar em campo:</p>
+          <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground bg-secondary/50 p-4 rounded-xl border border-primary/20">
+            <li>Acesse <Link to="/dashboard/quidditch" className="text-primary underline">Quadribol</Link>.</li>
+            <li>Escolha um time da sua casa (ou crie um novo se for o capitão).</li>
+            <li>Marque uma partida — outro bruxo precisa aceitar o desafio.</li>
+            <li>Durante a partida, escolha sua posição: Apanhador, Artilheiro, Batedor ou Goleiro.</li>
+            <li>Ganhe pontos para sua casa a cada gol e ao capturar o Pomo de Ouro.</li>
+          </ol>
+          <p className="text-xs text-primary italic">Quer uma vibe mais teatral? Forme uma <Link to="/dashboard/rp-teams" className="text-primary underline">Equipe de RP</Link> — squads narrativos com seus amigos.</p>
+        </div>
+      ),
+    },
+    {
+      title: "🏰 Clubes & Sala Precisa",
+      content: (
+        <div className="space-y-4">
+          <p>Clubes e salas privadas são o coração da vida social do castelo.</p>
+          <div className="space-y-3 text-sm">
+            <div className="bg-secondary/50 p-3 rounded-xl border border-primary/20">
+              <strong className="text-foreground"><EmojiIcon e="🛡️" /> Clubes</strong>
+              <p className="text-muted-foreground">Em <Link to="/dashboard/clubs" className="text-primary underline">Clubes</Link> você cria ou entra em grupos temáticos (Duelo, Coral, Xadrez Bruxo...). Ao entrar, clique em "Entrar no Salão" para acessar o mural e chat exclusivos do clube.</p>
+            </div>
+            <div className="bg-secondary/50 p-3 rounded-xl border border-primary/20">
+              <strong className="text-foreground"><EmojiIcon e="🚪" /> Sala Precisa</strong>
+              <p className="text-muted-foreground">Em <Link to="/dashboard/room" className="text-primary underline">Sala Precisa</Link> você materializa uma sala privada com até 6 bruxos. Útil para reuniões secretas, planejamento de RPs e ensaios.</p>
+            </div>
+            <div className="bg-secondary/50 p-3 rounded-xl border border-primary/20">
+              <strong className="text-foreground"><EmojiIcon e="⚔️" /> Guildas &amp; Facções</strong>
+              <p className="text-muted-foreground">Para a alta política do castelo, junte-se a uma <Link to="/dashboard/guilds" className="text-primary underline">Guilda</Link> ou <Link to="/dashboard/factions" className="text-primary underline">Facção</Link>. Disputas entre facções liberam eventos lendários.</p>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "📚 Aulas, N.O.M.s e Carreira Acadêmica",
+      content: (
+        <div className="space-y-4">
+          <p>Você está em uma escola — então sim, há aulas. Mas elas dão MUITO XP.</p>
+          <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground bg-secondary/50 p-4 rounded-xl border border-primary/20">
+            <li><strong className="text-foreground">Aulas e Aulas Canon:</strong> respondem questões do universo HP — XP e Galeões na hora.</li>
+            <li><strong className="text-foreground">N.O.M.s &amp; Exames:</strong> ao atingir Nv 5, libere os exames oficiais e suba de ano escolar.</li>
+            <li><strong className="text-foreground">Grimório:</strong> sua biblioteca pessoal de feitiços desbloqueados.</li>
+            <li><strong className="text-foreground">Estufa &amp; Laboratório de Poções:</strong> colete ingredientes e fabrique poções de bônus.</li>
+            <li><strong className="text-foreground">Criaturas Mágicas:</strong> aprenda a lidar com bichos e ganhe figurinhas raras.</li>
+          </ul>
+        </div>
+      ),
+    },
+    {
+      title: "✈️ Mundo Mágico Além do Castelo",
+      content: (
+        <div className="space-y-4">
+          <p>Hogwarts é só o começo. Você pode viajar pelo mundo bruxo:</p>
+          <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground bg-secondary/50 p-4 rounded-xl border border-primary/20">
+            <li><strong className="text-foreground">Hogsmeade:</strong> a vila bruxa — Três Vassouras, Dedosdemel, Zonko's.</li>
+            <li><strong className="text-foreground">Beco Diagonal:</strong> ingredientes raros, livros e itens lendários.</li>
+            <li><strong className="text-foreground">Mapa do Mundo &amp; Viagens Mágicas:</strong> aparate para Beauxbatons, Durmstrang, Salem e mais. Cada destino tem missões únicas.</li>
+            <li><strong className="text-foreground">Diário de Viagem:</strong> seu registro de tudo que você descobriu.</li>
+            <li><strong className="text-foreground">Ministério da Magia:</strong> burocracia bruxa, decretos, julgamentos e cargos públicos.</li>
+          </ul>
+        </div>
+      ),
     },
     {
       title: "🎵 InstaHogwarts & Mensagens Diretas",
@@ -182,6 +321,77 @@ export default function MaraudersGuide() {
           </div>
         </div>
       )
+    },
+    {
+      title: "🤝 Trocas, Mercado e Leilões",
+      content: (
+        <div className="space-y-4">
+          <p>Tem um item duplicado ou precisa daquela varinha lendária? Use a economia jogador a jogador:</p>
+          <div className="space-y-3 text-sm">
+            <div className="bg-secondary/50 p-3 rounded-xl border border-primary/20">
+              <strong className="text-foreground"><EmojiIcon e="🤝" /> Trocas de Itens</strong>
+              <p className="text-muted-foreground">Em <Link to="/dashboard/item-trades" className="text-primary underline">Trocas</Link> você propõe um item seu por outro de qualquer bruxo.</p>
+            </div>
+            <div className="bg-secondary/50 p-3 rounded-xl border border-primary/20">
+              <strong className="text-foreground"><EmojiIcon e="🛒" /> Mercado Aberto</strong>
+              <p className="text-muted-foreground">No <Link to="/dashboard/marketplace" className="text-primary underline">Mercado</Link>, qualquer um pode listar itens por Galeões. Compre e venda à vontade.</p>
+            </div>
+            <div className="bg-secondary/50 p-3 rounded-xl border border-primary/20">
+              <strong className="text-foreground"><EmojiIcon e="🔨" /> Leilões</strong>
+              <p className="text-muted-foreground">Para itens raríssimos, use os <Link to="/dashboard/auctions" className="text-primary underline">Leilões</Link> e dispute com outros bruxos em tempo real.</p>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "🎭 Eventos, RP e Vida Social",
+      content: (
+        <div className="space-y-4">
+          <p>O castelo está sempre vivo. Estes são os pontos de encontro:</p>
+          <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground bg-secondary/50 p-4 rounded-xl border border-primary/20">
+            <li><strong>Eventos Mágicos:</strong> programação diária com horários — apareça ao vivo para ganhar XP/Galeões.</li>
+            <li><strong>Eventos ao Vivo:</strong> bailes, banquetes e reuniões agendadas pelos admins.</li>
+            <li><strong>InstaHogwarts:</strong> a rede social do castelo. Poste fotos com música do Spotify.</li>
+            <li><strong>Chats RPG:</strong> salas temáticas (Salão Principal, Sala Comunal, Floresta Proibida...) onde acontece o roleplay.</li>
+            <li><strong>Aventuras &amp; Crônicas:</strong> missões narrativas com escolhas que afetam sua história.</li>
+          </ul>
+        </div>
+      ),
+    },
+    {
+      title: "📨 Recrutamento — Convide Bruxos",
+      content: (
+        <div className="space-y-4">
+          <p>Trazer amigos para Hogwarts é a melhor forma de subir rápido:</p>
+          <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground bg-secondary/50 p-4 rounded-xl border border-primary/20">
+            <li>Acesse <Link to="/dashboard/referrals" className="text-primary underline">Indicações</Link>.</li>
+            <li>Copie seu link mágico e mande para amigos.</li>
+            <li>Quando o convidado se matricular, ele já ganha 500 Galeões + Baú Lendário.</li>
+            <li>Quando ele atingir o Nv 2, você recebe <strong className="text-primary">+100 Galeões e +50 XP</strong>.</li>
+            <li>A cada 5 amigos aprovados, ganhe uma medalha exclusiva no perfil.</li>
+          </ol>
+          <Button asChild variant="magical" className="w-full">
+            <Link to="/dashboard/referrals">Abrir Sistema de Indicação <EmojiIcon e="📨" /></Link>
+          </Button>
+        </div>
+      ),
+    },
+    {
+      title: "🚨 Regras, Segurança & Suporte",
+      content: (
+        <div className="space-y-4">
+          <p>Antes de qualquer coisa, leia as <Link to="/dashboard/rules" className="text-primary underline">Regras do Castelo</Link>. Comportamento tóxico vai parar em <Link to="/dashboard/azkaban" className="text-primary underline">Azkaban</Link>.</p>
+          <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground bg-secondary/50 p-4 rounded-xl border border-primary/20">
+            <li>Nunca compartilhe dados pessoais reais — só seu personagem.</li>
+            <li>Reporte abuso pelo perfil do usuário → botão "Reportar".</li>
+            <li>Bloqueie quem te incomoda — DMs e marcações ficam silenciadas.</li>
+            <li>Precisa de ajuda? Vá em <Link to="/dashboard/support" className="text-primary underline">Suporte</Link> e abra um chamado.</li>
+            <li>Esqueceu uma regra do RP? <Link to="/dashboard/rp-history" className="text-primary underline">Histórico de RP</Link> mostra tudo o que rolou na sua sala.</li>
+          </ul>
+          <p className="text-xs text-primary italic">Lembre-se: Hogwarts é um lugar mágico, mas também é uma comunidade real. Trate cada bruxo com respeito.</p>
+        </div>
+      ),
     },
     {
       title: "🤝 Amigos, DMs & Comunidade",
