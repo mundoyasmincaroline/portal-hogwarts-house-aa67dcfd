@@ -18,7 +18,7 @@ interface Choice {
 }
 
 export default function Chapters() {
-  const { user, profile } = useAuth();
+  const { user, profile, fetchProfile } = useAuth();
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [choices, setChoices] = useState<Choice[]>([]);
   const [progress, setProgress] = useState<Record<string, { choice_id: string | null }>>({});
@@ -55,6 +55,7 @@ export default function Chapters() {
         xp: (profile?.xp || 0) + xpGain,
         galeons: (profile?.galeons || 0) + chapter.rewards_galeons,
       }).eq("user_id", user.id);
+      if (fetchProfile) await fetchProfile(user.id);
 
       toast.success(`+${xpGain} XP · +${chapter.rewards_galeons} Galeões`, {
         description: choice.outcome_text || "Sua escolha ecoa no castelo...",

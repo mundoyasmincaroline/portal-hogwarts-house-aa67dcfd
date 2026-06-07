@@ -33,7 +33,7 @@ export default function Patronus() {
   const discover = async () => {
     if (!user) return;
     setDiscovering(true);
-    const { error } = await (supabase as any).from("patronuses").insert({ user_id: user.id, animal: chosenAnimal });
+    const { error } = await (supabase as any).from("patronuses").upsert({ user_id: user.id, animal: chosenAnimal }, { onConflict: "user_id" });
     setDiscovering(false);
     if (error) toast.error(error.message); else { toast.success(`🦌 Seu patrono é ${chosenAnimal}!`); load(); }
   };
