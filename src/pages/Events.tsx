@@ -34,6 +34,53 @@ const getEventsForToday = (celebrations: any[]): MagicalEvent[] => celebrations.
   description: `Hoje é o dia de celebrar a vida de ${c.name}! Dê os parabéns no Salão Principal!`
 }));
 
+// Eventos diários recorrentes — garantem que sempre há algo acontecendo no castelo
+const DAILY_RECURRING: MagicalEvent[] = [
+  {
+    id: "morning_post",
+    name: "🌅 Coruja Matinal",
+    start: "06:00",
+    end: "11:59",
+    type: "social",
+    xp: 50,
+    galeons: 10,
+    audience: "all",
+    description: "Comece o dia respondendo o post do Profeta Diário ou postando uma novidade no InstaHogwarts.",
+  },
+  {
+    id: "afternoon_study",
+    name: "📚 Hora do Estudo na Biblioteca",
+    start: "12:00",
+    end: "17:59",
+    type: "study",
+    xp: 75,
+    galeons: 15,
+    audience: "all",
+    description: "Participe de uma Aula, complete um Enigma ou estude uma Crônica para registrar sua presença.",
+  },
+  {
+    id: "evening_gathering",
+    name: "🕯️ Reunião no Salão Principal",
+    start: "18:00",
+    end: "21:59",
+    type: "social",
+    xp: 100,
+    galeons: 20,
+    audience: "all",
+    description: "Encontre outros bruxos nos Chats RPG. Interaja, faça RP e ganhe pontos para sua Casa.",
+  },
+  {
+    id: "night_duels",
+    name: "🌙 Duelos da Meia-Noite",
+    start: "22:00",
+    end: "23:59",
+    type: "combat",
+    xp: 150,
+    galeons: 30,
+    audience: "all",
+    description: "A hora mais perigosa do castelo. Desafie outro bruxo nos Duelos PvP ou enfrente o Chefe Raid.",
+  },
+];
 export default function Events() {
   const { user, profile } = useAuth();
   const [dailyEvents, setDailyEvents] = useState<MagicalEvent[]>([]);
@@ -57,7 +104,53 @@ export default function Events() {
             return d.getDate() === day && (d.getMonth() + 1) === month;
         }).map(c => ({ name: c.full_name, type: "oc_birthday" }));
 
-        const events = getEventsForToday(activeCelebrations);
+        const events: MagicalEvent[] = [...DAILY_RECURRING, ...getEventsForToday(activeCelebrations)];
+
+        // Live events ativos (entre starts_at e ends_at)
+        const nowIso = new Date().toISOString();
+        const { data: liveRows } = await supabase
+          .from("live_events")
+          .select("id,title,description,cover_emoji,starts_at,ends_at,reward_xp,reward_gold,status")
+          .lte("starts_at", new Date(Date.now() + 7 * 24 * 3600_000).toISOString())
+          .gte("ends_at", nowIso)
+          .order("starts_at", { ascending: true });
+        (liveRows || []).forEach((ev: any) => {
+          const s = new Date(ev.starts_at);
+          const e = new Date(ev.ends_at);
+          events.push({
+            id: `live_${ev.id}`,
+            name: `${ev.cover_emoji || "🎭"} ${ev.title}`,
+            start: s.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", hour12: false }),
+            end: e.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", hour12: false }),
+            type: "live",
+            xp: ev.reward_xp || 50,
+            galeons: ev.reward_gold || 25,
+            audience: "all",
+            description: ev.description || "Evento ao vivo no castelo. Não perca!",
+          });
+        });
+
+        // Eventos sazonais ativos (dentro do intervalo de datas)
+        const todayDate = today.toISOString().split("T")[0];
+        const { data: seasonRows } = await supabase
+          .from("seasonal_events")
+          .select("id,title,description,start_date,end_date,active")
+          .eq("active", true)
+          .lte("start_date", todayDate)
+          .gte("end_date", todayDate);
+        (seasonRows || []).forEach((ev: any) => {
+          events.push({
+            id: `season_${ev.id}`,
+            name: `🌟 ${ev.title}`,
+            start: "00:00",
+            end: "23:59",
+            type: "seasonal",
+            xp: 200,
+            galeons: 40,
+            audience: "all",
+            description: ev.description || "Evento sazonal em andamento.",
+          });
+        });
         
         // Plot Twist: Checar aniversário do usuário para a lista
         if (profile?.birth_date) {

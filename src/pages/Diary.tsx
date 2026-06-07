@@ -127,23 +127,26 @@ export default function Diary() {
         {filteredEntries.map(e => {
           const m = MOODS.find(x => x.v === e.mood) || MOODS[1];
           return (
-            <Card key={e.id} className="p-5 border-primary/20 bg-texture-parchment text-foreground hover:bg-texture-noise transition-all shadow-lg relative overflow-hidden group">
-              <div className="absolute inset-0 bg-texture-noise opacity-5 pointer-events-none" />
+            <Card
+              key={e.id}
+              className="p-5 border border-amber-900/20 bg-gradient-to-br from-[#fbf3dd] to-[#f3e5c0] text-amber-950 hover:shadow-2xl hover:-translate-y-0.5 transition-all duration-300 shadow-lg relative overflow-hidden group rounded-2xl"
+            >
+              <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-amber-700 to-amber-900 opacity-70" />
               <div className="flex items-start justify-between gap-3 mb-2">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <Badge variant="outline" className="text-[10px]">{m.e} {m.l}</Badge>
-                    <span className="text-[10px] text-muted-foreground">
+                    <Badge variant="outline" className="text-[10px] border-amber-900/30 bg-amber-100/60 text-amber-900">{m.e} {m.l}</Badge>
+                    <span className="text-[10px] text-amber-900/60">
                       {format(new Date(e.created_at), "dd 'de' MMM, yyyy 'às' HH:mm", { locale: ptBR })}
                     </span>
                   </div>
-                  <h3 className="font-heading text-lg text-foreground">{e.title}</h3>
+                  <h3 className="font-heading text-lg text-amber-950">{e.title}</h3>
                 </div>
-                <Button variant="ghost" size="icon" onClick={() => { if (confirm("Deseja apagar esta memória?")) remove(e.id); }} className="text-destructive shrink-0">
+                <Button variant="ghost" size="icon" onClick={() => { if (confirm("Deseja apagar esta memória?")) remove(e.id); }} className="text-destructive shrink-0 hover:bg-red-100/40">
                   <Trash2 size={14}/>
                 </Button>
               </div>
-              <p className="text-sm text-foreground/85 whitespace-pre-wrap font-serif italic leading-relaxed">{e.content}</p>
+              <p className="text-sm text-amber-950/85 whitespace-pre-wrap font-serif italic leading-relaxed">{e.content}</p>
             </Card>
           );
         })}
