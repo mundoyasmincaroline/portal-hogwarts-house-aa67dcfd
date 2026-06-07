@@ -153,7 +153,7 @@ export default function Classes() {
       const endTime = new Date();
       endTime.setHours(eh, em, 0, 0);
       
-      return now >= startTime && now <= endTime;
+      return new Date() >= startTime && new Date() <= endTime;
     } catch (error) {
       // Falha silenciosa caso o admin tenha digitado o horário num formato incorreto
       return false;
