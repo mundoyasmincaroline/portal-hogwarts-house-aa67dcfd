@@ -5,13 +5,13 @@ import { Heart, Sparkles } from "lucide-react";
 const MEMORIES = [
   {
     id: "dumbledore_memorial",
-    image: "/memories/monster_quality_dumbledore_memorial.png",
+    image: "/memories/monster_quality_dumbledore_memorial.jpg",
     quote: "A felicidade pode ser encontrada mesmo nas horas mais sombrias, se alguém se lembrar de acender a luz.",
     context: "O Adeus ao Diretor"
   },
   {
     id: "first_arrival",
-    image: "/memories/monster_quality_first_arrival.png",
+    image: "/memories/monster_quality_first_arrival.jpg",
     quote: "Não é todo dia que se descobre que é um bruxo.",
     context: "A Primeira Travessia"
   }
