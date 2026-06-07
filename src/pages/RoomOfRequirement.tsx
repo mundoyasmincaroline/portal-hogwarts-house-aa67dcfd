@@ -40,8 +40,14 @@ export default function RoomOfRequirement() {
 
   const create = async () => {
     if (!user || !name.trim()) return;
-    const { error } = await (supabase as any).from("room_of_requirement").insert({ owner_id: user.id, name: name.trim(), theme, description: description.trim() || null });
-    if (error) toast.error(error.message); else { toast.success("✨ Sala materializada!"); setName(""); setDescription(""); load(); }
+    const { data, error } = await (supabase as any).from("room_of_requirement").insert({ owner_id: user.id, name: name.trim(), theme, description: description.trim() || null }).select("id").single();
+    if (error) { toast.error(error.message); return; }
+    toast.success("✨ Sala materializada!");
+    setName(""); setDescription("");
+    // auto-join owner
+    await (supabase as any).from("room_members").insert({ room_id: data.id, user_id: user.id });
+    load();
+    navigate(`/dashboard/room/${data.id}`);
   };
 
   const join = async (roomId: string) => {
