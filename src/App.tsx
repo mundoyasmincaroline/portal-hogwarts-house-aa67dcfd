@@ -63,6 +63,7 @@ const RankedLadder = lazy(() => import("./pages/RankedLadder"));
 const DuelsPvP = lazy(() => import("./pages/DuelsPvP"));
 const Quidditch = lazy(() => import("./pages/Quidditch"));
 const RoomOfRequirement = lazy(() => import("./pages/RoomOfRequirement"));
+const Lounge = lazy(() => import("./pages/Lounge"));
 const WandCrafting = lazy(() => import("./pages/WandCrafting"));
 const Patronus = lazy(() => import("./pages/Patronus"));
 const Chapters = lazy(() => import("./pages/Chapters"));
