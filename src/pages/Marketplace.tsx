@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
@@ -238,9 +239,13 @@ export default function Marketplace() {
                 <div className="flex items-center gap-1 text-yellow-400 font-bold">
                   <Coins className="w-4 h-4" /> {l.price_galeons}
                 </div>
-                <span className="text-xs text-muted-foreground">
-                  @{l.seller?.username || "?"}
-                </span>
+                {l.seller_id ? (
+                  <Link to={`/dashboard/profile/${l.seller_id}`} className="text-xs text-muted-foreground hover:text-primary hover:underline">
+                    @{l.seller?.username || "?"}
+                  </Link>
+                ) : (
+                  <span className="text-xs text-muted-foreground">@{l.seller?.username || "?"}</span>
+                )}
               </div>
               {mine ? (
                 <Button size="sm" variant="outline" className="w-full" onClick={() => cancel(l.id)}>
