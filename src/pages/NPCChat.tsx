@@ -123,7 +123,7 @@ export default function NPCChat() {
           onKeyDown={e => e.key === "Enter" && send()}
           placeholder={`Diga algo para ${npc.name}...`}
           disabled={sending}/>
-        <Button onClick={send} disabled={sending || !input.trim()} variant="magical"><Send size={16}/></Button>
+        <Button onClick={() => send()} disabled={sending || !input.trim()} variant="magical"><Send size={16}/></Button>
       </div>
     </div>
   );
