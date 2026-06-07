@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ const THEMES = [
 
 export default function RoomOfRequirement() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [rooms, setRooms] = useState<any[]>([]);
   const [members, setMembers] = useState<Record<string, any[]>>({});
   const [name, setName] = useState("");
@@ -45,7 +47,7 @@ export default function RoomOfRequirement() {
   const join = async (roomId: string) => {
     if (!user) return;
     const { error } = await (supabase as any).from("room_members").insert({ room_id: roomId, user_id: user.id });
-    if (error) toast.error(error.message); else { toast.success("Entrou na sala!"); load(); }
+    if (error) toast.error(error.message); else { toast.success("Entrou na sala!"); load(); navigate(`/dashboard/room/${roomId}`); }
   };
 
   const leave = async (roomId: string) => {
@@ -106,7 +108,12 @@ export default function RoomOfRequirement() {
               {r.description && <p className="text-sm text-foreground/80">{r.description}</p>}
               <div className="text-xs text-foreground/60">{ms.length}/{r.max_members} bruxos dentro</div>
               {joined
-                ? <Button size="sm" variant="outline" className="w-full" onClick={() => leave(r.id)}>Sair</Button>
+                ? (
+                    <div className="space-y-2">
+                      <Button size="sm" className="w-full" onClick={() => navigate(`/dashboard/room/${r.id}`)}>Entrar na sala ✨</Button>
+                      <Button size="sm" variant="outline" className="w-full" onClick={() => leave(r.id)}>Sair</Button>
+                    </div>
+                  )
                 : <Button size="sm" className="w-full" onClick={() => join(r.id)} disabled={ms.length >= r.max_members}>{ms.length >= r.max_members ? "Lotada" : "Entrar"}</Button>
               }
             </motion.div>
