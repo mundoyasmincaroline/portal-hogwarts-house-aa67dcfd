@@ -66,6 +66,7 @@ export default function ProphetDaily() {
         title: json.title,
         content: json.content,
         category: json.category || "geral",
+        published: true,
       });
       if (insErr) throw insErr;
       toast.success("Edição extra publicada!");

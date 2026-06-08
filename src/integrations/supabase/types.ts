@@ -7354,6 +7354,7 @@ export type Database = {
         Args: { p_pass_id: string; p_reward_id: string }
         Returns: Json
       }
+      claim_live_event_reward: { Args: { _event_id: string }; Returns: Json }
       claim_rp_slot: {
         Args: { p_character_id: string }
         Returns: {
@@ -7606,7 +7607,9 @@ export type Database = {
       }
       join_guild: { Args: { p_guild_id: string }; Returns: Json }
       join_tournament: { Args: { p_tournament_id: string }; Returns: Json }
+      leave_faction: { Args: never; Returns: undefined }
       leave_family: { Args: never; Returns: undefined }
+      leave_guild: { Args: never; Returns: undefined }
       open_sticker_pack: { Args: { _user_id: string }; Returns: Json }
       open_vault: { Args: never; Returns: Json }
       place_auction_bid: {

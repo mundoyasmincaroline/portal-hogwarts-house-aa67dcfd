@@ -51,6 +51,15 @@ export default function LiveEvents() {
     toast.success("RSVP confirmado ✨"); load();
   };
 
+  const claim = async (eventId: string) => {
+    if (!user) return toast.error("Faça login");
+    const { data, error } = await (supabase as any).rpc("claim_live_event_reward", { _event_id: eventId });
+    if (error) return toast.error(error.message);
+    if (!data?.success) return toast.error(data?.message || "Não foi possível resgatar");
+    toast.success(`Recompensa resgatada! +${data.xp || 0} XP · +${data.galeons || 0} 🪙`);
+    load();
+  };
+
   const createEvent = async () => {
     if (!user) return;
     if (!form.title || !form.starts_at || !form.ends_at) return toast.error("Preencha título e horários");
@@ -141,6 +150,11 @@ export default function LiveEvents() {
                     </Button>
                   ))}
                 </div>
+                {rsvps[e.id] === 'going' && new Date(e.starts_at).getTime() <= Date.now() && (
+                  <Button size="sm" variant="magical" className="w-full mt-2" onClick={() => claim(e.id)}>
+                    Resgatar Recompensa ✨ (+{e.reward_xp} XP · +{e.reward_gold} 🪙)
+                  </Button>
+                )}
               </div>
             );
           })}
