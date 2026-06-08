@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
+import { useRealtime } from "@/hooks/core/useRealtime";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -77,6 +78,8 @@ export default function InstaHogwarts() {
       fetchCharFollows();
     }
   }, [user]);
+
+  useRealtime("insta_posts", "*", () => fetchPosts());
 
   const fetchMyChars = async () => {
     const { data } = await supabase.from("characters").select("id, full_name, avatar_url, house, character_type, user_id").eq("user_id", user!.id);

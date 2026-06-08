@@ -153,8 +153,9 @@ export default function Reputation() {
             <div className="space-y-2 max-h-[200px] overflow-y-auto">
               {given.map(e => (
                 <div key={e.id} className="p-2 rounded-lg bg-secondary/30 flex items-center justify-between">
-                  <div>
-                    <span className="text-xs">→ {e.to_user.slice(0,8)}...</span>
+                  <div className="flex items-center gap-2">
+                    <SafeImage src={(e as any).to_profiles?.avatar_url || ""} alt="" className="w-5 h-5 rounded-full" />
+                    <span className="text-xs">→ {(e as any).to_profiles?.full_name || (e as any).to_profiles?.username || e.to_user.slice(0,8)}</span>
                     <Badge variant="outline" className="text-[10px] ml-2">{e.type}</Badge>
                   </div>
                   <Button size="sm" variant="ghost" onClick={() => remove(e.id)}>Remover</Button>
