@@ -49,6 +49,16 @@ export default function Factions() {
     load();
   };
 
+  const leave = async () => {
+    if (!confirm("Renunciar à sua facção? Sua lealdade será perdida.")) return;
+    setBusy(true);
+    const { error } = await (supabase as any).rpc("leave_faction");
+    setBusy(false);
+    if (error) { toast.error(error.message); return; }
+    toast.success("Você renunciou à facção.");
+    load();
+  };
+
   const complete = async (id: string) => {
     setBusy(true);
     const { error } = await supabase.rpc("complete_mission", { p_mission: id });
@@ -97,7 +107,12 @@ export default function Factions() {
                   <Badge variant="outline">{f.loyalty} pontos de influência</Badge>
                 </div>
                 {isMine ? (
-                  <Badge variant="secondary">Membro · {membership?.rank} · {membership?.loyalty} lealdade</Badge>
+                  <div className="flex items-center justify-between gap-2">
+                    <Badge variant="secondary">Membro · {membership?.rank} · {membership?.loyalty} lealdade</Badge>
+                    <Button size="sm" variant="ghost" disabled={busy} onClick={leave} className="text-destructive/80 hover:text-destructive">
+                      Renunciar
+                    </Button>
+                  </div>
                 ) : (
                   <Button disabled={busy} variant={dark ? "destructive" : "default"} onClick={() => join(f.slug)}>
                     {membership ? "Trocar de Facção" : "Juntar-se"}

@@ -57,6 +57,12 @@ export default function Guilds() {
     if (error) toast.error(error.message); else { toast.success("Você entrou na guilda!"); load(); }
   };
 
+  const leave = async () => {
+    if (!confirm("Tem certeza que deseja sair da sua guilda?")) return;
+    const { error } = await (supabase as any).rpc("leave_guild");
+    if (error) toast.error(error.message); else { toast.success("Você deixou a guilda."); load(); }
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
       <header>
@@ -127,6 +133,9 @@ export default function Guilds() {
           <h2 className="font-heading text-2xl text-primary flex items-center gap-3">
             <Users size={24} /> Guildas Ativas
           </h2>
+          <Button size="sm" variant="ghost" onClick={leave} className="text-destructive/80 hover:text-destructive">
+            Sair da minha guilda
+          </Button>
           <div className="relative group w-full sm:max-w-xs">
             <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-primary/40 group-focus-within:text-primary transition-colors">
               <EmojiIcon e="🔍" />
