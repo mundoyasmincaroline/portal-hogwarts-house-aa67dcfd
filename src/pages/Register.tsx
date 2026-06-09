@@ -436,7 +436,15 @@ export default function Register() {
 
           {/* ─── STEP 8 — CARTA FINAL (PÓS-CADASTRO) ─── */}
           {step === 8 && (
-            <AcceptanceLetter fullName={form.fullName} onContinue={() => navigate("/login")} />
+            <AcceptanceLetter
+              fullName={form.fullName}
+              onContinue={async () => {
+                // Se a sessão já foi criada (auto-confirm), entra direto no
+                // dashboard. Caso contrário, manda pra tela de login.
+                const { data: { session } } = await supabase.auth.getSession();
+                navigate(session ? "/dashboard" : "/login", { replace: true });
+              }}
+            />
           )}
         </div>
 
