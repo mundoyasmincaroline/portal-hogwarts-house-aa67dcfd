@@ -24,7 +24,11 @@ export function useCharacters() {
   }, [user]);
 
   const switchCharacter = async (characterId: string) => {
-    if (!user || characterId === profile?.active_character_id) return;
+    if (!user) return;
+    if (characterId === profile?.active_character_id) {
+      toast.success("Este turno já é seu ✨");
+      return;
+    }
     
     setSwitchingId(characterId);
     try {
@@ -40,10 +44,14 @@ export function useCharacters() {
       }));
 
       toast.success(`✨ Turno: ${target?.full_name}`);
-      // Refresca o perfil sem recarregar a página (preserva scroll/estado)
+      // Refresca o perfil sem recarregar a página (preserva scroll/estado).
+      // Aguarda o fetch para garantir que o house/level já vieram do banco
+      // antes do callsite fechar o popover ou redirecionar.
       try { await useAuth.getState().fetchProfile(user.id); } catch { /* ignore */ }
     } catch (error: any) {
       toast.error("Erro ao trocar de personagem: " + error.message);
+      // Reverte caso o backend tenha falhado
+      try { await useAuth.getState().fetchProfile(user.id); } catch { /* ignore */ }
     } finally {
       setSwitchingId(null);
     }

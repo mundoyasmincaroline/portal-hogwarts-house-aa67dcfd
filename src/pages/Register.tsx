@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
 import { type House } from "@/types";
 import { HOUSES } from "@/types/house";
 import { toast } from "sonner";
@@ -135,6 +136,16 @@ export default function Register() {
     if (form.referralCode.trim()) {
       localStorage.setItem("pending_referral", form.referralCode.trim().toLowerCase().replace("@", ""));
     }
+
+    // Tenta fazer login imediato — funciona quando a confirmação de e-mail
+    // está desativada. Se exigir confirmação, mostramos a carta e mandamos
+    // pro /login no final.
+    try {
+      await supabase.auth.signInWithPassword({
+        email: form.email,
+        password: form.password,
+      });
+    } catch { /* ignore — segue para tela de aceitação */ }
 
     setLoading(false);
     setStep(8); // carta de aceitação final
@@ -425,7 +436,15 @@ export default function Register() {
 
           {/* ─── STEP 8 — CARTA FINAL (PÓS-CADASTRO) ─── */}
           {step === 8 && (
-            <AcceptanceLetter fullName={form.fullName} onContinue={() => navigate("/login")} />
+            <AcceptanceLetter
+              fullName={form.fullName}
+              onContinue={async () => {
+                // Se a sessão já foi criada (auto-confirm), entra direto no
+                // dashboard. Caso contrário, manda pra tela de login.
+                const { data: { session } } = await supabase.auth.getSession();
+                navigate(session ? "/dashboard" : "/login", { replace: true });
+              }}
+            />
           )}
         </div>
 
