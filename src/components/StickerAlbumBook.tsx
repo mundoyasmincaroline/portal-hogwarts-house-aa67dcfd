@@ -5,6 +5,7 @@ import StickerVisual from "./StickerVisual";
 import { Button } from "./ui/button";
 import { RARITY_COST } from "@/constants/gameConstants";
 import { Sticker } from "@/types";
+import StickerDetailDialog from "./StickerDetailDialog";
 
 interface Props {
   stickers: Sticker[];
@@ -21,6 +22,7 @@ export default function StickerAlbumBook({ stickers, userStickers, onBuy, buying
   const [page, setPage] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isOpened, setIsOpened] = useState(false);
+  const [selected, setSelected] = useState<Sticker | null>(null);
 
   const totalPages = Math.ceil(stickers.length / ITEMS_PER_PAGE);
   const currentItems = stickers.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
@@ -131,7 +133,7 @@ export default function StickerAlbumBook({ stickers, userStickers, onBuy, buying
                     <div className="absolute inset-0 bg-gradient-to-l from-black/5 to-transparent pointer-events-none" />
                     <div className="grid grid-cols-2 gap-2 sm:gap-3 w-full relative z-10">
                       {currentItems.slice(0, 4).map((s) => (
-                        <StickerSlot key={s.id} sticker={s} owned={!!userStickers[s.id]} onBuy={onBuy} buying={buyingId === s.id} profileLevel={profileLevel} profileXp={profileXp} />
+                        <StickerSlot key={s.id} sticker={s} owned={!!userStickers[s.id]} onOpen={() => setSelected(s)} buying={buyingId === s.id} />
                       ))}
                     </div>
                   </div>
@@ -141,7 +143,7 @@ export default function StickerAlbumBook({ stickers, userStickers, onBuy, buying
                     <div className="absolute inset-0 bg-gradient-to-r from-black/5 to-transparent pointer-events-none" />
                     <div className="grid grid-cols-2 gap-2 sm:gap-3 w-full relative z-10">
                       {currentItems.slice(4, 8).map((s) => (
-                        <StickerSlot key={s.id} sticker={s} owned={!!userStickers[s.id]} onBuy={onBuy} buying={buyingId === s.id} profileLevel={profileLevel} profileXp={profileXp} />
+                        <StickerSlot key={s.id} sticker={s} owned={!!userStickers[s.id]} onOpen={() => setSelected(s)} buying={buyingId === s.id} />
                       ))}
                     </div>
                   </div>
@@ -189,27 +191,37 @@ export default function StickerAlbumBook({ stickers, userStickers, onBuy, buying
         <span>Colecione as Relíquias de Hogwarts</span>
         <Sparkles size={14} className="animate-pulse" />
       </div>
+
+      <StickerDetailDialog
+        sticker={selected}
+        owned={selected ? !!userStickers[selected.id] : false}
+        open={!!selected}
+        onOpenChange={(o) => !o && setSelected(null)}
+        onBuy={onBuy}
+        buying={selected ? buyingId === selected.id : false}
+        profileLevel={profileLevel}
+        profileXp={profileXp}
+      />
     </div>
   );
 }
 
-function StickerSlot({ sticker, owned, onBuy, buying, profileLevel, profileXp }: { 
+function StickerSlot({ sticker, owned, onOpen, buying }: { 
   sticker: Sticker; 
   owned: boolean; 
-  onBuy: (s: Sticker) => void; 
+  onOpen: () => void;
   buying: boolean;
-  profileLevel: number;
-  profileXp: number;
 }) {
-  const cost = RARITY_COST[sticker.rarity as keyof typeof RARITY_COST] || 100;
-  const levelOk = profileLevel >= sticker.level_required;
-  const xpOk = profileXp >= cost;
-
   return (
-    <div className={`relative aspect-[3/4.2] rounded-xl overflow-hidden border-2 transition-all duration-700 group shadow-lg ${
+    <button
+      type="button"
+      onClick={onOpen}
+      disabled={buying}
+      aria-label={owned ? `Ver figurinha de ${sticker.character_name}` : `Desbloquear figurinha`}
+      className={`relative aspect-[3/4.2] w-full rounded-xl overflow-hidden border-2 transition-all duration-500 group shadow-lg text-left active:scale-95 cursor-pointer hover:-translate-y-0.5 ${
       owned 
         ? sticker.rarity === 'gold' ? 'border-yellow-500/50 shadow-yellow-500/20' : 'border-black/10'
-        : 'border-dashed border-black/5 bg-black/5 opacity-60 hover:opacity-100'
+        : 'border-dashed border-black/10 bg-black/5 opacity-70 hover:opacity-100'
     }`}>
       {/* Monster Quality Frame */}
       {owned && (
@@ -239,33 +251,21 @@ function StickerSlot({ sticker, owned, onBuy, buying, profileLevel, profileXp }:
       
       {/* Mysterious Locked State */}
       {!owned && (
-        <div className="absolute inset-0 flex items-center justify-center z-20">
-          <div className="text-black/20 group-hover:text-black/40 transition-colors flex flex-col items-center gap-2">
-            <Lock size={20} className="animate-pulse" />
-            <span className="text-[8px] font-heading tracking-widest uppercase">Bloqueado</span>
+        <div className="absolute inset-0 flex flex-col items-center justify-center z-20 gap-2 p-2 text-center">
+          <div className="text-black/30 group-hover:text-black/60 transition-colors flex flex-col items-center gap-1">
+            <Lock size={22} className="animate-pulse" />
+            <span className="text-[8px] font-heading tracking-widest uppercase">Bloqueada</span>
+            <span className="text-[9px] font-heading text-black/40 uppercase tracking-wider mt-1">Toque para abrir</span>
           </div>
         </div>
       )}
       
-      {/* Label Overlay */}
-      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/80 to-transparent p-2 z-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+      {/* Label sempre visível em mobile, esmaecida quando inativa */}
+      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/85 to-transparent p-2 z-40 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300">
         <p className={`text-[8px] font-heading text-center leading-tight truncate text-white uppercase tracking-tighter`}>
-          {sticker.character_name}
+          {owned ? sticker.character_name : "???"}
         </p>
-        {!owned && (
-          <div className="flex flex-col gap-1 mt-1">
-            <Button 
-              size="sm" 
-              variant="plaque" 
-              className="h-6 text-[7px] p-0 w-full rounded-md shadow-xl"
-              disabled={!levelOk || !xpOk || buying}
-              onClick={() => onBuy(sticker)}
-            >
-              {buying ? "..." : `Adquirir ${cost} XP`}
-            </Button>
-          </div>
-        )}
       </div>
-    </div>
+    </button>
   );
 }

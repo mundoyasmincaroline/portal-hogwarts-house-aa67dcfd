@@ -7222,6 +7222,7 @@ export type Database = {
         Args: { _months?: number; _plan: string; _user_id: string }
         Returns: undefined
       }
+      admin_recompute_member: { Args: { _user_id: string }; Returns: Json }
       adopt_creature: {
         Args: { p_creature_id: string; p_nickname: string }
         Returns: Json

@@ -14,6 +14,7 @@ import { AdminStreakMilestonesTab } from "./Admin/AdminStreakMilestonesTab";
 import AdminKpiPanel from "@/components/admin/AdminKpiPanel";
 import AdminMemberModal from "@/components/admin/AdminMemberModal";
 import { AdminModerationTab } from "@/components/admin/AdminModerationTab";
+import AdminPowerPanel from "@/components/admin/AdminPowerPanel";
 
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
@@ -77,6 +78,8 @@ export default function Admin() {
       </div>
 
       <AdminKpiPanel />
+
+      <AdminPowerPanel onCreated={fetchAll} />
 
       <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
         {([
