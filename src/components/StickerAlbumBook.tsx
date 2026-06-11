@@ -212,58 +212,55 @@ function StickerSlot({ sticker, owned, onOpen, buying }: {
   onOpen: () => void;
   buying: boolean;
 }) {
+  const rarityColors = {
+    gold: { border: 'border-yellow-500/70', text: 'text-yellow-300', bg: 'bg-yellow-600/20', label: 'LENDÁRIA' },
+    silver: { border: 'border-slate-300/60', text: 'text-slate-100', bg: 'bg-slate-400/20', label: 'INCOMUM' },
+    bronze: { border: 'border-amber-700/60', text: 'text-amber-300', bg: 'bg-amber-800/20', label: 'COMUM' },
+  } as const;
+  const rc = rarityColors[sticker.rarity as keyof typeof rarityColors] ?? rarityColors.bronze;
   return (
     <button
       type="button"
       onClick={onOpen}
       disabled={buying}
-      aria-label={owned ? `Ver figurinha de ${sticker.character_name}` : `Desbloquear figurinha`}
-      className={`relative aspect-[3/4.2] w-full rounded-xl overflow-hidden border-2 transition-all duration-500 group shadow-lg text-left active:scale-95 cursor-pointer hover:-translate-y-0.5 ${
-      owned 
-        ? sticker.rarity === 'gold' ? 'border-yellow-500/50 shadow-yellow-500/20' : 'border-black/10'
-        : 'border-dashed border-black/10 bg-black/5 opacity-70 hover:opacity-100'
-    }`}>
-      {/* Monster Quality Frame */}
-      {owned && (
-        <div className={`absolute inset-0 z-30 border-[6px] pointer-events-none ${
-          sticker.rarity === 'gold' ? 'border-yellow-600/30 ring-inset ring-2 ring-yellow-400/20' : 'border-black/5'
-        }`} />
-      )}
+      aria-label={owned ? `Ver figurinha de ${sticker.character_name}` : `Adquirir ${sticker.character_name}`}
+      className={`relative aspect-[3/4.2] w-full rounded-xl overflow-hidden border-2 transition-all duration-300 group shadow-lg text-left active:scale-95 cursor-pointer hover:-translate-y-0.5 hover:shadow-xl ${rc.border} ${!owned ? 'opacity-95' : ''}`}
+    >
+      {/* Rarity badge - top */}
+      <div className={`absolute top-1 right-1 z-40 px-1.5 py-0.5 rounded ${rc.bg} ${rc.text} text-[7px] font-heading tracking-widest border ${rc.border}`}>
+        {rc.label}
+      </div>
 
-      <StickerVisual 
-        name={sticker.character_name} 
-        rarity={sticker.rarity as any} 
-        unlocked={owned} 
-        imageUrl={sticker.image_url} 
-      />
-      
-      {sticker.image_url && owned && (
+      {/* Artwork */}
+      {owned && sticker.image_url ? (
         <div className="absolute inset-0 z-10">
-          <img 
-            src={sticker.image_url} 
-            alt={sticker.character_name} 
-            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+          <img
+            src={sticker.image_url}
+            alt={sticker.character_name}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
+        </div>
+      ) : owned ? (
+        <div className="absolute inset-0 z-10">
+          <StickerVisual name={sticker.character_name} rarity={sticker.rarity as any} unlocked={true} imageUrl={sticker.image_url} />
+        </div>
+      ) : (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-gradient-to-br from-black/85 via-zinc-900 to-black gap-2 p-3">
+          {sticker.image_url ? (
+            <img src={sticker.image_url} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover blur-md grayscale opacity-20" />
+          ) : null}
+          <Lock size={26} className={`relative ${rc.text} drop-shadow animate-pulse`} />
+          <span className="relative text-[8px] font-heading tracking-widest text-white/70 uppercase">Bloqueada</span>
+          <span className="relative text-[9px] font-heading text-white/50 uppercase tracking-wider mt-1">Toque para adquirir</span>
         </div>
       )}
-      
-      {/* Mysterious Locked State */}
-      {!owned && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center z-20 gap-2 p-2 text-center">
-          <div className="text-black/30 group-hover:text-black/60 transition-colors flex flex-col items-center gap-1">
-            <Lock size={22} className="animate-pulse" />
-            <span className="text-[8px] font-heading tracking-widest uppercase">Bloqueada</span>
-            <span className="text-[9px] font-heading text-black/40 uppercase tracking-wider mt-1">Toque para abrir</span>
-          </div>
-        </div>
-      )}
-      
-      {/* Label sempre visível em mobile, esmaecida quando inativa */}
-      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/85 to-transparent p-2 z-40 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300">
-        <p className={`text-[8px] font-heading text-center leading-tight truncate text-white uppercase tracking-tighter`}>
-          {owned ? sticker.character_name : "???"}
+
+      {/* Name label always visible */}
+      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/85 to-transparent p-2 z-40">
+        <p className="text-[10px] font-heading text-center leading-tight text-white uppercase tracking-tight line-clamp-2">
+          {sticker.character_name}
         </p>
       </div>
     </button>
