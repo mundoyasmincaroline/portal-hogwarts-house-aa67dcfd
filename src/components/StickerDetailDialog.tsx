@@ -2,9 +2,9 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Lock, Share2, Sparkles, X, Twitter, MessageCircle } from "lucide-react";
+import { Lock, Share2, Sparkles, X, Twitter, MessageCircle, Coins } from "lucide-react";
 import { Sticker } from "@/types";
-import { RARITY_COST } from "@/constants/gameConstants";
+import { RARITY_COST, RARITY_LABELS_PT } from "@/constants/gameConstants";
 import { shareContent, buildStickerShareText } from "@/lib/share";
 import { toast } from "sonner";
 
@@ -16,7 +16,7 @@ interface Props {
   onBuy: (s: Sticker) => Promise<any> | any;
   buying: boolean;
   profileLevel: number;
-  profileXp: number;
+  profileGaleons: number;
 }
 
 const RARITY_META: Record<string, { label: string; ring: string; glow: string; text: string }> = {
@@ -25,7 +25,7 @@ const RARITY_META: Record<string, { label: string; ring: string; glow: string; t
   bronze: { label: "Comum",    ring: "ring-amber-700/60",   glow: "shadow-[0_0_50px_rgba(180,83,9,0.4)]",    text: "text-amber-400" },
 };
 
-export default function StickerDetailDialog({ sticker, owned, open, onOpenChange, onBuy, buying, profileLevel, profileXp }: Props) {
+export default function StickerDetailDialog({ sticker, owned, open, onOpenChange, onBuy, buying, profileLevel, profileGaleons }: Props) {
   const [celebrate, setCelebrate] = useState(false);
 
   if (!sticker) return null;
@@ -33,7 +33,7 @@ export default function StickerDetailDialog({ sticker, owned, open, onOpenChange
   const meta = RARITY_META[sticker.rarity] ?? RARITY_META.bronze;
   const cost = RARITY_COST[sticker.rarity as keyof typeof RARITY_COST] || 100;
   const levelOk = profileLevel >= sticker.level_required;
-  const xpOk = profileXp >= cost;
+  const galeonsOk = profileGaleons >= cost;
 
   const handleBuy = async () => {
     const result = await onBuy(sticker);
@@ -120,9 +120,9 @@ export default function StickerDetailDialog({ sticker, owned, open, onOpenChange
             <div className="text-center">
               <p className={`text-[10px] font-heading uppercase tracking-[0.4em] ${meta.text}`}>{meta.label}</p>
               <h3 className="font-heading text-2xl text-gold-gradient mt-1">
-                {owned ? sticker.character_name : "Identidade desconhecida"}
+                {sticker.character_name}
               </h3>
-              {(sticker as any).house && owned && (
+              {(sticker as any).house && (
                 <p className="text-xs text-white/60 uppercase tracking-widest mt-1">
                   Casa: {(sticker as any).house}
                 </p>
@@ -153,24 +153,29 @@ export default function StickerDetailDialog({ sticker, owned, open, onOpenChange
                     Requer nível {sticker.level_required} (você está no {profileLevel}).
                   </p>
                 )}
-                {levelOk && !xpOk && (
+                {levelOk && !galeonsOk && (
                   <p className="text-center text-xs text-red-400/90">
-                    XP insuficiente: precisa de {cost}, você tem {profileXp}.
+                    Galeões insuficientes: precisa de {cost}, você tem {profileGaleons}.
                   </p>
                 )}
                 <Button
                   variant="magical"
                   size="lg"
                   className="w-full"
-                  disabled={!levelOk || !xpOk || buying}
+                  disabled={!levelOk || !galeonsOk || buying}
                   onClick={handleBuy}
                 >
                   {buying ? (
                     <span className="flex items-center gap-2"><Sparkles className="animate-spin" size={16} /> Conjurando…</span>
                   ) : (
-                    <>Desbloquear por {cost} XP</>
+                    <span className="flex items-center gap-2">
+                      <Coins size={16} /> Desbloquear por {cost} galeões
+                    </span>
                   )}
                 </Button>
+                <p className="text-center text-[10px] text-white/40 uppercase tracking-widest">
+                  Seu saldo: {profileGaleons} galeões
+                </p>
               </div>
             )}
           </div>

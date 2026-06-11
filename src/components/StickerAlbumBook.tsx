@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, BookOpen, Lock, Sparkles } from "lucide-react";
 import StickerVisual from "./StickerVisual";
 import { Button } from "./ui/button";
-import { RARITY_COST } from "@/constants/gameConstants";
+import { RARITY_COST, RARITY_LABELS_PT } from "@/constants/gameConstants";
 import { Sticker } from "@/types";
 import StickerDetailDialog from "./StickerDetailDialog";
 
@@ -13,12 +13,12 @@ interface Props {
   onBuy: (sticker: Sticker) => void;
   buyingId: string | null;
   profileLevel: number;
-  profileXp: number;
+  profileGaleons: number;
 }
 
 const ITEMS_PER_PAGE = 8;
 
-export default function StickerAlbumBook({ stickers, userStickers, onBuy, buyingId, profileLevel, profileXp }: Props) {
+export default function StickerAlbumBook({ stickers, userStickers, onBuy, buyingId, profileLevel, profileGaleons }: Props) {
   const [page, setPage] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isOpened, setIsOpened] = useState(false);
@@ -200,7 +200,7 @@ export default function StickerAlbumBook({ stickers, userStickers, onBuy, buying
         onBuy={onBuy}
         buying={selected ? buyingId === selected.id : false}
         profileLevel={profileLevel}
-        profileXp={profileXp}
+        profileGaleons={profileGaleons}
       />
     </div>
   );
