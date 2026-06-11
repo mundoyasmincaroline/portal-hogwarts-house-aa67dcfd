@@ -12,6 +12,7 @@ import StickerAlbumBook from "@/components/StickerAlbumBook";
 import { useStickers } from "@/hooks/features/useStickers";
 import { Sticker } from "@/types";
 import { RARITY_COST, PACK_COST } from "@/constants/gameConstants";
+import { Coins } from "lucide-react";
 import { shareContent, buildStickerShareText, buildAlbumShareText } from "@/lib/share";
 import EmojiIcon from "@/components/shared/EmojiIcon";
 
@@ -54,7 +55,7 @@ export default function StickerAlbum() {
 
   const openSurprisePack = async () => {
     if (!user || !profile || openingPack) return;
-    if (profile.xp < PACK_COST) { toast.error("XP insuficiente!"); return; }
+    if ((profile.galeons ?? 0) < PACK_COST) { toast.error(`Galeões insuficientes! Custo: ${PACK_COST}`); return; }
     setOpeningPack(true); setPackPhase("shaking");
     try {
       const { data, error } = await supabase.rpc("open_sticker_pack" as any, { _user_id: user.id });
@@ -85,7 +86,9 @@ export default function StickerAlbum() {
       <div className="relative overflow-hidden rounded-[2rem] border border-yellow-500/20 p-12 text-center bg-[#1a0f02]">
         <h1 className="font-heading text-4xl sm:text-6xl text-gold-gradient">{completedBanner ? "🏆 ÁLBUM LENDÁRIO 🏆" : "Álbum de Magia"}</h1>
         <div className="flex justify-center gap-4 mt-8">
-           <Button variant="magical" size="lg" onClick={openSurprisePack} disabled={openingPack || (profile?.xp ?? 0) < PACK_COST}>Abrir Pacote ({PACK_COST} XP)</Button>
+           <Button variant="magical" size="lg" onClick={openSurprisePack} disabled={openingPack || (profile?.galeons ?? 0) < PACK_COST} className="gap-2">
+             <Coins className="w-5 h-5" /> Abrir Pacote ({PACK_COST} galeões)
+           </Button>
         </div>
       </div>
 
@@ -147,7 +150,7 @@ export default function StickerAlbum() {
         </div>
       </div>
 
-      <StickerAlbumBook stickers={filtered} userStickers={userStickers} onBuy={buySticker} buyingId={buyingId} profileLevel={profile?.level || 1} profileXp={profile?.xp || 0} />
+      <StickerAlbumBook stickers={filtered} userStickers={userStickers} onBuy={buySticker} buyingId={buyingId} profileLevel={profile?.level || 1} profileGaleons={profile?.galeons || 0} />
     </div>
   );
 }

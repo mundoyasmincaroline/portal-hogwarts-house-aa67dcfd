@@ -157,7 +157,7 @@ export default function ProfileAlbum({ userId }: { userId: string }) {
           onBuy={() => {}} 
           buyingId={null}
           profileLevel={100} 
-          profileXp={1000} 
+          profileGaleons={0} 
         />
         
         <div className="flex justify-center mt-4">
