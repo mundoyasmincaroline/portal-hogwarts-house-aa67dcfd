@@ -354,6 +354,27 @@ export default function Landing() {
       {/* ── FOOTER MONSTER QUALITY ── */}
       <footer className="relative z-10 border-t border-white/5 px-6 py-12 bg-black/40 backdrop-blur-3xl overflow-hidden">
         <div className="max-w-6xl mx-auto">
+          {/* Strong legal disclaimer banner */}
+          <div className="mb-10 rounded-2xl border border-amber-500/30 bg-amber-950/40 p-6 text-center">
+            <h3 className="font-heading text-amber-300 text-sm uppercase tracking-[0.3em] mb-3">⚠️ Aviso Legal Importante</h3>
+            <p className="text-xs text-amber-100/80 leading-relaxed max-w-3xl mx-auto">
+              <strong>Hogwarts House é um projeto independente, sem fins lucrativos, criado por fãs para fãs.</strong>{" "}
+              Não somos afiliados, endossados, patrocinados ou de qualquer forma associados à
+              Warner Bros. Entertainment Inc., à J.K. Rowling, à Pottermore, à Bloomsbury Publishing
+              ou a qualquer detentor oficial dos direitos do universo Harry Potter. Todas as marcas,
+              nomes de personagens, locais e elementos do universo pertencem aos seus respectivos
+              proprietários. Este portal é uma obra de fan-fiction interativa e respeita integralmente
+              as diretrizes de uso justo (<em>fair use</em>).
+            </p>
+            <p className="text-[10px] text-amber-200/60 leading-relaxed max-w-3xl mx-auto mt-3 uppercase tracking-widest">
+              Conteúdo adequado para 13 anos ou mais · Moderado por equipe humana · LGPD &amp; ECA compliant
+            </p>
+            <p className="text-[10px] text-amber-200/50 mt-3">
+              Ao usar o portal você concorda com nossos{" "}
+              <Link to="/terms" className="underline hover:text-amber-200">Termos de Uso</Link> e{" "}
+              <Link to="/privacy" className="underline hover:text-amber-200">Política de Privacidade</Link>.
+            </p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12 text-center md:text-left">
             {/* Column 1: Brand */}
             <div className="space-y-4">

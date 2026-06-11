@@ -116,6 +116,27 @@ export default function DashboardLayout() {
       finally { localStorage.removeItem("pending_avatar_upload"); }
     })();
   }, [user?.id]);
+
+  // 🎁 Starter pack para novos usuários (auto-claim 1x: +200 galeões, +50 XP)
+  useEffect(() => {
+    if (!user?.id) return;
+    const key = `starter_claimed_${user.id}`;
+    if (localStorage.getItem(key)) return;
+    (async () => {
+      try {
+        const { data } = await supabase.rpc("claim_starter_pack" as any, { _user_id: user.id });
+        const r = data as any;
+        if (r?.ok) {
+          const { toast } = await import("sonner");
+          toast.success(`🎁 Bem-vindo! +${r.galeons} galeões e +${r.xp} XP para começar sua jornada!`, { duration: 6000 });
+        }
+      } catch (e) {
+        console.warn("starter_pack failed", e);
+      } finally {
+        localStorage.setItem(key, "1");
+      }
+    })();
+  }, [user?.id]);
   
   // Faz upload da identidade facial pendente do cadastro
   useEffect(() => {
