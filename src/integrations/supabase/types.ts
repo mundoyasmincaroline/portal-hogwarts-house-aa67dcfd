@@ -7314,6 +7314,10 @@ export type Database = {
         Returns: Json
       }
       buy_marketplace_listing: { Args: { p_listing_id: string }; Returns: Json }
+      buy_sticker_with_galeons: {
+        Args: { _sticker_id: string; _user_id: string }
+        Returns: Json
+      }
       buy_stock: {
         Args: { p_shares: number; p_stock_id: string }
         Returns: Json
@@ -7376,6 +7380,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      claim_starter_pack: { Args: { _user_id: string }; Returns: Json }
       collect_potion: { Args: { p_potion_id: string }; Returns: Json }
       complete_canon_lesson: {
         Args: {
