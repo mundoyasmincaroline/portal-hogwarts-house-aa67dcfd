@@ -22,18 +22,23 @@ export const stickerService = {
     return (data || []).map(s => s.sticker_id);
   },
 
-  async buySticker(userId: string, stickerId: string, cost: number): Promise<void> {
-    const { error: xpErr } = await supabase.rpc("award_xp_action", { 
-      _action: "buy_sticker", 
-      _user_id: userId, 
-      _xp: -cost 
+  async buySticker(userId: string, stickerId: string): Promise<{ cost: number; new_balance: number }> {
+    const { data, error } = await supabase.rpc("buy_sticker_with_galeons" as any, {
+      _user_id: userId,
+      _sticker_id: stickerId,
     });
-    if (xpErr) throw xpErr;
-
-    const { error: insertErr } = await supabase
-      .from("user_stickers")
-      .insert({ user_id: userId, sticker_id: stickerId } as any);
-    if (insertErr) throw insertErr;
+    if (error) throw error;
+    const r = data as any;
+    if (!r?.ok) {
+      if (r?.error === "insufficient_galeons") {
+        throw new Error(`Galeões insuficientes: precisa de ${r.need}, você tem ${r.have}.`);
+      }
+      if (r?.error === "already_owned") {
+        throw new Error("Você já possui esta figurinha.");
+      }
+      throw new Error(r?.error || "Falha na compra");
+    }
+    return { cost: r.cost, new_balance: r.new_balance };
   },
 
   async completeAlbumReward(userId: string): Promise<void> {

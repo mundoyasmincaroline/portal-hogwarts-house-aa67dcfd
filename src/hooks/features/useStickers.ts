@@ -39,28 +39,25 @@ export function useStickers() {
   const buySticker = async (sticker: Sticker) => {
     if (!user || !profile || userStickers[sticker.id] || buyingIdInternal) return;
     setBuyingIdInternal(sticker.id);
-    if (!user || !profile || userStickers[sticker.id]) return;
     const cost = RARITY_COST[sticker.rarity];
-    if (profile.xp < cost) {
-      toast.error(`Você precisa de ${cost} XP para esta figurinha! Você tem ${profile.xp} XP.`);
+    if ((profile.galeons ?? 0) < cost) {
+      toast.error(`Você precisa de ${cost} galeões! Você tem ${profile.galeons ?? 0}.`);
+      setBuyingIdInternal(null);
       return false;
     }
-
     try {
-      await stickerService.buySticker(user.id, sticker.id, cost);
-      
+      const r = await stickerService.buySticker(user.id, sticker.id);
       const newMap = { ...userStickers, [sticker.id]: true };
       setUserStickers(newMap);
       await fetchProfile(user.id);
-      
-      toast.success(`✨ Figurinha de ${sticker.character_name} desbloqueada! -${cost} XP`);
-      
+      toast.success(`✨ ${sticker.character_name} desbloqueada! -${r.cost} galeões`);
       if (Object.keys(newMap).length >= stickers.length) {
         await stickerService.completeAlbumReward(user.id);
+        toast.success("🏆 Álbum completo! Bônus enviado!");
       }
       return true;
     } catch (error: any) {
-      toast.error("Erro ao comprar figurinha: " + error.message);
+      toast.error(error.message || "Erro ao comprar figurinha");
       return false;
     } finally {
       setBuyingIdInternal(null);
