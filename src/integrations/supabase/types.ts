@@ -1876,6 +1876,7 @@ export type Database = {
           event_id: string
           id: string
           joined_at: string
+          outfit_item_id: string | null
           rsvp: string
           user_id: string
         }
@@ -1884,6 +1885,7 @@ export type Database = {
           event_id: string
           id?: string
           joined_at?: string
+          outfit_item_id?: string | null
           rsvp?: string
           user_id: string
         }
@@ -1892,6 +1894,7 @@ export type Database = {
           event_id?: string
           id?: string
           joined_at?: string
+          outfit_item_id?: string | null
           rsvp?: string
           user_id?: string
         }
@@ -1901,6 +1904,13 @@ export type Database = {
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "live_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_attendees_outfit_item_id_fkey"
+            columns: ["outfit_item_id"]
+            isOneToOne: false
+            referencedRelation: "user_inventory"
             referencedColumns: ["id"]
           },
         ]
