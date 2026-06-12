@@ -1,0 +1,1 @@
+ALTER TABLE public.dm_messages ADD COLUMN IF NOT EXISTS image_url text; ALTER TABLE public.dm_messages ALTER COLUMN content DROP NOT NULL;

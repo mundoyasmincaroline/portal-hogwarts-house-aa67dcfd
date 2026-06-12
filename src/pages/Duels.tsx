@@ -97,17 +97,19 @@ export default function Duels() {
   };
 
   const findOpponent = async () => {
+    if (!user || !profile) { toast.error("Perfil não carregado."); return; }
+    if (!profile.active_character_id) { toast.error("Selecione um personagem ativo antes de duelar."); return; }
     setSearching(true);
     const { data: potentialOpponents } = await supabase
       .from("profiles")
       .select("user_id, active_character_id")
-      .neq("user_id", user?.id)
+      .neq("user_id", user.id)
       .eq("approved", true)
+      .not("active_character_id", "is", null)
       .limit(20);
 
-    const opponent = potentialOpponents && potentialOpponents.length > 0 
-      ? potentialOpponents[Math.floor(Math.random() * potentialOpponents.length)]
-      : null;
+    const valid = (potentialOpponents ?? []).filter((o: any) => o.active_character_id);
+    const opponent = valid.length > 0 ? valid[Math.floor(Math.random() * valid.length)] : null;
 
     if (!opponent) {
       toast.error("Nenhum oponente disponível no momento.");
@@ -118,8 +120,8 @@ export default function Duels() {
     const { data: newDuel, error } = await supabase
       .from("duels")
       .insert({
-        challenger_user_id: user?.id,
-        challenger_character_id: profile?.active_character_id,
+        challenger_user_id: user.id,
+        challenger_character_id: profile.active_character_id,
         opponent_user_id: opponent.user_id,
         opponent_character_id: opponent.active_character_id,
         opponent_type: 'player',
@@ -132,7 +134,8 @@ export default function Duels() {
       .single();
 
     if (error) {
-      toast.error("Erro ao iniciar duelo.");
+      console.error("[Duels] insert error:", error);
+      toast.error(`Erro ao iniciar duelo: ${error.message}`);
     } else {
       setActiveDuel(newDuel as any);
       toast.success("Duelo iniciado!");

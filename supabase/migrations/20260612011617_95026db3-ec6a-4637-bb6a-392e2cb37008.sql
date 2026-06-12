@@ -1,0 +1,1 @@
+ALTER TABLE public.event_attendees ADD COLUMN IF NOT EXISTS outfit_item_id uuid REFERENCES public.user_inventory(id) ON DELETE SET NULL;

@@ -1525,25 +1525,28 @@ export type Database = {
       }
       dm_messages: {
         Row: {
-          content: string
+          content: string | null
           created_at: string | null
           id: string
+          image_url: string | null
           read: boolean | null
           receiver_id: string
           sender_id: string
         }
         Insert: {
-          content: string
+          content?: string | null
           created_at?: string | null
           id?: string
+          image_url?: string | null
           read?: boolean | null
           receiver_id: string
           sender_id: string
         }
         Update: {
-          content?: string
+          content?: string | null
           created_at?: string | null
           id?: string
+          image_url?: string | null
           read?: boolean | null
           receiver_id?: string
           sender_id?: string
@@ -1876,6 +1879,7 @@ export type Database = {
           event_id: string
           id: string
           joined_at: string
+          outfit_item_id: string | null
           rsvp: string
           user_id: string
         }
@@ -1884,6 +1888,7 @@ export type Database = {
           event_id: string
           id?: string
           joined_at?: string
+          outfit_item_id?: string | null
           rsvp?: string
           user_id: string
         }
@@ -1892,6 +1897,7 @@ export type Database = {
           event_id?: string
           id?: string
           joined_at?: string
+          outfit_item_id?: string | null
           rsvp?: string
           user_id?: string
         }
@@ -1901,6 +1907,13 @@ export type Database = {
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "live_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_attendees_outfit_item_id_fkey"
+            columns: ["outfit_item_id"]
+            isOneToOne: false
+            referencedRelation: "user_inventory"
             referencedColumns: ["id"]
           },
         ]

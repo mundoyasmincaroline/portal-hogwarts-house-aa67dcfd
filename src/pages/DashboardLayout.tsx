@@ -33,6 +33,7 @@ import HouseGhost from "@/components/HouseGhost";
 import MagicalMentor from "@/components/shared/MagicalMentor";
 import { BirthdayGlobalCelebration } from "@/components/BirthdayGlobalCelebration";
 import { prefetchRoute } from "@/lib/routePrefetch";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
@@ -388,6 +389,7 @@ export default function DashboardLayout() {
       <HouseGhost />
       <MagicalMentor />
       <BirthdayGlobalCelebration />
+      <PWAInstallPrompt />
     </div>
 
   );

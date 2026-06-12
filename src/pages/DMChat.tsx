@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Send } from "lucide-react";
+import { ArrowLeft, Send, ImagePlus, Loader2 } from "lucide-react";
 import SafeImage from "@/components/SafeImage";
 import { toast } from "sonner";
 
@@ -11,7 +11,8 @@ interface DM {
   id: string;
   sender_id: string;
   receiver_id: string;
-  content: string;
+  content: string | null;
+  image_url?: string | null;
   read: boolean;
   created_at: string;
 }
@@ -25,7 +26,9 @@ export default function DMChat() {
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   // Load partner profile
   useEffect(() => {
@@ -98,6 +101,34 @@ export default function DMChat() {
     setSending(false);
     if (error) { toast.error("Erro ao enviar mensagem"); return; }
     setText("");
+    await loadMessages();
+  };
+
+  const sendImage = async (file: File) => {
+    if (!user || !partnerId || uploading) return;
+    if (file.size > 5 * 1024 * 1024) { toast.error("Imagem muito grande (máx 5MB)"); return; }
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop() || "jpg";
+      const path = `${user.id}/dm/${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, { upsert: true, contentType: file.type || "image/jpeg" });
+      if (upErr) throw upErr;
+      const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
+      const url = `${publicUrl}?t=${Date.now()}`;
+      const { error } = await supabase.from("dm_messages").insert({
+        sender_id: user.id,
+        receiver_id: partnerId,
+        content: null,
+        image_url: url,
+      } as never);
+      if (error) throw error;
+      await loadMessages();
+    } catch (e: any) {
+      toast.error("Erro ao enviar imagem: " + (e?.message || ""));
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
   };
 
   const handleKey = (e: React.KeyboardEvent) => {
@@ -168,7 +199,12 @@ export default function DMChat() {
                           : "glass rounded-bl-sm text-foreground"
                       }`}
                     >
-                      <p className="break-words whitespace-pre-wrap">{m.content}</p>
+                      {m.content && <p className="break-words whitespace-pre-wrap">{m.content}</p>}
+                      {m.image_url && (
+                        <a href={m.image_url} target="_blank" rel="noopener noreferrer">
+                          <img src={m.image_url} alt="anexo" className="mt-1 rounded-xl max-w-[240px] max-h-[320px] object-cover border border-white/10" loading="lazy" />
+                        </a>
+                      )}
                       <p className={`text-[10px] mt-1 text-right ${isMe ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
                         {new Date(m.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
                         {isMe && <span className="ml-1">{m.read ? " ✓✓" : " ✓"}</span>}
@@ -188,6 +224,22 @@ export default function DMChat() {
         className="glass rounded-[1.5rem] sm:rounded-2xl p-2 sm:p-3 flex items-end gap-2 shrink-0 mt-1 border-white/10 shadow-2xl"
         style={{ marginBottom: 'max(8px, env(safe-area-inset-bottom))' }}
       >
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => { const f = e.target.files?.[0]; if (f) sendImage(f); }}
+        />
+        <button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          disabled={uploading}
+          title="Enviar foto"
+          className="p-2 rounded-xl bg-secondary text-foreground/80 hover:bg-primary/15 hover:text-primary transition-colors shrink-0 disabled:opacity-40"
+        >
+          {uploading ? <Loader2 size={16} className="animate-spin" /> : <ImagePlus size={16} />}
+        </button>
         <textarea
           value={text}
           onChange={e => setText(e.target.value)}
