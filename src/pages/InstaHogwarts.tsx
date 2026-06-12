@@ -90,10 +90,11 @@ export default function InstaHogwarts() {
   };
 
   const fetchPosts = async () => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("insta_posts")
       .select("*, characters(id, full_name, avatar_url, house, character_type, user_id), profiles(full_name, username, house, avatar_url)")
       .order("created_at", { ascending: false });
+    if (error) { console.error("[InstaHogwarts] fetchPosts error:", error); setLoading(false); return; }
     if (data) setPosts(data as unknown as InstaPost[]);
     setLoading(false);
   };
@@ -156,7 +157,7 @@ export default function InstaHogwarts() {
       setCaption("");
       setSpotifyUri("");
       await supabase.rpc("award_xp_action", { _action: "insta_post", _user_id: user.id, _xp: 10 });
-      fetchPosts();
+      await fetchPosts();
     }
     setUploading(false);
   };

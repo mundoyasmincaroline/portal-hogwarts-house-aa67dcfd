@@ -204,7 +204,9 @@ export default function Friends() {
           {friends.map((r) => (
             <Card key={r.id} row={r} actions={
               <>
-                <Button size="sm" variant="outline" onClick={() => navigate(`/dashboard/dm/${r.other?.user_id}`)}>
+                <Button size="sm" variant="outline"
+                  disabled={!r.other?.user_id}
+                  onClick={() => r.other?.user_id && navigate(`/dashboard/dm/${r.other.user_id}`)}>
                   <MessageCircle size={14} />
                 </Button>
                 <Button size="sm" variant="outline" onClick={() => { if (confirm("Remover amizade?")) remove(r.id); }}>
