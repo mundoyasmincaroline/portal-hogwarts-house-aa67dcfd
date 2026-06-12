@@ -508,7 +508,7 @@ export default function MaraudersGuide() {
           >
             ← Anterior
           </Button>
-          <span className="font-heading text-primary text-sm">
+          <span className="font-heading text-amber-900 text-sm">
             Página {activePage} de {guidePages.length}
           </span>
           <Button
@@ -530,10 +530,10 @@ export default function MaraudersGuide() {
             transition={{ duration: 0.3 }}
             className="relative z-10"
           >
-          <h2 className="font-heading text-2xl text-foreground mb-6 flex items-center gap-3">
+          <h2 className="font-heading text-2xl text-amber-950 mb-6 flex items-center gap-3">
             {guidePages[activePage - 1].title}
           </h2>
-          <div className="text-foreground/90 leading-relaxed">
+          <div className="text-amber-950 leading-relaxed [&_p]:text-amber-950 [&_li]:text-amber-900 [&_strong]:text-amber-950 [&_code]:bg-amber-200/60 [&_code]:text-amber-950 [&_code]:px-1.5 [&_code]:rounded [&_a]:text-amber-700 [&_a]:underline [&_a:hover]:text-amber-900 [&_.bg-secondary\/50]:bg-amber-100/80 [&_.bg-secondary\/50]:border-amber-700/30 [&_.text-muted-foreground]:!text-amber-900/90 [&_.text-foreground]:!text-amber-950 [&_.text-primary]:!text-amber-700">
             {guidePages[activePage - 1].content}
           </div>
           </motion.div>
@@ -541,7 +541,7 @@ export default function MaraudersGuide() {
 
         {activePage === guidePages.length && (
           <div className="mt-10 text-center animate-fade-in-up">
-            <h3 className="font-heading text-lg text-primary mb-3">Malfeito, feito!</h3>
+            <h3 className="font-heading text-lg text-amber-800 mb-3">Malfeito, feito!</h3>
             <Link to="/dashboard">
               <Button variant="magical" size="lg" className="font-heading">
                 Voltar para o Salão Principal <EmojiIcon e="⚡" />

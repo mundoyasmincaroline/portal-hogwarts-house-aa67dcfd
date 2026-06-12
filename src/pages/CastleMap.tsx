@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Lock, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 interface Room {
@@ -22,8 +23,28 @@ const EVENTS = [
   { type: "biscoito", text: "Um elfo te oferece biscoitos. Você se sente acolhido.", reward: { galeons: 5 } },
 ];
 
+// Slugs de salas que possuem uma página real no portal
+const SLUG_TO_ROUTE: Record<string, { path: string; label: string }> = {
+  "salao-principal": { path: "/dashboard/chats", label: "Entrar no Salão Principal" },
+  "biblioteca": { path: "/dashboard/grimoire", label: "Abrir Grimório" },
+  "campo-quadribol": { path: "/dashboard/quidditch", label: "Ir ao Campo de Quadribol" },
+  "sala-precisa": { path: "/dashboard/room", label: "Entrar na Sala Precisa" },
+  "masmorras": { path: "/dashboard/potions-lab", label: "Descer ao Laboratório de Poções" },
+  "torre-astronomia": { path: "/dashboard/canon-lessons", label: "Aula de Astronomia" },
+  "corujal": { path: "/dashboard/dm", label: "Ler Mensagens (Corujal)" },
+  "floresta-proibida": { path: "/dashboard/creatures", label: "Explorar Criaturas" },
+  "jardim": { path: "/dashboard/greenhouse", label: "Ir à Estufa" },
+  "sala-de-transfiguracao": { path: "/dashboard/classes", label: "Entrar na Aula" },
+  "cabana-hagrid": { path: "/dashboard/creatures", label: "Visitar a Cabana" },
+  "sala-comunal-grifinoria": { path: "/dashboard/chats", label: "Sala Comunal" },
+  "sala-comunal-sonserina": { path: "/dashboard/chats", label: "Sala Comunal" },
+  "camara-secreta": { path: "/dashboard/dark-arts", label: "Adentrar a Câmara" },
+  "ponte-suspensa": { path: "/dashboard/castle-entrance", label: "Atravessar a Ponte" },
+};
+
 export default function CastleMap() {
   const { user, profile, updateProfile } = useAuth();
+  const navigate = useNavigate();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [visits, setVisits] = useState<Record<string, number>>({});
   const [selected, setSelected] = useState<Room | null>(null);
@@ -180,6 +201,15 @@ export default function CastleMap() {
               <p className="font-heading text-primary text-xs uppercase tracking-widest mb-1"><EmojiIcon e="✨" /> Evento mágico!</p>
               {eventMsg}
             </div>
+          )}
+          {SLUG_TO_ROUTE[selected.slug] && (
+            <Button
+              variant="magical"
+              className="mt-4 w-full"
+              onClick={() => navigate(SLUG_TO_ROUTE[selected.slug].path)}
+            >
+              ✨ {SLUG_TO_ROUTE[selected.slug].label}
+            </Button>
           )}
         </Card>
       )}
