@@ -1525,25 +1525,28 @@ export type Database = {
       }
       dm_messages: {
         Row: {
-          content: string
+          content: string | null
           created_at: string | null
           id: string
+          image_url: string | null
           read: boolean | null
           receiver_id: string
           sender_id: string
         }
         Insert: {
-          content: string
+          content?: string | null
           created_at?: string | null
           id?: string
+          image_url?: string | null
           read?: boolean | null
           receiver_id: string
           sender_id: string
         }
         Update: {
-          content?: string
+          content?: string | null
           created_at?: string | null
           id?: string
+          image_url?: string | null
           read?: boolean | null
           receiver_id?: string
           sender_id?: string
