@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { Link } from "react-router-dom";
 import { useImmersion } from "@/hooks/core/useImmersion";
+import { toast } from "sonner";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 interface Notification {
@@ -47,6 +48,8 @@ export default function Notifications() {
         } else {
           cast('owlHoot');
         }
+        const n = payload.new as any;
+        toast.info(`🦉 ${n.title ?? "Nova notificação"}${n.message ? `: ${n.message}` : ""}`, { duration: 4000 });
       })
       .subscribe();
 

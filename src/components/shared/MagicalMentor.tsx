@@ -81,6 +81,16 @@ const GENERAL_STEPS: GuideStep[] = [
   }
 ];
 
+// --- ONBOARDING TOUR (5 paradas guiadas) ---
+interface TourStep { id: string; emoji: string; title: string; description: string; path: string; label: string; }
+const TOUR_STEPS: TourStep[] = [
+  { id: "feed",     emoji: "📸", title: "Feed — InstaHogwarts",  description: "Veja e publique momentos mágicos. Curta, comente e siga outros bruxos.", path: "/dashboard/instahogwarts", label: "Abrir Feed" },
+  { id: "chats",    emoji: "💬", title: "Chats de RPG",          description: "Salas em tempo real para interpretar seu personagem. Use *ações* e (pensamentos).", path: "/dashboard/chats", label: "Ir aos Chats" },
+  { id: "map",      emoji: "🗺️", title: "Mapa do Castelo",       description: "Navegue pelos corredores e descubra onde tudo acontece em Hogwarts.", path: "/dashboard/castle-map", label: "Abrir Mapa" },
+  { id: "bank",     emoji: "🏦", title: "Gringotts — Seu Cofre", description: "Gerencie seus Galeões, compre pacotes e veja seu extrato mágico.", path: "/dashboard/gringotts", label: "Ver Gringotts" },
+  { id: "stickers", emoji: "📒", title: "Álbum de Figurinhas",   description: "Colecione figurinhas raras e complete seu álbum para bônus especiais!", path: "/dashboard/sticker-album", label: "Abrir Álbum" },
+];
+
 const HOUSE_GUIDES: Record<House, { intro: string; goal: string }> = {
   gryffindor: {
     intro: "Bravo Grifinório! Sua coragem é sua maior arma. Mostre sua fibra nos duelos e proteja os mais fracos.",
@@ -107,6 +117,8 @@ export default function MagicalMentor() {
   const [showHouseGuide, setShowHouseGuide] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [hasSeenGuide, setHasSeenGuide] = useState(true);
+  const [tourMode, setTourMode] = useState(false);
+  const [tourStep, setTourStep] = useState(0);
   
   const houseId = (profile?.house as House) || "gryffindor";
   const house = HOUSES[houseId];
@@ -156,6 +168,13 @@ export default function MagicalMentor() {
     } else {
       setHasSeenGuide(true);
     }
+
+    // Tour guiado (5 paradas) — auto-abre uma vez por usuário, em paralelo
+    const tourKey = `tour_done_${profile.user_id}`;
+    if (!localStorage.getItem(tourKey)) {
+      setTourMode(true);
+      setTimeout(() => setIsOpen(true), 3500);
+    }
     // Após ver o guia inicial: NÃO reabre sozinho. Usuário decide quando consultar.
   }, [profile?.user_id]);
 
@@ -185,6 +204,16 @@ export default function MagicalMentor() {
     } else {
       setStepIndex(Math.max(0, stepIndex - 1));
     }
+  };
+
+  const tourNext = () => {
+    if (tourStep < TOUR_STEPS.length - 1) setTourStep(t => t + 1);
+    else finishTour();
+  };
+  const finishTour = () => {
+    if (profile?.user_id) localStorage.setItem(`tour_done_${profile.user_id}`, "1");
+    setTourMode(false);
+    setIsOpen(false);
   };
 
   const currentStep = GENERAL_STEPS[stepIndex];
@@ -239,7 +268,47 @@ export default function MagicalMentor() {
                   <X size={20} />
                 </button>
 
-                {!showHouseGuide ? (
+                {tourMode ? (
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-3">
+                      <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-3xl">
+                        {TOUR_STEPS[tourStep].emoji}
+                      </div>
+                      <div>
+                        <h2 className="font-heading text-xl text-gold-gradient">{TOUR_STEPS[tourStep].title}</h2>
+                        <p className="text-[10px] font-heading uppercase tracking-widest text-primary/60">
+                          Tour de Boas-Vindas · {tourStep + 1}/{TOUR_STEPS.length}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-foreground/80 leading-relaxed font-serif min-h-[60px]">
+                      {TOUR_STEPS[tourStep].description}
+                    </p>
+                    <div className="flex justify-center gap-2">
+                      {TOUR_STEPS.map((_, i) => (
+                        <div key={i} className={`h-2 rounded-full transition-all ${i === tourStep ? "bg-primary w-4" : "bg-primary/30 w-2"}`} />
+                      ))}
+                    </div>
+                    <div className="flex items-center justify-between pt-2 gap-2 flex-wrap">
+                      <Button variant="ghost" size="sm" onClick={finishTour}
+                        className="font-heading text-xs uppercase tracking-tighter text-foreground/40 hover:text-primary/80">
+                        Pular Tour
+                      </Button>
+                      <div className="flex gap-2">
+                        <Link to={TOUR_STEPS[tourStep].path} onClick={finishTour}>
+                          <Button variant="outline" size="sm"
+                            className="font-heading text-xs uppercase tracking-tighter border-primary/30 text-primary hover:bg-primary/10">
+                            {TOUR_STEPS[tourStep].label}
+                          </Button>
+                        </Link>
+                        <Button variant="magical" size="sm" onClick={tourNext}
+                          className="font-heading text-xs uppercase tracking-tighter">
+                          {tourStep === TOUR_STEPS.length - 1 ? "Concluir ✨" : "Próximo"} <ChevronRight className="w-4 h-4 ml-1" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ) : !showHouseGuide ? (
                   <div className="space-y-6">
                     <div className="flex items-center gap-4">
                       <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center shadow-inner">
