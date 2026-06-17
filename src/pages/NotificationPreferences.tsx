@@ -5,9 +5,10 @@ import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Bell, Mail, Smartphone, Sparkles } from "lucide-react";
+import { Bell, Mail, Smartphone, Sparkles, BatteryCharging } from "lucide-react";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
+import { useSettings } from "@/lib/settingsStore";
 type Prefs = {
   in_app: boolean;
   daily_digest: boolean;
@@ -31,6 +32,9 @@ export default function NotificationPreferences() {
   const [prefs, setPrefs] = useState<Prefs>(DEFAULT);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  
+  const lowQualityMode = useSettings((s) => s.lowQualityMode);
+  const setLowQualityMode = useSettings((s) => s.setLowQualityMode);
 
   useEffect(() => {
     (async () => {
@@ -80,6 +84,13 @@ export default function NotificationPreferences() {
             desc="Sino do topo da tela com novidades em tempo real"
             value={prefs.in_app}
             onChange={(v) => update("in_app", v)}
+          />
+          <Row
+            icon={<BatteryCharging className="w-5 h-5 text-amber-400" />}
+            title="Modo Economia de Bateria"
+            desc="Desativa efeitos mágicos pesados e animações para evitar travamentos."
+            value={lowQualityMode}
+            onChange={setLowQualityMode}
           />
           <Row
             icon={<Sparkles className="w-5 h-5" />}

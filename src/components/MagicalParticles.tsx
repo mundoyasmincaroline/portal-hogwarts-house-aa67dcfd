@@ -1,10 +1,13 @@
 import { useEffect, useRef } from "react";
 import { getSeasonalEvent } from "@/constants/seasonal";
+import { useSettings } from "@/lib/settingsStore";
 
 export default function MagicalParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const lowQualityMode = useSettings((s) => s.lowQualityMode);
 
   useEffect(() => {
+    if (lowQualityMode) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");

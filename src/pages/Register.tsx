@@ -68,8 +68,10 @@ export default function Register() {
   const next = () => setStep((s) => s + 1);
   const back = () => setStep((s) => Math.max(0, s - 1));
 
-  /* ── validações por etapa ── */
-  const validateIdentity = () => {
+  const [validating, setValidating] = useState(false);
+
+  const handleNextIdentity = async () => {
+    setValidating(true);
     const e: Record<string, string> = {};
     if (!form.fullName.trim()) e.fullName = "Como devemos te chamar?";
     if (!form.username.trim()) e.username = "Escolha um @";
@@ -79,8 +81,19 @@ export default function Register() {
     const a = parseInt(form.age);
     if (!a || a < 13 || a > 17) e.age = "Apenas bruxos de 13 a 17 anos";
     if (parseInt(captchaAnswer) !== captcha.num1 + captcha.num2) e.captcha = "Resposta incorreta";
+
+    if (!e.username) {
+      try {
+        const { data } = await supabase.from('profiles').select('id').eq('username', form.username).maybeSingle();
+        if (data) e.username = "Este nome de usuário já está em uso";
+      } catch (err) {
+        console.error("Erro ao verificar username", err);
+      }
+    }
+
     setErrors(e);
-    return !Object.keys(e).length;
+    setValidating(false);
+    if (!Object.keys(e).length) next();
   };
 
   /* ── envio final ── */
@@ -242,7 +255,7 @@ export default function Register() {
                 {errors.captcha && <p className="text-destructive text-[10px] mt-1 font-bold animate-pulse">{errors.captcha}</p>}
               </div>
 
-              <NavRow onBack={back} onNext={() => validateIdentity() && next()} />
+              <NavRow onBack={back} onNext={handleNextIdentity} disabled={validating} labelNext={validating ? "Verificando..." : "Continuar"} />
             </div>
           )}
 
