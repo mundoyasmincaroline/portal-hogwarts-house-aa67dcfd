@@ -1,14 +1,26 @@
 -- Migration: Gacha Wand Crafting & Luxury Store Items
 
--- 1. Insert Luxury Items into store_items for Gold Sinks
-INSERT INTO store_items (slug, name, description, category, rarity, price_galeons, image_url)
-VALUES
-('title-lord', 'Título: Lorde das Trevas', 'O título mais temido do mundo mágico. Demonstre seu poder e riqueza absolutos.', 'title', 'legendary', 10000, '/items/dark_mark.png'),
-('title-order', 'Título: Herói da Ordem', 'Apenas para os bruxos mais corajosos e ricos. Uma aura de pura bondade.', 'title', 'legendary', 10000, '/items/phoenix.png'),
-('aura-fire', 'Aura: Chamas Vivas', 'Sua foto de perfil ficará em chamas constantemente.', 'aura', 'epic', 5000, '/items/fire_aura.png')
-ON CONFLICT (slug) DO UPDATE SET price_galeons = EXCLUDED.price_galeons;
+-- 1. Update constraints to allow new categories and rarities
+ALTER TABLE store_items DROP CONSTRAINT IF EXISTS store_items_category_check;
+ALTER TABLE store_items ADD CONSTRAINT store_items_category_check CHECK (category IN ('clothing','wand','accessory','skin','decoration','pack','title','aura','potion','upgrade'));
 
--- 2. Update craft_wand to charge 50 Galeões and roll random Gacha stats
+ALTER TABLE store_items DROP CONSTRAINT IF EXISTS store_items_rarity_check;
+ALTER TABLE store_items ADD CONSTRAINT store_items_rarity_check CHECK (rarity IN ('common','rare','epic','legendary'));
+
+-- 2. Insert Luxury Items into store_items for Gold Sinks
+INSERT INTO store_items (name, description, category, rarity, price_galeons, image_url)
+SELECT 'Título: Lorde das Trevas', 'O título mais temido do mundo mágico. Demonstre seu poder e riqueza absolutos.', 'title', 'legendary', 10000, '/items/dark_mark.png'
+WHERE NOT EXISTS (SELECT 1 FROM store_items WHERE name = 'Título: Lorde das Trevas');
+
+INSERT INTO store_items (name, description, category, rarity, price_galeons, image_url)
+SELECT 'Título: Herói da Ordem', 'Apenas para os bruxos mais corajosos e ricos. Uma aura de pura bondade.', 'title', 'legendary', 10000, '/items/phoenix.png'
+WHERE NOT EXISTS (SELECT 1 FROM store_items WHERE name = 'Título: Herói da Ordem');
+
+INSERT INTO store_items (name, description, category, rarity, price_galeons, image_url)
+SELECT 'Aura: Chamas Vivas', 'Sua foto de perfil ficará em chamas constantemente.', 'aura', 'epic', 5000, '/items/fire_aura.png'
+WHERE NOT EXISTS (SELECT 1 FROM store_items WHERE name = 'Aura: Chamas Vivas');
+
+-- 3. Update craft_wand to charge 50 Galeões and roll random Gacha stats
 CREATE OR REPLACE FUNCTION craft_wand(p_wood text, p_core text, p_length numeric, p_flex text)
 RETURNS json
 LANGUAGE plpgsql
