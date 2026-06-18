@@ -100,14 +100,14 @@ export default function StickerTrades() {
   const createTrade = async () => {
     if (!user || !offerStickerId) { toast.error("Selecione a figurinha a oferecer!"); return; }
     setCreating(true);
-    const { error } = await supabase.from("sticker_trades").insert({
-      offerer_id: user.id,
-      offered_sticker_id: offerStickerId,
-      wanted_sticker_id: wantStickerId || null,
-      status: "open",
-    } as never);
-    if (error) { toast.error("Erro ao criar oferta: " + error.message); }
-    else {
+    const { data, error } = await (supabase.rpc as any)("propose_sticker_trade", {
+      p_offered_sticker_id: offerStickerId,
+      p_wanted_sticker_id: wantStickerId || null,
+    });
+    const result = data as any;
+    if (error || (result && !result.success)) {
+      toast.error("Erro ao criar oferta: " + (error?.message || result?.message));
+    } else {
       toast.success("✨ Oferta publicada no Mercado!");
       setOfferStickerId("");
       setWantStickerId("");

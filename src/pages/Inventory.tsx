@@ -23,13 +23,45 @@ export default function Inventory() {
 
   const load = async () => {
     if (!user) return;
-    const { data } = await supabase
+    const { data: hogsData } = await supabase
       .from("user_inventory")
       .select("*, item:hogsmeade_items(*)")
       .eq("user_id", user.id)
-      .gt("quantity", 0)
-      .order("obtained_at", { ascending: false });
-    setInv(data ?? []);
+      .gt("quantity", 0);
+      
+    const { data: diagonData } = await supabase
+      .from("diagon_purchases")
+      .select("*, item:diagon_shop_items(*)")
+      .eq("user_id", user.id);
+
+    const diagonGrouped = (diagonData || []).reduce((acc: any, row: any) => {
+      if (!row.item) return acc;
+      const itemId = row.item_id;
+      if (!acc[itemId]) {
+        acc[itemId] = {
+          id: row.id,
+          user_id: user.id,
+          item_id: itemId,
+          quantity: 1,
+          equipped: false,
+          obtained_at: row.purchased_at,
+          item: {
+            ...row.item,
+            emoji: row.item.icon || "✨",
+            category: "diagon_alley",
+            equippable: false
+          }
+        };
+      } else {
+        acc[itemId].quantity += 1;
+      }
+      return acc;
+    }, {});
+
+    const combined = [...(hogsData || []), ...Object.values(diagonGrouped)];
+    combined.sort((a: any, b: any) => new Date(b.obtained_at).getTime() - new Date(a.obtained_at).getTime());
+    
+    setInv(combined);
   };
   useEffect(() => { load(); }, [user?.id]);
 
