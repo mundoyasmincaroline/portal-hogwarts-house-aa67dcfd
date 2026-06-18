@@ -402,9 +402,9 @@ export default function Register() {
               <header className="mb-4">
                 <ShieldCheck className="w-8 h-8 text-primary mb-2" />
                 <p className="text-xs uppercase tracking-[0.3em] text-primary/70">Pergaminho VI</p>
-                <h2 className="font-heading text-2xl text-foreground">Identidade Mágica</h2>
+                <h2 className="font-heading text-2xl text-foreground">Retrato Mágico (Face ID)</h2>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Para garantir a segurança do castelo, valide sua essência mágica.
+                  Ative o Face ID Mágico para fazer login apenas com seu rosto no futuro.
                 </p>
               </header>
 
@@ -419,10 +419,21 @@ export default function Register() {
                 />
               </div>
 
-              <div className="text-center pt-4">
+              <div className="text-center pt-4 flex flex-col items-center gap-2">
                  <p className="text-[10px] text-muted-foreground/60 italic">
-                   Sua essência é única e necessária para o registro no Livro de Nomes.
+                   Você pode configurar isso depois no seu Perfil se preferir.
                  </p>
+                 <Button 
+                   variant="ghost" 
+                   size="sm"
+                   className="text-xs text-muted-foreground hover:text-primary" 
+                   onClick={() => { 
+                     setFacialIdPreview(null); 
+                     setStep(7); 
+                   }}
+                 >
+                   Pular esta etapa
+                 </Button>
               </div>
             </div>
           )}

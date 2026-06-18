@@ -154,7 +154,7 @@ export default function MagicFacialID({ onValidated, mode, referenceImage, onCan
             <>
               {onCancel && (
                 <Button variant="ghost" onClick={onCancel} disabled={isValidating}>
-                  Cancelar
+                  Voltar
                 </Button>
               )}
               <Button 
