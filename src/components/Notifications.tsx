@@ -102,7 +102,7 @@ export default function Notifications() {
       </button>
 
       {open && (
-        <div className="absolute bottom-14 left-0 w-[calc(100vw-32px)] sm:w-96 bg-card border border-primary/20 shadow-[0_20px_50px_rgba(0,0,0,0.8)] rounded-[2rem] overflow-hidden z-50 animate-in fade-in slide-in-from-bottom-4 duration-300 backdrop-blur-2xl">
+        <div className="fixed bottom-[5rem] left-4 right-4 md:absolute md:bottom-14 md:left-0 md:right-auto md:w-96 bg-card border border-primary/20 shadow-[0_20px_50px_rgba(0,0,0,0.8)] rounded-[2rem] overflow-hidden z-[100] animate-in fade-in slide-in-from-bottom-4 duration-300 backdrop-blur-2xl">
           <div className="p-5 border-b border-white/5 flex justify-between items-center bg-primary/5">
             <h3 className="font-heading text-sm text-foreground uppercase tracking-widest">Corujal</h3>
             {unreadCount > 0 && (
