@@ -37,6 +37,7 @@ import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import { initOneSignal, loginToOneSignal } from "@/lib/onesignal";
 import WelcomePackageCeremony from "@/components/WelcomePackageCeremony";
 import OnboardingChecklist from "@/components/OnboardingChecklist";
+import MaraudersDiaryWidget from "@/components/MaraudersDiaryWidget";
 
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
@@ -81,6 +82,7 @@ export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dmUnread, setDmUnread] = useState(0);
   const [hasCharacters, setHasCharacters] = useState<boolean | null>(null);
+  const [raidActive, setRaidActive] = useState(false);
 
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
   useAchievements(user?.id, profile?.xp ?? 0, profile?.level ?? 1);
@@ -171,16 +173,34 @@ export default function DashboardLayout() {
           .eq("user_id", user.id);
         if (error) {
           console.error("[DashboardLayout] character count failed:", error);
-          if (!cancelled) setHasCharacters(null);
+          setHasCharacters(null);
           return;
         }
-        if (!cancelled) setHasCharacters((count ?? 0) > 0);
+        setHasCharacters((count ?? 0) > 0);
       } catch (err) {
         console.error("[DashboardLayout] character count threw:", err);
-        if (!cancelled) setHasCharacters(null);
+        setHasCharacters(null);
       }
     };
+
+    const checkRaid = async () => {
+      try {
+        const { data } = await supabase
+          .from("events")
+          .select("id")
+          .eq("type", "raid_boss")
+          .gte("end_time", new Date().toISOString())
+          .lte("start_time", new Date().toISOString())
+          .limit(1);
+        setRaidActive(!!(data && data.length > 0));
+      } catch (e) {
+        console.error("Raid check err:", e);
+      }
+    };
+
     run();
+    checkRaid();
+
     const ch = supabase
       .channel(`dash-characters-${user.id}-${Date.now()}`)
       .on(
@@ -189,7 +209,7 @@ export default function DashboardLayout() {
         () => { run(); }
       )
       .subscribe();
-    return () => { cancelled = true; supabase.removeChannel(ch); };
+    return () => { supabase.removeChannel(ch); };
   }, [user?.id]);
 
   useEffect(() => {
@@ -246,7 +266,15 @@ export default function DashboardLayout() {
   }
 
   return (
-    <div className="flex h-dvh-screen overflow-hidden relative bg-black">
+    <motion.div 
+      animate={raidActive ? { x: [-2, 2, -2, 2, 0], y: [-1, 1, -1, 1, 0] } : {}}
+      transition={{ duration: 0.5, repeat: raidActive ? Infinity : 0, repeatDelay: 5 }}
+      className="flex h-dvh-screen overflow-hidden relative bg-black"
+    >
+      {raidActive && (
+        <div className="fixed top-0 left-0 right-0 h-1 bg-red-500 shadow-[0_0_20px_rgba(239,68,68,0.8)] z-[100] animate-pulse pointer-events-none" />
+      )}
+
       <AtmosphericBackground />
       <MagicalParticles />
 
@@ -358,6 +386,7 @@ export default function DashboardLayout() {
             </div>
 
             <OnboardingChecklist />
+            <MaraudersDiaryWidget />
 
             <div className="mb-6" id="daily-rp-slot">
               <DailyRPSlot />

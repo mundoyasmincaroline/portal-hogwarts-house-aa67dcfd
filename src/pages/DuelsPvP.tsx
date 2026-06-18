@@ -11,6 +11,8 @@ import EmojiIcon from "@/components/shared/EmojiIcon";
 type Spell = { id: string; code: string; name: string; type: string; damage: number; heal: number; shield: number; mp_cost: number; level_req: number; description: string; icon: string };
 type Match = any;
 type Action = any;
+type Potion = { id: string; recipe_id: string; potion_recipes: { name: string; icon: string } };
+
 
 export default function DuelsPvP() {
   const { user, profile } = useAuth();
@@ -19,7 +21,9 @@ export default function DuelsPvP() {
   const [actions, setActions] = useState<Action[]>([]);
   const [pending, setPending] = useState<Match[]>([]);
   const [opponents, setOpponents] = useState<any[]>([]);
+  const [potions, setPotions] = useState<Potion[]>([]);
   const [casting, setCasting] = useState(false);
+  const [activeTab, setActiveTab] = useState<"spells"|"inventory">("spells");
 
   const loadOpponents = useCallback(async () => {
     if (!user) return;
@@ -37,14 +41,18 @@ export default function DuelsPvP() {
     setPending((data || []).filter((m: any) => m.status === "pending" && m.player_b === user.id));
   }, [user]);
 
-  useEffect(() => {
     (async () => {
       const { data } = await (supabase as any).from("duel_spells").select("*").order("level_req");
       setSpells(data || []);
     })();
+    (async () => {
+      if (!user) return;
+      const { data } = await supabase.from("user_potions").select("id, recipe_id, potion_recipes(name, icon)").eq("user_id", user.id).eq("status", "completed");
+      setPotions((data as unknown as Potion[]) || []);
+    })();
     loadOpponents();
     loadActive();
-  }, [loadOpponents, loadActive]);
+  }, [loadOpponents, loadActive, user]);
 
   // Realtime
   useEffect(() => {
@@ -75,6 +83,18 @@ export default function DuelsPvP() {
     setCasting(true);
     const { error } = await (supabase as any).rpc("cast_duel_spell", { p_match: match.id, p_spell_code: code });
     if (error) toast.error(error.message);
+    setCasting(false);
+  };
+
+  const usePotion = async (potionId: string) => {
+    if (!match || casting) return;
+    setCasting(true);
+    const { error } = await (supabase as any).rpc("use_potion_in_duel", { p_match: match.id, p_potion_id: potionId });
+    if (error) toast.error(error.message);
+    else {
+      toast.success("🧪 Poção consumida!");
+      setPotions(prev => prev.filter(p => p.id !== potionId));
+    }
     setCasting(false);
   };
 
@@ -112,29 +132,56 @@ export default function DuelsPvP() {
           </div>
         </Card>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          {spells.filter(s => s.level_req <= level).map(s => {
-            const noMana = myMp < s.mp_cost;
-            return (
+        <div className="flex gap-2 border-b border-primary/20 pb-2">
+          <button onClick={() => setActiveTab("spells")} className={`px-4 py-2 font-heading text-sm rounded-t-lg transition-colors ${activeTab === "spells" ? "bg-primary/20 text-primary border-b-2 border-primary" : "text-foreground/60 hover:text-foreground"}`}>🪄 Feitiços</button>
+          <button onClick={() => setActiveTab("inventory")} className={`px-4 py-2 font-heading text-sm rounded-t-lg transition-colors ${activeTab === "inventory" ? "bg-primary/20 text-primary border-b-2 border-primary" : "text-foreground/60 hover:text-foreground"}`}>🧪 Mochila ({potions.length})</button>
+        </div>
+
+        {activeTab === "spells" && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {spells.filter(s => s.level_req <= level).map(s => {
+              const noMana = myMp < s.mp_cost;
+              return (
+                <button
+                  key={s.id}
+                  disabled={!myTurn || casting || noMana}
+                  onClick={() => cast(s.code)}
+                  className={`p-3 rounded-xl border text-left transition-all ${myTurn && !noMana ? "bg-card/70 border-primary/40 hover:border-primary hover:bg-primary/15 hover:-translate-y-1" : "bg-card/30 border-border opacity-50"}`}
+                >
+                  <div className="text-2xl">{s.icon}</div>
+                  <div className="font-heading text-sm text-primary mt-1">{s.name}</div>
+                  <div className="text-[10px] text-foreground/60">{s.description}</div>
+                  <div className="flex gap-2 mt-1 text-[10px]">
+                    {s.damage > 0 && <span className="text-red-400">⚔ {s.damage}</span>}
+                    {s.heal > 0 && <span className="text-green-400">💚 {s.heal}</span>}
+                    {s.shield > 0 && <span className="text-blue-400">🛡 {s.shield}</span>}
+                    <span className="text-cyan-400 ml-auto">{s.mp_cost} MP</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {activeTab === "inventory" && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {potions.length === 0 && <div className="col-span-full text-center p-4 text-sm text-foreground/60">Você não tem poções prontas. Fabrique-as no Laboratório!</div>}
+            {potions.map(p => (
               <button
-                key={s.id}
-                disabled={!myTurn || casting || noMana}
-                onClick={() => cast(s.code)}
-                className={`p-3 rounded-xl border text-left transition-all ${myTurn && !noMana ? "bg-card/70 border-primary/40 hover:border-primary hover:bg-primary/15 hover:-translate-y-1" : "bg-card/30 border-border opacity-50"}`}
+                key={p.id}
+                disabled={!myTurn || casting}
+                onClick={() => usePotion(p.id)}
+                className={`p-3 rounded-xl border text-left transition-all flex items-center gap-3 ${myTurn ? "bg-card/70 border-emerald-500/40 hover:border-emerald-500 hover:bg-emerald-500/15 hover:-translate-y-1" : "bg-card/30 border-border opacity-50"}`}
               >
-                <div className="text-2xl">{s.icon}</div>
-                <div className="font-heading text-sm text-primary mt-1">{s.name}</div>
-                <div className="text-[10px] text-foreground/60">{s.description}</div>
-                <div className="flex gap-2 mt-1 text-[10px]">
-                  {s.damage > 0 && <span className="text-red-400">⚔ {s.damage}</span>}
-                  {s.heal > 0 && <span className="text-green-400">💚 {s.heal}</span>}
-                  {s.shield > 0 && <span className="text-blue-400">🛡 {s.shield}</span>}
-                  <span className="text-cyan-400 ml-auto">{s.mp_cost} MP</span>
+                <div className="text-2xl">{p.potion_recipes?.icon || "🧪"}</div>
+                <div>
+                  <div className="font-heading text-sm text-emerald-400">{p.potion_recipes?.name}</div>
+                  <div className="text-[10px] text-foreground/60">Beber (Consome o turno)</div>
                 </div>
               </button>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        )}
 
         <Card className="p-3 bg-card/50 border-primary/20 max-h-48 overflow-y-auto">
           <div className="font-heading text-xs text-primary mb-2 uppercase tracking-widest"><EmojiIcon e="📜" /> Log do Duelo</div>
