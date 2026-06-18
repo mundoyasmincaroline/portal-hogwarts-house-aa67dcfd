@@ -1,12 +1,12 @@
 -- Migration: Gacha Wand Crafting & Luxury Store Items
 
 -- 1. Insert Luxury Items into store_items for Gold Sinks
-INSERT INTO store_items (slug, name, description, category, rarity, price, image_url)
+INSERT INTO store_items (slug, name, description, category, rarity, price_galeons, image_url)
 VALUES
 ('title-lord', 'Título: Lorde das Trevas', 'O título mais temido do mundo mágico. Demonstre seu poder e riqueza absolutos.', 'title', 'legendary', 10000, '/items/dark_mark.png'),
 ('title-order', 'Título: Herói da Ordem', 'Apenas para os bruxos mais corajosos e ricos. Uma aura de pura bondade.', 'title', 'legendary', 10000, '/items/phoenix.png'),
 ('aura-fire', 'Aura: Chamas Vivas', 'Sua foto de perfil ficará em chamas constantemente.', 'aura', 'epic', 5000, '/items/fire_aura.png')
-ON CONFLICT (slug) DO UPDATE SET price = EXCLUDED.price;
+ON CONFLICT (slug) DO UPDATE SET price_galeons = EXCLUDED.price_galeons;
 
 -- 2. Update craft_wand to charge 50 Galeões and roll random Gacha stats
 CREATE OR REPLACE FUNCTION craft_wand(p_wood text, p_core text, p_length numeric, p_flex text)
