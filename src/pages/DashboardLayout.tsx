@@ -308,7 +308,7 @@ export default function DashboardLayout() {
           ))}
         </nav>
 
-        <div className="p-5 border-t border-primary/10 bg-black/20 backdrop-blur-2xl">
+        <div className="p-5 border-t border-primary/10 bg-black/20 backdrop-blur-2xl relative z-50">
           <Link 
             to="/dashboard/store" 
             className="flex items-center justify-between px-4 py-3 sm:px-5 sm:py-4 mb-4 rounded-2xl border border-yellow-500/30 bg-gradient-to-br from-amber-600/10 via-yellow-900/30 to-black/80 hover:border-yellow-400/60 hover:-translate-y-1 transition-all group overflow-hidden relative shadow-2xl"
