@@ -34,6 +34,7 @@ import MagicalMentor from "@/components/shared/MagicalMentor";
 import { BirthdayGlobalCelebration } from "@/components/BirthdayGlobalCelebration";
 import { prefetchRoute } from "@/lib/routePrefetch";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
+import { initOneSignal, loginToOneSignal } from "@/lib/onesignal";
 
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
@@ -116,6 +117,13 @@ export default function DashboardLayout() {
       } catch (err) { console.error("Pending avatar processing error:", err); }
       finally { localStorage.removeItem("pending_avatar_upload"); }
     })();
+  }, [user?.id]);
+
+  // OneSignal Init and Login
+  useEffect(() => {
+    if (user?.id) {
+      loginToOneSignal(user.id);
+    }
   }, [user?.id]);
 
   // 🎁 Starter pack para novos usuários (auto-claim 1x: +200 galeões, +50 XP)
