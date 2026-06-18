@@ -311,7 +311,7 @@ export default function ChatRoom() {
         user_id: user.id,
         character_id: profile?.active_character_id ?? null,
         content: rollContent
-      }).select("*, characters(full_name, house, avatar_url)").single();
+      }).select().single();
       
       if (!rollErr && rollData) {
         setMessages(prev => {
@@ -390,7 +390,7 @@ export default function ChatRoom() {
       user_id: user.id,
       character_id: profile?.active_character_id || null,
       content: content.trim()
-    }).select("*, characters(full_name, house, avatar_url)").single();
+    }).select().single();
 
     if (error) {
       toast.error("Erro ao enviar mensagem.");
