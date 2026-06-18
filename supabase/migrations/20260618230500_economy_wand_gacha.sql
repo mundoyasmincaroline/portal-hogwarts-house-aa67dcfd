@@ -19,14 +19,14 @@ WHERE NOT EXISTS (SELECT 1 FROM store_items WHERE name = 'Aura: Chamas Vivas');
 
 -- 3. Update craft_wand to charge 50 Galeões and roll random Gacha stats
 CREATE OR REPLACE FUNCTION craft_wand(p_wood text, p_core text, p_length numeric, p_flex text)
-RETURNS json
+RETURNS public.wands
 LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 DECLARE
     v_user_id uuid;
     v_profile record;
-    v_wand record;
+    v_wand public.wands;
     v_cost int := 50;
     v_atk int;
     v_def int;
@@ -82,6 +82,6 @@ BEGIN
     INSERT INTO currency_ledger (user_id, amount, currency_type, transaction_type, description)
     VALUES (v_user_id, -v_cost, 'galeon', 'wand_craft', 'Forja de varinha');
 
-    RETURN row_to_json(v_wand);
+    RETURN v_wand;
 END;
 $$;
