@@ -267,12 +267,16 @@ export default function ChatRoom() {
             vip_plan: null
           };
 
-          setMessages(prev => [...prev, { 
-            ...payload.new, 
-            profiles: profileData, 
-            characters: charData, 
-            user_role: roleData?.role 
-          } as unknown as Message]);
+          setMessages(prev => {
+            if (prev.some(m => m.id === payload.new.id)) return prev;
+            return [...prev, { 
+              ...payload.new, 
+              profiles: profileData, 
+              characters: charData, 
+              user_role: roleData?.role 
+            } as unknown as Message];
+          });
+          setTimeout(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, 100);
         } catch (err) {
           console.error("Error processing realtime message:", err);
         }
@@ -302,13 +306,26 @@ export default function ChatRoom() {
       const roll = Math.floor(Math.random() * sides) + 1;
       const rollContent = `🎲 *Rolou um dado de ${sides} lados e tirou: ${roll}*`;
       
-      const { error: rollErr } = await supabase.from("messages").insert({
+      const { data: rollData, error: rollErr } = await supabase.from("messages").insert({
         channel_id: channel.id,
         user_id: user.id,
         character_id: profile?.active_character_id ?? null,
         content: rollContent
-      });
-      if (!rollErr) {
+      }).select("*, characters(full_name, house, avatar_url)").single();
+      
+      if (!rollErr && rollData) {
+        setMessages(prev => {
+          if (prev.some(m => m.id === rollData.id)) return prev;
+          const profileData = { 
+            full_name: profile?.full_name || "Bruxo", 
+            username: profile?.username || "bruxo", 
+            house: profile?.house || "gryffindor", 
+            avatar_url: profile?.avatar_url || null,
+            vip_plan: profile?.vip_plan || null
+          };
+          return [...prev, { ...rollData, profiles: profileData, user_role: isAdmin ? "admin" : "member" } as unknown as Message];
+        });
+        setTimeout(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, 100);
         setInput("");
         setIsSending(false);
         return;
@@ -361,18 +378,37 @@ export default function ChatRoom() {
     setShowMentionMenu(false);
     setCooldown(2); // Reduced from 30 to 2 for better UX, but keeping a small buffer
     // Note: Database triggers/RLS might handle the real anti-spam logic
+    
+    // Volta pra hoje se a pessoa mandou mensagem vendo o passado
+    const todayStr = new Date().toLocaleDateString('en-CA');
+    if (selectedDate !== todayStr) {
+      setSelectedDate(todayStr);
+    }
 
-    const { error } = await supabase.from("messages").insert({
+    const { data: newMsg, error } = await supabase.from("messages").insert({
       channel_id: channel.id,
       user_id: user.id,
       character_id: profile?.active_character_id || null,
       content: content.trim()
-    });
+    }).select("*, characters(full_name, house, avatar_url)").single();
 
     if (error) {
       toast.error("Erro ao enviar mensagem.");
       setInput(content);
-    } else {
+    } else if (newMsg) {
+      setMessages(prev => {
+        if (prev.some(m => m.id === newMsg.id)) return prev;
+        const profileData = { 
+          full_name: profile?.full_name || "Bruxo", 
+          username: profile?.username || "bruxo", 
+          house: profile?.house || "gryffindor", 
+          avatar_url: profile?.avatar_url || null,
+          vip_plan: profile?.vip_plan || null
+        };
+        return [...prev, { ...newMsg, profiles: profileData, user_role: isAdmin ? "admin" : "member" } as unknown as Message];
+      });
+      setTimeout(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, 100);
+
       // Global @todos / @everyone notification
       if (isAdmin && (content.includes("@todos") || content.includes("@everyone"))) {
         const { data: allMembers } = await supabase.from("profiles").select("user_id").eq("approved", true);
