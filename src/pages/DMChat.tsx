@@ -2,11 +2,12 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Send, ImagePlus, Loader2 } from "lucide-react";
+import { ArrowLeft, Send, ImagePlus, Loader2, Ban } from "lucide-react";
 import SafeImage from "@/components/SafeImage";
 import { toast } from "sonner";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
+
 interface DM {
   id: string;
   sender_id: string;
@@ -23,6 +24,7 @@ export default function DMChat() {
   const navigate = useNavigate();
   const [messages, setMessages] = useState<DM[]>([]);
   const [partner, setPartner] = useState<any>(null);
+  const [friendshipStatus, setFriendshipStatus] = useState<string>("none");
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -37,9 +39,19 @@ export default function DMChat() {
       .then(({ data }) => { if (data) setPartner(data); });
   }, [partnerId]);
 
-  // Load messages
+  // Load messages and friendship status
   const loadMessages = useCallback(async () => {
     if (!user || !partnerId) return;
+    
+    // Friendship status
+    const { data: fData } = await supabase
+      .from("friendships")
+      .select("status")
+      .or(`and(user_id.eq.${user.id},friend_id.eq.${partnerId}),and(user_id.eq.${partnerId},friend_id.eq.${user.id})`)
+      .maybeSingle();
+      
+    setFriendshipStatus(fData?.status || "none");
+
     const { data } = await supabase
       .from("dm_messages")
       .select("*")
@@ -54,7 +66,7 @@ export default function DMChat() {
     await supabase
       .from("dm_messages")
       .update({ read: true } as never)
-      .eq("sender_id", partnerId!)
+      .eq("sender_id", partnerId)
       .eq("receiver_id", user.id)
       .eq("read", false);
   }, [user, partnerId]);
@@ -80,10 +92,15 @@ export default function DMChat() {
           supabase.from("dm_messages").update({ read: true } as never).eq("id", msg.id);
         }
       })
+      .on("postgres_changes", {
+        event: "*",
+        schema: "public",
+        table: "friendships"
+      }, () => loadMessages())
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [user, partnerId]);
+  }, [user, partnerId, loadMessages]);
 
   // Scroll to bottom on new message
   useEffect(() => {
@@ -91,7 +108,7 @@ export default function DMChat() {
   }, [messages]);
 
   const send = async () => {
-    if (!text.trim() || !user || !partnerId || sending) return;
+    if (!text.trim() || !user || !partnerId || sending || friendshipStatus === "blocked") return;
     setSending(true);
     const { error } = await supabase.from("dm_messages").insert({
       sender_id: user.id,
@@ -99,13 +116,16 @@ export default function DMChat() {
       content: text.trim(),
     } as never);
     setSending(false);
-    if (error) { toast.error("Erro ao enviar mensagem"); return; }
+    if (error) { 
+      toast.error(error.message?.includes("bloqueio") ? "Não é possível enviar a mensagem devido a um bloqueio." : "Erro ao enviar mensagem"); 
+      return; 
+    }
     setText("");
     await loadMessages();
   };
 
   const sendImage = async (file: File) => {
-    if (!user || !partnerId || uploading) return;
+    if (!user || !partnerId || uploading || friendshipStatus === "blocked") return;
     if (file.size > 5 * 1024 * 1024) { toast.error("Imagem muito grande (máx 5MB)"); return; }
     setUploading(true);
     try {
@@ -124,7 +144,7 @@ export default function DMChat() {
       if (error) throw error;
       await loadMessages();
     } catch (e: any) {
-      toast.error("Erro ao enviar imagem: " + (e?.message || ""));
+      toast.error(e?.message?.includes("bloqueio") ? "Não é possível enviar imagens devido a um bloqueio." : "Erro ao enviar imagem");
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";
@@ -151,7 +171,7 @@ export default function DMChat() {
       }}
     >
       {/* Header */}
-      <div className="glass rounded-[1.5rem] sm:rounded-2xl p-2 sm:p-4 mb-3 flex items-center gap-3 shrink-0 border-white/5">
+      <div className="glass rounded-[1.5rem] sm:rounded-2xl p-2 sm:p-4 mb-2 flex items-center gap-3 shrink-0 border-white/5">
         <button onClick={() => navigate("/dashboard/dm")} className="touch-target flex items-center justify-center rounded-xl hover:bg-primary/10 text-foreground/85 hover:text-primary transition-all">
           <ArrowLeft size={20} />
         </button>
@@ -170,6 +190,13 @@ export default function DMChat() {
           </>
         )}
       </div>
+      
+      {/* Solicitação Banner */}
+      {friendshipStatus !== "accepted" && friendshipStatus !== "blocked" && messages.length > 0 && (
+        <div className="bg-primary/5 border border-primary/20 py-2 px-4 mb-2 rounded-xl text-center text-xs text-primary/80 font-serif italic mx-1 shrink-0 flex items-center justify-center gap-2">
+          <EmojiIcon e="✨" /> Vocês não são amigos. Continue conversando para formar uma conexão mágica!
+        </div>
+      )}
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto space-y-1 px-1 pb-2">
@@ -219,44 +246,50 @@ export default function DMChat() {
         <div ref={bottomRef} />
       </div>
 
-      {/* Input */}
-      <div
-        className="glass rounded-[1.5rem] sm:rounded-2xl p-2 sm:p-3 flex items-end gap-2 shrink-0 mt-1 border-white/10 shadow-2xl"
-        style={{ marginBottom: 'max(8px, env(safe-area-inset-bottom))' }}
-      >
-        <input
-          ref={fileRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={(e) => { const f = e.target.files?.[0]; if (f) sendImage(f); }}
-        />
-        <button
-          type="button"
-          onClick={() => fileRef.current?.click()}
-          disabled={uploading}
-          title="Enviar foto"
-          className="p-2 rounded-xl bg-secondary text-foreground/80 hover:bg-primary/15 hover:text-primary transition-colors shrink-0 disabled:opacity-40"
+      {/* Input or Blocked Banner */}
+      {friendshipStatus === "blocked" ? (
+        <div className="glass rounded-[1.5rem] p-3 text-center text-sm text-destructive border-destructive/20 mt-1 flex items-center justify-center gap-2 font-medium shrink-0">
+          <Ban size={16} /> Você não pode trocar mensagens com este bruxo.
+        </div>
+      ) : (
+        <div
+          className="glass rounded-[1.5rem] sm:rounded-2xl p-2 sm:p-3 flex items-end gap-2 shrink-0 mt-1 border-white/10 shadow-2xl"
+          style={{ marginBottom: 'max(8px, env(safe-area-inset-bottom))' }}
         >
-          {uploading ? <Loader2 size={16} className="animate-spin" /> : <ImagePlus size={16} />}
-        </button>
-        <textarea
-          value={text}
-          onChange={e => setText(e.target.value)}
-          onKeyDown={handleKey}
-          placeholder="Escreva uma mensagem..."
-          rows={1}
-          className="flex-1 bg-transparent text-foreground text-sm placeholder:text-muted-foreground resize-none focus:outline-none max-h-32 leading-relaxed py-1"
-          style={{ minHeight: "36px", maxHeight: "120px" }}
-        />
-        <button
-          onClick={send}
-          disabled={!text.trim() || sending}
-          className="p-2 rounded-xl bg-primary text-primary-foreground disabled:opacity-40 hover:bg-primary/90 transition-colors shrink-0"
-        >
-          <Send size={16} />
-        </button>
-      </div>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) sendImage(f); }}
+          />
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            disabled={uploading}
+            title="Enviar foto"
+            className="p-2 rounded-xl bg-secondary text-foreground/80 hover:bg-primary/15 hover:text-primary transition-colors shrink-0 disabled:opacity-40"
+          >
+            {uploading ? <Loader2 size={16} className="animate-spin" /> : <ImagePlus size={16} />}
+          </button>
+          <textarea
+            value={text}
+            onChange={e => setText(e.target.value)}
+            onKeyDown={handleKey}
+            placeholder="Escreva uma mensagem..."
+            rows={1}
+            className="flex-1 bg-transparent text-foreground text-sm placeholder:text-muted-foreground resize-none focus:outline-none max-h-32 leading-relaxed py-1"
+            style={{ minHeight: "36px", maxHeight: "120px" }}
+          />
+          <button
+            onClick={send}
+            disabled={!text.trim() || sending}
+            className="p-2 rounded-xl bg-primary text-primary-foreground disabled:opacity-40 hover:bg-primary/90 transition-colors shrink-0"
+          >
+            <Send size={16} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
