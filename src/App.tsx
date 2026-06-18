@@ -18,9 +18,7 @@ const Privacy = lazy(() => import("./pages/Privacy"));
 const ParentsGuide = lazy(() => import("./pages/ParentsGuide"));
 const Support = lazy(() => import("./pages/Support"));
 import { DashboardRoutes } from "@/routes/DashboardRoutes";
- (Loaded on demand but prioritized)
-
-
+// (Loaded on demand but prioritized)
 const LoadingFallback = () => (
   <div className="relative flex h-screen flex-col items-center justify-center bg-background overflow-hidden">
     <div
