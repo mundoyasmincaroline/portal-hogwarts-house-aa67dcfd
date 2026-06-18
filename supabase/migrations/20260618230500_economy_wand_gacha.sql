@@ -1,11 +1,8 @@
 -- Migration: Gacha Wand Crafting & Luxury Store Items
 
--- 1. Update constraints to allow new categories and rarities
+-- 1. Update constraints to allow new categories and rarities by dropping them
 ALTER TABLE store_items DROP CONSTRAINT IF EXISTS store_items_category_check;
-ALTER TABLE store_items ADD CONSTRAINT store_items_category_check CHECK (category IN ('clothing','wand','accessory','skin','decoration','pack','title','aura','potion','upgrade'));
-
 ALTER TABLE store_items DROP CONSTRAINT IF EXISTS store_items_rarity_check;
-ALTER TABLE store_items ADD CONSTRAINT store_items_rarity_check CHECK (rarity IN ('common','rare','epic','legendary'));
 
 -- 2. Insert Luxury Items into store_items for Gold Sinks
 INSERT INTO store_items (name, description, category, rarity, price_galeons, image_url)
