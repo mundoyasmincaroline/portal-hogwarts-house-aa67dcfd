@@ -247,13 +247,14 @@ function StickerSlot({ sticker, owned, onOpen, buying }: {
           <StickerVisual name={sticker.character_name} rarity={sticker.rarity as any} unlocked={true} imageUrl={sticker.image_url} />
         </div>
       ) : (
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-gradient-to-br from-black/85 via-zinc-900 to-black gap-2 p-3">
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-gradient-to-br from-black/50 via-zinc-900/70 to-black/80 gap-2 p-3 group-hover:from-black/40 transition-all duration-300">
           {sticker.image_url ? (
-            <img src={sticker.image_url} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover blur-md grayscale opacity-20" />
+            <img src={sticker.image_url} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover blur-[2px] grayscale opacity-40 mix-blend-luminosity group-hover:opacity-60 transition-opacity" />
           ) : null}
-          <Lock size={26} className={`relative ${rc.text} drop-shadow animate-pulse`} />
-          <span className="relative text-[8px] font-heading tracking-widest text-white/70 uppercase">Bloqueada</span>
-          <span className="relative text-[9px] font-heading text-white/50 uppercase tracking-wider mt-1">Toque para adquirir</span>
+          <div className="absolute inset-0 bg-black/30" />
+          <Lock size={26} className={`relative ${rc.text} drop-shadow animate-pulse z-20`} />
+          <span className="relative text-[8px] font-heading tracking-widest text-white/90 uppercase z-20">Bloqueada</span>
+          <span className="relative text-[9px] font-heading text-white/70 uppercase tracking-wider mt-1 z-20">Toque para adquirir</span>
         </div>
       )}
 

@@ -60,10 +60,22 @@ export default function StickerAlbum() {
     try {
       const { data, error } = await supabase.rpc("open_sticker_pack" as any, { _user_id: user.id });
       if (error) throw error;
-      const picked = (data as any).sticker as Sticker;
+      
+      const res = data as any;
+      if (!res?.success) {
+        throw new Error(res?.message || "Erro ao abrir o pacote");
+      }
+      
+      const picked = res.sticker as Sticker;
+      if (!picked) throw new Error("Pacote vazio!");
+
       await fetchProfile(user.id); await loadAlbum();
       setTimeout(() => { setPackPhase("reveal"); setPackReveal(picked); }, 1500);
-    } catch (err) { setOpeningPack(false); setPackPhase("idle"); }
+    } catch (err: any) { 
+      toast.error(err.message || "Erro mágico ao abrir o pacote.");
+      setOpeningPack(false); 
+      setPackPhase("idle"); 
+    }
   };
 
   const closePack = () => { setOpeningPack(false); setPackPhase("idle"); setPackReveal(null); };

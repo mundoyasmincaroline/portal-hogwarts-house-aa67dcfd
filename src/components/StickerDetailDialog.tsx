@@ -106,9 +106,13 @@ export default function StickerDetailDialog({ sticker, owned, open, onOpenChange
             ) : owned ? (
               <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-yellow-900/40 to-black text-7xl">🪄</div>
             ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center bg-black/80 gap-4">
-                <Lock size={64} className="text-white/30" />
-                <p className="font-heading text-2xl text-white/40 uppercase tracking-widest">Bloqueada</p>
+              <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-black/60 to-black/90 gap-4 relative">
+                {sticker.image_url && (
+                  <img src={sticker.image_url} alt="" className="absolute inset-0 w-full h-full object-cover grayscale blur-[2px] opacity-40 mix-blend-luminosity" />
+                )}
+                <div className="absolute inset-0 bg-black/40" />
+                <Lock size={64} className="text-white/40 z-10 drop-shadow-2xl" />
+                <p className="font-heading text-2xl text-white/60 uppercase tracking-widest z-10 drop-shadow-2xl">Bloqueada</p>
               </div>
             )}
             <div className={`absolute inset-0 ring-4 ring-inset ${meta.ring} pointer-events-none`} />
