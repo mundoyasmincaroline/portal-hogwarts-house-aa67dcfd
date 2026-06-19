@@ -129,8 +129,8 @@ export default function MaraudersDiaryWidget() {
 }
 
 function TaskItem({ title, desc, done, link, icon }: any) {
-  return (
-    <a href={link} className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${done ? 'bg-primary/5 border-primary/20 opacity-60' : 'bg-black/20 border-white/5 hover:border-primary/40 hover:bg-primary/10'}`}>
+  const content = (
+    <div className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${done ? 'bg-primary/5 border-primary/20 opacity-60' : 'bg-black/20 border-white/5 hover:border-primary/40 hover:bg-primary/10'}`}>
       <div className={`shrink-0 ${done ? 'text-primary' : 'text-muted-foreground'}`}>
         {done ? <CheckCircle2 size={16} /> : <Circle size={16} />}
       </div>
@@ -141,6 +141,23 @@ function TaskItem({ title, desc, done, link, icon }: any) {
         <p className={`text-sm font-heading ${done ? 'line-through text-muted-foreground' : 'text-foreground'}`}>{title}</p>
         <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{desc}</p>
       </div>
-    </a>
+    </div>
   );
+
+  if (link && link.startsWith('/')) {
+    return <Link to={link} className="block w-full">{content}</Link>;
+  }
+
+  if (link && link.startsWith('#')) {
+    return (
+      <button 
+        onClick={() => document.getElementById(link.substring(1))?.scrollIntoView({ behavior: 'smooth', block: 'center' })} 
+        className="block w-full text-left"
+      >
+        {content}
+      </button>
+    );
+  }
+
+  return <div className="w-full">{content}</div>;
 }
