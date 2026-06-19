@@ -61,9 +61,13 @@ BEGIN
             END IF;
         END IF;
         
-    ELSIF TG_TABLE_NAME = 'feed_posts' THEN
+    ELSIF TG_TABLE_NAME = 'posts' THEN
+        IF NEW.content IS NOT NULL THEN NEW.content := public.censor_text(NEW.content); END IF;
+    ELSIF TG_TABLE_NAME = 'insta_posts' THEN
         IF NEW.content IS NOT NULL THEN NEW.content := public.censor_text(NEW.content); END IF;
     ELSIF TG_TABLE_NAME = 'post_comments' THEN
+        IF NEW.content IS NOT NULL THEN NEW.content := public.censor_text(NEW.content); END IF;
+    ELSIF TG_TABLE_NAME = 'insta_comments' THEN
         IF NEW.content IS NOT NULL THEN NEW.content := public.censor_text(NEW.content); END IF;
     ELSIF TG_TABLE_NAME = 'dm_messages' THEN
         IF NEW.content IS NOT NULL THEN NEW.content := public.censor_text(NEW.content); END IF;
@@ -90,14 +94,24 @@ CREATE TRIGGER tr_messages_moderation
     BEFORE INSERT OR UPDATE ON public.messages
     FOR EACH ROW EXECUTE FUNCTION public.apply_moderation();
 
-DROP TRIGGER IF EXISTS tr_feed_posts_moderation ON public.feed_posts;
-CREATE TRIGGER tr_feed_posts_moderation
-    BEFORE INSERT OR UPDATE ON public.feed_posts
+DROP TRIGGER IF EXISTS tr_posts_moderation ON public.posts;
+CREATE TRIGGER tr_posts_moderation
+    BEFORE INSERT OR UPDATE ON public.posts
+    FOR EACH ROW EXECUTE FUNCTION public.apply_moderation();
+
+DROP TRIGGER IF EXISTS tr_insta_posts_moderation ON public.insta_posts;
+CREATE TRIGGER tr_insta_posts_moderation
+    BEFORE INSERT OR UPDATE ON public.insta_posts
     FOR EACH ROW EXECUTE FUNCTION public.apply_moderation();
 
 DROP TRIGGER IF EXISTS tr_post_comments_moderation ON public.post_comments;
 CREATE TRIGGER tr_post_comments_moderation
     BEFORE INSERT OR UPDATE ON public.post_comments
+    FOR EACH ROW EXECUTE FUNCTION public.apply_moderation();
+
+DROP TRIGGER IF EXISTS tr_insta_comments_moderation ON public.insta_comments;
+CREATE TRIGGER tr_insta_comments_moderation
+    BEFORE INSERT OR UPDATE ON public.insta_comments
     FOR EACH ROW EXECUTE FUNCTION public.apply_moderation();
 
 DROP TRIGGER IF EXISTS tr_dm_messages_moderation ON public.dm_messages;
