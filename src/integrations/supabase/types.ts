@@ -3262,6 +3262,8 @@ export type Database = {
           id: string
           is_pinned: boolean | null
           user_id: string
+          updated_at: string | null
+          spotify_url: string | null
         }
         Insert: {
           channel_id: string
@@ -3271,6 +3273,8 @@ export type Database = {
           id?: string
           is_pinned?: boolean | null
           user_id: string
+          updated_at?: string | null
+          spotify_url?: string | null
         }
         Update: {
           channel_id?: string
@@ -3280,6 +3284,8 @@ export type Database = {
           id?: string
           is_pinned?: boolean | null
           user_id?: string
+          updated_at?: string | null
+          spotify_url?: string | null
         }
         Relationships: [
           {

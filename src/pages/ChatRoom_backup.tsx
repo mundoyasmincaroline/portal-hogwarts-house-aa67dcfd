@@ -61,10 +61,6 @@ export default function ChatRoom() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [spotifyUrl, setSpotifyUrl] = useState("");
-  const [showSpotifyInput, setShowSpotifyInput] = useState(false);
-  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
-
   // @mention state
   const [mentionQuery, setMentionQuery] = useState("");
   const [mentionSuggestions, setMentionSuggestions] = useState<MemberSuggestion[]>([]);
@@ -285,12 +281,6 @@ export default function ChatRoom() {
           console.error("Error processing realtime message:", err);
         }
       })
-      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "messages", filter: `channel_id=eq.${channel.id}` }, async (payload) => {
-        setMessages(prev => prev.map(m => m.id === payload.new.id ? { ...m, ...payload.new } as unknown as Message : m));
-      })
-      .on("postgres_changes", { event: "DELETE", schema: "public", table: "messages", filter: `channel_id=eq.${channel.id}` }, async (payload) => {
-        setMessages(prev => prev.filter(m => m.id !== payload.old.id));
-      })
       .subscribe();
 
     return () => {
@@ -302,44 +292,12 @@ export default function ChatRoom() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const startEdit = (msg: Message) => {
-    setEditingMessageId(msg.id);
-    setInput(msg.content);
-    setSpotifyUrl(msg.spotify_url || "");
-    if (msg.spotify_url) setShowSpotifyInput(true);
-    inputRef.current?.focus();
-  };
-
-  const cancelEdit = () => {
-    setEditingMessageId(null);
-    setInput("");
-    setSpotifyUrl("");
-    setShowSpotifyInput(false);
-  };
-
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || !channel || !user || cooldown > 0 || isSending) return;
     setIsSending(true);
     try {
     const content = input;
-
-    if (editingMessageId) {
-      const { error } = await supabase.from("messages").update({
-        content: content.trim(),
-        spotify_url: spotifyUrl.trim() || null,
-        updated_at: new Date().toISOString()
-      }).eq("id", editingMessageId);
-      
-      if (error) {
-        toast.error("Erro ao editar mensagem.");
-      } else {
-        toast.success("Mensagem editada!");
-        cancelEdit();
-      }
-      setIsSending(false);
-      return;
-    }
 
     // ── RPG Command: /dado ──
     if (content.startsWith('/dado')) {
@@ -427,27 +385,10 @@ export default function ChatRoom() {
       setSelectedDate(todayStr);
     }
 
-    const isRPG = channel.category === "RPG" || channel.category === "Comunais" || channel.name?.toLowerCase().includes("comunal");
-    const isOff = channel.category === "Geral" || channel.name?.toLowerCase().includes("off");
-
-    let finalCharacterId = profile?.active_character_id || null;
-    if (isOff) {
-      finalCharacterId = null;
-    } else if (isRPG || !isOff) {
-      if (!finalCharacterId) {
-        toast.error("Identidade Mágica Necessária", {
-          description: "Você precisa assumir um personagem ativo (no Painel) para interagir nos chats de RPG."
-        });
-        setIsSending(false);
-        return;
-      }
-    }
-
     const { data: newMsg, error } = await supabase.from("messages").insert({
       channel_id: channel.id,
       user_id: user.id,
-      character_id: finalCharacterId,
-      spotify_url: spotifyUrl.trim() || null,
+      character_id: profile?.active_character_id || null,
       content: content.trim()
     }).select().single();
 
@@ -508,8 +449,6 @@ export default function ChatRoom() {
           }
         }
       }
-      setSpotifyUrl("");
-      setShowSpotifyInput(false);
     }
     setIsSending(false);
     } finally {
@@ -518,7 +457,7 @@ export default function ChatRoom() {
   };
 
   const deleteMessage = async (messageId: string) => {
-    if (!isAdmin && !messages.some(m => m.id === messageId && m.user_id === user?.id)) return;
+    if (!isAdmin) return;
     try {
       const { error } = await supabase.from("messages").delete().eq("id", messageId);
       if (error) throw error;
@@ -721,22 +660,12 @@ export default function ChatRoom() {
                           {m.profiles?.vip_plan === "founder" && <span className="text-[7px] text-yellow-500 font-bold bg-yellow-500/10 px-1 rounded-sm border border-yellow-500/20"><EmojiIcon e="👑" /></span>}
                           {m.profiles?.vip_plan === "vip" && <span className="text-[7px] text-purple-400 font-bold bg-purple-500/10 px-1 rounded-sm border border-purple-500/20"><EmojiIcon e="💜" /></span>}
                         </div>
-                        <span className="text-[8px] text-white/20 font-serif italic">
-                          {formatDate(m.created_at)}
-                          {m.updated_at && <span className="ml-1 text-white/40">(Editado)</span>}
-                        </span>
-                        {(isAdmin || isMe) && (
+                        <span className="text-[8px] text-white/20 font-serif italic">{formatDate(m.created_at)}</span>
+                        {isAdmin && !isMe && (
                           <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all ml-2">
-                            {isMe && (
-                              <button onClick={() => startEdit(m)} className="text-blue-500 hover:text-blue-400 text-[10px] font-bold uppercase" title="Editar">
-                                 <EmojiIcon e="✏️" />
-                              </button>
-                            )}
-                            {isAdmin && !isMe && (
-                              <button onClick={() => pinMessage(m)} className="text-primary hover:text-primary/80 text-[10px] font-bold uppercase" title="Fixar">
-                                 <EmojiIcon e="📌" />
-                              </button>
-                            )}
+                            <button onClick={() => pinMessage(m)} className="text-primary hover:text-primary/80 text-[10px] font-bold uppercase" title="Fixar">
+                               <EmojiIcon e="📌" />
+                            </button>
                             <button onClick={() => deleteMessage(m.id)} className="text-red-500 hover:text-red-400 text-[10px] font-bold uppercase" title="Remover">
                                <EmojiIcon e="🚫" />
                             </button>
@@ -759,20 +688,6 @@ export default function ChatRoom() {
                         }`}>
                           {renderRPGText(m.content)}
                         </div>
-
-                        {m.spotify_url && m.spotify_url.includes("spotify.com") && m.spotify_url.match(/track\/([a-zA-Z0-9]+)/) && (
-                          <div className="mt-3 w-full max-w-[280px]">
-                            <iframe 
-                              src={`https://open.spotify.com/embed/track/${m.spotify_url.match(/track\/([a-zA-Z0-9]+)/)?.[1]}`} 
-                              width="100%" 
-                              height="80" 
-                              frameBorder="0" 
-                              allow="encrypted-media" 
-                              loading="lazy"
-                              className="rounded-xl opacity-90 hover:opacity-100 transition-opacity"
-                            ></iframe>
-                          </div>
-                        )}
                       </div>
                     </div>
                   </div>
@@ -842,51 +757,30 @@ export default function ChatRoom() {
             </div>
           )}
 
-          <form onSubmit={sendMessage} className="flex flex-col gap-2 w-full">
-            {showSpotifyInput && (
-              <div className="relative animate-in slide-in-from-bottom-2">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/40"><EmojiIcon e="🎵" /></div>
-                <Input
-                  value={spotifyUrl}
-                  onChange={(e) => setSpotifyUrl(e.target.value)}
-                  placeholder="Cole aqui o link da música do Spotify..."
-                  className="w-full h-10 bg-black/60 border-white/10 rounded-xl pl-11 pr-4 text-xs font-serif transition-all focus:border-primary/50"
-                />
+          <form onSubmit={sendMessage} className="flex gap-3 items-center">
+            <div className="relative flex-1">
+               <Input
+                ref={inputRef}
+                value={input}
+                onChange={handleInputChange}
+                onKeyDown={(e) => { if (e.key === 'Escape') setShowMentionMenu(false); }}
+                placeholder={cooldown > 0 ? `Silêncio! Aguarde ${cooldown}s...` : `Escreva sua mensagem... (use @ para mencionar)`}
+                className="w-full h-14 bg-black/40 border-white/10 rounded-2xl px-6 focus:ring-2 focus:ring-primary/20 transition-all text-sm font-serif italic shadow-2xl"
+                disabled={cooldown > 0}
+                autoComplete="off"
+              />
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 flex gap-2">
+                 <span className="text-white/10 hover:text-white/30 transition-colors cursor-pointer text-xl"><EmojiIcon e="📸" /></span>
               </div>
-            )}
-            {editingMessageId && (
-              <div className="flex items-center justify-between bg-blue-500/10 border border-blue-500/20 px-4 py-2 rounded-xl">
-                <span className="text-xs text-blue-400 font-bold uppercase tracking-widest"><EmojiIcon e="✏️" /> Editando Mensagem</span>
-                <button type="button" onClick={cancelEdit} className="text-xs text-white/50 hover:text-white transition-colors uppercase font-bold">Cancelar</button>
-              </div>
-            )}
-            <div className="flex gap-3 items-center">
-              <div className="relative flex-1">
-                 <Input
-                  ref={inputRef}
-                  value={input}
-                  onChange={handleInputChange}
-                  onKeyDown={(e) => { if (e.key === 'Escape') setShowMentionMenu(false); }}
-                  placeholder={cooldown > 0 ? `Silêncio! Aguarde ${cooldown}s...` : `Escreva sua mensagem... (use @ para mencionar)`}
-                  className="w-full h-14 bg-black/40 border-white/10 rounded-2xl px-6 focus:ring-2 focus:ring-primary/20 transition-all text-sm font-serif italic shadow-2xl"
-                  disabled={cooldown > 0}
-                  autoComplete="off"
-                />
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 flex gap-2">
-                   <button type="button" onClick={() => setShowSpotifyInput(!showSpotifyInput)} className={`transition-colors cursor-pointer text-xl hover:scale-110 ${showSpotifyInput || spotifyUrl ? 'text-primary' : 'text-white/20 hover:text-white/50'}`} title="Adicionar Música"><EmojiIcon e="🎵" /></button>
-                </div>
-              </div>
-              
-              <Button type="submit" variant="plaque" size="icon" className="w-14 h-14 rounded-2xl shadow-xl shadow-primary/10 active:scale-95 transition-transform" disabled={!input.trim() || cooldown > 0}>
-                {cooldown > 0 ? (
-                  <span className="text-xs font-bold text-foreground/55">{cooldown}</span>
-                ) : editingMessageId ? (
-                  <EmojiIcon e="✏️" />
-                ) : (
-                  <Zap size={22} className="text-white animate-pulse" />
-                )}
-              </Button>
             </div>
+            
+            <Button type="submit" variant="plaque" size="icon" className="w-14 h-14 rounded-2xl shadow-xl shadow-primary/10 active:scale-95 transition-transform" disabled={!input.trim() || cooldown > 0}>
+              {cooldown > 0 ? (
+                <span className="text-xs font-bold text-foreground/55">{cooldown}</span>
+              ) : (
+                <Zap size={22} className="text-white animate-pulse" />
+              )}
+            </Button>
           </form>
         </div>
       </div>

@@ -101,9 +101,9 @@ const PostCard = memo(({
     
     {post.music_url && (
       <div className="mb-5 overflow-hidden rounded-2xl shadow-xl border border-white/5">
-        {post.music_url.includes("spotify.com/track/") ? (
+        {post.music_url.includes("spotify.com") && post.music_url.match(/track\/([a-zA-Z0-9]+)/) ? (
           <iframe 
-            src={post.music_url.replace("open.spotify.com/track/", "open.spotify.com/embed/track/")} 
+            src={`https://open.spotify.com/embed/track/${post.music_url.match(/track\/([a-zA-Z0-9]+)/)?.[1]}`} 
             width="100%" 
             height="80" 
             frameBorder="0" 

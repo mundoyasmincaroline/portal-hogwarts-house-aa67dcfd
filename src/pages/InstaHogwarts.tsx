@@ -470,7 +470,7 @@ export default function InstaHogwarts() {
 
                 {/* Content & Actions */}
                 <div className="p-6 pt-2 space-y-4">
-                  <div className="relative">
+            <div className="relative">
                     <span className="absolute -left-2 top-0 text-4xl text-black/10 font-serif italic">"</span>
                     <p className="text-black font-serif italic leading-relaxed text-sm px-4">
                       {post.caption}
@@ -478,15 +478,17 @@ export default function InstaHogwarts() {
                     <span className="absolute -right-2 bottom-0 text-4xl text-black/10 font-serif italic rotate-180">"</span>
                   </div>
 
-                  {post.spotify_uri && (
-                    <div className="bg-black/5 p-3 rounded border-l-4 border-green-600 flex items-center gap-3 group/spotify transition-colors hover:bg-black/10">
-                      <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center animate-pulse">
-                         <div className="w-4 h-4 text-white"><EmojiIcon e="🎵" /></div>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[10px] text-black/40 uppercase font-black tracking-widest leading-none mb-1">Trilha Sonora</p>
-                        <p className="text-xs font-serif font-bold text-black truncate">{post.spotify_uri}</p>
-                      </div>
+                  {post.spotify_uri && post.spotify_uri.includes("spotify.com") && post.spotify_uri.match(/track\/([a-zA-Z0-9]+)/) && (
+                    <div className="mt-2 w-full max-w-sm">
+                      <iframe 
+                        src={`https://open.spotify.com/embed/track/${post.spotify_uri.match(/track\/([a-zA-Z0-9]+)/)?.[1]}`} 
+                        width="100%" 
+                        height="80" 
+                        frameBorder="0" 
+                        allow="encrypted-media" 
+                        loading="lazy"
+                        className="rounded-xl opacity-90 hover:opacity-100 transition-opacity"
+                      ></iframe>
                     </div>
                   )}
 
