@@ -41,6 +41,7 @@ export default function DuelsPvP() {
     setPending((data || []).filter((m: any) => m.status === "pending" && m.player_b === user.id));
   }, [user]);
 
+  useEffect(() => {
     (async () => {
       const { data } = await (supabase as any).from("duel_spells").select("*").order("level_req");
       setSpells(data || []);
