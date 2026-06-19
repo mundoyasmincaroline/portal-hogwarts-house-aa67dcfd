@@ -414,7 +414,7 @@ export default function DashboardLayout() {
       <BirthdayGlobalCelebration />
       <PWAInstallPrompt />
       <WelcomePackageCeremony />
-    </div>
+    </motion.div>
 
   );
 }
