@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { CheckCircle2, Circle, AlertTriangle, ArrowRight, Skull, Swords, Beaker } from "lucide-react";
+import { CheckCircle2, Circle, AlertTriangle, ArrowRight, Skull, Swords, Beaker, Shield } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import EmojiIcon from "@/components/shared/EmojiIcon";
