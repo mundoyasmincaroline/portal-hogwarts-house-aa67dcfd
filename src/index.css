@@ -93,6 +93,12 @@
     overscroll-behavior: none;
     /* Altura correta em mobile com barra de URL visível */
     min-height: 100dvh;
+    overflow-x: hidden;
+    width: 100%;
+  }
+  #root {
+    overflow-x: hidden;
+    width: 100%;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading;
