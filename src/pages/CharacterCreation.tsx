@@ -14,7 +14,7 @@ interface Props { onComplete: () => void; onCancel?: () => void; canCancel?: boo
 const FIELD = ({ label, name, value, onChange, placeholder, type = "text", rows, required }: any) => (
   <div>
     <label className="text-xs font-heading text-muted-foreground block mb-1">
-      {label} {required && <span className="text-primary">*</span>}
+      {label} <span className="text-primary">*</span>
     </label>
     {rows ? (
       <textarea name={name} value={value} onChange={onChange} placeholder={placeholder} rows={rows}
@@ -112,17 +112,27 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
   const handleSubmit = async () => {
     if (!user) return;
     
-    // Validação de campos obrigatórios
+    // Validação de campos obrigatórios - 100% dos campos!
     const requiredFields = [
       { key: "full_name", label: "Nome" },
       { key: "gender", label: "Gênero" },
       { key: "house", label: "Casa" },
       { key: "age", label: "Idade" },
+      { key: "blood_status", label: "Status de Sangue" },
       { key: "wand", label: "Varinha" },
       { key: "patronus", label: "Patrono" },
+      { key: "pet", label: "Pet" },
+      { key: "favorite_class", label: "Matéria Favorita" },
+      { key: "favorite_spell", label: "Feitiço Favorito" },
       { key: "personality", label: "Personalidade" },
-      { key: "strength", label: "Força" },
+      { key: "strength", label: "Trunfo/Força" },
       { key: "weakness", label: "Fraqueza" },
+      { key: "fears", label: "Medos" },
+      { key: "dreams", label: "Sonhos" },
+      { key: "quotes", label: "Citações/Bordões" },
+      { key: "background", label: "Background" },
+      { key: "physical_description", label: "Descrição Física" },
+      { key: "history", label: "História" }
     ];
 
     if (step === "canon") {
@@ -135,6 +145,11 @@ export default function CharacterCreation({ onComplete, onCancel, canCancel }: P
     const missing = requiredFields.find(f => !form[f.key as keyof typeof form]);
     if (missing) {
       toast.error(`Por favor, preencha o campo obrigatório: ${missing.label}`);
+      return;
+    }
+
+    if (!avatarFile && !form.avatar_url) {
+      toast.error("Obrigatório: Envie uma foto ou desenho do seu personagem!");
       return;
     }
 

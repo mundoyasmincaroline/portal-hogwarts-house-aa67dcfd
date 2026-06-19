@@ -1,15 +1,37 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
+import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
 
 import EmojiIcon from "@/components/shared/EmojiIcon";
 export default function MaraudersGuide() {
   const [activePage, setActivePage] = useState(1);
   const [sworn, setSworn] = useState(false);
+  const [finishing, setFinishing] = useState(false);
+  const { user, profile } = useAuth();
+  const navigate = useNavigate();
+
+  const handleFinish = async () => {
+    if (user && !(profile as any)?.has_read_marauders_guide) {
+      setFinishing(true);
+      try {
+        await supabase.from("profiles").update({ has_read_marauders_guide: true } as any).eq("user_id", user.id);
+        useAuth.setState((state) => ({
+          profile: state.profile ? { ...state.profile, has_read_marauders_guide: true } : null
+        }));
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setFinishing(false);
+      }
+    }
+    navigate("/dashboard");
+  };
 
   if (!sworn) {
     return (
@@ -542,11 +564,9 @@ export default function MaraudersGuide() {
         {activePage === guidePages.length && (
           <div className="mt-10 text-center animate-fade-in-up">
             <h3 className="font-heading text-lg text-amber-800 mb-3">Malfeito, feito!</h3>
-            <Link to="/dashboard">
-              <Button variant="magical" size="lg" className="font-heading">
-                Voltar para o Salão Principal <EmojiIcon e="⚡" />
-              </Button>
-            </Link>
+            <Button onClick={handleFinish} disabled={finishing} variant="magical" size="lg" className="font-heading">
+              {finishing ? "Finalizando..." : "Concluir Leitura e Avançar"} <EmojiIcon e="⚡" />
+            </Button>
           </div>
         )}
       </div>

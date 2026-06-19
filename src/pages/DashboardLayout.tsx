@@ -255,6 +255,8 @@ export default function DashboardLayout() {
   if (!profile || !isAuthenticated) return null;
   if (!profile.approved && !isAdmin) return <ProtectedRoute adminOnly={false}><PendingApproval /></ProtectedRoute>;
   if (!isAdmin && !profile.has_accepted_rules) return <ProtectedRoute adminOnly={false}><RulesAgreement /></ProtectedRoute>;
+  if (!isAdmin && !(profile as any).has_read_marauders_guide) return <ProtectedRoute adminOnly={false}><MaraudersGuide /></ProtectedRoute>;
+  
   // Admin nunca é obrigado a criar ficha — pode acessar o portal livremente
   // BLOCKER FIX: gate por OR + tratar null (erro de fetch) como sem personagem para não vazar usuário pro dashboard quebrado
   if (!isAdmin && (hasCharacters !== true || !profile.active_character_id)) {
