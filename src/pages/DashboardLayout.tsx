@@ -15,6 +15,7 @@ import PendingApproval from "@/pages/PendingApproval";
 import RulesAgreement from "@/pages/RulesAgreement";
 import CharacterSelection from "@/pages/CharacterSelection";
 import CastleEntrance from "@/pages/CastleEntrance";
+import MaraudersGuide from "@/pages/MaraudersGuide";
 import NotificationBanner from "@/components/NotificationBanner";
 import { useAchievements } from "@/hooks/features/useAchievements";
 import TurnSwitcher from "@/components/TurnSwitcher";
